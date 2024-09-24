@@ -60,7 +60,7 @@
                             <th>In/Out</th>
                             <th>Received&nbsp;On</th>
                             <th>Door/Address</th>
-                            <th>Status{{$notFound}}</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <div>

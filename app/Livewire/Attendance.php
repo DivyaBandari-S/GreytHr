@@ -1048,11 +1048,8 @@ class Attendance extends Component
             $this->totalnumberofEarlyOut=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-            $this->totalmodalDays = $fromDatetemp->diffInDays($toDatetemp);
-            $this->holidayCountForInsightsPeriod = 0;
-            $this->count = $this->calculateWorkingDaysForModalTitle($fromDatetemp, $toDatetemp, auth()->guard('emp')->user()->emp_id);
-            $this->weekendDays = $this->calculateNumberofWeekends($fromDatetemp, $toDatetemp);
-            $this->countofAbsent = $this->totalmodalDays - $this->count - $this->weekendDays - $this->holidayCountForInsightsPeriod;
+        
+         
             
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
@@ -1115,37 +1112,43 @@ class Attendance extends Component
             $tempStartDate = $startDate->toDateString();
             
             // Check if the date is a holiday, weekend, or employee is on leave
-            $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
             $isweekend = $startDate->isWeekend();
+            
+            $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
+           
             $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = $this->isEmployeePresentOnDate($tempStartDate);
+            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at', $tempStartDate)->first();
+            
             
             // Log the status of the current day
             Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') . 
                       ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') . 
                       ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') . 
-                      ", IsPresent: " . ($isPresent ? 'Yes' : 'No'));
+                      ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
     
             // If not a holiday, weekend, or leave day, and the employee is present
-            if (!$isHoliday && !$isweekend && !$isOnLeave && $isPresent) {
+            if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
-                $lateSwipeExists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '>', '10:00:00')
-                    ->exists();
-                    $lateSwipes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '>', '10:00:00')
-                    ->pluck('swipe_time');
+                 
+                 try {
+                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(10, 0, 0);
+                } catch (\Exception $e) {
+                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(10, 0);
+                }
                     
-
+                 if ($swipeTime->greaterThan($limitTime)) {
+                    $lateSwipeExists=true;
+                } else {
+                    // Swipe time is 10:00 AM or later
+                    $lateSwipeExists=false;
+                }
                 // Log the late swipe check
-                Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate");
+                Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate"." on Time: $swipeTime");
     
                 // Increment late swipe count if a late swipe is found
-                if ($lateSwipeExists) {
+                if ($lateSwipeExists==true) {
                     $lateSwipeCount++;
                     Log::info("Late Swipe Count Incremented: $lateSwipeCount");
                 }
@@ -1178,27 +1181,37 @@ class Attendance extends Component
             $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
             $isweekend = $startDate->isWeekend();
             $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = $this->isEmployeePresentOnDate($tempStartDate);
+            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->whereDate('created_at', $tempStartDate)->first();
+       
+            if(empty($isPresent))
+            {
+                $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at', $tempStartDate)->first();   
+            }
+            
            
             // Log the status of the current day
             Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') .
                       ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') .
                       ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') .
-                      ", IsPresent: " . ($isPresent ? 'Yes' : 'No'));
+                      ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
    
             // If not a holiday, weekend, or leave day, and the employee is present
-            if (!$isHoliday && !$isweekend && !$isOnLeave && $isPresent) {
+            if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
-                $earlyOutExists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'OUT')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->exists();
-                    $earlySwipes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'OUT')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->pluck('swipe_time');
+                try {
+                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(19, 0, 0);
+                } catch (\Exception $e) {
+                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(19, 0);
+                }
+                    
+                 if ($swipeTime->lessThan($limitTime)) {
+                    $earlyOutExists=true;
+                } else {
+                    // Swipe time is 10:00 AM or later
+                    $earlyOutExists=false;
+                }
                    
  
                 // Log the late swipe check
@@ -1309,32 +1322,44 @@ class Attendance extends Component
         return $workingDays;
     }
     private function calculateTotalNumberOfLeaves($startDate, $endDate)
-    {
-     
-        $leaveCount = 0;
-      
-        // Iterate through the date range
-        while ($startDate->lt($endDate)) {
+{
+    $leaveCount = 0;
+
+    Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
+
+    // Iterate through the date range
+    while ($startDate->lt($endDate)) {
+        $tempStartDate = $startDate->toDateString();
+
+        // Check if the current date is a holiday
+        $isHoliday = HolidayCalendar::where('date', $tempStartDate)->exists();
+
+        // Skip weekends (Saturday and Sunday) or holidays
+        if ($startDate->isWeekend()) {
+            Log::info('Skipping weekend: ' . $tempStartDate);
+        } elseif ($isHoliday) {
+            Log::info('Skipping holiday: ' . $tempStartDate);
+        } else {
+            // Log current date and status
+            Log::info('Checking date: ' . $tempStartDate);
+
             // Check if employee is on leave on this date
-            $tempStartDate=$startDate->toDateString();
-            $isOnLeave = LeaveRequest::where('emp_id',auth()->guard('emp')->user()->emp_id)
-            ->where('status', 'approved')
-            ->where(function ($query) use ($tempStartDate) {
-                $query->whereDate('from_date', '<=', $tempStartDate)
-                    ->whereDate('to_date', '>=', $tempStartDate);
-            })->exists();
-    
+            $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
+            Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
+
             if ($isOnLeave) {
                 $leaveCount++;
             }
-    
-            // Move to the next day
-            $startDate->addDay();
         }
-    
-        return $leaveCount;
+
+        // Move to the next day
+        $startDate->addDay();
     }
 
+    Log::info('Total leave count (excluding weekends and holidays): ' . $leaveCount);
+
+    return $leaveCount;
+}
     public function calculateTotalDays()
     {
         try {

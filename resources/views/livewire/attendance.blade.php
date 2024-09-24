@@ -1792,9 +1792,11 @@ color: #fff;
                                                 @php
                                                 $Regularised=true;
                                                 @endphp
+                                                @if($day['status']=='P')
                                                 <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
                                                     <div class="down-arrow-reg"></div>
                                                 </span>
+                                                @endif
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">

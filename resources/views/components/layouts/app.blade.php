@@ -19,10 +19,7 @@
                 ->select('companies.company_logo', 'companies.company_name')
                 ->first();
         @endphp
-        <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
-        <title>
-            {{ $employee->company_name }}
-        </title>
+        
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
