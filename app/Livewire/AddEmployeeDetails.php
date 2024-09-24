@@ -365,7 +365,6 @@ class AddEmployeeDetails extends Component
             } else {
                 $imagePath = $this->image; // Already a path, use as is
             }
-            dd();
             $employee->update([
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
