@@ -69,7 +69,7 @@ class PasswordChangedNotification extends Notification
                 'device' => $device,
                 'os' => $os,
                 'osVersion' => $osVersion, // Include OS version
-                'logoUrl' => asset('images/hr_new_white.png'),
+                'logoUrl' => asset('images/hr_new_blue.png'),
             ]);
     }
 

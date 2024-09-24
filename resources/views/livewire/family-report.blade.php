@@ -7,7 +7,6 @@
     <div class="modal-body">
         <div class="row d-flex align-items-center m-0 p-0">
             <div class="col-md-6">
-                <span class="normalTextValue">Select All</span>
             </div>
             <div class="col-md-6">
                 <div class="search-container p-2" style="position: relative;">
@@ -31,11 +30,8 @@
                         {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
                     </td>
                     <td style="width:50%;font-size: 10px;color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px">{{$emp->emp_id}}</td>
-
                 </tr>
                 @endforeach
-
-
             </table>
         </div>
     </div>
@@ -46,6 +42,5 @@
         <button type="button" data-dismiss="modal"
             class="cancel-btn1"
             wire:click='resetFields'>Clear</button>
-
     </div>
 </div>

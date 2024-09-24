@@ -91,8 +91,9 @@
                                 $isCurrentMonth = $day['isCurrentMonth'];
                                 $isWeekend = in_array($carbonDate->dayOfWeek, [0, 6]); // 0 for Sunday, 6 for Saturday
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
+                                $leaveCount = $filterCriteria === 'Me' ? $day['leaveCountMe'] : $day['leaveCountMyTeam'];
                                 @endphp
-                                <td wire:click="dateClicked('{{ $day['day'] }}')" class="calendar-date{{ $selectedDate === $day['day'] ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
+                                <td wire:click="dateClicked('{{ $day['day'] }}')" class="calendar-date{{ $isActiveDate ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
                                     @if ($day)
                                     <div>
                                         @if ($day['isToday'])
@@ -105,10 +106,7 @@
                                         <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
                                             <!-- Render your content -->
                                         </div>
-                                        @php
-                                        $leaveCount = $filterCriteria === 'Me' ? $day['leaveCountMe'] : $day['leaveCountMyTeam'];
-                                        @endphp
-                                        @if ($leaveCount > 0)
+                                        @if (!$isWeekend && $leaveCount > 0) {{-- Only display leave count for weekdays --}}
                                         <div class="circle-greys">
                                             <span class="d-flex justify-content-center align-items-center rounded-circle" style="width:20px;height:20px;">
                                                 {{ $leaveCount }}
@@ -122,6 +120,7 @@
                             </tr>
                             @endforeach
                         </tbody>
+
 
                     </table>
 

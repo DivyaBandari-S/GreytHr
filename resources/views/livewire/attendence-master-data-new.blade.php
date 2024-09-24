@@ -408,11 +408,11 @@
         <div class="search-bar" style="margin-left:30px;">
             <input type="text" wire:model="search" placeholder="Search..." wire:change="searchfilter">
         </div>
-        <div class="shift-roster-download-and-dropdown-for-attendance-muster col-md-4 d-flex justify-content-end gap-2">
-            <button class="submit-btn py-0"wire:click="downloadExcel"style="padding:0px 10px;">
+        <div class="shift-roster-download-and-dropdown-for-attendance-muster col-md-4 d-flex justify-content-end">
+            <button class="submit-btn"wire:click="downloadExcel"style="margin:13px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
-            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:30%;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">
+            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:30%;margin:11px;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">
                 <option value="{{$todayyear-1}}">{{$todayyear-1}}</option>
                 <option value="{{$todayyear}}">{{$todayyear}}</option>
                 <option value="{{$todayyear+1}}">{{$todayyear+1}}</option>
@@ -620,7 +620,8 @@
                 @foreach($Employees as $emp)
                 <tr>
 
-                    <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"data-toggle="tooltip" data-placement="top"
+                    title="{{ ucwords(strtolower($emp->first_name)) }} {{ ucwords(strtolower($emp->last_name)) }}({{ $emp->emp_id }})">
                         {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role),}}{{ucfirst($emp->job_location)}}</span>
                     </td>
                     @php

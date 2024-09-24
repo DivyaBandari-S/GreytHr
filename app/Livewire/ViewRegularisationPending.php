@@ -2,12 +2,14 @@
 
 namespace App\Livewire;
 
+use App\Mail\ManagerNotificationMail;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
 use App\Models\RegularisationNew;
 use App\Models\RegularisationNew1;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
@@ -25,6 +27,10 @@ class ViewRegularisationPending extends Component
 
     public $openApprovePopupModal=false;
     public $countofregularisations;
+
+    public $managerEmail = 'pranitagrace02@gmail.com';
+    public $messageContent;
+    public $senderName;
     public function mount()
     {
         $this->employeeId = auth()->guard('emp')->user()->emp_id;
@@ -49,6 +55,19 @@ class ViewRegularisationPending extends Component
 
 
         }
+    }
+    public function sendMail()
+    {
+        // Prepare email details
+        $details = [
+            'message' => $this->messageContent,
+            'sender_name' => $this->senderName
+        ];
+
+        // Send email to manager
+        Mail::to($this->managerEmail)->send(new ManagerNotificationMail($details));
+
+        session()->flash('message', 'Email has been sent successfully!');
     }
     public function openRejectModal()
     {

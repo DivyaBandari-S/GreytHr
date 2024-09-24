@@ -109,6 +109,7 @@ class Regularisation extends Component
 
     public $todayYear;
 
+    public $todayDay;
     public function mount()
     {
         try {
@@ -117,6 +118,7 @@ class Regularisation extends Component
             $this->month = now()->month;
             $this->todayYear=now()->year;
             $this->todayMonth=now()->month;
+            $this->todayDay = now()->day;
             $this->getDaysInMonth($this->year, $this->month);
             $this->monthinFormat = now()->format('F');
             $this->holidays = HolidayCalendar::where('month', $this->monthinFormat)
@@ -213,8 +215,15 @@ class Regularisation extends Component
         $selectedDate = Carbon::parse($date);
         $selecteddateyear = $selectedDate->year;
         $selecteddatemonth = $selectedDate->month;
-        
-        if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1)
+        $selecteddateday=$selectedDate->day;
+        if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25)
+        {
+            session()->flash('error', 'Attendance Period is locked');
+              $this->showAlert=true;
+              // Stop further execution if the date is in the future
+              return;
+        }
+        if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1&&$selecteddateday<=(Carbon::today()->year))
         {
               // Throw a validation error or set a message for the user
               session()->flash('error', 'Attendance Period is locked');
@@ -282,10 +291,6 @@ class Regularisation extends Component
             }
         }
          
-    }
-    public function submitShiftsForcheck()
-    {
-        dd($this->shift_times);
     }
     private function isEmployeeRegularisedOnDate($date)
     {

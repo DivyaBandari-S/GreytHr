@@ -2,10 +2,12 @@
 
 namespace App\Livewire;
 
+use App\Mail\ManagerNotificationMail;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
@@ -15,7 +17,11 @@ class ViewRegularisationPendingNew extends Component
     public $employeeId;
 
     public $openAccordionForActive=null;
+    public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
+    public $messageContent;  // This will hold the message input from the form
+    public $senderName;
 
+    public $regularisationEntries;
     public $searchQuery='';
     public $searching=0;
     public $regularised_date;
@@ -42,20 +48,44 @@ class ViewRegularisationPendingNew extends Component
         ->with('employee')
         ->orderBy('created_at', 'desc')
         ->get();
-        
+
         foreach ($this->regularisations as $regularisation) {
             $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
 
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
 
-            if ($daysDifference >= 3) {
-                $this->auto_approve=true;
-                $this->approve($regularisation->id);
+            if ($daysDifference > 3) {
+
+                $this->sendMail($regularisation->id);
+
+
             }
 
 
         }
     }
+    public function sendMail($id)
+{
+    $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
+    $this->regularisationEntries = json_decode($item->regularisation_entries, true); // Decode the JSON entries
+    $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
+    // Prepare the HTML table
+    $this->messageContent = " ".$this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")" ."has neither approved nor rejected the regularization request for the past 3 days for employee ". $item->emp_id . " (" . $employee->first_name . " " . $employee->last_name . ").";
+    $details = [
+        'message' => $this->messageContent,
+        'regularisationRequests'=>$this->regularisationEntries,
+        'sender_id'=>$employee->emp_id,
+        'sender_name' => $this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")"
+    ];
+
+
+    // Send email to manager
+    Mail::to($this->managerEmail)->send(new ManagerNotificationMail($details));
+
+    // Flash success message to session
+    session()->flash('message', 'Email has been sent successfully!');
+}
+
     public function toggleActiveAccordion($id)
     {
         

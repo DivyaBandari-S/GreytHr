@@ -17,12 +17,61 @@ class ShiftRoaster extends Component
     public $holiday;
     public $notFound;
 
-    public $selectedMonth='June';
+    public $selectedMonth;
     public $attendanceMonth;
 
+    public $currentMonth;
+
+    public $previousMonth;
+
+    public $nextMonth;
+
+    public $currentMonthForDropdown;
+    public $currentYear;
+
+    public $previousYear;
+
+    public $nextYear;
+
+    public $previousMonthWithPreviousYear;
+
+    public $nextMonthWithPreviousYear;
+
+    public $previousMonthWithNextYear;
+
+    public $nextMonthWithNextYear;
+
+    public $attendanceYear;
+    public $previousMonthWithCurrentYear;
+
+    public $currentMonthWithPreviousYear;
+    public $nextMonthWithCurrentYear;
+
+    public $currentMonthWithNextYear;
+    public function mount()
+    {
+        $currentDate = now();
+        $this->currentMonthForDropdown = now()->format('F'); // Current month (e.g., September)
+        $this->previousMonth = now()->subMonth(1)->format('F'); // Previous month
+        $this->nextMonth = now()->addMonth(1)->format('F'); // Next month
+        $this->currentYear = $currentDate->year;
+        $this->selectedMonth=now()->format('F');
+        
+    }
+    
     public function updateselectedMonth()
     {
-        $this->attendanceMonth = $this->selectedMonth; 
+        $selected = explode(' ', $this->selectedMonth);
+    
+        // Update attendanceMonth and attendanceYear
+        if (count($selected) === 2) {
+            $this->attendanceMonth = $selected[0];  // The month part
+            $this->attendanceYear = $selected[1];   // The year part
+            
+        }
+    
+        // Debug output to check if both month and year are updated correctly
+   
     }
     public function searchfilter()
     {
@@ -79,7 +128,7 @@ class ShiftRoaster extends Component
 
        }
        foreach ($employees as $employee) {
-        $rowData = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name']];
+        $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
         
         
         $dateCount=0;

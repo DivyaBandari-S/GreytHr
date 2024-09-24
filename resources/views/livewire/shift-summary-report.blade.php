@@ -17,7 +17,6 @@
         </div>
         <div class="row m-0 p-0 d-flex align-items-center">
             <div class="col-md-6">
-                <span class="normalTextValue">Select All</span>
             </div>
             <div class="search-container col-md-6 p-2" style="position: relative;">
                 <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">

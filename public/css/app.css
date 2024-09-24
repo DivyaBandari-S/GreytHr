@@ -1140,23 +1140,7 @@ button.close-button {
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-.arrow-btn {
-    color: var(--label-color);
-    height: 22px;
-    width: 22px;
-    display: flex;
-    margin-right: 10px;
-    cursor: pointers;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
-    border: 1px solid #dcdcdc;
-    margin-right: 10px;
-}
-.cancel-btn:hover {
-    background-color: rgb(2, 17, 79);
-    color: white;
-}
+
 .toggle-box-container-who-is-in {
     float: right;
     display: flex;
@@ -1754,7 +1738,7 @@ td {
     position: relative;
 }
 .shift-roster-download-and-dropdown-for-attendance-muster {
-    margin-left: 370px;
+   margin-left:375px;
 }
 .green-section-employee-swipes p {
     font-size: 11px;
@@ -2048,7 +2032,11 @@ td {
 .Attendance-attendance-muster .table tbody tr td:last-child {
     border-right: none;
 }
-
+@media screen and (min-width: 320px) and (max-width: 500px) {
+    .shift-roster-download-and-dropdown-for-attendance-muster {
+        margin-left: 10px; 
+    }
+}
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
@@ -2143,15 +2131,13 @@ td {
     height: 60px;
     margin-left: 30px;
 }
-/* .form-select {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 5px;
+ .form-select {
+
     font-size: 0.75rem;
-    color: #3b4452;
-    margin-top: 5px;
-    height: 30px;
-} */
+} 
+.modal-body{
+    font-size: 0.75rem;
+}
 .addcomment {
     position: absolute;
     bottom: 15px; /* Move up by increasing this value */
@@ -3085,6 +3071,16 @@ input[type="radio"] {
     border: 1px solid #dcdcdc;
     margin-right: 10px;
 }
+.arrow-btn .fa {
+    transition: transform 0.3s ease; /* Smooth rotation */
+}
+
+.arrow-btn .rotate {
+    transform: rotate(180deg); /* Rotate the icon */
+}
+.arrow-btn.active .fa {
+    color: rgb(2, 17, 79); /* Change to your desired active color */
+}
 
 .side {
     display: flex;
@@ -3208,6 +3204,15 @@ input[type="radio"] {
 }
 
 /* //leave apply styles */
+.checkLeaveBal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.borderLeft{
+    border-left: 1px solid #ccc;
+
+}
 .leave-type-hide {
     display: inline-block;
     font-size: var(--normal-font-size);

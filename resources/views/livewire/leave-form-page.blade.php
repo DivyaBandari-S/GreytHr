@@ -1,7 +1,7 @@
 <div class="leavePageContent position-relative">
    <div class="d-flex mt-2 gap-4 align-items-center ">
       @if(session()->has('error'))
-      <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;"  id="error-alert">
+      <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;" id="error-alert">
          {{ session('error') }}
          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
@@ -67,7 +67,7 @@
                <div class="leave-pending rounded w-100">
                   @if($resShowinfoMessage)
                   <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-                     <p class="mb-0 normalTextSmall" >Restricted Holidays (RH) are a set of holidays allocated by the
+                     <p class="mb-0 normalTextSmall">Restricted Holidays (RH) are a set of holidays allocated by the
                         company that are optional for the employee to utilize. The company sets a limit on the
                         amount of holidays that can be used.</p>
                      <p class="mb-0 hideInfo" wire:click="toggleInfoRes">Hide</p>
@@ -288,7 +288,7 @@
 
                @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
 
-               <div class="containerWidth mt-4" >
+               <div class="containerWidth mt-4">
 
                   <div class="accordion rounded ">
 
@@ -334,7 +334,7 @@
 
                               @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
-                              <span class="approvedColor" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                              <span class="approvedColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                               @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
 
@@ -353,15 +353,15 @@
 
                               @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                              <span class="approvedColor" >{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="approvedColor">{{ strtoupper($leaveRequest->status) }}</span>
 
                               @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                              <span class="rejectColor" >{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="rejectColor">{{ strtoupper($leaveRequest->status) }}</span>
 
                               @else
 
-                              <span class="normalTextValue" >{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="normalTextValue">{{ strtoupper($leaveRequest->status) }}</span>
 
                               @endif
 
@@ -462,12 +462,16 @@
 <script>
    function toggleAccordion(element) {
       const accordionBody = element.nextElementSibling;
+      const arrowIcon = element.querySelector('.fa'); // Select the arrow icon
+
       if (accordionBody.style.display === 'block') {
          accordionBody.style.display = 'none';
          element.classList.remove('active'); // Remove active class
+         arrowIcon.classList.remove('rotate'); // Remove rotation class
       } else {
          accordionBody.style.display = 'block';
          element.classList.add('active'); // Add active class
+         arrowIcon.classList.add('rotate'); // Add rotation class
       }
    }
 </script>

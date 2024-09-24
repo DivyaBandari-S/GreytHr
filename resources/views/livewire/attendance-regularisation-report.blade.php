@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group col-md-4">
                     <label for="status">Status:</label>
-                    <select id="status" class="form-control" name="year" wire:model="selectedStatus" wire:change="updateselectedStatus">
+                    <select id="status" class="form-select placeholder-small" name="year" wire:model="selectedStatus" wire:change="updateselectedStatus">
                         <option value="">Select Status</option>
                         <option value="approved">Accepted</option>
                         <option value="withdrawn">Withdrawn</option>
@@ -37,10 +37,7 @@
                     </tr>
 
                     @foreach ($employees as $emp)
-
-
                     <tr style="border:1px solid #ccc;">
-
                         <td style="width:50%;font-size: 10px; color:  <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
                             <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:model="EmployeeId" wire:change="updateEmployeeId" value="{{ $emp->emp_id }}">
                             {{ucwords(strtolower($emp->first_name))}} {{ucwords(strtolower($emp->last_name))}}
