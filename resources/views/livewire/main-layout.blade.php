@@ -130,8 +130,9 @@
                 <div class="profile m-auto me-2">
                     <div class="d-flex brandLogoDiv" >
                         @livewire('company-logo')
-                        @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
-                        <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="" onclick="openProfile()">
+
+                        @if($loginEmployeeProfile->image !== null && $loginEmployeeProfile->image != "null" && $loginEmployeeProfile->image != "Null" && $loginEmployeeProfile->image != "")
+                        <img class="navProfileImg" src="data:image/jpeg;base64,{{ ($loginEmployeeProfile->image) }}" alt="" onclick="openProfile()">
                         @else
                         @if($loginEmployeeProfile->gender=='Male')
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
