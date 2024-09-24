@@ -314,7 +314,7 @@
                                                     </div>
                                                     <div class="modal-body" style="max-height: 400px; overflow-y: auto;">
                                                         <ul class="list-group list-group-flush">
-                                                            @foreach ($files as $file)
+                                                            @foreach ($files as $file)a
 
                                                             @php
 

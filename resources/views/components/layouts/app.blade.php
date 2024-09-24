@@ -7,7 +7,7 @@
     @guest
     <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
     <title>
-        HR Strategies Pro
+        HR Xpert
     </title>
     @endguest
     @auth('emp')
