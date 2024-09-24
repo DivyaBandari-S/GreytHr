@@ -14,31 +14,31 @@
         <div class="d-flex flex-row">
 
 
-            <div class=" mt-1 h-60">
-                @if(auth('emp')->check() || auth('hr')->check())
-                @php
-                // Determine the employee ID based on the authentication guard
-                $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
+        <div class=" mt-1 h-60">
+                        @if(auth('emp')->check() || auth('hr')->check())
+                        @php
+                        // Determine the employee ID based on the authentication guard
+                        $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
 
-                // Fetch the employee details from EmployeeDetails model
-                $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
-                @endphp
+                        // Fetch the employee details from EmployeeDetails model
+                        $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
+                        @endphp
 
-                @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}">
-                @else
-                @if($employeeDetails && $employeeDetails->gender == "Male")
-                <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                @else
-                <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                @endif
-                @endif
-                @else
-                <p>User is not authenticated.</p>
-                @endif
-            </div>
+                        @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                        <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}">
+                        @else
+                        @if($employeeDetails && $employeeDetails->gender == "Male")
+                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                        @else
+                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                        @endif
+                        @endif
+                        @else
+                        <p>User is not authenticated.</p>
+                        @endif
+                    </div>
             <div class="drive-in  justify-content-center mt-2">
 
                 <span class="text-feed mt-1">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
@@ -112,8 +112,7 @@
                                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <!-- File Input -->
-                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
-                                        role="alert"></div>
+                                   
                                     <!-- File Upload -->
                                     <div class="form-group mt-1">
                                         <label for="file_path">Upload Attachment:</label>
@@ -128,6 +127,8 @@
 
                                         </div>
                                     </div>
+                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
+                                    role="alert"></div>
                                 </div>
 
                                 <!-- Submit & Cancel Buttons -->

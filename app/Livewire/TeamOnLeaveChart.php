@@ -29,6 +29,7 @@ class TeamOnLeaveChart extends Component
     public $search = '';
     public $leaveTypeFilter = "";
     public $leaveTypes = [];
+    public $todaysDate;
 
     ///this method ill give data for barchart of leave applications of employees
     private function prepareChartData($leaveApplications)
@@ -107,7 +108,7 @@ class TeamOnLeaveChart extends Component
                     }
 
                         // Update the employee's leave count for the day
-                        $employeeLeaveDays[$employeeId][$day] += (int)$currentDayCount; // Cast to int
+                        $employeeLeaveDays[$employeeId][$day] += (float)$currentDayCount; // Cast to int
 
                         // Initialize the chart data for the leave type if it's not set
                         if (!isset($chartData['datasets'][$leaveType][$day])) {
@@ -115,7 +116,7 @@ class TeamOnLeaveChart extends Component
                         }
 
                         // Accumulate leave days for the specific leave type
-                        $chartData['datasets'][$leaveType][$day] += (int)$currentDayCount; // Cast to int
+                        $chartData['datasets'][$leaveType][$day] += (float)$currentDayCount; // Cast to int
 
                     }
 
@@ -315,6 +316,7 @@ class TeamOnLeaveChart extends Component
     public function mount()
     {
         try {
+            $this->todaysDate = Carbon::now()->format('d M, Y');
             $this->duration = request()->query('duration') ? request()->query('duration') : 'this_month';
             $this->leaveApplications = $this->fetchTodayLeaveApplications();
             // dd( $this->leaveApplications);
