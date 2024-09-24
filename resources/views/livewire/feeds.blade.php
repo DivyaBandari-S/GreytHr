@@ -30,7 +30,7 @@
                         @endphp
 
                         @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}">
+                        <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}">
                         @else
                         @if($employeeDetails && $employeeDetails->gender == "Male")
                         <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -446,7 +446,7 @@
                                         </p>
                                         <div style="display: flex; align-items: center;">
                                             @if(($data['employee']->image) &&$data['employee']->image !== 'null')
-                                            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}">
+                                            <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="data:image/jpeg;base64,{{ ($data['employee']->image) }}" >
                                             @else
                                             @if($data['employee'] && $data['employee']->gender == "Male")
                                             <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -666,7 +666,7 @@
 
                                                 <div class="col-md-1">
                                                     @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                                                    <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}">
+                                                    <img style="border-radius: 50%; " height="50" width="50"   src="data:image/jpeg;base64,{{  $employeeDetails->image}}" >
                                                     @else
                                                     @if($employeeDetails && $employeeDetails->gender == "Male")
                                                     <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -707,7 +707,7 @@
                                         @if($comment->employee)
                                         @if(($comment->employee->image) &&$comment->employee->image !== 'null')
 
-                                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}">
+                                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"   src="data:image/jpeg;base64,{{  $comment->employee->image}}">
                                         @else
                                         @if($comment->employee && $comment->employee->gender == "Male")
                                         <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -733,7 +733,7 @@
                                         </div>
                                         @elseif ($comment->hr)
                                         @if(($comment->hr->image) &&$comment->hr->image !== 'null')
-                                        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$comment->hr->image_url }}">
+                                        <img style="border-radius: 50%; margin-left: 10px" height="50" width="50"  src="data:image/jpeg;base64,{{  $comment->hr->image}}">
                                         @else
                                         @if($comment->hr && $comment->hr->gender == "Male")
                                         <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -817,7 +817,7 @@
                                 </p>
                                 <div style="display: flex; align-items: center;">
                                     @if(($data['employee']->image) &&$data['employee']->image !== 'null')
-                                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}">
+                                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50"  src="data:image/jpeg;base64,{{ $data['employee']->image}}">
                                     @else
                                     @if($data['employee'] && $data['employee']->gender == "Male")
                                     <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1031,7 +1031,7 @@
 
                                         <div class="col-md-1">
                                             @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                                            <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}">
+                                            <img style="border-radius: 50%; " height="50" width="50"   src="data:image/jpeg;base64,{{$employeeDetails->image}}">
                                             @else
                                             @if($employeeDetails && $employeeDetails->gender == "Male")
                                             <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1116,7 +1116,7 @@
                             </div>
                             @elseif ($comment->hr)
                             @if(($comment->hr->image) &&$comment->hr->image !== 'null')
-                            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}">
+                            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"   src="data:image/jpeg;base64,{{$comment->employee->image}}">
                             @else
                             @if($comment->hr && $comment->hr->gender == "Male")
                             <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1205,7 +1205,7 @@
 
                             <div style="display: flex; align-items: center;">
                                 @if(($data['employee']->image) &&$data['employee']->image !== 'null')
-                                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}">
+                                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}" >
                                 @else
                                 @if($data['employee'] && $data['employee']->gender == "Male")
                                 <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1415,7 +1415,7 @@
 
                                 <div class="col-md-1">
                                     @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                                    <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                                    <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{$employeeDetails->image}}" alt="Employee Image">
                                     @else
                                     @if($employeeDetails && $employeeDetails->gender == "Male")
                                     <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1462,7 +1462,7 @@
                         <div class="comment" style="font-size: 10px; display: flex;">
                             @if($comment->employee)
                             @if(($comment->employee->image) &&$comment->employee->image !== 'null')
-                            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}" alt="Employee Image">
+                            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"  src="data:image/jpeg;base64,{{$comment->employee->image}}" alt="Employee Image">
                             @else
                             @if($comment->employee && $comment->employee->gender == "Male")
                             <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1799,7 +1799,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
                         <div class="col-md-1">
                             @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                            <img style="border-radius: 50%; " height="50" width="50" src="{{ $employeeDetails->image_url }}" alt="Employee Image">
+                            <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{$employeeDetails->image}}" alt="Employee Image">
                             @else
                             @if($employeeDetails && $employeeDetails->gender == "Male")
                             <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1864,7 +1864,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
                 @if ($comment->employee)
                 @if(($comment->employee->image) &&$comment->employee->image !== 'null')
-                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}" alt="Employee Image">
+                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{$comment->employee->image}}" alt="Employee Image">
                 @else
                 @if($comment->employee && $comment->employee->gender == "Male")
                 <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1887,7 +1887,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
                 @elseif ($comment->hr)
                 @if(($comment->hr->image) &&$comment->hr->image !== 'null')
-                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}" alt="Employee Image">
+                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"  src="data:image/jpeg;base64,{{$comment->employee->image}}" alt="Employee Image">
                 @else
                 @if($comment->hr && $comment->hr->gender == "Male")
                 <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
