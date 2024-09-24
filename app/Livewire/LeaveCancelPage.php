@@ -303,7 +303,7 @@ class LeaveCancelPage extends Component
             }
 
             // Update the leave request
-      $leaveRequest->update([
+             $leaveRequest->update([
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
                 'cancel_status' => 'Pending Leave Cancel',
@@ -471,6 +471,10 @@ class LeaveCancelPage extends Component
     public function getFilteredManagers()
     {
         $this->render(); // Re-render to apply the search filter
+    }
+    public function handleEnterKey()
+    {
+        $this->searchCCRecipients();
     }
     public function render()
     {
