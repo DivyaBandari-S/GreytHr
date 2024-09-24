@@ -30,8 +30,6 @@
     ->select('companies.company_logo', 'companies.company_name')
     ->first();
     }
-
-
     @endphp
     <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
     <title>

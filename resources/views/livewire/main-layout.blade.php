@@ -3,7 +3,6 @@
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $managerId = DB::table('employee_details')
     ->where('manager_id', $employeeId)->value('manager_id');
-    dd($managerId);
     @endphp
     <!-- SIDEBAR -->
     <section id="sidebar">
