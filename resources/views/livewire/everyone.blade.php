@@ -112,8 +112,7 @@
                                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <!-- File Input -->
-                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
-                                        role="alert"></div>
+                                   
                                     <!-- File Upload -->
                                     <div class="form-group mt-1">
                                         <label for="file_path">Upload Attachment:</label>
@@ -128,6 +127,8 @@
 
                                         </div>
                                     </div>
+                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
+                                    role="alert"></div>
                                 </div>
 
                                 <!-- Submit & Cancel Buttons -->

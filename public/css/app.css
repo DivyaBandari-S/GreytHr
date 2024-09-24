@@ -2135,6 +2135,10 @@ td {
 
     font-size: 0.75rem;
 } 
+.catagory-select:hover{
+    background-color: #edf3ff;
+ 
+}
 .modal-body{
     font-size: 0.75rem;
 }
