@@ -89,8 +89,7 @@ class ProfileInfo extends Component
 
             if ($this->image) {
 
-                $imagePath = file_get_contents($this->image->getRealPath());
-
+                $imagePath = base64_encode (file_get_contents($this->image->getRealPath()));
                 $employee->image = $imagePath;
 
                 $employee->save();

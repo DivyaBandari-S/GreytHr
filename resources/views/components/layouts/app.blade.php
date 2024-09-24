@@ -22,29 +22,58 @@
     ->first();
     // Decode the company_id from employee_details
     $companyIds = json_decode($employeeDetails->company_id);
-    if ($companyIds) {
-    // Now perform the join with companies table
-    $employee = DB::table('companies')
-    ->whereIn('company_id', $companyIds)
-    ->where('is_parent', 'yes')
-    ->select('companies.company_logo', 'companies.company_name')
-    ->first();
+
+
+    $needsFlattening = false;
+    foreach ($companyIds as $item) {
+    if (is_array($item)) {
+    $needsFlattening = true;
+    break;
     }
-    @endphp
-    <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
-    <title>
-        {{ $employee->company_name }}
-    </title>
-    @endauth
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        crossorigin="anonymous">
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
-    <!-- Date range picker links -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
-    <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    @livewireStyles
+    }
+
+    if ($needsFlattening) {
+    // If there's nesting, flatten the array
+    $flattenedArray = array_merge(...$companyIds);
+    } else {
+    // Otherwise, use the array as-is
+    $flattenedArray = $companyIds;
+    }
+    if ($companyIds) {
+
+    // Now perform the join with companies table
+    if( count($flattenedArray)<=1){
+        $employee=DB::table('companies')
+        ->whereIn('company_id', $companyIds)
+        ->select('companies.company_logo', 'companies.company_name')
+        ->first();
+
+        }else{
+        $employee = DB::table('companies')
+        ->whereIn('company_id', $companyIds)
+        ->where('is_parent', 'yes')
+        ->select('companies.company_logo', 'companies.company_name')
+        ->first();
+        }
+
+        }
+
+
+        @endphp
+        <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
+        <title>
+            {{ $employee->company_name }}
+        </title>
+        @endauth
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+            crossorigin="anonymous">
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
+        <!-- Date range picker links -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+        <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
+        <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        @livewireStyles
 </head>
 
 <body>
