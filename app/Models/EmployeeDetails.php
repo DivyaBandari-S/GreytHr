@@ -55,9 +55,9 @@ class EmployeeDetails extends Authenticatable
         'service_age',
         'confirmation_date',
     ];
+
     protected $casts = [
         'company_id' => 'array',
-
     ];
 
     public function empBankDetails()
