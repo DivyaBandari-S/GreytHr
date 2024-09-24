@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('company_registration_no')->unique();
             $table->string('company_logo')->nullable();
             $table->string('contact_email')->unique();
+            $table->string('email_domain');
+            $table->string('parent_company_id');
+            $table->enum('is_parent', ['yes', 'no'])->default('no');
             $table->string('contact_phone')->unique();
             $table->string('password')->nullable();
             $table->timestamps(); // Created_at and updated_at columns
