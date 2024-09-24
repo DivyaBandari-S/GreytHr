@@ -108,7 +108,7 @@ class TeamOnLeaveChart extends Component
                     }
 
                         // Update the employee's leave count for the day
-                        $employeeLeaveDays[$employeeId][$day] += (int)$currentDayCount; // Cast to int
+                        $employeeLeaveDays[$employeeId][$day] += (float)$currentDayCount; // Cast to int
 
                         // Initialize the chart data for the leave type if it's not set
                         if (!isset($chartData['datasets'][$leaveType][$day])) {
@@ -116,7 +116,7 @@ class TeamOnLeaveChart extends Component
                         }
 
                         // Accumulate leave days for the specific leave type
-                        $chartData['datasets'][$leaveType][$day] += (int)$currentDayCount; // Cast to int
+                        $chartData['datasets'][$leaveType][$day] += (float)$currentDayCount; // Cast to int
 
                     }
 
