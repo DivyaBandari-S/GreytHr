@@ -202,10 +202,9 @@ class EmployeesReview extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = auth()->guard('emp')->user()->company_id;
-
             // Retrieve team members' emp_ids where the logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
-                ->where('company_id', $companyId)
+                ->whereJsonContains('company_id', $companyId)
                 ->pluck('emp_id')
                 ->toArray();
 

@@ -140,8 +140,8 @@ class LeaveCancelPage extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->ccRecipients = EmployeeDetails::where('company_id', $applying_to->company_id)
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+            $this->ccRecipients = EmployeeDetails::whereJsonContains('company_id', $applying_to)
                 ->where('emp_id', '!=', $employeeId) // Exclude the current user
                 ->where(function ($query) {
                     $query

@@ -368,8 +368,8 @@
                             <!-- Display leave details here based on $leaveRequest -->
                             <div class="col accordion-content">
                                 <div class="accordion-profile d-flex align-items-center justify-content-center gap-2 m-auto" >
-                                    @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null')
-                                    <img height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($leaveRequest['approvedLeaveRequest']->image)}}" style="border-radius: 50%;">
+                                    @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null' && $leaveRequest['approvedLeaveRequest']->image != "Null" && $leaveRequest['approvedLeaveRequest']->image != "")
+                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($leaveRequest['approvedLeaveRequest']->image) }}" style="border-radius: 50%;">
                                     @else
                                     @if($leaveRequest['approvedLeaveRequest']->gender === 'Female')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">

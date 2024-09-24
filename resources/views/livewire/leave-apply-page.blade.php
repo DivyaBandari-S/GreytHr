@@ -276,7 +276,7 @@
                     @if($selectedManagerDetails)
                     @if($selectedManagerDetails->image && $selectedManagerDetails->image !=='null')
                     <div class="employee-profile-image-container">
-                        <img class="rounded-circle" height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}} ">
+                        <img class="rounded-circle" height="40" width="40" src="data:image/jpeg;base64,{{($selectedManagerDetails->image)}} ">
                     </div>
                     @else
                     @if($selectedManagerDetails->gender=='Female')
@@ -354,7 +354,7 @@
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                             @if($employee['image'] && $employee['image'] !== 'null' )
                             <div class="employee-profile-image-container">
-                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                <img class="rounded-circle" height="35px" width="35px" src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
                             @if($employee['gender'] == 'Female')
@@ -486,7 +486,7 @@
                                 <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
                                 @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                                 <div class="employee-profile-image-container">
-                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                    <img class="rounded-circle" height="35px" width="35px" src="data:image/jpeg;base64,{{($employee['image'])}}">
                                 </div>
                                 @else
                                 @if($employee['gender'] === "Male")

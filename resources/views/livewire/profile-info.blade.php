@@ -44,23 +44,28 @@
                             </div>
                             @endif
 
-                            @if(!empty($employeeDetails->image) && $employeeDetails->image !== 'null')
-                            <div class="employee-profile-image-container" style="margin-left: 15px;">
-                                <img height="80" src="{{ $employeeDetails->image_url }}" class="employee-profile-image">
+                            @if ($employeeDetails->image !== null && $employeeDetails->image != "null" && $employeeDetails->image != "Null" && $employeeDetails->image != "")
+                            <!-- Check if the image is in base64 format -->
+                            @if (strpos($employeeDetails->image, 'data:image/') === 0)
+                            <!-- It's base64 -->
+                            <img src="{{ $employeeDetails->image }}" alt="binary" style='height:80px;width:80px; margin:0px 0px 5px 15px' class="img-thumbnail" />
+                            @else
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}" alt="base" style='height:80px;width:80px;margin:0px 0px 5px 15px' class="img-thumbnail" />
+                            @endif
+                            @else
+                            <!-- Default images based on gender -->
+                            @if($employeeDetails->gender == 'Male')
+                            <div class="employee-profile-image-container mb-2">
+                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" style='height:80px;width:80px;margin:0px 0px 5px 15px' alt="Default Image">
+                            </div>
+                            @elseif($employeeDetails->gender == 'Female')
+                            <div class="employee-profile-image-container mb-2">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" style='height:80px;width:80px;margin:0px 0px 5px 15px' alt="Default Image">
                             </div>
                             @else
-                            @if($employeeDetails->gender=='Male')
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
-                            </div>
-                            @elseif($employeeDetails->gender=='Female')
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
-                            </div>
-                            @else
-                            <div class="employee-profile-image-container mb-2" style="margin-left: 15px;">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" height="80" width="80" alt="Default Image">
+                            <div class="employee-profile-image-container mb-2">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder" style='height:80px;width:80px;margin:0px 0px 5px 15px' alt="Default Image">
                             </div>
                             @endif
                             @endif

@@ -311,6 +311,11 @@
         .onDutyIcon {
             background-color: #fff7eb;
         }
+        .search-bar input[type="text"] {
+    font-size: 12px; /* Adjust the font size as needed */
+    color: #555; /* Change to your desired text color */
+  /* Optional: Add border radius for rounded corners */
+}
 
         .holidayIcon {
             background-color: #f2feff;
