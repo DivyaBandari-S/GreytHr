@@ -38,11 +38,10 @@ class PasswordResetComponent extends Component
                 $user->save();
             }
         );
-
         // Handle the result
         if ($status == Password::PASSWORD_RESET) {
             session()->flash('message', 'Your password has been reset!');
-            return redirect()->route('login');
+            return redirect()->route('emplogin');
         } else {
             session()->flash('error', 'There was an error resetting your password.');
         }

@@ -220,6 +220,7 @@ class EmpLogin extends Component
                 ->where('date_of_birth', $this->dob)
                 ->first();
             $user = EmployeeDetails::where('email', $this->email)->first();
+
             // $token = Password::getRepository()->create($user);
             $token = Password::createToken($user);
             $user->notify(new ResetPasswordLink($token));

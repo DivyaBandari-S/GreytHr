@@ -37,7 +37,7 @@
 
 <body>
     @guest
-    <livewire:emplogin />
+    {{$slot}}
     @else
     <section>
         @livewire('main-layout')

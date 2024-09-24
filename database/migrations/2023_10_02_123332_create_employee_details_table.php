@@ -52,6 +52,7 @@ return new class extends Migration
             $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
+            $table->rememberToken();
             $table->timestamps();
         });
 
