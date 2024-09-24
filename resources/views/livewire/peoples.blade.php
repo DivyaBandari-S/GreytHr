@@ -11,52 +11,70 @@
 
         @php
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $companyId = Auth::user()->company_id;
+            if (is_string($companyId)) {
+                $companyIdsArray = json_decode($companyId, true);
+            } else {
+                $companyIdsArray = $companyId;
+            }
+
+            if (!is_array($companyIdsArray)) {
+                $companyIdsArray = [];
+            }
+
             $mangerid = DB::table('employee_details')
-                ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                ->where('employee_details.manager_id', $employeeId)
-                ->select('companies.company_logo', 'companies.company_name')
-                ->first();
+                        ->join('companies', function ($join) use ($companyIdsArray) {
+                            // Use JSON_CONTAINS to check against the company_id JSON field
+                        $join->whereRaw('JSON_CONTAINS(employee_details.company_id, ?)', [json_encode($companyIdsArray)]);
+                        })
+                        ->where('employee_details.manager_id', $employeeId)
+                        ->select('companies.company_logo', 'companies.company_name')
+                        ->first();
         @endphp
         @if ($mangerid)
             <div class="row justify-content-center people-tab-container">
                 <div class="col-4 text-center people-starred-tab-container">
-                    <a id="starred-tab-link" class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
-                    
+                    <a id="starred-tab-link"
+                        class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'starred')" class="links">
                         Starred
                     </a>
                 </div>
                 <div class="col-4 text-center people-starred-tab-container">
                     <a id="myteam-tab-link" class="people-manager-tab-link {{ $activeTab === 'myteam' ? 'active' : '' }}"
-                      
                         wire:click="$set('activeTab', 'myteam')" class="links">
                         My Team
                     </a>
                 </div>
                 <div class="col-4 text-center people-starred-tab-container">
-                    <a id="everyone-tab-link" class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
+                    <a id="everyone-tab-link"
+                        class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'everyone')" class="links">
                         Everyone
                     </a>
                 </div>
-                <div class="people-manager-tab-line {{ $activeTab === 'starred' ? 'tab-position-starred' : ($activeTab === 'myteam' ? 'tab-position-myteam' : 'tab-position-everyone') }}">
+                <div
+                    class="people-manager-tab-line {{ $activeTab === 'starred' ? 'tab-position-starred' : ($activeTab === 'myteam' ? 'tab-position-myteam' : 'tab-position-everyone') }}">
                 </div>
             </div>
         @else
             <div class="row justify-content-start people-emp-tab-container">
                 <div class="col-3 text-start people-starred-tab-container">
-                    <a id="starred-tab-link" class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
+                    <a id="starred-tab-link"
+                        class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'starred')" class="links">
                         Starred
                     </a>
                 </div>
                 <div class="col-3 text-start people-starred-tab-container">
-                    <a id="everyone-tab-link" class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
+                    <a id="everyone-tab-link"
+                        class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
                         wire:click="$set('activeTab', 'everyone')" class="links">
                         Everyone
                     </a>
                 </div>
-                <div class="people-emp-tab-line {{ $activeTab === 'starred' ? 'tab-position-emp-starred' : 'tab-position-emp-everyone' }}">
+                <div
+                    class="people-emp-tab-line {{ $activeTab === 'starred' ? 'tab-position-emp-starred' : 'tab-position-emp-everyone' }}">
                 </div>
             </div>
         @endif
@@ -68,7 +86,7 @@
 
                 <div class="col-12 col-md-4 bg-white people-left-side-container">
                     <div class="input-group people-input-group-container">
-                        <input wire:model="search" type="text" class="form-control people-search-input"
+                        <input wire:input="starredFilter" wire:model="search" type="text" class="form-control people-search-input"
                             placeholder="Search for Employee Name or ID" aria-label="Search"
                             aria-describedby="basic-addon1">
                         <div class="input-group-append">
@@ -88,7 +106,7 @@
                             @endphp
                             @foreach ($starredPeoples->where('starred_status', 'starred') as $people)
                                 <div wire:click="starredPersonById('{{ $people->id }}')"
-                                    class="container people-details-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : ''}}">
+                                    class="container people-details-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : '' }}">
                                     <div class="row align-items-center">
                                         <div class="col-3">
                                             @if (!empty($people->profile) && $people->profile !== 'null')
@@ -372,7 +390,7 @@
 
         <div class="col-12 col-md-4 bg-white people-left-side-container">
             <div class="input-group people-input-group-container">
-                <input wire:model="searchTerm" type="text" class="form-control people-search-input"
+                <input wire:input="filter" wire:model="searchTerm" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filter" class="people-search-button" type="button">
@@ -392,7 +410,7 @@
 
                         @foreach ($peopleData as $people)
                             <div wire:click="selectPerson('{{ $people->emp_id }}')"
-                                class="container people-details-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : ''  }}">
+                                class="container people-details-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
                                         @if (!empty($people->image) && $people->image !== 'null')
@@ -667,7 +685,7 @@
         <div class="col-12 col-md-4 bg-white people-left-side-container">
 
             <div class="input-group people-input-group-container">
-                <input wire:model="searchValue" type="text" class="form-control people-search-input"
+                <input wire:input="filterMyTeam" wire:model="searchValue" type="text" class="form-control people-search-input"
                     placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filterMyTeam" class="people-search-button" type="button">
