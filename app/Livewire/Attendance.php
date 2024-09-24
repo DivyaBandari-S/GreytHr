@@ -174,6 +174,9 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $avergageFirstInTime=0;
+
+    public $averageLastOutTime=0;
     public $totalnumberofAbsents=0;
     public $percentageinworkhrsforattendance;
     public $leaveTaken = 0;
@@ -1042,17 +1045,18 @@ class Attendance extends Component
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
-            $this->totalLateInSwipes = $this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $insights=$this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $outsights=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
+            $this->totalLateInSwipes = $insights['lateSwipeCount'];
+
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));           
-            $this->totalnumberofEarlyOut=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
-            
+            $this->totalnumberofEarlyOut=$outsights['EarlyOutCount'];
+            $this->averageLastOutTime=$outsights['averageLastOutTime'];
+            $this->avergageFirstInTime=$insights['averageFirstInTime'];
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-            $this->totalmodalDays = $fromDatetemp->diffInDays($toDatetemp);
-            $this->holidayCountForInsightsPeriod = 0;
-            $this->count = $this->calculateWorkingDaysForModalTitle($fromDatetemp, $toDatetemp, auth()->guard('emp')->user()->emp_id);
-            $this->weekendDays = $this->calculateNumberofWeekends($fromDatetemp, $toDatetemp);
-            $this->countofAbsent = $this->totalmodalDays - $this->count - $this->weekendDays - $this->holidayCountForInsightsPeriod;
+        
+         
             
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
@@ -1100,13 +1104,16 @@ class Attendance extends Component
             session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
         }
     }
+    
     private function calculatetotalLateInSwipes($startDate, $endDate)
     {
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $lateSwipeCount = 0;
-     
+        $firstInCount=0;
+        $totalFirstInSeconds = 0;
+        
 
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
     
@@ -1115,40 +1122,47 @@ class Attendance extends Component
             $tempStartDate = $startDate->toDateString();
             
             // Check if the date is a holiday, weekend, or employee is on leave
-            $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
             $isweekend = $startDate->isWeekend();
+            
+            $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
+           
             $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = $this->isEmployeePresentOnDate($tempStartDate);
+            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at', $tempStartDate)->first();
+            
             
             // Log the status of the current day
             Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') . 
                       ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') . 
                       ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') . 
-                      ", IsPresent: " . ($isPresent ? 'Yes' : 'No'));
+                      ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
     
             // If not a holiday, weekend, or leave day, and the employee is present
-            if (!$isHoliday && !$isweekend && !$isOnLeave && $isPresent) {
+            if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
-                $lateSwipeExists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '>', '10:00:00')
-                    ->exists();
-                    $lateSwipes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'IN')
-                    ->where('swipe_time', '>', '10:00:00')
-                    ->pluck('swipe_time');
-                    
-
+                 $firstInCount++;
+                 try {
+                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(10, 0, 0);
+                } catch (\Exception $e) {
+                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(10, 0);
+                }
+                $totalFirstInSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
+                 if ($swipeTime->greaterThan($limitTime)) {
+                    $lateSwipeExists=true;
+                } else {
+                    // Swipe time is 10:00 AM or later
+                    $lateSwipeExists=false;
+                }
                 // Log the late swipe check
-                Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate");
+                Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate"." on Time: $swipeTime");
     
                 // Increment late swipe count if a late swipe is found
-                if ($lateSwipeExists) {
+                if ($lateSwipeExists==true) {
                     $lateSwipeCount++;
                     Log::info("Late Swipe Count Incremented: $lateSwipeCount");
                 }
+                Log::info(message: "First In Count Incremented: $firstInCount");
             }
            
             // Move to the next day
@@ -1157,8 +1171,22 @@ class Attendance extends Component
     
         // Log the final late swipe count
         Log::info("Total Late Swipes: $lateSwipeCount");
+        if ($firstInCount > 0) {
+            $averageFirstInSeconds = $totalFirstInSeconds / $firstInCount;
+            $averageFirstInTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageFirstInSeconds);
+        } else {
+            $averageFirstInTime = null;  // No valid first in records
+        }
     
-        return $lateSwipeCount;
+        // Log results
+        Log::info("Total First In Count: $firstInCount, Late Swipe Count: $lateSwipeCount");
+        Log::info("Average First In Time: " . ($averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A'));
+    
+        return [
+            'averageFirstInTime' => $averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A',
+            'lateSwipeCount' => $lateSwipeCount,
+           
+        ];
     }
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
@@ -1166,8 +1194,8 @@ class Attendance extends Component
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
         $earlyOutCount = 0;
-     
- 
+        $lastOutCount=0;
+        $totalLastOutSeconds=0;
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
    
         // Iterate through the date range
@@ -1178,27 +1206,38 @@ class Attendance extends Component
             $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
             $isweekend = $startDate->isWeekend();
             $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = $this->isEmployeePresentOnDate($tempStartDate);
+            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->whereDate('created_at', $tempStartDate)->first();
+       
+            if(empty($isPresent))
+            {
+                $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->whereDate('created_at', $tempStartDate)->first();   
+            }
+            
            
             // Log the status of the current day
             Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') .
                       ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') .
                       ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') .
-                      ", IsPresent: " . ($isPresent ? 'Yes' : 'No'));
+                      ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
    
             // If not a holiday, weekend, or leave day, and the employee is present
-            if (!$isHoliday && !$isweekend && !$isOnLeave && $isPresent) {
+            if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
-                $earlyOutExists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'OUT')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->exists();
-                    $earlySwipes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->whereDate('created_at', $tempStartDate)
-                    ->where('in_or_out', 'OUT')
-                    ->where('swipe_time', '<', '19:00:00')
-                    ->pluck('swipe_time');
+                $lastOutCount++;
+                try {
+                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(19, 0, 0);
+                } catch (\Exception $e) {
+                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
+                    $limitTime = Carbon::createFromTime(19, 0);
+                }
+                $totalLastOutSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
+                 if ($swipeTime->lessThan($limitTime)) {
+                    $earlyOutExists=true;
+                } else {
+                    // Swipe time is 10:00 AM or later
+                    $earlyOutExists=false;
+                }
                    
  
                 // Log the late swipe check
@@ -1213,8 +1252,19 @@ class Attendance extends Component
            
             // Move to the next day
             $startDate->addDay();
+           
         }
-        return $earlyOutCount;
+        if ($lastOutCount > 0) {
+            $averageLastOutSeconds = $totalLastOutSeconds / $lastOutCount;
+            $averageLastOutTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageLastOutSeconds);
+        } else {
+            $averageLastOutTime = null;  // No valid first in records
+        }
+        return [
+            'averageLastOutTime' => $averageLastOutTime ? $averageLastOutTime->format('H:i:s') : 'N/A',
+            'EarlyOutCount' => $earlyOutCount,
+           
+        ];
     }
     private function calculateAvgWorkingHrs($employeeId)
     {
@@ -1309,32 +1359,44 @@ class Attendance extends Component
         return $workingDays;
     }
     private function calculateTotalNumberOfLeaves($startDate, $endDate)
-    {
-     
-        $leaveCount = 0;
-      
-        // Iterate through the date range
-        while ($startDate->lt($endDate)) {
+{
+    $leaveCount = 0;
+
+    Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
+
+    // Iterate through the date range
+    while ($startDate->lt($endDate)) {
+        $tempStartDate = $startDate->toDateString();
+
+        // Check if the current date is a holiday
+        $isHoliday = HolidayCalendar::where('date', $tempStartDate)->exists();
+
+        // Skip weekends (Saturday and Sunday) or holidays
+        if ($startDate->isWeekend()) {
+            Log::info('Skipping weekend: ' . $tempStartDate);
+        } elseif ($isHoliday) {
+            Log::info('Skipping holiday: ' . $tempStartDate);
+        } else {
+            // Log current date and status
+            Log::info('Checking date: ' . $tempStartDate);
+
             // Check if employee is on leave on this date
-            $tempStartDate=$startDate->toDateString();
-            $isOnLeave = LeaveRequest::where('emp_id',auth()->guard('emp')->user()->emp_id)
-            ->where('status', 'approved')
-            ->where(function ($query) use ($tempStartDate) {
-                $query->whereDate('from_date', '<=', $tempStartDate)
-                    ->whereDate('to_date', '>=', $tempStartDate);
-            })->exists();
-    
+            $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
+            Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
+
             if ($isOnLeave) {
                 $leaveCount++;
             }
-    
-            // Move to the next day
-            $startDate->addDay();
         }
-    
-        return $leaveCount;
+
+        // Move to the next day
+        $startDate->addDay();
     }
 
+    Log::info('Total leave count (excluding weekends and holidays): ' . $leaveCount);
+
+    return $leaveCount;
+}
     public function calculateTotalDays()
     {
         try {
