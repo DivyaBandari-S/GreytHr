@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails,HolidayCalendar
 namespace App\Livewire;
 
+use App\Models\Company;
 use Livewire\Component;
 use Carbon\Carbon;
 use App\Models\LeaveRequest;
@@ -366,16 +367,16 @@ class LeaveCalender extends Component
                 $employeeId = auth()->guard('emp')->user()->emp_id;
                 $checkLoginIsManager = EmployeeDetails::where('manager_id', $employeeId)->value('manager_id');
                 $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
-                if($checkLoginIsManager){
-                    $teamMembersIds = EmployeeDetails::where('company_id', $companyId)
-                    ->where('manager_id', $checkLoginIsManager) // Filter by manager_id
-                    ->pluck('emp_id')
-                    ->toArray();
-                }else{
-                    $teamMembersIds = EmployeeDetails::where('company_id', $companyId)
-                    ->where('manager_id', $managerId) // Filter by manager_id
-                    ->pluck('emp_id')
-                    ->toArray();
+                if ($checkLoginIsManager) {
+                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyId)
+                        ->where('manager_id', $checkLoginIsManager) // Filter by manager_id
+                        ->pluck('emp_id')
+                        ->toArray();
+                } else {
+                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyId)
+                        ->where('manager_id', $managerId) // Filter by manager_id
+                        ->pluck('emp_id')
+                        ->toArray();
                 }
                 // Retrieve team members with the same company ID and manager ID
 
@@ -605,14 +606,32 @@ class LeaveCalender extends Component
                     ->get();
             }
             // Now $employeesOnLeave contains employee first_name and last_name for the specified conditions
-            $companyName = EmployeeDetails::join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                ->where('employee_details.emp_id', $userId)
-                ->value('companies.company_name');
+            $companyIds = EmployeeDetails::where('emp_id', $userId)->value('company_id');
 
-            $companyDetails = EmployeeDetails::join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                ->where('employee_details.emp_id', $userId)
-                ->select('companies.company_present_address', 'companies.company_perminent_address')
-                ->first();
+            if (count($companyIds) === 1) {
+                // If there's only one company ID, get that company's name and details
+                $companyName = Company::whereJsonContains('company_id', $companyIds)->value('company_name');
+                $companyDetails = Company::whereJsonContains('company_id', $companyIds)
+                    ->select('company_present_address', 'company_permanent_address')
+                    ->first();
+            } else {
+                // If there are multiple company IDs, check for is_parent = 'yes'
+                $companyName = Company::whereJsonContains('company_id', $companyIds)
+                    ->where('is_parent', 'yes')
+                    ->value('company_name');
+
+                $companyDetails = Company::whereJsonContains('company_id', $companyIds)
+                    ->where('is_parent', 'yes')
+                    ->select('company_present_address', 'company_permanent_address')
+                    ->first();
+            }
+
+            // Check if companyName and companyDetails were found
+            if (!$companyName || !$companyDetails) {
+                // Handle the case where no company was found
+                $companyName = null;
+                $companyDetails = null;
+            }
 
             if ($companyDetails) {
                 $companyAddress1 = $companyDetails->company_address1;

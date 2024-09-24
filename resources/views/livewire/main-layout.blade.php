@@ -2,10 +2,7 @@
     @php
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $managerId = DB::table('employee_details')
-    ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-    ->where('employee_details.manager_id', $employeeId)
-    ->select('companies.company_logo', 'companies.company_name')
-    ->first();
+    ->where('manager_id', $employeeId)->value('manager_id');
     @endphp
     <!-- SIDEBAR -->
     <section id="sidebar">
@@ -130,8 +127,9 @@
                 <div class="profile m-auto me-2">
                     <div class="d-flex brandLogoDiv" >
                         @livewire('company-logo')
-                        @if(!empty($loginEmployeeProfile->image) && $loginEmployeeProfile->image !== 'null')
-                        <img class="navProfileImg" src="{{ $loginEmployeeProfile->image_url }}" alt="" onclick="openProfile()">
+
+                        @if($loginEmployeeProfile->image !== null && $loginEmployeeProfile->image != "null" && $loginEmployeeProfile->image != "Null" && $loginEmployeeProfile->image != "")
+                        <img class="navProfileImg" src="data:image/jpeg;base64,{{ ($loginEmployeeProfile->image) }}" alt="" onclick="openProfile()">
                         @else
                         @if($loginEmployeeProfile->gender=='Male')
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">

@@ -379,6 +379,11 @@
             color: #aeadad;
             pointer-events: none;
         }
+        .search-bar input[type="text"] {
+    font-size: 12px; /* Adjust the font size as needed */
+    color: #555; /* Change to your desired text color */
+  /* Optional: Add border radius for rounded corners */
+}
      
     </style>
     @php
