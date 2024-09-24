@@ -1650,10 +1650,10 @@ color: #fff;
 
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$avergageFirstInTime}}</span></p>
                                 </div>
                                 <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
+                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageLastOutTime}}</span></p>
                                 </div>
 
                             </div>
@@ -1792,9 +1792,11 @@ color: #fff;
                                                 @php
                                                 $Regularised=true;
                                                 @endphp
+                                                @if($day['status']=='P')
                                                 <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
                                                     <div class="down-arrow-reg"></div>
                                                 </span>
+                                                @endif
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">

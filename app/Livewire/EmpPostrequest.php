@@ -181,7 +181,7 @@ class EmpPostrequest extends Component
             $isManager = DB::table('employee_details')
                 ->where('manager_id', $employeeId)
                 ->exists();
-    dd(  $isManager);
+
             // If not a manager, set `emp_id` instead of `manager_id`
             $postStatus = $isManager ? 'Open' : 'Pending';
             $managerId = $isManager ? $employeeId : null;

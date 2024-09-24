@@ -48,37 +48,37 @@
                 </div>
             </div>
 
-            <div class="row m-0 p-0  mt-4">
-                <div class="col-md-9 mb-4">
-                    <div class="bg-white border rounded">
-                        <div class="table-responsive bg-white rounded p-0 m-0">
-                            <table class="employee-swipes-table  bg-white" style="width: 100%;padding-right:10px;">
-                                <thead>
-                                    <tr>
-                                        <th>Employee&nbsp;Name</th>
-                                        <th>Swipe&nbsp;Time&nbsp;&&nbsp;Date</th>
-                                        <th>Shift</th>
-                                        <th>In/Out</th>
-                                        <th>Received&nbsp;On</th>
-                                        <th>Door/Address</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <div>
-                                    <tbody>
-
-
-
-                                        <!-- Display the filtered collection or any other content -->
-                                        @foreach($SignedInEmployees as $swipe)
-                                        <!-- Display swipe details -->
-                                        @if(!empty($swipe['swipe_log']))
-                                        <tr class="employee-swipes-table-container">
-                                            <td class="employee-swipes-name-and-id">
-                                                <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
-                                                <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                    {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
-                                                </span>
+    <div class="row m-0 p-0  mt-4" >
+        <div class="col-md-9 mb-4" >
+           <div class="bg-white border rounded">
+             <div class="table-responsive bg-white rounded p-0 m-0">
+                <table class="employee-swipes-table  bg-white" style="width: 100%;padding-right:10px;">
+                    <thead>
+                        <tr>
+                            <th>Employee&nbsp;Name</th>
+                            <th>Swipe&nbsp;Time&nbsp;&&nbsp;Date</th>
+                            <th>Shift</th>
+                            <th>In/Out</th>
+                            <th>Received&nbsp;On</th>
+                            <th>Door/Address</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <div>
+                    <tbody>
+                  
+                         
+                   
+    <!-- Display the filtered collection or any other content -->
+                        @foreach($SignedInEmployees as $swipe)
+        <!-- Display swipe details -->
+                       @if(!empty($swipe['swipe_log']))
+                       <tr class="employee-swipes-table-container">
+                              <td  class="employee-swipes-name-and-id">
+                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
+                                        <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                               {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
+                                        </span>
 
                                                 <br />
                                                 <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
