@@ -14,7 +14,11 @@
         <!-- Other HTML content -->
         <div class="team-on-leave-duration-div">
             <p class="mb-0 normalTextValue team-on-leave-duration" >Duration Selected:</p>
+            @if($duration!='today')
             <p class="mb-0 normalText">{{ $fromDateFormatted  }} <span class="team-on-leave-to" >TO </span> {{$toDateFormatted }}</p>
+            @else
+            <p class="mb-0 normalText">{{ $todaysDate  }} </p>
+            @endif
         </div>
 
 

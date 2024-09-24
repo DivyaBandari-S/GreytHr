@@ -2135,6 +2135,10 @@ td {
 
     font-size: 0.75rem;
 } 
+.catagory-select:hover{
+    background-color: #edf3ff;
+ 
+}
 .modal-body{
     font-size: 0.75rem;
 }
@@ -2980,11 +2984,12 @@ input[type="radio"] {
     color: var(--label-color);
     font-size: 0.69rem;
 }
-.search-btn {
+.helpdesk-search-btn {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
     color: #fff !important;
     width: 40px;
+    height:32px;
     border: none;
     align-items: center;
     display: flex;
@@ -3211,7 +3216,13 @@ input[type="radio"] {
 }
 .borderLeft{
     border-left: 1px solid #ccc;
-
+    padding: 0 12px;
+}
+.borderContainer{
+    border: 1px solid #ccc;
+}
+.borderContainer:hover{
+    border-color: rgb(2, 17, 79);
 }
 .leave-type-hide {
     display: inline-block;
@@ -6776,17 +6787,16 @@ peoples module styles started */
     margin-left: -20px;
 }
 
-.task-first-container {
-    margin-top: 15px;
+/* .task-first-container {
     width: 100%;
-    height: 600px;
+    max-height: 600px;
     border: 1px solid silver;
     border-radius: 5px;
     background-color: white;
     overflow-x: hidden;
     padding-bottom: 15px;
     position: relative;
-}
+} */
 
 .task-tab-button-container {
     margin-top: 15px;
@@ -6849,7 +6859,8 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
-    max-height: 400px;
+    height: 279px;
+    max-height: 300px;
     overflow-y: auto;
     overflow-y: auto;
     margin-top: 10px;
@@ -7155,6 +7166,7 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
+    height: 279px;
     max-height: 300px;
     overflow-y: auto;
     overflow-x: auto;

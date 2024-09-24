@@ -10,7 +10,7 @@
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="close bg-none border-none" data-dismiss="alert" aria-label="Close">
+        <button type="button" wire:click="hideAlert" class="bg-none border-none" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">x</span>
         </button>
     </div>
@@ -272,11 +272,11 @@
                 <div class="form-group mt-3">
                     <span class="normalTextValue"> Applying To</span>
                 </div>
-                <div class="reporting mb-2">
+                <div class="reporting rounded-pill mb-2">
                     @if($selectedManagerDetails)
                     @if($selectedManagerDetails->image && $selectedManagerDetails->image !=='null')
                     <div class="employee-profile-image-container">
-                        <img class="rounded-circle" height="40" width="40" src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedManagerDetails->image)}} ">
+                        <img class=" navProfileImg rounded-circle" height="40" width="40" src="data:image/jpeg;base64,{{($selectedManagerDetails->image)}} ">
                     </div>
                     @else
                     @if($selectedManagerDetails->gender=='Female')
@@ -352,22 +352,22 @@
                         <div class="d-flex gap-3 align-items-center"
                             style="cursor: pointer; @if(in_array($employee['emp_id'], $selectedManager)) background-color: #d6dbe0; @endif"
                             wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
-                            @if($employee['image'] && $employee['image'] !== 'null' )
+                            @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
                             <div class="employee-profile-image-container">
-                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
                             @if($employee['gender'] == 'Female')
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
                             @elseif($employee['gender'] == 'Male')
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/male-default.png') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px" alt="Default Image">
+                                <img src="{{ asset('images/user.jpg') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
                             @endif
                             @endif
@@ -481,12 +481,12 @@
                     <div class="scrollApplyingTO mb-2 mt-2">
                         @if(!empty($ccRecipients))
                         @foreach($ccRecipients as $employee)
-                        <div wire:key="{{ $employee['emp_id'] }}">
+                        <div class="borderContainer mb-2 rounded" wire:key="{{ $employee['emp_id'] }}">
                             <div class="downArrow d-flex align-items-center mt-2 align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                 <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-                                @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
+                                @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
                                 <div class="employee-profile-image-container">
-                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                    <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{($employee['image'])}}">
                                 </div>
                                 @else
                                 @if($employee['gender'] === "Male")
@@ -513,7 +513,7 @@
                         @endforeach
                         @else
                         <div class="mb-0 normalTextValue">
-                            No data found
+                            No found
                         </div>
                         @endif
                     </div>

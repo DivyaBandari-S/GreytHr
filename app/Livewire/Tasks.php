@@ -483,6 +483,7 @@ public $validationFollowerMessage = '';
             ]);
 
 
+
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
             $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
 
@@ -549,7 +550,7 @@ public $validationFollowerMessage = '';
 
         $trimmedSearchTerm = trim($this->searchTerm);
 
-        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
+        $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
             ->where(function ($query) use ($trimmedSearchTerm) {
                 $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                     ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
@@ -565,7 +566,7 @@ public $validationFollowerMessage = '';
 
         $trimmedSearchTerm = trim($this->searchTermFollower);
 
-        $this->filteredFollowers = EmployeeDetails::where('company_id', $companyId)
+        $this->filteredFollowers = EmployeeDetails::whereJsonContains('company_id', $companyId)
             ->where(function ($query) use ($trimmedSearchTerm) {
                 $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                     ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
@@ -722,7 +723,7 @@ public $validationFollowerMessage = '';
         $companyId = Auth::user()->company_id;
 
         // Fetch employees, ensuring the authenticated employee is shown first
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
             ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
             ->orderBy('first_name')
             ->orderBy('last_name')

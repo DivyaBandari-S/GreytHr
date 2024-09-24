@@ -58,7 +58,7 @@ class Peoples extends Component
             $companyId = Auth::user()->company_id;
             $trimmedSearchTerm = trim($this->searchTerm);
 
-            $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
+            $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
                         ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
@@ -80,7 +80,7 @@ class Peoples extends Component
             $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
             $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
-                ->where('company_id', $companyId)
+                ->whereJsonContains('company_id', $companyId)
                 ->where('manager_id', $employeeId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
@@ -105,7 +105,7 @@ class Peoples extends Component
             $companyId = Auth::user()->company_id;
             $trimmedSearchTerm = trim($this->search);
 
-            $this->filteredStarredPeoples = StarredPeople::where('company_id', $companyId)
+            $this->filteredStarredPeoples = StarredPeople::whereJsonContains('company_id', $companyId)
                 ->where('emp_id', $employeeId)
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where('name', 'LIKE', '%' . $trimmedSearchTerm . '%')
@@ -134,6 +134,7 @@ class Peoples extends Component
                 if ($this->starredPerson) {
                     $this->starredPerson->delete();
                 } else {
+
                     $employeeId = auth()->guard('emp')->user()->emp_id;
                     $this->employeeDetails = EmployeeDetails::find($employeeId);
                     try {
@@ -141,7 +142,7 @@ class Peoples extends Component
                         $this->starredPerson = StarredPeople::create([
                             'people_id' => $this->employee->emp_id,
                             'emp_id' => $this->employeeDetails->emp_id,
-                            'company_id' => $this->employee->company_id,
+                            'company_id' => is_array($this->employee->company_id) ? json_encode($this->employee->company_id) : $this->employee->company_id,
                             'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '', 
                             'profile' => $this->employee->image ?? 'null',
                             'contact_details' => $this->employee->emergency_contact ?? '',
@@ -189,17 +190,19 @@ class Peoples extends Component
     {
         try {
             $companyId = Auth::user()->company_id;
-            $this->peoples = EmployeeDetails::with('starredPeople')->where('company_id', $companyId)
+
+            $this->peoples = EmployeeDetails::with('starredPeople')->whereJsonContains('company_id', $companyId)
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
+
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
             // Fetch all employees under the same manager, with the same company_id, and active status
             $this->myTeam = EmployeeDetails::with('starredPeople')
-                ->where('company_id', $companyId)
+                ->whereJsonContains('company_id', $companyId)
                 ->where('manager_id', $employeeId)
                 ->orderBy('first_name')
                 ->orderBy('last_name')
