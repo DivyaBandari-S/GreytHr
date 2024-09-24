@@ -608,13 +608,16 @@ public function historyButton()
     public function withdraw($id)
     {
         try {
+          
             $currentDateTime = Carbon::now();
             $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
             ]);
             $this->withdraw_session = true;
+            $this->withdrawModal=false;
             session()->flash('success', 'Hurry Up! Regularisation withdrawn  successfully');
+            
         } catch (\Exception $ex) {
             session()->flash('error', 'Something went wrong while withdrawing regularisation.');
         }
