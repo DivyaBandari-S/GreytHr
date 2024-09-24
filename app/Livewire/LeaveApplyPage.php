@@ -811,4 +811,8 @@ class LeaveApplyPage extends Component
     {
         $this->render(); // Re-render to apply the search filter
     }
+    public function handleEnterKey()
+    {
+        $this->searchCCRecipients();
+    }
 }
