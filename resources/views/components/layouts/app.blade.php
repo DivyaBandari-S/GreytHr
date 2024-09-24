@@ -12,12 +12,26 @@
     @endguest
     @auth('emp')
     @php
+    // Get the logged-in employee ID
     $employeeId = auth()->guard('emp')->user()->emp_id;
-    $employee = DB::table('employee_details')
-    ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-    ->where('employee_details.emp_id', $employeeId)
+
+    // Retrieve the employee details including the company_id
+    $employeeDetails = DB::table('employee_details')
+    ->where('emp_id', $employeeId)
+    ->select('company_id') // Select only the company_id
+    ->first();
+    // Decode the company_id from employee_details
+    $companyIds = json_decode($employeeDetails->company_id);
+    if ($companyIds) {
+    // Now perform the join with companies table
+    $employee = DB::table('companies')
+    ->whereIn('company_id', $companyIds)
+    ->where('is_parent', 'yes')
     ->select('companies.company_logo', 'companies.company_name')
     ->first();
+    }
+
+
     @endphp
     <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
     <title>
@@ -37,7 +51,7 @@
 
 <body>
     @guest
-    {{$slot}}
+    <livewire:emplogin />
     @else
     <section>
         @livewire('main-layout')

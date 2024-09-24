@@ -57,6 +57,11 @@ class EmployeeDetails extends Authenticatable
         'service_age',
         'confirmation_date',
     ];
+
+    protected $casts = [
+        'company_id' => 'array',
+    ];
+
     public function empBankDetails()
     {
         return $this->hasOne(EmpBankDetail::class, 'emp_id', 'emp_id');
@@ -130,3 +135,4 @@ class EmployeeDetails extends Authenticatable
         $this->notify(new ResetPasswordLink($token));
     }
 }
+

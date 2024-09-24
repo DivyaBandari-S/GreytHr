@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('gender')->nullable();
             $table->string('email')->unique()->nullable();
-            $table->string('company_id')->nullable();
+            $table->json('company_id');
             $table->binary('image')->nullable();
             $table->string('dept_id')->nullable();
             $table->string('sub_dept_id')->nullable();
@@ -49,7 +49,6 @@ return new class extends Migration
             $table->json('confirmation_date')->nullable();
             $table->string('referral')->nullable();
             $table->string('service_age')->nullable();
-            $table->foreign('company_id')->references('company_id')->on('companies')->onDelete('cascade');
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
             $table->rememberToken();
