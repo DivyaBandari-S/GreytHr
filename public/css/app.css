@@ -2135,6 +2135,10 @@ td {
 
     font-size: 0.75rem;
 } 
+.catagory-select:hover{
+    background-color: #edf3ff;
+ 
+}
 .modal-body{
     font-size: 0.75rem;
 }
@@ -2980,11 +2984,12 @@ input[type="radio"] {
     color: var(--label-color);
     font-size: 0.69rem;
 }
-.search-btn {
+.helpdesk-search-btn {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
     color: #fff !important;
     width: 40px;
+    height:32px;
     border: none;
     align-items: center;
     display: flex;
