@@ -96,7 +96,7 @@ class EmployeeDetails extends Authenticatable
     }
     public function comments()
     {
-        return $this->hasMany(Comment::class, 'emp_id', 'emp_id');
+        return $this->hasMany(Comment::class, 'company_id', 'company_id');
     }
     public function canCreatePost()
     {
@@ -127,4 +127,13 @@ class EmployeeDetails extends Authenticatable
     {
         return $value ? Carbon::parse($value) : null;
     }
+    public function company()
+{
+    return $this->belongsTo(Company::class, 'company_id', 'company_id');
+}
+
+public function employee()
+{
+    return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+}
 }

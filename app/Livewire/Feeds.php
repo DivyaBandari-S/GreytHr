@@ -52,7 +52,7 @@ class Feeds extends Component
 
     public $employees;
     public $hr;
-    public $combinedData;
+ 
     public $dropdownVisible = false;
     public $monthAndDay;
     public $currentCardEmpId;
@@ -80,6 +80,8 @@ class Feeds extends Component
     public $showFeedsDialog = false;
     public $showMessage = true;
     public $empCompanyLogoUrl;
+ 
+    public $combinedData = [];
     public function closeMessage()
     {
         $this->showMessage = false;
@@ -138,29 +140,50 @@ class Feeds extends Component
 
     public function mount()
     {
-
-        $companyId = Auth::user()->company_id;
-        // Load employees with comments
-        $this->employees = EmployeeDetails::with('comments')->where('company_id', $companyId)->get();
-
-        // Combine and sort data
-        $this->combinedData = $this->combineAndSortData($this->employees);
-
-      $this->loadComments();   
+        // Get the authenticated user's company ID
+        $authCompanyId = Auth::user()->company_id;
+    
+        // Fetch the parent company where is_parent is 'yes'
+        $company = DB::table('companies')
+            ->where('company_id', $authCompanyId)
+            ->where('is_parent', 'yes')
+            ->first();
+            
+    
+        // Check if a parent company was found
+        if ($company) {
+            // Debugging: Print the raw company_id from the database (assumed to be a JSON string)
+       
+    
+            // No need to decode company_id as an array; treat it as a string
+            $companyId = $company->company_id;
+          
+ 
+            // Ensure the company ID is not null or empty
+            if (!empty($companyId)) {
+                // Load employees where the company_id JSON field in employee_details matches the parent company_id string
+                $this->employees = EmployeeDetails::whereRaw("JSON_CONTAINS(company_id, '\"$companyId\"')")->get();
+                $this->comments = Comment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+                $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+                $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+                $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+                $this->combinedData = $this->combineAndSortData($this->employees);
+                $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
+                $this->loadComments();   
       $employeeId = Auth::guard('emp')->user()->emp_id;
       $this->isManager = DB::table('employee_details')
           ->where('manager_id', $employeeId)
           ->exists();
- 
-       $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        // Retrieve and set the company logo URL for the current employee
-        $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
-        if (session()->has('showAlert')) {
-            $this->showAlert = session('showAlert');
+            
+              
+            }
+        } else {
+            // If no parent company is found
+            dd('No parent company found with is_parent = yes.');
         }
     }
+    
+
     public $isEmojiListVisible = false;
     public function showEmojiList()
     {
@@ -514,7 +537,7 @@ public function loadaddComments()
                 'file_name' => $fileName,
                 'status' => $postStatus,
             ]);
-    
+
             // Reset form fields and display success message
             $this->reset(['category', 'description']);
             session()->flash('message', 'Post created successfully!');
@@ -573,7 +596,7 @@ public function loadaddComments()
     
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
-    
+ 
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {
@@ -668,13 +691,14 @@ public function showEmployee($id)
 
     private function combineAndSortData($employees)
     {
+        
         $combinedData = [];
         $currentDate = Carbon::now();
-    
+
         foreach ($employees as $employee) {
             if ($employee->personalInfo && !empty($employee->personalInfo->date_of_birth)) {
                 $dateOfBirth = Carbon::parse($employee->personalInfo->date_of_birth);
-    
+
                 // Check if the date of birth is within the current month and up to the current date
                 if ($dateOfBirth->month < $currentDate->month || 
                     ($dateOfBirth->month === $currentDate->month && $dateOfBirth->day <= $currentDate->day)) {
@@ -685,10 +709,10 @@ public function showEmployee($id)
                     ];
                 }
             }
-    
+
             if ($employee->hire_date) {
                 $hireDate = Carbon::parse($employee->hire_date);
-    
+
                 // Check if the hire date is within the current month and up to the current date
                 if ($hireDate->month < $currentDate->month || 
                     ($hireDate->month === $currentDate->month && $hireDate->day <= $currentDate->day)) {
@@ -700,13 +724,12 @@ public function showEmployee($id)
                 }
             }
         }
-    
+
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {
             return $b['date'] <=> $a['date']; // Sort in descending order
         });
-    
-      
+
         return $combinedData;
     }
     
