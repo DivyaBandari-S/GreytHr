@@ -3,7 +3,7 @@
       @if(session()->has('error'))
       <div class="alert alert-danger position-absolute p-1" style="right: 25%;top:-3%;" id="error-alert">
          {{ session('error') }}
-         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+         <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
             <span>X</span>
          </button>
       </div>
@@ -199,6 +199,10 @@
                            @if(($leaveRequest->category_type === 'Leave') )
                            <div class="col accordion-content">
                               <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                           </div>
+                           @else
+                           <div class="col accordion-content">
+                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
                            </div>
                            @endif
                            <div class="arrow-btn">

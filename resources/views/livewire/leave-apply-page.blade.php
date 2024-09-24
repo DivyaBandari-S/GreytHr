@@ -10,7 +10,7 @@
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="close bg-none border-none" data-dismiss="alert" aria-label="Close">
+        <button type="button" wire:click="hideAlert" class="bg-none border-none" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">x</span>
         </button>
     </div>
