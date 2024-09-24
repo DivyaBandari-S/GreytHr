@@ -3204,6 +3204,15 @@ input[type="radio"] {
 }
 
 /* //leave apply styles */
+.checkLeaveBal{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.borderLeft{
+    border-left: 1px solid #ccc;
+
+}
 .leave-type-hide {
     display: inline-block;
     font-size: var(--normal-font-size);

@@ -32,7 +32,7 @@
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Number</th>
                     </tr>
-                    @foreach ($employees as $emp)
+                    @foreach ($Employees as $emp)
 
                     <tr style="border:1px solid #ccc;">
 

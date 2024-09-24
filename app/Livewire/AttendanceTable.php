@@ -62,6 +62,7 @@ class AttendanceTable extends Component
     public $toDate;
     public $city='-';
 
+    public $öpenattendanceperiod = false;
     public $postal_code='-';
     protected $listeners = [
         'update',
@@ -90,6 +91,15 @@ class AttendanceTable extends Component
     public function updatefromDate()
     {
         $this->fromDate=$this->fromDate;
+    }
+    public function öpenattendanceperiodModal()
+    {
+
+        $this->öpenattendanceperiod = true;
+    }
+    public function closeattendanceperiodModal()
+    {
+        $this->öpenattendanceperiod = false;
     }
     public function updatetoDate()
     {
