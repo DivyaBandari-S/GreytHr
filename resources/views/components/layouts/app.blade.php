@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
- 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @guest
-        <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
-        <title>
-            HR Strategies Pro
-        </title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
+    <title>
+        HR Strategies Pro
+    </title>
     @endguest
     @auth('emp')
-        @php
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $employee = DB::table('employee_details')
-                ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-                ->where('employee_details.emp_id', $employeeId)
-                ->select('companies.company_logo', 'companies.company_name')
-                ->first();
-        @endphp
-        
+    @php
+    // Get the logged-in employee ID
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+
+    // Retrieve the employee details including the company_id
+    $employeeDetails = DB::table('employee_details')
+    ->where('emp_id', $employeeId)
+    ->select('company_id') // Select only the company_id
+    ->first();
+    // Decode the company_id from employee_details
+    $companyIds = json_decode($employeeDetails->company_id);
+    if ($companyIds) {
+    // Now perform the join with companies table
+    $employee = DB::table('companies')
+    ->whereIn('company_id', $companyIds)
+    ->where('is_parent', 'yes')
+    ->select('companies.company_logo', 'companies.company_name')
+    ->first();
+    }
+
+
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
+    <title>
+        {{ $employee->company_name }}
+    </title>
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
@@ -31,17 +48,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @livewireStyles
 </head>
- 
-<body >
+
+<body>
     @guest
-        <livewire:emplogin />
+    <livewire:emplogin />
     @else
-        <section>
-            @livewire('main-layout')
-            <main id="maincontent" style="overflow: auto; height: calc(100vh - 100px);">
-                {{ $slot }}
-            </main>
-        </section>
+    <section>
+        @livewire('main-layout')
+        <main id="maincontent" style="overflow: auto; height: calc(100vh - 100px);">
+            {{ $slot }}
+        </main>
+    </section>
     @endguest
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="{{ asset('js/admin-dash.js?v=' . filemtime(public_path('js/admin-dash.js'))) }}"></script>
@@ -57,6 +74,5 @@
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
     @livewireScripts
 </body>
- 
+
 </html>
- 

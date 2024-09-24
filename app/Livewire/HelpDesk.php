@@ -570,6 +570,7 @@ class HelpDesk extends Component
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
+           
 
             session()->flash('message', 'Request created successfully.');
             return redirect()->to('/HelpDesk');

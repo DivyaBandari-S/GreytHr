@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('admin_emp_id')->nullable();
             $table->string('manager_id')->nullable();
             $table->string('emp_id')->nullable();
-            $table->enum('category',  ['Appreciations', 'Buy/Sell/Rent', 'Companynews', 'Events', 'Everyone','Hyderabad','US']);
+            $table->enum('category',  ['Appreciations',  'Companynews', 'Events', 'Everyone','Hyderabad','US']);
             $table->text('description');
             $table->binary('file_path')->nullable();
             $table->string('file_name')->nullable();
