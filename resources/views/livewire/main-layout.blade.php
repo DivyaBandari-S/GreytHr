@@ -2,10 +2,7 @@
     @php
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $managerId = DB::table('employee_details')
-    ->join('companies', 'employee_details.company_id', '=', 'companies.company_id')
-    ->where('employee_details.manager_id', $employeeId)
-    ->select('companies.company_logo', 'companies.company_name')
-    ->first();
+    ->where('manager_id', $employeeId)->value('manager_id');
     @endphp
     <!-- SIDEBAR -->
     <section id="sidebar">

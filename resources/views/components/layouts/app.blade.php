@@ -7,7 +7,7 @@
     @guest
     <link rel="icon" type="image/x-icon" href="{{ asset('public/images/hr_expert.png') }}">
     <title>
-        HR Strategies Pro
+        HR Xpert
     </title>
     @endguest
     @auth('emp')
@@ -30,8 +30,6 @@
     ->select('companies.company_logo', 'companies.company_name')
     ->first();
     }
-
-
     @endphp
     <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
     <title>
