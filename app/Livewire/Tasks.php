@@ -481,7 +481,9 @@ public $validationFollowerMessage = '';
                 'mime_type' => $mimeType,
                 'status' => "Open",
             ]);
+            // $this->showRecipients = false;
 
+            // $this->selectedPeopleName=null;
 
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
@@ -498,9 +500,10 @@ public $validationFollowerMessage = '';
                 ]);
             }
 
-            $this->reset();
-            session()->flash('message', 'Task created successfully!');
             session()->flash('showAlert', true);
+            session()->flash('message', 'Task created successfully!');
+            $this->resetFields();
+          
             return redirect()->to('/tasks');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
@@ -509,10 +512,27 @@ public $validationFollowerMessage = '';
                 'employee_id' => $employeeId,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
+    }
+    public function resetFields(){
+        $this->task_name = null;
+        $this->assignee = null;
+        $this->client_id = null;
+        $this->project_name = null;
+        $this->priority = null;
+        $this->due_date = null;
+        $this->tags = null;
+        $this->followers = null;
+        $this->subject = null;
+        $this->description = false;
+        $this->selectedPeopleName=null;
+        $this->selectedPeopleNamesForFollowers=[];
+        $this->showRecipients = false;
+        $this->showFollowers = false;
+        $this->file_path = null;
     }
 
     public $client_id, $project_name, $image_path;
