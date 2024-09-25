@@ -8,30 +8,12 @@
                 {{ session('emp_error') }}
             </div>
         @endif
-
         @php
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $companyId = Auth::user()->company_id;
-            if (is_string($companyId)) {
-                $companyIdsArray = json_decode($companyId, true);
-            } else {
-                $companyIdsArray = $companyId;
-            }
-
-            if (!is_array($companyIdsArray)) {
-                $companyIdsArray = [];
-            }
-
-            $mangerid = DB::table('employee_details')
-                        ->join('companies', function ($join) use ($companyIdsArray) {
-                            // Use JSON_CONTAINS to check against the company_id JSON field
-                        $join->whereRaw('JSON_CONTAINS(employee_details.company_id, ?)', [json_encode($companyIdsArray)]);
-                        })
-                        ->where('employee_details.manager_id', $employeeId)
-                        ->select('companies.company_logo', 'companies.company_name')
-                        ->first();
-        @endphp
-        @if ($mangerid)
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+    $managerId = DB::table('employee_details')
+    ->where('manager_id', $employeeId)->value('manager_id');
+    @endphp
+        @if ($managerId)
             <div class="row justify-content-center people-tab-container">
                 <div class="col-4 text-center people-starred-tab-container">
                     <a id="starred-tab-link"
@@ -86,9 +68,9 @@
 
                 <div class="col-12 col-md-4 bg-white people-left-side-container">
                     <div class="input-group people-input-group-container">
-                        <input wire:input="starredFilter" wire:model="search" type="text" class="form-control people-search-input"
-                            placeholder="Search for Employee Name or ID" aria-label="Search"
-                            aria-describedby="basic-addon1">
+                        <input wire:input="starredFilter" wire:model="search" type="text"
+                            class="form-control people-search-input" placeholder="Search for Employee Name or ID"
+                            aria-label="Search" aria-describedby="basic-addon1">
                         <div class="input-group-append">
                             <button wire:click="starredFilter" class="people-search-button" type="button">
                                 <i class="fa fa-search people-search-icon"></i>
@@ -109,9 +91,10 @@
                                     class="container people-details-container {{ ($selectStarredPeoples && $selectStarredPeoples->id == $people->id) || (!$selectStarredPeoples && $defaultSelection->id == $people->id) ? 'selected' : '' }}">
                                     <div class="row align-items-center">
                                         <div class="col-3">
-                                            @if (!empty($people->profile) && $people->profile !== 'null')
-                                                <img class="people-profile-image"
-                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($people->profile) }}">
+                                            @if ($people->profile !== null && $people->profile != 'null' && $people->profile != 'Null' && $people->profile != '')
+                                                <!-- It's binary, convert to base64 -->
+                                                <img src="data:image/jpeg;base64,{{ $people->profile }}" alt="base"
+                                                    class="people-profile-image" />
                                             @else
                                                 @if ($people && $people->emp->gender == 'Male')
                                                     <img class="people-profile-image"
@@ -164,9 +147,15 @@
                         <!-- Code to display details when $selectStarredPeoples is set -->
                         <div class="row">
                             <div class="col-3">
-                                @if (!empty($selectStarredPeoples->profile) && $selectStarredPeoples->profile !== 'null')
-                                    <img class="people-image"
-                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($selectStarredPeoples->profile) }}">
+                                @if (
+                                    $selectStarredPeoples->profile !== null &&
+                                        $selectStarredPeoples->profile != 'null' &&
+                                        $selectStarredPeoples->profile != 'Null' &&
+                                        $selectStarredPeoples->profile != '')
+
+                                    <!-- It's binary, convert to base64 -->
+                                    <img src="data:image/jpeg;base64,{{ $selectStarredPeoples->profile }}"
+                                        alt="base" class="people-image" />
                                 @else
                                     @if ($selectStarredPeoples && $selectStarredPeoples->emp->gender == 'Male')
                                         <img class="people-image" src="{{ asset('images/male-default.png') }}"
@@ -268,9 +257,15 @@
                 <div class="row">
 
                     <div class="col-3">
-                        @if (!empty($firstStarredPerson->profile) && $firstStarredPerson->profile !== 'null')
-                            <img class="people-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($firstStarredPerson->profile) }}">
+
+                        @if (
+                            $firstStarredPerson->profile !== null &&
+                                $firstStarredPerson->profile != 'null' &&
+                                $firstStarredPerson->profile != 'Null' &&
+                                $firstStarredPerson->profile != '')
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $firstStarredPerson->profile }}" alt="base"
+                                class="people-image" />
                         @else
                             @if ($firstStarredPerson && $firstStarredPerson->emp->gender == 'Male')
                                 <img class="people-image" src="{{ asset('images/male-default.png') }}"
@@ -390,8 +385,9 @@
 
         <div class="col-12 col-md-4 bg-white people-left-side-container">
             <div class="input-group people-input-group-container">
-                <input wire:input="filter" wire:model="searchTerm" type="text" class="form-control people-search-input"
-                    placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                <input wire:input="filter" wire:model="searchTerm" type="text"
+                    class="form-control people-search-input" placeholder="Search for Employee Name or ID"
+                    aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filter" class="people-search-button" type="button">
                         <i class="fa fa-search people-search-icon"></i>
@@ -413,9 +409,10 @@
                                 class="container people-details-container {{ ($selectedPerson && $selectedPerson->emp_id == $people->emp_id) || (!$selectedPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
-                                        @if (!empty($people->image) && $people->image !== 'null')
-                                            <img class="people-profile-image"
-                                                src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                        @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                            <!-- It's binary, convert to base64 -->
+                                            <img src="data:image/jpeg;base64,{{ $people->image }}" alt="base"
+                                                class="people-profile-image" />
                                         @else
                                             @if ($people && $people->gender == 'Male')
                                                 <img class="people-profile-image"
@@ -465,9 +462,16 @@
                 <!-- Code to display details when $selectStarredPeoples is set -->
                 <div class="row">
                     <div class="col-3">
-                        @if (!empty($selectedPerson->image) && $selectedPerson->image !== 'null')
-                            <img class="people-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedPerson->image) }}">
+
+                        @if (
+                            $selectedPerson->image !== null &&
+                                $selectedPerson->image != 'null' &&
+                                $selectedPerson->image != 'Null' &&
+                                $selectedPerson->image != '')
+
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $selectedPerson->image }}" alt="base"
+                                class="people-image" />
                         @else
                             @if ($selectedPerson && $selectedPerson->gender == 'Male')
                                 <img class="people-image" src="{{ asset('images/male-default.png') }}"
@@ -569,9 +573,15 @@
                 <div class="row">
 
                     <div class="col-3">
-                        @if (!empty($firstPerson->image) && $firstPerson->image !== 'null')
-                            <img class="people-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($firstPerson->image) }}">
+
+                        @if (
+                            $firstPerson->image !== null &&
+                                $firstPerson->image != 'null' &&
+                                $firstPerson->image != 'Null' &&
+                                $firstPerson->image != '')
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $firstPerson->image }}" alt="base"
+                                class="people-image" />
                         @else
                             @if ($firstPerson && $firstPerson->gender == 'Male')
                                 <img class="people-image" src="{{ asset('images/male-default.png') }}"
@@ -685,8 +695,9 @@
         <div class="col-12 col-md-4 bg-white people-left-side-container">
 
             <div class="input-group people-input-group-container">
-                <input wire:input="filterMyTeam" wire:model="searchValue" type="text" class="form-control people-search-input"
-                    placeholder="Search for Employee Name or ID" aria-label="Search" aria-describedby="basic-addon1">
+                <input wire:input="filterMyTeam" wire:model="searchValue" type="text"
+                    class="form-control people-search-input" placeholder="Search for Employee Name or ID"
+                    aria-label="Search" aria-describedby="basic-addon1">
                 <div class="input-group-append">
                     <button wire:click="filterMyTeam" class="people-search-button" type="button">
                         <i class="fa fa-search people-search-icon"></i>
@@ -708,9 +719,11 @@
                                 class="container people-details-container {{ ($selectedMyTeamPerson && $selectedMyTeamPerson->emp_id == $people->emp_id) || (!$selectedMyTeamPerson && $defaultSelection && $defaultSelection->emp_id == $people->emp_id) ? 'selected' : '' }}">
                                 <div class="row align-items-center">
                                     <div class="col-3">
-                                        @if (!empty($people->image) && $people->image !== 'null')
-                                            <img class="people-profile-image"
-                                                src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+
+                                        @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                            <!-- It's binary, convert to base64 -->
+                                            <img src="data:image/jpeg;base64,{{ $people->image }}" alt="base"
+                                                class="people-profile-image" />
                                         @else
                                             @if ($people && $people->gender == 'Male')
                                                 <img class="people-profile-image"
@@ -762,9 +775,15 @@
                 <!-- Code to display details when $selectStarredPeoples is set -->
                 <div class="row">
                     <div class="col-3">
-                        @if (!empty($selectedMyTeamPerson->image) && $selectedMyTeamPerson->image !== 'null')
-                            <img class="people-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($selectedMyTeamPerson->image) }}">
+                        @if (
+                            $selectedMyTeamPerson->image !== null &&
+                                $selectedMyTeamPerson->image != 'null' &&
+                                $selectedMyTeamPerson->image != 'Null' &&
+                                $selectedMyTeamPerson->image != '')
+
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $selectedMyTeamPerson->image }}" alt="base"
+                                class="people-image" />
                         @else
                             @if ($selectedMyTeamPerson && $selectedMyTeamPerson->gender == 'Male')
                                 <img class="people-image" src="{{ asset('images/male-default.png') }}"
@@ -864,9 +883,16 @@
                 <div class="row">
 
                     <div class="col-3">
-                        @if (!empty($firstPerson->image) && $firstPerson->image !== 'null')
-                            <img class="people-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($firstPerson->image) }}">
+
+                        @if (
+                            $firstPerson->image !== null &&
+                                $firstPerson->image != 'null' &&
+                                $firstPerson->image != 'Null' &&
+                                $firstPerson->image != '')
+
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $firstPerson->image }}" alt="base"
+                                class="people-image" />
                         @else
                             @if ($firstPerson && $firstPerson->gender == 'Male')
                                 <img class="people-image" src="{{ asset('images/male-default.png') }}"
