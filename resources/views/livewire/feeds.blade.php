@@ -30,7 +30,7 @@
                         @endphp
 
                         @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}">
+                        <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}"  >
                         @else
                         @if($employeeDetails && $employeeDetails->gender == "Male")
                         <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
