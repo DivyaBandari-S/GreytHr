@@ -130,7 +130,7 @@
                                                     </div>
                                                     <div class="col-auto">
                                                         @if (!empty($people->image) && $people->image !== 'null')
-                                                            <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                                                         @else
                                                             @php $gender = $people->gender ?? null; @endphp
                                                             @if ($gender === 'Male')
@@ -312,7 +312,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -495,7 +495,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -685,7 +685,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -871,7 +871,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1055,7 +1055,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1244,7 +1244,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1445,7 +1445,7 @@
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 

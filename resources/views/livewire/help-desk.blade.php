@@ -237,7 +237,7 @@
 
                         <div class="col-auto">
                             @if (!empty($people->image) && $people->image !== 'null')
-                                <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
                             @else
                                 @if ($people->gender === 'Male')
                                     <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
@@ -368,7 +368,7 @@
                                             <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" src="data:image/jpeg;base64,{{ ($imageUrl) }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                            <img src="{{ $imageUrl }}"  class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
