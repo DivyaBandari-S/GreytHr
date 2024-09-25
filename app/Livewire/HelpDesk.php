@@ -99,7 +99,7 @@ class HelpDesk extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
 
         $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->selectedPeople = [];
@@ -113,7 +113,7 @@ class HelpDesk extends Component
             ->orderBy('created_at', 'desc')
             ->get();
         // dd( $this->records);
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
@@ -628,7 +628,7 @@ class HelpDesk extends Component
     public function updatedSelectedPeople()
     {
         $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
-     
+
     }
 
 
@@ -652,31 +652,45 @@ class HelpDesk extends Component
 
         $this->cc_to = '';
     }
+
     public function filter()
     {
-
         $employeeId = auth()->guard('emp')->user()->emp_id;
-
         $companyId = Auth::user()->company_id;
-
-
-        $this->peopleData = EmployeeDetails::where('first_name', 'like', '%' . $this->searchTerm . '%')
-            ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
-            ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%')
+    
+        // Fetch people data based on company ID and search term
+        $this->peopleData = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->where(function ($query) {
+                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
+            })
             ->get();
 
-        $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
+            
 
+        // Apply isChecked only for selected people, uncheck the rest
+        $this->peoples->transform(function ($person) {
+            // Ensure the comparison is between the same types (convert emp_id to string)
+            $person->isChecked = in_array((string)$person->emp_id, $this->selectedPeople);
+            return $person;
+        });
+            
+        // Reset filteredPeoples if search term is present
+        $this->filteredPeoples = $this->searchTerm ? $this->peopleData : null;
+    
         // Filter records based on category and search term
         $this->records = HelpDesks::with('emp')
             ->whereHas('emp', function ($query) {
                 $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
             })
-
             ->orderBy('created_at', 'desc')
             ->get();
     }
+    
+    
+    
 
 
     public function render()
@@ -717,7 +731,7 @@ class HelpDesk extends Component
 
         // Apply filtering based on the selected category
 
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
         // Initialize peopleData properly
         $peopleData = $this->filteredPeoples ?: $this->peoples;
 
