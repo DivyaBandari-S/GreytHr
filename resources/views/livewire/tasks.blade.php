@@ -496,9 +496,15 @@
                                     <br>
                                     <i wire:click="forAssignee" wire:change="autoValidate" class="fa fa-user icon"
                                         id="profile-icon"></i>
-                                    @if ($showRecipients)
-                                        <strong class="task-modal-selected-assignee">Selected assignee:
-                                        </strong><span>{{ $selectedPeopleName }}</span>
+                                        @if ($showRecipients==true)
+
+                                            <strong class="col-4 task-modal-selected-assignee">Selected assignee:
+
+                                            </strong><input class="col-8" type="text" style="border: none;" value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName"
+    
+                                                wire:input="autoValidate">
+                                    
+                                       
                                     @else
                                         <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"> Add
                                             Assignee</a>
@@ -707,9 +713,12 @@
                                     <br>
                                     <i wire:click="forFollowers" wire:change="autoValidate"
                                         class="fas fa-user icon task-follower-user-icon" id="profile-icon"></i>
-                                    @if ($showFollowers)
+                                    @if ($showFollowers==true)
                                         <strong class="task-selected-follower">Selected Followers:
-                                        </strong><span>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
+                                        </strong>
+                                            <textarea style="border: none; width: 100%; height: 100%;" 
+          wire:model="selectedPeopleNamesForFollowers" 
+          wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
                                     @else
                                         <a wire:click="forFollowers" class="hover-link task-add-followers"> Add
                                             Followers</a>
