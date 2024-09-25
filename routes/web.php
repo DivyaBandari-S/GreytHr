@@ -563,5 +563,4 @@ Route::get('/up', function () {
     Artisan::call('up');
     return 'Application is now live!';
 });
-
-Route::get('/password/reset/{token}', PasswordResetComponent::class)->name('password.reset');
+Route::get('password/reset/{token}', PasswordResetComponent::class)->name('password.reset');

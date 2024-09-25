@@ -2,49 +2,68 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeDetails;
+use Illuminate\Auth\Events\PasswordReset;
 use Livewire\Component;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rules;
+
 class PasswordResetComponent extends Component
 {
-
     public $token;
-    public $password;
-    public $password_confirmation;
+    public $email; // Email passed through the link
+    public $newPassword; // New password
+    public $confirmNewPassword; // Confirm new password
+
+    // Define validation rules
+    protected $rules = [
+        'newPassword' => [
+            'required',
+            'string',
+            'min:8',               // At least 8 characters
+            'regex:/[A-Z]/',       // Must contain at least one uppercase letter
+            'regex:/[a-z]/',       // Must contain at least one lowercase letter
+            'regex:/[0-9]/',       // Must contain at least one digit
+            'regex:/[@$!%*#?&]/',  // Must contain at least one special character
+        ],
+        'confirmNewPassword' => 'required|same:newPassword',  // Confirms that confirmNewPassword matches newPassword
+    ];
 
     public function mount($token)
     {
         $this->token = $token;
+        $this->email = request()->query('email'); // Get email from query string
+        dd($this->email);
     }
 
     public function resetPassword()
     {
-        // Validate password input only
-        $data = $this->validate([
-            'password' => 'required|min:8|confirmed',
-        ]);
+        $this->validate();
 
-        // Attempt to reset the user's password
-        $status = Password::reset(
+        // Attempt to reset the password
+        $response = Password::reset(
             [
-                'password' => $this->password,
-                'password_confirmation' => $this->password_confirmation,
+                'email' => $this->email, // Use the email from the query
+                'password' => $this->newPassword, // Use newPassword
+                'password_confirmation' => $this->confirmNewPassword, // Use confirmNewPassword
                 'token' => $this->token,
             ],
-            function ($user) {
-                $user->password = Hash::make($this->password);
-                $user->setRememberToken(Str::random(60));
+            function (EmployeeDetails $user) {
+                $user->password = bcrypt($this->newPassword); // Hash the new password
                 $user->save();
+                event(new PasswordReset($user));
             }
         );
-        // Handle the result
-        if ($status == Password::PASSWORD_RESET) {
-            session()->flash('message', 'Your password has been reset!');
+
+        if ($response == Password::PASSWORD_RESET) {
+            session()->flash('status', __('Password has been reset!'));
             return redirect()->route('emplogin');
-        } else {
-            session()->flash('error', 'There was an error resetting your password.');
         }
+
+        session()->flash('error', __('Unable to reset password.'));
     }
 
     public function render()

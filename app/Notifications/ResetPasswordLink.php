@@ -2,55 +2,71 @@
 
 namespace App\Notifications;
 
+use Illuminate\Support\Facades\Lang;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\URL;
+
 class ResetPasswordLink extends Notification
 {
-    use Queueable;
-
     /**
-     * Create a new notification instance.
+     * The password reset token.
+     *
+     * @var string
      */
     public $token;
 
+    /**
+     * Create a notification instance.
+     *
+     * @param  string  $token
+     * @return void
+     */
     public function __construct($token)
     {
         $this->token = $token;
     }
 
     /**
-     * Get the notification's delivery channels.
+     * Get the notification's channels.
      *
-     * @return array<int, string>
+     * @param  mixed  $notifiable
+     * @return array|string
      */
-    public function via(object $notifiable): array
+    public function via($notifiable)
     {
         return ['mail'];
     }
 
     /**
-     * Get the mail representation of the notification.
+     * Build the mail representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\MailMessage
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail($notifiable)
     {
-        $resetUrl = URL::to('password/reset/' . $this->token);
         return (new MailMessage)
-            ->subject('Reset Your Password')
-            ->view('emails.reset-password-link', ['resetUrl' => $resetUrl]);
+            ->view('emails.reset-password-link', [
+                'url' => $this->resetUrl($notifiable),
+                'count' => config('auth.passwords.' . config('auth.defaults.passwords') . '.expire'),
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ]);
     }
 
     /**
-     * Get the array representation of the notification.
+     * Get the reset URL for the given notifiable.
      *
-     * @return array<string, mixed>
+     * @param  mixed  $notifiable
+     * @return string
      */
-    public function toArray(object $notifiable): array
+    protected function resetUrl($notifiable)
     {
-        return [
-            //
-        ];
+        return url(route('password.reset', [
+            'token' => $this->token,
+            // 'email' => $notifiable->getEmailForPasswordReset(),
+        ], false));
     }
 }

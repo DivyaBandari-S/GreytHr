@@ -135,4 +135,3 @@ class EmployeeDetails extends Authenticatable
         $this->notify(new ResetPasswordLink($token));
     }
 }
-

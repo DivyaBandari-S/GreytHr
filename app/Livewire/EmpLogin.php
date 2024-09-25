@@ -51,6 +51,7 @@ class EmpLogin extends Component
     public $showErrorModal = false;
     public $showLoader = false;
     public $passwordChangedModal = false;
+    public $emp_id;
     public $form = [
         'emp_id' => '',
         'password' => '',
@@ -158,11 +159,13 @@ class EmpLogin extends Component
 
     public function resetForm()
     {
+        $this->emp_id = '';
         $this->email = '';
         $this->dob = '';
         $this->newPassword = '';
         $this->newPassword_confirmation = '';
         $this->verified = false;
+        $this->verify_error = '';
         $this->resetValidation();
     }
 
@@ -200,64 +203,109 @@ class EmpLogin extends Component
     }
 
 
-    public function verifyEmailAndDOB()
+    // public function verifyEmailAndDOB()
+    // {
+    //     $this->validate(
+    //         [
+    //             'email' => ['nullable', 'email', 'required_without:company_email'],
+    //             'company_email' => ['nullable', 'email', 'required_without:email'],
+    //             'dob' => ['required', 'date'],
+    //         ],
+
+    //     );
+    //     try {
+    //         // Custom validation rule to ensure either email or company_email is present
+
+    //         if (!$this->email) {
+    //             throw new \Exception('Either email or company email must be provided.');
+    //         }
+    //         $userInEmployeeDetails = EmpPersonalInfo::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))
+    //             ->where('date_of_birth', $this->dob)
+    //             ->first();
+    //         $user = EmployeeDetails::where('email', $this->email)->first();
+    //         // $token = Password::getRepository()->create($user);
+    //         $token = Password::createToken($user);
+    //         $user->notify(new ResetPasswordLink($token));
+    //         if ($userInEmployeeDetails) {
+    //             $this->verified = true;
+    //             if ($this->verified) {
+    //                 $this->verified = false;
+    //                 $this->verify_error = false;
+    //                 $this->showSuccessModal = true;
+    //             }
+    //         } else {
+    //             // Invalid email or DOB, show an error message or handle accordingly.
+    //             // $this->addError('email', 'Invalid email or date of birth');
+    //             $this->verify_error = "Invalid Email or Date of Birth... Please try again!";
+    //         }
+    //     } catch (ValidationException $e) {
+    //         // Handle validation errors
+    //         //$this->showErrorModal = true;
+    //         // $this->addError('email', 'There was a problem with your input. Please check and try again.');
+    //         $this->verify_error = "There was a problem with your input. Please check and try again.";
+    //     } catch (\Illuminate\Database\QueryException $e) {
+    //         // Handle database errors
+    //         //$this->showErrorModal = true;
+    //         // $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
+    //         $this->verify_error = 'We are experiencing technical difficulties. Please try again later.';
+    //     } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
+    //         // Handle server errors
+    //         // $this->showErrorModal = true;
+    //         // $this->addError('email', 'There is a server error. Please try again later.');
+    //         $this->verify_error = 'There is a server error. Please try again later.';
+    //     } catch (\Exception $e) {
+    //         // Handle general errors
+    //         // $this->showErrorModal = true;
+    //         // $this->addError('email', 'An unexpected error occurred. Please try again.');
+    //         $this->verify_error = 'An unexpected error occurred. Please try again.';
+    //     }
+    // }
+
+    public function verifyLoginId()
     {
+        // Validate Employee ID
         $this->validate(
             [
-                'email' => ['nullable', 'email', 'required_without:company_email'],
-                'company_email' => ['nullable', 'email', 'required_without:email'],
-                'dob' => ['required', 'date'],
+                'emp_id' => 'required|exists:employee_details,emp_id',
             ],
-
+            [
+                'emp_id.required' => 'Enter your employee ID.',
+                'emp_id.exists' => 'The entered Employee ID does not exist.',
+            ]
         );
+
         try {
-            // Custom validation rule to ensure either email or company_email is present
-
-            if (!$this->email) {
-                throw new \Exception('Either email or company email must be provided.');
+            // Fetch the employee using emp_id
+            $employee = EmployeeDetails::where('emp_id', $this->emp_id)->firstOrFail();
+            // Check if the employee has an email
+            if (empty($employee->email)) {
+                // Handle case when employee email does not exist
+                $this->verify_error = 'The employee does not have an associated email address. Please update your email for this ID: ' . $this->emp_id;
+                return;
             }
-            $userInEmployeeDetails = EmpPersonalInfo::where('emp_id', EmployeeDetails::where('email', $this->email)->value('emp_id'))
-                ->where('date_of_birth', $this->dob)
-                ->first();
-            $user = EmployeeDetails::where('email', $this->email)->first();
 
-            // $token = Password::getRepository()->create($user);
-            $token = Password::createToken($user);
-            $user->notify(new ResetPasswordLink($token));
-            if ($userInEmployeeDetails) {
-                $this->verified = true;
-                if ($this->verified) {
-                    $this->verified = false;
-                    $this->verify_error = false;
-                    $this->showSuccessModal = true;
-                }
+            // Send reset password link to the employee's email
+            $status = Password::broker('emp')->sendResetLink(
+                ['email' => $employee->email]
+            );
+
+            // Check the status and flash a message to the session
+            if ($status == Password::RESET_LINK_SENT) {
+                session()->flash('empIdMessageType', 'success');
+                session()->flash('empIdMessage', 'Password reset link sent successfully to ' . $employee->email);
+                $this->resetForm();
             } else {
-                // Invalid email or DOB, show an error message or handle accordingly.
-                // $this->addError('email', 'Invalid email or date of birth');
-                $this->verify_error = "Invalid Email or Date of Birth... Please try again!";
+                session()->flash('empIdMessageType', 'danger');
+                session()->flash('empIdMessage', 'Failed to send password reset link.');
+                $this->resetForm();
             }
-        } catch (ValidationException $e) {
-            // Handle validation errors
-            //$this->showErrorModal = true;
-            // $this->addError('email', 'There was a problem with your input. Please check and try again.');
-            $this->verify_error = "There was a problem with your input. Please check and try again.";
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database errors
-            //$this->showErrorModal = true;
-            // $this->addError('email', 'We are experiencing technical difficulties. Please try again later.');
-            $this->verify_error = 'We are experiencing technical difficulties. Please try again later.';
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            // Handle server errors
-            // $this->showErrorModal = true;
-            // $this->addError('email', 'There is a server error. Please try again later.');
-            $this->verify_error = 'There is a server error. Please try again later.';
         } catch (\Exception $e) {
-            // Handle general errors
-            // $this->showErrorModal = true;
-            // $this->addError('email', 'An unexpected error occurred. Please try again.');
-            $this->verify_error = 'An unexpected error occurred. Please try again.';
+            // If any exception occurs, catch and set an error message
+            $this->verify_error = 'There was an error processing your request: ' . $e->getMessage();
         }
     }
+
+
 
 
     public function showPasswordChangeModal()
