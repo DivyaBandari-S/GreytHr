@@ -2247,8 +2247,8 @@ td {
     font-weight: 600;
 }
 .text-feed {
-    font-size: 13px;
-    color: #3b4452;
+    font-size: var(--nav-headings-font-size);
+    color: var(--main-heading-color);
     font-weight: 600;
 }
 .custom-feed {
@@ -2663,10 +2663,15 @@ input[type="radio"] {
     color: #3b4452;
     display: flex;
     flex-direction: column;
-    margin-top: 5px;
     justify-content: center; /* Centers items vertically */
-    margin-left: 10px;
-    /* Full viewport height to center vertically */
+}
+.navProfileImgFeeds{
+    width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	cursor: pointer;
+	margin-right: 0px !important;
 }
 .radio-wrapper {
     display: inline-block;
