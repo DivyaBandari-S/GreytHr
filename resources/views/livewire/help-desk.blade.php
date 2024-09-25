@@ -197,9 +197,7 @@
                                 <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
                                     <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
 
-                                        <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
-                                            <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                        </button>
+                                      
 
                                         <input
                                             wire:model="searchTerm"
@@ -210,7 +208,7 @@
                                             aria-label="Search"
                                             aria-describedby="basic-addon1">
                                         <div class="input-group-append" style="display: flex; align-items: center;">
-                                            <button wire:click="filter" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                                            <button wire:click="filter"  class="helpdesk-search-btn" type="button">
                                                 <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                                             </button>
 

@@ -146,10 +146,9 @@ class LeaveApplyPage extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            dd($applying_to->company_id);
-            $this->ccRecipients = EmployeeDetails::where('company_id', $applying_to->company_id)
-                ->where('emp_id', '!=', $employeeId) // Exclude the current user
+            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+            $this->ccRecipients = EmployeeDetails::whereJsonContains('company_id', $applying_to)
+                ->where('emp_id', '!=', $employeeId)
                 ->where(function ($query) {
                     $query
                         ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
@@ -164,6 +163,7 @@ class LeaveApplyPage extends Component
                 )
                 ->orderBy('full_name')
                 ->get();
+
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
@@ -189,6 +189,7 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
+            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
@@ -809,5 +810,9 @@ class LeaveApplyPage extends Component
     public function getFilteredManagers()
     {
         $this->render(); // Re-render to apply the search filter
+    }
+    public function handleEnterKey()
+    {
+        $this->searchCCRecipients();
     }
 }
