@@ -189,6 +189,7 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
+            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
@@ -809,5 +810,9 @@ class LeaveApplyPage extends Component
     public function getFilteredManagers()
     {
         $this->render(); // Re-render to apply the search filter
+    }
+    public function handleEnterKey()
+    {
+        $this->searchCCRecipients();
     }
 }
