@@ -3212,6 +3212,15 @@ input[type="radio"] {
 }
 
 /* //leave apply styles */
+.search-btn-leave{
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+
+}
 .checkLeaveBal{
     display: flex;
     justify-content: center;

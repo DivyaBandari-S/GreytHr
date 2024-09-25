@@ -10,8 +10,8 @@
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="bg-none border-none" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">x</span>
+        <button type="button" wire:click="hideAlert" class="alert-close bg-none border-none" data-dismiss="alert" aria-label="Close">
+            <span >X</span>
         </button>
     </div>
     @endif
@@ -162,7 +162,7 @@
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 @if($from_date && $to_date && $from_session && $to_session)
-                                {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
+                                {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type) }}
                                 @else
                                 0
                                 @endif
@@ -171,7 +171,7 @@
                             @if(isset($leaveBalances) && !empty($leaveBalances))
                             <!-- Directly access the leave balance for the selected leave type -->
                             @php
-                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session);
+                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type);
                             @endphp
                             @if($leave_type == 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
@@ -328,9 +328,9 @@
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button
                                             type="button"
-                                            class="search-btn"
+                                            class="search-btn-leave"
                                             wire:click="getFilteredManagers">
-                                            <i class="fas fa-search ms-2"></i>
+                                            <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -465,8 +465,8 @@
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i class="fas fa-search ms-2"></i>
+                                    <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
+                                        <i class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>

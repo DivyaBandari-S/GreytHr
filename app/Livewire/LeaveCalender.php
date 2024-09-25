@@ -486,7 +486,7 @@ class LeaveCalender extends Component
             session()->flash('error', 'An unexpected error occurred. Please try again later.');
         }
     }
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -494,16 +494,32 @@ class LeaveCalender extends Component
 
             // Check if the start or end date is a weekend
             if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+                return 0;
             }
 
             // Check if the start and end sessions are different on the same day
-            if ($startDate->isSameDay($endDate)) {
-                if ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
-                    return 1;
-                } elseif ($this->getSessionNumber($fromSession) == $this->getSessionNumber($toSession)) {
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
                     return 0.5;
                 } else {
+                    // If either start or end date is a weekend, return 0
+                    return 0;
+                }
+            }
+
+            if (
+                $startDate->isSameDay($endDate) &&
+                $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays
+                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                    return 1;
+                } else {
+                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -511,9 +527,12 @@ class LeaveCalender extends Component
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
+                if ($leaveType == 'Sick Leave') {
                     $totalDays += 1;
+                } else {
+                    if ($startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 }
                 // Move to the next day
                 $startDate->addDay();

@@ -85,7 +85,7 @@
 
                         <div class="col accordion-content d-flex align-items-center mb-0">
                             @php
-                            $numberOfDays = $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session);
+                            $numberOfDays = $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session,$leaveRequest['leaveRequest']->leave_type);
                             @endphp
                             <p class="normalTextValue mb-0">
                                 Period <br>
@@ -135,7 +135,7 @@
                         <span class="normalTextValue">No. of days :</span>
                         @if(isset($leaveRequest['leaveRequest']->from_date))
                         <span class="normalText font-weight-400">
-                            {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session) }}
+                            {{ $this->calculateNumberOfDays($leaveRequest['leaveRequest']->from_date, $leaveRequest['leaveRequest']->from_session, $leaveRequest['leaveRequest']->to_date, $leaveRequest['leaveRequest']->to_session,$leaveRequest['leaveRequest']->leave_type) }}
                         </span>
                         @else
                         <span class="normalText font-weight-400">No. of days not available</span>
