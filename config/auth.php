@@ -1,7 +1,7 @@
 <?php
- 
+
 return [
- 
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Defaults
@@ -12,12 +12,12 @@ return [
     | as required, but they're a perfect start for most applications.
     |
     */
- 
+
     'defaults' => [
         'guard' => 'web',
         'passwords' => 'users',
     ],
- 
+
     /*
     |--------------------------------------------------------------------------
     | Authentication Guards
@@ -34,7 +34,7 @@ return [
     | Supported: "session"
     |
     */
- 
+
     'guards' => [
         'web' => [
             'driver' => 'session',
@@ -66,7 +66,7 @@ return [
             'provider' => 'admins',
         ],
     ],
- 
+
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -83,18 +83,18 @@ return [
     | Supported: "database", "eloquent"
     |
     */
- 
+
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
- 
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
- 
+
         'emp' => [
             'driver' => 'eloquent',
             'model' => App\Models\EmployeeDetails::class, // Update this to your Employee model
@@ -120,7 +120,7 @@ return [
             'model' => App\Models\Admin::class, // Update this to your Employee model
         ],
     ],
- 
+
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
@@ -139,7 +139,7 @@ return [
     | quickly generating a very large amount of password reset tokens.
     |
     */
- 
+
     'passwords' => [
         'users' => [
             'provider' => 'users',
@@ -147,35 +147,51 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
- 
- 
+
         'emp' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\EmployeeDetails::class, // Update this to your Employee model
+            'provider' => 'emp',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
- 
+
         'com' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Company::class,
+            'provider' => 'com',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
+
         'finance' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Finance::class,
+            'provider' => 'finance',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
+
         'hr' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Hr::class,
+            'provider' => 'hr',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
+
         'it' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\IT::class,
+            'provider' => 'it',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
+
         'admins' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\Admin::class, // Update this to your Employee model
+            'provider' => 'admins',
+            'table' => 'password_reset_tokens', // Using the same table
+            'expire' => 60,
+            'throttle' => 60,
         ],
     ],
- 
+
+
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
@@ -186,7 +202,7 @@ return [
     | confirmation screen. By default, the timeout lasts for three hours.
     |
     */
- 
+
     'password_timeout' => 10800,
- 
+
 ];
