@@ -44,6 +44,7 @@ class Catalog extends Component
 
     public $isNames = false;
     public $record;
+    public $peopleData='';
     public $mail;
     public $subject;
     public $distributor_name;
@@ -113,6 +114,29 @@ class Catalog extends Component
     ];
     public function mount()
 {
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+    $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+    $companyId = auth()->guard('emp')->user()->company_id;
+    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+
+    $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+    $this->selectedPeople = [];
+    $this->selectedPeopleNames = [];
+    $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+    $this->records = HelpDesks::with('emp')
+        ->where(function ($query) use ($employeeId, $employeeName) {
+            $query->where('emp_id', $employeeId)
+                ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+        })
+        ->orderBy('created_at', 'desc')
+        ->get();
+    // dd( $this->records);
+    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
+
     $this->selected_equipment = '';  // Initialize with a default value if needed
 }
 
@@ -376,18 +400,38 @@ class Catalog extends Component
 
     public function filter()
     {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
-
-        $trimmedSearchTerm = trim($this->searchTerm);
-
-        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+    
+        // Fetch people data based on company ID and search term
+        $this->peopleData = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->where(function ($query) {
+                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
             })
             ->get();
 
-        $this->peopleFound = count($this->filteredPeoples) > 0;
+            
+
+        // Apply isChecked only for selected people, uncheck the rest
+        $this->peoples->transform(function ($person) {
+            // Ensure the comparison is between the same types (convert emp_id to string)
+            $person->isChecked = in_array((string)$person->emp_id, $this->selectedPeople);
+            return $person;
+        });
+            
+        // Reset filteredPeoples if search term is present
+        $this->filteredPeoples = $this->searchTerm ? $this->peopleData : null;
+    
+        // Filter records based on category and search term
+        $this->records = HelpDesks::with('emp')
+            ->whereHas('emp', function ($query) {
+                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
 
     public function updatedSelectedPeople()
@@ -753,7 +797,7 @@ class Catalog extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
         $employee = auth()->guard('emp')->user();

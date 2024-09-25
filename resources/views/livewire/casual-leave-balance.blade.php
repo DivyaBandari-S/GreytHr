@@ -107,7 +107,7 @@
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
                                     <td>
                                         @php
-                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session);
+                                        $days = $this->s($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session,$balance->leave_type);
                                         @endphp
                                         {{ $days }}
                                     </td>

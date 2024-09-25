@@ -1140,7 +1140,10 @@ button.close-button {
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-
+.small-font
+{
+    font-size: 12px;
+}
 .toggle-box-container-who-is-in {
     float: right;
     display: flex;
@@ -2988,7 +2991,7 @@ input[type="radio"] {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
     color: #fff !important;
-    width: 40px;
+    width: 45px;
     height:32px;
     border: none;
     align-items: center;
@@ -3209,6 +3212,15 @@ input[type="radio"] {
 }
 
 /* //leave apply styles */
+.search-btn-leave{
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+
+}
 .checkLeaveBal{
     display: flex;
     justify-content: center;

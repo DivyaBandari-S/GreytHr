@@ -348,7 +348,7 @@ class LeaveCancelPage extends Component
     }
 
     //it will calculate number of days for leave application
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -389,9 +389,12 @@ class LeaveCancelPage extends Component
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
+                if ($leaveType == 'Sick Leave') {
                     $totalDays += 1;
+                } else {
+                    if ($startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 }
                 // Move to the next day
                 $startDate->addDay();
