@@ -1140,7 +1140,10 @@ button.close-button {
 
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
-
+.small-font
+{
+    font-size: 12px;
+}
 .toggle-box-container-who-is-in {
     float: right;
     display: flex;

@@ -608,13 +608,16 @@ public function historyButton()
     public function withdraw($id)
     {
         try {
+          
             $currentDateTime = Carbon::now();
             $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
             ]);
             $this->withdraw_session = true;
+            $this->withdrawModal=false;
             session()->flash('success', 'Hurry Up! Regularisation withdrawn  successfully');
+            
         } catch (\Exception $ex) {
             session()->flash('error', 'Something went wrong while withdrawing regularisation.');
         }
@@ -673,7 +676,7 @@ public function historyButton()
             $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                 ->where('status', 'pending')
                 ->where('is_withdraw', 0)
-                ->orderByDesc('id')
+                ->orderByDesc('updated_at')
                 ->get();
            
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
@@ -683,7 +686,7 @@ public function historyButton()
     
             $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
                 ->whereIn('status', ['pending', 'approved', 'rejected'])
-                ->orderByDesc('id')
+                ->orderByDesc('updated_at')
                 ->get();            
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
