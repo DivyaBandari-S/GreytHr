@@ -44,7 +44,7 @@
                                 <td>{{ $leaveRequest->leave_type }}</td>
                                 <td>{{ $leaveRequest->from_date->format('d M, Y') }}</td>
                                 <td>{{ $leaveRequest->to_date->format('d M, Y') }}</td>
-                                <td>{{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</td>
+                                <td>{{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</td>
                                 <td>{{ $leaveRequest->reason }}</td>
                             </tr>
                             @endforeach
@@ -79,7 +79,7 @@
                         @if($selectedManagerDetails)
                         @if($selectedManagerDetails->image)
                         <div class="employee-profile-image-container">
-                            <img class="rounded-circle" height="40" width="40" src="data:image/jpeg;base64,{{($selectedManagerDetails->image)}}">
+                            <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($selectedManagerDetails->image)}}">
                         </div>
                         @else
                         <div class="employee-profile-image-container">
@@ -122,9 +122,9 @@
                                         <div class="input-group-append searchBtnBg d-flex align-items-center">
                                             <button
                                                 type="button"
-                                                class="search-btn"
+                                                class="search-btn-leave"
                                                 wire:click="getFilteredManagers">
-                                                <i class="fas fa-search ms-2"></i>
+                                                <i class="fas fa-search "></i>
                                             </button>
                                         </div>
                                     </div>
@@ -222,7 +222,7 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" >More Recipients</h5>
+                                        <h5 class="modal-title" >CC to</h5>
                                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                             wire:click="openModal" >
                                         </button>
@@ -254,8 +254,8 @@
                                 <div class="input-group">
                                     <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput"  type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                        <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                            <i  class="fas fa-search ms-2"></i>
+                                        <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
+                                            <i  class="fas fa-search "></i>
                                         </button>
                                     </div>
                                 </div>

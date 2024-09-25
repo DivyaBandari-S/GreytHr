@@ -96,7 +96,7 @@
                             <div class="box d-flex text-center p-2">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}</span>
+                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -507,7 +507,7 @@
 
                         @foreach($leaveApplications as $leaveCountOfEmp)
                         @php
-                        $totalDays += $this->calculateNumberOfDays($leaveCountOfEmp->from_date, $leaveCountOfEmp->from_session, $leaveCountOfEmp->to_date, $leaveCountOfEmp->to_session);
+                        $totalDays += $this->calculateNumberOfDays($leaveCountOfEmp->from_date, $leaveCountOfEmp->from_session, $leaveCountOfEmp->to_date, $leaveCountOfEmp->to_session,$leaveCountOfEmp->leave_type);
                         @endphp
                         @endforeach
 
@@ -542,7 +542,7 @@
                                             </span>
                                         </div>
                                     </td>
-                                    <td> {{ $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session) }}</td>
+                                    <td> {{ $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session, $leaveApplication->leave_type) }}</td>
                                     <td>
                                         {{ ucfirst($leaveApplication->status === 'approved' ? 'Availed' : $leaveApplication->status) }}
                                     </td>

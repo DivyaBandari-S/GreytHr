@@ -1395,9 +1395,7 @@ $lastItem = end($regularisationEntries); // Get the last item
         </div>
 
     </div>
-
-</div>
-@if($withdrawModal==true)
+    @if($withdrawModal==true)
 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
@@ -1422,6 +1420,8 @@ $lastItem = end($regularisationEntries); // Get the last item
  
 
 @endif
+</div>
+
 @endif
 @endforeach
 
@@ -1439,9 +1439,28 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 @php
 $regularisationEntries = json_decode($hr->regularisation_entries, true);
-$numberOfEntries = count($regularisationEntries);
-$firstEntry = reset($regularisationEntries);
-$lastEntry = end($regularisationEntries);
+            // Count the number of elements in the array
+            $numberOfEntries = count($regularisationEntries);
+            // Initialize variables for minimum and maximum dates
+            $minDate = null;
+            $maxDate = null;
+            // Iterate through each entry to find the minimum and maximum dates
+            foreach ($regularisationEntries as $entry) {
+            // Check if the entry contains the 'date' key
+            if (isset($entry['date'])) {
+            $date = strtotime($entry['date']);
+ 
+            // Set the initial values for min and max dates
+            if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===null || $date> $maxDate) {
+                $maxDate = $date;
+                }
+                } else {
+                }
+                }
+ 
+                // Convert timestamps back to date strings
+                $minDate = $minDate !== null ? date('Y-m-d', $minDate) : null;
+                $maxDate = $maxDate !== null ? date('Y-m-d', $maxDate) : null;
 @endphp
 
 @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
@@ -1509,15 +1528,25 @@ $lastEntry = end($regularisationEntries);
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
     <div class="content px-2">
-        @if($numberOfEntries>1)
-        <span style="color: #778899; font-size: 12px; font-weight: 500;">Dates Applied:
-            {{ date('d M Y', strtotime($firstEntry['date'])) }} to
-        </span>
-        @elseif($numberOfEntries==1)
-        <span style="color: #778899; font-size: 12px; font-weight: 500;">Dates Applied:
-            {{ date('d M Y', strtotime($firstEntry['date'])) }}</span>
-        @endif
-    </div>
+
+                            <span style="color: #778899; font-size: 12px; font-weight: 500;">Dates Applied:</span>
+
+                            <span style="font-size: 11px;">
+
+                                <span style="font-size: 11px; font-weight: 500;"></span>
+
+                                {{ date('d M, Y', strtotime($minDate)) }}
+                                @if($numberOfEntries>1)
+                                -
+                                @endif
+                                <span style="font-size: 11px; font-weight: 500;"></span>
+
+                                @if($numberOfEntries>1)
+                                {{ date('d M, Y', strtotime($maxDate)) }}
+                                @endif
+                            </span>
+
+        </div>
 
 
 

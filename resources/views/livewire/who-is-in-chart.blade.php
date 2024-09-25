@@ -14,7 +14,7 @@
     <input type="date" wire:model="from_date" wire:change="updateDate" class="form-control" id="fromDate" name="fromDate" style="color: #778899;">
 </div>
 <div class="shift-selector-container-who-is-in">
-  <input type="text" class="shift-selector-who-is-in" placeholder="Select Shifts">
+  <input type="text" class="shift-selector-who-is-in small-font" placeholder="Select Shifts"value="{{ $selectedShift }}" readonly>
   <div class="arrow-who-is-in" style="cursor:pointer;" wire:click="openSelector"></div>
 </div>
 @if($openshiftselector==true)
@@ -117,7 +117,11 @@
   <div class="container-box-for-employee-information-who-is-in">
     <!-- Your content goes here -->
     <div style="display:flex;align-items:center; text-align:center;justify-content:center;padding:0;">
-      <p style="text-align:center;font-size:14px;padding: 10px 0px;margin-bottom:0px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span></p>
+      @if(empty($selectedShift))
+         <p style="text-align:center;font-size:14px;padding: 10px 0px;margin-bottom:0px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span></p>
+      @else
+      <p style="text-align:center;font-size:14px;padding: 10px 0px;margin-bottom:0px;">Employees Information for <span style="font-weight: 500; ">{{\Carbon\Carbon::parse($currentDate)->format('jS F Y')}}</span> and <span style="font-weight: 500; ">  the selected shift(s)</span></p>
+      @endif
     </div>
 
     <div class="content-who-is-in">

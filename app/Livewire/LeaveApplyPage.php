@@ -163,7 +163,6 @@ class LeaveApplyPage extends Component
                 )
                 ->orderBy('full_name')
                 ->get();
-
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
@@ -347,7 +346,7 @@ class LeaveApplyPage extends Component
             $totalNumberOfDays = 0; // Initialize the counter for total days
             if (!$checkLeaveBalance->isEmpty()) {
                 foreach ($checkLeaveBalance as $leaveRequest) {
-                    $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session);
+                    $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type);
                     $totalNumberOfDays += $numberBalanceOfDays;
                 }
             }
@@ -357,7 +356,8 @@ class LeaveApplyPage extends Component
                     $this->from_date,
                     $this->from_session,
                     $this->to_date,
-                    $this->to_session
+                    $this->to_session,
+                    $this->leave_type
                 );
                 $totalNumberOfDays += $totalEnteredDays;
             }
@@ -390,6 +390,52 @@ class LeaveApplyPage extends Component
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
+            // Check if the leave type is Casual Leave
+            if ($this->leave_type === 'Casual Leave') {
+                $currentMonth = now()->month;
+                $currentYear = now()->year;
+
+                // Get all casual leave requests for the current month
+                $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_type', 'Casual Leave')
+                    ->whereYear('from_date', $currentYear)
+                    ->whereMonth('from_date', $currentMonth)
+                    ->whereIn('status', ['approved', 'pending'])
+                    ->get();
+
+                $totalLeaveDays = 0;
+
+                foreach ($leaveRequests as $leaveRequest) {
+                    $numberOfDays = $this->calculateNumberOfDays(
+                        $leaveRequest->from_date,
+                        $leaveRequest->from_session,
+                        $leaveRequest->to_date,
+                        $leaveRequest->to_session,
+                        $leaveRequest->leave_type
+                    );
+                    $totalLeaveDays += $numberOfDays;
+                }
+
+                // Calculate days for the new leave request if it's Casual Leave
+                if ($this->from_date && $this->to_date) {
+                    $newLeaveDays = $this->calculateNumberOfDays(
+                        $this->from_date,
+                        $this->from_session,
+                        $this->to_date,
+                        $this->to_session,
+                        $this->leave_type
+                    );
+                    $totalLeaveDays += $newLeaveDays;
+                }
+
+                // Check if total leave days exceed 2
+                if ($totalLeaveDays > 2) {
+                    $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
+                    $this->showerrorMessage = true;
+                    return redirect()->back()->withInput();
+                }
+            }
+
 
             // Prepare CC and Manager details
             $ccToDetails = [];
@@ -485,7 +531,7 @@ class LeaveApplyPage extends Component
         try {
             $this->showNumberOfDays = true;
             if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
-                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession, $this->leaveType);
             }
         } catch (\Exception $e) {
             // Log the error
@@ -589,7 +635,7 @@ class LeaveApplyPage extends Component
     }
 
     //it will calculate number of days for leave application
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -630,9 +676,12 @@ class LeaveApplyPage extends Component
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
+                if ($leaveType == 'Sick Leave') {
                     $totalDays += 1;
+                } else {
+                    if ($startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 }
                 // Move to the next day
                 $startDate->addDay();

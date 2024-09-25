@@ -496,9 +496,15 @@
                                     <br>
                                     <i wire:click="forAssignee" wire:change="autoValidate" class="fa fa-user icon"
                                         id="profile-icon"></i>
-                                    @if ($showRecipients)
-                                        <strong class="task-modal-selected-assignee">Selected assignee:
-                                        </strong><span>{{ $selectedPeopleName }}</span>
+                                        @if ($showRecipients==true)
+
+                                            <strong class="col-4 task-modal-selected-assignee">Selected assignee:
+
+                                            </strong><input class="col-8" type="text" style="border: none;" value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName"
+    
+                                                wire:input="autoValidate">
+                                    
+                                       
                                     @else
                                         <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"> Add
                                             Assignee</a>
@@ -547,9 +553,11 @@
                                                                     value="{{ $people->emp_id }}">
                                                             </div>
                                                             <div class="col-auto">
-                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                    <img class="profile-image task-assignee-people-img"
-                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                                                    <!-- It's binary, convert to base64 -->
+                                                                    <img src="data:image/jpeg;base64,{{ $people->image }}"
+                                                                        alt="base"
+                                                                        class="profile-image task-assignee-people-img" />
                                                                 @else
                                                                     @if ($people && $people->gender == 'Male')
                                                                         <img class="profile-image task-assignee-people-img"
@@ -705,9 +713,12 @@
                                     <br>
                                     <i wire:click="forFollowers" wire:change="autoValidate"
                                         class="fas fa-user icon task-follower-user-icon" id="profile-icon"></i>
-                                    @if ($showFollowers)
+                                    @if ($showFollowers==true)
                                         <strong class="task-selected-follower">Selected Followers:
-                                        </strong><span>{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</span>
+                                        </strong>
+                                            <textarea style="border: none; width: 100%; height: 100%;" 
+          wire:model="selectedPeopleNamesForFollowers" 
+          wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
                                     @else
                                         <a wire:click="forFollowers" class="hover-link task-add-followers"> Add
                                             Followers</a>
@@ -749,12 +760,13 @@
                                                             <input type="checkbox" value="{{ $people->emp_id }}"
                                                                 id="checkbox-{{ $people->emp_id }}"
                                                                 {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
-                    {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
+                                                            {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
                                                         </div>
                                                         <div class="col-auto">
-                                                            @if (!empty($people->image) && $people->image !== 'null')
-                                                                <img class="profile-image"
-                                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                                                <!-- It's binary, convert to base64 -->
+                                                                <img src="data:image/jpeg;base64,{{ $people->image }}"
+                                                                    alt="base" class="profile-image" />
                                                             @else
                                                                 @if ($people && $people->gender == 'Male')
                                                                     <img class="profile-image"
@@ -789,10 +801,10 @@
                                 @endif
 
                                 @if ($validationFollowerMessage)
-                                <div class="alert alert-danger">
-                                    {{ $validationFollowerMessage }}
-                                </div>
-                            @endif
+                                    <div class="alert alert-danger">
+                                        {{ $validationFollowerMessage }}
+                                    </div>
+                                @endif
                                 <div class="form-group">
                                     <label for="Subject" class="task-modal-subject-label">Subject</label>
                                     <br>

@@ -226,7 +226,7 @@
                                             </span>
                                         </td>
 
-                                        <td class="num-days">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session) }}</td>
+                                        <td class="num-days">{{ $this->calculateNumberOfDays($transaction->from_date, $transaction->from_session, $transaction->to_date, $transaction->to_session,$transaction->leave_type) }}</td>
                                         <td class="date-range">
                                             @if($transaction->from_date === $transaction->to_date)
                                             <span>{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M') }}</span>
