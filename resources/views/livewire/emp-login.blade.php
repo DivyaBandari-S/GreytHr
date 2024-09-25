@@ -6,9 +6,17 @@
                 Recruitment</button>
         </div>
     </div>
+    <!-- Success or Error Message for Emp ID Verification -->
+    @if (session()->has('empIdMessageType'))
+    <div class="alert alert-{{ session('empIdMessageType') }} mt-3 position-relative">
+        <button type="button" class="btn-close position-absolute" style="top: 10px; right: 10px;" aria-label="Close" wire:click="$set('empIdMessageType', null); $set('empIdMessage', null)"></button>
+        <strong>{{ session('empIdMessage') }}</strong>
+    </div>
+    @endif
 
 
     <div class="row m-0 d-felx align-items-center">
+
         <!-- Left Side (Login Form) -->
         <div class="col-md-6 ">
 
@@ -275,13 +283,6 @@
                                 </span>
                             </button>
                         </div>
-
-                        <!-- Success or Error Message for Emp ID Verification -->
-                        @if (session()->has('empIdMessage'))
-                        <div class="alert alert-{{ session('empIdMessageType') }} mt-3">
-                            {{ session('empIdMessage') }}
-                        </div>
-                        @endif
                     </form>
 
                     @endif

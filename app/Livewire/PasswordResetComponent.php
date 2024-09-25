@@ -3,67 +3,75 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
-use Illuminate\Auth\Events\PasswordReset;
 use Livewire\Component;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\DB;
 
 class PasswordResetComponent extends Component
 {
     public $token;
-    public $email; // Email passed through the link
     public $newPassword; // New password
     public $confirmNewPassword; // Confirm new password
+    public $isValidToken = true; // To track token validity
 
     // Define validation rules
     protected $rules = [
         'newPassword' => [
             'required',
             'string',
-            'min:8',               // At least 8 characters
-            'regex:/[A-Z]/',       // Must contain at least one uppercase letter
-            'regex:/[a-z]/',       // Must contain at least one lowercase letter
-            'regex:/[0-9]/',       // Must contain at least one digit
-            'regex:/[@$!%*#?&]/',  // Must contain at least one special character
+            'min:8',
+            'regex:/[A-Z]/',
+            'regex:/[a-z]/',
+            'regex:/[0-9]/',
+            'regex:/[@$!%*#?&]/',
         ],
-        'confirmNewPassword' => 'required|same:newPassword',  // Confirms that confirmNewPassword matches newPassword
+        'confirmNewPassword' => 'required|same:newPassword',
     ];
 
     public function mount($token)
     {
+        session()->forget('error');
+        session()->forget('success');
+
         $this->token = $token;
-        $this->email = request()->query('email'); // Get email from query string
-        dd($this->email);
+
+        // Check if the token is valid
+        $tokenData = DB::table('password_reset_tokens')->where('token', $this->token)->first();
+
+        // If the token is not valid, set an error message and mark the token as invalid
+        if (!$tokenData) {
+            $this->isValidToken = false;
+            session()->flash('error', 'The password reset link is invalid or has already been used. Click on link return to the login page.');
+        }
     }
 
     public function resetPassword()
     {
         $this->validate();
 
-        // Attempt to reset the password
-        $response = Password::reset(
-            [
-                'email' => $this->email, // Use the email from the query
-                'password' => $this->newPassword, // Use newPassword
-                'password_confirmation' => $this->confirmNewPassword, // Use confirmNewPassword
-                'token' => $this->token,
-            ],
-            function (EmployeeDetails $user) {
-                $user->password = bcrypt($this->newPassword); // Hash the new password
-                $user->save();
-                event(new PasswordReset($user));
-            }
-        );
-
-        if ($response == Password::PASSWORD_RESET) {
-            session()->flash('status', __('Password has been reset!'));
-            return redirect()->route('emplogin');
+        // Check if the token is valid
+        $tokenData = DB::table('password_reset_tokens')->where('token', $this->token)->first();
+        if (!$tokenData) {
+            session()->flash('error', 'Invalid token or email.');
+            return;
         }
 
-        session()->flash('error', __('Unable to reset password.'));
+        // Proceed with password reset
+        $user = EmployeeDetails::where('email', $tokenData->email)->first();
+        if ($user) {
+            $user->password = bcrypt($this->newPassword);
+            $user->save();
+
+            // Optionally, delete the token
+            DB::table('password_reset_tokens')->where('email', $tokenData->email)->delete();
+
+            // Clear fields after reset
+            $this->newPassword = '';
+            $this->confirmNewPassword = '';
+
+            session()->flash('success', 'Password reset successfully. Click below to log in.');
+        } else {
+            session()->flash('error', 'User not found.');
+        }
     }
 
     public function render()

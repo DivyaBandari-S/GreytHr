@@ -130,18 +130,19 @@ class EmployeeDetails extends Authenticatable
         return $value ? Carbon::parse($value) : null;
     }
     public function company()
-{
-    return $this->belongsTo(Company::class, 'company_id', 'company_id');
-}
-
-public function employee()
-{
-    return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
-}
-    }
-    public function sendPasswordResetNotification($token)
     {
-        // Your own implementation.
-        $this->notify(new ResetPasswordLink($token));
+        return $this->belongsTo(Company::class, 'company_id', 'company_id');
     }
+
+    public function employee()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
+
+    // public function sendPasswordResetNotification($token)
+    // {
+        
+    //     // Your own implementation.
+    //     $this->notify(new ResetPasswordLink($token));
+    // }
 }

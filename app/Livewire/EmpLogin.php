@@ -35,6 +35,7 @@ use App\Notifications\ResetPasswordLink;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 
 class EmpLogin extends Component
@@ -51,6 +52,7 @@ class EmpLogin extends Component
     public $showErrorModal = false;
     public $showLoader = false;
     public $passwordChangedModal = false;
+    public $empIdMessageType;
     public $emp_id;
     public $form = [
         'emp_id' => '',
@@ -284,26 +286,32 @@ class EmpLogin extends Component
                 return;
             }
 
-            // Send reset password link to the employee's email
-            $status = Password::broker('emp')->sendResetLink(
-                ['email' => $employee->email]
+            // Generate a custom token
+            $token = Str::random(60); // or use your own custom token generation logic
+
+            // Store the token in the password_reset_tokens table
+            DB::table('password_reset_tokens')->updateOrInsert(
+                ['email' => $employee->email], // Check for existing email
+                [
+                    'token' => $token,
+                    'created_at' => now(),
+                ]
             );
 
-            // Check the status and flash a message to the session
-            if ($status == Password::RESET_LINK_SENT) {
-                session()->flash('empIdMessageType', 'success');
-                session()->flash('empIdMessage', 'Password reset link sent successfully to ' . $employee->email);
-                $this->resetForm();
-            } else {
-                session()->flash('empIdMessageType', 'danger');
-                session()->flash('empIdMessage', 'Failed to send password reset link.');
-                $this->resetForm();
-            }
+            // Here, you should create the email and send it with the link.
+            // For example:
+            $employee->notify(new ResetPasswordLink($token));
+
+            // Flash a message to the session
+            session()->flash('empIdMessageType', 'success');
+            session()->flash('empIdMessage', 'Password reset link sent successfully to ' . $employee->email);
+            $this->remove();
         } catch (\Exception $e) {
             // If any exception occurs, catch and set an error message
             $this->verify_error = 'There was an error processing your request: ' . $e->getMessage();
         }
     }
+
 
 
 

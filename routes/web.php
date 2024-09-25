@@ -564,3 +564,32 @@ Route::get('/up', function () {
     return 'Application is now live!';
 });
 Route::get('password/reset/{token}', PasswordResetComponent::class)->name('password.reset');
+use Illuminate\Support\Facades\Crypt;
+
+Route::get('/encode-decode/{value}', function ($value) {
+    try {
+        // Attempt to decrypt the value
+        $decrypted = Crypt::decryptString($value);
+        return response()->json(['action' => 'decrypted', 'value' => $decrypted]);
+    } catch (\Exception $e) {
+        // If decryption fails, encrypt the value
+        $encrypted = Crypt::encryptString($value);
+        return response()->json(['action' => 'encrypted', 'value' => $encrypted]);
+    }
+});
+
+use Illuminate\Support\Facades\Hash;
+
+Route::get('/hash-verify/{value}', function ($value) {
+    // Attempt to verify the value against the hashed version
+    // Here, we'll assume that a certain value (e.g., 'originalValue') needs to be verified
+    $originalValue = 'originalValue'; // Replace this with the actual value you want to verify against
+
+    if (Hash::check($originalValue, $value)) {
+        return response()->json(['action' => 'verified', 'value' => $originalValue]);
+    } else {
+        // If not verified, hash the original value
+        $hashed = Hash::make($originalValue);
+        return response()->json(['action' => 'hashed', 'value' => $hashed]);
+    }
+});
