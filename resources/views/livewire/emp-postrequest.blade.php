@@ -448,7 +448,7 @@
                     </div>
                     <div class="modal-body text-center">
                     @if ($imageUrl)
-                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    <img src="{{ $imageUrl }}"  alt="File" class="img-fluid" style="max-width: 100%;" />
                     @endif
                     </div>
                     <div class="modal-footer">

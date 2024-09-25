@@ -194,84 +194,71 @@
                                 </div>
 
                                 @if($isRotated)
-                                <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
-                                    <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
+    <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
+        <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
+            <input
+                wire:model="searchTerm"
+                style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;"
+                type="text"
+                class="form-control"
+                placeholder="Search for Emp.Name or ID"
+                aria-label="Search"
+                aria-describedby="basic-addon1"
+            >
+            <div class="input-group-append" style="display: flex; align-items: center;">
+                <button wire:click="filter" class="helpdesk-search-btn" type="button">
+                    <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                </button>
+                <button
+                    wire:click="closePeoples"
+                    type="button"
+                    class="close rounded px-1 py-0"
+                    aria-label="Close"
+                    style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
+                    <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
+                </button>
+            </div>
+        </div>
 
-                                      
+        @if ($peopleData && $peopleData->isEmpty())
+            <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
+                No People Found
+            </div>
+        @else
+            @foreach($peopleData->sortBy(function($person) {
+                return $person->first_name . ' ' . $person->last_name;
+            }) as $people)
+                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px; margin-top: 5px">
+                    <div class="row align-items-center">
+                        <div class="col-auto">
+                       
+    <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+</div>
 
-                                        <input
-                                            wire:model="searchTerm"
-                                            style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;"
-                                            type="text"
-                                            class="form-control"
-                                            placeholder="Search for Emp.Name or ID"
-                                            aria-label="Search"
-                                            aria-describedby="basic-addon1">
-                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                            <button wire:click="filter"  class="helpdesk-search-btn" type="button">
-                                                <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                            </button>
-
-
-                                            <button
-                                                wire:click="closePeoples"
-                                                type="button"
-                                                class="close rounded px-1 py-0"
-                                                aria-label="Close"
-                                                style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-
-                                    @if ($peopleData && $peopleData->isEmpty())
-                                    <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
-                                        No People Found
-                                    </div>
-                                    @else
-                                    @foreach($peopleData->sortBy(function($person) {
-                                    return $person->first_name . ' ' . $person->last_name;
-                                    }) as $people)
-                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px; margin-top: 5px">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-                                                <input type="checkbox" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                            </div>
-                                            <div class="col-auto">
-                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                <!-- Display the actual image if available -->
-                                                <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
-                                                @else
-                                                <!-- If image is not available, check the gender and show default images -->
-
-                                                @php
-                                                // Debugging step to check gender
-                                                $gender = $people->gender ?? null;
-                                                @endphp
-                                                @if ($gender === 'Male')
-                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                @elseif($gender === 'Female')
-                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-
-                                                @else
-                                                <!-- Fallback if emp is not available -->
-                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                @endif
-                                                @endif
-                                            </div>
-                                            <div class="col">
-                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    @endforeach
-                                    @endif
-
-
-                                </div>
+                        <div class="col-auto">
+                            @if (!empty($people->image) && $people->image !== 'null')
+                                <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                            @else
+                                @if ($people->gender === 'Male')
+                                    <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                                @elseif($people->gender === 'Female')
+                                    <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                                @else
+                                    <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
                                 @endif
+                            @endif
+                        </div>
+                        <div class="col">
+                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+                        </div>
+                    </div>
+                </label>
+            @endforeach
+        @endif
+    </div>
+@endif
+
                             </div>
                         </div>
 
@@ -295,7 +282,7 @@
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
 
 
-                    <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                    <button  class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                     </button>
 
@@ -381,7 +368,7 @@
                                             <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                            <img src="{{ $imageUrl }}" src="data:image/jpeg;base64,{{ ($imageUrl) }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
@@ -463,7 +450,7 @@
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
 
-                    <button wire:click="searchCloseHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                    <button wire:click="searchCloseHelpDesk"class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                     </button>
                 </div>
@@ -621,7 +608,7 @@
             <div class="col-12 col-md-3 ">
                 <div class="input-group">
                     <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <button wire:click="searchPendingHelpDesk" style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button" wire:click="searchActiveHelpDesk">
+                    <button wire:click="searchPendingHelpDesk" class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                     </button>
 

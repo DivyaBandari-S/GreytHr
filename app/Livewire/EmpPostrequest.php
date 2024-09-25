@@ -141,15 +141,26 @@ class EmpPostrequest extends Component
 
     public function submit()
     {
-        $validatedData = $this->validate($this->newCommentRules);
+        // Update validation to only allow image files
+        $validatedData = $this->validate([
+            'category' => 'required|string|max:255',
+            'description' => 'required|string',
+            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files with a max size of 2MB
+        ]);
     
         try {
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
     
-            // Process the uploaded file
+            // Process the uploaded image file
             if ($this->file_path) {
+                // Validate file is an image
+                if (!in_array($this->file_path->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'])) {
+                    session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
+                    return;
+                }
+    
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
@@ -164,8 +175,8 @@ class EmpPostrequest extends Component
                 return;
             }
     
-            // Check if the file content is too large
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+            // Check if the file content is too large (16MB limit for MEDIUMBLOB)
+            if (strlen($fileContent) > 16777215) {
                 session()->flash('error', 'File size exceeds the allowed limit.');
                 return;
             }
@@ -181,9 +192,9 @@ class EmpPostrequest extends Component
             $isManager = DB::table('employee_details')
                 ->where('manager_id', $employeeId)
                 ->exists();
-
+    
             // If not a manager, set `emp_id` instead of `manager_id`
-            $postStatus = $isManager ? 'Open' : 'Pending';
+            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
             $managerId = $isManager ? $employeeId : null;
             $empId = $isManager ? null : $employeeId;
     
@@ -204,9 +215,8 @@ class EmpPostrequest extends Component
             ]);
     
             // Reset form fields and display success message
-            $this->reset(['category', 'description']);
-            $this->message = 'Post created successfully!';
-            session()->flash('showAlert', true);
+            $this->reset(['category', 'description', 'file_path']);
+            session()->flash('message', 'Post created successfully!');
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {
