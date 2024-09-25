@@ -1205,7 +1205,7 @@
 
                             <div style="display: flex; align-items: center;">
                                 @if(($data['employee']->image) &&$data['employee']->image !== 'null')
-                                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}" >
+                                <img style="border-radius: 50%; margin-left: 10px" height="50" width="50"  src="data:image/jpeg;base64,{{ ($data['employee']->image) }}" >
                                 @else
                                 @if($data['employee'] && $data['employee']->gender == "Male")
                                 <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
@@ -1581,7 +1581,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                 </p>
                 <div style="display: flex; align-items: center;">
                     @if(($data['employee']->image) &&$data['employee']->image !== 'null')
-                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{$data['employee']->image_url }}" alt="Employee Image">
+                    <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="data:image/jpeg;base64,{{ ($data['employee']->image) }}" alt="Employee Image">
                     @else
                     @if($data['employee'] && $data['employee']->gender == "Male")
                     <img style="border-radius: 50%; margin-left: 10px" height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
