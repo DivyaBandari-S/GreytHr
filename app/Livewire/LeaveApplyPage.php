@@ -270,7 +270,7 @@ class LeaveApplyPage extends Component
                 $this->showAlert = true; // Assuming you're using this to control alert visibility
             }
         }
-        
+
         $this->searchCCRecipients(); // Assuming you want to update the recipients list
         $this->fetchEmployeeDetails(); // Fetch details if necessary
     }
@@ -302,31 +302,59 @@ class LeaveApplyPage extends Component
     }
     public function handleCheckboxChange($empId)
     {
-        if (isset($this->selectedPeople[$empId])) {
-            // If the checkbox is unchecked, remove from CC
-            $this->removeFromCcTo($empId);
-        } else {
-            // If the checkbox is checked, add to CC
-            $this->selectedPeople[$empId] = true;
+        try {
+            // Check if the employee is selected (checkbox is checked)
+            if (array_key_exists($empId, $this->selectedPeople) && $this->selectedPeople[$empId]) {
+                // Checkbox is currently checked, so it’s being unchecked
+                $this->removeFromCcTo($empId);
+            } else {
+                // Checkbox is currently unchecked, so it’s being checked
+                $this->selectedPeople[$empId] = true;
+
+                // Optionally add to selectedCcTo or perform other actions
+                $this->selectedCcTo[] = ['emp_id' => $empId];
+            }
+
+            // Update cc_to field
+            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+            // Fetch updated employee details and search CC recipients
+            $this->fetchEmployeeDetails();
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Handle the exception (log it, show a message, etc.)
+            Log::error('Error handling checkbox change: ' . $e->getMessage());
+            // You might also want to notify the user in some way
+            session()->flash('error', 'An error occurred while updating CC recipients.');
         }
     }
+
     public function removeFromCcTo($empId)
     {
-        // Remove the employee from selectedCcTo array
-        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
-            return $recipient['emp_id'] != $empId;
-        }));
+        try {
+            // Remove the employee from selectedCcTo array
+            $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+                return $recipient['emp_id'] != $empId;
+            }));
 
-        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
-        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+            // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
 
-        // Toggle selection state in selectedPeople
-        unset($this->selectedPeople[$empId]);
-        $this->showCcRecipents = true;
-        // Fetch updated employee details
-        $this->fetchEmployeeDetails();
-        $this->searchCCRecipients();
+            // Toggle selection state in selectedPeople
+            unset($this->selectedPeople[$empId]);
+            $this->showCcRecipents = true;
+
+            // Fetch updated employee details
+            $this->fetchEmployeeDetails();
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Handle the exception (log it, show a message, etc.)
+            Log::error('Error removing from CC: ' . $e->getMessage());
+            // Notify the user
+            session()->flash('error', 'An error occurred while removing CC recipients.');
+        }
     }
+
     public $showCCEmployees = false;
     public function openModal()
     {
@@ -839,6 +867,7 @@ class LeaveApplyPage extends Component
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
         $this->file_paths = null;
+        $this->selectedPeople = [];
     }
 
     public $managerDetails, $fullName;
@@ -930,9 +959,14 @@ class LeaveApplyPage extends Component
                     'image' => $hrManager->image,
                 ]);
             });
+
+            // Keep only unique emp_ids
+            $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
+
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
 
 
         return view('livewire.leave-apply-page', [
