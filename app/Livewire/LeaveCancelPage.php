@@ -552,6 +552,7 @@ class LeaveCancelPage extends Component
         $this->leave_cancel_reason = null;
         $this->applying_to = null;
         $this->selectedLeaveType = null;
+        $this->selectedPeople = [];
     }
     public function getFilteredManagers()
     {
@@ -648,9 +649,13 @@ class LeaveCancelPage extends Component
                     'image' => $hrManager->image,
                 ]);
             });
+            // Keep only unique emp_ids
+            $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
+
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->where('from_date', '>=', now()->subMonths(2))

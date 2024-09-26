@@ -310,14 +310,14 @@ class LeaveApplyPage extends Component
             } else {
                 // Checkbox is currently unchecked, so it’s being checked
                 $this->selectedPeople[$empId] = true;
-    
+
                 // Optionally add to selectedCcTo or perform other actions
                 $this->selectedCcTo[] = ['emp_id' => $empId];
             }
-    
+
             // Update cc_to field
             $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
-    
+
             // Fetch updated employee details and search CC recipients
             $this->fetchEmployeeDetails();
             $this->searchCCRecipients();
@@ -328,7 +328,7 @@ class LeaveApplyPage extends Component
             session()->flash('error', 'An error occurred while updating CC recipients.');
         }
     }
-    
+
     public function removeFromCcTo($empId)
     {
         try {
@@ -336,14 +336,14 @@ class LeaveApplyPage extends Component
             $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
                 return $recipient['emp_id'] != $empId;
             }));
-    
+
             // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
             $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
-    
+
             // Toggle selection state in selectedPeople
             unset($this->selectedPeople[$empId]);
             $this->showCcRecipents = true;
-    
+
             // Fetch updated employee details
             $this->fetchEmployeeDetails();
             $this->searchCCRecipients();
@@ -867,6 +867,7 @@ class LeaveApplyPage extends Component
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
         $this->file_paths = null;
+        $this->selectedPeople = [];
     }
 
     public $managerDetails, $fullName;
@@ -958,9 +959,14 @@ class LeaveApplyPage extends Component
                     'image' => $hrManager->image,
                 ]);
             });
+
+            // Keep only unique emp_ids
+            $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
+
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
 
 
         return view('livewire.leave-apply-page', [
