@@ -120,7 +120,11 @@
     </style>
     <div class="leave-transctions">
         <div class="pdf-heading">
-            @if ($employeeDetails->company_id === 'XSS-12345')
+            @php
+            // Check if company_id is an array or JSON
+            $companyIds = is_array($employeeDetails->company_id) ? $employeeDetails->company_id : json_decode($employeeDetails->company_id, true);
+        @endphp
+             @if (in_array('XSS-12345', $companyIds))
                 <img src="https://media.licdn.com/dms/image/C4D0BAQHZsEJO8wdHKg/company-logo_200_200/0/1677514035093/xsilica_software_solutions_logo?e=2147483647&v=beta&t=rFgO4i60YIbR5hKJQUL87_VV9lk3hLqilBebF2_JqJg"
                     alt="" style="width:200px;height:200px;object-fit: cover;">
                 <div>
@@ -133,7 +137,7 @@
                     <h3>Leave Balance As On {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- payglogo -->
-            @elseif($employeeDetails->company_id === 'PAYG-12345')
+                @elseif (in_array('PAYG-12345', $companyIds))
                 <img src="https://play-lh.googleusercontent.com/qUGkF93p010_IHxbn8FbnFWZfqb2lk_z07i6JkpOhC9zf8hLzxTdRGv2oPpNOOGVaA=w600-h300-pc0xffffff-pd"
                     style="width:200px;height:125px;">
                 <div>
@@ -146,7 +150,7 @@
                     <h3>Leave Balance As On {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- attune golabal logo -->
-            @elseif($employeeDetails->company_id === 'AGS-12345')
+                @elseif (in_array('AGS-12345', $companyIds))
                 <img src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/rxyycak6d2ydcybdbb3e"
                     alt="" style="width:200px;height:125px;">
                 <div>
