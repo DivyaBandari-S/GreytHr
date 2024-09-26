@@ -11,7 +11,7 @@
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
         <button type="button" wire:click="hideAlert" class="alert-close bg-none border-none" data-dismiss="alert" aria-label="Close">
-            <span >X</span>
+            <span>X</span>
         </button>
     </div>
     @endif
@@ -459,7 +459,7 @@
                 </div>
 
                 @if($showCcRecipents)
-                <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                <div class="ccContainer position-relative" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
@@ -478,22 +478,27 @@
                             </button>
                         </div>
                     </div>
-                    <div class="scrollApplyingTO mb-2 mt-2">
-                        @if(!empty($ccRecipients))
+                    <div class="scrollApplyingTO mb-2 mt-2 ">
+                        @if(session()->has('error'))
+                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
+                        @endif
+
+                        @if($ccRecipients->isNotEmpty())
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer mb-2 rounded" wire:key="{{ $employee['emp_id'] }}">
-                            <div class="downArrow d-flex align-items-center mt-2 align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-                                @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
+                        <div class="borderContainer mb-2 rounded" wire:key="{{ $employee->emp_id }}">
+                            <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
+
+                                @if(!empty($employee->image) && $employee->image !== 'null')
                                 <div class="employee-profile-image-container">
-                                    <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{($employee['image'])}}">
+                                    <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
                                 </div>
                                 @else
-                                @if($employee['gender'] === "Male")
+                                @if($employee->gender === "Male")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
-                                @elseif($employee['gender'] === "Female")
+                                @elseif($employee->gender === "Female")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
@@ -504,9 +509,9 @@
                                 @endif
                                 @endif
 
-                                <div class=" mb-2 mt-2">
-                                    <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                    <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
+                                <div class="mb-2 mt-2">
+                                    <p class="mb-0 empCcName">{{ ucwords(strtolower($employee->full_name)) }}</p>
+                                    <p class="mb-0 empIdStyle">#{{ $employee->emp_id }}</p>
                                 </div>
                             </div>
                         </div>

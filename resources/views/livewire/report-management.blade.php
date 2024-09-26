@@ -101,7 +101,6 @@
                 data-target="#FamilyDetailsModal"
                 style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px;white-space: nowrap; {{ $currentSection === 'Leave Transaction Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">
                 Leave Transaction Report
-
             </a>
         </div>
 
@@ -238,7 +237,7 @@
                                         <option value="casual_leave">Casual Leave</option>
                                         <option value="earned_leave">Earned Leave</option>
                                         <option value="sick">Sick Leave</option>
-                                        <option value="petarnity">Paternity Leave</option>
+                                        <optiorn value="petarnity">Paternity Leave</optiorn>
                                         <option value="maternity">Maternity Leave</option>
                                         <option value="casual_leave_probation">Casul Leave Probation</option>
                                         <option value="marriage_leave">Marriage Leave</option>

@@ -148,7 +148,7 @@ class ReportManagement extends Component
         ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->where('leave_applications.status', 'approved')
         ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-           
+
             $leaveTypes = [
                 'lop' => 'Loss of Pay',
                 'casual_leave' => 'Casual Leave',
@@ -215,7 +215,8 @@ class ReportManagement extends Component
                         $item->leave_from_date,
                         $item->from_session,
                         $item->leave_to_date,
-                        $item->to_session
+                        $item->to_session,
+                        $item->leave_type
                     );
                     return [
                         'emp_id' => $item->emp_id,
@@ -364,7 +365,8 @@ public  function updateTransactionType($event){
                         $item->leave_from_date,
                         $item->from_session,
                         $item->leave_to_date,
-                        $item->to_session
+                        $item->to_session,
+                        $leaveRequest->leave_type
                     );
                     return [
                         'emp_id' => $item->emp_id,
@@ -573,7 +575,8 @@ public function leaveBalanceAsOnADayReport()
                         $item->leave_from_date,
                         $item->from_session,
                         $item->leave_to_date,
-                        $item->to_session
+                        $item->to_session,
+                        $item->leave_type
                     );
                     return [
                         'emp_id' => $item->emp_id,
@@ -703,7 +706,8 @@ public function leaveBalanceAsOnADayReport()
                         $item->leave_from_date,
                         $item->from_session,
                         $item->leave_to_date,
-                        $item->to_session
+                        $item->to_session,
+                        $item->leave_type
                     );
                     return [
                         'emp_id' => $item->emp_id,
