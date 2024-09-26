@@ -189,6 +189,7 @@ class LeaveApplyPage extends Component
             foreach ($companyIdsArray as $companyId) {
                 $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
                     ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
+                    ->whereIn('employee_status', ['active', 'on-probation']) 
                     ->where(function ($query) {
                         // Apply search filtering if a search term is provided
                         if ($this->searchTerm) {
@@ -966,7 +967,6 @@ class LeaveApplyPage extends Component
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
-
 
 
         return view('livewire.leave-apply-page', [

@@ -178,7 +178,8 @@ class LeaveCancelPage extends Component
             // Loop through each company ID and find employees
             foreach ($companyIdsArray as $companyId) {
                 $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
-                    ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
+                    ->where('emp_id', '!=', $employeeId)
+                    ->whereIn('employee_status', ['active', 'on-probation']) e // Exclude the logged-in employee
                     ->where(function ($query) {
                         // Apply search filtering if a search term is provided
                         if ($this->searchTerm) {
