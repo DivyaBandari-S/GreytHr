@@ -58,7 +58,7 @@ class LeaveApplyPage extends Component
     public $loginEmpManagerId;
     public $employee;
     public $managerFullName = [];
-    public $ccRecipients = [];
+    public $ccRecipients;
     public $selectedEmployee = [];
     public $selectedManager = [];
 
@@ -174,23 +174,43 @@ class LeaveApplyPage extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
-            $this->ccRecipients = EmployeeDetails::whereJsonContains('company_id', $applying_to)
-                ->where('emp_id', '!=', $employeeId)
-                ->where(function ($query) {
-                    $query
-                        ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                })
-                ->groupBy('emp_id', 'image', 'gender')
-                ->select(
-                    'emp_id',
-                    'gender',
-                    'image',
-                    DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
-                )
-                ->orderBy('full_name')
-                ->get();
+
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+
+            // Initialize an empty collection for recipients
+            $this->ccRecipients = collect(); // Ensure it's initialized as a collection
+
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+                $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
+                    ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
+                    ->where(function ($query) {
+                        // Apply search filtering if a search term is provided
+                        if ($this->searchTerm) {
+                            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                        }
+                    })
+                    ->groupBy('emp_id', 'image', 'gender') // Group by the required fields
+                    ->select(
+                        'emp_id',
+                        'gender',
+                        'image',
+                        DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name') // Create a full name field
+                    )
+                    ->orderBy('full_name') // Order by full name
+                    ->get();
+
+                // Merge the results into the ccRecipients collection
+                $this->ccRecipients = $this->ccRecipients->merge($employees);
+            }
+
+            // Optionally, you can remove duplicates if necessary
+            $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
@@ -870,14 +890,22 @@ class LeaveApplyPage extends Component
             );
 
             // Get the company_id from the logged-in employee's details
-            $companyId = $applying_to->company_id;
+            $companyIds = $applying_to->company_id;
+
+            // Convert the company IDs to an array if it's in JSON format
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
             // Fetch emp_ids from the HR table
             $hrEmpIds = Hr::pluck('emp_id');
 
             // Now, fetch employee details for these HR emp_ids
             $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
-                ->whereJsonContains('company_id', $companyId) // Ensure company_id matches
+                ->where(function ($query) use ($companyIdsArray) {
+                    // Check if any of the company IDs match
+                    foreach ($companyIdsArray as $companyId) {
+                        $query->orWhere('company_id', 'like', "%\"$companyId\"%"); // Assuming company_id is stored as JSON
+                    }
+                })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
 
             // Add HR managers to the collection

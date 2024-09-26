@@ -238,7 +238,7 @@
                                         <option value="casual_leave">Casual Leave</option>
                                         <option value="earned_leave">Earned Leave</option>
                                         <option value="sick">Sick Leave</option>
-                                        <option value="petarnity">Paternity Leave</option>
+                                        <optiorn value="petarnity">Paternity Leave</optiorn>
                                         <option value="maternity">Maternity Leave</option>
                                         <option value="casual_leave_probation">Casul Leave Probation</option>
                                         <option value="marriage_leave">Marriage Leave</option>

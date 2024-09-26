@@ -271,7 +271,7 @@
                             @if(!empty($ccRecipients))
                             @foreach($ccRecipients as $employee)
                             <div class="borderContainer mb-2 rounded" wire:key="{{ $employee['emp_id'] }}">
-                                <div class="downArrow d-flex align-items-center mt-2 align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
+                                <div class="downArrow d-flex align-items-center align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
                                     <input class="ms-2 downArrow" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}"  wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
                                     @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
                                     <div class="employee-profile-image-container">
