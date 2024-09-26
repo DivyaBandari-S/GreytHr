@@ -177,7 +177,10 @@ class ReportManagement extends Component
         });
     
         if ($this->employeeType == 'active') {
-            $query->where('employee_details.employee_status', $this->employeeType);
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'active')
+                      ->orWhere('employee_details.employee_status', 'on-probation');
+            });
         } else {
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'resigned')
@@ -341,7 +344,10 @@ public  function updateTransactionType($event){
             }
 
            if($this->employeeType=='active'){
-            $query->where('employee_details.employee_status', $this->employeeType);
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'active')
+                      ->orWhere('employee_details.employee_status', 'on-probation');
+            });
            }else{
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'resigned')
@@ -537,7 +543,10 @@ public function leaveBalanceAsOnADayReport()
         }
     
         if ($this->employeeType == 'active') {
-            $query->where('employee_details.employee_status', $this->employeeType);
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'active')
+                      ->orWhere('employee_details.employee_status', 'on-probation');
+            });
         } else {
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'resigned')
@@ -663,7 +672,10 @@ public function leaveBalanceAsOnADayReport()
     
     
         if ($this->employeeType == 'active') {
-            $query->where('employee_details.employee_status', $this->employeeType);
+            $query->where(function ($query) {
+                $query->where('employee_details.employee_status', 'active')
+                      ->orWhere('employee_details.employee_status', 'on-probation');
+            });
         } else {
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'resigned')
