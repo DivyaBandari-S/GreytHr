@@ -219,33 +219,6 @@
                                         </div>
                                     </div>
 
-
-        @if ($peopleData && $peopleData->isEmpty())
-            <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
-                No People Found
-            </div>
-        @else
-            @foreach($peopleData->sortBy(function($person) {
-                return $person->first_name . ' ' . $person->last_name;
-            }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px; margin-top: 5px">
-                    <div class="row align-items-center">
-                        <div class="col-auto">
-                       
-    <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
-</div>
-
-                        <div class="col-auto">
-                            @if (!empty($people->image) && $people->image !== 'null')
-                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                            @else
-                                @if ($people->gender === 'Male')
-                                    <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                @elseif($people->gender === 'Female')
-                                    <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                @else
-                                    <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-
                                     @if ($peopleData && $peopleData->isEmpty())
                                     <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
                                         No People Found
@@ -283,7 +256,6 @@
                                     @endforeach
                                     @endif
                                 </div>
-
                                 @endif
 
                             </div>
@@ -395,7 +367,7 @@
                                             <h5 class="modal-title">View File</h5>
                                         </div>
                                         <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}"  class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                            <img src="{{ $imageUrl }}" src="data:image/jpeg;base64,{{ ($imageUrl) }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
