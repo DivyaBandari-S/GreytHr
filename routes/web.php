@@ -384,7 +384,7 @@ Route::get('/ytdpayslip', function () {
 
 
 
-
+#########################################This are routes for checking hash and encrypt values################################################################################################################################################################
 
 use App\Models\EmpSalary;
 use Illuminate\Support\Facades\Artisan;
@@ -478,6 +478,7 @@ Route::get('/clear', function () {
     Artisan::call('config:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
+    Artisan::call('auth:clear-resets');
 
     return 'Log contents cleared, and caches have been cleared and optimized!';
 });
@@ -564,6 +565,7 @@ Route::get('/up', function () {
     return 'Application is now live!';
 });
 Route::get('password/reset/{token}', PasswordResetComponent::class)->name('password.reset');
+
 use Illuminate\Support\Facades\Crypt;
 
 Route::get('/encode-decode/{value}', function ($value) {
