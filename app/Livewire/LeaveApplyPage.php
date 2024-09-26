@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
 use App\Models\HolidayCalendar;
+use App\Models\Hr;
 use App\Models\LeaveRequest;
 use App\Models\Notification;
 use Carbon\Carbon;
@@ -110,11 +111,38 @@ class LeaveApplyPage extends Component
             $managerId = $this->employee->manager_id;
             // Fetch the logged-in employee's manager details
             $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
             if ($managerDetails) {
+                // If manager details are found, format the full name
                 $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
                 $this->loginEmpManager = $fullName;
                 $this->selectedManagerDetails = $managerDetails;
+            } else {
+                // If no manager is found, check if the managerId is null
+                if (is_null($managerId)) {
+                    // Get the company_id from the logged-in employee's details
+                    $companyId = $this->employee->company_id;
+                    // Fetch emp_ids from the HR table
+                    $hrEmpIds = Hr::pluck('emp_id');
+                    // Now, fetch employee details for these HR emp_ids
+                    $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
+                        ->whereJsonContains('company_id', $companyId) // Ensure company_id matches
+                        ->get();
+
+                    if ($hrManagers->isNotEmpty()) {
+                        // Assuming you want the first manager or you can apply your own logic to select a specific manager
+                        $firstManager = $hrManagers->first();
+                        $fullName = ucfirst(strtolower($firstManager->first_name)) . ' ' . ucfirst(strtolower($firstManager->last_name));
+                        $this->loginEmpManager = $fullName;
+                        $this->selectedManagerDetails = $firstManager;
+                    } else {
+                        // Handle case where no HR managers are found
+                        $this->loginEmpManager = 'No manager found';
+                        $this->selectedManagerDetails = null;
+                    }
+                }
             }
+
             // Determine if the dropdown option should be displayed
             $this->showCasualLeaveProbation = $this->employee && !$this->employee->confirmation_date;
             $currentYear = date('Y'); // Get the current year
@@ -817,7 +845,7 @@ class LeaveApplyPage extends Component
             // Fetch the gender of the logged-in employee
             $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
 
-            // Fetch employees with job roles CTO and Chairman
+            // Fetch employees with job roles CTO, Chairman, and HR
             $jobRoles = ['CTO', 'Chairman'];
             $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
                 ->where(function ($query) {
@@ -840,9 +868,32 @@ class LeaveApplyPage extends Component
                     ];
                 })
             );
+
+            // Get the company_id from the logged-in employee's details
+            $companyId = $applying_to->company_id;
+
+            // Fetch emp_ids from the HR table
+            $hrEmpIds = Hr::pluck('emp_id');
+
+            // Now, fetch employee details for these HR emp_ids
+            $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
+                ->whereJsonContains('company_id', $companyId) // Ensure company_id matches
+                ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
+
+            // Add HR managers to the collection
+            $hrManagers->each(function ($hrManager) use ($managers) {
+                $fullName = ucfirst(strtolower($hrManager->first_name)) . ' ' . ucfirst(strtolower($hrManager->last_name));
+                $managers->push([
+                    'full_name' => $fullName,
+                    'emp_id' => $hrManager->emp_id,
+                    'gender' => $hrManager->gender,
+                    'image' => $hrManager->image,
+                ]);
+            });
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
 
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
