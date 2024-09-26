@@ -572,15 +572,19 @@ class Tasks extends Component
         $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTerm);
-        foreach ($companyIdsArray as $companyId) {
 
-            $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+
+            $this->filteredPeoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
+            })
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
                 })
                 ->get();
-        }
+
 
         $this->peopleFound = count($this->filteredPeoples) > 0;
     }
@@ -596,14 +600,18 @@ class Tasks extends Component
         $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTermFollower);
-        foreach ($companyIdsArray as $companyId) {
-            $this->filteredFollowers = EmployeeDetails::whereJsonContains('company_id', $companyId)
+
+            $this->filteredFollowers = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
+            })
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
                 })
                 ->get();
-        }
+
 
         $this->peopleFound = count($this->filteredFollowers) > 0;
     }
@@ -760,15 +768,18 @@ class Tasks extends Component
         $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         // Fetch employees, ensuring the authenticated employee is shown first
-        foreach ($companyIdsArray as $companyId) {
 
-            $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+
+            $this->peoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
+            })
                 ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
                 ->orderBy('first_name')
                 ->orderBy('last_name')
                 ->get();
-        }
-
+        
         $peopleAssigneeData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $peopleFollowerData = $this->filteredFollowers ? $this->filteredFollowers : $this->peoples;
 
