@@ -8384,6 +8384,12 @@ peoples module styles started */
         margin-top: 10px; /* Margin for mobile devices */
         margin-left: 0; /* Optionally remove left margin for mobile */
     }
+    .checkLeaveBal{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        margin-top: 20px;
+    }
 }
 @media screen and (max-width: 460px) {
     .leavePageContent {
