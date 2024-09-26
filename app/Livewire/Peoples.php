@@ -55,16 +55,23 @@ class Peoples extends Component
     public function filter()
     {
         try {
-            $companyId = Auth::user()->company_id;
-            $trimmedSearchTerm = trim($this->searchTerm);
+            $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
-                        ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
-                })
-                ->orderByRaw("CONCAT(first_name, ' ', last_name)")
-                ->get();
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            $trimmedSearchTerm = trim($this->searchTerm);
+            foreach ($companyIdsArray as $companyId) {
+                $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+                    ->where(function ($query) use ($trimmedSearchTerm) {
+                        $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
+                            ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
+                    })
+                    ->orderByRaw("CONCAT(first_name, ' ', last_name)")
+                    ->get();
+            }
 
             $this->peopleFound = count($this->filteredPeoples) > 0;
         } catch (\Exception $e) {
@@ -74,20 +81,28 @@ class Peoples extends Component
     public function filterMyTeam()
     {
         try {
-            $companyId = Auth::user()->company_id;
-            $trimmedSearchTerm = trim($this->searchValue);
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
-            $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
-                ->whereJsonContains('company_id', $companyId)
-                ->where('manager_id', $employeeId)
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
-                        ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
-                })
-                ->orderByRaw("CONCAT(first_name, ' ', last_name)")
-                ->get();
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            $trimmedSearchTerm = trim($this->searchValue);
+            $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+
+                $this->filteredMyTeamPeoples = EmployeeDetails::with('starredPeople')
+                    ->whereJsonContains('company_id', $companyId)
+                    ->where('manager_id', $employeeId)
+                    ->where(function ($query) use ($trimmedSearchTerm) {
+                        $query->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ['%' . $trimmedSearchTerm . '%'])
+                            ->orWhere('emp_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
+                    })
+                    ->orderByRaw("CONCAT(first_name, ' ', last_name)")
+                    ->get();
+            }
 
             $this->peopleFound = count($this->filteredMyTeamPeoples) > 0;
         } catch (\Exception $e) {
@@ -102,16 +117,23 @@ class Peoples extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $companyId = Auth::user()->company_id;
-            $trimmedSearchTerm = trim($this->search);
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
 
-            $this->filteredStarredPeoples = StarredPeople::whereJsonContains('company_id', $companyId)
-                ->where('emp_id', $employeeId)
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->where('name', 'LIKE', '%' . $trimmedSearchTerm . '%')
-                        ->orWhere('people_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
-                })
-                ->get();
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            $trimmedSearchTerm = trim($this->search);
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+
+                $this->filteredStarredPeoples = StarredPeople::whereJsonContains('company_id', $companyId)
+                    ->where('emp_id', $employeeId)
+                    ->where(function ($query) use ($trimmedSearchTerm) {
+                        $query->where('name', 'LIKE', '%' . $trimmedSearchTerm . '%')
+                            ->orWhere('people_id', 'LIKE', '%' . $trimmedSearchTerm . '%');
+                    })
+                    ->get();
+            }
 
             $this->peopleFound = count($this->filteredStarredPeoples) > 0;
         } catch (\Exception $e) {
@@ -143,12 +165,12 @@ class Peoples extends Component
                             'people_id' => $this->employee->emp_id,
                             'emp_id' => $this->employeeDetails->emp_id,
                             'company_id' => is_array($this->employee->company_id) ? json_encode($this->employee->company_id) : $this->employee->company_id,
-                            'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '', 
+                            'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '',
                             'profile' => $this->employee->image ?? 'null',
                             'contact_details' => $this->employee->emergency_contact ?? '',
                             'category' => $category,
                             'location' => $this->employee->job_location ?? '',
-                           'joining_date' => $this->employee->hire_date ?? '', 
+                            'joining_date' => $this->employee->hire_date ?? '',
                             'date_of_birth' => $this->employee->empPersonalInfo ? $this->employee->empPersonalInfo->date_of_birth : '',
                             'starred_status' => 'starred'
                         ]);
@@ -189,24 +211,36 @@ class Peoples extends Component
     public function render()
     {
         try {
-            $companyId = Auth::user()->company_id;
-
-            $this->peoples = EmployeeDetails::with('starredPeople')->whereJsonContains('company_id', $companyId)
-                ->orderBy('first_name')
-                ->orderBy('last_name')
-                ->get();
-
-
             $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+
+                $this->peoples = EmployeeDetails::with('starredPeople')->whereJsonContains('company_id', $companyId)
+                    ->orderBy('first_name')
+                    ->orderBy('last_name')
+                    ->get();
+            }
+
+
+
             $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
 
             // Fetch all employees under the same manager, with the same company_id, and active status
-            $this->myTeam = EmployeeDetails::with('starredPeople')
-                ->whereJsonContains('company_id', $companyId)
-                ->where('manager_id', $employeeId)
-                ->orderBy('first_name')
-                ->orderBy('last_name')
-                ->get();
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+                $this->myTeam = EmployeeDetails::with('starredPeople')
+                    ->whereJsonContains('company_id', $companyId)
+                    ->where('manager_id', $employeeId)
+                    ->orderBy('first_name')
+                    ->orderBy('last_name')
+                    ->get();
+            }
 
             $this->starredList = StarredPeople::with('emp')->where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
 
