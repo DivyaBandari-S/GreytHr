@@ -148,7 +148,7 @@ class ReportManagement extends Component
         ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->where('leave_applications.status', 'approved')
         ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-           
+
             $leaveTypes = [
                 'lop' => 'Loss of Pay',
                 'casual_leave' => 'Casual Leave',

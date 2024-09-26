@@ -166,6 +166,7 @@ class LeaveApplyPage extends Component
     public function hideAlert()
     {
         $this->showerrorMessage = false;
+        $this->searchCCRecipients();
     }
 
     //this method used to filter cc recipients from employee details
@@ -256,13 +257,24 @@ class LeaveApplyPage extends Component
     public function toggleSelection($empId)
     {
         if (isset($this->selectedPeople[$empId])) {
+            // If already selected, unselect it
             unset($this->selectedPeople[$empId]);
         } else {
-            $this->selectedPeople[$empId] = true;
+            // Check if limit is reached
+            if (count($this->selectedPeople) < 5) {
+                // Add employee if under limit
+                $this->selectedPeople[$empId] = true;
+            } else {
+                // Show error if limit exceeded
+                session()->flash('error', 'You can only select up to 5 CC recipients.');
+                $this->showAlert = true; // Assuming you're using this to control alert visibility
+            }
         }
-        $this->searchCCRecipients();
-        $this->fetchEmployeeDetails();
+        
+        $this->searchCCRecipients(); // Assuming you want to update the recipients list
+        $this->fetchEmployeeDetails(); // Fetch details if necessary
     }
+
     public function fetchEmployeeDetails()
     {
         // Reset the list of selected employees

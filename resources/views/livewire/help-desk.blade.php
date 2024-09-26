@@ -237,7 +237,7 @@
                                             <div class="col-auto">
                                                 @if (!empty($people->image) && $people->image !== 'null')
                                                 <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                @elsec
+                                                @else
                                                 @if ($people->gender === 'Male')
                                                 <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
                                                 @elseif($people->gender === 'Female')

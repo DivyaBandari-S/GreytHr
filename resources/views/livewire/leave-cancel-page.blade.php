@@ -12,7 +12,7 @@
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
-            <p class="mb-0 normalTextSmall" >Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
+            <p class="mb-0 normalTextSmall">Leave Cancel enables you to apply for cancellation of approved leave applications. Please select a leave type to get started..</p>
             <p class="mb-0 hideInfo" wire:click="toggleInfoLeave">Hide</p>
         </div>
         @endif
@@ -40,7 +40,7 @@
                             @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                             @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
-                                <td wire:click="applyingTo({{ $leaveRequest->id }})"><input  type="radio" name="leaveType" wire:model="selectedLeaveType"></td>
+                                <td wire:click="applyingTo({{ $leaveRequest->id }})"><input type="radio" name="leaveType" wire:model="selectedLeaveType"></td>
                                 <td>{{ $leaveRequest->leave_type }}</td>
                                 <td>{{ $leaveRequest->from_date->format('d M, Y') }}</td>
                                 <td>{{ $leaveRequest->to_date->format('d M, Y') }}</td>
@@ -62,8 +62,8 @@
                 <div>
                     @if($showApplyingTo)
                     <div class="form-group mt-3">
-                        <div class="downArrow d-flex" >
-                            <span class="normalTextValue" >
+                        <div class="downArrow d-flex">
+                            <span class="normalTextValue">
                                 <img class="rounded-circle" src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px">
                                 Applying To <span class="requiredMark">*</span>
                             </span>
@@ -88,16 +88,16 @@
                         @endif
                         <div class=" p-0 m-0">
                             <p id="reportToText" class="ellipsis mb-0">{{ ucwords(strtolower($selectedManagerDetails->first_name)) }} {{ ucwords(strtolower($selectedManagerDetails->last_name)) }}</p>
-                            <p class="mb-0 normalTextSmall"  id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
+                            <p class="mb-0 normalTextSmall" id="managerIdText"><span class="remaining">#{{$selectedManagerDetails->emp_id}}</span></p>
                         </div>
                         @else
                         <div class=" p-0 m-0">
-                            <p class="mb-0 normalTextSmall" >N/A</p>
-                            <p class="mb-0 normalTextSmall"  id="managerIdText">#(N/A)</p>
+                            <p class="mb-0 normalTextSmall">N/A</p>
+                            <p class="mb-0 normalTextSmall" id="managerIdText">#(N/A)</p>
                         </div>
                         @endif
                         <div class="downArrow " wire:click="toggleApplyingto">
-                            <i class="fas fa-chevron-down " ></i>
+                            <i class="fas fa-chevron-down "></i>
                         </div>
                     </div>
                     @endif
@@ -117,8 +117,7 @@
                                             class="form-control searchBar placeholder-small"
                                             placeholder="Search...."
                                             aria-label="Search"
-                                            aria-describedby="basic-addon1"
-                                            >
+                                            aria-describedby="basic-addon1">
                                         <div class="input-group-append searchBtnBg d-flex align-items-center">
                                             <button
                                                 type="button"
@@ -131,7 +130,7 @@
                                 </div>
 
                                 <div class="col-md-2 m-0 p-0">
-                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close" >
+                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close">
                                         <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
                                         </span>
                                     </button>
@@ -148,7 +147,7 @@
                                 wire:click="toggleManager('{{ $employee['emp_id'] }}')" wire:key="{{ $employee['emp_id'] }}">
                                 @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
                                 <div class="employee-profile-image-container">
-                                    <img class="rounded-circle navProfileImg"  src="data:image/jpeg;base64,{{($employee['image'])}}" >
+                                    <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($employee['image'])}}">
                                 </div>
                                 @else
                                 @if($employee['gender'] === "Male")
@@ -167,7 +166,7 @@
                                 @endif
                                 <div class="d-flex flex-column mt-2 mb-2">
                                     <span class="ellipsis mb-0">{{ $employee['full_name'] }}</span>
-                                    <span class="mb-0 normalTextSmall" > #{{ $employee['emp_id'] }} </span>
+                                    <span class="mb-0 normalTextSmall"> #{{ $employee['emp_id'] }} </span>
                                 </div>
                             </div>
                             @endforeach
@@ -184,7 +183,7 @@
                         CC To
                     </span>
                     <div class="control-wrapper d-flex align-items-center">
-                        <a class="text-3 text-secondary control no-underline" aria-haspopup="true" wire:click="openCcRecipientsContainer" >
+                        <a class="text-3 text-secondary control no-underline" aria-haspopup="true" wire:click="openCcRecipientsContainer">
                             <div class="icon-container">
                                 <i class="fa fa-plus"></i>
                             </div>
@@ -218,17 +217,17 @@
 
                         <!-- Popup Modal -->
                         @if($showCCEmployees)
-                        <div class="modal d-block" tabindex="-1" role="dialog" >
+                        <div class="modal d-block" tabindex="-1" role="dialog">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title" >CC to</h5>
+                                        <h5 class="modal-title">CC to</h5>
                                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
-                                            wire:click="openModal" >
+                                            wire:click="openModal">
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <ul class="d-flex align-items-center mb-0 list-unstyled gap-3" >
+                                        <ul class="d-flex align-items-center mb-0 list-unstyled gap-3">
                                             @foreach($hiddenEmployees as $recipient)
                                             <li>
                                                 <div class="px-2 py-1 d-flex justify-content-between align-items-center rounded-pill gap-3" style=" border: 2px solid #adb7c1;" title="{{ ucwords(strtolower($recipient['first_name'])) }} {{ ucwords(strtolower($recipient['last_name'])) }}">
@@ -248,14 +247,14 @@
                     </div>
 
                     @if($showCcRecipents)
-                    <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                    <div class="ccContainer position-relative" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                         <div class="row  d-flex align-items-center justify-content-between">
-                            <div class="col-md-10 m-0 py-0 px-2" >
+                            <div class="col-md-10 m-0 py-0 px-2">
                                 <div class="input-group">
-                                    <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput"  type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                    <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
-                                            <i  class="fas fa-search "></i>
+                                            <i class="fas fa-search "></i>
                                         </button>
                                     </div>
                                 </div>
@@ -267,41 +266,46 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="scrollApplyingTO mb-2 mt-2">
-                            @if(!empty($ccRecipients))
+                        <div class="scrollApplyingTO mb-2 mt-2 ">
+                            @if(session()->has('error'))
+                            <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
+                            @endif
+                            @if($ccRecipients->isNotEmpty())
                             @foreach($ccRecipients as $employee)
-                            <div class="borderContainer mb-2 rounded" wire:key="{{ $employee['emp_id'] }}">
-                                <div class="downArrow d-flex align-items-center align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                                    <input class="ms-2 downArrow" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}"  wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-                                    @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
+                            <div class="borderContainer mb-2 rounded" wire:key="{{ $employee->emp_id }}">
+                                <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                    <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
+
+                                    @if(!empty($employee->image) && $employee->image !== 'null')
                                     <div class="employee-profile-image-container">
-                                        <img class="rounded-circle navProfileImg"  src="data:image/jpeg;base64,{{($employee['image'])}} " >
+                                        <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
                                     </div>
                                     @else
-                                    @if($employee['gender'] === "Male")
+                                    @if($employee->gender === "Male")
                                     <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                     </div>
-                                    @elseif($employee['gender'] === "Female")
+                                    @elseif($employee->gender === "Female")
                                     <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
+                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                     </div>
                                     @else
                                     <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px">
+                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
                                     </div>
                                     @endif
                                     @endif
+
                                     <div class="mb-2 mt-2">
-                                        <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                        <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
+                                        <p class="mb-0 empCcName">{{ ucwords(strtolower($employee->full_name)) }}</p>
+                                        <p class="mb-0 empIdStyle">#{{ $employee->emp_id }}</p>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
                             @else
                             <div class="mb-0 normalTextValue">
-                                No data found
+                                No found
                             </div>
                             @endif
                         </div>

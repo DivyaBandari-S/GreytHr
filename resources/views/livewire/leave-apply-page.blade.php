@@ -459,7 +459,7 @@
                 </div>
 
                 @if($showCcRecipents)
-                <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                <div class="ccContainer position-relative" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
@@ -478,8 +478,12 @@
                             </button>
                         </div>
                     </div>
-                    <div class="scrollApplyingTO mb-2 mt-2">
-                        @if($ccRecipients->isNotEmpty()) <!-- Use isNotEmpty() to check the collection -->
+                    <div class="scrollApplyingTO mb-2 mt-2 ">
+                        @if(session()->has('error'))
+                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
+                        @endif
+
+                        @if($ccRecipients->isNotEmpty())
                         @foreach($ccRecipients as $employee)
                         <div class="borderContainer mb-2 rounded" wire:key="{{ $employee->emp_id }}">
                             <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
