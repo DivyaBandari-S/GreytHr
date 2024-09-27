@@ -1027,7 +1027,7 @@
                 });
             }
 
-            document.getElementById('employeeJobDetails').style.display = 'block';
+            document.getElementById('employeeJobDetails').style.display = 'none';
             document.addEventListener('DOMContentLoaded', function() {
                 var today = new Date().toISOString().split('T')[0];
                 document.getElementById('resignation_date').setAttribute('min', today);

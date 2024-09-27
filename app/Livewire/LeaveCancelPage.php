@@ -178,7 +178,8 @@ class LeaveCancelPage extends Component
             // Loop through each company ID and find employees
             foreach ($companyIdsArray as $companyId) {
                 $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
-                    ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
+                    ->where('emp_id', '!=', $employeeId)
+                    ->whereIn('employee_status', ['active', 'on-probation']) e // Exclude the logged-in employee
                     ->where(function ($query) {
                         // Apply search filtering if a search term is provided
                         if ($this->searchTerm) {
@@ -552,6 +553,7 @@ class LeaveCancelPage extends Component
         $this->leave_cancel_reason = null;
         $this->applying_to = null;
         $this->selectedLeaveType = null;
+        $this->selectedPeople = [];
     }
     public function getFilteredManagers()
     {
@@ -648,9 +650,13 @@ class LeaveCancelPage extends Component
                     'image' => $hrManager->image,
                 ]);
             });
+            // Keep only unique emp_ids
+            $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
+
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where('status', 'approved')
             ->where('from_date', '>=', now()->subMonths(2))

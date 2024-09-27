@@ -579,6 +579,10 @@ class Tasks extends Component
                     $query->orWhereJsonContains('company_id', $companyId);
                 }
             })
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
+            })
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
@@ -605,6 +609,10 @@ class Tasks extends Component
                 foreach ($companyIdsArray as $companyId) {
                     $query->orWhereJsonContains('company_id', $companyId);
                 }
+            })
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
             })
                 ->where(function ($query) use ($trimmedSearchTerm) {
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
@@ -774,6 +782,10 @@ class Tasks extends Component
                 foreach ($companyIdsArray as $companyId) {
                     $query->orWhereJsonContains('company_id', $companyId);
                 }
+            })
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
             })
                 ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
                 ->orderBy('first_name')
