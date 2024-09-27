@@ -82,7 +82,7 @@
     @else
     <section>
         @livewire('main-layout')
-        <main id="maincontent" style="overflow: auto; height: calc(100vh - 100px);">
+        <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
             {{ $slot }}
         </main>
     </section>
