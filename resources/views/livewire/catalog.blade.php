@@ -126,11 +126,11 @@
                                             <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
-                                                        <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                                                    <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="col-auto">
                                                         @if (!empty($people->image) && $people->image !== 'null')
-                                                            <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                                                         @else
                                                             @php $gender = $people->gender ?? null; @endphp
                                                             @if ($gender === 'Male')
@@ -307,12 +307,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -490,12 +490,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -680,12 +680,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -866,12 +866,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1050,12 +1050,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1123,7 +1123,7 @@
                         <div class="row m-0">
                             <div class="col-md-4 mb-4">
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                    <p style="font-size: 12px;"><b>New Laptop</b></p>
+                                    <p style="font-size: 12px;"><b> Laptop Request</b></p>
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2" style="font-size:12px">
                                             <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" style="height:4em;">
@@ -1146,7 +1146,7 @@
                                                                 <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" style="height:7em">
                                                             </div>
                                                             <div class="col-8 m-auto">
-                                                                <p style="font-size:15px;">New Laptop</p>
+                                                                <p style="font-size:15px;"> Laptop Request</p>
                                                             </div>
                                                         </div>
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
@@ -1239,12 +1239,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 
@@ -1440,12 +1440,12 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                            <input type="checkbox" wire:model="selectedPeople" id="cc_to" value="{{ $people->emp_id }}">
+                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
                         <!-- Display the actual image if available -->
-                        <img class="profile-image" src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                        <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
                     @else
                         <!-- If image is not available, check the gender and show default images -->
 

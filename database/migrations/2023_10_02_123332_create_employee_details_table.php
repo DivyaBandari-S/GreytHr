@@ -51,6 +51,7 @@ return new class extends Migration
             $table->string('service_age')->nullable();
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->foreign('sub_dept_id')->references('sub_dept_id')->on('emp_sub_departments')->onDelete('cascade');
+            $table->rememberToken();
             $table->timestamps();
         });
 

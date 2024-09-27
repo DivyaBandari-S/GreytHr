@@ -77,12 +77,11 @@ class Tasks extends Component
         if ($tab === 'open') {
             $this->activeTab = 'open';
             $this->search = '';
-            $this->filterPeriod='all';
-            
+            $this->filterPeriod = 'all';
         } elseif ($tab === 'completed') {
             $this->activeTab = 'completed';
             $this->closedSearch = '';
-            $this->filterPeriod='all';
+            $this->filterPeriod = 'all';
         }
         $this->loadTasks();
     }
@@ -101,7 +100,7 @@ class Tasks extends Component
         }
     }
     public $filterPeriod = 'all';
- 
+
 
     public function searchActiveTasks()
     {
@@ -112,8 +111,8 @@ class Tasks extends Component
         })
             ->where('status', 'Open');
 
-         // Filter by period
-         switch ($this->filterPeriod) {
+        // Filter by period
+        switch ($this->filterPeriod) {
             case 'this_week':
                 $startOfWeek = now()->startOfWeek()->toDateString();
                 $endOfWeek = now()->endOfWeek()->toDateString();
@@ -141,7 +140,7 @@ class Tasks extends Component
         if ($this->search) {
             $searchTerm = trim($this->search); // Trim any extra whitespace
             $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
-        
+
             $query->where(function ($query) use ($searchTerm) {
                 $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
                     ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
@@ -154,7 +153,7 @@ class Tasks extends Component
                     ->orWhereRaw('LOWER(CONCAT("T-", id)) LIKE ?', ["%{$searchTerm}%"]);
             });
         }
-        
+
 
         $this->filterData = $query->orderBy('created_at', 'desc')->get();
         $this->peopleFound = count($this->filterData) > 0;
@@ -171,36 +170,36 @@ class Tasks extends Component
             ->where('status', 'Completed');
 
 
-            switch ($this->filterPeriod) {
-                case 'this_week':
-                    $startOfWeek = now()->startOfWeek()->toDateString();
-                    $endOfWeek = now()->endOfWeek()->toDateString();
-                    $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
-                    break;
-                case 'this_month':
-                    $startOfMonth = now()->startOfMonth()->toDateString();
-                    $endOfMonth = now()->endOfMonth()->toDateString();
-                    $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
-                    break;
-                case 'last_month':
-                    $startOfLastMonth = now()->subMonth()->startOfMonth()->toDateString();
-                    $endOfLastMonth = now()->subMonth()->endOfMonth()->toDateString();
-                    $query->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth]);
-                    break;
-                case 'this_year':
-                    $startOfYear = now()->startOfYear()->toDateString();
-                    $endOfYear = now()->endOfYear()->toDateString();
-                    $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
-                    break;
-                case 'all':
-                    break;
-            }
+        switch ($this->filterPeriod) {
+            case 'this_week':
+                $startOfWeek = now()->startOfWeek()->toDateString();
+                $endOfWeek = now()->endOfWeek()->toDateString();
+                $query->whereBetween('created_at', [$startOfWeek, $endOfWeek]);
+                break;
+            case 'this_month':
+                $startOfMonth = now()->startOfMonth()->toDateString();
+                $endOfMonth = now()->endOfMonth()->toDateString();
+                $query->whereBetween('created_at', [$startOfMonth, $endOfMonth]);
+                break;
+            case 'last_month':
+                $startOfLastMonth = now()->subMonth()->startOfMonth()->toDateString();
+                $endOfLastMonth = now()->subMonth()->endOfMonth()->toDateString();
+                $query->whereBetween('created_at', [$startOfLastMonth, $endOfLastMonth]);
+                break;
+            case 'this_year':
+                $startOfYear = now()->startOfYear()->toDateString();
+                $endOfYear = now()->endOfYear()->toDateString();
+                $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
+                break;
+            case 'all':
+                break;
+        }
 
 
         if ($this->closedSearch) {
             $searchTerm = trim($this->closedSearch); // Trim any extra whitespace
             $searchTerm = strtolower($searchTerm); // Convert to lowercase for case-insensitivity
-        
+
             $query->where(function ($query) use ($searchTerm) {
                 $query->whereRaw('LOWER(assignee) LIKE ?', ["%{$searchTerm}%"])
                     ->orWhereRaw('LOWER(followers) LIKE ?', ["%{$searchTerm}%"])
@@ -237,7 +236,7 @@ class Tasks extends Component
 
     public function forAssignee()
     {
-        $this->searchTerm='';
+        $this->searchTerm = '';
         $this->assigneeList = true;
     }
     public function closeAssignee()
@@ -247,7 +246,7 @@ class Tasks extends Component
 
     public function forFollowers()
     {
-        $this->searchTermFollower='';        
+        $this->searchTermFollower = '';
         $this->followersList = true;
     }
     public function closeFollowers()
@@ -270,11 +269,10 @@ class Tasks extends Component
 
         // TO reduce notification count by making as read related to  task
 
-         DB::table('notifications')
-        ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
-        ->where('notification_type', 'task')
-        ->delete();
-
+        DB::table('notifications')
+            ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$employeeId])
+            ->where('notification_type', 'task')
+            ->delete();
     }
     public function updatedFilterPeriod()
     {
@@ -313,7 +311,7 @@ class Tasks extends Component
         if (in_array($personId, $this->selectedPeopleForFollowers)) {
             $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
         } else {
-           
+
             $this->selectedPeopleForFollowers[] = $personId;
         }
 
@@ -327,41 +325,40 @@ class Tasks extends Component
 
     public $selectedPeopleForFollowers = [];
 
-public function togglePersonSelection($personId)
-{
-    if (in_array($personId, $this->selectedPeopleForFollowers)) {
-        // Deselect the person
-        $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+    public function togglePersonSelection($personId)
+    {
+        if (in_array($personId, $this->selectedPeopleForFollowers)) {
+            // Deselect the person
+            $this->selectedPeopleForFollowers = array_diff($this->selectedPeopleForFollowers, [$personId]);
+        } else {
 
-    } else {
-    
-        // Select the person
-        $this->selectedPeopleForFollowers[] = $personId;
+            // Select the person
+            $this->selectedPeopleForFollowers[] = $personId;
+        }
+
+        // Ensure state is updated correctly
+
+        $this->updateFollowers();
+        if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
+            $this->validationFollowerMessage = "You can only select up to 5 followers.";
+        } else {
+            $this->validationFollowerMessage = '';
+        }
     }
 
-    // Ensure state is updated correctly
 
-    $this->updateFollowers();
-    if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
-        $this->validationFollowerMessage = "You can only select up to 5 followers.";
-    } else {
-        $this->validationFollowerMessage = '';
+    public function updateFollowers()
+    {
+
+        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+            $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+        }, $this->selectedPeopleForFollowers);
+
+        $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+
+        $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
     }
-}
-
-
-public function updateFollowers()
-{
-   
-    $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
-        $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-        return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name .' #(' . $selectedPerson->emp_id . ')' : '';
-    }, $this->selectedPeopleForFollowers);
-
-    $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
-    
-    $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
-}
 
     public function openForTasks($taskId)
     {
@@ -414,7 +411,7 @@ public function updateFollowers()
         }
     }
     public $maxFollowers = 5;
-public $validationFollowerMessage = '';
+    public $validationFollowerMessage = '';
 
 
     public function submit()
@@ -481,7 +478,9 @@ public $validationFollowerMessage = '';
                 'mime_type' => $mimeType,
                 'status' => "Open",
             ]);
+            // $this->showRecipients = false;
 
+            // $this->selectedPeopleName=null;
 
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
@@ -498,9 +497,10 @@ public $validationFollowerMessage = '';
                 ]);
             }
 
-            $this->reset();
-            session()->flash('message', 'Task created successfully!');
             session()->flash('showAlert', true);
+            session()->flash('message', 'Task created successfully!');
+            $this->resetFields();
+
             return redirect()->to('/tasks');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
@@ -509,10 +509,28 @@ public $validationFollowerMessage = '';
                 'employee_id' => $employeeId,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
+    }
+    public function resetFields()
+    {
+        $this->task_name = null;
+        $this->assignee = null;
+        $this->client_id = null;
+        $this->project_name = null;
+        $this->priority = null;
+        $this->due_date = null;
+        $this->tags = null;
+        $this->followers = null;
+        $this->subject = null;
+        $this->description = false;
+        $this->selectedPeopleName = null;
+        $this->selectedPeopleNamesForFollowers = [];
+        $this->showRecipients = false;
+        $this->showFollowers = false;
+        $this->file_path = null;
     }
 
     public $client_id, $project_name, $image_path;
@@ -546,32 +564,62 @@ public $validationFollowerMessage = '';
 
     public function filter()
     {
-        $companyId = Auth::user()->company_id;
+        // Fetch the company_ids for the logged-in employee
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+        // Check if companyIds is an array; decode if it's a JSON string
+        $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTerm);
 
-        $this->filteredPeoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+
+            $this->filteredPeoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
             })
-            ->get();
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
+            })
+                ->where(function ($query) use ($trimmedSearchTerm) {
+                    $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                        ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+                })
+                ->get();
+
 
         $this->peopleFound = count($this->filteredPeoples) > 0;
     }
     public $filteredFollowers;
     public function filterFollower()
     {
-        $companyId = Auth::user()->company_id;
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Fetch the company_ids for the logged-in employee
+        $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+        // Check if companyIds is an array; decode if it's a JSON string
+        $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTermFollower);
 
-        $this->filteredFollowers = EmployeeDetails::whereJsonContains('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+            $this->filteredFollowers = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
             })
-            ->get();
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
+            })
+                ->where(function ($query) use ($trimmedSearchTerm) {
+                    $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                        ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+                })
+                ->get();
+
 
         $this->peopleFound = count($this->filteredFollowers) > 0;
     }
@@ -720,15 +768,30 @@ public $validationFollowerMessage = '';
         $this->fetchTaskComments($this->taskId);
         // Retrieve the authenticated employee's ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $companyId = Auth::user()->company_id;
+        // $companyId = Auth::user()->company_id;
+        // Fetch the company_ids for the logged-in employee
+        $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+        // Check if companyIds is an array; decode if it's a JSON string
+        $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         // Fetch employees, ensuring the authenticated employee is shown first
-        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
 
+
+            $this->peoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
+                foreach ($companyIdsArray as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
+            })
+            ->where(function($query) {
+                $query->where('employee_status', 'active')
+                      ->orWhere('employee_status', 'on-probation');
+            })
+                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+                ->orderBy('first_name')
+                ->orderBy('last_name')
+                ->get();
+        
         $peopleAssigneeData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $peopleFollowerData = $this->filteredFollowers ? $this->filteredFollowers : $this->peoples;
 

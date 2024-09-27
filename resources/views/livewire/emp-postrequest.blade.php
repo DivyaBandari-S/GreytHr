@@ -227,7 +227,7 @@
                                 placeholder="Search...."
                                 aria-label="Search"
                                 aria-describedby="basic-addon1">
-                            <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
+                            <button class="helpdesk-search-btn" type="button">
                                 <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                             </button>
 
@@ -280,7 +280,7 @@
                             <a class="menu-item" href="/events">Adilabad</a>
 
 
-                            <a class="menu-item" href="/hrevents">Doddaballapur</a>
+     
 
 
                             <a class="menu-item" href="/events">Doddaballapur</a>
@@ -448,7 +448,7 @@
                     </div>
                     <div class="modal-body text-center">
                     @if ($imageUrl)
-                    <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                    <img src="{{ $imageUrl }}"  alt="File" class="img-fluid" style="max-width: 100%;" />
                     @endif
                     </div>
                     <div class="modal-footer">

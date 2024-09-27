@@ -6,8 +6,6 @@
     @endif
 
     <div class="row  p-0">
-
-
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
@@ -69,28 +67,6 @@
                             </div>
                             @endif
                             @endif
-                            @if ($errors->has('image'))
-                            <span class="text-danger">{{ $errors->first('image') }}</span><br>
-                            @endif
-                            <div class="d-flex align-items-center gap-2 " style="margin-left: 15px;">
-                                <button class="submit-btn px-2 py-1" wire:click="updateProfile">
-                                    <span style="font-size: 10px;">
-
-                                        @if($isUploading == true)
-                                        Uploading...
-                                        @else
-                                        Update
-                                        @endif
-                                    </span>
-                                </button>
-                                <input type="file" id="imageInput" wire:model="image" class="form-control-small" style="font-size: 0.75rem;">
-                            </div>
-                            @if ($showSuccessMessage)
-                            <span class="alert" style="font-size: 10px;color:green;cursor:pointer;" wire:poll.5s="closeMessage">
-                                Profile updated successfully!
-                            </span>
-                            @endif
-
                             <div style="font-size: 12px; margin-top: 10px; color: #778899; margin-left: 15px">
                                 Location
                             </div>
@@ -1049,7 +1025,7 @@
                 });
             }
 
-            document.getElementById('employeeJobDetails').style.display = 'block';
+            document.getElementById('employeeJobDetails').style.display = 'none';
             document.addEventListener('DOMContentLoaded', function() {
                 var today = new Date().toISOString().split('T')[0];
                 document.getElementById('resignation_date').setAttribute('min', today);
