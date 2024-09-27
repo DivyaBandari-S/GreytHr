@@ -149,215 +149,215 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Additional row -->
-        <div class="row mt-2 d-flex">
-            <div class="col-md-3 feeds-custom-menu bg-white p-3">
-                <p class="feeds-left-menu">Filters</p>
-                <hr style="width: 100%;border-bottom: 1px solid grey;">
-                <p class="feeds-left-menu">Activities</p>
-                <div class="activities">
-                    <label class="custom-radio-label">
-                        <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
-                        <div class="feed-icon-container" style="margin-left: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <rect x="7" y="7" width="3" height="9"></rect>
-                                <rect x="14" y="7" width="3" height="5"></rect>
-                            </svg>
-                        </div>
-                        <span class="custom-radio-button bg-blue"></span>
-                        <span class="custom-radio-content ">All Activities</span>
-                    </label>
-                </div>
+
+            <!-- Additional row -->
+            <div class="row mt-2 d-flex">
+                <div class="col-md-3 feeds-custom-menu bg-white p-3" >
+                    <p class="feeds-left-menu">Filters</p>
+                    <hr style="width: 100%;border-bottom: 1px solid grey;">
+                    <p class="feeds-left-menu">Activities</p>
+                    <div class="activities">
+                        <label class="custom-radio-label">
+                            <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <rect x="7" y="7" width="3" height="9"></rect>
+                                    <rect x="14" y="7" width="3" height="5"></rect>
+                                </svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">All Activities</span>
+                        </label>
+                    </div>
 
 
-                <div class="posts">
-                    <label class="custom-radio-label">
+                    <div class="posts">
+                        <label class="custom-radio-label">
 
-                        <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
 
-                        <div class="feed-icon-container" style="margin-left: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                        </div>
-                        <span class="custom-radio-button bg-blue"></span>
-                        <span class="custom-radio-content ">Posts</span>
-                    </label>
-                </div>
-                @if($isManager)
-                <div class="post-requests">
-                    <label class="custom-radio-label">
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Posts</span>
+                        </label>
+                    </div>
+                    @if($isManager)
+                    <div class="post-requests">
+                        <label class="custom-radio-label">
 
-                        <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+                            <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
 
-                        <div class="feed-icon-container" style="margin-left: 10px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                        </div>
-                        <span class="custom-radio-button bg-blue"></span>
-                        <span class="custom-radio-content ">Post Requests</span>
-                    </label>
-                </div>
-                @endif
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Post Requests</span>
+                        </label>
+                    </div>
+                    @endif
 
 
-                <hr style="width: 100%;border-bottom: 1px solid grey;">
-                <div>
-                    <div class="row" style="max-height:auto">
-                        <div class="col " style="margin: 0px;">
-                            <div class="input-group">
+                    <hr style="width: 100%;border-bottom: 1px solid grey;">
+                    <div>
+                        <div class="row" style="max-height:auto">
+                            <div class="col " style="margin: 0px;">
+                                <div class="input-group">
                                 <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" id="searchInput"
-                                    type="text"
-                                    class="form-control placeholder-small"
-                                    placeholder="Search...."
-                                    aria-label="Search"
-                                    aria-describedby="basic-addon1">
-                                <button style="border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none;" class="search-btn" type="button">
-                                    <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                </button>
+                                        type="text"
+                                        class="form-control placeholder-small"
+                                        placeholder="Search...."
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon1">
+                                    <button class="helpdesk-search-btn" type="button">
+                                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
+                                    </button>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="w-full custom-dropdown visible mt-1">
-                        <div class="cus-button" onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
-                            <span class="text-base leading-4">Groups</span>
-                            <span class="arrow-icon" id="arrowIcon1">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
+                        <div class="w-full custom-dropdown visible mt-1" >
+                            <div class="cus-button"onclick="toggleDropdown('dropdownContent1', 'arrowSvg1')">
+                                <span class="text-base leading-4">Groups</span>
+                                <span class="arrow-icon" id="arrowIcon1" >
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg1" style="color:#3b4452;margin-top:-5px">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div id="dropdownContent1" class="Feeds-Dropdown">
+                                <ul class="d-flex flex-column m-0 p-0" >
+                                    <a class="menu-item" href="/Feeds">All Feeds</a>
+                               
+                                    <a class="menu-item" href="/events" >Every One</a>
+                                   
+                                    <a class="menu-item" href="/Feeds" >Events</a>
+                            
+                                    <a class="menu-item" href="/events" >Company News</a>
+                                 
+                                    <a class="menu-item" href="/events" >Appreciation</a>
+                                
+                                   
+                                    <a class="menu-item" href="/events" >Buy/Sell/Rent</a>
+                                   
+                                </ul>
+                            </div>
                         </div>
-                        <div id="dropdownContent1" class="Feeds-Dropdown">
-                            <ul class="d-flex flex-column m-0 p-0">
-                                <a class="menu-item" href="/Feeds">All Feeds</a>
-
-                                <a class="menu-item" href="/events">Every One</a>
-
-                                <a class="menu-item" href="/Feeds">Events</a>
-
-                                <a class="menu-item" href="/events">Company News</a>
-
-                                <a class="menu-item" href="/events">Appreciation</a>
 
 
-                                <a class="menu-item" href="/events">Buy/Sell/Rent</a>
+                        <div class="w-full custom-dropdown visible mt-1">
+                            <div class="cus-button" >
+                                <span class="text-base leading-4 " >Location</span>
+                                <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:#3b4452;margin-top:-5px">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div id="dropdownContent2" class="Feeds-Dropdown">
+                                <ul class="d-flex flex-column p-0 m-0">
+                                    <a class="menu-item" style="font-weight: 700;" >India</a>
 
-                            </ul>
+                                   
+                                    <a class="menu-item" href="/events" >Adilabad</a>
+                                   
+
+                                 
+
+                              
+                                    <a class="menu-item" href="/events" >Doddaballapur</a>
+                                    
+                                  
+                                    <a class="menu-item" href="/events" >Guntur</a>
+
+                                    <a class="menu-item" href="/events" >Hoskote</a>
+                                  
+                                    <a class="menu-item" href="/events" >Hyderabad</a>
+                                   
+                                    <a class="menu-item" href="/events" >Mandya
+                                    </a>
+                                   
+                                    <a class="menu-item" href="/events" >Mangalore
+                                    </a>
+                                   
+                                    <a class="menu-item" href="/events" >Mumbai
+                                    </a>
+                                   
+                                  
+                                    <a class="menu-item" href="/events" >Mysore
+                                    </a>
+                                   
+                                    <a class="menu-item" href="/events" >Pune
+                                    </a>
+                                   
+                                    <a class="menu-item" href="/events" >Sirsi
+                                    </a>
+                                   
+                                    <a class="menu-item" href="/events" >Thumkur
+                                    </a>
+                                  
+                                    <a class="menu-item" href="/events" >Tirupati</a>
+                                   
+                                    <a class="menu-item" href="/events" >Trivandrum</a>
+                                    
+                                    <a class="menu-item" href="/events" >Udaipur</a>
+                                    
+                                    <a class="menu-item" href="/events" >Vijayawada</a>
+                                    
+                                    <a class="menu-item" style="font-weight: 700;" >USA</a>
+                                   
+                                    <a class="menu-item" href="/events" >California</a>
+                                   
+                                    <a class="menu-item" href="/events" >New York</a>
+                                  
+                                    <a class="menu-item" href="/events" >Hawaii</a>
+                                    
+
+                                </ul>
+                            </div>
                         </div>
-                    </div>
+                        <div class="w-full visible custom-dropdown  mt-1">
+                            <div class="cus-button">
+                                <span class="text-base leading-4" >Department</span>
+                                <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
+                                        <polyline points="6 9 12 15 18 9"></polyline>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div id="dropdownContent3" class="Feeds-Dropdown" >
+                                <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
+                               
+                                    <a class="menu-item" href="/events" >HR</a>
+                     
+                                   
+                                    
 
-
-                    <div class="w-full custom-dropdown visible mt-1">
-                        <div class="cus-button">
-                            <span class="text-base leading-4 ">Location</span>
-                            <span class="arrow-icon" id="arrowIcon2" onclick="toggleDropdown('dropdownContent2', 'arrowSvg2')" style="margin-top:-5px;color:#3b4452;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg2" style="color:#3b4452;margin-top:-5px">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
+                                    <a class="menu-item" href="/events" >Operations</a>
+                                   
+                                 
+                                    <a class="menu-item" href="/events" >Production Team</a>
+                                 
+                                  
+                                    <a class="menu-item" href="/events" >QA</a>
+                                 
+                                  
+                                    <a class="menu-item" href="/events" >Sales Team</a>
+                                 
+                             
+                                    <a class="menu-item" href="/events" >Testing Team</a>
+                                  
+                                </ul>
+                            </div>
                         </div>
-                        <div id="dropdownContent2" class="Feeds-Dropdown">
-                            <ul class="d-flex flex-column p-0 m-0">
-                                <a class="menu-item" style="font-weight: 700;">India</a>
-
-
-                                <a class="menu-item" href="/events">Adilabad</a>
-
-
-                                <a class="menu-item" href="/hrevents">Doddaballapur</a>
-
-
-                                <a class="menu-item" href="/events">Doddaballapur</a>
-
-
-                                <a class="menu-item" href="/events">Guntur</a>
-
-                                <a class="menu-item" href="/events">Hoskote</a>
-
-                                <a class="menu-item" href="/events">Hyderabad</a>
-
-                                <a class="menu-item" href="/events">Mandya
-                                </a>
-
-                                <a class="menu-item" href="/events">Mangalore
-                                </a>
-
-                                <a class="menu-item" href="/events">Mumbai
-                                </a>
-
-
-                                <a class="menu-item" href="/events">Mysore
-                                </a>
-
-                                <a class="menu-item" href="/events">Pune
-                                </a>
-
-                                <a class="menu-item" href="/events">Sirsi
-                                </a>
-
-                                <a class="menu-item" href="/events">Thumkur
-                                </a>
-
-                                <a class="menu-item" href="/events">Tirupati</a>
-
-                                <a class="menu-item" href="/events">Trivandrum</a>
-
-                                <a class="menu-item" href="/events">Udaipur</a>
-
-                                <a class="menu-item" href="/events">Vijayawada</a>
-
-                                <a class="menu-item" style="font-weight: 700;">USA</a>
-
-                                <a class="menu-item" href="/events">California</a>
-
-                                <a class="menu-item" href="/events">New York</a>
-
-                                <a class="menu-item" href="/events">Hawaii</a>
-
-
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="w-full visible custom-dropdown  mt-1">
-                        <div class="cus-button">
-                            <span class="text-base leading-4">Department</span>
-                            <span class="arrow-icon" id="arrowIcon3" onclick="toggleDropdown('dropdownContent3', 'arrowSvg3')" style="margin-top:-5px;">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-down h-1.2x w-1.2x text-secondary-400" id="arrowSvg3" style="color:#3b4452;">
-                                    <polyline points="6 9 12 15 18 9"></polyline>
-                                </svg>
-                            </span>
-                        </div>
-                        <div id="dropdownContent3" class="Feeds-Dropdown">
-                            <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
-
-                                <a class="menu-item" href="/events">HR</a>
-
-
-
-
-                                <a class="menu-item" href="/events">Operations</a>
-
-
-                                <a class="menu-item" href="/events">Production Team</a>
-
-
-                                <a class="menu-item" href="/events">QA</a>
-
-
-                                <a class="menu-item" href="/events">Sales Team</a>
-
-
-                                <a class="menu-item" href="/events">Testing Team</a>
-
-                            </ul>
-                        </div>
-                    </div>
 
                 </div>
             </div>
