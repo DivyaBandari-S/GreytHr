@@ -43,6 +43,7 @@ class ViewRegularisationPendingNew extends Component
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
         ->where('status','pending')
+        ->whereNull('mail_sent')        
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
         ->with('employee')
@@ -54,20 +55,25 @@ class ViewRegularisationPendingNew extends Component
 
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
 
-            if ($daysDifference > 3) {
-
+            if($daysDifference>3&&empty($regularisation->mail_sent))
+            {
                 $this->sendMail($regularisation->id);
-
-
+                $regularisation->mail_sent = 'sent';
+                $regularisation->save();
             }
+
+           
 
 
         }
     }
     public function sendMail($id)
 {
+    
     $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
+
     $this->regularisationEntries = json_decode($item->regularisation_entries, true); // Decode the JSON entries
+    
     $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
     // Prepare the HTML table
     $this->messageContent = " ".$this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")" ."has neither approved nor rejected the regularization request for the past 3 days for employee ". $item->emp_id . " (" . $employee->first_name . " " . $employee->last_name . ").";
@@ -88,7 +94,7 @@ class ViewRegularisationPendingNew extends Component
 
     public function toggleActiveAccordion($id)
     {
-        
+          
         if ($this->openAccordionForActive === $id) {
             $this->openAccordionForActive = null; // Close if already open
         } else {

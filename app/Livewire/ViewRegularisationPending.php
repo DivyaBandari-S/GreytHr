@@ -50,7 +50,7 @@ class ViewRegularisationPending extends Component
             $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
 
             if ($daysDifference >= 3) {
-                $this->approve($regularisation->id);
+                $this->sendMail($regularisation->id);
             }
 
 
