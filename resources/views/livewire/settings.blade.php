@@ -49,10 +49,10 @@
                     <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Login
                             History</h6>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                            aria-label="Close" wire:click="close">
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                            wire:click="close">
                         </button>
-                     
+
 
                     </div>
                     <div class="modal-body">
@@ -101,9 +101,9 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h6 class="modal-title" id="exampleModalLongTitle">Change Password</h6>
-                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="remove">
-                    </button>
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                            wire:click="remove">
+                        </button>
                     </div>
                     <form wire:submit.prevent="changePassword">
                         @if ($error)
@@ -142,8 +142,8 @@
                                             @enderror
                                         </div>
                                         <div class="form-group">
-                                            <label class="setting-password-modal-label"
-                                                for="confirmNewPassword">Confirm New Password</label>
+                                            <label class="setting-password-modal-label" for="confirmNewPassword">Confirm
+                                                New Password</label>
                                             <br>
                                             <input class="form-control setting-password-modal-input" type="password"
                                                 id="confirmNewPassword" name="confirmNewPassword"
@@ -183,9 +183,10 @@
             <div class="card col-md-9 p-2 mt-3">
                 <div class="row m-0 p-0 d-flex">
                     <div class="col-lg-2 col-12 text-center">
-                        @if (!empty($employee->image) && $employee->image !== 'null')
-                            <img class="settings-profile-image"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode($employee->image) }}">
+                        @if ($employee->image !== null && $employee->image != 'null' && $employee->image != 'Null' && $employee->image != '')
+                            <!-- It's binary, convert to base64 -->
+                            <img src="data:image/jpeg;base64,{{ $employee->image }}" alt="base"
+                                class="settings-profile-image" />
                         @else
                             @if ($employee && $employee->gender == 'Male')
                                 <img class="settings-profile-image" src="{{ asset('images/male-default.png') }}"

@@ -547,9 +547,11 @@
                                                                     value="{{ $people->emp_id }}">
                                                             </div>
                                                             <div class="col-auto">
-                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                    <img class="profile-image task-assignee-people-img"
-                                                                        src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                                @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                                                    <!-- It's binary, convert to base64 -->
+                                                                    <img src="data:image/jpeg;base64,{{ $people->image }}"
+                                                                        alt="base"
+                                                                        class="profile-image task-assignee-people-img" />
                                                                 @else
                                                                     @if ($people && $people->gender == 'Male')
                                                                         <img class="profile-image task-assignee-people-img"
@@ -749,12 +751,13 @@
                                                             <input type="checkbox" value="{{ $people->emp_id }}"
                                                                 id="checkbox-{{ $people->emp_id }}"
                                                                 {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
-                    {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
+                                                            {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
                                                         </div>
                                                         <div class="col-auto">
-                                                            @if (!empty($people->image) && $people->image !== 'null')
-                                                                <img class="profile-image"
-                                                                    src="{{ 'data:image/jpeg;base64,' . base64_encode($people->image) }}">
+                                                            @if ($people->image !== null && $people->image != 'null' && $people->image != 'Null' && $people->image != '')
+                                                                <!-- It's binary, convert to base64 -->
+                                                                <img src="data:image/jpeg;base64,{{ $people->image }}"
+                                                                    alt="base" class="profile-image" />
                                                             @else
                                                                 @if ($people && $people->gender == 'Male')
                                                                     <img class="profile-image"
@@ -789,10 +792,10 @@
                                 @endif
 
                                 @if ($validationFollowerMessage)
-                                <div class="alert alert-danger">
-                                    {{ $validationFollowerMessage }}
-                                </div>
-                            @endif
+                                    <div class="alert alert-danger">
+                                        {{ $validationFollowerMessage }}
+                                    </div>
+                                @endif
                                 <div class="form-group">
                                     <label for="Subject" class="task-modal-subject-label">Subject</label>
                                     <br>
