@@ -4,7 +4,6 @@
             margin-right: 62px;
         }
 
-
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -1378,6 +1377,7 @@ color: #fff;
     overflow-y: auto; /* Enable vertical scrolling */
     scrollbar-width: thin; /* For Firefox - makes the scrollbar thinner */
     scrollbar-color: #888 #f1f1f1; /* For Firefox - custom scrollbar color */
+    height: 600px;
 }
 
 /* Chrome, Edge, Safari */
@@ -1400,6 +1400,24 @@ color: #fff;
 .custom-scrollbar-for-right-side-container
 ::-webkit-scrollbar-thumb:hover {
     background-color: #555; /* Change color on hover */
+}
+.container1box
+{
+    border-right: 1px solid #ccc; 
+    text-align: center;
+ 
+}
+.container1boxDate
+{
+    font-weight:bold;
+    font-size:14px;
+    color:#778899;
+}
+.container1boxDay
+{
+    font-weight:600;
+    font-size:12px;
+    color:#778899;
 }
 @media screen and (max-height: 513px) {
     .penalty-and-average-work-hours-card{
@@ -1696,17 +1714,33 @@ color: #fff;
                                 @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L') @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
                                     <div>
 
+                                       @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend)
+                                                <div style="background-color:#edfaed;margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                                        
+                                                         <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                        <span class="text-secondary">P</span>
+                                                        
+                                                </div>
+                                                
 
-                                        @if ($day['isToday'])
-                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
-                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                        </div>
-                                        @else
-                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
-                                        @endif
+                                       @else
+                                                <div>
+                                                        @if ($day['isToday'])
+                                                        <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
+                                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                                        </div>
+                                                        @else
+                                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                                        @endif
 
+                                                </div>
+                                                
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
+                                       @endif
+
+                                        @if($day['status']=='HP'&&!$day['isToday'])
+
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;">
                                             <!-- Render your grey circle -->
                                             @if ($isWeekend&&$isCurrentMonth)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
@@ -1749,6 +1783,95 @@ color: #fff;
 
                                                 </span>
                                                 @endif
+                                                @if($day['status']=='HP')
+                                                
+                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:#f66;padding-left: 39px;margin-top: -5px;">
+                                                    A
+                                                </span>
+                                                @endif
+                                                @if($day['isRegularised']==true&&($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='MTL'||$day['status']=='L'))
+                                                @php
+                                                $Regularised=true;
+                                                @endphp
+                                                
+                                                @if($day['status']=='P')
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                    <div class="down-arrow-reg"></div>
+                                                </span>
+                                                @endif
+                                                @endif
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @elseif($day['status']=='HP')
+                                                <div style="background-color:#fcf0f0;">
+                                                    <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
+                                                    </span>
+                                                </div>
+                                                @elseif($isCurrentMonth)
+                                                @if($day['isRegularised']==true)
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @else
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+
+                                                @endif
+                                                @endif
+                                                @endif
+                                        </div>
+                                        @else
+
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
+                                            <!-- Render your grey circle -->
+                                            @if ($isWeekend&&$isCurrentMonth)
+                                            <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
+
+                                            <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;">
+                                                O
+                                            </span>
+                                            @elseif($isCurrentMonth)
+
+
+                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
+
+                                                @if($day['isPublicHoliday'])
+                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">H</span>
+                                                @elseif($day['status'] == 'CLP')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CLP</span>
+                                                @elseif($day['status'] == 'SL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">SL</span>
+                                                @elseif($day['status'] == 'LOP')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">LOP</span>
+                                                @elseif($day['status'] == 'CL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">CL</span>
+                                                @elseif($day['status'] == 'ML')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">ML</span>
+                                                @elseif($day['status'] == 'PL')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">PL</span>
+                                                @elseif($day['status'] == 'L')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px">L</span>
+                                                @elseif($day['status'] == 'A')
+                                                  
+                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px">A</span>
+                    
+                                                @elseif($day['status'] == 'HP')
+                                                   
+                                                   <span style="text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 33px;white-space: nowrap;padding-bottom:10px;">:</span>
+
+                                                @elseif($day['status'] == 'P')
+                                                   
+                                                   <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px">P</span>
+                                                   
+                                                @endif
+
+
+                                                </span>
+                                                @endif
                                                 @if($day['isRegularised']==true&&($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='MTL'||$day['status']=='L'))
                                                 @php
                                                 $Regularised=true;
@@ -1762,6 +1885,10 @@ color: #fff;
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @elseif($day['status']=='HP')
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($isCurrentMonth)
                                                 @if($day['isRegularised']==true)
@@ -1777,6 +1904,7 @@ color: #fff;
                                                 @endif
                                                 @endif
                                         </div>
+                                        @endif
                                     </div>
                                     @endif
                                     </td>
@@ -1948,14 +2076,14 @@ color: #fff;
             @livewire('attendance-table')
 
             @endif
-            <div class="col-md-5 custom-scrollbar-for-right-side-container"style="height: 600px;">
+            <div class="col-md-5 custom-scrollbar-for-right-side-container">
                 @if($defaultfaCalendar==1)
-                <div class="container1" style="background-color:white;">
+                <div class="container1">
                     <!-- Content goes here -->
                     <div class="row m-0">
-                        <div class="col-2 pb-1 pt-1 p-0" style="border-right: 1px solid #ccc; text-align: center;">
-                            <p class="mb-1" style="font-weight:bold;font-size:14px;color:#778899;">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
-                            <p class="m-0" style="font-weight:600;font-size:12px;color:#778899;">
+                        <div class="col-2 pb-1 pt-1 p-0 container1box">
+                            <p class="mb-1 container1boxDate">{{ \Carbon\Carbon::parse($currentDate2)->format('d') }}</p>
+                            <p class="m-0 container1boxDay">
                                 {{ \Carbon\Carbon::parse($currentDate2)->format('D') }}
                             </p>
                         </div>

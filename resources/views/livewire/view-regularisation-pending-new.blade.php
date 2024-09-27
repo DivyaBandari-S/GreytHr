@@ -207,11 +207,11 @@
     </div>
       @endforeach
     @else
-    <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
-                    <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
-                    <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no regularization records to view
-                    </p>
-        </div>
+            <div class="d-flex flex-column justify-content-center bg-white rounded border text-center">
+                            <img src="/images/pending.png" alt="Pending Image" style="width:55%; margin:0 auto;">
+                            <p style="color:#969ea9; font-size:12px; font-weight:400; ">Hey, you have no regularization records to view
+                            </p>
+            </div>
     @endif
     </div>
 
