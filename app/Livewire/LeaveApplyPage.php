@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
 use App\Models\HolidayCalendar;
@@ -11,15 +12,17 @@ use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class LeaveApplyPage extends Component
 {
     use WithFileUploads;
-    public $leave_type, $employeeId;
+    public $leave_type;
+    public $employeeId;
     public $currentYear;
-
+    public $leaveType;
     public $searchQuery = '';
     public $emp_id;
     public $casualLeavePerYear;
@@ -189,7 +192,7 @@ class LeaveApplyPage extends Component
             foreach ($companyIdsArray as $companyId) {
                 $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
                     ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
-                    ->whereIn('employee_status', ['active', 'on-probation']) 
+                    ->whereIn('employee_status', ['active', 'on-probation'])
                     ->where(function ($query) {
                         // Apply search filtering if a search term is provided
                         if ($this->searchTerm) {
@@ -535,6 +538,7 @@ class LeaveApplyPage extends Component
                         $ccToDetails[] = [
                             'emp_id' => $selectedEmployeeId,
                             'full_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                            'email' => $employeeDetails->email
                         ];
                     }
                 }
@@ -547,6 +551,7 @@ class LeaveApplyPage extends Component
                     $applyingToDetails[] = [
                         'manager_id' => $employeeDetails->emp_id,
                         'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                        'email' => $employeeDetails->email
                     ];
                 }
             } else {
@@ -603,6 +608,12 @@ class LeaveApplyPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
+            // Send email notification
+            $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
+            $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+
+            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
+
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
             session()->flash('message', 'Leave application submitted successfully!');
@@ -619,7 +630,7 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showNumberOfDays = true;
-            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
+            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session' || $field == 'leave_type') {
                 $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession, $this->leaveType);
             }
         } catch (\Exception $e) {

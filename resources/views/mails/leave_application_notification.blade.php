@@ -13,17 +13,6 @@
 
     <p>An employee has submitted a leave application. Here are the details:</p>
 
-    <ul>
-    @if($leaveDetails)
-        <li><strong>Leave Type:</strong> {{ $leaveDetails['leave_type'] }}</li>
-        <li><strong>From Date:</strong> {{ $leaveDetails['from_date'] }}</li>
-        <!-- Add more details as needed -->
-    @else
-        <li>No leave details available.</li>
-    @endif
-</ul>
-
-
     <p>Please review and take appropriate action.</p>
 
     <p>Thank you.</p>

@@ -6,8 +6,6 @@
     @endif
 
     <div class="row  p-0">
-
-
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
