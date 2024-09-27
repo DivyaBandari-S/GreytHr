@@ -283,6 +283,7 @@ class EmpLogin extends Component
             if (empty($employee->email)) {
                 // Handle case when employee email does not exist
                 $this->verify_error = 'The employee does not have an associated email address. Please update your email for this ID: ' . $this->emp_id;
+                $this->emp_id = null;
                 return;
             }
 
