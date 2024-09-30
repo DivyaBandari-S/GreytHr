@@ -14,8 +14,8 @@ class Company_Shifts extends Model
     protected $fillable = [
         'company_id',
         'shift_name',
-        'shift_start_date',
-        'shift_end_date',
+        'shift_start_time',
+        'shift_end_time',
 
     ];
 
