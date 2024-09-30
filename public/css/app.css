@@ -10,6 +10,7 @@
 /* bootstarp v5 downolad */
 :root {
     --main-heading-color: #3b4452;
+    --main-color:rgb(2, 17, 79);
     /* use main heading along with font-weight-500 */
     --requiredAlert: red;
     --label-color: #778899;
@@ -1237,7 +1238,7 @@ input:checked + .slider:before {
     -ms-transform: translateX(20px);
     transform: translateX(20px);
     background-color: white;
-    
+
 }
 
 .slider.round {
@@ -2037,7 +2038,7 @@ td {
 }
 @media screen and (min-width: 320px) and (max-width: 500px) {
     .shift-roster-download-and-dropdown-for-attendance-muster {
-        margin-left: 10px; 
+        margin-left: 10px;
     }
 }
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -2137,10 +2138,10 @@ td {
  .form-select {
 
     font-size: 0.75rem;
-} 
+}
 .catagory-select:hover{
     background-color: #edf3ff;
- 
+
 }
 .modal-body{
     font-size: 0.75rem;
@@ -5727,7 +5728,7 @@ select .yearSelect {
     margin: 0px;
 }
 .lableCount {
-    color: #f2b13f;
+    color: var(--main-color);
     font-size: 14px;
 }
 .notification-text {
@@ -5736,6 +5737,11 @@ select .yearSelect {
 }
 .notification-head {
     font-size: var(--normal-font-size);
+    color: var( --main-color);
+    /* max-height: 100px;
+    overflow: auto ;
+    text-overflow: ellipsis;
+    white-space: nowrap; */
 }
 .notification-text-para {
     color: #535f6b;
@@ -5792,14 +5798,13 @@ select .yearSelect {
 }
 
 .notification-detail-container {
-    width: 300px;
+    width: 290px;
     background: #f5f8f9;
 }
 
 .notification-close-btn {
     font-size: 7px;
-    width: 15px;
-    height: 15px;
+   
     border-radius: 50%;
     padding: 2px;
     border: 1px solid var(--label-color);
