@@ -921,12 +921,7 @@ border: 1px solid #778899;
 }
 }
     </style>
-@if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert"wire:poll.10s="hideAlert">
-        {{ session('error') }}
-        <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+
 @if($showMessage)
     <div class="alert alert-success">
         {{ session('success') }}
@@ -948,6 +943,12 @@ border: 1px solid #778899;
         <button class="my-button pending-button" style="background-color: {{ ($isPending==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isPending==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="pendingButton">Pending</button>
         <button class="my-button history-button" style="background-color: {{ ($isHistory==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isHistory==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="historyButton">History</button>
     </div>
+    @if (session('error'))
+    <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert"wire:poll.10s="hideAlert">
+        {{ session('error') }}
+        <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
     @if($isApply==1&&$defaultApply==1)
     
     <div class="h row m-0 mt-4">
