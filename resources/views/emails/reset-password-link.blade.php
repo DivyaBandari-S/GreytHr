@@ -6,7 +6,7 @@
     <title>Password Reset Request</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             background-color: #f4f4f4;
             padding: 20px;
         }

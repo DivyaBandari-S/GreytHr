@@ -39,6 +39,8 @@ class Attendance extends Component
     public $minutesFormatted;
 
     public $avgWorkHoursFromJuly = 0;
+
+    
     public $last_out_time;
 
     public $percentageDifference;
@@ -777,145 +779,212 @@ class Attendance extends Component
 
     //This function will help us to create the calendar
     public function generateCalendar()
-    {
-        try {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            
-            $firstDay = Carbon::create($this->year, $this->month, 1);
-           
-            $daysInMonth = $firstDay->daysInMonth;
-            
-            $today = now();
-            
-            $calendar = [];
-            $dayCount = 1;
-            $publicHolidays = $this->getPublicHolidaysForMonth($this->year, $this->month);
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        Log::info('Employee ID:', ['employeeId' => $employeeId]);
         
-            // Calculate the first day of the week for the current month
-            $firstDayOfWeek = $firstDay->dayOfWeek;
-           
-            // Calculate the starting date of the previous month
-            $startOfPreviousMonth = $firstDay->copy()->subMonth();
-            
-            // Fetch holidays for the previous month
-            $publicHolidaysPreviousMonth = $this->getPublicHolidaysForMonth(
-                $startOfPreviousMonth->year,
-                $startOfPreviousMonth->month
-            );
+        $firstDay = Carbon::create($this->year, $this->month, 1);
+        $daysInMonth = $firstDay->daysInMonth;
+        $today = now();
+        
+        Log::info('First Day of Month:', ['firstDay' => $firstDay->toDateString()]);
+        Log::info('Days in Month:', ['daysInMonth' => $daysInMonth]);
+        Log::info('Today:', ['today' => $today->toDateString()]);
 
-            // Calculate the last day of the previous month
-            $lastDayOfPreviousMonth = $firstDay->copy()->subDay();
+        $calendar = [];
+        $dayCount = 1;
 
-            for ($i = 0; $i < ceil(($firstDayOfWeek + $daysInMonth) / 7); $i++) {
-                $week = [];
-            
-                for ($j = 0; $j < 7; $j++) {
-                    if ($i === 0 && $j < $firstDay->dayOfWeek) {
-                        // Add the days of the previous month
-                        $previousMonthDays = $lastDayOfPreviousMonth->copy()->subDays($firstDay->dayOfWeek - $j - 1);
-                        $week[] = [
-                            'day' => $previousMonthDays->day,
-                            'isToday' => false,
-                            'isPublicHoliday' => in_array($previousMonthDays->toDateString(), $publicHolidaysPreviousMonth->pluck('date')->toArray()),
-                            'isCurrentMonth' => false,
-                            'isPreviousMonth' => true,
-                            'isRegularised' => false,
-                            'backgroundColor' => '',
-                            'status' => '',
-                            'onleave' => ''
-                        ];
-                    } elseif ($dayCount <= $daysInMonth) {
-                        $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
-                        $isPublicHoliday = in_array(
-                            Carbon::create($this->year, $this->month, $dayCount)->toDateString(),
-                            $publicHolidays->pluck('date')->toArray()
-                        );
+        // Fetch public holidays for the current month
+        $publicHolidays = $this->getPublicHolidaysForMonth($this->year, $this->month);
+        Log::info('Public Holidays for Current Month:', ['publicHolidays' => $publicHolidays]);
 
-                        $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
+        $firstDayOfWeek = $firstDay->dayOfWeek;
+        Log::info('First Day of Week:', ['firstDayOfWeek' => $firstDayOfWeek]);
 
-                        $date = Carbon::create($this->year, $this->month, $dayCount)->toDateString();
-                        $isregularised = $this->isEmployeeRegularisedOnDate($date);
-                        // Check if the employee is absent
-                        $isAbsent = !$this->isEmployeePresentOnDate($date);
-                        $isonLeave = $this->isEmployeeLeaveOnDate($date, $employeeId);
-                        $leaveType = $this->getLeaveType($date, $employeeId);
-                        if ($isonLeave) {
-                            $leaveType = $this->getLeaveType($date, $employeeId);
+        $startOfPreviousMonth = $firstDay->copy()->subMonth();
+        $publicHolidaysPreviousMonth = $this->getPublicHolidaysForMonth(
+            $startOfPreviousMonth->year,
+            $startOfPreviousMonth->month
+        );
+        $lastDayOfPreviousMonth = $firstDay->copy()->subDay();
 
-                            switch ($leaveType) {
-                                case 'Casual Leave Probation':
-                                    $status = 'CLP'; // Casual Leave Probation
-                                    break;
-                                case 'Sick Leave':
-                                    $status = 'SL'; // Sick Leave
-                                    break;
-                                case 'Loss Of Pay':
-                                    $status = 'LOP'; // Loss of Pay
-                                    break;
-                                case 'Casual Leave':
-                                    $status = 'CL'; // Loss of Pay
-                                    break;
-                                case 'Marriage Leave':
-                                    $status = 'ML'; // Loss of Pay
-                                    break;
-                                case 'Paternity Leave':
-                                    $status = 'PL'; // Loss of Pay
-                                    break;
-                                case 'Maternity Leave':
-                                    $status = 'MTL'; // Loss of Pay
-                                    break;        
-                                default:
-                                    $status = 'L'; // Default to 'L' if the leave type is not recognized
-                                    break;
-                            }
-                        } else {
+        Log::info('Start of Previous Month:', ['startOfPreviousMonth' => $startOfPreviousMonth->toDateString()]);
+        Log::info('Public Holidays for Previous Month:', ['publicHolidaysPreviousMonth' => $publicHolidaysPreviousMonth]);
+
+        for ($i = 0; $i < ceil(($firstDayOfWeek + $daysInMonth) / 7); $i++) {
+            $week = [];
+
+            for ($j = 0; $j < 7; $j++) {
+                if ($i === 0 && $j < $firstDay->dayOfWeek) {
+                    $previousMonthDays = $lastDayOfPreviousMonth->copy()->subDays($firstDay->dayOfWeek - $j - 1);
+                    Log::info('Previous Month Day:', ['previousMonthDays' => $previousMonthDays->toDateString()]);
+                    
+                    $week[] = [
+                        'day' => $previousMonthDays->day,
+                        'isToday' => false,
+                        'isPublicHoliday' => in_array($previousMonthDays->toDateString(), $publicHolidaysPreviousMonth->pluck('date')->toArray()),
+                        'isCurrentMonth' => false,
+                        'isPreviousMonth' => true,
+                        'isRegularised' => false,
+                        'backgroundColor' => '',
+                        'status' => '',
+                        'onleave' => ''
+                    ];
+                } elseif ($dayCount <= $daysInMonth) {
+                    $date = Carbon::create($this->year, $this->month, $dayCount);
+                    Log::info('Processing Date:', ['date' => $date->toDateString()]);
+                  
+                    $isAbsentFor = false;
+                    $isHalfDayPresent = false;            
+                    
+                    $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
+                    $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray());
+                    Log::info('Is Public Holiday:', ['isPublicHoliday' => $isPublicHoliday]);
+                    $isHoliday=HolidayCalendar::where('date',$date->toDateString())->exists();
+                    $isRegularised = $this->isEmployeeRegularisedOnDate($date->toDateString());
+                    Log::info('Is Regularised:', ['isRegularised' => $isRegularised]);
+
+                    $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId);
+                    Log::info('Is On Leave:', ['isOnLeave' => $isOnLeave]);
+
+                    $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
+                    Log::info('Leave Type:', ['leaveType' => $leaveType]);
+
+                    $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
+                    if (!$isOnLeave && !$isHoliday && !$date->isWeekend()) {
+                        $isPresentOnDate = $this->isEmployeePresentOnDate($date);
                         
-                            // Employee is not on leave, check for absence or presence
-                            $isAbsent = !$this->isEmployeePresentOnDate($date);
-
-                            // Set the status based on presence
-                            $status = $isAbsent ? 'A' : 'P';
+                        if ($isPresentOnDate) {
+                            Log::info('Employee Present On Date: ' . $date->toDateString());
+                    
+                            // Fetch both IN and OUT records together to minimize queries
+                            $swipeRecords = SwipeRecord::where('emp_id', $employeeId)
+                                ->whereDate('created_at', $date->toDateString())
+                                ->whereIn('in_or_out', ['IN', 'OUT'])
+                                ->get();
+                            
+                            $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
+                            $outSwipeTime = $swipeRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;  // Default to IN if no OUT time
                           
+                            if ($inSwipeTime) {
+                                Log::info('Swipe In Time for Date: ' . $date->toDateString() . ' is ' . $inSwipeTime->swipe_time);
+                            } else {
+                                Log::warning('No Swipe In Time for Date: ' . $date->toDateString());
+                            }
+                            
+                            if ($outSwipeTime) {
+                                Log::info('Swipe Out Time for Date: ' . $date->toDateString() . ' is ' . $outSwipeTime->swipe_time);
+                            } else {
+                                Log::warning('No Swipe Out Time for Date: ' . $date->toDateString());
+                            }
+                            if ($inSwipeTime && $outSwipeTime) {
+                                $inTime = Carbon::parse($inSwipeTime->swipe_time);
+                                $outTime = Carbon::parse($outSwipeTime->swipe_time);
+                            
+                                $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
+                                $hours = floor($timeDifference / 60);
+                                $minutes = $timeDifference % 60;
+                                if ($timeDifference < 240) {
+                                    $isAbsentFor = true;
+                                    
+                                }
+                                elseif ($timeDifference >= 240 && $timeDifference < 480) {
+                                    // Between 4 hours and 8 hours, mark as half-day present
+                                    $isHalfDayPresent = true;
+                                }
+                               
+                                Log::info('Time difference for Date: ' . $date->toDateString() . ' is ' . sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes));
+
+                            }
                         }
-                        // Set the status based on presence
-                        $week[] = [
-                            'day' => $dayCount,
-                            'isToday' => $isToday,
-                            'isPublicHoliday' => $isPublicHoliday,
-                            'isCurrentMonth' => true,
-                            'isRegularised' => $isregularised,
-                            'isPreviousMonth' => false,
-                            'backgroundColor' => $backgroundColor,
-                            'onleave'=>$isonLeave,
-                            'status' => $status,
-                        ];
-
-                        $dayCount++;
-                    } else {
-                        $week[] = [
-                            'day' => $dayCount - $daysInMonth,
-                            'isToday' => false,
-                            'isPublicHoliday' => in_array($lastDayOfPreviousMonth->copy()->addDays($dayCount - $daysInMonth)->toDateString(), $this->getPublicHolidaysForMonth($startOfPreviousMonth->year, $startOfPreviousMonth->month)->pluck('date')->toArray()),
-                            'isCurrentMonth' => false,
-                            'isRegularised' => false,
-                            'isNextMonth' => true,
-                            'backgroundColor' => '',
-                            'onleave'=>'false',
-                            'status' => '',
-                        ];
-                        $dayCount++;
+                        else
+                        {
+                            $inSwipeTime=null;
+                            $outSwipeTime=null;
+                            $timeDifference = null; // Calculate difference in minutes
+                         
+                        }
                     }
-                }
-                $calendar[] = $week;
-            }
+                    if ($isOnLeave) {
+                        switch ($leaveType) {
+                            case 'Casual Leave Probation':
+                                $status = 'CLP';
+                                break;
+                            case 'Sick Leave':
+                                $status = 'SL';
+                                break;
+                            case 'Loss Of Pay':
+                                $status = 'LOP';
+                                break;
+                            case 'Casual Leave':
+                                $status = 'CL';
+                                break;
+                            case 'Marriage Leave':
+                                $status = 'ML';
+                                break;
+                            case 'Paternity Leave':
+                                $status = 'PL';
+                                break;
+                            case 'Maternity Leave':
+                                $status = 'MTL';
+                                break;
+                            default:
+                                $status = 'L';
+                                break;
+                        }
+                    } else {
+                        $isAbsent = !$this->isEmployeePresentOnDate($date->toDateString()) || $isAbsentFor;
+                        if ($isAbsent) {
+                            $status = 'A';
+                        } elseif ($isHalfDayPresent) {
+                            $status = 'HP';
+                        } else {
+                            $status = 'P';
+                        }
+                    }
+                    
 
-            $this->calendar = $calendar;
-        } catch (\Exception $e) {
-            Log::error('Error in generateCalendar method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the calendar. Please try again later.');
-            $this->calendar = []; // Set calendar to empty array in case of error
+                    $week[] = [
+                        'day' => $dayCount,
+                        'isToday' => $isToday,
+                        'isPublicHoliday' => $isPublicHoliday,
+                        'isCurrentMonth' => true,
+                        'isRegularised' => $isRegularised,
+                        'isPreviousMonth' => false,
+                        'backgroundColor' => $backgroundColor,
+                        'onleave' => $isOnLeave,
+                        'status' => $status,
+                    ];
+
+                    $dayCount++;
+                } else {
+                    $week[] = [
+                        'day' => $dayCount - $daysInMonth,
+                        'isToday' => false,
+                        'isPublicHoliday' => false,
+                        'isCurrentMonth' => false,
+                        'isRegularised' => false,
+                        'isNextMonth' => true,
+                        'backgroundColor' => '',
+                        'onleave' => false,
+                        'status' => '',
+                    ];
+                    $dayCount++;
+                }
+            }
+            $calendar[] = $week;
         }
+
+        Log::info('Generated Calendar:', ['calendar' => $calendar]);
+
+        $this->calendar = $calendar;
+    } catch (\Exception $e) {
+        Log::error('Error in generateCalendar method: ' . $e->getMessage());
+        session()->flash('error', 'An error occurred while generating the calendar. Please try again later.');
+        $this->calendar = []; // Set calendar to empty array in case of error
     }
+}
     //This function will help us to check the details related to the particular date in the calendar
     public function updateDate($date1)
     {

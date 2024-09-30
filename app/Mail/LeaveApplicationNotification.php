@@ -16,20 +16,25 @@ class LeaveApplicationNotification extends Mailable
     /**
      * Create a new message instance.
      */
-     public $leaveDetails;
-     public $fromAddress;
-     public function __construct($leaveRequest, $fromAddress)
-     {
-         $this->leaveRequest = $leaveRequest;
-         $this->fromAddress = $fromAddress;
-     }
- 
-     public function build()
-     {
-         return $this->view('emails.leave_application_notification')
-             ->from($this->fromAddress)
-             ->subject('Leave Application Notification');
-     }
+    public $leaveRequest;
+    public $applyingToDetails;
+    public $ccToDetails;
+    public function __construct($leaveRequest, $applyingToDetails, $ccToDetails)
+    {
+        $this->leaveRequest = $leaveRequest;
+        $this->applyingToDetails = $applyingToDetails;
+        $this->ccToDetails = $ccToDetails;
+    }
+    public function build()
+    {
+        return $this->subject('Leave Application Submitted')
+                    ->view('mails.leave_application_notification')
+                    ->with([
+                        'leaveRequest' => $this->leaveRequest,
+                        'applyingToDetails' => $this->applyingToDetails,
+                        'ccToDetails' => $this->ccToDetails,
+                    ]);
+    }
    
 
     /**
