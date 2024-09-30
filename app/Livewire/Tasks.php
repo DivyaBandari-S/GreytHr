@@ -347,18 +347,34 @@ class Tasks extends Component
     }
 
 
+    // public function updateFollowers()
+    // {
+
+    //     $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+    //         $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+    //         return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+    //     }, $this->selectedPeopleForFollowers);
+
+    //     $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+
+    //     $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+    // }
     public function updateFollowers()
-    {
+{
+    $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+        $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+        return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+    }, $this->selectedPeopleForFollowers);
 
-        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
-            $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
-        }, $this->selectedPeopleForFollowers);
+    // Filter out any empty results
+    $this->selectedPeopleNamesForFollowers = array_filter($this->selectedPeopleNamesForFollowers);
 
-        $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+    // Convert to a string for display
+    $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
 
-        $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
-    }
+    $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+}
+
 
     public function openForTasks($taskId)
     {
@@ -520,12 +536,12 @@ class Tasks extends Component
         $this->assignee = null;
         $this->client_id = null;
         $this->project_name = null;
-        $this->priority = null;
+        $this->priority = 'Low';
         $this->due_date = null;
         $this->tags = null;
         $this->followers = null;
         $this->subject = null;
-        $this->description = false;
+        $this->description = null;
         $this->selectedPeopleName = null;
         $this->selectedPeopleNamesForFollowers = [];
         $this->showRecipients = false;
@@ -556,7 +572,8 @@ class Tasks extends Component
 
     public function close()
     {
-        $this->reset();
+        $this->resetErrorBag();
+        $this->resetFields();
 
         $this->showDialog = false;
         $this->validate_tasks = false;
@@ -587,7 +604,11 @@ class Tasks extends Component
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
                 })
+                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+->orderBy('first_name')
+->orderBy('last_name')
                 ->get();
+              
 
 
         $this->peopleFound = count($this->filteredPeoples) > 0;
@@ -618,6 +639,9 @@ class Tasks extends Component
                     $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
                         ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
                 })
+                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+->orderBy('first_name')
+->orderBy('last_name')
                 ->get();
 
 

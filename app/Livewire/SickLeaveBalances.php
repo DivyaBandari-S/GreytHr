@@ -124,7 +124,7 @@ class SickLeaveBalances extends Component
 
     public function changeYear($year)
     {
-        return redirect()->to("/sickleavebalance?year={$year}");
+        return redirect()->to("/leave-balances/sickleavebalance?year={$year}");
     }
 
     public function render()

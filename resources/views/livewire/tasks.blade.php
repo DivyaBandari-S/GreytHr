@@ -500,7 +500,7 @@
 
                                             <strong class="col-4 task-modal-selected-assignee">Selected assignee:
 
-                                            </strong><input class="col-8" type="text" style="border: none;" value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName"
+                                            </strong><input class="col-8" type="text" style="border: none; background: transparent" value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName" disabled
     
                                                 wire:input="autoValidate">
                                     
@@ -716,9 +716,11 @@
                                     @if ($showFollowers==true)
                                         <strong class="task-selected-follower">Selected Followers:
                                         </strong>
-                                            <textarea style="border: none; width: 100%; height: 100%;" 
-          wire:model="selectedPeopleNamesForFollowers" 
-          wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
+                                        <textarea style="border: none; width: 100%; height: 100%; resize: none; background: transparent" 
+                                        disabled 
+                                        wire:model="followers" 
+                                        wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
+                              
                                     @else
                                         <a wire:click="forFollowers" class="hover-link task-add-followers"> Add
                                             Followers</a>
