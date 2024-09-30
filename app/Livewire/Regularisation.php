@@ -223,6 +223,13 @@ class Regularisation extends Component
               // Stop further execution if the date is in the future
               return;
         }
+        if((Carbon::today()->month)-$selecteddatemonth==1&&$selecteddateyear==(Carbon::today()->year)&&$selecteddateday<25)
+        {
+            session()->flash('error', 'Attendance Period is locked');
+              $this->showAlert=true;
+              // Stop further execution if the date is in the future
+              return;
+        }
         if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1&&$selecteddateday<=(Carbon::today()->year))
         {
               // Throw a validation error or set a message for the user
