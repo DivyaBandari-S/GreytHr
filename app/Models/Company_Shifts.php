@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Company_Shifts extends Model
 {
     use HasFactory;
-    protected $table = "companyShifts";
+    protected $table = "company_shifts";
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -16,7 +16,7 @@ class Company_Shifts extends Model
         'shift_name',
         'shift_start_date',
         'shift_end_date',
-        
+
     ];
 
 }
