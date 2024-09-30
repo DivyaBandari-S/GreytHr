@@ -123,7 +123,7 @@
                     <td>{{ \Carbon\Carbon::parse($leaveApplication->to_date)->format('d M, Y') }}</td>
                     <td>
                         @php
-                        $days = $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session);
+                        $days = $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session,$leaveApplication->leave_type);
                         @endphp
                         {{ $days }}
                     </td>

@@ -115,7 +115,7 @@
                                         <div class="col-9">
                                             <div class="d-flex align-items-center">
                                                 <h6 class="username truncate-text people-default-container-name   @isset($people->emp)
-                                        @if ($people->emp->employee_status != 'active')
+                                        @if ($people->emp->employee_status == 'terminated' || $people->emp->employee_status == 'resigned')
                                             inactive
                                         @endif
                                             @endisset"
@@ -124,7 +124,7 @@
                                                 <p
                                                     class="mb-0 people-default-container-empid
                                             @isset($people->emp)
-                                        @if ($people->emp->employee_status != 'active')
+                                        @if ($people->emp->employee_status == 'terminated' || $people->emp->employee_status == 'resigned')
                                             inactive
                                         @endif
                                             @endisset">
@@ -437,12 +437,12 @@
                                                 ->first();
                                         @endphp
                                         <div class="d-flex align-items-center">
-                                            <h6 class="username truncate-text people-default-container-name @if ($people->employee_status != 'active') inactive @endif"
+                                            <h6 class="username truncate-text people-default-container-name @if ($people->employee_status == 'terminated' || $people->employee_status == 'resigned') inactive @endif"
                                                 title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">
                                                 {{ ucwords(strtolower($people->first_name)) }}
                                                 {{ ucwords(strtolower($people->last_name)) }}</h6>
                                             <p
-                                                class="mb-0 people-default-container-empid @if ($people->employee_status != 'active') inactive @endif">
+                                                class="mb-0 people-default-container-empid @if ($people->employee_status == 'terminated' || $people->employee_status == 'resigned') inactive @endif">
                                                 (#{{ $people->emp_id }})
                                             </p>
                                             @if ($starredPerson && $starredPerson->starred_status == 'starred')
@@ -748,12 +748,12 @@
                                                 ->first();
                                         @endphp
                                         <div class="d-flex align-items-center">
-                                            <h6 class="username truncate-text people-default-container-name @if ($people->employee_status != 'active') inactive @endif"
+                                            <h6 class="username truncate-text people-default-container-name @if ($people->employee_status == 'terminated' || $people->employee_status == 'resigned') inactive @endif"
                                                 title="{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }} (#{{ $people->emp_id }})">
                                                 {{ ucwords(strtolower($people->first_name)) }}
                                                 {{ ucwords(strtolower($people->last_name)) }}</h6>
                                             <p
-                                                class="mb-0 people-default-container-empid @if ($people->employee_status != 'active') inactive @endif">
+                                                class="mb-0 people-default-container-empid @if ($people->employee_status == 'terminated' || $people->employee_status == 'resigned') inactive @endif">
                                                 (#{{ $people->emp_id }})
                                             </p>
                                             @if ($starredPerson && $starredPerson->starred_status == 'starred')

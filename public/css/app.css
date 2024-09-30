@@ -2247,8 +2247,8 @@ td {
     font-weight: 600;
 }
 .text-feed {
-    font-size: 13px;
-    color: #3b4452;
+    font-size: var(--nav-headings-font-size);
+    color: var(--main-heading-color);
     font-weight: 600;
 }
 .custom-feed {
@@ -2663,10 +2663,15 @@ input[type="radio"] {
     color: #3b4452;
     display: flex;
     flex-direction: column;
-    margin-top: 5px;
     justify-content: center; /* Centers items vertically */
-    margin-left: 10px;
-    /* Full viewport height to center vertically */
+}
+.navProfileImgFeeds{
+    width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	object-fit: cover;
+	cursor: pointer;
+	margin-right: 0px !important;
 }
 .radio-wrapper {
     display: inline-block;
@@ -2991,7 +2996,7 @@ input[type="radio"] {
     background-color: rgb(2, 17, 79);
     border-radius: 0 5px 5px 0;
     color: #fff !important;
-    width: 40px;
+    width: 45px;
     height:32px;
     border: none;
     align-items: center;
@@ -3212,6 +3217,15 @@ input[type="radio"] {
 }
 
 /* //leave apply styles */
+.search-btn-leave{
+    background: none;
+    border: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+
+}
 .checkLeaveBal{
     display: flex;
     justify-content: center;
@@ -6862,7 +6876,7 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
-    height: 279px;
+    height: auto;
     max-height: 300px;
     overflow-y: auto;
     overflow-y: auto;
@@ -7169,7 +7183,7 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
-    height: 279px;
+    height: auto;
     max-height: 300px;
     overflow-y: auto;
     overflow-x: auto;
@@ -8369,6 +8383,12 @@ peoples module styles started */
     .people-employee-detail-container {
         margin-top: 10px; /* Margin for mobile devices */
         margin-left: 0; /* Optionally remove left margin for mobile */
+    }
+    .checkLeaveBal{
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        margin-top: 20px;
     }
 }
 @media screen and (max-width: 460px) {

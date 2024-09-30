@@ -10,8 +10,8 @@
     @if($showerrorMessage)
     <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="bg-none border-none" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">x</span>
+        <button type="button" wire:click="hideAlert" class="alert-close bg-none border-none" data-dismiss="alert" aria-label="Close">
+            <span>X</span>
         </button>
     </div>
     @endif
@@ -162,7 +162,7 @@
                             @if($showNumberOfDays)
                             <span id="numberOfDays" class="sickLeaveBalance">
                                 @if($from_date && $to_date && $from_session && $to_session)
-                                {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session) }}
+                                {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type) }}
                                 @else
                                 0
                                 @endif
@@ -171,7 +171,7 @@
                             @if(isset($leaveBalances) && !empty($leaveBalances))
                             <!-- Directly access the leave balance for the selected leave type -->
                             @php
-                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session);
+                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type);
                             @endphp
                             @if($leave_type == 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
@@ -328,9 +328,9 @@
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
                                         <button
                                             type="button"
-                                            class="search-btn"
+                                            class="search-btn-leave"
                                             wire:click="getFilteredManagers">
-                                            <i class="fas fa-search ms-2"></i>
+                                            <i class="fas fa-search"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -431,7 +431,7 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">More Recipients</h5>
+                                    <h5 class="modal-title">CC to</h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                         wire:click="openModal">
                                     </button>
@@ -459,14 +459,14 @@
                 </div>
 
                 @if($showCcRecipents)
-                <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                <div class="ccContainer position-relative" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
                                 <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                    <button type="button" wire:click="searchCCRecipients" class="search-btn">
-                                        <i class="fas fa-search ms-2"></i>
+                                    <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
+                                        <i class="fas fa-search"></i>
                                     </button>
                                 </div>
                             </div>
@@ -478,35 +478,42 @@
                             </button>
                         </div>
                     </div>
-                    <div class="scrollApplyingTO mb-2 mt-2">
-                        @if(!empty($ccRecipients))
-                        @foreach($ccRecipients as $employee)
-                        <div class="borderContainer mb-2 rounded" wire:key="{{ $employee['emp_id'] }}">
-                            <div class="downArrow d-flex align-items-center mt-2 align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee['emp_id'] }}')">
-                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee['emp_id'] }}" wire:click="handleCheckboxChange('{{ $employee['emp_id'] }}')">
-                                @if(!empty($employee['image']) && ($employee['image'] !== 'null') && $employee['image'] !== null && $employee['image'] != "Null" && $employee['image'] != "")
-                                <div class="employee-profile-image-container">
-                                    <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{($employee['image'])}}">
-                                </div>
-                                @else
-                                @if($employee['gender'] === "Male")
-                                <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
-                                </div>
-                                @elseif($employee['gender'] === "Female")
-                                <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
-                                </div>
-                                @else
-                                <div class="employee-profile-image-container">
-                                    <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
-                                </div>
-                                @endif
-                                @endif
+                    <div class="scrollApplyingTO mb-2 mt-2 ">
+                        @if(session()->has('error'))
+                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
+                        @endif
 
-                                <div class=" mb-2 mt-2">
-                                    <p class="mb-0 empCcName">{{ ucwords(strtolower($employee['full_name'])) }}</p>
-                                    <p class="mb-0 empIdStyle">#{{ $employee['emp_id'] }}</p>
+                        @if($ccRecipients->isNotEmpty())
+                        @foreach($ccRecipients as $employee)
+                        <div class="borderContainer mb-2 rounded" >
+                            <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
+                                <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
+                                    <div>
+                                        @if(!empty($employee->image) && $employee->image !== 'null')
+                                        <div class="employee-profile-image-container">
+                                            <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
+                                        </div>
+                                        @else
+                                        @if($employee->gender === "Male")
+                                        <div class="employee-profile-image-container">
+                                            <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                        </div>
+                                        @elseif($employee->gender === "Female")
+                                        <div class="employee-profile-image-container">
+                                            <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                        </div>
+                                        @else
+                                        <div class="employee-profile-image-container">
+                                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
+                                        </div>
+                                        @endif
+                                        @endif
+                                    </div>
+                                    <div class="mb-2 mt-2">
+                                        <p class="mb-0 empCcName">{{ ucwords(strtolower($employee->full_name)) }}</p>
+                                        <p class="mb-0 empIdStyle">#{{ $employee->emp_id }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>

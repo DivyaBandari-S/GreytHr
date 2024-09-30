@@ -1,16 +1,10 @@
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 
-<body>
+<div>
     <style>
         .leave-transctions {
             background: #fff;
-            margin: 0 auto;
+            margin: 0px;
             box-shadow: 0 3px 10px 0 rgba(0, 0, 0, 0.2);
         }
 
@@ -104,15 +98,20 @@
             text-align: left;
             width: auto;
         }
-        .approver-column {
-            font-size: 0.8rem; /* Slightly smaller font size */
-    white-space: normal; /* Allow text wrapping */
-    word-wrap: break-word;
-}
 
-th.approver-column, td.approver-column {
-    width: 15%; /* Adjust percentage as necessary */
-}
+        .approver-column {
+            font-size: 0.8rem;
+            /* Slightly smaller font size */
+            white-space: normal;
+            /* Allow text wrapping */
+            word-wrap: break-word;
+        }
+
+        th.approver-column,
+        td.approver-column {
+            width: 15%;
+            /* Adjust percentage as necessary */
+        }
 
         td {
             font-size: 0.825rem;
@@ -130,7 +129,11 @@ th.approver-column, td.approver-column {
     </style>
     <div class="leave-transctions">
         <div class="pdf-heading">
-            @if ($employeeDetails->company_id === 'XSS-12345')
+            @php
+            // Check if company_id is an array or JSON
+            $companyIds = is_array($employeeDetails->company_id) ? $employeeDetails->company_id : json_decode($employeeDetails->company_id, true);
+        @endphp
+             @if (in_array('XSS-12345', $companyIds))
                 <img src="https://media.licdn.com/dms/image/C4D0BAQHZsEJO8wdHKg/company-logo_200_200/0/1677514035093/xsilica_software_solutions_logo?e=2147483647&v=beta&t=rFgO4i60YIbR5hKJQUL87_VV9lk3hLqilBebF2_JqJg"
                     alt="" style="width:200px;height:200px;object-fit: cover;">
                 <div>
@@ -145,7 +148,7 @@ th.approver-column, td.approver-column {
                         {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- payglogo -->
-            @elseif($employeeDetails->company_id === 'PAYG-12345')
+                @elseif (in_array('PAYG-12345', $companyIds))
                 <img src="https://play-lh.googleusercontent.com/qUGkF93p010_IHxbn8FbnFWZfqb2lk_z07i6JkpOhC9zf8hLzxTdRGv2oPpNOOGVaA=w600-h300-pc0xffffff-pd"
                     style="width:200px;height:125px;">
                 <div>
@@ -160,7 +163,7 @@ th.approver-column, td.approver-column {
                         {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
                 </div>
                 <!-- attune golabal logo -->
-            @elseif($employeeDetails->company_id === 'AGS-12345')
+                @elseif (in_array('AGS-12345', $companyIds))
                 <img src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/rxyycak6d2ydcybdbb3e"
                     alt="" style="width:200px;height:125px;">
                 <div>
@@ -203,10 +206,11 @@ th.approver-column, td.approver-column {
                         style="text-align: center;  font-weight:600;   font-size:15px ;">No data found</td>
                 </tr>
             @else
+            @php $siNo = 1; @endphp  
                 @foreach ($leaveTransactions as $leaveTransaction)
                     @foreach ($leaveTransaction['details'] as $transaction)
                         <tr>
-                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $siNo++ }}</td>
                             <td>{{ $transaction['emp_id'] }}</td>
                             <td>{{ ucwords(strtolower($transaction['first_name'])) }}
                                 {{ ucwords(strtolower($transaction['last_name'])) }}</td>
@@ -214,7 +218,7 @@ th.approver-column, td.approver-column {
                             <td>{{ ucwords(strtolower($employeeDetails->first_name)) }}
                                 {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
                             <td>{{ $transaction['leave_type'] }}</td>
-                          
+
 
                             <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}</td>
                             <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}</td>
@@ -231,6 +235,6 @@ th.approver-column, td.approver-column {
             @endif
         </tbody>
     </table>
-</body>
+</div>
 
-</html>
+

@@ -2,23 +2,27 @@
 
 namespace App\Livewire;
 
+use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
 use App\Models\HolidayCalendar;
+use App\Models\Hr;
 use App\Models\LeaveRequest;
 use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class LeaveApplyPage extends Component
 {
     use WithFileUploads;
-    public $leave_type, $employeeId;
+    public $leave_type;
+    public $employeeId;
     public $currentYear;
-
+    public $leaveType;
     public $searchQuery = '';
     public $emp_id;
     public $casualLeavePerYear;
@@ -57,7 +61,7 @@ class LeaveApplyPage extends Component
     public $loginEmpManagerId;
     public $employee;
     public $managerFullName = [];
-    public $ccRecipients = [];
+    public $ccRecipients;
     public $selectedEmployee = [];
     public $selectedManager = [];
 
@@ -110,11 +114,38 @@ class LeaveApplyPage extends Component
             $managerId = $this->employee->manager_id;
             // Fetch the logged-in employee's manager details
             $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
             if ($managerDetails) {
+                // If manager details are found, format the full name
                 $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
                 $this->loginEmpManager = $fullName;
                 $this->selectedManagerDetails = $managerDetails;
+            } else {
+                // If no manager is found, check if the managerId is null
+                if (is_null($managerId)) {
+                    // Get the company_id from the logged-in employee's details
+                    $companyId = $this->employee->company_id;
+                    // Fetch emp_ids from the HR table
+                    $hrEmpIds = Hr::pluck('emp_id');
+                    // Now, fetch employee details for these HR emp_ids
+                    $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
+                        ->whereJsonContains('company_id', $companyId) // Ensure company_id matches
+                        ->get();
+
+                    if ($hrManagers->isNotEmpty()) {
+                        // Assuming you want the first manager or you can apply your own logic to select a specific manager
+                        $firstManager = $hrManagers->first();
+                        $fullName = ucfirst(strtolower($firstManager->first_name)) . ' ' . ucfirst(strtolower($firstManager->last_name));
+                        $this->loginEmpManager = $fullName;
+                        $this->selectedManagerDetails = $firstManager;
+                    } else {
+                        // Handle case where no HR managers are found
+                        $this->loginEmpManager = 'No manager found';
+                        $this->selectedManagerDetails = null;
+                    }
+                }
             }
+
             // Determine if the dropdown option should be displayed
             $this->showCasualLeaveProbation = $this->employee && !$this->employee->confirmation_date;
             $currentYear = date('Y'); // Get the current year
@@ -138,6 +169,7 @@ class LeaveApplyPage extends Component
     public function hideAlert()
     {
         $this->showerrorMessage = false;
+        $this->searchCCRecipients();
     }
 
     //this method used to filter cc recipients from employee details
@@ -146,24 +178,44 @@ class LeaveApplyPage extends Component
         try {
             // Fetch employees based on the search term for CC To
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
-            $this->ccRecipients = EmployeeDetails::whereJsonContains('company_id', $applying_to)
-                ->where('emp_id', '!=', $employeeId)
-                ->where(function ($query) {
-                    $query
-                        ->orWhere('first_name', 'like', '%' . $this->searchTerm . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                })
-                ->groupBy('emp_id', 'image', 'gender')
-                ->select(
-                    'emp_id',
-                    'gender',
-                    'image',
-                    DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
-                )
-                ->orderBy('full_name')
-                ->get();
 
+            // Fetch the company_ids for the logged-in employee
+            $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+
+            // Initialize an empty collection for recipients
+            $this->ccRecipients = collect(); // Ensure it's initialized as a collection
+
+            // Loop through each company ID and find employees
+            foreach ($companyIdsArray as $companyId) {
+                $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
+                    ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
+                    ->whereIn('employee_status', ['active', 'on-probation'])
+                    ->where(function ($query) {
+                        // Apply search filtering if a search term is provided
+                        if ($this->searchTerm) {
+                            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                        }
+                    })
+                    ->groupBy('emp_id', 'image', 'gender') // Group by the required fields
+                    ->select(
+                        'emp_id',
+                        'gender',
+                        'image',
+                        DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name') // Create a full name field
+                    )
+                    ->orderBy('full_name') // Order by full name
+                    ->get();
+
+                // Merge the results into the ccRecipients collection
+                $this->ccRecipients = $this->ccRecipients->merge($employees);
+            }
+
+            // Optionally, you can remove duplicates if necessary
+            $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
@@ -209,13 +261,24 @@ class LeaveApplyPage extends Component
     public function toggleSelection($empId)
     {
         if (isset($this->selectedPeople[$empId])) {
+            // If already selected, unselect it
             unset($this->selectedPeople[$empId]);
         } else {
-            $this->selectedPeople[$empId] = true;
+            // Check if limit is reached
+            if (count($this->selectedPeople) < 5) {
+                // Add employee if under limit
+                $this->selectedPeople[$empId] = true;
+            } else {
+                // Show error if limit exceeded
+                session()->flash('error', 'You can only select up to 5 CC recipients.');
+                $this->showAlert = true; // Assuming you're using this to control alert visibility
+            }
         }
-        $this->searchCCRecipients();
-        $this->fetchEmployeeDetails();
+
+        $this->searchCCRecipients(); // Assuming you want to update the recipients list
+        $this->fetchEmployeeDetails(); // Fetch details if necessary
     }
+
     public function fetchEmployeeDetails()
     {
         // Reset the list of selected employees
@@ -243,31 +306,59 @@ class LeaveApplyPage extends Component
     }
     public function handleCheckboxChange($empId)
     {
-        if (isset($this->selectedPeople[$empId])) {
-            // If the checkbox is unchecked, remove from CC
-            $this->removeFromCcTo($empId);
-        } else {
-            // If the checkbox is checked, add to CC
-            $this->selectedPeople[$empId] = true;
+        try {
+            // Check if the employee is selected (checkbox is checked)
+            if (array_key_exists($empId, $this->selectedPeople) && $this->selectedPeople[$empId]) {
+                // Checkbox is currently checked, so it’s being unchecked
+                $this->removeFromCcTo($empId);
+            } else {
+                // Checkbox is currently unchecked, so it’s being checked
+                $this->selectedPeople[$empId] = true;
+
+                // Optionally add to selectedCcTo or perform other actions
+                $this->selectedCcTo[] = ['emp_id' => $empId];
+            }
+
+            // Update cc_to field
+            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+
+            // Fetch updated employee details and search CC recipients
+            $this->fetchEmployeeDetails();
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Handle the exception (log it, show a message, etc.)
+            Log::error('Error handling checkbox change: ' . $e->getMessage());
+            // You might also want to notify the user in some way
+            session()->flash('error', 'An error occurred while updating CC recipients.');
         }
     }
+
     public function removeFromCcTo($empId)
     {
-        // Remove the employee from selectedCcTo array
-        $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
-            return $recipient['emp_id'] != $empId;
-        }));
+        try {
+            // Remove the employee from selectedCcTo array
+            $this->selectedCcTo = array_values(array_filter($this->selectedCcTo, function ($recipient) use ($empId) {
+                return $recipient['emp_id'] != $empId;
+            }));
 
-        // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
-        $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
+            // Update cc_to field with selectedCcTo (comma-separated string of emp_ids)
+            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
 
-        // Toggle selection state in selectedPeople
-        unset($this->selectedPeople[$empId]);
-        $this->showCcRecipents = true;
-        // Fetch updated employee details
-        $this->fetchEmployeeDetails();
-        $this->searchCCRecipients();
+            // Toggle selection state in selectedPeople
+            unset($this->selectedPeople[$empId]);
+            $this->showCcRecipents = true;
+
+            // Fetch updated employee details
+            $this->fetchEmployeeDetails();
+            $this->searchCCRecipients();
+        } catch (\Exception $e) {
+            // Handle the exception (log it, show a message, etc.)
+            Log::error('Error removing from CC: ' . $e->getMessage());
+            // Notify the user
+            session()->flash('error', 'An error occurred while removing CC recipients.');
+        }
     }
+
     public $showCCEmployees = false;
     public function openModal()
     {
@@ -347,7 +438,7 @@ class LeaveApplyPage extends Component
             $totalNumberOfDays = 0; // Initialize the counter for total days
             if (!$checkLeaveBalance->isEmpty()) {
                 foreach ($checkLeaveBalance as $leaveRequest) {
-                    $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session);
+                    $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type);
                     $totalNumberOfDays += $numberBalanceOfDays;
                 }
             }
@@ -357,7 +448,8 @@ class LeaveApplyPage extends Component
                     $this->from_date,
                     $this->from_session,
                     $this->to_date,
-                    $this->to_session
+                    $this->to_session,
+                    $this->leave_type
                 );
                 $totalNumberOfDays += $totalEnteredDays;
             }
@@ -390,6 +482,52 @@ class LeaveApplyPage extends Component
                 $this->showerrorMessage = true;
                 return redirect()->back()->withInput();
             }
+            // Check if the leave type is Casual Leave
+            if ($this->leave_type === 'Casual Leave') {
+                $currentMonth = now()->month;
+                $currentYear = now()->year;
+
+                // Get all casual leave requests for the current month
+                $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_type', 'Casual Leave')
+                    ->whereYear('from_date', $currentYear)
+                    ->whereMonth('from_date', $currentMonth)
+                    ->whereIn('status', ['approved', 'pending'])
+                    ->get();
+
+                $totalLeaveDays = 0;
+
+                foreach ($leaveRequests as $leaveRequest) {
+                    $numberOfDays = $this->calculateNumberOfDays(
+                        $leaveRequest->from_date,
+                        $leaveRequest->from_session,
+                        $leaveRequest->to_date,
+                        $leaveRequest->to_session,
+                        $leaveRequest->leave_type
+                    );
+                    $totalLeaveDays += $numberOfDays;
+                }
+
+                // Calculate days for the new leave request if it's Casual Leave
+                if ($this->from_date && $this->to_date) {
+                    $newLeaveDays = $this->calculateNumberOfDays(
+                        $this->from_date,
+                        $this->from_session,
+                        $this->to_date,
+                        $this->to_session,
+                        $this->leave_type
+                    );
+                    $totalLeaveDays += $newLeaveDays;
+                }
+
+                // Check if total leave days exceed 2
+                if ($totalLeaveDays > 2) {
+                    $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
+                    $this->showerrorMessage = true;
+                    return redirect()->back()->withInput();
+                }
+            }
+
 
             // Prepare CC and Manager details
             $ccToDetails = [];
@@ -400,6 +538,7 @@ class LeaveApplyPage extends Component
                         $ccToDetails[] = [
                             'emp_id' => $selectedEmployeeId,
                             'full_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                            'email' => $employeeDetails->email
                         ];
                     }
                 }
@@ -412,6 +551,7 @@ class LeaveApplyPage extends Component
                     $applyingToDetails[] = [
                         'manager_id' => $employeeDetails->emp_id,
                         'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                        'email' => $employeeDetails->email
                     ];
                 }
             } else {
@@ -468,6 +608,12 @@ class LeaveApplyPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
+            // Send email notification
+            $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
+            $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+
+            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
+
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
             session()->flash('message', 'Leave application submitted successfully!');
@@ -484,8 +630,8 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showNumberOfDays = true;
-            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session') {
-                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession);
+            if ($field == 'from_date' || $field == 'to_date' || $field == 'from_session' || $field == 'to_session' || $field == 'leave_type') {
+                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession, $this->leaveType);
             }
         } catch (\Exception $e) {
             // Log the error
@@ -589,7 +735,7 @@ class LeaveApplyPage extends Component
     }
 
     //it will calculate number of days for leave application
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -630,9 +776,12 @@ class LeaveApplyPage extends Component
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
+                if ($leaveType == 'Sick Leave') {
                     $totalDays += 1;
+                } else {
+                    if ($startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 }
                 // Move to the next day
                 $startDate->addDay();
@@ -730,6 +879,7 @@ class LeaveApplyPage extends Component
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
         $this->file_paths = null;
+        $this->selectedPeople = [];
     }
 
     public $managerDetails, $fullName;
@@ -768,7 +918,7 @@ class LeaveApplyPage extends Component
             // Fetch the gender of the logged-in employee
             $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
 
-            // Fetch employees with job roles CTO and Chairman
+            // Fetch employees with job roles CTO, Chairman, and HR
             $jobRoles = ['CTO', 'Chairman'];
             $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
                 ->where(function ($query) {
@@ -791,9 +941,44 @@ class LeaveApplyPage extends Component
                     ];
                 })
             );
+
+            // Get the company_id from the logged-in employee's details
+            $companyIds = $applying_to->company_id;
+
+            // Convert the company IDs to an array if it's in JSON format
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+
+            // Fetch emp_ids from the HR table
+            $hrEmpIds = Hr::pluck('emp_id');
+
+            // Now, fetch employee details for these HR emp_ids
+            $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
+                ->where(function ($query) use ($companyIdsArray) {
+                    // Check if any of the company IDs match
+                    foreach ($companyIdsArray as $companyId) {
+                        $query->orWhere('company_id', 'like', "%\"$companyId\"%"); // Assuming company_id is stored as JSON
+                    }
+                })
+                ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
+
+            // Add HR managers to the collection
+            $hrManagers->each(function ($hrManager) use ($managers) {
+                $fullName = ucfirst(strtolower($hrManager->first_name)) . ' ' . ucfirst(strtolower($hrManager->last_name));
+                $managers->push([
+                    'full_name' => $fullName,
+                    'emp_id' => $hrManager->emp_id,
+                    'gender' => $hrManager->gender,
+                    'image' => $hrManager->image,
+                ]);
+            });
+
+            // Keep only unique emp_ids
+            $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
+
         } catch (\Exception $e) {
             Log::error('Error fetching employee or manager details: ' . $e->getMessage());
         }
+
 
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,

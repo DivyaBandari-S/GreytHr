@@ -7,7 +7,7 @@ use App\Models\LeaveRequest;
 
 class LeaveHelper
 {
-    public static function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public static function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -29,13 +29,15 @@ class LeaveHelper
                 }
             }
 
-
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                // Check if it's a weekday (Monday to Friday)
-                if ($startDate->isWeekday()) {
+                if ($leaveType == 'Sick Leave') {
                     $totalDays += 1;
+                } else {
+                    if ($startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 }
                 // Move to the next day
                 $startDate->addDay();
@@ -100,7 +102,8 @@ class LeaveHelper
                 $leaveRequest->from_date,
                 $leaveRequest->from_session,
                 $leaveRequest->to_date,
-                $leaveRequest->to_session
+                $leaveRequest->to_session,
+                $leaveRequest->leave_type
             );
 
             // Accumulate days based on leave type
@@ -164,7 +167,8 @@ class LeaveHelper
                 $leaveRequest->from_date,
                 $leaveRequest->from_session,
                 $leaveRequest->to_date,
-                $leaveRequest->to_session
+                $leaveRequest->to_session,
+                $leaveRequest->leave_type
             );
 
             // Accumulate days based on leave type

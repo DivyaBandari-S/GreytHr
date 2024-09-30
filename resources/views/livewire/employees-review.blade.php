@@ -414,7 +414,7 @@
                             <div class="col accordion-content">
                                 <span class="category-type-hide">No. of Days</span>
                                 <span class="normalText">
-                                    {{ $this->calculateNumberOfDays($leaveRequest['approvedLeaveRequest']->from_date, $leaveRequest['approvedLeaveRequest']->from_session, $leaveRequest['approvedLeaveRequest']->to_date, $leaveRequest['approvedLeaveRequest']->to_session) }}
+                                    {{ $this->calculateNumberOfDays($leaveRequest['approvedLeaveRequest']->from_date, $leaveRequest['approvedLeaveRequest']->from_session, $leaveRequest['approvedLeaveRequest']->to_date, $leaveRequest['approvedLeaveRequest']->to_session,$leaveRequest['approvedLeaveRequest']->leave_type) }}
                                 </span>
                             </div>
                             @if(($leaveRequest['approvedLeaveRequest']->category_type) == 'Leave')
@@ -627,7 +627,7 @@
 
                                 <span class="normalText">
 
-                                    {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session) }}
+                                    {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_typev) }}
 
                                 </span>
 
