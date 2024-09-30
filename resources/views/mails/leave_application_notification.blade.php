@@ -10,11 +10,20 @@
     <h2>Leave Application Notification</h2>
 
     <p>Hi,</p>
+    @if($leaveCategory == 'Leave')
     @if($status === 'Withdrawn')
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
     @else
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
     <p>Please log on to and review the leave application.</p>
+    @endif
+    @else
+    @if($cancelStatus === 'Withdrawn')
+    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
+    @else
+    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
+    <p>Please log on to and review the leave application.</p>
+    @endif
     @endif
 
     <h3>Following are the leave details:</h3>

@@ -1019,19 +1019,19 @@ border: 1px solid #778899;
                     @endif
                 </div>
               
-              
+
             </div>
         </div>
         <div class="col-md-7 mb-3">
             @if(count($selectedDates)>0&&$isdatesApplied==false)
-           
+
             <div class="remarks-container">
             <div class="reporting mb-2">
                 @if(!empty($reportingmanagerfullName->image) && ($reportingmanagerfullName->image !== 'null'))
                                 <div class="employee-profile-image-container">
-                                    <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($reportingmanagerfullName->image)}}">
+                                    <img class="rounded-circle" height="35px" width="35px" src="data:image/jpeg;base64,{{($reportingmanagerfullName->image)}}">
                                 </div>
-                @else    
+                @else
                                 @if($reportingmanagerfullName->gender === "Male")
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle"  height="33" width="33">
@@ -1044,7 +1044,7 @@ border: 1px solid #778899;
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle"  height="35px" width="35px">
                                             </div>
-                                @endif  
+                                @endif
 
                 @endif
                     <div class="center p-0 m-0">

@@ -22,6 +22,8 @@ class LeaveApplicationNotification extends Mailable
     public $employeeDetails;
     public $applyingToDetails;
     public $ccToDetails;
+    public $cancelStatus;
+    public $leaveCategory;
     public function __construct($leaveRequest, $applyingToDetails, $ccToDetails)
     {
         $this->leaveRequest = $leaveRequest;
@@ -39,7 +41,7 @@ class LeaveApplicationNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-    
+
         return $this->view('mails.leave_application_notification')
             ->with([
                 'leaveRequest' => $this->leaveRequest,
@@ -47,7 +49,10 @@ class LeaveApplicationNotification extends Mailable
                 'ccToDetails' => $this->ccToDetails,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status, // Pass the status to the view if needed
+                'status' => $this->leaveRequest->status,
+                'leaveCategory' => $this->leaveRequest->category_type,
+                'cancelStatus' => $this->leaveRequest->cancel_status,
+
             ]);
     }
 
@@ -56,14 +61,24 @@ class LeaveApplicationNotification extends Mailable
      */
     public function envelope(): Envelope
     {
-        $status = $this->leaveRequest->status; // Get the leave request status
+        $status = $this->leaveRequest->status;
+        $cancelStatus = $this->leaveRequest->cancel_status;
+        $leaveCategory = $this->leaveRequest->categpry_type;
         $subject = '';
-
-        if ($status === 'Withdrawn') {
-            $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
-        } else {
-            $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
+        if ($leaveCategory === 'Leave'){
+            if ($status === 'Withdrawn') {
+                $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
+            } else {
+                $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
+            }
+        }else{
+            if ($cancelStatus === 'Withdrawn') {
+                $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
+            } else {
+                $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
+            }
         }
+
 
         return new Envelope(
             subject: $subject // Use the subject variable here

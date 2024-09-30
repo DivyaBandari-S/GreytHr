@@ -82,6 +82,10 @@ class EmployeesReview extends Component
                         ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
                 })
+                ->where(function ($query) {
+                    $query->whereIn('leave_applications.status', ['approved', 'rejected'])
+                          ->where('leave_applications.cancel_status', '!=', 'Pending Leave Cancel'); // Exclude Pending cancel status
+                })
                 ->orderBy('created_at', 'desc')
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
 
