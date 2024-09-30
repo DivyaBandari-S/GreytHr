@@ -216,7 +216,7 @@ class Regularisation extends Component
         $selecteddateyear = $selectedDate->year;
         $selecteddatemonth = $selectedDate->month;
         $selecteddateday=$selectedDate->day;
-        if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25)
+        if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$selecteddateday<25)
         {
             session()->flash('error', 'Attendance Period is locked');
               $this->showAlert=true;
