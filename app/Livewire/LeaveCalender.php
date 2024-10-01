@@ -383,6 +383,7 @@ class LeaveCalender extends Component
                         ->where('manager_id', $managerId) // Filter by manager_id
                         ->pluck('emp_id')
                         ->toArray();
+
                 }
                 // Fetch leave transactions for the team members
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
