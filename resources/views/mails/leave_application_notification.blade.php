@@ -7,8 +7,7 @@
 </head>
 
 <body>
-    <h2>Leave Application Notification</h2>
-
+    <h5>Leave Application Notification</h5>
     <p>Hi,</p>
     @if($leaveCategory == 'Leave')
     @if($status === 'Withdrawn')
@@ -19,15 +18,16 @@
     @endif
     @else
     @if($cancelStatus === 'Withdrawn')
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
+    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave cancel.</p>
     @else
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
-    <p>Please log on to and review the leave application.</p>
+    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave cancel.</p>
+    <p>Please log on to and review the leave cancel application.</p>
     @endif
     @endif
 
     <h3>Following are the leave details:</h3>
     <ul>
+    <li>Category type: {{ $leaveRequest->category_type }}</li>
         <li>Leave type: {{ $leaveRequest->leave_type }}</li>
         <li>From Date: {{ $leaveRequest->from_date->format('d M Y') }}</li>
         <li>To Date: {{ $leaveRequest->to_date->format('d M Y') }}</li>

@@ -318,7 +318,7 @@
 
             @if ($leaveactiveTab === "active")
             <div class="pending-leavves-container" >
-                @if($count > 0)
+                @if($count > 0 || $sendLeaveApplications)
                 <div class="reviewList">
                     @livewire('view-pending-details')
                 </div>
@@ -354,10 +354,6 @@
                 </div>
             </div>
 
-            @php
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $isManager = DB::table('employee_details')->where('manager_id', $employeeId)->exists();
-            @endphp
             @if($isManager)
             <div class="closed-leaves-container px-2">
                 @if(!empty($approvedLeaveApplicationsList))

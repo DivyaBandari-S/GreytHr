@@ -11,26 +11,25 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class LeaveApplicationNotification extends Mailable
+class LeaveApprovalNotification extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     */
     public $leaveRequest;
     public $employeeDetails;
-    public $applyingToDetails;
-    public $ccToDetails;
     public $cancelStatus;
     public $leaveCategory;
-    public function __construct($leaveRequest, $applyingToDetails, $ccToDetails)
+
+    public function __construct($leaveRequest)
     {
         $this->leaveRequest = $leaveRequest;
-        $this->applyingToDetails = $applyingToDetails;
-        $this->ccToDetails = $ccToDetails;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
     }
+
+    /**
+     * Get the message envelope.
+     */
+
     public function build()
     {
         // Calculate number of days before passing to the view
@@ -41,24 +40,18 @@ class LeaveApplicationNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-
-        return $this->view('mails.leave_application_notification')
+        return $this->subject('Leave Approved')
+            ->view('mails.leave_approval_notification') // Create a view for the email
             ->with([
                 'leaveRequest' => $this->leaveRequest,
-                'applyingToDetails' => $this->applyingToDetails,
-                'ccToDetails' => $this->ccToDetails,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
                 'status' => $this->leaveRequest->status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
 
-            ]);
+        ]);
     }
-
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         $status = $this->leaveRequest->status;
@@ -66,25 +59,22 @@ class LeaveApplicationNotification extends Mailable
         $leaveCategory = $this->leaveRequest->category_type;
         $subject = '';
         if ($leaveCategory === 'Leave'){
-            if ($status === 'Withdrawn') {
-                $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
+            if ($status === 'approved') {
+                $subject = 'Your Leave Application has been Accepted.';
             } else {
-                $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
+                $subject = 'Your Leave Application has been Rejected.';
             }
         }else{
-            if ($cancelStatus === 'Withdrawn') {
-                $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
+            if ($cancelStatus === 'approved') {
+                $subject = 'Your Leave Cancel Application has been Accepted.';
             } else {
-                $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
+                $subject = 'Your Leave Cancel Application has been Rejected.';
             }
         }
-
-
         return new Envelope(
-            subject: $subject // Use the subject variable here
+            subject: $subject,
         );
     }
-
 
     /**
      * Get the message content definition.
@@ -92,7 +82,7 @@ class LeaveApplicationNotification extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.leave_application_notification',
+            view: 'mails.leave_approval_notification',
         );
     }
 

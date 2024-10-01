@@ -60,13 +60,13 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText fw-600">
+                                    <span class="normalText fw-bold">
                                         {{ $leaveRequest->from_date->format('d M, Y') }}<br><span
                                             class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText fw-600">{{ $leaveRequest->to_date->format('d M, Y') }}
+                                    <span class="normalText fw-bold">{{ $leaveRequest->to_date->format('d M, Y') }}
                                         <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
@@ -74,8 +74,8 @@
                             <div class="box d-flex align-items-center text-center p-1">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText fw-600">
-                                        {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type) }}</span>
+                                    <span class="normalText fw-bold">
+                                        {{ $this->calculateNumberOfDays($leaveRequest->from_date,l $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type) }}</span>
                                 </div>
                             </div>
                         </div>

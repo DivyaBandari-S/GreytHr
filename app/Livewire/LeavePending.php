@@ -33,6 +33,8 @@ class LeavePending extends Component
     public $selectedYear;
     public $applyingTo;
     public $showViewImageDialog = false;
+    public $actionTakenBy;
+
 
     public function mount($leaveRequestId)
     {
@@ -40,6 +42,7 @@ class LeavePending extends Component
             // Fetch leave request details based on $leaveRequestId with employee details
             $this->selectedYear = Carbon::now()->format('Y');
             $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->actionTakenBy =  EmployeeDetails::where('emp_id', $this->leaveRequest->action_by)->first();
             $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {
@@ -239,6 +242,7 @@ class LeavePending extends Component
             return view('livewire.leave-pending', [
                 'leaveRequest' => $this->leaveRequest,
                 'leaveBalances' => $leaveBalances,
+                'actionTakenBy' => $this->actionTakenBy
             ]);
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message

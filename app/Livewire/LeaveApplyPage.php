@@ -531,9 +531,13 @@ class LeaveApplyPage extends Component
 
             // Prepare CC and Manager details
             $ccToDetails = [];
-            foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
+            foreach ($this->selectedCCEmployees as $selectedEmployee) {
+                $selectedEmployeeId = $selectedEmployee['emp_id']; // Get the emp_id
+
+                // Check if the emp_id is not already in $ccToDetails
                 if (!in_array($selectedEmployeeId, array_column($ccToDetails, 'emp_id'))) {
                     $employeeDetails = EmployeeDetails::where('emp_id', $selectedEmployeeId)->first();
+
                     if ($employeeDetails) {
                         $ccToDetails[] = [
                             'emp_id' => $selectedEmployeeId,
@@ -557,10 +561,12 @@ class LeaveApplyPage extends Component
             } else {
                 $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
                 $defaultManager = $employeeDetails->manager_id;
+                $defaultManagerEmail = EmployeeDetails::where('emp_id', $defaultManager)->first();
                 $applyingToDetails[] = [
                     'manager_id' => $defaultManager,
                     'report_to' => $this->loginEmpManager,
                     'image' => $this->loginEmpManagerProfile,
+                    'email' => $defaultManagerEmail->email
                 ];
             }
 
@@ -613,7 +619,6 @@ class LeaveApplyPage extends Component
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
 
             Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
-
 
             logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
             session()->flash('message', 'Leave application submitted successfully!');
@@ -948,7 +953,7 @@ class LeaveApplyPage extends Component
             // Convert the company IDs to an array if it's in JSON format
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
-            // Fetch emp_ids from the HR table
+            // Fetch emp_ids flrom the HR table
             $hrEmpIds = Hr::pluck('emp_id');
 
             // Now, fetch employee details for these HR emp_ids

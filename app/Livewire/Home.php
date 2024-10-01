@@ -351,7 +351,6 @@ class Home extends Component
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
             $groupedRequests = [];
-
             // Iterate through each leave request
             foreach ($this->leaveApplied as $request) {
                 $leaveRequest = $request['leaveRequest'];
@@ -369,12 +368,8 @@ class Home extends Component
                 $groupedRequests[$empId]['count']++;
                 $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
             }
-
-
             // Store the grouped requests in the class property
             $this->groupedRequests = $groupedRequests;
-
-
             $this->count = count($matchingLeaveApplications);
             //team on leave
             $currentDate = Carbon::today();

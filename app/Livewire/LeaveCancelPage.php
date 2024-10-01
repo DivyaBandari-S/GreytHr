@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
 use App\Models\LeaveRequest;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Mail;
 
 class LeaveCancelPage extends Component
 {
@@ -361,6 +363,7 @@ class LeaveCancelPage extends Component
                         $ccToDetails[] = [
                             'emp_id' => $selectedEmployeeId,
                             'full_name' => $fullName,
+                            'email' => $employeeDetails->email
                         ];
                     }
                 }
@@ -374,16 +377,19 @@ class LeaveCancelPage extends Component
                     $applyingToDetails[] = [
                         'manager_id' => $employeeDetails->emp_id,
                         'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                        'email' => $employeeDetails->email
                     ];
                 }
             } else {
                 $employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
                 $defaultManager = $employeeDetails->manager_id;
                 // Handle default values if no employee is selected
+                $defaultManagerEmail = EmployeeDetails::where('emp_id',$defaultManager)->first();
                 $applyingToDetails[] = [
                     'manager_id' => $defaultManager,
                     'report_to' => $this->loginEmpManager,
                     'image' => $this->loginEmpManagerProfile,
+                    'email' => $defaultManagerEmail->email
                 ];
             }
 
@@ -406,6 +412,11 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
+            // Send email notification
+            $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
+            $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+
+            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetails, $ccToDetails));
             $this->cancel();
             session()->flash('message', 'Applied request for leave cancel successfully.');
             $this->showAlert = true;

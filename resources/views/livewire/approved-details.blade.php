@@ -33,17 +33,10 @@
                                 Applied by
                             </span>
                             <br>
-                            @if(strtoupper($leaveRequest->status) == 'APPROVED')
                             <span class="normalText uppercase-text">
-                                {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
+                                {{ strtoupper($this->leaveRequest->employee->first_name) }} {{ strtoupper($this->leaveRequest->employee->last_name) }}
                             </span>
-                            @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
-                            <span class="normalText uppercase-text">
-                                {{ $this->leaveRequest->employee->first_name }} {{ $this->leaveRequest->employee->last_name }}
-                            </span>
-                            @endif
                         </div>
-
                         <div>
                             @if($leaveRequest->category_type == 'Leave')
                             <span>
@@ -415,18 +408,23 @@
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
-                                    @if(!empty($leaveRequest['applying_to']))
-                                    @foreach($leaveRequest['applying_to'] as $applyingTo)
+                                    @if(!empty($leaveRequest->actionTakenBy))
                                     <span class="normalText text-start">
-                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
-
-                                    @endforeach
+                                    @else
+                                    <span>N/A</span>
                                     @endif
                                     @else
                                     Rejected by <br>
-                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}} <br>
+                                    <span class="normalText">
+                                    @if(!empty($actionTakenBy))
+                                    {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                    @else
+                                    <span>N/A</span>
+                                    @endif
+                                     <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
 
                                     </span>
@@ -463,7 +461,6 @@
                                 </h5>
                                 @endif
                             </div>
-
                         </div>
                         <div>
                             <div class="d-flex flex-column">

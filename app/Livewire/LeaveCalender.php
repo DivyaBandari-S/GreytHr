@@ -22,6 +22,10 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Spatie\SimpleExcel\SimpleExcelWriter;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
 
 class LeaveCalender extends Component
 {
@@ -342,6 +346,8 @@ class LeaveCalender extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $companyId = auth()->guard('emp')->user()->company_id;
+            // Check if companyIds is an array; decode if it's a JSON string
+            $companyIdsArray = is_array($companyId) ? $companyId : json_decode($companyId, true);
             $dateFormatted = Carbon::parse($date)->format('Y-m-d');
             $searchTerm = '%' . $this->searchTerm . '%';
             $leaveCount = 0;
@@ -368,18 +374,16 @@ class LeaveCalender extends Component
                 $checkLoginIsManager = EmployeeDetails::where('manager_id', $employeeId)->value('manager_id');
                 $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
                 if ($checkLoginIsManager) {
-                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyId)
+                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
                         ->where('manager_id', $checkLoginIsManager) // Filter by manager_id
                         ->pluck('emp_id')
                         ->toArray();
                 } else {
-                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyId)
+                    $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
                         ->where('manager_id', $managerId) // Filter by manager_id
                         ->pluck('emp_id')
                         ->toArray();
                 }
-                // Retrieve team members with the same company ID and manager ID
-
                 // Fetch leave transactions for the team members
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
                     ->whereIn('emp_id', $teamMembersIds)
@@ -394,12 +398,9 @@ class LeaveCalender extends Component
                             });
                     })
                     ->get();
-
                 $leaveCount = $leaveTransactionsOfTeam->count();
                 $this->leaveTransactions = $leaveTransactionsOfTeam;
             }
-
-
             return $leaveCount;
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('Database Error: ' . $e->getMessage());
@@ -578,15 +579,44 @@ class LeaveCalender extends Component
             $user = EmployeeDetails::find($userId);
             $managerId = $user->manager_id;
             $startDate = Carbon::create($this->year, $this->month, 1)->startOfMonth();
-
-            // Ending date of the current month and year
             $endDate = Carbon::create($this->year, $this->month, 1)->endOfMonth();
 
-            // Format the dates as per your requirement
             $formattedStartDate = $startDate->toDateString();
-
             $formattedEndDate = $endDate->toDateString();
 
+            // Fetch company name and address based on user's company ID
+            $companyIds = EmployeeDetails::where('emp_id', $userId)->value('company_id');
+            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+
+            if (count($companyIdsArray) === 1) {
+                $companyName = Company::whereIn('company_id', $companyIdsArray)->value('company_name');
+                $companyDetails = Company::whereIn('company_id', $companyIdsArray)
+                    ->select('company_present_address', 'company_perminent_address')
+                    ->first();
+            } else {
+                $companyName = Company::whereIn('company_id', $companyIdsArray)
+                    ->where('is_parent', 'yes')
+                    ->value('company_name');
+                $companyDetails = Company::whereIn('company_id', $companyIdsArray)
+                    ->where('is_parent', 'yes')
+                    ->select('company_present_address', 'company_perminent_address')
+                    ->first();
+            }
+
+            // Default values if no company info is found
+            if (!$companyName || !$companyDetails) {
+                $companyName = 'N/A';
+                $companyDetails = (object)[
+                    'company_present_address' => 'N/A',
+                    'company_perminent_address' => 'N/A'
+                ];
+            }
+
+            $companyAddress1 = $companyDetails->company_present_address;
+            $companyAddress2 = $companyDetails->company_perminent_address;
+            $concatenatedAddress = $companyAddress1 . ' ' . $companyAddress2;
+
+            // Fetch employees on leave
             if ($this->filterCriteria == 'MyTeam') {
                 $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                     ->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
@@ -606,7 +636,6 @@ class LeaveCalender extends Component
                     ->get();
             } elseif ($this->filterCriteria == 'Me') {
                 $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-
                     ->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
                         $query->whereBetween('from_date', [$formattedStartDate, $formattedEndDate])
                             ->orWhereBetween('to_date', [$formattedStartDate, $formattedEndDate])
@@ -616,83 +645,77 @@ class LeaveCalender extends Component
                             });
                     })
                     ->where('leave_applications.status', 'approved')
-                    ->where(function ($query) use ($managerId) {
-                        $query->whereJsonContains('leave_applications.applying_to', [['manager_id' => $managerId]])
-                            ->orWhereJsonContains('leave_applications.applying_to', ['manager_id' => $managerId]);
-                    })
                     ->where('employee_details.emp_id', $userId)
                     ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
                     ->get();
             }
-            // Now $employeesOnLeave contains employee first_name and last_name for the specified conditions
-            $companyIds = EmployeeDetails::where('emp_id', $userId)->value('company_id');
 
-            if (count($companyIds) === 1) {
-                // If there's only one company ID, get that company's name and details
-                $companyName = Company::whereJsonContains('company_id', $companyIds)->value('company_name');
-                $companyDetails = Company::whereJsonContains('company_id', $companyIds)
-                    ->select('company_present_address', 'company_permanent_address')
-                    ->first();
-            } else {
-                // If there are multiple company IDs, check for is_parent = 'yes'
-                $companyName = Company::whereJsonContains('company_id', $companyIds)
-                    ->where('is_parent', 'yes')
-                    ->value('company_name');
+            // Create a new spreadsheet
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-                $companyDetails = Company::whereJsonContains('company_id', $companyIds)
-                    ->where('is_parent', 'yes')
-                    ->select('company_present_address', 'company_permanent_address')
-                    ->first();
+            // Set header data and apply styles (with company info)
+            $sheet->setCellValue('A1', $companyName);
+            $sheet->setCellValue('A2', $concatenatedAddress);
+            $sheet->setCellValue('A3', $this->filterCriteria == 'Me' ? 'My Leave' : 'My Team Leave');
+
+            // Header row
+            $sheet->setCellValue('A4', 'Employee No');
+            $sheet->setCellValue('B4', 'Name of the Employee');
+            $sheet->setCellValue('C4', 'Type');
+            $sheet->setCellValue('D4', 'Days');
+            $sheet->setCellValue('E4', 'From Date');
+            $sheet->setCellValue('F4', 'To Date');
+            $sheet->setCellValue('G4', 'Remarks');
+
+            // Apply styles to header row
+            $headerStyleArray = [
+                'font' => ['bold' => true],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical' => Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'allBorders' => ['borderStyle' => Border::BORDER_THIN],
+                ],
+            ];
+            $sheet->getStyle('A4:G4')->applyFromArray($headerStyleArray);
+
+            // Set column widths to be the same
+            foreach (range('A', 'G') as $columnID) {
+                $sheet->getColumnDimension($columnID)->setWidth(20);
             }
 
-            // Check if companyName and companyDetails were found
-            if (!$companyName || !$companyDetails) {
-                // Handle the case where no company was found
-                $companyName = null;
-                $companyDetails = null;
-            }
-
-            if ($companyDetails) {
-                $companyAddress1 = $companyDetails->company_address1;
-                $companyAddress2 = $companyDetails->company_address2;
-                $concatenatedAddress = $companyAddress1 . ' ' . $companyAddress2;
-            } else {
-                // Handle the case where no result is found
-                $concatenatedAddress = null; // Or any other default value or action
-            }
-            $data[] = [$companyName];
-            $data[] = [$concatenatedAddress];
-            if ($this->filterCriteria == 'Me') {
-                $data[] = ['My Leave ' . Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y') . 'to ' . Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
-            } else if ($this->filterCriteria == 'MyTeam') {
-                $data[] = ['My Team Leave ' . Carbon::createFromFormat('Y-m-d', $formattedStartDate)->format('d M Y') . 'to ' . Carbon::createFromFormat('Y-m-d', $formattedEndDate)->format('d M Y')];
-            }
-
-            //   $data[] = ['Early Employees on ' .  $formattedDate, '', '', ''];
-            $data[] = ['Employee No', 'Name of the Employee', 'Type', 'Days', 'From Date', 'To Date', 'Remarks'];
-
+            // Insert data
+            $row = 5; // Start from row 5
             foreach ($employeesOnLeave as $eol) {
                 $fromDate = Carbon::parse($eol->from_date);
                 $toDate = Carbon::parse($eol->to_date);
-                $numberOfDays = $fromDate->diffInDays($toDate, false);
-                $numberOfDays = $numberOfDays + 1;
-                $numberOfDaysFloat = (float) $numberOfDays;
-                $data[] = [$eol->emp_id, $eol->first_name . '  ' . $eol->last_name, $eol->leave_type, $numberOfDaysFloat, $fromDate->format('d M,Y'), $toDate->format('d M,Y'), ' '];
+                $numberOfDays = $fromDate->diffInDays($toDate) + 1;
+
+                $sheet->setCellValue('A' . $row, $eol->emp_id);
+                $sheet->setCellValue('B' . $row, $eol->first_name . ' ' . $eol->last_name);
+                $sheet->setCellValue('C' . $row, $eol->leave_type);
+                $sheet->setCellValue('D' . $row, $numberOfDays);
+                $sheet->setCellValue('E' . $row, $fromDate->format('d M,Y'));
+                $sheet->setCellValue('F' . $row, $toDate->format('d M,Y'));
+                $sheet->setCellValue('G' . $row, '');
+
+                // Apply borders to all data rows
+                $sheet->getStyle('A' . $row . ':G' . $row)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
+                $row++;
             }
 
-            $filePath = storage_path('app/leaveApplications.xlsx');
+            // Save the file
+            $writer = new Xlsx($spreadsheet);
+            $filePath = storage_path('app/leave calendar.xlsx');
+            $writer->save($filePath);
 
-            SimpleExcelWriter::create($filePath)->addRows($data);
-
-            return response()->download($filePath, 'leaveApplications.xlsx');
-        } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            // Return file for download
+            return response()->download($filePath, 'leave calendar.xlsx');
         } catch (\Exception $e) {
-            // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            Log::error('Error generating Excel: ' . $e->getMessage());
+            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
         }
     }
 }

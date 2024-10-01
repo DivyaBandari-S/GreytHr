@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('to_session')->nullable();
             $table->date('to_date')->nullable();
             $table->json('file_paths')->nullable();
-            $table->string('applying_to');
+            $table->json('applying_to');
+            $table->string(column: 'action_by')->nullable();
             $table->json('cc_to')->nullable();
             $table->string('status')->default('Pending');
             $table->string('cancel_status')->default('Pending');
