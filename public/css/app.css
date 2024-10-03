@@ -3374,6 +3374,12 @@ input[type="radio"] {
     background: #ffffff;
     padding: 10px 15px;
 }
+.scrollLeaveApply{
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-X: hidden;
+}
 .reporting {
     display: flex;
     flex-direction: row;
