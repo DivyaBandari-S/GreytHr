@@ -17,7 +17,7 @@
             @endif
         </div>
     </div>
-    <div class="offcanvas offcanvas-end notification-detail-container "  tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas offcanvas-end notification-detail-container "  tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 320px;">
         <div class="offcanvas-header d-flex justify-content-between align-items-center">
             <h6 id="offcanvasRightLabel" class="offcanvasRightLabel">Notifications <span class="lableCount" id="notificationCount">
                     ({{$totalnotificationscount}})</span> </h6>
@@ -53,11 +53,12 @@
             @elseif($notification->notification_type=='leave')
             <div>
                 <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
-                    <p class="mb-0 notification-text"></p>
+                    <p class="mb-0 notification-text">
                     <a href="#" class="notification-head" wire:click.prevent="reduceLeaveRequestCount('{{ $notification->emp_id }}')">
                         {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
                         (#{{ $notification->emp_id }})
                     </a>
+                    </p>
 
                     @if($notification->details_count>1 && $notification->details_count<=10 )
                         <p class="mb-0 notification-text-para"> Sent {{$notification->details_count}} leave requests.</p>
@@ -74,11 +75,12 @@
             @elseif($notification->notification_type=='leaveCancel')
             <div>
                 <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
-                    <p class="mb-0 notification-text"></p>
+                    <p class="mb-0 notification-text">
                     <a href="#" class="notification-head" wire:click.prevent="reduceLeaveRequestCount('{{ $notification->emp_id }}')">
                         {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
                         (#{{ $notification->emp_id }})
                     </a>
+                    </p>
 
                     @if($notification->details_count>1 && $notification->details_count<=10 )
                         <p class="mb-0 notification-text-para"> Sent {{$notification->details_count}} leave cancel requests.</p>
