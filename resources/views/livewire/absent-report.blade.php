@@ -7,7 +7,7 @@
     @if($showAbsentReportDialog==true)
     <div>
         <div class="modal-body">
-            <div class="date-filters mb-2 d-flex mt-2 gap-2">
+            <div class="row m-0 p-0">
                 <div class="form-group col-md-6">
                     <label for="from-date">From Date:</label>
                     <input class="form-control" type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate">
@@ -21,7 +21,7 @@
                 <div class="col-md-6">
 
                 </div>
-                <div class=" form-group col-md-6">
+                <div class="col-md-6">
                     <div class="search-container" style="position: relative;">
                         <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
                         <button wire:click="searchfilter" id="searchButtonReports">
