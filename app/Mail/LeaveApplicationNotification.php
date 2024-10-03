@@ -52,7 +52,6 @@ class LeaveApplicationNotification extends Mailable
                 'status' => $this->leaveRequest->status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
-
             ]);
     }
 

@@ -6,13 +6,21 @@
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a type="button" class="submit-btn"
                                 href="{{ route('leave-form-page') }}">Back</a></li>
+                        @if($leaveRequest->category_type === 'Leave')
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
+                        @else
+                        <li class="breadcrumb-item active" aria-current="page">Leave Cancel - View Details</li>
+                        @endif
                     </ol>
                 </div>
             </div>
         </div>
         <div class="headers-details">
+            @if($leaveRequest->category_type === 'Leave')
             <h6>Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @else
+            <h6>Leave Cancel Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @endif
         </div>
         <div class="approved-leave d-flex gap-3">
             <div class="heading rounded mb-3">
@@ -75,7 +83,7 @@
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
                                     <span class="normalText fw-bold">
-                                        {{ $this->calculateNumberOfDays($leaveRequest->from_date,l $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type) }}</span>
+                                        {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -124,7 +132,9 @@
                                     <div class="custom-grid-item">
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-label">Contact</span>
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                             <span class="custom-label">CC to</span>
                                         @endif
@@ -140,9 +150,12 @@
                                         @else
                                             <span class="custom-value">-</span>
                                         @endif
-
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
+                                        @else
+                                        <span class="custom-value">{{ ucfirst($leaveRequest->leave_cancel_reason) }}</span>
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                             <span class="custom-value">
                                                 @if (is_string($leaveRequest->cc_to))

@@ -5,13 +5,21 @@
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-form-page') }}">Back</a></li>
+                        @if($leaveRequest->category_type === 'Leave')
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
+                        @else
+                        <li class="breadcrumb-item active" aria-current="page">Leave Cancel - View Details</li>
+                        @endif
                     </ol>
                 </div>
             </div>
         </div>
         <div class="headers-details">
+            @if($leaveRequest->category_type === 'Leave')
             <h6>Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @else
+            <h6>Leave Cancel Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @endif
         </div>
         <div class="approved-leave d-flex gap-3">
             <div class="heading rounded mb-3">
@@ -100,14 +108,14 @@
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText fw-blod">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalText fw-bold">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box d-flex text-center p-1">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText fw-blold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</span>
+                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -154,7 +162,9 @@
                                     <div class="custom-grid-item">
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-label">Contact</span>
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
                                         @endif
@@ -169,8 +179,12 @@
                                         <span class="custom-value">-</span>
                                         @endif
 
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
+                                        @else
+                                        <span class="custom-value">{{ ucfirst($leaveRequest->leave_cancel_reason) }}</span>
+                                        @endif
 
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-value">
@@ -363,7 +377,7 @@
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
-                                    @if(!empty($leaveRequest->actionTakenBy))
+                                    @if(!empty($actionTakenBy))
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
@@ -405,12 +419,12 @@
                                     @else
                                     Rejected by <br>
                                     <span class="normalText">
-                                    @if(!empty($actionTakenBy))
-                                    {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
-                                    @else
-                                    <span>N/A</span>
-                                    @endif
-                                     <br>
+                                        @if(!empty($actionTakenBy))
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                        @else
+                                        <span>N/A</span>
+                                        @endif
+                                        <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
                                     @endif

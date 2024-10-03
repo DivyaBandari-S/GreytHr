@@ -408,7 +408,7 @@
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
-                                    @if(!empty($leaveRequest->actionTakenBy))
+                                    @if(!empty($actionTakenBy))
                                     <span class="normalText text-start">
                                         {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>

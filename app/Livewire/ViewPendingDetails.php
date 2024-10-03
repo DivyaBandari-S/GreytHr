@@ -274,21 +274,39 @@ class ViewPendingDetails extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
+    
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
+    
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-
+    
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
-                    // Update status to 'approved'
+    
+                    // Find any other leave request matching from_date, from_session, to_date, to_session
+                    $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
+                        ->where('from_date', $leaveRequest->from_date)
+                        ->where('from_session', $leaveRequest->from_session)
+                        ->where('to_date', $leaveRequest->to_date)
+                        ->where('to_session', $leaveRequest->to_session)
+                        ->where('status', '!=', 'Re-applied')
+                        ->first();
+                    if ($matchingLeaveRequest) {
+                        // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->status = 'rejected';
+                        $matchingLeaveRequest->updated_at = now();
+                        $matchingLeaveRequest->action_by = $employeeId;
+                        $matchingLeaveRequest->save();
+                    }
+    
+                    // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
                     $leaveRequest->status = 'rejected';
                     $leaveRequest->updated_at = now();
@@ -308,6 +326,7 @@ class ViewPendingDetails extends Component
             session()->flash('error', 'Failed to approve leave application. Please try again.');
         }
     }
+
     public function rejectLeaveCancel($index)
     {
         try {

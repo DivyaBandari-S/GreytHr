@@ -46,11 +46,10 @@ class LeaveApprovalNotification extends Mailable
                 'leaveRequest' => $this->leaveRequest,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status,
+                'status' => $this->leaveRequest->status, 
                 'leaveCategory' => $this->leaveRequest->category_type,
-                'cancelStatus' => $this->leaveRequest->cancel_status,
-
-        ]);
+                'cancelStatus' => $this->leaveRequest->cancel_status
+            ]);
     }
     public function envelope(): Envelope
     {
