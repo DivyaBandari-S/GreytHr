@@ -248,7 +248,7 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span>
                                                             @enderror
                                                         </div>
-                                                        <div class="form-group ml-1" >
+                                                        <div class="form-group ml-1"  style="margin-top:5px">
                                                             <div class="row">
                                                                 <div class="form-group ">
                                                                     <label for="cc_to" class="form-label ">Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>

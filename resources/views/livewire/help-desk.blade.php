@@ -316,13 +316,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($searchData->where('status', 'Recent')->isEmpty())
-                    <tr>
-                        <td colspan="7" style="text-align: center;">
-                            <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
-                        </td>
-                    </tr>
-                    @else
+                @if($searchData && $searchData->where('status', 'Recent')->isEmpty())
+    <tr>
+        <td colspan="7" style="text-align: center;border:none">
+            <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
+        </td>
+    </tr>
+    @else
                     @foreach ($searchData->sortByDesc('created_at') as $index => $record)
                     @if($record->status == "Recent")
                     <tr style="background-color: white;">
@@ -418,8 +418,8 @@
                     </tr>
 
                     @if (count($ccToArray) > 2)
-                    <tr class="B" style="border-top:none">
-                        <td class="" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none;">
+                    <tr class="border" tyle="border-top: none !important;">
+                        <td class="boder" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
                             <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
                                 CC TO: {{ implode(', ', $ccToArray) }}
                             </div>
@@ -445,15 +445,17 @@
 
         @if ($activeTab == "closed")
         <div class="row align-items-center">
+       
             <div class="col-12 col-md-3 ">
                 <div class="input-group">
-                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+                    <input wire:model="searchclosed" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
 
-                    <button wire:click="searchCloseHelpDesk" class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
+                    <button wire:click="searchCloseHelpDesk" class="helpdesk-search-btn" type="button" >
                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                     </button>
                 </div>
             </div>
+     
             <div class="col-12 col-md-3">
                 <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
@@ -479,8 +481,8 @@
                 </thead>
                 <tbody>
                     @if($searchData->where('status', 'Completed')->isEmpty())
-                    <tr>
-                        <td colspan="7" style="text-align: center;">
+                    <tr class="search-data">
+                        <td colspan="7" style="text-align: center;border:none">
                             <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
                         </td>
                     </tr>
@@ -606,15 +608,15 @@
         <div class="row ">
             <div class="col-12 col-md-3 ">
                 <div class="input-group">
-                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <button wire:click="searchPendingHelpDesk" class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
+                    <input wire:model="searchpending" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
+                    <button wire:click="searchPendingHelpDesk" class="helpdesk-search-btn" type="button">
                         <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
                     </button>
 
                 </div>
             </div>
             <div class="col-12 col-md-3">
-                <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+                <select wire:model="selectedCategory" wire:change="searchPendingHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
@@ -638,8 +640,8 @@
                 </thead>
                 <tbody>
                     @if($searchData->where('status', 'Pending')->isEmpty())
-                    <tr>
-                        <td colspan="7" style="text-align: center;">
+                    <tr class="search-data">
+                        <td colspan="7" style="text-align: center;border:none">
                             <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
                         </td>
                     </tr>
