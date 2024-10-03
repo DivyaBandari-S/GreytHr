@@ -21,7 +21,7 @@
                 </div>
                 <div class="search-container d-flex align-items-end justify-content-end p-2" style="position: relative;">
                     <input type="text" wire:model.debounce.500ms="filter" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded" style="padding-right: 40px;">
-                    <button wire:click="fetchPendingLeaveApplications" id="searchButtonReview">
+                    <button wire:click="fetchPendingLeaveApplications" id="searchButtonReports">
                         <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                     </button>
                 </div>
