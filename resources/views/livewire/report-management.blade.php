@@ -58,12 +58,12 @@
                 Shift Summary Report
 
             </a>
-            <a class="px-1" wire:click="showContent('Attendance Conslidate Report')" data-toggle="modal"
+            <!-- <a class="px-1" wire:click="showContent('Attendance Conslidate Report')" data-toggle="modal"
                 data-target="#FamilyDetailsModal"
                 style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px;white-space: nowrap; {{ $currentSection === 'Attendance Conslidate Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">
                 Attendance Conslidate Report
 
-            </a>
+            </a> -->
             <a class="px-1" wire:click="showContent('Attendance Regularization Report')" data-toggle="modal"
                 data-target="#FamilyDetailsModal"
                 style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px; white-space: nowrap;{{ $currentSection === 'Attendance Regularization Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">

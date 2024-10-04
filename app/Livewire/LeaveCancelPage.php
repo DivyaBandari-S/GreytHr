@@ -265,13 +265,15 @@ class LeaveCancelPage extends Component
             } else {
                 // Show error if limit exceeded
                 session()->flash('error', 'You can only select up to 5 CC recipients.');
-                $this->showAlert = true; // Assuming you're using this to control alert visibility
+                $this->showAlert = true;
             }
         }
-
-        $this->searchCCRecipients(); // Assuming you want to update the recipients list
-        $this->fetchEmployeeDetails(); // Fetch details if necessary
+        // Update the recipients list
+        $this->searchCCRecipients();
+        // Fetch details if necessary
+        $this->fetchEmployeeDetails();
     }
+
 
     public function handleCheckboxChange($empId)
     {
@@ -343,17 +345,17 @@ class LeaveCancelPage extends Component
             if (empty($this->selectedLeaveRequestId)) {
                 throw new \Exception('No leave request selected.');
             }
-    
+
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
-    
+
             // Get the employee ID and details
             $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
-    
+
             // Update the existing leave request's cancel_status to 'Re-applied'
             $leaveRequest->cancel_status = 'Re-applied';
             $leaveRequest->save();
-    
+
             // Prepare ccToDetails
             $ccToDetails = [];
             foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
@@ -373,7 +375,7 @@ class LeaveCancelPage extends Component
                     }
                 }
             }
-    
+
             // Prepare applyingToDetails
             $applyingToDetails = [];
             if ($this->selectedManagerDetails) {
@@ -397,7 +399,7 @@ class LeaveCancelPage extends Component
                     'email' => $defaultManagerEmail->email
                 ];
             }
-    
+
             // Create a new leave request record
             LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
@@ -413,7 +415,7 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
                 'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
             ]);
-    
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             Notification::create([
                 'emp_id' => $employeeId,
@@ -423,13 +425,13 @@ class LeaveCancelPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
-    
+
             // Send email notification
             $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
-    
+
             Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetails, $ccToDetails));
-    
+
             $this->cancel();
             session()->flash('message', 'Leave cancel request submitted successfully.');
             $this->showAlert = true;
@@ -685,12 +687,12 @@ class LeaveCancelPage extends Component
         }
 
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-        ->where('status', 'approved')
-        ->where('from_date', '>=', now()->subMonths(2))
-        ->where('category_type', 'Leave')
-        ->where('cancel_status', '!=', 'Re-applied') // Exclude 'Pending Leave Cancel'
-        ->with('employee')
-        ->get();
+            ->where('status', 'approved')
+            ->where('from_date', '>=', now()->subMonths(2))
+            ->where('category_type', 'Leave')
+            ->where('cancel_status', '!=', 'Re-applied') // Exclude 'Pending Leave Cancel'
+            ->with('employee')
+            ->get();
 
         return view('livewire.leave-cancel-page', [
             'cancelLeaveRequests' => $this->cancelLeaveRequests,
