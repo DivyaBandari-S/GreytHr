@@ -8,11 +8,8 @@
     </div>
     @endif
     @if($showerrorMessage)
-    <div id="errorMessage" class="alert alert-danger" wire:poll.2s="hideAlert">
+    <div id="errorMessage" class="alert alert-danger d-flex gap-3 position-absolute" style="right: 0;left:0;top:-18%;" wire:poll.5s="hideAlert">
         {{ $errorMessage }}
-        <button type="button" wire:click="hideAlert" class="alert-close bg-none border-none" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-        </button>
     </div>
     @endif
 
@@ -24,13 +21,13 @@
             <p class="mb-0 hideInfo" wire:click="toggleInfo">Hide</p>
         </div>
         @endif
-        <div class="d-flex justify-content-between">
+        <div class=" d-flex justify-content-between">
             <p class="applyingFor">Applying for Leave</p>
             @if($showinfoButton)
             <p class="info-paragraph mb-0" wire:click="toggleInfo">Info</p>
             @endif
         </div>
-        <form wire:submit.prevent="leaveApply" enctype="multipart/form-data">
+        <form class="scrollLeaveApply m-0 p-2 " wire:submit.prevent="leaveApply" enctype="multipart/form-data">
             <div class="row d-flex align-items-center">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -485,7 +482,7 @@
 
                         @if($ccRecipients->isNotEmpty())
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer mb-2 rounded" >
+                        <div class="borderContainer mb-2 rounded">
                             <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
                                 <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
                                 <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">

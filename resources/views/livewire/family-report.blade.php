@@ -11,7 +11,7 @@
             <div class="col-md-6">
                 <div class="search-container p-2" style="position: relative;">
                     <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
-                    <button wire:click="searchfilter" id="searchButtonReview">
+                    <button  wire:click="searchfilter" id="searchButtonReview" style="padding:7px 12px !important;">
                         <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                     </button>
                 </div>

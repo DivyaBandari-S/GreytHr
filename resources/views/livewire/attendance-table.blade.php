@@ -2078,7 +2078,7 @@ color: #fff;
 
                                     <tr style="border:1px solid #ccc; background-color: #f0f0f0;">
                                         @if($viewDetailsOutswiperecord)
-                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :{{ str_pad($hours, 2, '0', STR_PAD_LEFT) }} hrs {{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }} mins </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :{{ str_pad($hours, 2, '0', STR_PAD_LEFT) }} hrs {{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }} mins</td>
                                         @else
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;">Actual Hours :00 hrs 00 mins </td>
                                         @endif
