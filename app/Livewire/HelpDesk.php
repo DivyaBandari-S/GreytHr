@@ -28,6 +28,11 @@ class HelpDesk extends Component
 {
     use WithFileUploads;
     public $selectedCategory = [];
+    public $activeCategory = null; // Category for Active tab
+public $pendingCategory = null; // Category for Pending tab
+public $closedCategory = null; // Category for Closed tab
+
+  
     public $searchTerm = '';
     public $showViewFileDialog = false;
     public $showModal = false;
@@ -61,6 +66,9 @@ class HelpDesk extends Component
     public $filterData;
     public $activeTab = 'active';
     public $selectedPeople = [];
+    public $activeSearch = '';
+public $pendingSearch = '';
+public $closedSearch = '';
     protected $rules = [
         'category' => 'required|string',
         'subject' => 'required|string',
@@ -117,7 +125,7 @@ class HelpDesk extends Component
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-
+   $this->loadHelpDeskData();
         // Group categories by their request
         if ($requestCategories->isNotEmpty()) {
             // Group categories by their request
@@ -145,147 +153,76 @@ class HelpDesk extends Component
         logger($this->records); // Log filtered records
     }
 
-
-
-
-
-    public function searchCompleted()
+    public function loadHelpDeskData()
     {
-        // Filter people based on search term
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $companyId = Auth::user()->company_id;
-        $this->records = HelpDesks::all();
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) {
-                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-            })
-            ->orderBy('first_name')
-            ->orderBy('last_name')
-            ->get();
-
-        $this->filteredPeoples = $this->searchTerm ? $this->peoples : null;
-
-        // Filter records based on category and search term
-        $this->records = HelpDesks::with('emp')
-            ->whereHas('emp', function ($query) {
-                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-            })
-
-            ->orderBy('created_at', 'desc')
-            ->get();
+        if ($this->activeTab === 'active') {
+            $this->searchActiveHelpDesk();
+        } elseif ($this->activeTab === 'pending') {
+            $this->searchPendingHelpDesk();
+        } elseif ($this->activeTab === 'closed') {
+            $this->searchClosedHelpDesk();
+        }
     }
+    
+    public function updatedActiveTab()
+    {
+        $this->loadHelpDeskData(); // Reload data when the tab is updated
+    }
+    
+  
+    public function searchHelpDesk($status, $searchTerm,$selectedCategory)
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+    
+        // Start the base query based on status and employee ID or cc_to
+        $query = HelpDesks::where(function ($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
+        })
+        ->where('status', $status); // Apply status filter dynamically
+    
+        // If a category is selected, apply category filtering
+        if ($selectedCategory) {
+            logger('Selected Category: ' . $selectedCategory);
+            $query->whereIn('category', Request::where('Request', $selectedCategory)->pluck('category'));
+        }
+    
+        // If there's a search term, apply search filtering
+        if ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('emp_id', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('category', 'like', '%' . $searchTerm . '%')
+                    ->orWhere('subject', 'like', '%' . $searchTerm . '%')
+                    ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                        $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                            ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                    });
+            });
+        }
+    
+        // Get results
+        $results = $query->orderBy('created_at', 'desc')->get();
+        logger('Filtered Results for status ' . $status . ': ', $results->toArray());
+    
+        $this->filterData = $results;
+        $this->peopleFound = count($this->filterData) > 0;
+    }
+    
+    
     public function searchActiveHelpDesk()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-
-        $query = HelpDesks::where(function ($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
-        })
-            ->where('status', 'Recent');
-
-        if ($this->selectedCategory) {
-            logger('Selected Category: ' . $this->selectedCategory);
-            // Filter HelpDesks based on the selectedCategory's associated categories
-            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
-        }
-
-        // Additional filtering logic, if any, can go here
-
-        // Final query execution
-        $results = $query->orderBy('created_at', 'desc')->get();
-        logger('Filtered Results: ', $results->toArray());
-        $this->filterData = $results;
-
-        if ($this->search) {
-            $query->where(function ($query) {
-                $query->where('emp_id', 'like', '%' . $this->search . '%')
-                    ->orWhere('category', 'like', '%' . $this->search . '%')
-                    ->orWhere('subject', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                    });
-            });
-        }
-
-        $this->filterData = $query->orderBy('created_at', 'desc')->get();
-        $this->peopleFound = count($this->filterData) > 0;
+        $this->searchHelpDesk('Recent', $this->activeSearch,$this->activeCategory);
     }
-
+    
     public function searchPendingHelpDesk()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = HelpDesks::where(function ($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
-        })
-            ->where('status', 'Pending');
-
-        if ($this->selectedCategory) {
-            logger('Selected Category: ' . $this->selectedCategory);
-            // Filter HelpDesks based on the selectedCategory's associated categories
-            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
-        }
-
-        // Additional filtering logic, if any, can go here
-
-        // Final query execution
-        $results = $query->orderBy('created_at', 'desc')->get();
-        logger('Filtered Results: ', $results->toArray());
-        $this->filterData = $results;
-
-        if ($this->search) {
-            $query->where(function ($query) {
-                $query->where('emp_id', 'like', '%' . $this->search . '%')
-                    ->orWhere('category', 'like', '%' . $this->search . '%')
-                    ->orWhere('subject', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                    });
-            });
-        }
-
-        $this->filterData = $query->orderBy('created_at', 'desc')->get();
-        $this->peopleFound = count($this->filterData) > 0;
+        $this->searchHelpDesk('Pending', $this->pendingSearch,$this->pendingCategory);
     }
+    
     public function searchClosedHelpDesk()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $query = HelpDesks::where(function ($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
-        })
-            ->where('status', 'Completed');
-
-        if ($this->selectedCategory) {
-            logger('Selected Category: ' . $this->selectedCategory);
-            // Filter HelpDesks based on the selectedCategory's associated categories
-            $query->whereIn('category', Request::where('Request', $this->selectedCategory)->pluck('category'));
-        }
-
-        // Additional filtering logic, if any, can go here
-
-        // Final query execution
-        $results = $query->orderBy('created_at', 'desc')->get();
-        logger('Filtered Results: ', $results->toArray());
-        $this->filterData = $results;
-
-        if ($this->search) {
-            $query->where(function ($query) {
-                $query->where('emp_id', 'like', '%' . $this->search . '%')
-                    ->orWhere('category', 'like', '%' . $this->search . '%')
-                    ->orWhere('subject', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('emp', function ($query) {
-                        $query->where('first_name', 'like', '%' . $this->search . '%')
-                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
-                    });
-            });
-        }
-
-        $this->filterData = $query->orderBy('created_at', 'desc')->get();
-        $this->peopleFound = count($this->filterData) > 0;
+        $this->searchHelpDesk('Completed', $this->closedSearch,$this->closedCategory);
     }
+    
     public function close()
     {
         $this->showDialog = false;
