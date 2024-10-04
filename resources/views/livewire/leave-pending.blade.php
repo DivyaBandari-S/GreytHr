@@ -5,13 +5,21 @@
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a type="button" class="submit-btn" href="{{ route('leave-form-page') }}">Back</a></li>
+                        @if($leaveRequest->category_type === 'Leave')
                         <li class="breadcrumb-item active" aria-current="page">Leave - View Details</li>
+                        @else
+                        <li class="breadcrumb-item active" aria-current="page">Leave Cancel - View Details</li>
+                        @endif
                     </ol>
                 </div>
             </div>
         </div>
         <div class="headers-details">
+            @if($leaveRequest->category_type === 'Leave')
             <h6>Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @else
+            <h6>Leave Cancel Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @endif
         </div>
         <div class="approved-leave d-flex gap-3">
             <div class="heading rounded mb-3">
@@ -19,12 +27,22 @@
                     <div class="d-flex flex-row justify-content-between rounded">
                         <div class="field">
                             <span class="normalTextValue">
+                                @if($leaveRequest->category_type == 'Leave')
                                 @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                 Withdrawn by
                                 @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                 Approved by
                                 @else
-                                Pending with
+                                Rejected by
+                                @endif
+                                @else
+                                @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                Withdrawn by
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                Approved by
+                                @else
+                                Rejected by
+                                @endif
                                 @endif
                             </span>
                             <br>
@@ -33,30 +51,52 @@
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
                             </span>
                             @elseif(!empty($leaveRequest['applying_to']))
+                            @if(!empty($actionTakenBy))
+                            {{ ucwords(strtoupper($actionTakenBy->first_name))}} {{ ucwords(strtoupper(string: $actionTakenBy->last_name))}}
+                            @else
                             @foreach($leaveRequest['applying_to'] as $applyingTo)
                             <span class="normalText">
                                 {{ ucwords(strtoupper($applyingTo['report_to'] ))}}
                             </span>
                             @endforeach
                             @endif
+                            @endif
                         </div>
 
                         <div>
+                            @if($leaveRequest->category_type == 'Leave')
                             <span>
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span class="approvedColor mt-2">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="approvedStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span class="rejectColor mt-2">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="rejectedStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span class="otherStatus mt-2">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
                             </span>
+                            @else
+                            <span>
+                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+
+                                <span class="approvedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+
+                                <span class="rejectedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @else
+
+                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+
+                                @endif
+                            </span>
+                            @endif
                         </div>
                     </div>
                     <div class="middle-container">
@@ -64,18 +104,18 @@
                             <div class="first-col m-0 p-0 d-flex gap-4">
                                 <div class="field p-2">
                                     <span class="normalTextValue">From Date</span> <br>
-                                    <span class="normalText fw-600"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
+                                    <span class="normalText fw-bold"> {{ $leaveRequest->from_date->format('d M, Y') }}<br><span class="sessionFont">{{ $leaveRequest->from_session }}</span></span>
                                 </div>
                                 <div class="field p-2">
                                     <span class="normalTextValue">To Date</span> <br>
-                                    <span class="normalText fw-600">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
+                                    <span class="normalText fw-bold">{{ $leaveRequest->to_date->format('d M, Y') }} <br><span class="sessionFont">{{ $leaveRequest->to_session }}</span></span>
                                 </div>
                                 <div class="vertical-line"></div>
                             </div>
                             <div class="box d-flex text-center p-1">
                                 <div class="field p-2">
                                     <span class="normalTextValue">No. of days</span> <br>
-                                    <span class="normalText fw-600"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</span>
+                                    <span class="normalText fw-bold"> {{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -122,7 +162,9 @@
                                     <div class="custom-grid-item">
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-label">Contact</span>
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
                                         @endif
@@ -137,8 +179,12 @@
                                         <span class="custom-value">-</span>
                                         @endif
 
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
+                                        @else
+                                        <span class="custom-value">{{ ucfirst($leaveRequest->leave_cancel_reason) }}</span>
+                                        @endif
 
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-value">
@@ -284,16 +330,16 @@
                                         @elseif(!empty($files) && count($files) == 1)
                                         @foreach($files as $file)
                                         @php
-                                            $base64File = trim($file['data'] ?? '');
-                                            $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
-                                            $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+                                        $base64File = trim($file['data'] ?? '');
+                                        $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                                        $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
                                         @endphp
-                                
+
                                         <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
-                                           download="{{ $originalName }}" class="anchorTagDetails">
+                                            download="{{ $originalName }}" class="anchorTagDetails">
                                             Download File
                                         </a>
-                                    @endforeach
+                                        @endforeach
                                         @endif
 
 
@@ -320,31 +366,71 @@
                     <div class="mt-4 d-flex flex-column" style="gap: 60px;">
                         <div class="group">
                             <div>
+                                @if($leaveRequest->category_type == 'Leave')
                                 <h5 class="normalText text-start">
                                     @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                                     Withdrawn
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
-                                        {{ $leaveRequest->updated_at->format('d M, Y g:i a') }}
+                                        <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
                                     @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
-                                    @if(!empty($leaveRequest['applying_to']))
-                                    @foreach($leaveRequest['applying_to'] as $applyingTo)
+                                    @if(!empty($actionTakenBy))
                                     <span class="normalText text-start">
-                                        {{ ucwords(strtolower($applyingTo['report_to'] ))}}
-                                    </span> <br>
-                                    <span class="normalTextSmall text-start">{{ $leaveRequest->updated_at->format('d M, Y g:i a') }}</span>
-
-                                    @endforeach
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}} <br>
+                                        <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+                                    </span>
+                                    @else
+                                    <span>N/A</span>
                                     @endif
                                     @else
-                                    Rejected by
-                                    <span class="normalText"> {{ ucwords(strtolower($applyingTo['report_to'] ))}}</span>
+                                    Rejected by <br>
+                                    <span class="normalText">
+                                        @if(!empty($actionTakenBy))
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                        @else
+                                        <span>N/A</span>
+                                        @endif
+                                        <br>
+                                        <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+
+                                    </span>
                                     @endif
                                     <br>
                                 </h5>
+                                @else
+                                <h5 class="normalText text-start">
+                                    @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                    Withdrawn
+                                    <span class="normalText text-start">by</span> <br>
+                                    <span class="normalTextValue text-start">
+                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
+                                        <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+                                    </span>
+                                    @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                    <span class="normalTextValue text-start"> Approved <br> by</span>
+                                    @if(!empty($actionTakenBy))
+                                    {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                    @else
+                                    <span>N/A</span>
+                                    @endif
+                                    @else
+                                    Rejected by <br>
+                                    <span class="normalText">
+                                        @if(!empty($actionTakenBy))
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                        @else
+                                        <span>N/A</span>
+                                        @endif
+                                        <br>
+                                        <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
+                                    </span>
+                                    @endif
+                                    <br>
+                                </h5>
+                                @endif
                             </div>
 
                         </div>

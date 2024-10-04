@@ -37,6 +37,7 @@ class ApprovedDetails extends Component
     public $startOfWeek;
     public $leaveApplications;
     public $leaveCount;
+    public $actionTakenBy;
     public $endOfWeek;
     public $showViewImageDialog = false;
 
@@ -47,6 +48,7 @@ class ApprovedDetails extends Component
             $this->selectedWeek = 'this_week';
             $this->setWeekDates();
             $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
+            $this->actionTakenBy =  EmployeeDetails::where('emp_id', $this->leaveRequest->action_by)->first();
             $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
             $this->selectedYear = Carbon::now()->format('Y');
@@ -387,7 +389,8 @@ class ApprovedDetails extends Component
             return view('livewire.approved-details', [
                 'leaveRequest' => $this->leaveRequest,
                 'leaveBalances' => $this->leaveBalances,
-                'employeeName' => $employeeName
+                'employeeName' => $employeeName,
+                'actionTakenBy' =>$this->actionTakenBy
             ]);
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {

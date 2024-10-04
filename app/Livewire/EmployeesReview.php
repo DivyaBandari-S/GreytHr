@@ -27,10 +27,12 @@ class EmployeesReview extends Component
 {
     public $attendenceActiveTab = 'active';
     public $leaveactiveTab = 'active';
+    public $isManager;
 
     public $searching = 0;
 
     public $search = '';
+    public $leaveRequest;
     public $showattendance = true;
     public $showleave = false;
     public $approvedRegularisationRequestList;
@@ -41,6 +43,7 @@ class EmployeesReview extends Component
     public $regularisation_count;
     public $countofregularisations;
     public $leaveApplications = [];
+    public $sendLeaveApplications = [];
     public $approvedLeaveRequests;
     public $searchQuery = '';
     public $selectedYear;
@@ -84,7 +87,7 @@ class EmployeesReview extends Component
                 })
                 ->where(function ($query) {
                     $query->whereIn('leave_applications.status', ['approved', 'rejected'])
-                          ->where('leave_applications.cancel_status', '!=', 'Pending Leave Cancel'); // Exclude Pending cancel status
+                        ->where('leave_applications.cancel_status', '!=', 'Pending Leave Cancel'); // Exclude Pending cancel status
                 })
                 ->orderBy('created_at', 'desc')
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
@@ -170,14 +173,56 @@ class EmployeesReview extends Component
 
     public function mount(Request $request)
     {
+        $loggedInEmpId = auth()->guard('emp')->user()->emp_id;
+        $this->isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
+        $companyIds = auth()->guard('emp')->user()->company_id;
 
+        // Ensure $companyIds is an array
+        if (!is_array($companyIds)) {
+            $companyIds = [$companyIds]; // Wrap in an array if it's a single value
+        }
+        // Retrieve team members' emp_ids where the logged-in user is the manager
+        $teamMembersIds = EmployeeDetails::where(function ($query) use ($companyIds) {
+            foreach ($companyIds as $companyId) {
+                $query->orWhereJsonContains('company_id', $companyId);
+            }
+        })
+            ->pluck('emp_id')
+            ->toArray();
+        // Query leave requests for team members with specified conditions
+        $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
+            ->where(function ($query) {
+                $query->where('status', 'pending')
+                    ->orWhere(function ($query) {
+                        $query->where('status', 'approved')
+                            ->where('cancel_status', 'Pending Leave Cancel');
+                    });
+            })
+            ->orderBy('created_at', 'desc');
+
+        // Execute the query
+        $this->sendLeaveApplications = $query->get();
+        // Decode JSON fields for each leave application
+        foreach ($this->sendLeaveApplications as $leaveRequest) {
+            $leaveRequest->applying_to = json_decode($leaveRequest->applying_to, true);
+            $leaveRequest->cc_to = json_decode($leaveRequest->cc_to, true);
+            // Check if cc_to contains an entry with emp_id matching loginempid
+            if (isset($leaveRequest->cc_to)) {
+                foreach ($leaveRequest->cc_to as $cc) {
+                    if (isset($cc['emp_id']) && $cc['emp_id'] === $loggedInEmpId) {
+                        $leaveRequest->isCcToLoginEmp = true;
+                    }
+                }
+            }
+        }
+
+        // Dump the entire collection to inspect
         $this->getEmpLeaveRequests();
         $this->getPendingLeaveRequest();
         // if ($request->query('tab') === 'leave') {
         //     $this->setActiveTab('leave');
         //     $this->showleave = true;
         //     $this->showattendance = false;
-
         // }
 
         $tab = $request->query('tab');
@@ -206,13 +251,21 @@ class EmployeesReview extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $companyId = auth()->guard('emp')->user()->company_id;
+            $companyIds = auth()->guard('emp')->user()->company_id;
+
+            // Ensure $companyIds is an array
+            if (!is_array($companyIds)) {
+                $companyIds = [$companyIds]; // Wrap in an array if it's a single value
+            }
             // Retrieve team members' emp_ids where the logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
-                ->whereJsonContains('company_id', $companyId)
+                ->where(function ($query) use ($companyIds) {
+                    foreach ($companyIds as $companyId) {
+                        $query->orWhereJsonContains('company_id', $companyId);
+                    }
+                })
                 ->pluck('emp_id')
                 ->toArray();
-
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
@@ -353,13 +406,13 @@ class EmployeesReview extends Component
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
-            ->where(function($query) {
-                $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-                      ->orWhere(function($query) {
-                          $query->where('regularisation_dates.status', 'pending')
+                ->where(function ($query) {
+                    $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+                        ->orWhere(function ($query) {
+                            $query->where('regularisation_dates.status', 'pending')
                                 ->where('regularisation_dates.approver_remarks', 'Forwarded to HR');
-                      });
-            })
+                        });
+                })
 
                 ->orderByDesc('regularisation_dates.id')
 
@@ -380,8 +433,8 @@ class EmployeesReview extends Component
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
 
-           ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-                      
+                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
+
 
 
 
@@ -401,6 +454,7 @@ class EmployeesReview extends Component
 
         return view('livewire.employees-review', [
             'leaveApplications' => $this->leaveApplications,
+            'sendLeaveApplications' => $this->sendLeaveApplications,
             'matchingLeaveApplications' => $this->matchingLeaveApplications,
             'count' => $this->count,
             'searchQuery' => $this->searchQuery,
@@ -408,7 +462,8 @@ class EmployeesReview extends Component
             'empLeaveRequests' => $this->empLeaveRequests,
             'activeContent' => $this->activeContent,
             'regularisation_count' => $this->regularisation_count,
-            'countofregularisations' => $this->countofregularisations
+            'countofregularisations' => $this->countofregularisations,
+            'isManager'=>$this->isManager
         ]);
     }
 }

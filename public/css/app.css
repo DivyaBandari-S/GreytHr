@@ -3374,6 +3374,12 @@ input[type="radio"] {
     background: #ffffff;
     padding: 10px 15px;
 }
+.scrollLeaveApply{
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-X: hidden;
+}
 .reporting {
     display: flex;
     flex-direction: row;
@@ -3759,7 +3765,19 @@ input[type="radio"] {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
+#searchButtonReports{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    outline: none;
+    background: rgb(2, 17, 79);
+    padding: 7px 12px;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 /* //end of leave-history styles */
 
 /* start of view-pending details */

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
 use App\Models\LeaveRequest;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use App\Models\Notification;
+use Illuminate\Support\Facades\Mail;
 
 class LeaveCancelPage extends Component
 {
@@ -341,12 +343,17 @@ class LeaveCancelPage extends Component
             if (empty($this->selectedLeaveRequestId)) {
                 throw new \Exception('No leave request selected.');
             }
-
+    
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
-
+    
             // Get the employee ID and details
             $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
+    
+            // Update the existing leave request's cancel_status to 'Re-applied'
+            $leaveRequest->cancel_status = 'Re-applied';
+            $leaveRequest->save();
+    
             // Prepare ccToDetails
             $ccToDetails = [];
             foreach ($this->selectedCCEmployees as $selectedEmployeeId) {
@@ -361,11 +368,12 @@ class LeaveCancelPage extends Component
                         $ccToDetails[] = [
                             'emp_id' => $selectedEmployeeId,
                             'full_name' => $fullName,
+                            'email' => $employeeDetails->email
                         ];
                     }
                 }
             }
-
+    
             // Prepare applyingToDetails
             $applyingToDetails = [];
             if ($this->selectedManagerDetails) {
@@ -374,40 +382,56 @@ class LeaveCancelPage extends Component
                     $applyingToDetails[] = [
                         'manager_id' => $employeeDetails->emp_id,
                         'report_to' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+                        'email' => $employeeDetails->email
                     ];
                 }
             } else {
                 $employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
                 $defaultManager = $employeeDetails->manager_id;
                 // Handle default values if no employee is selected
+                $defaultManagerEmail = EmployeeDetails::where('emp_id', $defaultManager)->first();
                 $applyingToDetails[] = [
                     'manager_id' => $defaultManager,
                     'report_to' => $this->loginEmpManager,
                     'image' => $this->loginEmpManagerProfile,
+                    'email' => $defaultManagerEmail->email
                 ];
             }
-
-            // Update the leave request
-            $leaveRequest->update([
+    
+            // Create a new leave request record
+            LeaveRequest::create([
+                'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
-                'cancel_status' => 'Pending Leave Cancel',
+                'cancel_status' => 'Pending Leave Cancel', // This should reflect the current state of the new request
+                'from_date' => $leaveRequest->from_date,
+                'to_date' => $leaveRequest->to_date,
+                'to_session' => $leaveRequest->to_session,
+                'from_session' => $leaveRequest->from_session,
+                'leave_type' => $leaveRequest->leave_type,
                 'leave_cancel_reason' => $this->leave_cancel_reason,
                 'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
                 'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
             ]);
-
+    
             $employeeId = auth()->guard('emp')->user()->emp_id;
             Notification::create([
                 'emp_id' => $employeeId,
                 'notification_type' => 'leaveCancel',
                 'leave_type' => $leaveRequest->leave_type,
-                'leave_reason' =>  $this->leave_cancel_reason,
+                'leave_reason' => $this->leave_cancel_reason,
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
+    
+            // Send email notification
+            $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
+            $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+    
+            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetails, $ccToDetails));
+    
             $this->cancel();
-            session()->flash('message', 'Applied request for leave cancel successfully.');
+            session()->flash('message', 'Leave cancel request submitted successfully.');
             $this->showAlert = true;
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to submit the leave cancel request. Please try again.');
@@ -415,6 +439,9 @@ class LeaveCancelPage extends Component
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }
     }
+
+
+
 
     public function toggleInfo()
     {
@@ -658,11 +685,13 @@ class LeaveCancelPage extends Component
         }
 
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved')
-            ->where('from_date', '>=', now()->subMonths(2))
-            ->where('category_type', 'Leave')
-            ->with('employee')
-            ->get();
+        ->where('status', 'approved')
+        ->where('from_date', '>=', now()->subMonths(2))
+        ->where('category_type', 'Leave')
+        ->where('cancel_status', '!=', 'Re-applied') // Exclude 'Pending Leave Cancel'
+        ->with('employee')
+        ->get();
+
         return view('livewire.leave-cancel-page', [
             'cancelLeaveRequests' => $this->cancelLeaveRequests,
             'empManagerDetails' => $this->empManagerDetails,

@@ -221,8 +221,8 @@
                                             <span title="{{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }}: {{ $transaction->emp_id }}">
                                                 {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
                                             </span> <br>
-                                            <span title="{{ $transaction->employee->job_location ? $transaction->employee->job_location . ', ' : '' }}{{ $transaction->employee->job_title }}" class="normalTextSmall">
-                                                {{ $transaction->employee->job_location ? $transaction->employee->job_location . ', ' : '' }}{{ $transaction->employee->job_title }}
+                                            <span title="{{ $transaction->employee->job_location ? $transaction->employee->job_location . ', ' : '' }}{{ $transaction->employee->job_title }}" class="normalTextSmall fw-normal">
+                                            {{ $transaction->employee->job_location ? $transaction->employee->job_location . ($transaction->employee->job_title ? ', ' : '') : '' }}{{ $transaction->employee->job_title }}
                                             </span>
                                         </td>
 
