@@ -1617,11 +1617,14 @@ color: #fff;
                     $totalWorkedMinutes = ($hours * 60) + $minutes;
 
                     }
-
+                    
                     @endphp
                    
-                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave ? 'rgb(252, 242, 255)':($isPresent || $swipeRecordExists ? '#edfaed' : '#fcf0f0')))) : 'white'}};">
-                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">
+                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave ? 'rgb(252, 242, 255)':($isPresent || $swipeRecordExists ? ((isset($totalWorkedMinutes) && $totalWorkedMinutes < 240) ? '#fcf0f0' :'#edfaed') : '#fcf0f0')))) : 'white'}};">
+                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             <p style="white-space:nowrap;">
                                 {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
                                 @if($swipeRecordExists)
@@ -1630,18 +1633,30 @@ color: #fff;
                             </p>
                         </td>
 
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:(GS)</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap;">10:00 Am to 07:00Pm</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">10:(GS)</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">10:00 Am to 07:00Pm</td>
 
                         @if($distinctDates->has($dateKeyForLookup))
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             @if($isDate)
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
                             00:00
                             @endif
                         </td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             @if($isDate)
                             @if(empty($record['last_out_time']))
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
@@ -1652,7 +1667,10 @@ color: #fff;
                             00:00
                             @endif
                         </td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             @if($isDate == false)
                             00:00
                             @elseif(empty($record['last_out_time']))
@@ -1661,7 +1679,10 @@ color: #fff;
                             {{ str_pad($hours, 2, '0', STR_PAD_LEFT) }}:{{ str_pad($minutes, 2, '0', STR_PAD_LEFT) }}
                             @endif
                         </td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             @if($isDate == false)
                             00:00
                             @elseif(empty($record['last_out_time']))
@@ -1675,13 +1696,28 @@ color: #fff;
                             @endif
                         </td>
                         @else
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">00:00</td>
                         @endif
 
-                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($isOnLeave ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')))) : 'black'}}">
+                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($isOnLeave ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')))) : 'black'}};background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'pink':'none'
+           ;}}">
                             @if($isDate)
                             @if($isWeekend)
                             O
@@ -1706,6 +1742,12 @@ color: #fff;
                                  SL
                               @endif
                             @php $leaveCount++; @endphp
+                            @elseif($totalWorkedMinutes <240)
+
+                               A
+                            @elseif($totalWorkedMinutes >240&&$totalWorkedMinutes <480)
+                            
+                               P:<span style="color:#f66;">A</span>
                             @elseif($distinctDates->has($dateKeyForLookup))
                             P
                             @php $presentCount++; @endphp
@@ -1719,13 +1761,22 @@ color: #fff;
                         </td>
 
                         <td>
-                            <button type="button" style="font-size:12px;background-color:transparent;color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{ $dateKeyForLookup }}')">
+                            <button type="button" style="font-size:12px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           }};color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{ $dateKeyForLookup }}')">
                                 Info
                             </button>
                         </td>
 
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;">No&nbsp;attention&nbsp;required</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">No&nbsp;attention&nbsp;required</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">
                             @if($totalWorkedMinutes < $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
                                 @php
                                 $shortfalltime=$standardWorkingMinutes - $totalWorkedMinutes;
@@ -1741,7 +1792,10 @@ color: #fff;
                                 00:00
                                 @endif
                                 </td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">
                             @if($totalWorkedMinutes > $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
                             @php
                             $excesstime = $totalWorkedMinutes - $standardWorkingMinutes;
@@ -1756,7 +1810,10 @@ color: #fff;
                             00:00
                             @endif
                         </td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">10:00-14:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">10:00-14:00</td>
                         @if($this->moveCaretLeftSession1)
                         @if($distinctDates->has($dateKeyForLookup))
                         @php
@@ -1765,7 +1822,10 @@ color: #fff;
                         $lateArrivalTime = $firstInTime->diff(\Carbon\Carbon::parse('10:00'))->format('%H:%I');
                         $isLateBy10AM = $firstInTime->format('H:i') > '10:00';
                         @endphp
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">
                             @if($isDate)
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
@@ -1774,27 +1834,57 @@ color: #fff;
 
                         </td>
                         @if($isDate==false)
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                         @elseif($isLateBy10AM)
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">{{$lateArrivalTime}}</td>
                         @else
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                         @endif
                         @else
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                         @endif
 
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
 
                         @endif
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">14:01-19:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">14:01-19:00</td>
                         @if($this->moveCaretLeftSession2==true)
 
 
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                         @if($distinctDates->has($dateKeyForLookup))
                         @php
 
@@ -1805,17 +1895,32 @@ color: #fff;
                             $isEarlyBy07PM = $firstInTime->format('H:i') < '19:00' ; @endphp <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
                                 @else
 
-                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">{{ date('H:i', strtotime($record['last_out_time'])) }}</td>
                                 @endif
                                 @if($isEarlyBy07PM)
-                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">{{$lateArrivalTime}}</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">{{$lateArrivalTime}}</td>
                                 @else
-                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                                 @endif
 
                                 @else
-                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
-                                <td style="font-weight:normal;font-size:12px;padding-top:16px;">00:00</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
+                                <td style="font-weight:normal;font-size:12px;padding-top:16px;background-color: 
+           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
+               'fcf0f0':'none'
+           ;}}">00:00</td>
                                 @endif
                                 @endif
                                 @php
