@@ -10,6 +10,7 @@
 /* bootstarp v5 downolad */
 :root {
     --main-heading-color: #3b4452;
+    --main-color:rgb(2, 17, 79);
     /* use main heading along with font-weight-500 */
     --requiredAlert: red;
     --label-color: #778899;
@@ -1237,7 +1238,7 @@ input:checked + .slider:before {
     -ms-transform: translateX(20px);
     transform: translateX(20px);
     background-color: white;
-    
+
 }
 
 .slider.round {
@@ -2037,7 +2038,7 @@ td {
 }
 @media screen and (min-width: 320px) and (max-width: 500px) {
     .shift-roster-download-and-dropdown-for-attendance-muster {
-        margin-left: 10px; 
+        margin-left: 10px;
     }
 }
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -2137,10 +2138,10 @@ td {
  .form-select {
 
     font-size: 0.75rem;
-} 
+}
 .catagory-select:hover{
     background-color: #edf3ff;
- 
+
 }
 .modal-body{
     font-size: 0.75rem;
@@ -3373,6 +3374,22 @@ input[type="radio"] {
     background: #ffffff;
     padding: 10px 15px;
 }
+.scrollLeaveApply{
+    max-height: 100vh;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-X: hidden;
+}
+::-webkit-scrollbar {
+    width: 5px; /* Adjust as needed */
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d6dc; /* Adjust color */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
 .reporting {
     display: flex;
     flex-direction: row;
@@ -3398,7 +3415,9 @@ input[type="radio"] {
 .scrollApplyingTO {
     height: 200px;
     max-height: 200px;
+    position: relative; 
     overflow-y: auto;
+    padding: 0 5px;
 }
 .ccContainer {
     background: #fff;
@@ -3426,7 +3445,7 @@ input[type="radio"] {
     border: 1px solid #ccc;
 }
 .icon-container:hover {
-    border-color: #007bff;
+    border-color: rgb(2, 17, 79);
 }
 .icon-container {
     height: 30px;
@@ -3758,7 +3777,19 @@ input[type="radio"] {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
-
+#searchButtonReports{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    outline: none;
+    background: rgb(2, 17, 79);
+    padding: 7px 12px;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 /* //end of leave-history styles */
 
 /* start of view-pending details */
@@ -5727,7 +5758,7 @@ select .yearSelect {
     margin: 0px;
 }
 .lableCount {
-    color: #f2b13f;
+    color: var(--main-color);
     font-size: 14px;
 }
 .notification-text {
@@ -5736,6 +5767,11 @@ select .yearSelect {
 }
 .notification-head {
     font-size: var(--normal-font-size);
+    color: var( --main-color);
+    /* max-height: 100px;
+    overflow: auto ;
+    text-overflow: ellipsis;
+    white-space: nowrap; */
 }
 .notification-text-para {
     color: #535f6b;
@@ -5792,14 +5828,13 @@ select .yearSelect {
 }
 
 .notification-detail-container {
-    width: 300px;
+    width: 290px;
     background: #f5f8f9;
 }
 
 .notification-close-btn {
     font-size: 7px;
-    width: 15px;
-    height: 15px;
+   
     border-radius: 50%;
     padding: 2px;
     border: 1px solid var(--label-color);
@@ -6555,6 +6590,7 @@ peoples module styles started */
 .people-starred-list-container {
     max-height: 350px;
     overflow-y: auto;
+    padding: 0 5px;
     overflow-x: hidden;
 }
 
@@ -6876,7 +6912,7 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
-    height: 279px;
+    height: auto;
     max-height: 300px;
     overflow-y: auto;
     overflow-y: auto;
@@ -7183,7 +7219,7 @@ peoples module styles started */
     background-color: white;
     width: 100%;
     border-radius: 5px;
-    height: 279px;
+    height: auto;
     max-height: 300px;
     overflow-y: auto;
     overflow-x: auto;
@@ -8567,4 +8603,52 @@ peoples module styles started */
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
+}
+
+
+/* //check box styles */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-checkbox input {
+    display: none; /* Hide the default checkbox */
+}
+
+.checkmark {
+    width: 15px; /* Width of the custom checkbox */
+    height: 15px; /* Height of the custom checkbox */
+    background-color: white; /* Default background color */
+    border: 2px solid #ccc; /* Border for the checkbox */
+    border-radius: 3px;
+    position: relative;
+    margin-right: 10px; /* Spacing between checkbox and label */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.custom-checkbox input:checked + .checkmark {
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none; /* Hide by default */
+}
+
+.custom-checkbox input:checked + .checkmark:after {
+    display: block; /* Show the checkmark when checked */
+}
+
+.checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg); /* Rotate to create the checkmark */
 }

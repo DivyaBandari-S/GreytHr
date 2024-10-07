@@ -11,12 +11,14 @@
 // Models                          : EmployeeDetails,LeaveRequest
 namespace App\Livewire;
 
+use App\Mail\LeaveApprovalNotification;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use PDOException;
 
@@ -63,6 +65,7 @@ class ViewPendingDetails extends Component
                     $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
                         ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
                         ->orWhere('leave_applications.category_type', 'like', '%' . $filter . '%')
+                        ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
                         ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%');
                 });
             }
@@ -232,9 +235,10 @@ class ViewPendingDetails extends Component
     public function approveLeave($index)
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
+            $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
@@ -247,13 +251,17 @@ class ViewPendingDetails extends Component
                     // Update status to 'approved'
                     $leaveRequest->status = 'approved';
                     $leaveRequest->updated_at = now(); // Update timestamps
+                    $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
+                    // Send email notification
+                    if ($sendEmailToEmp) {
+                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+                    }
                     $this->showAlert = true;
                     session()->flash('message', 'Leave application approved successfully.');
                 }
             }
             $this->fetchPendingLeaveApplications();
-
         } catch (\Exception $e) {
             // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
@@ -265,24 +273,49 @@ class ViewPendingDetails extends Component
     public function approveLeaveCancel($index)
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+    
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+            $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
+    
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-
+    
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
-                    // Update status to 'approved'
+    
+                    // Find any other leave request matching from_date, from_session, to_date, to_session
+                    $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
+                        ->where('from_date', $leaveRequest->from_date)
+                        ->where('from_session', $leaveRequest->from_session)
+                        ->where('to_date', $leaveRequest->to_date)
+                        ->where('to_session', $leaveRequest->to_session)
+                        ->where('status', '!=', 'Re-applied')
+                        ->first();
+                    if ($matchingLeaveRequest) {
+                        // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->status = 'rejected';
+                        $matchingLeaveRequest->updated_at = now();
+                        $matchingLeaveRequest->action_by = $employeeId;
+                        $matchingLeaveRequest->save();
+                    }
+    
+                    // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
                     $leaveRequest->status = 'rejected';
                     $leaveRequest->updated_at = now();
+                    $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    if ($sendEmailToEmp) {
+                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+                    }
                     $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
@@ -293,12 +326,15 @@ class ViewPendingDetails extends Component
             session()->flash('error', 'Failed to approve leave application. Please try again.');
         }
     }
+
     public function rejectLeaveCancel($index)
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-
+            $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
@@ -313,8 +349,13 @@ class ViewPendingDetails extends Component
                     // Update status to 'approved'v
                     $leaveRequest->cancel_status = 'rejected';
                     $leaveRequest->updated_at = now();
+                    $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
+                    // Send email notification
+                    if ($sendEmailToEmp) {
+                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+                    }
                     $this->showAlert = false;
                     $this->fetchPendingLeaveApplications();
                 }
@@ -330,14 +371,22 @@ class ViewPendingDetails extends Component
     public function rejectLeave($index)
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+            $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
             // Update status to 'rejected'
             $leaveRequest->status = 'rejected';
-            $leaveRequest->save();
             $leaveRequest->updated_at = now();
+            $leaveRequest->action_by = $employeeId;
+            $leaveRequest->save();
+
             session()->flash('message', 'Leave application rejected.');
-             $this->showAlert = true;
+            // Send email notification
+            if ($sendEmailToEmp) {
+                Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+            }
+            $this->showAlert = true;
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
             // Log the error

@@ -7,27 +7,22 @@
 </head>
 
 <body>
-    <h5>Leave Application Notification</h5>
-    <p>Hi,</p>
-    @if($leaveCategory == 'Leave')
-    @if($status === 'Withdrawn')
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
+    <p>Hi, {{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}],</p>
+    @if($leaveRequest->category_type === 'Leave')
+    @if($leaveRequest->status === 'approved')
+    <p>Your leave application has been accepted.</p>
     @else
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
-    <p>Please log on to and review the leave application.</p>
+    <p>Your leave application has been rejected.</p>
     @endif
+    @elseif($leaveRequest->category_type === 'Leave Cancel')
+    @if($$leaveRequest->cancel_status === 'approved')
+    <p>Your leave cancel application has been accepted.</p>
     @else
-    @if($cancelStatus === 'Withdrawn')
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave cancel.</p>
-    @else
-    <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave cancel.</p>
-    <p>Please log on to and review the leave cancel application.</p>
+    <p>Your leave cancel application has been rejected.</p>
     @endif
     @endif
 
-    <h3>Following are the leave details:</h3>
-    <ul>
-        <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
             <thead>
                 <tr>
                     <th></th>
@@ -76,16 +71,11 @@
             </tbody>
         </table>
 
-        @if($status === 'Withdrawn')
-        <p></p>
-        @else
-        <p><a href="https://s6.payg-india.com/employees-review">Click here </a>to approve/reject this request.</p>
-        @endif
-        <p>Regards</p>
+    <p>Regards</p>
 
-        <p>Note: This is an auto-generated mail. Please do not reply.</p>
+    <p>Note: This is an auto-generated mail. Please do not reply.</p>
 
-        <p>PS: "This e-mail is generated from info@s6.payg-india.com"</p>
+    <p>PS: "This e-mail is generated from info@s6.payg-india.com"</p>
 </body>
 
 </html>

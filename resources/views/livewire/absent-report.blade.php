@@ -6,28 +6,32 @@
     @endif
     @if($showAbsentReportDialog==true)
     <div>
-        <div class="modal-body" >
-            <div class="date-filters mb-2 d-flex mt-2 gap-2">
-                <div class="form-group col-md-4">
+        <div class="modal-body">
+            <div class="row m-0 p-0">
+                <div class="form-group col-md-6">
                     <label for="from-date">From Date:</label>
                     <input class="form-control" type="date" id="from-date" wire:model="fromDate" wire:change="updatefromDate">
                 </div>
-                <div class="form-group col-md-4">
+                <div class="form-group col-md-6">
                     <label for="to-date">To Date:</label>
                     <input class="form-control" type="date" id="to-date" wire:model="toDate" wire:change="updatetoDate">
                 </div>
-                <div class="col-md-4"style="margin-top:15px;">
-                        <div class="search-container p-2" style="position: relative;">
-                            <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
-                            <button wire:click="searchfilter" id="searchButtonReview">
-                                <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
-                            </button>
-                        </div>
+            </div>
+            <div class="row mt-3 mb-3 m-0 p-0 d-flex align-items-center">
+                <div class="col-md-6">
+
+                </div>
+                <div class="col-md-6">
+                    <div class="search-container" style="position: relative;">
+                        <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
+                        <button wire:click="searchfilter" id="searchButtonReports">
+                            <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-
             <div class="table-responsive" style="height:200px;max-height:200px;overflow-y:auto;">
-                <table class="swipes-table mt-2 w-100 border" >
+                <table class="swipes-table mt-2 w-100 border">
                     <tr style="background-color: #f6fbfc;">
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Number</th>

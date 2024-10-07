@@ -26,8 +26,8 @@ class LeaveRequest extends Model
         'reason',
         'leave_cancel_reason',
         'is_read',
-        'file_paths'
-        // Add other fields that you want to be fillable here
+        'file_paths',
+        'action_by'
     ];
 
     protected $casts = [

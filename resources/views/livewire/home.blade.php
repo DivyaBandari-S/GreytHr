@@ -258,7 +258,7 @@
         </div>
         <div class="row m-0">
             <div class="col-md-3  ">
-                @if ($ismanager)
+                @if ($ismanager ||  $leaveApplied)
                     <div class="payslip-card mb-4" style="height: 195px;">
                         <p class="payslip-card-title">Review</p>
                         @if ($this->count > 0)

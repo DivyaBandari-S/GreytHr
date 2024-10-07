@@ -18,13 +18,13 @@ class LeaveHelper
                 return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
             }
 
-            if ($startDate->isSameDay($endDate) ){
-                if(self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)){
+            if ($startDate->isSameDay($endDate)) {
+                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
 
                     return 1;
-                }elseif(self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)){
+                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
                     return 0.5;
-                }else{
+                } else {
                     return 0;
                 }
             }
@@ -83,17 +83,28 @@ class LeaveHelper
         // Fetch approved leave requests
         $selectedYear = (int) $selectedYear;
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved')
-            ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
+            ->where(function ($query) {
+                $query->where('status', 'approved')
+                    ->where('cancel_status', 'Pending');
+            })
+            ->whereIn('leave_type', [
+                'Casual Leave Probation',
+                'Loss Of Pay',
+                'Sick Leave',
+                'Casual Leave',
+                'Maternity Leave',
+                'Marriage Leave',
+                'Paternity Leave'
+            ])
             ->whereYear('to_date', '=', $selectedYear)
             ->get();
-        $totalCasualDays = 0;
-        $totalCasualLeaveProbationDays = 0;
-        $totalSickDays = 0;
-        $totalLossOfPayDays = 0;
-        $totalMaternityDays = 0;
-        $totalMarriageDays = 0;
-        $totalPaternityDays = 0;
+            $totalCasualDays = 0;
+            $totalCasualLeaveProbationDays = 0;
+            $totalSickDays = 0;
+            $totalLossOfPayDays = 0;
+            $totalMaternityDays = 0;
+            $totalMarriageDays = 0;
+            $totalPaternityDays = 0;
 
         // Calculate the total number of days based on sessions for each approved leave request
         foreach ($approvedLeaveRequests as $leaveRequest) {
@@ -145,13 +156,24 @@ class LeaveHelper
     public static function getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear)
     {
         // Fetch approved leave requests
-     
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved')
-            ->whereIn('leave_type', ['Casual Leave Probation', 'Loss Of Pay', 'Sick Leave', 'Casual Leave', 'Maternity Leave', 'Marriage Leave', 'Petarnity Leave'])
-            ->whereDate('to_date', '<=', $selectedYear)
+            ->where(function ($query) {
+                $query->where('status', 'approved')
+                    ->where('cancel_status', 'Pending'); // Check both 'status' and 'cancel_status'
+            })
+            ->whereIn('leave_type', [
+                'Casual Leave Probation',
+                'Loss Of Pay',
+                'Sick Leave',
+                'Casual Leave',
+                'Maternity Leave',
+                'Marriage Leave',
+                'Paternity Leave'
+            ])
+            ->whereYear('to_date', '=', $selectedYear)
             ->get();
-      
+
+
         $totalCasualDays = 0;
         $totalCasualLeaveProbationDays = 0;
         $totalSickDays = 0;

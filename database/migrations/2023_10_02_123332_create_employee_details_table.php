@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('manager_id')->nullable();
             $table->string('dept_head')->nullable();
             $table->enum('employee_status', ['active', 'on-leave', 'terminated', 'resigned', 'on-probation'])->default('active');
-            $table->string('emergency_contact')->unique()->nullable();
+            $table->string('emergency_contact')->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->enum('inter_emp', ['yes', 'no']);
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('time_zone')->nullable();
             $table->string('is_starred')->nullable();
             $table->string('job_mode')->nullable();
-            $table->string('emp_domain')->nullable();
+            $table->json('emp_domain');
             $table->string('notice_period')->nullable();
             $table->string('resignation_date')->nullable();
             $table->string('resignation_reason')->nullable();
@@ -46,7 +46,7 @@ return new class extends Migration
             $table->string('shift_start_time')->nullable();
             $table->string('shift_end_time')->nullable();
             $table->string('probation_Period')->default('30');
-            $table->json('confirmation_date')->nullable();
+            $table->date('confirmation_date')->nullable();
             $table->string('referral')->nullable();
             $table->string('service_age')->nullable();
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');

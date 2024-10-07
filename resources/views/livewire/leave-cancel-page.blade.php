@@ -272,37 +272,47 @@
                             @endif
                             @if($ccRecipients->isNotEmpty())
                             @foreach($ccRecipients as $employee)
-                            <div class="borderContainer mb-2 rounded" wire:key="{{ $employee->emp_id }}">
-                                <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
-                                    <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
+                            <div class="borderContainer px-2 mb-2 rounded">
+                                <div class="downArrow d-flex align-items-center text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox"
+                                            wire:model="selectedPeople.{{ $employee->emp_id }}"
+                                            @if(isset($selectedPeople[$employee->emp_id])) checked @endif
+                                        wire:click.prevent="toggleSelection('{{ $employee->emp_id }}')" />
+                                        <span class="checkmark"></span>
+                                    </label>
 
-                                    @if(!empty($employee->image) && $employee->image !== 'null')
-                                    <div class="employee-profile-image-container">
-                                        <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
-                                    </div>
-                                    @else
-                                    @if($employee->gender === "Male")
-                                    <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
-                                    </div>
-                                    @elseif($employee->gender === "Female")
-                                    <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
-                                    </div>
-                                    @else
-                                    <div class="employee-profile-image-container">
-                                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
-                                    </div>
-                                    @endif
-                                    @endif
-
-                                    <div class="mb-2 mt-2">
-                                        <p class="mb-0 empCcName">{{ ucwords(strtolower($employee->full_name)) }}</p>
-                                        <p class="mb-0 empIdStyle">#{{ $employee->emp_id }}</p>
+                                    <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
+                                        <div>
+                                            @if(!empty($employee->image) && $employee->image !== 'null')
+                                            <div class="employee-profile-image-container">
+                                                <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
+                                            </div>
+                                            @else
+                                            @if($employee->gender === "Male")
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                            </div>
+                                            @elseif($employee->gender === "Female")
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                            </div>
+                                            @else
+                                            <div class="employee-profile-image-container">
+                                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
+                                            </div>
+                                            @endif
+                                            @endif
+                                        </div>
+                                        <div class="mb-2 ms-2 mt-2">
+                                            <p class="mb-0 empCcName">{{ ucwords(strtolower($employee->full_name)) }}</p>
+                                            <p class="mb-0 empIdStyle">#{{ $employee->emp_id }}</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             @endforeach
+
                             @else
                             <div class="mb-0 normalTextValue">
                                 No found
