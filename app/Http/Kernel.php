@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -17,12 +18,12 @@ class Kernel extends HttpKernel
         // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
-        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\CleanupLivewireTempFiles::class,
-        \Sarfraznawaz2005\Loading\Http\Middleware\LoadingMiddleware::class
+        \Sarfraznawaz2005\Loading\Http\Middleware\LoadingMiddleware::class,
+        \App\Http\Middleware\AddCacheControlHeaders::class,
     ];
 
     /**
@@ -39,8 +40,6 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\PostLoginMessage::class,
-            \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
-
         ],
 
         'api' => [
@@ -71,7 +70,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'checkAuth' => \App\Http\Middleware\CheckAuth::class,
         'handleSession' => \App\Http\Middleware\CheckAuthAndHandleSession::class,
-        // 'preventHistory' => \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
 
 
 
