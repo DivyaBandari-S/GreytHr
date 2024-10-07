@@ -475,16 +475,23 @@
                             </button>
                         </div>
                     </div>
-                    <div class="scrollApplyingTO mb-2 mt-2 ">
+                    <div class="scrollApplyingTO position-relative mb-2 mt-2 ">
                         @if(session()->has('error'))
-                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
+                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;z-index:100;">{{ session('error') }}</div>
                         @endif
 
                         @if($ccRecipients->isNotEmpty())
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer mb-2 rounded">
-                            <div class="downArrow d-flex align-items-center gap-3 text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
-                                <input class="downArrow ms-2" type="checkbox" wire:model="selectedPeople.{{ $employee->emp_id }}" wire:click="handleCheckboxChange('{{ $employee->emp_id }}')">
+                        <div class="borderContainer px-2 mb-2 rounded">
+                            <div class="downArrow d-flex align-items-center text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                <label class="custom-checkbox">
+                                    <input type="checkbox"
+                                        wire:model="selectedPeople.{{ $employee->emp_id }}"
+                                        @if(isset($selectedPeople[$employee->emp_id])) checked @endif
+                                    wire:click.prevent="toggleSelection('{{ $employee->emp_id }}')" />
+                                    <span class="checkmark"></span>
+                                </label>
+
                                 <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
                                     <div>
                                         @if(!empty($employee->image) && $employee->image !== 'null')
@@ -515,6 +522,7 @@
                             </div>
                         </div>
                         @endforeach
+
                         @else
                         <div class="mb-0 normalTextValue">
                             No found
