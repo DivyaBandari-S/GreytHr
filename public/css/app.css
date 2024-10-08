@@ -3388,7 +3388,7 @@ input[type="radio"] {
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #9f9e9e;
 }
 .reporting {
     display: flex;
@@ -3422,6 +3422,7 @@ input[type="radio"] {
 .ccContainer {
     background: #fff;
     border: 1px solid #ccc;
+    position: relative;
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
