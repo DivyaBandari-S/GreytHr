@@ -289,7 +289,7 @@ class EmployeeSwipesData extends Component
                 'swipe_log' => $employeeSwipeLog,
             ];
 
-        
+          
         $this->swipes=$swipeData;
         
         

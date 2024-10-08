@@ -417,10 +417,10 @@
             <button class="submit-btn"wire:click="downloadExcel"style="margin:13px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
-            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:30%;margin:11px;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">
-                <option value="{{$todayyear-1}}">{{$todayyear-1}}</option>
-                <option value="{{$todayyear}}">{{$todayyear}}</option>
-                <option value="{{$todayyear+1}}">{{$todayyear+1}}</option>
+            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:40%;margin:11px;font-size:12px;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">
+                <option value="{{$todayyear-1}}-{{$todaymonth}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear-1}}</option>
+                <option value="{{$todayyear}}-{{$todaymonth}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear}}</option>
+                <option value="{{$todayyear+1}}-{{$todaymonth}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear+1}}</option>
             </select>
             @php
             $attendanceYearAsNumber = intval($attendanceYear);
