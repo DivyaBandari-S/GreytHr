@@ -23,6 +23,7 @@ class AttendanceMusterReport extends Component
     public $search;
     public $fromDate;
 
+    
     public $toDate;
     public $i = 0;
     public $showAttendanceMusterReportDialog = true;

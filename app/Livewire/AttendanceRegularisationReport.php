@@ -21,6 +21,9 @@ class AttendanceRegularisationReport extends Component
 
     public $toDate;
 
+
+    public $showAlert=false;
+  
    
    
     public $regularisationDetails;
@@ -30,6 +33,10 @@ class AttendanceRegularisationReport extends Component
     {
         $this->EmployeeId=$this->EmployeeId;
         
+    }
+    public function hideAlert()
+    {
+        $this->showAlert = false;
     }
     public function updateselectedStatus()
     {
@@ -59,23 +66,28 @@ class AttendanceRegularisationReport extends Component
           
         if(empty($this->EmployeeId))
         {
-            return redirect()->back()->with('error', 'Please Select at least one employee detail');
+            return redirect()->back()->with('error', 'Please Select at least one employee detail.');
+            $this->showAlert=true;
         }
         elseif(empty($this->fromDate)&&empty($this->fromDate))
         {
-            return redirect()->back()->with('error', 'Please Select fromDate and ToDate');
+            return redirect()->back()->with('error', 'Please Select fromDate and ToDate.');
+            $this->showAlert=true;
         }
         elseif(empty($this->fromDate))
         {
-            return redirect()->back()->with('error', 'Please Select fromDate');
+            return redirect()->back()->with('error', 'Please Select fromDate.');
+            $this->showAlert=true;
         }
         elseif(empty($this->toDate))
         {
-            return redirect()->back()->with('error', 'Please Select toDate');
+            return redirect()->back()->with('error', 'Please Select toDate.');
+            $this->showAlert=true;
         }
         elseif(empty($this->selectedStatus))
         {
-            return redirect()->back()->with('error', 'Please Select Status');
+            return redirect()->back()->with('error', 'Please Select Status.');
+            $this->showAlert=true;
         }
         else
         {

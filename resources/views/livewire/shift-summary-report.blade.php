@@ -35,8 +35,12 @@
                 @foreach ($filteredEmployees as $emp)
                 <tr style="border:1px solid #ccc;">
                     <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
+                      <label class="custom-checkbox"> 
                         <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:model="shiftSummary" value="{{ $emp->emp_id }}">
+                        <span class="checkmark"></span>
                         {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
+
+                      </label>
                     </td>
                     <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px;white-space:nowrap;">{{$emp->emp_id}}</td>
                 </tr>

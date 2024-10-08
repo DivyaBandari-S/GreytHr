@@ -27,41 +27,40 @@
         </div>
 
 
-
-        <div class="d-flex justify-content-end">
-            <button wire:click="show" class="task-add-new-task-button">Add
-                New Task</button>
-        </div>
-
-
         @if ($activeTab == 'open')
-            <div class="task-filter-section">
-                <div class="form-inline row task-filter-container">
-                    <!-- Search Box -->
-                    <div class="input-group task-input-group-container">
-                        <input wire:input="searchActiveTasks" wire:model="search" type="text"
-                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
-                            aria-describedby="basic-addon1">
-                        <div class="input-group-append">
-                            <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
-                                <i class="fa fa-search task-search-icon"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="form-group task-date-range-picker">
-
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
-                            <option value="all" selected>All</option>
-                            <option value="this_week">This Week</option>
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="this_year">This Year</option>
-                        </select>
-
+        <div class="task-filter-container d-flex justify-content-end">
+            <div class="task-search-container">
+                <div class="input-group task-input-group-container">
+                    <input wire:input="searchActiveTasks" wire:model="search" type="text"
+                        class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                        aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
+                            <i class="fa fa-search task-search-icon"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+            <div class="task-dropdown">
+                <div class="form-group">
+
+                    <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                        <option value="all" selected>All</option>
+                        <option value="this_week">This Week</option>
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="this_year">This Year</option>
+                    </select>
+
+                </div>
+            </div>
+            <div>
+                <button wire:click="show" class="task-add-new-task-button">Add
+                    New Task</button>
+            </div>
+
+        </div>
+            
             <div class="card-body task-open-card-body-container">
 
                 <div class="table-cresponsive">
@@ -252,33 +251,37 @@
         @endif
 
         @if ($activeTab == 'completed')
-            <div class="task-filter-section">
-                <div class="form-inline row task-filter-container">
-                    <!-- Search Box -->
-                    <div class="input-group task-input-group-container">
-                        <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text"
-                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
-                            aria-describedby="basic-addon1">
-                        <div class="input-group-append">
-                            <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
-                                <i class="fa fa-search task-search-icon"></i>
-                            </button>
-                        </div>
+        <div class="task-filter-container d-flex justify-content-end">
+            <div class="task-search-container">
+                <div class="input-group task-input-group-container">
+                    <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text"
+                        class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                        aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
+                            <i class="fa fa-search task-search-icon"></i>
+                        </button>
                     </div>
-
-                    <div class="form-group task-date-range-picker">
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
-                            <option value="all" selected>All</option>
-                            <option value="this_week">This Week</option>
-                            <option value="this_month">This Month</option>
-                            <option value="last_month">Last Month</option>
-                            <option value="this_year">This Year</option>
-                        </select>
-                    </div>
-
-
                 </div>
             </div>
+            <div class="task-dropdown">
+                <div class="form-group">
+                    <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                        <option value="all" selected>All</option>
+                        <option value="this_week">This Week</option>
+                        <option value="this_month">This Month</option>
+                        <option value="last_month">Last Month</option>
+                        <option value="this_year">This Year</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button wire:click="show" class="task-add-new-task-button">Add
+                    New Task</button>
+            </div>
+
+        </div>
+           
             <div class="card-body task-closed-card-body">
 
                 <div class="table-responsive">
@@ -755,13 +758,17 @@
                                             </div>
                                         @else
                                             @foreach ($peopleFollowerData as $people)
-                                                <div wire:click="togglePersonSelection('{{ $people->emp_id }}')"
+                                                <div wire:click="togglePersonSelection('{{ $people->emp_id }}')" 
                                                     class="container task-modal-follower-peoples-container">
                                                     <div class="row align-items-center">
                                                         <div class="col-auto">
+                                                            <label class="custom-checkbox">
                                                             <input type="checkbox" value="{{ $people->emp_id }}"
                                                                 id="checkbox-{{ $people->emp_id }}"
-                                                                {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}>
+                                                                {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}
+                                                                wire:click="togglePersonSelection('{{ $people->emp_id }}')">
+                                                                <span class="checkmark"></span>
+                                </label>
                                                             {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
                                                         </div>
                                                         <div class="col-auto">
