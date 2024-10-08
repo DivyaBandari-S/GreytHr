@@ -25,7 +25,7 @@
                     </li>
                     @endif
                 </ul>
-            </li>a
+            </li>
             <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
             <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>
             <!-- <li class="divider" data-text="main">Main</li> -->

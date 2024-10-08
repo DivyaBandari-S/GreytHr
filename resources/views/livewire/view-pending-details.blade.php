@@ -26,7 +26,7 @@
                     </button>
                 </div>
 
-            </div>
+            </div>a
         </div>
         @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
