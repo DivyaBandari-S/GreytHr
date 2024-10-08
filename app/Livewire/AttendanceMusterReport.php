@@ -23,7 +23,7 @@ class AttendanceMusterReport extends Component
     public $search;
     public $fromDate;
 
-    public $filteredEmployees;
+    
     public $toDate;
     public $i = 0;
     public $showAttendanceMusterReportDialog = true;
@@ -323,7 +323,7 @@ class AttendanceMusterReport extends Component
         if($this->searching==1)
         {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter
-            $this->filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {
+            $filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {
                 return stripos($employee->first_name, $nameFilter) !== false ||
                     stripos($employee->last_name, $nameFilter) !== false ||
                     stripos($employee->emp_id, $nameFilter) !== false||
@@ -332,7 +332,7 @@ class AttendanceMusterReport extends Component
                     stripos($employee->state, $nameFilter) !== false;
             });
 
-            if ($this->filteredEmployees->isEmpty()) {
+            if ($filteredEmployees->isEmpty()) {
                 $this->notFound = true; // Set a flag indicating that the name was not found
             } else {
                 $this->notFound = false;
@@ -340,7 +340,7 @@ class AttendanceMusterReport extends Component
         }
         else
         {
-            $this->filteredEmployees=$this->employees;
+            $filteredEmployees=$this->employees;
         }
 
         return view('livewire.attendance-muster-report',['Employees'=>$filteredEmployees]);

@@ -1110,18 +1110,57 @@ class Attendance extends Component
             // Format the dates and update the modal title
             $formattedFromDate = Carbon::parse($this->start_date_for_insights)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
+            if ($formattedFromDate > $formattedToDate) {
+                $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
+                $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
+                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+                $this->addError('date_range', 'The start date cannot be greater than the end date.');
+                return; // Stop execution if validation fails
+            }
+            if ($formattedFromDate >=  Carbon::today()->format('Y-m-d') && $formattedToDate >=  Carbon::today()->format('Y-m-d')) {
+                $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
+                $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
+                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+                // Set values to '-' and average work hours to '00:00'
+                $this->totalWorkingDays='-';
+                $this->totalLateInSwipes = '-';
+                $this->totalnumberofEarlyOut = '-';
+                $this->totalnumberofLeaves = '-';
+                $this->totalnumberofAbsents = '-';
+                $this->averageWorkHoursForModalTitle = '-';
+                $this->avergageFirstInTime='N/A';
+                $this->averageLastOutTime='N/A';
+                return; // Stop execution after setting values
+            }
+            if ($formattedToDate >  Carbon::today()->format('Y-m-d')) {
+                $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
+                $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
+                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+                // Set values to '-' and average work hours to '00:00'
+                $this->totalWorkingDays='-';
+                $this->totalLateInSwipes = '-';
+                $this->totalnumberofEarlyOut = '-';
+                $this->totalnumberofLeaves = '-';
+                $this->totalnumberofAbsents = '-';
+                $this->averageWorkHoursForModalTitle = '-';
+                $this->avergageFirstInTime='N/A';
+                $this->averageLastOutTime='N/A';
+                return; // Stop execution after setting values
+            }
+            
             $fromDatetemp = Carbon::parse($this->start_date_for_insights);
             $toDatetemp = Carbon::parse($this->to_date);
             $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+            
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
             $insights=$this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $outsights=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalLateInSwipes = $insights['lateSwipeCount'];
 
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
-            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));           
+            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));                     
             $this->totalnumberofEarlyOut=$outsights['EarlyOutCount'];
             $this->averageLastOutTime=$outsights['averageLastOutTime'];
             $this->avergageFirstInTime=$insights['averageFirstInTime'];
@@ -1779,6 +1818,9 @@ class Attendance extends Component
     public function closeattendanceperiodModal()
     {
         $this->öpenattendanceperiod = false;
+        $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
+        $this->to_date = Carbon::now()->toDateString();
+        $this->updateModalTitle();
     }
     public function checkDateInRegularisationEntries($d)
     {
