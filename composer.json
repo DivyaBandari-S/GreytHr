@@ -28,7 +28,7 @@
         "power-components/livewire-powergrid": "^5.8",
         "sarfraznawaz2005/loading": "^1.4",
         "spatie/simple-excel": "^3.4",
-        "torann/geoip": "^3.0",
+        "torann/geoip": "*",
         "vinkla/hashids": "^11.0"
     },
     "require-dev": {
