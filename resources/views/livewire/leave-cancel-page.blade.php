@@ -4,7 +4,7 @@
         {{ session('message') }}
     </div>
     @elseif (session()->has('error'))
-    <div id="errorMessage" class="alert alert-danger text-align-center" wire:poll.5s="hideAlert">
+    <div id="errorMessage" class="alert alert-danger text-align-center" wire:poll.2s="hideAlert">
         {{ session('error') }}
     </div>
     @endif
@@ -247,7 +247,10 @@
                     </div>
 
                     @if($showCcRecipents)
-                    <div class="ccContainer position-relative" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                    <div class="ccContainer " x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
+                        @if(session()->has('error'))
+                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;z-index:100;">{{ session('error') }}</div>
+                        @endif
                         <div class="row  d-flex align-items-center justify-content-between">
                             <div class="col-md-10 m-0 py-0 px-2">
                                 <div class="input-group">
@@ -266,10 +269,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="scrollApplyingTO mb-2 mt-2 ">
-                            @if(session()->has('error'))
-                            <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;">{{ session('error') }}</div>
-                            @endif
+                        <div class="scrollApplyingTO  mb-2 mt-2 ">
                             @if($ccRecipients->isNotEmpty())
                             @foreach($ccRecipients as $employee)
                             <div class="borderContainer px-2 mb-2 rounded">
