@@ -1556,12 +1556,14 @@ color: #fff;
                 </div>
             </div>
             @if ($öpenattendanceperiod==true)
+            
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
                     <div class="modal-content attendance-period">
                         <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;display: flex; justify-content: space-between; align-items: center;">
                             <p class="modal-title attendance-period-header" style="color:white;">
                                 {{$modalTitle}}
+
                             </p>
 
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
@@ -1569,6 +1571,9 @@ color: #fff;
                             </button>
                         </div>
                         <div class="modal-body">
+                          @if ($errors->has('date_range'))
+                                     <span class="text-danger text-center"style="padding-left:200px;">{{ $errors->first('date_range') }}</span>
+                          @endif
                             <div class="form-row" style="display: flex; justify-content: center;">
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From

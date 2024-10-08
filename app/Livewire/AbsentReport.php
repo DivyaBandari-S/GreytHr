@@ -256,6 +256,7 @@ class AbsentReport extends Component
         $this->selectedEmployees=[];
         $this->fromDate='';
         $this->toDate='';
+        $this->search='';
     }
     public function render()
     {
