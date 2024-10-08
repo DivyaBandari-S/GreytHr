@@ -70,6 +70,7 @@
                          
                    
     <!-- Display the filtered collection or any other content -->
+                      @if(count($SignedInEmployees))
                         @foreach($SignedInEmployees as $swipe)
         <!-- Display swipe details -->
                        @if(!empty($swipe['swipe_log']))
@@ -105,7 +106,9 @@
                                         </tr>
                                         @endif
                                         @endforeach
-
+                                    @else
+                                        <td>Employee Swipe Data Not found</td>
+                                    @endif
                                     </tbody>
                             </table>
                         </div>

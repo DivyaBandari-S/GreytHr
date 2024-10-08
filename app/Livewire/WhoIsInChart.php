@@ -641,7 +641,7 @@ public function checkshift()
                 ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
                 ->where('employee_details.employee_status','active')
                 ->get();
-          
+                
        
             $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')

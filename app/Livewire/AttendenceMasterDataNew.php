@@ -50,13 +50,18 @@ class AttendenceMasterDataNew extends Component
 
     public $attendanceYear;
 
+    public $todaymonth;
     public $todayyear;
 
 
     public $legend=false;
+
+    public $todaymonthinformat;
     public function mount()
     {
         $this->todayyear = date('Y');
+        $this->todaymonth=date('n');
+        $this->todaymonthinformat=date('F');
         
     }
     public function openlegend()
