@@ -20,6 +20,7 @@
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
                 <div class="nav-buttons d-flex justify-content-center">
                     <ul class="nav custom-nav-tabs border rounded">
+                        
                         <li class="custom-item m-0 p-0 flex-grow-1">
                             <div href="#"
                                 wire:click="$set('activeTab', 'active')"
@@ -277,19 +278,19 @@
         @if ($activeTab == "active")
         <div class="row align-items-center">
             <div class="col-12 col-md-3 ">
-                <div class="input-group">
-                    <input wire:model="search" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-
-
-                    <button class="helpdesk-search-btn" type="button" wire:click="searchActiveHelpDesk">
-                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                    </button>
-
-
-                </div>
+            <div class="input-group task-input-group-container">
+                        <input wire:input="searchActiveHelpDesk" wire:model="activeSearch" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchActiveHelpDesk" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
             </div>
             <div class="col-12 col-md-3">
-                <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+                <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
@@ -447,17 +448,20 @@
         <div class="row align-items-center">
        
             <div class="col-12 col-md-3 ">
-                <div class="input-group">
-                    <input wire:model="searchclosed" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-
-                    <button wire:click="searchCloseHelpDesk" class="helpdesk-search-btn" type="button" >
-                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                    </button>
-                </div>
+            <div class="input-group task-input-group-container">
+                        <input wire:input="searchClosedHelpDesk" wire:model="closedSearch" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchClosedHelpDesk"  class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
             </div>
      
             <div class="col-12 col-md-3">
-                <select wire:model="selectedCategory" wire:change="searchActiveHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+                <select wire:model="closedCategory" wire:change="searchClosedHelpDesk"id="closedCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
@@ -562,14 +566,6 @@
 
 
 
-
-
-
-
-
-
-
-
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
                             @php
@@ -582,7 +578,7 @@
                         </td>
                     </tr>
                     @if (count($ccToArray) > 2)
-                    <tr class="no-border-top">
+                    <tr class="no-border-top" style="border-top:none">
                         <td class="no-border-top" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize;">
                             <div class="no-border-top" style="margin-left: 10px; font-size: 12px; text-transform: capitalize; ">
                                 CC TO: {{ implode(', ', $ccToArray) }}
@@ -607,16 +603,19 @@
         @if ($activeTab == "pending")
         <div class="row ">
             <div class="col-12 col-md-3 ">
-                <div class="input-group">
-                    <input wire:model="searchpending" type="text" class="form-control people-search-input" placeholder="Search Employee.." aria-label="Search" aria-describedby="basic-addon1" style="height:32px">
-                    <button wire:click="searchPendingHelpDesk" class="helpdesk-search-btn" type="button">
-                        <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                    </button>
-
-                </div>
+            <div class="input-group task-input-group-container">
+                        <input wire:input="searchPendingHelpDesk" wire:model="pendingSearch" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchPendingHelpDesk" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
+                            </button>
+                        </div>
+                    </div>
             </div>
             <div class="col-12 col-md-3">
-                <select wire:model="selectedCategory" wire:change="searchPendingHelpDesk" class="form-select" style="height:33px; font-size:0.8rem;">
+                <select wire:model="pendingCategory" wire:change="searchPendingHelpDesk"  id="pendingCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>

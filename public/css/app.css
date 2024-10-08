@@ -3380,6 +3380,16 @@ input[type="radio"] {
     overflow-y: auto;
     overflow-X: hidden;
 }
+::-webkit-scrollbar {
+    width: 5px; /* Adjust as needed */
+}
+::-webkit-scrollbar-thumb {
+    background: #d1d6dc; /* Adjust color */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #9f9e9e;
+}
 .reporting {
     display: flex;
     flex-direction: row;
@@ -3405,11 +3415,14 @@ input[type="radio"] {
 .scrollApplyingTO {
     height: 200px;
     max-height: 200px;
+    position: relative; 
     overflow-y: auto;
+    padding: 0 5px;
 }
 .ccContainer {
     background: #fff;
     border: 1px solid #ccc;
+    position: relative;
     border-radius: 3px;
     box-shadow: 2px 0 5px 0 #ccc;
     padding: 12px 15px;
@@ -3433,7 +3446,7 @@ input[type="radio"] {
     border: 1px solid #ccc;
 }
 .icon-container:hover {
-    border-color: #007bff;
+    border-color: rgb(2, 17, 79);
 }
 .icon-container {
     height: 30px;
@@ -6578,6 +6591,7 @@ peoples module styles started */
 .people-starred-list-container {
     max-height: 350px;
     overflow-y: auto;
+    padding: 0 5px;
     overflow-x: hidden;
 }
 
@@ -6793,6 +6807,14 @@ peoples module styles started */
 /* peoples module styles ended */
 
 /* task module styles started */
+.task-search-container{
+    margin-top: 30px; 
+    margin-bottom: 15px;
+}
+.task-dropdown{
+    margin-top: 30px; 
+    margin-bottom: 15px;
+}
 
 .task-input-group-container {
     width: 230px;
@@ -6822,10 +6844,7 @@ peoples module styles started */
     color: #fff;
 }
 
-.task-date-range-picker {
-    width: 245px;
-    margin-left: -20px;
-}
+
 
 /* .task-first-container {
     width: 100%;
@@ -6878,12 +6897,14 @@ peoples module styles started */
     border-radius: 5px;
     color: white;
     font-size: var(--normal-font-size);
-    height: 30px;
+    height: 32px;
     cursor: pointer;
-    margin-top: 15px;
-    margin-right: 20px;
+    margin-top: 30px;
+    margin-left: 10px;
     width: 100px;
     margin-bottom: 15px;
+    margin-right: 10px;
+
 }
 
 .task-filter-section {
@@ -8552,7 +8573,7 @@ peoples module styles started */
 @media (max-width: 548px) {
     .task-date-range-picker {
         margin-left: 0px;
-    }
+    }   
 }
 @media (max-width: 991px) {
     .settings-birthday-value {
@@ -8590,4 +8611,68 @@ peoples module styles started */
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
+}
+@media (min-width: 360px) and (max-width: 565px) {
+    .task-search-container {
+        flex-basis: 100%; /* Make the search container take the full width */
+        margin-top: 0px; /* Optional: add some top margin */
+        margin-bottom: 0px;
+        margin-left: 240px;
+    }
+
+    .task-filter-container {
+        flex-wrap: wrap-reverse; /* Allow items to wrap */
+        justify-content: flex-start; / /* Allow items to wrap */
+    }
+    .task-dropdown{
+        margin-bottom: 0px;
+    }
+}
+
+
+/* //check box styles */
+.custom-checkbox {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.custom-checkbox input {
+    display: none; /* Hide the default checkbox */
+}
+
+.checkmark {
+    width: 15px; /* Width of the custom checkbox */
+    height: 15px; /* Height of the custom checkbox */
+    background-color: white; /* Default background color */
+    border: 2px solid #ccc; /* Border for the checkbox */
+    border-radius: 3px;
+    position: relative;
+    margin-right: 10px; /* Spacing between checkbox and label */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.custom-checkbox input:checked + .checkmark {
+    background-color: rgb(2, 17, 79);
+    border: 1px solid rgb(2, 17, 79);
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none; /* Hide by default */
+}
+
+.custom-checkbox input:checked + .checkmark:after {
+    display: block; /* Show the checkmark when checked */
+}
+
+.checkmark:after {
+    left: 4px;
+    top: 0px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg); /* Rotate to create the checkmark */
 }

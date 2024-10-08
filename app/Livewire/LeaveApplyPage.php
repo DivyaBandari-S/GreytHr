@@ -176,29 +176,28 @@ class LeaveApplyPage extends Component
     public function searchCCRecipients()
     {
         try {
-            // Fetch employees based on the search term for CC To
+            // Get the logged-in employee's ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            // Fetch the company_ids for the logged-in employee
+            // Fetch the company IDs for the logged-in employee
             $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
 
-            // Check if companyIds is an array; decode if it's a JSON string
+            // Ensure companyIds is an array; decode if it's a JSON string
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
             // Initialize an empty collection for recipients
-            $this->ccRecipients = collect(); // Ensure it's initialized as a collection
+            $this->ccRecipients = collect();
 
             // Loop through each company ID and find employees
             foreach ($companyIdsArray as $companyId) {
-                $employees = EmployeeDetails::whereJsonContains('company_id', $companyId) // Check against JSON company_id
+                $employees = EmployeeDetails::whereJsonContains('company_id', $companyId)
                     ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
                     ->whereIn('employee_status', ['active', 'on-probation'])
-                    ->where(function ($query) {
-                        // Apply search filtering if a search term is provided
-                        if ($this->searchTerm) {
-                            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                    ->when($this->searchTerm, function ($query) {
+                        $query->where(function ($subQuery) {
+                            $subQuery->where('first_name', 'like', '%' . $this->searchTerm . '%')
                                 ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                        }
+                        });
                     })
                     ->groupBy('emp_id', 'image', 'gender') // Group by the required fields
                     ->select(
@@ -214,7 +213,7 @@ class LeaveApplyPage extends Component
                 $this->ccRecipients = $this->ccRecipients->merge($employees);
             }
 
-            // Optionally, you can remove duplicates if necessary
+            // Optionally, remove duplicates if necessary
             $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
             // Log the error
@@ -222,6 +221,7 @@ class LeaveApplyPage extends Component
             session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
         }
     }
+
 
     public function openCcRecipientsContainer()
     {
@@ -260,11 +260,12 @@ class LeaveApplyPage extends Component
     }
     public function toggleSelection($empId)
     {
+        // Check if the employee ID is already in the selected array
         if (isset($this->selectedPeople[$empId])) {
             // If already selected, unselect it
             unset($this->selectedPeople[$empId]);
         } else {
-            // Check if limit is reached
+            // Check if the limit is reached
             if (count($this->selectedPeople) < 5) {
                 // Add employee if under limit
                 $this->selectedPeople[$empId] = true;
@@ -275,8 +276,10 @@ class LeaveApplyPage extends Component
             }
         }
 
-        $this->searchCCRecipients(); // Assuming you want to update the recipients list
-        $this->fetchEmployeeDetails(); // Fetch details if necessary
+        // Update the recipients list
+        $this->searchCCRecipients();
+        // Fetch details if necessary
+        $this->fetchEmployeeDetails();
     }
 
     public function fetchEmployeeDetails()
