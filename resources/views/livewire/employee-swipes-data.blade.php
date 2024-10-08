@@ -73,10 +73,10 @@
                       @if(count($SignedInEmployees))
                         @foreach($SignedInEmployees as $swipe)
         <!-- Display swipe details -->
-                       @if(!empty($swipe['swipe_log']))
+                       @if(!empty($swipe['employee']))
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
-                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:click="checkboxClicked('{{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}')">
+                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox">
                                         <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                                {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
                                         </span>
@@ -86,19 +86,19 @@
                                             </td>
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
-                                            @else
+                                            @elseif(isset($swipe['swipe_log1']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> NA<br /> <span class="text-muted employee-swipes-swipe-date"> NA</span></td>
                                             @endif
                                             <td class="employee-swipes-swipe-details-for-signed-employees">10:00 am to 19:00 pm</td>
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log']->Direction}}</td>
-                                            @else
+                                            @elseif(isset($swipe['swipe_log1']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">NA</td>
                                             @endif
 
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
-                                            @else
+                                            @elseif(isset($swipe['swipe_log1']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> NA<br /> <span class="text-muted employee-swipes-swipe-date"> NA</span></td>
                                             @endif
                                             <td class="empty-text">-</td>
@@ -107,7 +107,7 @@
                                         @endif
                                         @endforeach
                                     @else
-                                        <td>Employee Swipe Data Not found</td>
+                                        <td colspan="12"class="text-center">Employee Swipe Data Not found</td>
                                     @endif
                                     </tbody>
                             </table>
