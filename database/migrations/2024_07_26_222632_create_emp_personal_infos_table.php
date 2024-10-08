@@ -26,9 +26,9 @@ return new class extends Migration
             $table->string('religion')->nullable();
             $table->enum('marital_status', ['married', 'unmarried']);
             $table->enum('physically_challenge', ['yes', 'no']);
-            $table->string('email')->unique()->nullable();
-            $table->string('mobile_number')->unique()->nullable();
-            $table->string('alternate_mobile_number')->unique()->nullable();
+            $table->string('email')->nullable();
+            $table->string('mobile_number')->nullable();
+            $table->string('alternate_mobile_number')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
             $table->string('postal_code')->nullable();
@@ -40,10 +40,10 @@ return new class extends Migration
             $table->string('skill_set')->nullable();
             $table->text('present_address')->nullable();
             $table->text('permenant_address')->nullable();
-            $table->string('passport_no')->unique()->nullable();
-            $table->string('pan_no')->unique()->nullable();
-            $table->string('adhar_no')->unique()->nullable();
-            $table->string('pf_no')->unique()->nullable();
+            $table->string('passport_no')->nullable();
+            $table->string('pan_no')->nullable();
+            $table->string('adhar_no')->nullable();
+            $table->string('pf_no')->nullable();
             $table->string('nick_name')->nullable();
             $table->string('biography')->nullable();
             $table->string('facebook')->nullable();
