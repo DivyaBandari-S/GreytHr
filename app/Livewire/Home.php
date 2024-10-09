@@ -287,7 +287,7 @@ class Home extends Component
                 ->where(function ($query) {
                     $query->where('status', 'Pending')
                         ->orWhere(function ($query) {
-                            $query->where('status', 'approved')
+                            $query->where('status', 'Pending')
                                 ->where('cancel_status', 'Pending Leave Cancel');
                         });
                 })
@@ -299,6 +299,7 @@ class Home extends Component
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
 
                 $ccToJson = trim($leaveRequest->cc_to);
+
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
 
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;

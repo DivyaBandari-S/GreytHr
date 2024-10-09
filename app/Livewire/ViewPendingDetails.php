@@ -28,6 +28,7 @@ class ViewPendingDetails extends Component
     public $employeeId;
     public $leaveRequests;
     public $count = 0;
+    public $isEmpInCcTo;
     public $applying_to = [];
     public $matchingLeaveApplications = [];
     public $leaveRequest;
@@ -278,7 +279,7 @@ class ViewPendingDetails extends Component
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
-    
+
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
@@ -289,7 +290,7 @@ class ViewPendingDetails extends Component
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
-    
+
                     // Find any other leave request matching from_date, from_session, to_date, to_session
                     $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
                         ->where('from_date', $leaveRequest->from_date)
@@ -305,7 +306,7 @@ class ViewPendingDetails extends Component
                         $matchingLeaveRequest->action_by = $employeeId;
                         $matchingLeaveRequest->save();
                     }
-    
+
                     // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
                     $leaveRequest->status = 'rejected';
@@ -410,7 +411,8 @@ class ViewPendingDetails extends Component
         return view('livewire.view-pending-details', [
             'leaveApplications' => $this->leaveApplications,
             'filter' => $this->filter,
-            'count' => $this->count
+            'count' => $this->count,
+            'isEmpInCcTo' => $this->isEmpInCcTo
         ]);
     }
 }
