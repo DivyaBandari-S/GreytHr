@@ -153,7 +153,6 @@
 
 
         <!-- main content -->
-
         <div class="row m-0">
             <div class="col-md-3 ">
                 <div class="mb-4">
@@ -183,7 +182,7 @@
                                 {{ $formattedEndShiftTime }}
                             </p>
                             <div class="d-flex" style="font-size: 14px; margin-top: 2em;" x-data="{
-                                time: '00:00:00',
+                                time: '',
                                 updateTime() {
                                     const now = new Date();
                                     const hours = String(now.getHours()).padStart(2, '0');
@@ -195,8 +194,11 @@
                                 x-init="setInterval(() => updateTime(), 1000)">
                                 <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
                                     style="width: 2.7em;">
-                                <p x-text="time" class="showTimer"></p>
+                                <template x-if="time">
+                                    <p x-text="time" class="showTimer"></p>
+                                </template>
                             </div>
+
                             <div class="A d-flex justify-content-between align-items-center flex-row"
                                 style="margin-top: 2em">
                                 <a class="viewSwipesList" wire:click="open">View Swipes</a>
@@ -219,7 +221,6 @@
 
 
             <div class="col-md-3 ">
-
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <div class="row m-0 avatarImgDiv">
                         <img src="images/gamer.png" class="firstImg position-absolute" />

@@ -226,7 +226,7 @@
                                             @if (is_string($leaveRequest->cc_to))
                                             @foreach(json_decode($leaveRequest->cc_to, true) as $ccToItem)
                                             <span class="custom-cc-item">
-                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id'] }})
                                             </span>
                                             @if (!$loop->last)
                                             ,
