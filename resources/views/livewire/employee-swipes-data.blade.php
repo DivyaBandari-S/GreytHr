@@ -86,20 +86,26 @@
                                             </td>
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
+                                            @elseif(isset($swipe['swipe_log2']))
+                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log2']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log2']->created_at)->format('jS F Y')}}</span></td>
                                             @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> NA<br /> <span class="text-muted employee-swipes-swipe-date"> NA</span></td>
+                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log1']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log1']->created_at)->format('jS F Y')}}</span></td>
                                             @endif
                                             <td class="employee-swipes-swipe-details-for-signed-employees">10:00 am to 19:00 pm</td>
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log']->Direction}}</td>
+                                            @elseif(isset($swipe['swipe_log2']))
+                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log2']->in_or_out}}</td>
                                             @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">NA</td>
+                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log1']->in_or_out}}</td>
                                             @endif
 
                                             @if(isset($swipe['swipe_log']))
                                             <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
+                                            @elseif(isset($swipe['swipe_log2']))
+                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log2']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date"> {{\Carbon\Carbon::parse($swipe['swipe_log2']->created_at)->format('jS F Y')}}</span></td>
                                             @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> NA<br /> <span class="text-muted employee-swipes-swipe-date"> NA</span></td>
+                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log1']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date"> {{\Carbon\Carbon::parse($swipe['swipe_log1']->created_at)->format('jS F Y')}}</span></td>
                                             @endif
                                             <td class="empty-text">-</td>
                                             <td class="empty-text">-</td>
