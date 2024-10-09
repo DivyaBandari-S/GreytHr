@@ -428,7 +428,7 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title">CC to</h5>
+                                    <h5 class="modal-title">CC To</h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                                         wire:click="openModal">
                                     </button>
@@ -463,7 +463,7 @@
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <input wire:model.debounce.500ms="searchTerm"  id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
                                         <i class="fas fa-search"></i>
@@ -479,9 +479,9 @@
                         </div>
                     </div>
                     <div class="scrollApplyingTO mb-2 mt-2 ">
-                        @if($ccRecipients->isNotEmpty())
+                        @if($ccRecipients)
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer px-2 mb-2 rounded">
+                        <div class="borderContainer px-2 mb-2 rounded" wire:key="employee-{{ $employee->emp_id }}">
                             <div class="downArrow d-flex align-items-center text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
                                 <label class="custom-checkbox">
                                     <input type="checkbox"
@@ -490,27 +490,16 @@
                                     wire:click.prevent="toggleSelection('{{ $employee->emp_id }}')" />
                                     <span class="checkmark"></span>
                                 </label>
-
-                                <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
+                                <div class="d-flex align-items-center gap-2">
                                     <div>
                                         @if(!empty($employee->image) && $employee->image !== 'null')
                                         <div class="employee-profile-image-container">
                                             <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
                                         </div>
                                         @else
-                                        @if($employee->gender === "Male")
                                         <div class="employee-profile-image-container">
-                                            <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                            <img src="{{ $employee->gender === 'Male' ? asset('images/male-default.png') : ($employee->gender === 'Female' ? asset('images/female-default.jpg') : asset('images/user.jpg')) }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                         </div>
-                                        @elseif($employee->gender === "Female")
-                                        <div class="employee-profile-image-container">
-                                            <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
-                                        </div>
-                                        @else
-                                        <div class="employee-profile-image-container">
-                                            <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
-                                        </div>
-                                        @endif
                                         @endif
                                     </div>
                                     <div class="mb-2 mt-2">
@@ -524,7 +513,7 @@
 
                         @else
                         <div class="mb-0 normalTextValue">
-                            No found
+                            No data found
                         </div>
                         @endif
                     </div>

@@ -37,7 +37,7 @@ return new class extends Migration
             $table->string('time_zone')->nullable();
             $table->string('is_starred')->nullable();
             $table->string('job_mode')->nullable();
-            $table->json('emp_domain');
+            $table->json('emp_domain')->nullable();
             $table->string('notice_period')->nullable();
             $table->string('resignation_date')->nullable();
             $table->string('resignation_reason')->nullable();
