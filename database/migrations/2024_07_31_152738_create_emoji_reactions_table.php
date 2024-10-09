@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('emoji_reactions', function (Blueprint $table) {
             $table->id();
+            $table->string('card_id');
             $table->string('emp_id'); // Adjust the data type as needed
             $table->string('first_name');
             $table->string('last_name');
