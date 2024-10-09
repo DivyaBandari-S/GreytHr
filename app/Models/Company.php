@@ -20,6 +20,7 @@ class Company extends Authenticatable
         'company_registration_date',
         'company_present_address',
         'company_perminent_address',
+        'branch_locations',
         'company_registration_no',
         'company_logo',
         'password',
