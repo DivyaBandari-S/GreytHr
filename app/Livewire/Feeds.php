@@ -36,6 +36,7 @@ class Feeds extends Component
 
     use WithFileUploads;
    public $image;
+   public $currentCardEmojis;
    public $card_id;
    public $file_path;
     public $category;
@@ -76,6 +77,8 @@ class Feeds extends Component
     public $isManager;
     public $flashMessage = '';
       public $storedemojis;
+      public $showDialog = false;
+      public $showDialogEmoji=false;
 
     public $showFeedsDialog = false;
     public $showMessage = true;
@@ -219,7 +222,36 @@ class Feeds extends Component
         }
     }
 
-
+    public function openDialog($emp_id)
+    {
+        logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
+    
+        $this->emp_id = $emp_id;
+        $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
+    
+ 
+    
+        $this->showDialog = true;
+    }
+    public function openEmojiDialog($emp_id)
+    {
+        logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
+    
+        $this->emp_id = $emp_id;
+        $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
+    
+ 
+    
+        $this->showDialogEmoji = true;
+    }
+    public function closeEmojiDialog()
+    {
+        $this->showDialogEmoji = false;
+    } 
+    public function closeDialog()
+    {
+        $this->showDialog = false;
+    }
     // Method to add emoji
     public function add_emoji($emp_id)
     {
@@ -227,16 +259,36 @@ class Feeds extends Component
         $user = Auth::user();
 
         // Validate if needed
-
+        $employeeId = null;
+        $hrId = null;
+    
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's emp_id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+        } elseif (auth()->guard('hr')->check()) {
+            // Get the current authenticated HR's emp_id
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+        }
+    
+        // Ensure that either $employeeId or $hrId is set
+        if (is_null($employeeId) && is_null($hrId)) {
+            session()->flash('error', 'Employee ID cannot be null.');
+            return;
+        }
+    
+        // Create the comment based on the authenticated role
+        if ($employeeId) {
         // Create emoji record
         Emoji::create([
-            'emp_id' => $emp_id, // Assuming emp_id is available in the user object
+            'card_id' => $emp_id,
+            'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'emoji' => $this->selectedEmoji ?? '',
         ]);
 
-
+    }
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
@@ -247,21 +299,42 @@ class Feeds extends Component
     {
         // Get the current user
         $user = Auth::user();
-
+        $employeeId = null;
+        $hrId = null;
+    
+        if (auth()->guard('emp')->check()) {
+            // Get the current authenticated employee's emp_id
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+        } elseif (auth()->guard('hr')->check()) {
+            // Get the current authenticated HR's emp_id
+            $hrEmployee = auth()->guard('hr')->user();
+            $hrId = $hrEmployee->emp_id;
+        }
+    
+        // Ensure that either $employeeId or $hrId is set
+        if (is_null($employeeId) && is_null($hrId)) {
+            session()->flash('error', 'Employee ID cannot be null.');
+            return;
+        }
+    
+        // Create the comment based on the authenticated role
+        if ($employeeId) {
         // Validate if needed
 
         // Create emoji record
         EmojiReaction::create([
-            'emp_id' => $emp_id, // Assuming emp_id is available in the user object
+            'card_id' => $emp_id,
+            'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
             'first_name' => $user->first_name,
             'last_name' => $user->last_name,
             'emoji_reaction' => $this->selectedEmojiReaction ?? '',
         ]);
-
+    }
 
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+    
         // Optionally, show a flash message
         session()->flash('message', 'Emoji added successfully.');
     }
