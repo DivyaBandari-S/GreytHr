@@ -183,7 +183,7 @@
                                 {{ $formattedEndShiftTime }}
                             </p>
                             <div class="d-flex" style="font-size: 14px; margin-top: 2em;" x-data="{
-                                time: '',
+                                time: '00:00:00',
                                 updateTime() {
                                     const now = new Date();
                                     const hours = String(now.getHours()).padStart(2, '0');
