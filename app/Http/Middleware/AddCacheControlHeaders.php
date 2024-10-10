@@ -25,8 +25,8 @@ class AddCacheControlHeaders
         // Set the expiration date to a dynamic future date (e.g., 1 minute in the future)
         $expiresDate = Carbon::now()->addMinute();
 
-        Log::info('Cache-Control Header: no-cache, no-store, max-age=0, must-revalidate');
-        Log::info('Expires Header: ' . $expiresDate);
+        // Log::info('Cache-Control Header: no-cache, no-store, max-age=0, must-revalidate');
+        // Log::info('Expires Header: ' . $expiresDate);
 
         // Check if the response is an instance of the Symfony Response, Laravel RedirectResponse, or JsonResponse
         if ($response instanceof Response) {
