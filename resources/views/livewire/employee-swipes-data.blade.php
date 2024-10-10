@@ -77,7 +77,8 @@
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
                               <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox">
-                                        <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"data-toggle="tooltip"
+                                        data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
                                                {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
                                         </span>
 

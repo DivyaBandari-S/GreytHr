@@ -213,8 +213,20 @@
 
 }
     </style>
-    
-    <div class="detail-container ">
+     <div class="row m-0 p-0">
+            <div class="col-md-4 p-0 m-0 mb-2 ">
+                <div aria-label="breadcrumb bg-none">
+                    <ol class="breadcrumb d-flex align-items-center ">
+                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('review') }}">Back</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Regularisation - View Details</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="headers-details">
+            <h6>Regularisation Applied on {{ $regularisationrequest->created_at->format('d M, Y') }} </h6>
+        </div>
+    <div class="detail-container">
         
         <div class="approved-leave d-flex gap-3">
             <div class="heading mb-3">
@@ -368,8 +380,8 @@
                 @endforeach
         </table>
     
-     <table style="width: 50%;height:60%">
-           <thead style="height:62%;">
+     <table style="width: 50%;height:68%">
+           <thead style="height:40%;">
                 <tr>
                      <th style="padding: 8px;"></th>
                      <th></th>
@@ -377,19 +389,19 @@
                      <th></th>
                 </tr>
             </thead> 
-        <thead style="height:40%;margin-top:4px;">
-            <tr>
-                
-                <th>Shift</th>
-                <th>First In Time</th>
-                <th>Last Out Time</th>
-                <th style="border-right:1px solid #dcdcdc;">Reason</th>
-            </tr>
-        </thead>
+        
+        <thead style="height:30%;margin:2px;">
+                    <tr>
+                        <th>Shift</th>
+                        <th>First In Time</th>
+                        <th>Last Out Time</th>
+                        <th style="border-right:1px solid #dcdcdc;">Reason</th>
+                    </tr>
+                </thead>
          
             
         @foreach($regularisationEntries as $r1)
-        <tbody class="regularisationEntries"style="height:40%;">
+        <tbody class="regularisationEntries">
                 
                 
                 <td>10:00 am to 07:00 pm</td>

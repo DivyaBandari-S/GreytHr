@@ -213,7 +213,19 @@
 
 }
     </style>
-
+<div class="row m-0 p-0">
+            <div class="col-md-4 p-0 m-0 mb-2 ">
+                <div aria-label="breadcrumb bg-none">
+                    <ol class="breadcrumb d-flex align-items-center ">
+                        <li class="breadcrumb-item"><a type="button" style="color:#fff !important;" class="submit-btn" href="{{ route('review') }}">Back</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Regularisation - View Details</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+        <div class="headers-details">
+            <h6>Regularisation Applied on {{ $regularisationrequest->created_at->format('d M, Y') }} </h6>
+        </div>
     <div class="detail-container ">
 
         <div class="approved-leave d-flex gap-3">

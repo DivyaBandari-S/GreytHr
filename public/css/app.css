@@ -3073,6 +3073,10 @@ input[type="radio"] {
     display: none;
     background-color: #fff;
 }
+.accordion-body1 {
+    border-radius: 10px;
+    background-color: #fff;
+}
 .canvasBorder {
     position: relative;
     border-radius: 50%;
