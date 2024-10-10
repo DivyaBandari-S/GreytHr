@@ -248,7 +248,7 @@
 
                         <div class="content1">
                             <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails">View Details</a>
-                            @if($isEmpInCcTo)
+                            @if($isLoggedInEmpInCcTo)
                             <!-- Do not display buttons -->
                             @else
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
