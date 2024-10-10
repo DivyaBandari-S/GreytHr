@@ -143,7 +143,7 @@
 
             @if ($attendenceActiveTab == "active")
             <div class="reviewList" style="margin:30px auto;">
-                @livewire('view-pending-regularisations-new1')
+                @livewire('view-regularisation-pending-new')
             </div>
             @else
 
