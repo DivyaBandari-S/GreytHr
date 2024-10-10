@@ -187,8 +187,12 @@ public function checkshift()
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
-                ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
-                ->where('employee_details.employee_status','active')
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->where('employee_details.employee_status', 'active')
                 ->get();
             $data = [
                 ['List of Late Arrival Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
@@ -255,19 +259,21 @@ public function checkshift()
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
-                ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number')
-                ->where('employee_details.employee_status','active')
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->where('employee_details.employee_status', 'active')
                 ->get();
             $data = [
                 ['List of On Time Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
-                ['Employee ID', 'Name', 'Sign In Time', 'Late By(HH:MM)'],
+                ['Employee ID', 'Name', 'Sign In Time', 'Early By(HH:MM)'],
 
             ];
             foreach ($swipes as $employee) {
                 $swipeTime = Carbon::parse($employee->swipe_time);
                 $shiftStartTime = (new DateTime($employee->shift_start_time))->format('H:i');
-
-                $swipeTime1 = Carbon::parse($employee['CalculateAbsenteescreated_at'])->format('H:i:s');
                 $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
                 $isEarlyBy10AM = $swipeTime->format('H:i') <=$shiftStartTime;
                 if($isEarlyBy10AM)
@@ -360,10 +366,17 @@ public function checkshift()
                 });
 
                 $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
+                })
                 ->select(
                     'employee_details.*',
-                    'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos
+                    'emp_personal_infos.mobile_number', // Selecting the mobile number from emp_personal_infos
+                    'company_shifts.shift_name', // Selecting shift_name from company_shifts
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
                 )
                 ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
                     $query->select('emp_id')
@@ -373,7 +386,7 @@ public function checkshift()
                 })
                 ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_details.employee_status', 'active')
-                ->get()->toArray();
+                ->get();
             $data = [
                 ['List of Absent Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
                 ['Employee ID', 'Name','Shift_Start_Time'],
