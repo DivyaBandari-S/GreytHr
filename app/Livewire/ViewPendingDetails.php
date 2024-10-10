@@ -287,7 +287,7 @@ class ViewPendingDetails extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-    
+
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
@@ -295,7 +295,7 @@ class ViewPendingDetails extends Component
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-    
+
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
@@ -309,7 +309,7 @@ class ViewPendingDetails extends Component
                         ->where('from_session', $leaveRequest->from_session)
                         ->where('to_date', $leaveRequest->to_date)
                         ->where('to_session', $leaveRequest->to_session)
-                        ->where('status', '!=', 'Re-applied')
+                        ->where('cancel_status', '=', 'Re-applied')
                         ->first();
                     if ($matchingLeaveRequest) {
                         // Update the matching request status to 'rejected'
@@ -348,28 +348,43 @@ class ViewPendingDetails extends Component
             // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
+
             // Calculate the difference in days from the created date to now
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
 
             // Check if status is already approved
-            if ($leaveRequest->cancel_status === 'rejected') {
-                session()->flash('message', 'Leave application is already approved.');
-                $this->showAlert = true;
+            if ($leaveRequest->cancel_status === 'rejecetd') {
+                session()->flash('message', 'Leave application is already rejected.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
-                if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
-                    // Update status to 'approved'v
+                if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'rejected') {
+                    // Find any other leave request matching from_date, from_session, to_date, to_session
+                    $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
+                        ->where('from_date', $leaveRequest->from_date)
+                        ->where('from_session', $leaveRequest->from_session)
+                        ->where('to_date', $leaveRequest->to_date)
+                        ->where('to_session', $leaveRequest->to_session)
+                        ->where('cancel_status', '=', 'Re-applied')
+                        ->first();
+                    if ($matchingLeaveRequest) {
+                        // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->updated_at = now();
+                        $matchingLeaveRequest->action_by = $employeeId;
+                        $matchingLeaveRequest->save();
+                    }
+
+                    // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'rejected';
+                    $leaveRequest->status = 'approved';
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
                     session()->flash('message', 'Leave cancel application approved successfully.');
-                    // Send email notification
                     if ($sendEmailToEmp) {
                         Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
                     }
-                    $this->showAlert = false;
+                    $this->showAlert = true;
                     $this->fetchPendingLeaveApplications();
                 }
             }
