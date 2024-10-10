@@ -78,6 +78,7 @@ class LeaveApplyPage extends Component
     public $showerrorMessage = false;
     public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
     public $showAlert = false;
+    public $field;
     public function hideSuccessAlert()
     {
         $this->showAlert = false;
@@ -106,6 +107,7 @@ class LeaveApplyPage extends Component
     }
     public function mount()
     {
+        $this->handleFieldUpdate($this->field);
         $this->searchTerm = '';
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -155,11 +157,6 @@ class LeaveApplyPage extends Component
         }
     }
 
-    public function updated($propertyName)
-    {
-        $this->validateOnly($propertyName);
-        $this->handleFieldUpdate($propertyName);
-    }
 
     public function toggleInfo()
     {
@@ -183,36 +180,32 @@ class LeaveApplyPage extends Component
             $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
 
             // Ensure companyIds is an array; decode if it's a JSON string
-            $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            $companyIdsArray = is_array($companyIds) ? $companyIds : (is_null($companyIds) ? [] : json_decode($companyIds, true));
 
             // Initialize an empty collection for recipients
             $this->ccRecipients = collect();
 
-            // Loop through each company ID and find employees
-            foreach ($companyIdsArray as $companyId) {
-                $employees = EmployeeDetails::whereJsonContains('company_id', $companyId)
-                    ->where('emp_id', '!=', $employeeId) // Exclude the logged-in employee
-                    ->whereIn('employee_status', ['active', 'on-probation'])
-                    ->when($this->searchTerm, function ($query) {
-                        $query->where(function ($subQuery) {
-                            $subQuery->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                                ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-                        });
-                    })
-                    ->groupBy('emp_id', 'image', 'gender') // Group by the required fields
-                    ->select(
-                        'emp_id',
-                        'gender',
-                        'image',
-                        DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name') // Create a full name field
-                    )
-                    ->orderBy('full_name') // Order by full name
-                    ->get();
+            // Fetch all employees for the relevant company IDs at once
+            $employees = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
+                ->where('emp_id', '!=', $employeeId)
+                ->whereIn('employee_status', ['active', 'on-probation'])
+                ->when($this->searchTerm, function ($query) {
+                    $query->where(function ($subQuery) {
+                        $subQuery->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                            ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                    });
+                })
+                ->groupBy('emp_id', 'image', 'gender')
+                ->select(
+                    'emp_id',
+                    'gender',
+                    'image',
+                    DB::raw('MIN(CONCAT(first_name, " ", last_name)) as full_name')
+                )
+                ->orderBy('full_name')
+                ->get();
 
-                // Merge the results into the ccRecipients collection
-                $this->ccRecipients = $this->ccRecipients->merge($employees);
-            }
-
+            $this->ccRecipients = collect($employees);
             // Optionally, remove duplicates if necessary
             $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
@@ -227,7 +220,9 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showCcRecipents = true;
-            $this->searchCCRecipients();
+            if ($this->showCcRecipents = true) {
+                $this->searchCCRecipients();
+            }
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
@@ -260,81 +255,63 @@ class LeaveApplyPage extends Component
     }
     public function toggleSelection($empId)
     {
-        // Check if the employee ID is already in the selected array
         if (isset($this->selectedPeople[$empId])) {
-            // If already selected, unselect it
             unset($this->selectedPeople[$empId]);
         } else {
-            // Check if the limit is reached
             if (count($this->selectedPeople) < 5) {
-                // Add employee if under limit
                 $this->selectedPeople[$empId] = true;
             } else {
-                // Show error if limit exceeded
                 session()->flash('error', 'You can only select up to 5 CC recipients.');
-                $this->showAlert = true; // Assuming you're using this to control alert visibility
+                $this->showAlert = true;
             }
         }
 
-        // Update the recipients list
-        $this->searchCCRecipients();
-        // Fetch details if necessary
-        $this->fetchEmployeeDetails();
+        // Only update recipients list if a valid selection was made
+        if (count($this->selectedPeople) <= 5) {
+            $this->searchCCRecipients();
+            $this->fetchEmployeeDetails();
+        }
     }
-
     public function fetchEmployeeDetails()
     {
         // Reset the list of selected employees
         $this->selectedCCEmployees = [];
 
-        // Fetch details for selected employees
-        foreach ($this->selectedPeople as $empId => $selected) {
-            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+        // Fetch employee IDs from selected people
+        $employeeIds = array_keys($this->selectedPeople);
 
-            if ($employee) {
+        // Ensure there are employee IDs to fetch
+        if (empty($employeeIds)) {
+            return; // No selected employees to fetch
+        }
+
+        try {
+            // Fetch details for selected employees in one query
+            $employees = EmployeeDetails::whereIn('emp_id', $employeeIds)->get();
+
+            // Map employees to selectedCCEmployees
+            $this->selectedCCEmployees = $employees->map(function ($employee) {
                 // Calculate initials
-                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
-                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
-                $initials = $firstNameInitial . $lastNameInitial;
+                $initials = strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name, 0, 1));
 
-                // Add to selectedEmployees array
-                $this->selectedCCEmployees[] = [
-                    'emp_id' => $empId,
+                // Return the transformed employee data
+                return [
+                    'emp_id' => $employee->emp_id,
                     'first_name' => $employee->first_name,
                     'last_name' => $employee->last_name,
                     'initials' => $initials,
                 ];
-            }
-        }
-    }
-    public function handleCheckboxChange($empId)
-    {
-        try {
-            // Check if the employee is selected (checkbox is checked)
-            if (array_key_exists($empId, $this->selectedPeople) && $this->selectedPeople[$empId]) {
-                // Checkbox is currently checked, so it’s being unchecked
-                $this->removeFromCcTo($empId);
-            } else {
-                // Checkbox is currently unchecked, so it’s being checked
-                $this->selectedPeople[$empId] = true;
+            })->toArray(); // Convert the collection back to an array
 
-                // Optionally add to selectedCcTo or perform other actions
-                $this->selectedCcTo[] = ['emp_id' => $empId];
-            }
-
-            // Update cc_to field
-            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
-
-            // Fetch updated employee details and search CC recipients
-            $this->fetchEmployeeDetails();
-            $this->searchCCRecipients();
         } catch (\Exception $e) {
-            // Handle the exception (log it, show a message, etc.)
-            Log::error('Error handling checkbox change: ' . $e->getMessage());
-            // You might also want to notify the user in some way
-            session()->flash('error', 'An error occurred while updating CC recipients.');
+            // Log the error message for debugging
+            Log::error('Error fetching employee details: ' . $e->getMessage());
+
+            // Optionally, you can set an error message to be displayed in the session
+            session()->flash('error', 'An error occurred while fetching employee details. Please try again later.');
         }
     }
+
 
     public function removeFromCcTo($empId)
     {
@@ -376,10 +353,10 @@ class LeaveApplyPage extends Component
         // Validate input fields before further processing
         $this->validate();
 
-        // Call handleFieldUpdate for relevant fields
-        $this->handleFieldUpdate('from_date'); // Or other fields as needed
-        $this->handleFieldUpdate('to_date');
-        $this->handleFieldUpdate('leave_type');
+        // // Call handleFieldUpdate for relevant fields
+        // $this->handleFieldUpdate('from_date');
+        // $this->handleFieldUpdate('to_date');
+        // $this->handleFieldUpdate('leave_type');
 
         // Check if there are existing error messages after field updates
         if ($this->showerrorMessage) {
@@ -424,7 +401,6 @@ class LeaveApplyPage extends Component
                 $applyingToDetails[] = [
                     'manager_id' => $defaultManager,
                     'report_to' => $this->loginEmpManager,
-                    'image' => $this->loginEmpManagerProfile,
                     'email' => $defaultManagerEmail->email
                 ];
             }
@@ -496,175 +472,73 @@ class LeaveApplyPage extends Component
         }
     }
 
-
-
     public function handleFieldUpdate($field)
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $checkJoinDate  = EmployeeDetails::where('emp_id', $employeeId)->first();
-            if ($this->to_date) {
+            $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+                // Check for existing error messages
                 if ($this->showerrorMessage) {
-                    return; // If there's already an error, do not proceed
+                    return;
                 }
+
+                // Step-by-step validation checks
+                $errorMessages = [];
+
                 // Check if the selected dates are on weekends
                 if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
-                    $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
-                    $this->showerrorMessage = true;
-                    return;
-                }
-                // Validate from date for joining date
-                if ($this->from_date < $checkJoinDate->hire_date) {
-                    $this->errorMessage = 'Entered From date and To dates are less than your Join date.';
-                    $this->showerrorMessage = true;
-                    return;
-                }
-                // Validate date range
-                if ($this->to_date < $this->from_date) {
-                    $this->errorMessage = 'To date must be greater than or equal to from date.';
-                    $this->showerrorMessage = true;
-                    return;
+                    $errorMessages[] = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
                 }
 
-                if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
-                    $this->errorMessage = 'To session must be greater than or equal to from session.';
-                    $this->showerrorMessage = true;
-                    return;
-                }
                 // Check for overlapping leave requests
-                $overlappingLeave = LeaveRequest::where('emp_id', $employeeId)
-                    ->where(function ($query) {
-                        $query->where(function ($q) {
-                            $q->where('from_date', '<=', $this->from_date)
-                                ->where('to_date', '>=', $this->from_date);
-                        })->orWhere(function ($q) {
-                            $q->where('from_date', '<=', $this->to_date)
-                                ->where('to_date', '>=', $this->to_date);
-                        })->orWhere(function ($q) {
-                            $q->where('from_date', '>=', $this->from_date)
-                                ->where('to_date', '<=', $this->to_date);
-                        });
-                    })
-                    ->whereIn('status', ['approved', 'pending'])
-                    ->get();
-                foreach ($overlappingLeave as $leave) {
-                    $carbonFromDate = $leave->from_date->format('Y-m-d');
-                    $carbonToDate = $leave->to_date->format('Y-m-d');
-
-                    // Overlap checks
-                    if (($this->from_date <= $carbonToDate && $this->to_date >= $carbonFromDate) &&
-                        ($this->from_session <= $leave->to_session && $this->to_session >= $leave->from_session)
-                    ) {
-                        $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                        $this->showerrorMessage = true;
-                        return;
-                    }
+                if ($this->checkOverlappingLeave($employeeId)) {
+                    $errorMessages[] = 'The selected leave dates overlap with an existing leave application.';
                 }
 
-                // Step 1: Retrieve total number of days for the selected leave type
-                $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_type', $this->leave_type)
-                    ->whereNotIn('leave_type', ['Loss Of Pay'])
-                    ->whereIn('status', ['approved', 'pending'])
-                    ->get();
-
-                $totalNumberOfDays = 0; // Initialize the counter for total days
-                if (!$checkLeaveBalance->isEmpty()) {
-                    foreach ($checkLeaveBalance as $leaveRequest) {
-                        $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type);
-                        $totalNumberOfDays += $numberBalanceOfDays;
-                    }
-                }
-                // Calculate the days for the new leave request, if provided
-                if ($this->leave_type !== 'Loss of Pay' && $this->from_date && $this->from_session && $this->to_date && $this->to_session) {
-                    $totalEnteredDays = $this->calculateNumberOfDays(
-                        $this->from_date,
-                        $this->from_session,
-                        $this->to_date,
-                        $this->to_session,
-                        $this->leave_type
-                    );
-                    $totalNumberOfDays += $totalEnteredDays;
-                }
-
-
-                // Step 2: Retrieve leave balances
-                $currentYear = now()->year;
-                $leaveBalances = [
-                    'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
-                    'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
-                    'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
-                    'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),
-                    'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $currentYear),
-                    'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $currentYear),
-                ];
-
-                $leaveBalance = (float)($leaveBalances[$this->leave_type] ?? 0); // Default to 0 if leave_type is not found
-
-                // Step 3: Compare total number of days with leave balance
+                // Validate leave balance
+                $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
+                $leaveBalance = $this->getLeaveBalance($employeeId);
                 if ($totalNumberOfDays > $leaveBalance) {
-                    $this->errorMessage = 'It looks like you have already used all your leave balance, considering pending and approved leaves.';
-                    $this->showerrorMessage = true;
-                    return;
+                    $errorMessages[] = 'It looks like you have already used all your leave balance, considering pending and approved leaves.';
                 }
 
                 // Check for holidays
-                $holidays = HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->get();
-                if ($holidays->isNotEmpty()) {
-                    $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                if ($this->checkForHolidays()) {
+                    $errorMessages[] = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                }
+
+                // Validate from date for joining date
+                if ($this->from_date < $checkJoinDate->hire_date) {
+                    $errorMessages[] = 'Entered From date and To dates are less than your Join date.';
+                }
+
+                // Special validation for Casual Leave
+                if ($this->leave_type === 'Casual Leave') {
+                    if ($this->checkCasualLeaveLimit($employeeId)) {
+                        $errorMessages[] = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
+                    }
+                }
+                // Validate date range
+                if ($this->to_date < $this->from_date) {
+                    $errorMessages[] = 'To date must be greater than or equal to from date.';
+                }
+
+                if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
+                    $errorMessages[] = 'To session must be greater than or equal to from session.';
+                }
+
+                // If there are any error messages, set them and return
+                if (!empty($errorMessages)) {
+                    $this->errorMessage = implode(' ', $errorMessages);
                     $this->showerrorMessage = true;
                     return;
                 }
-                // Check if the leave type is Casual Leave
-                if ($this->leave_type === 'Casual Leave') {
-                    $currentMonth = now()->month;
-                    $currentYear = now()->year;
 
-                    // Get all casual leave requests for the current month
-                    $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                        ->where('leave_type', 'Casual Leave')
-                        ->whereYear('from_date', $currentYear)
-                        ->whereMonth('from_date', $currentMonth)
-                        ->whereIn('status', ['approved', 'pending'])
-                        ->get();
-
-                    $totalLeaveDays = 0;
-
-                    foreach ($leaveRequests as $leaveRequest) {
-                        $numberOfDays = $this->calculateNumberOfDays(
-                            $leaveRequest->from_date,
-                            $leaveRequest->from_session,
-                            $leaveRequest->to_date,
-                            $leaveRequest->to_session,
-                            $leaveRequest->leave_type
-                        );
-                        $totalLeaveDays += $numberOfDays;
-                    }
-
-                    // Calculate days for the new leave request if it's Casual Leave
-                    if ($this->from_date && $this->to_date) {
-                        $newLeaveDays = $this->calculateNumberOfDays(
-                            $this->from_date,
-                            $this->from_session,
-                            $this->to_date,
-                            $this->to_session,
-                            $this->leave_type
-                        );
-                        $totalLeaveDays += $newLeaveDays;
-                    }
-
-                    // Check if total leave days exceed 2
-                    if ($totalLeaveDays > 2) {
-                        $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
-                        $this->showerrorMessage = true;
-                        return;
-                    }
-                }
-            }
-            //calculate number of days
+            // Calculate number of days if validation passed
             $this->showNumberOfDays = true;
             if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
-                $this->calculateNumberOfDays($this->fromDate, $this->fromSession, $this->toDate, $this->toSession, $this->leaveType);
+                $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
             }
         } catch (\Exception $e) {
             // Log the error
@@ -672,6 +546,121 @@ class LeaveApplyPage extends Component
             session()->flash('error', 'An error occurred while handling field update. Please try again later.');
         }
     }
+
+    // Additional methods for validation
+    protected function checkOverlappingLeave($employeeId)
+    {
+        return LeaveRequest::where('emp_id', $employeeId)
+            ->where(function ($query) {
+                $query->where(function ($q) {
+                    $q->where('from_date', '<=', $this->from_date)
+                        ->where('to_date', '>=', $this->from_date);
+                })->orWhere(function ($q) {
+                    $q->where('from_date', '<=', $this->to_date)
+                        ->where('to_date', '>=', $this->to_date);
+                })->orWhere(function ($q) {
+                    $q->where('from_date', '>=', $this->from_date)
+                        ->where('to_date', '<=', $this->to_date);
+                });
+            })
+            ->whereIn('status', ['approved', 'pending'])
+            ->exists();
+    }
+
+    protected function getTotalLeaveDays($employeeId)
+    {
+        // Retrieve total number of days for approved and pending leave requests
+        $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_type', $this->leave_type)
+            ->whereNotIn('leave_type', ['Loss Of Pay'])
+            ->whereIn('status', ['approved', 'pending'])
+            ->get();
+
+        $totalNumberOfDays = 0; // Initialize the counter for total days
+        if (!$checkLeaveBalance->isEmpty()) {
+            foreach ($checkLeaveBalance as $leaveRequest) {
+                $numberBalanceOfDays = $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type);
+                $totalNumberOfDays += $numberBalanceOfDays;
+            }
+        }
+
+        // Calculate the days for the new leave request, if provided
+        if ($this->leave_type !== 'Loss of Pay' && $this->from_date && $this->from_session && $this->to_date && $this->to_session) {
+            $totalEnteredDays = $this->calculateNumberOfDays(
+                $this->from_date,
+                $this->from_session,
+                $this->to_date,
+                $this->to_session,
+                $this->leave_type
+            );
+            $totalNumberOfDays += $totalEnteredDays;
+        }
+
+        return $totalNumberOfDays;
+    }
+
+    protected function getLeaveBalance($employeeId)
+    {
+        // Retrieve leave balances for the current year
+        $currentYear = now()->year;
+        $leaveBalances = [
+            'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
+            'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
+            'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
+            'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),
+            'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $currentYear),
+            'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $currentYear),
+        ];
+
+        return (float)($leaveBalances[$this->leave_type] ?? 0); // Default to 0 if leave_type is not found
+    }
+
+    protected function checkForHolidays()
+    {
+        return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->exists();
+    }
+
+    protected function checkCasualLeaveLimit($employeeId)
+    {
+        // Get all casual leave requests for the current month
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_type', 'Casual Leave')
+            ->whereYear('from_date', $currentYear)
+            ->whereMonth('from_date', $currentMonth)
+            ->whereIn('status', ['approved', 'pending'])
+            ->get();
+
+        $totalLeaveDays = 0;
+
+        foreach ($leaveRequests as $leaveRequest) {
+            $numberOfDays = $this->calculateNumberOfDays(
+                $leaveRequest->from_date,
+                $leaveRequest->from_session,
+                $leaveRequest->to_date,
+                $leaveRequest->to_session,
+                $leaveRequest->leave_type
+            );
+            $totalLeaveDays += $numberOfDays;
+        }
+
+        // Calculate days for the new leave request if it's Casual Leave
+        if ($this->from_date && $this->to_date) {
+            $newLeaveDays = $this->calculateNumberOfDays(
+                $this->from_date,
+                $this->from_session,
+                $this->to_date,
+                $this->to_session,
+                $this->leave_type
+            );
+            $totalLeaveDays += $newLeaveDays;
+        }
+
+        // Check if total leave days exceed 2
+        return $totalLeaveDays > 2;
+    }
+
 
     // Add the isWeekday function
     private function isWeekday($date)
@@ -1035,7 +1024,7 @@ class LeaveApplyPage extends Component
     // Add a method to update the search query
     public function getFilteredManagers()
     {
-        $this->render(); // Re-render to apply the search filter
+        $this->render();
     }
     public function handleEnterKey()
     {

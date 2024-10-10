@@ -254,7 +254,7 @@
                             <a class="menu-item" href="/events">Appreciation</a>
 
 
-                            <a class="menu-item" href="/events">Buy/Sell/Rent</a>
+                          
 
                         </ul>
                     </div>

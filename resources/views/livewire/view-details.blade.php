@@ -11,7 +11,11 @@
             </div>
         </div>
         <div class="headers-details">
-            <h6>Leave Applied on {{ $leaveRequest->created_at->format('d M, Y') }} </h6>
+            @if ($leaveRequest->category_type === 'Leave')
+            <p class="mb-0 ">Leave Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
+            @else
+            <p class="mb-0 ">Leave Cancel Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
+            @endif
         </div>
         <div class="approved-leave d-flex gap-3">
             <div class="heading rounded mb-3">
@@ -221,7 +225,7 @@
                 <hr>
                 <div class="pending-details">
                     <div class="data">
-                        <span class="normalTextSubheading" >Details</span>
+                        <span class="normalTextSubheading">Details</span>
                         <div class="row m-0 p-0">
                             <div class="col-md-8 m-0 p-0">
                                 <div class="custom-grid-container text-start">
@@ -252,7 +256,7 @@
                                             @if (is_string($leaveRequest->cc_to))
                                             @foreach(json_decode($leaveRequest->cc_to, true) as $ccToItem)
                                             <span class="custom-cc-item">
-                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id'] }})
                                             </span>
                                             @if (!$loop->last)
                                             ,
@@ -261,7 +265,7 @@
                                             @else
                                             @foreach($leaveRequest->cc_to as $ccToItem)
                                             <span class="custom-cc-item">
-                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']}})
                                             </span>
                                             @if (!$loop->last)
                                             ,
@@ -393,16 +397,16 @@
                                         @elseif(!empty($files) && count($files) == 1)
                                         @foreach($files as $file)
                                         @php
-                                            $base64File = trim($file['data'] ?? '');
-                                            $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
-                                            $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+                                        $base64File = trim($file['data'] ?? '');
+                                        $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                                        $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
                                         @endphp
-                                
+
                                         <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
-                                           download="{{ $originalName }}" class="anchorTagDetails">
+                                            download="{{ $originalName }}" class="anchorTagDetails">
                                             Download File
                                         </a>
-                                    @endforeach
+                                        @endforeach
                                         @endif
                                         @endif
                                     </div>
@@ -476,7 +480,7 @@
                             <div class="d-flex flex-column">
                                 <h5 class="mb-0 normalText text-start">Submitted
                                 </h5>
-                                <span class="normalTextSmall text-start" >{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
+                                <span class="normalTextSmall text-start">{{ $leaveRequest->created_at->format('d M, Y g:i A') }}</span>
                             </div>
                         </div>
                     </div>

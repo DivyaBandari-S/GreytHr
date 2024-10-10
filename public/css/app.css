@@ -736,7 +736,7 @@ button.close-button {
 } */
 /* Ending of peoples module (Kumar Asapu)*/
 
-/* Starting help desk module (Kumar Asapu)*/
+/* Starting help desk module */
 .card-body {
     background-color: white;
     padding: 20px;
@@ -775,8 +775,43 @@ button.close-button {
 .cancel-button {
     background-color: red;
 }
+.custom-checkbox-helpdesk:checked {
+    background-color: var(--main-color);
+    border-color: var(--main-color);
+}
+.custom-checkbox-helpdesk {
+    appearance: none; /* Remove default checkbox styling */
+   /* Set the height of the checkbox */
+   
+    outline: none; /* Remove outline on focus */
+    cursor: pointer; /* Pointer cursor for hover effect */
+   /* Smooth transition */
+}
 
-/* Ending help desk module (Kumar Asapu)*/
+.dropdown-options {
+    display: none; /* Hidden by default */
+    position: absolute;
+    background-color: var(--main-color);
+    border-radius: 5px;
+    z-index: 1;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+}
+.form-select-category option {
+    background-color: var(--main-color);  /* Background for options */
+ /* Text color for options */
+    padding: 5px;
+    cursor: pointer;
+}
+
+/* Default option styling */
+.option-default {
+    color:var(--main-color) ;  /* Different color for placeholder */
+}
+
+
+/* Ending help desk module */
 
 /* Starting document center/letters module (Kumar Asapu)*/
 
@@ -2096,6 +2131,7 @@ td {
 .custom-dropdown {
     margin-top: 20px;
     display: block;
+    
 }
 .eventsSection {
     display: flex;
@@ -3037,6 +3073,10 @@ input[type="radio"] {
     display: none;
     background-color: #fff;
 }
+.accordion-body1 {
+    border-radius: 10px;
+    background-color: #fff;
+}
 .canvasBorder {
     position: relative;
     border-radius: 50%;
@@ -3384,7 +3424,7 @@ input[type="radio"] {
     width: 5px; /* Adjust as needed */
 }
 ::-webkit-scrollbar-thumb {
-    background: #d1d6dc; /* Adjust color */
+    background: #9f9e9e; /* Adjust color */
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -3786,7 +3826,7 @@ input[type="radio"] {
     border: none;
     outline: none;
     background: rgb(2, 17, 79);
-    padding: 7px 12px;
+    padding: 3px 12px;
     color: white;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;

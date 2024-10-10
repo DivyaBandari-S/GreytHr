@@ -153,7 +153,6 @@
 
 
         <!-- main content -->
-
         <div class="row m-0">
             <div class="col-md-3 ">
                 <div class="mb-4">
@@ -195,8 +194,11 @@
                                 x-init="setInterval(() => updateTime(), 1000)">
                                 <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
                                     style="width: 2.7em;">
-                                <p x-text="time" class="showTimer"></p>
+                                <template x-if="time">
+                                    <p x-text="time" class="showTimer"></p>
+                                </template>
                             </div>
+
                             <div class="A d-flex justify-content-between align-items-center flex-row"
                                 style="margin-top: 2em">
                                 <a class="viewSwipesList" wire:click="open">View Swipes</a>
@@ -219,7 +221,6 @@
 
 
             <div class="col-md-3 ">
-
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <div class="row m-0 avatarImgDiv">
                         <img src="images/gamer.png" class="firstImg position-absolute" />
@@ -717,19 +718,14 @@
             </div>
         </div>
         <!-- TEAM ON LEAVE -->
-        <div class="col-md-4 mb-4 ">
+        <div class="col-md-4  mb-4 ">
             @if ($this->showLeaveApplies)
-            <div class="home-hover mb-4">
+            <div class="payslip-card  mb-4">
                 <div class="reviews">
-                    <div class="homeCard4 p-2">
-                        <div class="team-heading  mt-2 d-flex justify-content-between">
+                    <div >
+                        <div class="team-heading mt-2 d-flex justify-content-between">
                             <div>
-                                <p class="teamOnLeave"> Team On Leave</pclass>
-                            </div>
-                            <div>
-                                <a href="/team-on-leave-chart" style="font-size:16px; "><img
-                                        src="/images/up-arrow.png" alt=""
-                                        style="width:20px;height:27px;"></a>
+                                <p class="payslip-card-title"> Team On Leave</p>
                             </div>
                         </div>
                         @if ($this->teamCount > 0)
@@ -803,21 +799,26 @@
                                 @endif
                             </div>
                             @endif
-                            <p class="homeText"><a href="/team-on-leave-chart">Click here</a> to see
+                            <p class="payslip-small-desc"><a href="/team-on-leave-chart">Click here</a> to see
                                 who will be on leave in the
                                 upcoming days!</p>
                         </div>
                     </div>
                     @else
-                    <div class="leaveNodata">
+                    <div class="leaveNodata gap-3">
                         <img src="{{ asset('images/no data.png') }}" name="noData" id="noData"
                             alt="Image Description" width="120" height="100">
-                        <p class="homeText">
+                        <p class="payslip-small-desc">
                             Wow! No leaves planned today.
                         </p>
                     </div>
                     @endif
                 </div>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
             </div>
         </div>
         @endif

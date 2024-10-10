@@ -16,12 +16,11 @@
             </div>
         </div>
         <div class="header-details">
-            @if ($leaveRequest)
-            <p>Leave Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
+            @if ($leaveRequest->category_type === 'Leave')
+            <p class="mb-0 ">Leave Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
             @else
-            <p>Leave request details not found.</p>
+            <p class="mb-0 ">Leave Cancel Applied on {{ optional($leaveRequest->created_at)->format('d M, Y') }}</p>
             @endif
-
         </div>
         <div class="view-details-container ">
             <div class="heading mb-2
@@ -199,7 +198,9 @@
                                     <div class="custom-grid-item">
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-label">Contact</span>
+                                        @endif
                                         @if(!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
                                         @endif
@@ -210,23 +211,26 @@
 
                                     <div class="custom-grid-item">
                                         @if(!empty($leaveRequest['applying_to']))
-
                                         @foreach($leaveRequest['applying_to'] as $applyingTo)
                                         <span class="custom-value">{{ ucwords(strtolower($applyingTo['report_to'])) }}</span>
                                         @endforeach
                                         @else
                                         <span class="custom-value">-</span>
                                         @endif
-
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
+                                        @else
+                                        <span class="custom-value">{{ ucfirst($leaveRequest->leave_cancel_reason) }}</span>
+                                        @endif
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
-
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-value">
                                             @if (is_string($leaveRequest->cc_to))
                                             @foreach(json_decode($leaveRequest->cc_to, true) as $ccToItem)
                                             <span class="custom-cc-item">
-                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id'] }})
                                             </span>
                                             @if (!$loop->last)
                                             ,
@@ -235,7 +239,7 @@
                                             @else
                                             @foreach($leaveRequest->cc_to as $ccToItem)
                                             <span class="custom-cc-item">
-                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                {{ ucwords(strtolower($ccToItem['full_name'])) }} (#{{ $ccToItem['emp_id']}})
                                             </span>
                                             @if (!$loop->last)
                                             ,

@@ -26,7 +26,7 @@
                     </button>
                 </div>
 
-            </div>a
+            </div>
         </div>
         @if(!empty($this->leaveApplications))
         @foreach($this->leaveApplications as $leaveRequest)
@@ -141,6 +141,7 @@
                         <span class="normalText font-weight-400">No. of days not available</span>
                         @endif
                     </div>
+                    @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                     <div class="content1 px-4">
                         <span class="normalTextValue">Reason :</span>
                         @if(isset($leaveRequest['leaveRequest']->reason))
@@ -149,6 +150,17 @@
                         <span class="normalText font-weight-400">Reason Not Available</span>
                         @endif
                     </div>
+                    @else
+                    <div class="content1 px-4">
+                        <span class="normalTextValue">Reason :</span>
+                        @if(isset($leaveRequest['leaveRequest']->leave_cancel_reason))
+                        <span class="normalText font-weight-400">{{ ucfirst($leaveRequest['leaveRequest']->leave_cancel_reason) }}</span>
+                        @else
+                        <span class="normalText font-weight-400">Reason Not Available</span>
+                        @endif
+                    </div>
+                    @endif
+
                     <div class="horizontalLine"></div>
                     <div class="approvedLeaveDetails d-flex justify-content-between align-items-center px-3">
                         <div class="content1">
@@ -245,18 +257,19 @@
                             </div>
                             @endif
                         </div>
+
                         <div class="content1">
                             <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails">View Details</a>
+                            @if($isLoggedInEmpInCcTo)
+                            <!-- Do not display buttons -->
+                            @else
                             @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="rejectBtn" wire:click="rejectLeave({{ $loop->index }})">Reject</button>
-                            @else
-                            <button class="rejectBtn" wire:click="rejectLeaveCancel({{ $loop->index }})" title="Reject Leave Cancel">Reject</button>
-                            @endif
-
-                            @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                             <button class="approveBtn" wire:click="approveLeave({{ $loop->index }})">Approve</button>
                             @else
+                            <button class="rejectBtn" wire:click="rejectLeaveCancel({{ $loop->index }})" title="Reject Leave Cancel">Reject</button>
                             <button class="approveBtn" wire:click="approveLeaveCancel({{ $loop->index }})" title="Approve Request For Leave Cancel">Approve</button>
+                            @endif
                             @endif
                         </div>
                     </div>
