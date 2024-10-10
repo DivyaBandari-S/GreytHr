@@ -9,13 +9,7 @@
                     style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
             </div>
             @endif
-            @if (session()->has('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-                {{ session('error') }}
-                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                    style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-            </div>
-            @endif
+
 
             <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
                 <div class="nav-buttons d-flex justify-content-center">
@@ -157,7 +151,7 @@
                             <div class="input" class="form-control placeholder-small">
                                 <div style="position: relative;">
                                     <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                                        <option st="color: gray;" value="">Select Priority</option>
+                                        <option style="color: grey;" value="">Select Priority</option>
                                         <option value="High">High</option>
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>
@@ -180,8 +174,13 @@
                                             <div>
 
                                                 <div style="font-size: 12px; color: #778899; margin-bottom: 10px; font-weight: 500;">
-                                                    Selected CC recipients: {{ implode(', ', array_unique($selectedPeopleNames)) }}
+                                                    Select CC To: {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                 </div>
+                                                @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                             </div>
                                             <button type="button" style="border-radius: 50%; color: #778899; border: 1px solid #778899;" class="add-button" wire:click="toggleRotation">
                                                 <div class="icon-container">
@@ -193,6 +192,7 @@
                                         @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                 </div>
+   
 
                                 @if($isRotated)
                                 <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
@@ -204,7 +204,7 @@
                                             class="form-control"
                                             placeholder="Search for Emp.Name or ID"
                                             aria-label="Search"
-                                            aria-describedby="basic-addon1">
+                                            aria-describedby="basic-addon1"   wire:input="autoValidate">
                                         <div class="input-group-append" style="display: flex; align-items: center;">
                                             <button wire:click="filter" class="helpdesk-search-btn" type="button">
                                                 <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
@@ -232,7 +232,7 @@
                                         <div class="row align-items-center">
                                             <div class="col-auto">
 
-                                                <input type="checkbox" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                                                <input type="checkbox" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}   class="form-check-input custom-checkbox-helpdesk">
                                             </div>
 
                                             <div class="col-auto">
@@ -289,11 +289,12 @@
                         </div>
                     </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3 ">
                 <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                    <option value="">Select Request</option>
-                    @foreach($requestCategories as $request => $categories)
-                    <option value="{{ $request }}">{{ $request }}</option>
+                <option value="" class="option-default">Select Request</option>
+    @foreach($requestCategories as $request => $categories)
+    <option value="{{ $request }}" class="option-item">{{ $request }}</option>
+  
                     @endforeach
                 </select>
             </div>
