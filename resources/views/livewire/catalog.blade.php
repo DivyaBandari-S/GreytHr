@@ -90,6 +90,11 @@
                                 <div class="form-group">
                                     <div class="form-group m-0 p-0">
                                         <label for="cc_to">Members to be Added: <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
+                                        @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                     </div>
                                 </div>
                                 <div class="form-group m-0">
@@ -126,7 +131,7 @@
                                             <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                 <div class="row align-items-center">
                                                     <div class="col-auto">
-                                                    <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                                                    <input type="checkbox"   id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                                                     </div>
                                                     <div class="col-auto">
                                                         @if (!empty($people->image) && $people->image !== 'null')
@@ -252,7 +257,11 @@
                                                             <div class="row">
                                                                 <div class="form-group ">
                                                                     <label for="cc_to" class="form-label ">Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
+                                                                    @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                                                 </div>
                                                                 <div class="form-group ">
                                                                     <div class=" p-0">
@@ -275,7 +284,7 @@
         class="form-control" 
         placeholder="Search for Emp.Name or ID" 
         aria-label="Search" 
-        aria-describedby="basic-addon1"
+        aria-describedby="basic-addon1"  wire:input="autoValidate"
     >
     <div class="input-group-append" style="display: flex; align-items: center;">
         <button 
@@ -307,7 +316,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox" class="form-check-input custom-checkbox-helpdesk"  id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -490,7 +499,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -625,7 +634,11 @@
                                                                 <div class="row ml-1">
                                                                     <div class="form-group mb-1">
                                                                         <label for="cc_to" class="form-label"> Request For :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
+                                                                        @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="form-group  p-0">
@@ -680,7 +693,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -810,7 +823,11 @@
                                                                     <div class="form-group">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
 
-
+                                                                        @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
 
                                                                     </div>
                                                                     <div class="row m-0">
@@ -866,7 +883,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -994,7 +1011,11 @@
 
                                                                         <div class="form-group m-0 p-0">
                                                                             <label for="cc_to" class="form-label" style="margin-left:-13px"> Members to be Added :<span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
+                                                                            @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                                                         </div>
                                                                     </div>
                                                                     <div class="row m-0">
@@ -1050,7 +1071,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -1184,7 +1205,11 @@
                                                                 <div class="row">
                                                                     <div class="form-group ">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
+                                                                        @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                                                     </div>
                                                                     <div class="row m-0">
                                                                         <div class="form-group  p-0">
@@ -1239,7 +1264,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox" class="form-check-input custom-checkbox-helpdesk"  id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -1385,7 +1410,11 @@
                                                                 <div class="row">
                                                                     <div class="form-group mt-2">
                                                                         <label for="cc_to" class="form-label"> Request For : <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-
+                                                                        @if (session()->has('selecterror'))
+    <div class="alert alert-danger">
+        {{ session('selecterror') }}
+    </div>
+@endif
                                                                     </div>
                                                                     <div class="form-group m-0">
                                                                         <div class=" p-0">
@@ -1440,7 +1469,7 @@
                 <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"   id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')

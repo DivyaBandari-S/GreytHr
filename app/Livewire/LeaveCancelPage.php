@@ -119,24 +119,38 @@ class LeaveCancelPage extends Component
         // Reset the list of selected employees
         $this->selectedCCEmployees = [];
 
-        // Fetch details for selected employees
-        foreach ($this->selectedPeople as $empId => $selected) {
-            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+        // Fetch employee IDs from selected people
+        $employeeIds = array_keys($this->selectedPeople);
 
-            if ($employee) {
+        // Ensure there are employee IDs to fetch
+        if (empty($employeeIds)) {
+            return; // No selected employees to fetch
+        }
+
+        try {
+            // Fetch details for selected employees in one query
+            $employees = EmployeeDetails::whereIn('emp_id', $employeeIds)->get();
+
+            // Map employees to selectedCCEmployees
+            $this->selectedCCEmployees = $employees->map(function ($employee) {
                 // Calculate initials
-                $firstNameInitial = strtoupper(substr($employee->first_name, 0, 1));
-                $lastNameInitial = strtoupper(substr($employee->last_name, 0, 1));
-                $initials = $firstNameInitial . $lastNameInitial;
+                $initials = strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name, 0, 1));
 
-                // Add to selectedEmployees array
-                $this->selectedCCEmployees[] = [
-                    'emp_id' => $empId,
+                // Return the transformed employee data
+                return [
+                    'emp_id' => $employee->emp_id,
                     'first_name' => $employee->first_name,
                     'last_name' => $employee->last_name,
                     'initials' => $initials,
                 ];
-            }
+            })->toArray(); // Convert the collection back to an array
+
+        } catch (\Exception $e) {
+            // Log the error message for debugging
+            Log::error('Error fetching employee details: ' . $e->getMessage());
+
+            // Optionally, you can set an error message to be displayed in the session
+            session()->flash('error', 'An error occurred while fetching employee details. Please try again later.');
         }
     }
     public function openCcRecipientsContainer()
@@ -348,13 +362,8 @@ class LeaveCancelPage extends Component
 
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::findOrFail($this->selectedLeaveRequestId);
-
             // Get the employee ID and details
             $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
-
-            // Update the existing leave request's cancel_status to 'Re-applied'
-            $leaveRequest->cancel_status = 'Re-applied';
-            $leaveRequest->save();
 
             // Prepare ccToDetails
             $ccToDetails = [];
@@ -368,7 +377,7 @@ class LeaveCancelPage extends Component
                         // Concatenate first_name and last_name to get the full name
                         $fullName = $employeeDetails->first_name . ' ' . $employeeDetails->last_name;
                         $ccToDetails[] = [
-                            'emp_id' => $selectedEmployeeId,
+                            'emp_id' => $selectedEmployeeId['emp_id'],
                             'full_name' => $fullName,
                             'email' => $employeeDetails->email
                         ];
@@ -395,11 +404,12 @@ class LeaveCancelPage extends Component
                 $applyingToDetails[] = [
                     'manager_id' => $defaultManager,
                     'report_to' => $this->loginEmpManager,
-                    'image' => $this->loginEmpManagerProfile,
                     'email' => $defaultManagerEmail->email
                 ];
             }
-
+            // Update the existing leave request's cancel_status to 'Re-applied'
+            $leaveRequest->cancel_status = 'Re-applied';
+            $leaveRequest->save();
             // Create a new leave request record
             LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
@@ -441,9 +451,6 @@ class LeaveCancelPage extends Component
             Log::error('Error marking leave request as cancel: ' . $e->getMessage());
         }
     }
-
-
-
 
     public function toggleInfo()
     {
@@ -690,7 +697,7 @@ class LeaveCancelPage extends Component
             ->where('status', 'approved')
             ->where('from_date', '>=', now()->subMonths(2))
             ->where('category_type', 'Leave')
-            ->where('cancel_status', '!=', 'Re-applied') // Exclude 'Pending Leave Cancel'
+            ->where('cancel_status', '!=', 'Re-applied')
             ->with('employee')
             ->get();
 

@@ -275,6 +275,12 @@ public $closedSearch = '';
     public function selectPerson($personId)
     {
         try {
+            if (count($this->selectedPeopleNames) >= 5 && !in_array($personId, $this->selectedPeople)) {
+                session()->flash('error', 'You can only select up to 5 followers.');
+                return;
+            }
+    
+          
             $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
 
             if ($selectedPerson) {
@@ -318,6 +324,18 @@ public $closedSearch = '';
         try {
 
             $validatedData = $this->validate($this->rules);
+              // Auto validate before proceeding
+        $this->autoValidate();
+
+        // Validate the maximum followers selection
+        if (count($this->selectedPeopleNames) > 5) {
+            session()->flash('error', 'You can only select up to 5 followers.');
+            return;
+        }
+
+        // Validate input based on predefined rules
+       
+
  // Validate and store the uploaded file
  $fileContent = null;
             $mime_type = null;
@@ -467,6 +485,13 @@ public $closedSearch = '';
             $mime_type = null;
             $file_name = null;
            $this->validate($this->rules);
+           $this->autoValidate();
+
+           // Validate the maximum followers selection
+           if (count($this->selectedPeopleNames) > 5) {
+               session()->flash('selecterror', 'You can only select up to 5 followers.');
+               return;
+           }
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mime_type = $this->file_path->getMimeType();
@@ -564,9 +589,18 @@ public $closedSearch = '';
 
     public function updatedSelectedPeople()
     {
-        $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
-
+        if (count($this->selectedPeople) > 5) {
+            // Flash an error message
+            session()->flash('selecterror', 'You can only select up to 5 people.');
+            
+            // Optionally, reset the selected people array or remove the last selection
+            $this->selectedPeople = array_slice($this->selectedPeople, 0, 5);
+        } else {
+            // Update cc_to field
+            $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+        }
     }
+    
 
 
     public function toggleRotation()
