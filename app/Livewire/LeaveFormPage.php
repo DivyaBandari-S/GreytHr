@@ -290,6 +290,7 @@ class LeaveFormPage extends Component
     public function cancelLeaveCancel($leaveRequestId)
     {
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
             // Find the leave request by ID
             $leaveRequest = LeaveRequest::find($leaveRequestId);
 
@@ -297,12 +298,28 @@ class LeaveFormPage extends Component
             if (!$leaveRequest) {
                 throw new \Exception("Leave request not found.");
             }
+                    // Find any other leave request matching from_date, from_session, to_date, to_session
+                    $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
+                        ->where('from_date', $leaveRequest->from_date)
+                        ->where('from_session', $leaveRequest->from_session)
+                        ->where('to_date', $leaveRequest->to_date)
+                        ->where('to_session', $leaveRequest->to_session)
+                        ->where('status', '!=', 'Re-applied')
+                        ->first();
+                    if ($matchingLeaveRequest) {
+                        // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->cancel_status = 'Withdrawn';
+                        $matchingLeaveRequest->updated_at = now();
+                        $matchingLeaveRequest->action_by = $employeeId;
+                        $matchingLeaveRequest->save();
+                    }
 
-            // Update status to 'Withdrawn'
-            $leaveRequest->status = 'Withdrawn';
-            $leaveRequest->cancel_status = 'Withdrawn';
-            $leaveRequest->updated_at = now();
-            $leaveRequest->save();
+                    // Update the current leave request status to 'approved'
+                    $leaveRequest->cancel_status = 'Withdrawn';
+                    $leaveRequest->status = 'rejected';
+                    $leaveRequest->updated_at = now();
+                    $leaveRequest->action_by = $employeeId;
+                    $leaveRequest->save();
 
             // Decode the JSON data from applying_to to get the email
             $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
