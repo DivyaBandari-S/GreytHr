@@ -248,9 +248,6 @@
 
                         <div class="content1">
                             <a href="{{ route('view-details', ['leaveRequestId' => $leaveRequest['leaveRequest']->id]) }}" class="anchorTagDetails">View Details</a>
-                            @php
-                            dd($leaveRequest['leaveRequest']->cc_to['emp_id']);
-                            @endphp
                             @if($isEmpInCcTo)
                             <!-- Do not display buttons -->
                             @else

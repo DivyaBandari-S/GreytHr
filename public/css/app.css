@@ -3384,7 +3384,7 @@ input[type="radio"] {
     width: 5px; /* Adjust as needed */
 }
 ::-webkit-scrollbar-thumb {
-    background: #d1d6dc; /* Adjust color */
+    background: #9f9e9e; /* Adjust color */
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {

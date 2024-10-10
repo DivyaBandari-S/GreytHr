@@ -94,7 +94,8 @@ class ViewPendingDetails extends Component
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
 
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
-                $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
+                $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'];
+                $isEmpisCCto = $ccArray[0]['emp_id'];
 
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
