@@ -1,0 +1,51 @@
+[2024-10-10 10:12:48] local.INFO: Stored session ID: mHI6a53fXks0pepolRTEwKSOWqfHK9b5rWd6J5kQ  
+[2024-10-10 10:12:48] local.INFO: Existing session ID: None  
+[2024-10-10 10:12:48] local.INFO: Session updated {"user_id":"XSS-0476","session_id":"mHI6a53fXks0pepolRTEwKSOWqfHK9b5rWd6J5kQ","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-10-10 10:12:48] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IncwZ3lpRDNnc2dRQjVqd0ZKc3pYUHc9PSIsInZhbHVlIjoiUzZkWmRJeVlrNXBaRDkrTVdoTnNkdHdwZGNJZlVYaFpNdk81cklpekVlczJrN2JiUS9iVnhkYk1odWtNM1dveVBOd2R5TEt2SzA5dlVyRWx3VEdmc1NKaEppWS9LMmVENHFwV3IxamJnMkFqVnhpNzM3bEgvQ0x3YkZqZkFDS1UiLCJtYWMiOiI5M2RkZjk0YTFiMmNmNGExYTVkMjdjMjg0NmVjNTI0ZmUzY2YxNDhlNDViODg4ZTcwYTM1OGQ2OTA0MWE3YTYwIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik9SbFBtSGc2Y29tWE05SkNqSmlJbkE9PSIsInZhbHVlIjoiY3VlR3V1T1VOamlaMGxyTmd1N0QzQW1wZUlkRzA2QVhqTjVxMzU3UXA5UnVaaTc0QlFnelhMMjFkMEh5M0V5cXozOWJtSkN3ek4vS01wV21mTkNNQmtQbVlURTNuS3k5bFBMM21yVXdmcWpYekZoV01tdDFIZVhVTFI4enRzSm0iLCJtYWMiOiI4YTUyZTE1MzJjZWZmNDMzZWMyYjAyZWIzMTNhY2M3Yjc3MTNkNmU0ODgzNmEyNjZmMGZiMjVmZjMwNDJmYzZmIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/HelpDesk
+
+Sec-Ch-Ua:                 \"Microsoft Edge\";v=\"129\", \"Not=A?Brand\";v=\"8\", \"Chromium\";v=\"129\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/129.0.0.0 Safari/537.36 Edg/129.0.0.0
+
+Cookie: XSRF-TOKEN=WZ34sPxvVJIDCngshMJrRCQQUoJbubxG9U1dKp2M; laravel_session=mHI6a53fXks0pepolRTEwKSOWqfHK9b5rWd6J5kQ
+
+
+
+"}} 
+[2024-10-10 10:12:49] local.INFO: Cache-Control Header: no-cache, no-store, max-age=0, must-revalidate  
+[2024-10-10 10:12:49] local.INFO: Expires Header: 2024-10-10 10:13:49  
+[2024-10-10 10:13:01] local.INFO: openDialog method called with emp_id: XSS-0307  
+[2024-10-10 10:13:02] local.INFO: Cache-Control Header: no-cache, no-store, max-age=0, must-revalidate  
+[2024-10-10 10:13:02] local.INFO: Expires Header: 2024-10-10 10:14:02  
+[2024-10-10 10:13:07] local.INFO: Cache-Control Header: no-cache, no-store, max-age=0, must-revalidate  
+[2024-10-10 10:13:07] local.INFO: Expires Header: 2024-10-10 10:14:07  

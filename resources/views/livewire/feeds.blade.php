@@ -419,7 +419,30 @@
                                     Group Events
                                 </div>
                                 <div class=" col-md-4 group-events  m-auto">
-                                    {{ date('d M', strtotime($data['employee']->personalInfo->date_of_birth??'-')) }}
+                                @if(isset($data['employee']->personalInfo->date_of_birth))
+            {{-- Format the date to display day and month --}}
+    
+
+            {{-- Calculate and display the difference in a human-readable format --}}
+            @php
+                $dateOfBirth = \Carbon\Carbon::parse($data['employee']->personalInfo->date_of_birth);
+                $currentDate = \Carbon\Carbon::now();
+                
+                // Calculate the difference without considering the year
+                $ageMonths = $currentDate->diffInMonths($dateOfBirth->copy()->year($currentDate->year));
+                $ageDays = $currentDate->diffInDays($dateOfBirth->copy()->year($currentDate->year));
+                $ageHours = $currentDate->diffInHours($dateOfBirth->copy()->year($currentDate->year));
+                // Determine the output based on the age
+                if ($ageMonths > 0) {
+                    echo " {$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . " ago";
+                } elseif ($ageDays > 0) {
+                    echo " {$ageDays} day" . ($ageDays > 1 ? 's' : '') . " ago";
+                } else {
+                    echo " {$ageHours} hour" . ($ageHours > 1 ? 's' : '') . " ago";
+                }
+            @endphp
+        
+        @endif
                                 </div>
                             </div>
                             <div class="row m-0 mt-2">
@@ -505,13 +528,13 @@
                             <div class="modal-header">
                                 <h5 class="modal-title"> Reactions</h5>
                                 <button type="button" class="btn-close" wire:click="closeEmojiDialog" aria-label="Close" style="margin-left:auto;">
-        <span aria-hidden="true">&times;</span>
+
     </button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
                                 {{-- Display all emojis and their reactions --}}
                                 @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;margin-top:10px;">
                                     <span>
     @php
         // Assuming $emoji has an 'emp_id' to fetch the correct employee data
@@ -531,8 +554,11 @@
     @endif
 </span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;margin-left:40px">{{ $emoji->emoji_reaction  }}</span>
+                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
+                                    <div style="display: flex; justify-content: center;">
+    <span style="font-size: 16px;">{{ $emoji->emoji_reaction }}</span>
+</div>
+
    
                                     </div>
                                 @endforeach
@@ -852,7 +878,30 @@
                             Group Events
                         </div>
                         <div class=" col-md-4 group-events m-auto">
-                            {{ date('d M ', strtotime($data['employee']->date_of_birth)) }}
+                        @if(isset($data['employee']->personalInfo->date_of_birth))
+            {{-- Format the date to display day and month --}}
+    
+
+            {{-- Calculate and display the difference in a human-readable format --}}
+            @php
+                $dateOfBirth = \Carbon\Carbon::parse($data['employee']->personalInfo->date_of_birth);
+                $currentDate = \Carbon\Carbon::now();
+                
+                // Calculate the difference without considering the year
+                $ageMonths = $currentDate->diffInMonths($dateOfBirth->copy()->year($currentDate->year));
+                $ageDays = $currentDate->diffInDays($dateOfBirth->copy()->year($currentDate->year));
+                $ageHours = $currentDate->diffInHours($dateOfBirth->copy()->year($currentDate->year));
+                // Determine the output based on the age
+                if ($ageMonths > 0) {
+                    echo " {$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . " ago";
+                } elseif ($ageDays > 0) {
+                    echo " {$ageDays} day" . ($ageDays > 1 ? 's' : '') . " ago";
+                } else {
+                    echo " {$ageHours} hour" . ($ageHours > 1 ? 's' : '') . " ago";
+                }
+            @endphp
+        
+        @endif
                         </div>
                     </div>
                     <div class="row m-0 mt-2">
@@ -929,13 +978,13 @@
                             <div class="modal-header">
                                 <h5 class="modal-title"> Reactions</h5>
                                 <button type="button" class="btn-close" wire:click="closeEmojiDialog" aria-label="Close" style="margin-left:auto;">
-        <span aria-hidden="true">&times;</span>
+        
     </button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
                                 {{-- Display all emojis and their reactions --}}
                                 @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;margin-top:10px;">
                                     <span>
     @php
         // Assuming $emoji has an 'emp_id' to fetch the correct employee data
@@ -955,8 +1004,8 @@
     @endif
 </span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;margin-left:40px">{{ $emoji->emoji_reaction  }}</span>
+                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
+                                        <span style="font-size: 16px;">{{ $emoji->emoji_reaction  }}</span>
    
                                     </div>
                                 @endforeach
@@ -1271,7 +1320,28 @@
                     Group Events
                 </div>
                 <div class=" col-md-4 group-events m-auto">
-                    {{ date('d M ', strtotime($data['employee']->hire_date)) }}
+                @if(isset($data['employee']->hire_date))
+    {{-- Calculate and display the difference in a human-readable format --}}
+    @php
+        $hireDate = \Carbon\Carbon::parse($data['employee']->hire_date);
+        $currentDate = \Carbon\Carbon::now();
+        
+        // Calculate the difference without considering the year
+        $ageMonths = $currentDate->diffInMonths($hireDate->copy()->year($currentDate->year));
+        $ageDays = $currentDate->diffInDays($hireDate->copy()->year($currentDate->year));
+        $ageHours = $currentDate->diffInHours($hireDate->copy()->year($currentDate->year));
+        
+        // Determine the output based on the age
+        if ($ageMonths > 0) {
+            echo "{$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . " ago";
+        } elseif ($ageDays > 0) {
+            echo "{$ageDays} day" . ($ageDays > 1 ? 's' : '') . " ago";
+        } else {
+            echo "{$ageHours} hour" . ($ageHours > 1 ? 's' : '') . " ago";
+        }
+    @endphp
+@endif
+
                 </div>
             </div>
             <div class="row m-0">
@@ -1369,13 +1439,13 @@
                             <div class="modal-header">
                                 <h5 class="modal-title"> Reactions</h5>
                                 <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;">
-        <span aria-hidden="true">&times;</span>
+      
     </button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
                                 {{-- Display all emojis and their reactions --}}
                                 @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;margin-top:10px;">
                                     <span>
     @php
         // Assuming $emoji has an 'emp_id' to fetch the correct employee data
@@ -1395,8 +1465,8 @@
     @endif
 </span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;margin-left:40px">{{ $emoji->emoji }}</span>
+                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
+                                        <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
    
                                     </div>
                                 @endforeach
@@ -1709,7 +1779,27 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                 Group Events
             </div>
             <div class="col-md-4 m-auto" style="font-size: 12px; font-weight: 100px; color: #9E9696; text-align: center;">
-                {{ date('d M ', strtotime($data['employee']->hire_date)) }}
+            @if(isset($data['employee']->hire_date))
+    {{-- Calculate and display the difference in a human-readable format --}}
+    @php
+        $hireDate = \Carbon\Carbon::parse($data['employee']->hire_date);
+        $currentDate = \Carbon\Carbon::now();
+        
+        // Calculate the difference without considering the year
+        $ageMonths = $currentDate->diffInMonths($hireDate->copy()->year($currentDate->year));
+        $ageDays = $currentDate->diffInDays($hireDate->copy()->year($currentDate->year));
+        $ageHours = $currentDate->diffInHours($hireDate->copy()->year($currentDate->year));
+        
+        // Determine the output based on the age
+        if ($ageMonths > 0) {
+            echo "{$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . " ago";
+        } elseif ($ageDays > 0) {
+            echo "{$ageDays} day" . ($ageDays > 1 ? 's' : '') . " ago";
+        } else {
+            echo "{$ageHours} hour" . ($ageHours > 1 ? 's' : '') . " ago";
+        }
+    @endphp
+@endif
             </div>
         </div>
         <div class="row m-0">
@@ -1794,13 +1884,13 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                             <div class="modal-header">
                                 <h5 class="modal-title"> Reactions</h5>
                                 <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;">
-        <span aria-hidden="true">&times;</span>
+     
     </button>
                             </div>
-                            <div class="modal-body">
+                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
                                 {{-- Display all emojis and their reactions --}}
                                 @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;">
+                                    <div style="display: flex; align-items: center;margin-top:10px;">
                                     <span>
     @php
         // Assuming $emoji has an 'emp_id' to fetch the correct employee data
@@ -1820,8 +1910,8 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
     @endif
 </span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;margin-left:40px">{{ $emoji->emoji }}</span>
+                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
+                                        <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
    
                                     </div>
                                 @endforeach
