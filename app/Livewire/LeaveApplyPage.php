@@ -478,8 +478,6 @@ class LeaveApplyPage extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-            // Validate dates only if to_date is set
-            if ($this->to_date) {
                 // Check for existing error messages
                 if ($this->showerrorMessage) {
                     return;
@@ -491,15 +489,6 @@ class LeaveApplyPage extends Component
                 // Check if the selected dates are on weekends
                 if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
                     $errorMessages[] = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
-                }
-
-                // Validate date range
-                if ($this->to_date < $this->from_date) {
-                    $errorMessages[] = 'To date must be greater than or equal to from date.';
-                }
-
-                if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
-                    $errorMessages[] = 'To session must be greater than or equal to from session.';
                 }
 
                 // Check for overlapping leave requests
@@ -530,6 +519,14 @@ class LeaveApplyPage extends Component
                         $errorMessages[] = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
                     }
                 }
+                // Validate date range
+                if ($this->to_date < $this->from_date) {
+                    $errorMessages[] = 'To date must be greater than or equal to from date.';
+                }
+
+                if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
+                    $errorMessages[] = 'To session must be greater than or equal to from session.';
+                }
 
                 // If there are any error messages, set them and return
                 if (!empty($errorMessages)) {
@@ -537,7 +534,6 @@ class LeaveApplyPage extends Component
                     $this->showerrorMessage = true;
                     return;
                 }
-            }
 
             // Calculate number of days if validation passed
             $this->showNumberOfDays = true;
