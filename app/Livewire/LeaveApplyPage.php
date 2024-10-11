@@ -577,7 +577,7 @@ class LeaveApplyPage extends Component
                         ->where('to_date', '<=', $this->to_date);
                 });
             })
-            ->whereIn('status', ['approved', 'pending'])
+            ->whereIn('status', ['approved', 'Pending'])
             ->exists();
     }
 
@@ -587,7 +587,7 @@ class LeaveApplyPage extends Component
         $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_type', $this->leave_type)
             ->whereNotIn('leave_type', ['Loss Of Pay'])
-            ->whereIn('status', ['approved', 'pending'])
+            ->whereIn('status', ['approved', 'Pending'])
             ->get();
         $totalNumberOfDays = 0; // Initialize the counter for total days
         if (!$checkLeaveBalance->isEmpty()) {
@@ -642,7 +642,7 @@ class LeaveApplyPage extends Component
             ->where('leave_type', 'Casual Leave')
             ->whereYear('from_date', $currentYear)
             ->whereMonth('from_date', $currentMonth)
-            ->whereIn('status', ['approved', 'pending'])
+            ->whereIn('status', ['approved', 'Pending'])
             ->get();
 
         $totalLeaveDays = 0;
