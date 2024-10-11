@@ -141,6 +141,7 @@
                         <span class="normalText font-weight-400">No. of days not available</span>
                         @endif
                     </div>
+                    @if($leaveRequest['leaveRequest']->category_type === 'Leave')
                     <div class="content1 px-4">
                         <span class="normalTextValue">Reason :</span>
                         @if(isset($leaveRequest['leaveRequest']->reason))
@@ -149,6 +150,17 @@
                         <span class="normalText font-weight-400">Reason Not Available</span>
                         @endif
                     </div>
+                    @else
+                    <div class="content1 px-4">
+                        <span class="normalTextValue">Reason :</span>
+                        @if(isset($leaveRequest['leaveRequest']->leave_cancel_reason))
+                        <span class="normalText font-weight-400">{{ ucfirst($leaveRequest['leaveRequest']->leave_cancel_reason) }}</span>
+                        @else
+                        <span class="normalText font-weight-400">Reason Not Available</span>
+                        @endif
+                    </div>
+                    @endif
+
                     <div class="horizontalLine"></div>
                     <div class="approvedLeaveDetails d-flex justify-content-between align-items-center px-3">
                         <div class="content1">

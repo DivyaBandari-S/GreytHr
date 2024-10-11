@@ -147,7 +147,7 @@
             </div>
             @else
 
-            <div class="row p-0 mt-3 d-flex justify-content-end" >
+            <div class="row p-0 mt-3 d-flex justify-content-end">
                 <div class="row m-0 p-0 mt-3">
                     <div class="search-container d-flex align-items-end justify-content-end p-1">
                         <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
@@ -222,7 +222,7 @@
                             <div class="col accordion-content">
                                 @if($arrl->status=='approved')
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status}}</span>
-                                @elseif($arrl->status=='rejected') 
+                                @elseif($arrl->status=='rejected')
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status}}</span>
                                 @elseif($arrl->approver_remarks=='Forwarded to HR'&&$arrl->status=='pending')
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:yellow;text-transform:uppercase;">FORWARDED</span>
@@ -311,13 +311,13 @@
                         <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <div  class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</div>
+                        <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</div>
                     </li>
                 </ul>
             </div>
 
             @if ($leaveactiveTab === "active")
-            <div class="pending-leavves-container" >
+            <div class="pending-leavves-container">
                 @if($count > 0 || $sendLeaveApplications)
                 <div class="reviewList">
                     @livewire('view-pending-details')
@@ -363,7 +363,7 @@
                         <div class="accordion-head rounded m-0">
                             <!-- Display leave details here based on $leaveRequest -->
                             <div class="col accordion-content">
-                                <div class="accordion-profile d-flex align-items-center justify-content-center gap-2 m-auto" >
+                                <div class="accordion-profile d-flex align-items-center justify-content-center gap-2 m-auto">
                                     @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null' && $leaveRequest['approvedLeaveRequest']->image != "Null" && $leaveRequest['approvedLeaveRequest']->image != "")
                                     <img height="40" width="40" src="data:image/jpeg;base64,{{ ($leaveRequest['approvedLeaveRequest']->image) }}" style="border-radius: 50%;">
                                     @else
@@ -459,14 +459,23 @@
                             </span>
 
                         </div>
-
+                        @if($leaveRequest['approvedLeaveRequest']->category_type === 'Leave')
                         <div class="review-content px-3">
 
                             <span class="normalTextValue">Reason:</span>
 
                             <span class="normalText font-weight-400">{{ucfirst( $leaveRequest['approvedLeaveRequest']->reason) }}</span>
                         </div>
+                        @else
+                        @if($leaveRequest['approvedLeaveRequest']->category_type === 'Leave')
+                        <div class="review-content px-3">
 
+                            <span class="normalTextValue">Reason:</span>
+
+                            <span class="normalText font-weight-400">{{ucfirst( $leaveRequest['approvedLeaveRequest']->leave_cancel_reason) }}</span>
+                        </div>
+                        @endif
+                        @endif
                         <div class="horizontalLine"></div>
                         <div class="approvedLeaveDetails d-flex justify-content-between align-items-center">
 
@@ -482,82 +491,82 @@
                                 @if(!empty($leaveRequest['leaveBalances']))
                                 <div class="d-flex align-items-center justify-content-center">
 
-                                <!-- Sick Leave -->
+                                    <!-- Sick Leave -->
 
-                                <div class="sickLeaveCircle">
+                                    <div class="sickLeaveCircle">
 
-                                    <span class="sickLeaveBal">SL</span>
+                                        <span class="sickLeaveBal">SL</span>
+
+                                    </div>
+
+                                    <span class="sickLeaveValue">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
+
+                                    <!-- Casual Leave  -->
+
+                                    <div class="casLeaveCircle">
+
+                                        <span class="casLeaveBal">CL</span>
+
+                                    </div>
+
+                                    <span class="casLeaveValue">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
+
+                                    <!-- Casual Leave  Probation-->
+                                    @if($leaveRequest['approvedLeaveRequest']->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
+                                    <div class="probLeave">
+
+                                        <span class="probLeaveBal">CLP</span>
+
+                                    </div>
+                                    <span class="probLeaveValue">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
+
+                                    <!-- Loss of Pay -->
+
+                                    @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Loss Of Pay' && isset($leaveRequest['leaveBalances']['lossOfPayBalance']))
+
+                                    <div class="lossLeave">
+
+                                        <span class="lossLeaveBal">LOP</span>
+
+                                    </div>
+                                    @if(($leaveRequest['leaveBalances']['lossOfPayBalance'])>0)
+                                    <span class="lossLeaveValue">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    @else
+                                    <span class="lossLeaveValue">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
+                                    @endif
+                                    @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Marriage Leave' && isset($leaveRequest['leaveBalances']['marriageLeaveBalance']))
+
+                                    <div class="marriageLeave">
+
+                                        <span class="marriageLeaveBal">MRL</span>
+
+                                    </div>
+
+                                    <span class="marriageLeaveValue">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
+
+                                    @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Petarnity Leave' && isset($leaveRequest['leaveBalances']['paternityLeaveBalance']))
+
+                                    <div class="petarnityLeave">
+
+                                        <span class="petarnityLeaveBal">PL</span>
+
+                                    </div>
+
+                                    <span class="petarnityLeaveValue">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
+
+                                    @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Maternity Leave' && isset($leaveRequest['leaveBalances']['maternityLeaveBalance']))
+
+                                    <div class="maternityLeave">
+
+                                        <span class="maternityLeaveBal">ML</span>
+
+                                    </div>
+
+                                    <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
+
+                                    @endif
 
                                 </div>
-
-                                <span class="sickLeaveValue">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
-
-                                <!-- Casual Leave  -->
-
-                                <div class="casLeaveCircle">
-
-                                    <span class="casLeaveBal">CL</span>
-
-                                </div>
-
-                                <span class="casLeaveValue">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
-
-                                <!-- Casual Leave  Probation-->
-                                @if($leaveRequest['approvedLeaveRequest']->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
-                                <div class="probLeave">
-
-                                    <span class="probLeaveBal">CLP</span>
-
-                                </div>
-                                <span class="probLeaveValue">{{ $leaveRequest['leaveBalances']['casualProbationLeaveBalance'] }}</span>
-
-                                <!-- Loss of Pay -->
-
-                                @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Loss Of Pay' && isset($leaveRequest['leaveBalances']['lossOfPayBalance']))
-
-                                <div class="lossLeave">
-
-                                    <span class="lossLeaveBal">LOP</span>
-
-                                </div>
-                                @if(($leaveRequest['leaveBalances']['lossOfPayBalance'])>0)
-                                <span class="lossLeaveValue">&minus;{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
-                                @else
-                                <span class="lossLeaveValue">{{ $leaveRequest['leaveBalances']['lossOfPayBalance'] }}</span>
-                                @endif
-                                @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Marriage Leave' && isset($leaveRequest['leaveBalances']['marriageLeaveBalance']))
-
-                                <div class="marriageLeave">
-
-                                    <span class="marriageLeaveBal">MRL</span>
-
-                                </div>
-
-                                <span class="marriageLeaveValue">{{ $leaveRequest['leaveBalances']['marriageLeaveBalance'] }}</span>
-
-                                @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Petarnity Leave' && isset($leaveRequest['leaveBalances']['paternityLeaveBalance']))
-
-                                <div class="petarnityLeave">
-
-                                    <span class="petarnityLeaveBal">PL</span>
-
-                                </div>
-
-                                <span class="petarnityLeaveValue">{{ $leaveRequest['leaveBalances']['paternityLeaveBalance'] }}</span>
-
-                                @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Maternity Leave' && isset($leaveRequest['leaveBalances']['maternityLeaveBalance']))
-
-                                <div class="maternityLeave">
-
-                                    <span class="maternityLeaveBal">ML</span>
-
-                                </div>
-
-                                <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
-
-                                @endif
-
-                            </div>
                                 @else
                                 <span class="normalText">0</span>
                                 @endif
@@ -637,7 +646,7 @@
 
                                 @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
 
-                                <span class="approvedColor" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="approvedColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
 
@@ -645,7 +654,7 @@
 
                                 @else
 
-                                <span class="normalTextValue" >{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="normalTextValue">{{ strtoupper($leaveRequest->cancel_status) }}</span>
 
                                 @endif
 
@@ -656,15 +665,15 @@
 
                                 @if(strtoupper($leaveRequest->status) == 'APPROVED')
 
-                                <span class="approvedColor" >{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="approvedColor">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
 
-                                <span class="rejectColor" >{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="rejectColor">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @else
 
-                                <span class="normalTextValue" >{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="normalTextValue">{{ strtoupper($leaveRequest->status) }}</span>
 
                                 @endif
 
