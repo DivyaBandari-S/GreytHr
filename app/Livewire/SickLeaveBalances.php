@@ -149,15 +149,16 @@ class SickLeaveBalances extends Component
                 ->pluck('sick_leave')
                 ->first();
 
-
-
             // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
             // where emp_id matches and leave_type is "Sick Leave"
             $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Sick Leave')
                 ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
                 ->whereYear('to_date', '>=', $this->year)
-                ->where('status', 'approved')
+                ->where(function ($query) {
+                    $query->where('status', 'approved')
+                        ->whereIn('cancel_status', ['Re-applied','Pending']);
+                })
                 ->get();
 
 
