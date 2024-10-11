@@ -152,17 +152,17 @@ class CasualLeaveBalance extends Component
         // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
         // where emp_id matches and leave_type is "Sick Leave"
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Casual Leave')
-            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-            ->whereYear('to_date', '>=', $this->year)
-            ->where('status', 'approved')
+            ->where(function ($query) {
+                $query->whereYear('from_date', $this->year)   // Match from_date within the year
+                    ->orWhereYear('to_date', $this->year);  // or match to_date within the year
+            })
+            ->where(function ($query) {
+                $query->where('status', 'approved')
+                    ->whereIn('cancel_status', ['Re-applied','Pending']);
+            })
             ->get();
+
         // dd(  $this->employeeleaveavlid);
-
-
-
-
-
 
         foreach ($this->employeeleaveavlid as $leaveRequest) {
             //$leaveType = $leaveRequest->leave_type;
@@ -186,7 +186,7 @@ class CasualLeaveBalance extends Component
 
 
         $currentMonth = date('n');
-        $lastmonth=12;
+        $lastmonth = 12;
         $currentYear = date('Y');
 
         $startingMonth = 1; // January
@@ -212,7 +212,7 @@ class CasualLeaveBalance extends Component
                 ->whereYear('from_date', $currentYear)
                 ->where(function ($query) use ($month) {
                     $query->whereMonth('from_date', $month)
-                          ->orWhereMonth('to_date', $month);
+                        ->orWhereMonth('to_date', $month);
                 })
                 ->get();
 
