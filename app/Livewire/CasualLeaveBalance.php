@@ -156,10 +156,8 @@ class CasualLeaveBalance extends Component
                 $query->whereYear('from_date', $this->year)   // Match from_date within the year
                     ->orWhereYear('to_date', $this->year);  // or match to_date within the year
             })
-            ->where(function ($query) {
-                $query->where('status', 'approved')
-                    ->whereIn('cancel_status', ['Re-applied','Pending']);
-            })
+            ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
+            ->whereIn('cancel_status', ['Pending', 'rejected', 'Withdrawn', 'Re-applied'])
             ->get();
 
         // dd(  $this->employeeleaveavlid);
