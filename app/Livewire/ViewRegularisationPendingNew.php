@@ -15,6 +15,8 @@ class ViewRegularisationPendingNew extends Component
 {
     public $regularisations;
     public $employeeId;
+
+    public $showAlert=false;
     public $openAccordionForActive=null;
     public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
     public $messageContent;  // This will hold the message input from the form
@@ -66,6 +68,7 @@ class ViewRegularisationPendingNew extends Component
 
         }
     }
+
     public function sendMail($id)
 {
     
@@ -102,6 +105,10 @@ class ViewRegularisationPendingNew extends Component
     public function openRejectModal()
     {
        $this->openRejectPopupModal=true;
+    }
+    public function hideAlert()
+    {
+        $this->showAlert=false;
     }
     public function closeRejectModal()
     {
@@ -206,6 +213,7 @@ class ViewRegularisationPendingNew extends Component
         $this->remarks='';
         $this->closeApproveModal();
         Session::flash('success', 'Regularisation Request approved successfully');
+        $this->showAlert=true;
     }
     
     public function searchRegularisation()
@@ -234,6 +242,7 @@ class ViewRegularisationPendingNew extends Component
         $this->remarks='';
         $this->closeRejectModal();
         Session::flash('success', 'Regularisation Request rejected successfully');
+        $this->showAlert=true;
     }
     
  
