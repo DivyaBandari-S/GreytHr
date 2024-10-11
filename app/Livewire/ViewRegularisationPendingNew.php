@@ -15,7 +15,6 @@ class ViewRegularisationPendingNew extends Component
 {
     public $regularisations;
     public $employeeId;
-
     public $openAccordionForActive=null;
     public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
     public $messageContent;  // This will hold the message input from the form

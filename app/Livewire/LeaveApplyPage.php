@@ -79,6 +79,8 @@ class LeaveApplyPage extends Component
     public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
     public $showAlert = false;
     public $field;
+    public $managerDetails, $fullName;
+    public $empManagerDetails, $selectedManagerDetails;
     public function hideSuccessAlert()
     {
         $this->showAlert = false;
@@ -108,7 +110,9 @@ class LeaveApplyPage extends Component
     public function mount()
     {
         $this->handleFieldUpdate($this->field);
+        $this->selectedPeople = [];
         $this->searchTerm = '';
+        $this->searchQuery = '';
         $this->selectedYear = Carbon::now()->format('Y');
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employee = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -167,7 +171,7 @@ class LeaveApplyPage extends Component
     {
         $this->showerrorMessage = false;
         $this->searchCCRecipients();
-    }
+   }
 
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
@@ -206,6 +210,7 @@ class LeaveApplyPage extends Component
                 ->get();
 
             $this->ccRecipients = collect($employees);
+
             // Optionally, remove duplicates if necessary
             $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
@@ -236,7 +241,6 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->showCcRecipents = !$this->showCcRecipents;
-            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
@@ -327,10 +331,6 @@ class LeaveApplyPage extends Component
             // Toggle selection state in selectedPeople
             unset($this->selectedPeople[$empId]);
             $this->showCcRecipents = true;
-
-            // Fetch updated employee details
-            $this->fetchEmployeeDetails();
-            $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Handle the exception (log it, show a message, etc.)
             Log::error('Error removing from CC: ' . $e->getMessage());
@@ -478,64 +478,77 @@ class LeaveApplyPage extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-                // Check for existing error messages
-                if ($this->showerrorMessage) {
-                    return;
-                }
+            // Check for existing error messages and clear any previous ones
+            if ($this->showerrorMessage) {
+                return;
+            }
 
-                // Step-by-step validation checks
-                $errorMessages = [];
+            // Initialize the error message
+            $errorMessages = [];
 
-                // Check if the selected dates are on weekends
-                if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
-                    $errorMessages[] = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
-                }
+            // Step-by-step validation process:
 
-                // Check for overlapping leave requests
-                if ($this->checkOverlappingLeave($employeeId)) {
-                    $errorMessages[] = 'The selected leave dates overlap with an existing leave application.';
-                }
+            // 1. Check if the selected dates are on weekends
+            if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
+                $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                // Validate leave balance
-                $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
-                $leaveBalance = $this->getLeaveBalance($employeeId);
-                if ($totalNumberOfDays > $leaveBalance) {
-                    $errorMessages[] = 'It looks like you have already used all your leave balance, considering pending and approved leaves.';
-                }
+            // 2. Check for overlapping leave requests
+            if ($this->checkOverlappingLeave($employeeId)) {
+                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                // Check for holidays
-                if ($this->checkForHolidays()) {
-                    $errorMessages[] = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
-                }
+            // 3. Validate leave balance
+            $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
+            $leaveBalance = $this->getLeaveBalance($employeeId);
+            if ($totalNumberOfDays > $leaveBalance) {
+                $this->errorMessage = 'It looks like you have already used all your leave balance, considering pending and approved leaves.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                // Validate from date for joining date
-                if ($this->from_date < $checkJoinDate->hire_date) {
-                    $errorMessages[] = 'Entered From date and To dates are less than your Join date.';
-                }
+            // 4. Check for holidays
+            if ($this->checkForHolidays()) {
+                $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                // Special validation for Casual Leave
-                if ($this->leave_type === 'Casual Leave') {
-                    if ($this->checkCasualLeaveLimit($employeeId)) {
-                        $errorMessages[] = 'You can only apply for a maximum of 2 days of Casual Leave for this month.';
-                    }
-                }
-                // Validate date range
-                if ($this->to_date < $this->from_date) {
-                    $errorMessages[] = 'To date must be greater than or equal to from date.';
-                }
+            // 5. Validate from date for joining date
+            $fromDate = Carbon::parse($this->from_date);
+            $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
+            if ($fromDate->format('Y-m-d') < $hireDate) {
+                $this->errorMessage = 'Entered From date and To dates are less than your Join date.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
-                    $errorMessages[] = 'To session must be greater than or equal to from session.';
-                }
+            // 6. Special validation for Casual Leave
+            if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
+                $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for the month.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-                // If there are any error messages, set them and return
-                if (!empty($errorMessages)) {
-                    $this->errorMessage = implode(' ', $errorMessages);
-                    $this->showerrorMessage = true;
-                    return;
-                }
+            // 7. Validate date range
+            if ($this->to_date < $this->from_date) {
+                $this->errorMessage = 'To date must be greater than or equal to from date.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
 
-            // Calculate number of days if validation passed
+            // 8. Validate session range
+            if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
+                $this->errorMessage = 'To session must be greater than or equal to from session.';
+                $this->showerrorMessage = true;
+                return; // Stop further validation if error occurs
+            }
+
+            // All validations passed, now calculate the number of days
             $this->showNumberOfDays = true;
             if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
                 $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
@@ -546,6 +559,7 @@ class LeaveApplyPage extends Component
             session()->flash('error', 'An error occurred while handling field update. Please try again later.');
         }
     }
+
 
     // Additional methods for validation
     protected function checkOverlappingLeave($employeeId)
@@ -575,7 +589,6 @@ class LeaveApplyPage extends Component
             ->whereNotIn('leave_type', ['Loss Of Pay'])
             ->whereIn('status', ['approved', 'pending'])
             ->get();
-
         $totalNumberOfDays = 0; // Initialize the counter for total days
         if (!$checkLeaveBalance->isEmpty()) {
             foreach ($checkLeaveBalance as $leaveRequest) {
@@ -912,8 +925,7 @@ class LeaveApplyPage extends Component
         $this->selectedPeople = [];
     }
 
-    public $managerDetails, $fullName;
-    public $empManagerDetails, $selectedManagerDetails;
+
     public function render()
     {
         $this->selectedYear = Carbon::now()->format('Y');
