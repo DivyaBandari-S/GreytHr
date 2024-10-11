@@ -152,12 +152,12 @@ class CasualLeaveBalance extends Component
         // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
         // where emp_id matches and leave_type is "Sick Leave"
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
             ->where(function ($query) {
-                $query->whereYear('from_date', $this->year)   // Match from_date within the year
-                    ->orWhereYear('to_date', $this->year);  // or match to_date within the year
+                $query->where('status', 'approved')
+                    ->whereIn('cancel_status', ['Re-applied', 'Pending']);
             })
-            ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
-            ->whereIn('cancel_status', ['Pending', 'rejected', 'Withdrawn', 'Re-applied'])
             ->get();
 
         // dd(  $this->employeeleaveavlid);
