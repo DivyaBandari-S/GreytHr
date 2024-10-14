@@ -85,7 +85,7 @@ class LeaveHelper
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where(function ($query) {
                 $query->where('status', 'approved')
-                    ->where('cancel_status', 'Pending');
+                ->whereIn('cancel_status', ['Re-applied','Pending','rejected','Withdrawn']);
             })
             ->whereIn('leave_type', [
                 'Casual Leave Probation',
@@ -159,7 +159,7 @@ class LeaveHelper
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where(function ($query) {
                 $query->where('status', 'approved')
-                    ->where('cancel_status', 'Pending'); // Check both 'status' and 'cancel_status'
+              ->whereIn('cancel_status', ['Re-applied','Pending','rejected','Withdrawn']); // Check both 'status' and 'cancel_status'
             })
             ->whereIn('leave_type', [
                 'Casual Leave Probation',

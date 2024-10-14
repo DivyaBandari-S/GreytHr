@@ -11,7 +11,18 @@
     @if (session()->has('message'))
         <div class="alert alert-success">{{ session('message') }}</div>
     @endif
-
+    @if (session()->has('success'))
+            <div class="alert alert-success"wire:poll.10s="hideAlert">
+                {{ session('success') }}
+                
+ 
+            </div>
+    @elseif (session()->has('success'))
+           <div class="alert alert-danger"wire:poll.10s="hideAlert">
+                {{ session('success') }}
+                
+            </div>
+    @endif
     
 </div>
     
@@ -41,23 +52,7 @@
     @endif
 
     @endforeach
-    @if (session()->has('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-
-            </div>
-    @elseif (session()->has('success'))
-           <div class="alert alert-danger">
-                {{ session('success') }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-
-            </div>
-    @endif
+    
 
 
     <div class="accordion bg-white border mb-3 rounded">

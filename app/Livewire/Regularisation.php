@@ -270,6 +270,11 @@ class Regularisation extends Component
             $this->showAlert=true;
             return;
         }
+        if ($this->isEmployeeRegularisedOnDate($selectedDate) ){
+            session()->flash('error', 'Your regularisation is already approved for this date.');
+            $this->showAlert=true;
+            return;
+        }
         
 
         if (!in_array($date, $this->selectedDates)) {

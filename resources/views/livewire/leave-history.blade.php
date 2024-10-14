@@ -172,7 +172,7 @@
                                                     @foreach ($leaveRequest->cc_to as $ccToItem)
                                                         <span class="custom-cc-item">
                                                             {{ ucwords(strtolower($ccToItem['full_name'])) }}
-                                                            (#{{ $ccToItem['emp_id']['emp_id'] }})
+                                                            (#{{ $ccToItem['emp_id'] }})
                                                         </span>
                                                         @if (!$loop->last)
                                                             ,

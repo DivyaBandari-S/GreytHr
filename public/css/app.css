@@ -3073,6 +3073,10 @@ input[type="radio"] {
     display: none;
     background-color: #fff;
 }
+.accordion-body1 {
+    border-radius: 10px;
+    background-color: #fff;
+}
 .canvasBorder {
     position: relative;
     border-radius: 50%;
@@ -3420,7 +3424,7 @@ input[type="radio"] {
     width: 5px; /* Adjust as needed */
 }
 ::-webkit-scrollbar-thumb {
-    background: #d1d6dc; /* Adjust color */
+    background: #9f9e9e; /* Adjust color */
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -3822,7 +3826,7 @@ input[type="radio"] {
     border: none;
     outline: none;
     background: rgb(2, 17, 79);
-    padding: 7px 12px;
+    padding: 3px 12px;
     color: white;
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
