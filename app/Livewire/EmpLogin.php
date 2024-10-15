@@ -129,33 +129,69 @@ class EmpLogin extends Component
 
         try {
             // $this->showLoader = true;
+            $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])
+                ->orWhere('email', $this->form['emp_id'])
+                ->first();
+            // Check if user exists and is inactive
+            if ($user && !$user->status) {
 
-            if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+                // sweetalert()->addError('Your account is inactive. Please contact support.');
+                // is_active == false
+                ################################### this is also working by using dispatch event call from in the blade using javascript
+                // Dispatch event to trigger a SweetAlert on the frontend
+                $this->dispatch('inactive-user-alert', ['message' => 'Your account is inactive. Please contact support.']);
+                $this->resetForm();
+                $this->reset('form'); // Reset the entire form
+
+            } else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
                 return redirect('/');
-            } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+            } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
                 return redirect('/');
             } else {
-                $this->error = "Invalid ID or Password. Please try again.";
+                $this->flashError("Invalid ID or Password. Please try again.");
             }
         } catch (ValidationException $e) {
-            // Handle validation errors
-            $this->showLoader = false; // Hide loader if validation fails
-            $this->error = "There was a problem with your input. Please check and try again.";
+            $this->flashError('There was a problem with your input. Please check and try again.');
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database errors
-            $this->showLoader = false;
-            $this->error = "We are experiencing technical difficulties. Please try again later.";
+            $this->flashError('We are experiencing technical difficulties. Please try again later.');
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            // Handle server errors
-            $this->showLoader = false;
-            $this->error = "There is a server error. Please try again later.";
+            $this->flashError('There is a server error. Please try again later.');
         } catch (\Exception $e) {
-            // Handle general errors
-            $this->showLoader = false;
-            $this->error = "An unexpected error occurred. Please try again.";
+            $this->flashError('An unexpected error occurred. Please try again.');
         }
+    }
+
+
+    protected function flashError($message)
+    {
+        $this->showLoader = false;
+        ########################################## both flash are working now ############################################################################################################
+        flash(
+            message: $message,
+            type: 'error',
+            options: [
+                // 'timeout' => 3000, // 3 seconds
+                'position' => 'top-center',
+            ]
+        );
+        // flash()->addFlash(
+        //     message: $message,
+        //     type: 'error',
+        //     options: [
+        //         'timeout' => 3000, // 3 seconds
+        //         'position' => 'top-center',
+        //     ]
+        // );
+        ################################################ adding info by using this function ###################################################
+        // flash()->addInfo(
+        //     message: $message,
+        //     options: [
+        //         // 'timeout' => 3000, // 3 seconds
+        //         'position' => 'top-center',
+        //     ]
+        // );
     }
 
 
@@ -168,6 +204,7 @@ class EmpLogin extends Component
         $this->newPassword_confirmation = '';
         $this->verified = false;
         $this->verify_error = '';
+        $this->form = ['emp_id' => '', 'password' => '']; // Resetting the form
         $this->resetValidation();
     }
 
