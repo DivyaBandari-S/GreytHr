@@ -34,9 +34,9 @@
             </div>
             @if($employeeLeaveBalances == 0)
             <div class="row m-0 p-0">
-                <div class="col-md-12 leave-details-col-md-12" >
+                <div class="col-md-12 leave-details-col-md-12">
                     <div class="card leave-details-card">
-                        <div class="card-body leave-details-card-body" >
+                        <div class="card-body leave-details-card-body">
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
                                 <p class="card-text">No information found</p>
@@ -78,7 +78,7 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas class="leave-details-canvas" id="casualLeaveChart" >
+                            <canvas class="leave-details-canvas" id="casualLeaveChart">
                             </canvas>
                         </div>
                     </div>
@@ -101,17 +101,33 @@
                             <tbody>
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
-                                    <td>{{ $balance->status == 'approved' ? 'Availed' : '' }}</td>
+                                    <td>
+                                       @if($balance->category_type === 'Leave')
+                                       @if($balance->status == 'approved')
+                                        Availed
+                                        @elseif($balance->status == 'Withdrawn' )
+                                        Withdrawn
+                                        @else
+                                        Rejected
+                                        @endif
+                                       @else
+                                        Leave Cancel({{ucfirst($balance->cancel_status)}})
+                                       @endif
+                                    </td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
                                     <td>
                                         @php
-                                        $days = $this->s($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session,$balance->leave_type);
+                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session,$balance->leave_type);
                                         @endphp
                                         {{ $days }}
                                     </td>
+                                    @if($balance->category_type === 'Leave')
                                     <td>{{ $balance->reason }}</td>
+                                    @else
+                                    <td>{{ $balance->leave_cancel_reason }}</td>
+                                    @endif
                                 </tr>
                                 @endforeach
                                 @foreach($leaveGrantedData as $index => $balance)

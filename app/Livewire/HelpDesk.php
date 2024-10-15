@@ -276,7 +276,7 @@ public $closedSearch = '';
     {
         try {
             if (count($this->selectedPeopleNames) >= 5 && !in_array($personId, $this->selectedPeople)) {
-                session()->flash('error', 'You can only select up to 5 followers.');
+ 
                 return;
             }
     
@@ -325,7 +325,7 @@ public $closedSearch = '';
 
             $validatedData = $this->validate($this->rules);
               // Auto validate before proceeding
-        $this->autoValidate();
+ 
 
         // Validate the maximum followers selection
         if (count($this->selectedPeopleNames) > 5) {
@@ -481,49 +481,46 @@ public $closedSearch = '';
     public function submitHR()
     {
         try {
+            $this->validate($this->rules);
+           
+    
+            // Validate the maximum followers selection
+      
             $fileContent = null;
             $mime_type = null;
             $file_name = null;
-           $this->validate($this->rules);
-           $this->autoValidate();
-
-           // Validate the maximum followers selection
-           if (count($this->selectedPeopleNames) > 5) {
-               session()->flash('selecterror', 'You can only select up to 5 followers.');
-               return;
-           }
+    
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
+    
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    session()->flash('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                $maxFileSize = 16777215; // 16MB for MEDIUMBLOB
+                if (strlen($fileContent) > $maxFileSize) {
+                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    return;
+                }
+    
                 $mime_type = $this->file_path->getMimeType();
                 $file_name = $this->file_path->getClientOriginalName();
-                // Validate and store the uploaded file
             }
-            // Store the file as binary data
-
-
-            if (  $fileContent  === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                session()->flash('error', 'Failed to read the uploaded file.');
-                return;
-            }
-
-            // Check if the file content is too large
-            if (strlen(  $fileContent ) > 16777215) { // 16MB for MEDIUMBLOB
-                session()->flash('error', 'File size exceeds the allowed limit.');
-                return;
-            }
-
+    
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+    
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>   $fileContent , // Store the binary file data
+                'file_path' => $fileContent, // Store the binary file data
                 'file_name' => $file_name,
                 'mime_type' => $mime_type,
                 'cc_to' => $this->cc_to ?? '-',
@@ -532,10 +529,10 @@ public $closedSearch = '';
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
-           
-
+    
             session()->flash('message', 'Request created successfully.');
             return redirect()->to('/HelpDesk');
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -543,11 +540,12 @@ public $closedSearch = '';
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             session()->flash('error', 'An error occurred while creating the request. Please try again.');
         }
     }
+    
 
     public function downloadFile($id)
     {

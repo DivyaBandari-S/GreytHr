@@ -136,7 +136,10 @@ class CasualProbationLeaveBalance extends Component
                 ->where('leave_type', 'Casual Leave Probation')
                 ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
                 ->whereYear('to_date', '>=', $this->year)
-                ->where('status', 'approved')
+                ->where(function ($query) {
+                    $query->where('status', 'approved')
+                        ->whereIn('cancel_status', ['Re-applied','Pending']);
+                })
                 ->get();
 
             foreach ($this->employeeleaveavlid as $leaveRequest) {
