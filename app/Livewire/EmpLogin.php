@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-
+use App\Helpers\FlashMessageHelper;
 
 class EmpLogin extends Component
 {
@@ -148,49 +148,49 @@ class EmpLogin extends Component
                 session(['post_login' => true]);
                 return redirect('/');
             } else {
-                $this->flashError("Invalid ID or Password. Please try again.");
+                FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
             }
         } catch (ValidationException $e) {
-            $this->flashError('There was a problem with your input. Please check and try again.');
+            FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
         } catch (\Illuminate\Database\QueryException $e) {
-            $this->flashError('We are experiencing technical difficulties. Please try again later.');
+            FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            $this->flashError('There is a server error. Please try again later.');
+            FlashMessageHelper::flashError('There is a server error. Please try again later.');
         } catch (\Exception $e) {
-            $this->flashError('An unexpected error occurred. Please try again.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
         }
     }
 
 
-    protected function flashError($message)
-    {
-        $this->showLoader = false;
-        ########################################## both flash are working now ############################################################################################################
-        flash(
-            message: $message,
-            type: 'error',
-            options: [
-                // 'timeout' => 3000, // 3 seconds
-                'position' => 'top-center',
-            ]
-        );
-        // flash()->addFlash(
-        //     message: $message,
-        //     type: 'error',
-        //     options: [
-        //         'timeout' => 3000, // 3 seconds
-        //         'position' => 'top-center',
-        //     ]
-        // );
-        ################################################ adding info by using this function ###################################################
-        // flash()->addInfo(
-        //     message: $message,
-        //     options: [
-        //         // 'timeout' => 3000, // 3 seconds
-        //         'position' => 'top-center',
-        //     ]
-        // );
-    }
+    // protected function flashError($message)
+    // {
+    //     $this->showLoader = false;
+    //     ########################################## both flash are working now ############################################################################################################
+    //     flash(
+    //         message: $message,
+    //         type: 'error',
+    //         options: [
+    //             // 'timeout' => 3000, // 3 seconds
+    //             'position' => 'top-center',
+    //         ]
+    //     );
+    //     // flash()->addFlash(
+    //     //     message: $message,
+    //     //     type: 'error',
+    //     //     options: [
+    //     //         'timeout' => 3000, // 3 seconds
+    //     //         'position' => 'top-center',
+    //     //     ]
+    //     // );
+    //     ################################################ adding info by using this function ###################################################
+    //     // flash()->addInfo(
+    //     //     message: $message,
+    //     //     options: [
+    //     //         // 'timeout' => 3000, // 3 seconds
+    //     //         'position' => 'top-center',
+    //     //     ]
+    //     // );
+    // }
 
 
     public function resetForm()
@@ -339,12 +339,11 @@ class EmpLogin extends Component
             $employee->notify(new ResetPasswordLink($token));
 
             // Flash a message to the session
-            session()->flash('empIdMessageType', 'success');
-            session()->flash('empIdMessage', 'Password reset link sent successfully to ' . $employee->email);
+            FlashMessageHelper::flashSuccess('Password reset link sent successfully to ' . $employee->email);
             $this->remove();
         } catch (\Exception $e) {
             // If any exception occurs, catch and set an error message
-            $this->verify_error = 'There was an error processing your request: ' . $e->getMessage();
+            FlashMessageHelper::flashError('There was an error processing your request: ' . $e->getMessage());
         }
     }
 
