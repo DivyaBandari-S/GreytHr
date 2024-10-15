@@ -2123,7 +2123,7 @@ color: #fff;
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In{{$dateToCheck}}</th>
+                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In</th>
                                     <th style="font-weight:normal;font-size:12px;">Last&nbsp;Out</th>
                                     <th style="font-weight:normal;font-size:12px;">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th style="font-weight:normal;font-size:12px;">Break&nbsp;Hrs</th>

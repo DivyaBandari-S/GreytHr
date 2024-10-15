@@ -925,9 +925,7 @@ border: 1px solid #778899;
 @if($showMessage)
     <div class="alert alert-success">
         {{ session('success') }}
-        <button type="button" wire:click="hideMessage" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
+
     </div>
 @endif
     <div class="container">
@@ -946,7 +944,6 @@ border: 1px solid #778899;
     @if (session('error'))
     <div class="alert alert-danger alert-dismissible fade show w-50 m-auto" role="alert"wire:poll.10s="hideAlert">
         {{ session('error') }}
-        <button type="button" class="btn-close p-1" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
     @if($isApply==1&&$defaultApply==1)
