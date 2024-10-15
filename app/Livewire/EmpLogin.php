@@ -125,8 +125,6 @@ class EmpLogin extends Component
     {
         $this->validate($this->rules);
 
-
-
         try {
             // $this->showLoader = true;
             $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])

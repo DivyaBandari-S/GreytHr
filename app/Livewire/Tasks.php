@@ -513,23 +513,88 @@ class Tasks extends Component
                     Log::info("Sending email to: {$assigneeEmail}");
 
                     // Assuming you have these variables available in your context
-                    $searchData =$this->filterData ?: $this->records;
+                    $searchData = $this->filterData ?: $this->records;
 
                     $taskName = $this->task_name;
                     $description = $this->description;
                     $assignee = $this->assignee;
-                 
+                    preg_match('/^(.*?)\s+#\((.*?)\)$/', $assignee, $matches);
+
+                    if (isset($matches[1]) && isset($matches[2])) {
+                        $namePart = ucwords(strtolower(trim($matches[1]))); // Format the name
+                        $idPart = strtoupper(trim($matches[2])); // Convert ID to uppercase
+                        $formattedAssignee = $namePart . ' #(' . $idPart . ')'; // Combine formatted name and ID
+                    } else {
+                        $formattedAssignee = ucwords(strtolower($assignee)); // Fallback if the format doesn't match
+                    }
+
                     $dueDate = $this->due_date; // Make sure this variable is defined
                     $priority = $this->priority; // Make sure this variable is defined
-                    $assignedBy = $this->employeeDetails->first_name; // You may want to get the full name of the person assigning the task
+                    $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
 
-                    Mail::to($assigneeEmail)->send(new TaskAssignedNotification($taskName, $description,$dueDate,$priority,$assignedBy,$assignee,$searchData));
+
+                    Mail::to($assigneeEmail)->send(new TaskAssignedNotification(
+                        $taskName,
+                        $description,
+                        $dueDate,
+                        $priority,
+                        $assignedBy,
+                        $formattedAssignee,
+                        $searchData,
+                        '',
+                        false
+                    ));
 
                     Log::info("Email sent successfully.");
                 }
-
-
             }
+
+            foreach ($this->selectedPeopleForFollowers as $followerId) {
+                Log::info("Processing follower ID: {$followerId}");
+                $followerDetails = EmployeeDetails::find($followerId);
+                $searchData = $this->filterData ?: $this->records;
+
+                $taskName = $this->task_name;
+                $description = $this->description;
+                $assignee = $this->assignee;
+                preg_match('/^(.*?)\s+#\((.*?)\)$/', $assignee, $matches);
+
+                if (isset($matches[1]) && isset($matches[2])) {
+                    $namePart = ucwords(strtolower(trim($matches[1]))); // Format the name
+                    $idPart = strtoupper(trim($matches[2])); // Convert ID to uppercase
+                    $formattedAssignee = $namePart . ' #( ' . $idPart . ' )'; // Combine formatted name and ID
+                } else {
+                    $formattedAssignee = ucwords(strtolower($assignee)); // Fallback if the format doesn't match
+                }
+            
+
+            if ($followerDetails) {
+                $followerFirstName = ucwords(strtolower($followerDetails->first_name));
+                $followerLastName = ucwords(strtolower($followerDetails->last_name));
+                $followerIdFormatted = strtoupper(trim($followerDetails->emp_id)); // Assuming this is the ID
+
+                // Combine follower's name and ID
+                $formattedFollowerName = $followerFirstName . ' ' . $followerLastName . ' #( ' . $followerIdFormatted . ' )';
+                $dueDate = $this->due_date; // Make sure this variable is defined
+                $priority = $this->priority; // Make sure this variable is defined
+                $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
+                if (!empty($followerDetails->email)) {
+                    Log::info("Sending email to follower: {$followerDetails->email}");
+                    Mail::to($followerDetails->email)->send(new TaskAssignedNotification(
+                        $taskName,
+                        $description,
+                        $dueDate,
+                        $priority,
+                        $assignedBy,
+                        $formattedAssignee,
+                        $searchData,
+                        $formattedFollowerName, // Pass formatted follower name
+                        true
+                    ));
+                    Log::info("Email sent to follower successfully.");
+                }
+            }
+        }
 
 
             if ($extracted != $this->employeeDetails->emp_id) {
@@ -546,8 +611,7 @@ class Tasks extends Component
             session()->flash('message', 'Task created successfully!');
             $this->resetFields();
             Log::info("Redirecting to tasks page.");
-return redirect()->to('/tasks');
-
+            return redirect()->to('/tasks');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -655,18 +719,18 @@ return redirect()->to('/tasks');
         $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTermFollower);
-         // Assuming $this->selectedPeopleName contains the string
-         $selectedPeopleName = $this->selectedPeopleName;
+        // Assuming $this->selectedPeopleName contains the string
+        $selectedPeopleName = $this->selectedPeopleName;
 
-         // Use a regular expression to extract the ID
-         preg_match('/#\((.*?)\)/', $selectedPeopleName, $matches);
- 
-         // Check if a match was found
-         if (isset($matches[1])) {
-             $assignedEmployeeId = $matches[1]; // This will hold the extracted ID (e.g., XSS-0490)
-         } else {
-             $assignedEmployeeId = null; // Handle the case where no ID is found
-         }
+        // Use a regular expression to extract the ID
+        preg_match('/#\((.*?)\)/', $selectedPeopleName, $matches);
+
+        // Check if a match was found
+        if (isset($matches[1])) {
+            $assignedEmployeeId = $matches[1]; // This will hold the extracted ID (e.g., XSS-0490)
+        } else {
+            $assignedEmployeeId = null; // Handle the case where no ID is found
+        }
 
         $this->filteredFollowers = EmployeeDetails::where(function ($query) use ($companyIdsArray) {
             foreach ($companyIdsArray as $companyId) {
