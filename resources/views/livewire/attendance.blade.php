@@ -2164,7 +2164,9 @@ color: #fff;
                                     <td>-</td>
                                     <td>-</td>
                                     <td>{{$this->work_hrs_in_shift_time}}</td>
-                                    <td>{{$this->shortFallHrs}}</td>
+                                    <td>
+                                         {{$this->shortFallHrs}}
+                                    </td>
                                     <td>-</td>
 
                                 </tr>
@@ -2329,7 +2331,7 @@ color: #fff;
                         <div class="table-responsive"style="max-width: 100%; text-align: center;">
 
                             <table>
-                               @if ($SwiperecordsCount > 0)
+                               @if ($swipe_records_count > 0)
                                 <thead>
 
                                     <tr>
