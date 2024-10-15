@@ -313,7 +313,8 @@ class ViewPendingDetails extends Component
                         ->first();
                     if ($matchingLeaveRequest) {
                         // Update the matching request status to 'rejected'
-                        $matchingLeaveRequest->status = 'rejected';
+                        $matchingLeaveRequest->status = 'approved';
+                        $matchingLeaveRequest->cancel_status = 'approved';
                         $matchingLeaveRequest->updated_at = now();
                         $matchingLeaveRequest->action_by = $employeeId;
                         $matchingLeaveRequest->save();
@@ -321,7 +322,7 @@ class ViewPendingDetails extends Component
 
                     // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'approved';
-                    $leaveRequest->status = 'rejected';
+                    $leaveRequest->status = 'approved';
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
@@ -376,7 +377,7 @@ class ViewPendingDetails extends Component
 
                     // Update the current leave request status to 'approved'
                     $leaveRequest->cancel_status = 'rejected';
-                    $leaveRequest->status = 'approved';
+                    $leaveRequest->status = 'rejected';
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();

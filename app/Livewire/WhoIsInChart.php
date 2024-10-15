@@ -674,9 +674,11 @@ public function checkshift()
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
-                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name', 'company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
+                ->orderBy('swipe_records.swipe_time', 'DESC') // Order by swipe_time in descending order
                 ->get();
+
                 
        
             $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
@@ -705,7 +707,7 @@ public function checkshift()
         $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
     })
     ->count();
-
+    
     $earlySwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
         $query->selectRaw('MIN(swipe_records.id)')
             ->from('swipe_records')
