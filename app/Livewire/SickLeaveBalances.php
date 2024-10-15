@@ -155,10 +155,11 @@ class SickLeaveBalances extends Component
                 ->where('leave_type', 'Sick Leave')
                 ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
                 ->whereYear('to_date', '>=', $this->year)
-                ->where(function ($query) {
-                    $query->whereIn('status', ['approved', 'rejected','Withdrawn'])  // Include both approved and rejected statuses
-                ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
-                })
+                // ->where(function ($query) {
+                //     $query->whereIn('status', ['approved', 'rejected','Withdrawn'])
+                // ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
+                // })
+                ->orderBy('created_at', 'desc')
                 ->get();
 
 
@@ -171,7 +172,7 @@ class SickLeaveBalances extends Component
                     $leaveRequest->to_session,
                     $leaveRequest->leave_type
                 );
-                if(  $leaveRequest->status=='approved'){
+                if( $leaveRequest->status=='approved' &&$leaveRequest->cancel_status!='approved' &&  $leaveRequest->category_type=='Leave'){
                     $this->totalSickDays += $days;
                 }
 
@@ -205,11 +206,12 @@ class SickLeaveBalances extends Component
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Sick Leave')
                     ->where('status', 'approved')
+                    ->where('cancel_status','!=','approved')
                     ->whereYear('from_date', $currentYear)
                     ->where(function ($query) use ($month) {
                         $query->whereMonth('from_date', $month)
                             ->orWhereMonth('to_date', $month);
-                    })
+                    })->where('category_type','Leave')
                     ->get();
 
                 foreach ($availedLeavesRequests as $availedleaveRequest) {
