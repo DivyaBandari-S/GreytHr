@@ -103,7 +103,19 @@
                             <tbody>
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
-                                    <td>{{ $balance->status == 'approved' ? 'Availed' : '' }}</td>
+                                    <td>
+                                        @if($balance->category_type === 'Leave')
+                                       @if($balance->status == 'approved')
+                                        Availed
+                                        @elseif($balance->status == 'Withdrawn' )
+                                        Withdrawn
+                                        @else
+                                        Rejected
+                                        @endif
+                                       @else
+                                        Leave Cancel({{ucfirst($balance->cancel_status)}})
+                                       @endif
+                                    </td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
@@ -113,7 +125,11 @@
                                         @endphp
                                         {{ $days }}
                                     </td>
+                                    @if($balance->category_type === 'Leave')
                                     <td>{{ $balance->reason }}</td>
+                                    @else
+                                    <td>{{ $balance->leave_cancel_reason }}</td>
+                                    @endif
                                 </tr>
                                 @endforeach
                                 @foreach($leaveGrantedData as $index => $balance)
