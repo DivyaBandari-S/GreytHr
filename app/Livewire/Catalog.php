@@ -479,13 +479,7 @@ class Catalog extends Component
         $fileContent = null;
         $mimeType = null;
         $fileName = null;
-        $this->autoValidate();
-
-        // Validate the maximum followers selection
-        if (count($this->selectedPeopleNames) > 5) {
-            session()->flash('selecterror', 'You can only select up to 5 followers.');
-            return;
-        }
+   
         if ($this->file_path) {
             $fileContent = file_get_contents($this->file_path->getRealPath());
             if ($fileContent === false) {
@@ -561,13 +555,9 @@ class Catalog extends Component
         try {
       
     // Store the file as binary data
-    $this->autoValidate();
 
-    // Validate the maximum followers selection
-    if (count($this->selectedPeopleNames) > 5) {
-        session()->flash('selecterror', 'You can only select up to 5 followers.');
-        return;
-    }
+
+
     $fileContent=null;
     $mimeType = null;
     $fileName = null;
@@ -647,13 +637,7 @@ class Catalog extends Component
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
               
             ],$messages);
-            $this->autoValidate();
-
-            // Validate the maximum followers selection
-            if (count($this->selectedPeopleNames) > 5) {
-                session()->flash('selecterror', 'You can only select up to 5 followers.');
-                return;
-            }
+          
     // Store the file as binary data
     $fileContent=null;
     $mimeType = null;
@@ -732,13 +716,7 @@ class Catalog extends Component
                  'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
              ],$messages);
      
-             $this->autoValidate();
-
-             // Validate the maximum followers selection
-             if (count($this->selectedPeopleNames) > 5) {
-                 session()->flash('selecterror', 'You can only select up to 5 followers.');
-                 return;
-             }
+           
              $fileContent=null;
              $mimeType = null;
              $fileName = null;
