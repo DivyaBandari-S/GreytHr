@@ -1908,6 +1908,7 @@ class Attendance extends Component
 
             if ($this->changeDate == 1) {
                 $this->currentDate2 = $this->dateclicked;
+                
                 $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->orderBy('updated_at', 'desc'   )->first();
                 $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->orderBy('updated_at', 'desc')->first();
                 if ( isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
@@ -1937,14 +1938,16 @@ class Attendance extends Component
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
                 }
-                if ($this->first_in_time == $this->last_out_time) {
+                if(Carbon::parse($this->currentDate2)->isWeekend())
+                {  
+                    $this->shortFallHrs = '-';
+                    $this->work_hrs_in_shift_time = '-';
+
+                }
+                elseif ($this->first_in_time == $this->last_out_time) {
                     $this->shortFallHrs = '08:59';
                     $this->work_hrs_in_shift_time = '-';
-                } 
-                elseif(Carbon::parse($this->currentDate2)->isWeekend()){
-                    $this->shortFallHrs = '-';
-                } 
-                else{
+                } else {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '09:00';
                 }
