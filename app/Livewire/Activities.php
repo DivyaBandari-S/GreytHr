@@ -1,7 +1,8 @@
 <?php
  
 namespace App\Livewire;
- 
+
+use App\Helpers\FlashMessageHelper;
 use Livewire\Component;
 use App\Models\Comment;
 use App\Models\Company;
@@ -218,13 +219,13 @@ class Activities extends Component
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
-                session()->flash('error', 'Failed to read the uploaded file.');
+                FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
                 return;
             }
     
             // Check if the file content is too large (16MB limit for MEDIUMBLOB)
             if (strlen($fileContent) > 16777215) {
-                session()->flash('error', 'File size exceeds the allowed limit.');
+                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                 return;
             }
     
@@ -263,7 +264,7 @@ class Activities extends Component
     
             // Reset form fields and display success message
             $this->reset(['category', 'description', 'file_path']);
-            session()->flash('message', 'Post created successfully!');
+            FlashMessageHelper::flashSuccess( 'Post created successfully!');
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -273,7 +274,7 @@ class Activities extends Component
                 'employee_id' => $employeeId ?? 'N/A',
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
     
