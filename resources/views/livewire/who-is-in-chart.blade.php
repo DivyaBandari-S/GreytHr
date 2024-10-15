@@ -180,7 +180,7 @@
           <thead>
             <tr>
             <th>Employee</th>
-            <th>Expected InTime</th>
+            <th>Expected In Time</th>
             <th></th>
            
             </tr>

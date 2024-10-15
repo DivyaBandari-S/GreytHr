@@ -229,6 +229,91 @@ class EmployeeSwipesData extends Component
         $this->endDate=$this->endDate;
         // dd($this->sta)
     }
+    public function processSwipeLogs($managedEmployees, $today)
+{
+    $swipeData = [];
+
+    // Set the start and end dates if provided
+    $startDate = $this->startDate ? Carbon::parse($this->startDate)->startOfDay() : null;
+    $endDate = $this->endDate ? Carbon::parse($this->endDate)->endOfDay() : null;
+
+    foreach ($managedEmployees as $employee) {
+        $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+        Log::info('Normalized employee ID:', ['normalizedEmpId' => $normalizedEmployeeId]);
+
+        // Fetch swipe logs from the external SQL Server database
+        $employeeSwipeLog = $this->fetchExternalSwipeLog($normalizedEmployeeId, $startDate, $endDate, $today);
+
+        // If swipe log doesn't exist, check the SwipeRecord table
+        if (!$employeeSwipeLog) {
+            $swipeRecordExists = SwipeRecord::where('emp_id', $employee->emp_id)
+                ->whereDate('created_at', $today)
+                ->exists();
+
+            // Handle cases based on job_mode and swipe record existence
+            if ($this->shouldFetchSwipeRecord($employee, $swipeRecordExists)) {
+                $employeeSwipeLog = SwipeRecord::where('emp_id', $employee->emp_id)
+                    ->whereDate('created_at', $today)
+                    ->first();
+            }
+        }
+
+        // Add employee and swipe log (if any) to the result array
+        if ($employeeSwipeLog) {
+            $swipeData[] = [
+                'employee' => $employee,
+                'swipe_log' => $employeeSwipeLog,
+            ];
+        }
+    }
+
+    // Debug the final swipe data
+    Log::info('Final swipe data:', ['swipe_data' => $swipeData]);
+    return $swipeData;
+}
+// Helper method to fetch swipe logs from the external SQL Server database
+private function fetchExternalSwipeLog($normalizedEmployeeId, $startDate, $endDate, $today)
+{
+
+    try {
+        $currentDate = Carbon::today();
+        $today = $currentDate->toDateString(); // Get today's date in 'Y-m-d' format
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+ 
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $query = DB::connection('sqlsrv')
+            ->table($tableName)
+            ->select('UserId', 'logDate', 'Direction')
+            ->where('UserId', $normalizedEmployeeId);
+
+        // If startDate and endDate are provided, apply the date filter
+        if ($startDate && $endDate) {
+            $query->whereBetween('logDate', [$startDate, $endDate]);
+        } else {
+            // Fetch swipe log for the current day
+            $query->whereDate('logDate', $today);
+        }
+
+        // Get only the first entry
+        $employeeSwipeLog = $query->first();
+        Log::info('Fetched external swipe log:', ['swipe_log' => $employeeSwipeLog]);
+
+        return $employeeSwipeLog;
+    } catch (\Exception $e) {
+        Log::error('Error fetching swipe log from SQL Server:', ['message' => $e->getMessage()]);
+        return null;
+    }
+}
+
+// Helper method to determine whether to fetch SwipeRecord based on employee job_mode
+private function shouldFetchSwipeRecord($employee, $swipeRecordExists)
+{
+    return ($employee->job_mode == 'WFO') || 
+           ($employee->job_mode == 'Remote' && $swipeRecordExists) ||
+           ($employee->job_mode == 'WFO' && $swipeRecordExists);
+}
     public function render()
 {
     try {
@@ -268,175 +353,8 @@ class EmployeeSwipesData extends Component
        
         $managedEmployees = EmployeeDetails::where('manager_id', $userId)->where('employee_status','active')->get();
         $employeeIds=EmployeeDetails::where('manager_id', $userId)->pluck('emp_id')->toArray();
-        if($this->startDate&&$this->endDate)
-        {
-            
-            foreach ($managedEmployees as $employee) {
-                Log::info('Processing employee:', ['emp_id' => $employee->emp_id, 'job_mode' => $employee->job_mode]);
-            
-                // Loop through each date from startDate to endDate
-                
-                    // Set the current date for iteration
-                  
-                    $curDate = '2024-10-09';
-                    
-                    // Check if swipe records exist for the employee on the current date
-                    $swipeRecordExistsForEmployee = SwipeRecord::where('emp_id', $employee->emp_id)
-                        ->whereDate('created_at', $curDate)
-                        ->exists();
-                    
-                    if ($employee->job_mode == 'WFO') {
-                        $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-                        Log::info('Normalized employee ID:', ['normalizedEmpId' => $normalizedEmployeeId]);
-            
-                        // Fetch the first swipe log from the external database
-                        try {
-                            $employeeSwipeLog = DB::connection('sqlsrv')
-                                ->table($tableName)
-                                ->select('UserId', 'logDate', 'Direction')
-                                ->where('UserId', $normalizedEmployeeId)
-                                ->whereDate('logDate', $curDate)
-                                ->orderBy('logDate')
-                                ->first(); // Get only the first entry for the day
-            
-                            Log::info('Fetched swipe log:', ['swipe_log' => $employeeSwipeLog]);
-                        } catch (\Exception $e) {
-                            Log::error('Database query error:', ['message' => $e->getMessage()]);
-                            $employeeSwipeLog = null;
-                        }
-            
-                        if ($employeeSwipeLog) {
-                            $swipeData[] = [
-                                'employee' => $employee,
-                                'swipe_log' => $employeeSwipeLog,
-                            ];
-                        } elseif ($swipeRecordExistsForEmployee) {
-                            $employeeSwipeLog1 = SwipeRecord::where('emp_id', $employee->emp_id)
-                                ->whereDate('created_at', $curDate)
-                                ->first();
-                            $swipeData[] = [
-                                'employee' => $employee,
-                                'swipe_log2' => $employeeSwipeLog1,
-                            ];
-                        }
-                    } elseif (($employee->job_mode == 'Remote' && $swipeRecordExistsForEmployee) || ($employee->job_mode == 'WFO' && $swipeRecordExistsForEmployee)) {
-                        Log::info('Remote employee ID:', ['remoteEmpId' => $employee->emp_id]);
-            
-                        try {
-                            $employeeSwipeLog = SwipeRecord::where('emp_id', $employee->emp_id)
-                                ->whereDate('created_at', $curDate)
-                                ->first();
-            
-                            Log::info('Fetched swipe log:', ['swipe_log' => $employeeSwipeLog]);
-                        } catch (\Exception $e) {
-                            Log::error('Database query error:', ['message' => $e->getMessage()]);
-                            $employeeSwipeLog = null;
-                        }
-            
-                        if ($employeeSwipeLog) {
-                            $swipeData[] = [
-                                'employee' => $employee,
-                                'swipe_log1' => $employeeSwipeLog,
-                            ];
-                        }
-                    }
-                    
-                
-            }
-
-        }
-        else
-        {
-            foreach ($managedEmployees as $employee) {
-                // Log the employee details for debugging
-                $swipeRecordExists=false;
-                Log::info('Processing employee:', ['emp_id' => $employee->emp_id, 'job_mode' => $employee->job_mode]);
-                $swipeRecordExistsForEmployee=SwipeRecord::where('emp_id',$employee->emp_id)
-                ->whereDate('created_at',$today)
-                ->exists();
-                if ($employee->job_mode == 'WFO') {
-                    $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-                    
-                    // Log the normalized employee ID
-                    Log::info('Normalized employee ID:', ['normalizedEmpId' => $normalizedEmployeeId]);
-            
-                    // Fetch the first swipe log for each employee, if it exists
-                    try {
-                        $employeeSwipeLog = DB::connection('sqlsrv')
-                            ->table($tableName)
-                            ->select('UserId', 'logDate', 'Direction')
-                            ->where('UserId', $normalizedEmployeeId)
-                            ->whereDate('logDate', $today)
-                            ->orderBy('logDate')
-                            ->first(); // Get only the first entry for the day
-                      
-                        // Log the swipe log details for debugging
-                        Log::info('Fetched swipe log:', ['swipe_log' => $employeeSwipeLog]);
-                    } catch (\Exception $e) {
-                        // Log any exception that occurs during the DB query
-                        Log::error('Database query error:', ['message' => $e->getMessage()]);
-                        $employeeSwipeLog = null; // Set to null if an error occurs
-                        
-                    }
-                   
-                    
-                    // Add the employee and their swipe log (if any) to the results
-                    if($employeeSwipeLog)
-                    {
-                            $swipeData[] = [
-                                'employee' => $employee,
-                                'swipe_log' => $employeeSwipeLog,
-                            ];
-                    }
-                    elseif($swipeRecordExistsForEmployee)
-                    {
-                        $employeeSwipeLog1 = SwipeRecord::where('emp_id',$employee->emp_id)
-                        ->whereDate('created_at',$today)
-                        ->first();  
-                        $swipeData[] = [
-                            'employee' => $employee,
-                            'swipe_log2' => $employeeSwipeLog1,
-                        ];  
-                    }
-                }
-                elseif(($employee->job_mode=='Remote'&&$swipeRecordExistsForEmployee)||($employee->job_mode=='WFO'&&$swipeRecordExistsForEmployee))
-                {
-                   
-                    
-                    // Log the normalized employee ID
-                    Log::info('Remote employee ID:', ['remoteEmpId' => $employee->emp_id]);
-            
-                    // Fetch the first swipe log for each employee, if it exists
-                    try {
-                        $employeeSwipeLog = SwipeRecord::where('emp_id',$employee->emp_id)
-                        ->whereDate('created_at',$today)
-                        ->first();
-            
-                        // Log the swipe log details for debugging
-                        Log::info('Fetched swipe log:', ['swipe_log' => $employeeSwipeLog]);
-                    } catch (\Exception $e) {
-                        // Log any exception that occurs during the DB query
-                        Log::error('Database query error:', ['message' => $e->getMessage()]);
-                        $employeeSwipeLog = null; // Set to null if an error occurs
-                        
-                    }
-                   
-                    
-                    // Add the employee and their swipe log (if any) to the results
-                    
-                            $swipeData[] = [
-                                'employee' => $employee,
-                                'swipe_log1' => $employeeSwipeLog,
-                            ];
-                        
-                }
-                
-            }
-        }
-        $this->swipes = $swipeData;
         
-        // Log the final swipe data
-        Log::info('Final swipe data:', ['swipes' => $swipeData]);
+        $this->processSwipeLogs( $managedEmployees, Carbon::today()->toDateString());
 
         $todaySwipeIN = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $currentDate)->first();
 
