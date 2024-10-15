@@ -482,7 +482,6 @@ class LeaveApplyPage extends Component
             if ($this->showerrorMessage) {
                 return;
             }
-
             // Initialize the error message
             $errorMessages = [];
 
@@ -519,13 +518,15 @@ class LeaveApplyPage extends Component
             }
 
             // 5. Validate from date for joining date
-            $fromDate = Carbon::parse($this->from_date);
+            $fromDate = Carbon::parse($this->from_date)->format('Y-m-d');
+
             $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
-            if ($fromDate->format('Y-m-d') < $hireDate) {
+            if ($fromDate < $hireDate) {
                 $this->errorMessage = 'Entered From date and To dates are less than your Join date.';
                 $this->showerrorMessage = true;
                 return; // Stop further validation if error occurs
             }
+
 
             // 6. Special validation for Casual Leave
             if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
@@ -535,14 +536,15 @@ class LeaveApplyPage extends Component
             }
 
             // 7. Validate date range
-            if ($this->to_date < $this->from_date) {
+            if (($this->from_date) > ($this->to_date)) {
                 $this->errorMessage = 'To date must be greater than or equal to from date.';
                 $this->showerrorMessage = true;
                 return; // Stop further validation if error occurs
             }
 
+
             // 8. Validate session range
-            if ($this->from_date == $this->to_date && $this->from_session > $this->to_session) {
+            if (empty($this->from_date) == empty($this->to_date) && $this->from_session > $this->to_session) {
                 $this->errorMessage = 'To session must be greater than or equal to from session.';
                 $this->showerrorMessage = true;
                 return; // Stop further validation if error occurs
@@ -564,22 +566,36 @@ class LeaveApplyPage extends Component
     // Additional methods for validation
     protected function checkOverlappingLeave($employeeId)
     {
-        return LeaveRequest::where('emp_id', $employeeId)
-            ->where(function ($query) {
-                $query->where(function ($q) {
-                    $q->where('from_date', '<=', $this->from_date)
-                        ->where('to_date', '>=', $this->from_date);
-                })->orWhere(function ($q) {
-                    $q->where('from_date', '<=', $this->to_date)
-                        ->where('to_date', '>=', $this->to_date);
-                })->orWhere(function ($q) {
-                    $q->where('from_date', '>=', $this->from_date)
-                        ->where('to_date', '<=', $this->to_date);
-                });
-            })
-            ->whereIn('status', ['approved', 'Pending'])
-            ->exists();
+        try {
+            // Parse and format the dates to ensure consistency
+            $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date)->toDateString(); // 'Y-m-d'
+            $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date)->toDateString();     // 'Y-m-d'
+    
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where(function ($query) use ($fromDate, $toDate) {
+                    $query->where(function ($q) use ($fromDate) {
+                        $q->where('from_date', '<=', $fromDate)
+                          ->where('to_date', '>=', $fromDate);
+                    })
+                    ->orWhere(function ($q) use ($toDate) {
+                        $q->where('from_date', '<=', $toDate)
+                          ->where('to_date', '>=', $toDate);
+                    })
+                    ->orWhere(function ($q) use ($fromDate, $toDate) {
+                        $q->where('from_date', '>=', $fromDate)
+                          ->where('to_date', '<=', $toDate);
+                    });
+                })
+                ->whereIn('status', ['approved', 'Pending'])
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in checkOverlappingLeave method: ' . $e->getMessage());
+            // Optionally, handle the exception or rethrow
+            return false;
+        }
     }
+
+
 
     protected function getTotalLeaveDays($employeeId)
     {
@@ -672,6 +688,10 @@ class LeaveApplyPage extends Component
 
         // Check if total leave days exceed 2
         return $totalLeaveDays > 2;
+    }
+    private function validateDateFormat($date)
+    {
+        return Carbon::hasFormat($date, 'Y-m-d');
     }
 
 
