@@ -17,8 +17,8 @@ class ViewRegularisationPendingNew extends Component
     public $employeeId;
 
     public $showAlert=false;
-    public $openAccordionForActive=null;
-    public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
+    public $openAccordionForActive;
+    public $managerEmail = 'divya.bandari@paygdigitals.com'; // Example manager email
     public $messageContent;  // This will hold the message input from the form
     public $senderName;
 
@@ -27,6 +27,8 @@ class ViewRegularisationPendingNew extends Component
     public $searching=0;
     public $regularised_date;
     public $user;
+
+
 
     public $auto_approve=false;
     public $remarks;
@@ -98,8 +100,11 @@ class ViewRegularisationPendingNew extends Component
         
         if ($this->openAccordionForActive === $id) {
             $this->openAccordionForActive = null; // Close if already open
+           
+            
         } else {
             $this->openAccordionForActive = $id; // Set to open
+          
         }
     }
     public function openRejectModal()

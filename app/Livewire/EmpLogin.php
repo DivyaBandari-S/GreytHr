@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
-
+use App\Helpers\FlashMessageHelper;
 
 class EmpLogin extends Component
 {
@@ -125,38 +125,82 @@ class EmpLogin extends Component
     {
         $this->validate($this->rules);
 
-
-
         try {
             // $this->showLoader = true;
+            $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])
+                ->orWhere('email', $this->form['emp_id'])
+                ->first();
+            // Check if user exists and is inactive
+            if ($user && !$user->status) {
 
-            if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+                // sweetalert()->addError('Your account is inactive. Please contact support.');
+                // is_active == false
+                ################################### this is also working by using dispatch event call from in the blade using javascript
+                // Dispatch event to trigger a SweetAlert on the frontend
+                $this->dispatch('inactive-user-alert', ['message' => 'Your account is inactive. Please contact support.']);
+                $this->resetForm();
+                $this->reset('form'); // Reset the entire form
+
+            } else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
                 return redirect('/');
-            } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password']])) {
+            } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
                 return redirect('/');
             } else {
-                $this->error = "Invalid ID or Password. Please try again.";
+                FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
+                $this->resetForm();
+                $this->reset('form'); // Reset the entire form
             }
         } catch (ValidationException $e) {
-            // Handle validation errors
-            $this->showLoader = false; // Hide loader if validation fails
-            $this->error = "There was a problem with your input. Please check and try again.";
+            FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database errors
-            $this->showLoader = false;
-            $this->error = "We are experiencing technical difficulties. Please try again later.";
+            FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            // Handle server errors
-            $this->showLoader = false;
-            $this->error = "There is a server error. Please try again later.";
+            FlashMessageHelper::flashError('There is a server error. Please try again later.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Exception $e) {
-            // Handle general errors
-            $this->showLoader = false;
-            $this->error = "An unexpected error occurred. Please try again.";
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         }
     }
+
+
+    // protected function flashError($message)
+    // {
+    //     $this->showLoader = false;
+    //     ########################################## both flash are working now ############################################################################################################
+    //     flash(
+    //         message: $message,
+    //         type: 'error',
+    //         options: [
+    //             // 'timeout' => 3000, // 3 seconds
+    //             'position' => 'top-center',
+    //         ]
+    //     );
+    //     // flash()->addFlash(
+    //     //     message: $message,
+    //     //     type: 'error',
+    //     //     options: [
+    //     //         'timeout' => 3000, // 3 seconds
+    //     //         'position' => 'top-center',
+    //     //     ]
+    //     // );
+    //     ################################################ adding info by using this function ###################################################
+    //     // flash()->addInfo(
+    //     //     message: $message,
+    //     //     options: [
+    //     //         // 'timeout' => 3000, // 3 seconds
+    //     //         'position' => 'top-center',
+    //     //     ]
+    //     // );
+    // }
 
 
     public function resetForm()
@@ -168,6 +212,7 @@ class EmpLogin extends Component
         $this->newPassword_confirmation = '';
         $this->verified = false;
         $this->verify_error = '';
+        $this->form = ['emp_id' => '', 'password' => '']; // Resetting the form
         $this->resetValidation();
     }
 
@@ -304,12 +349,11 @@ class EmpLogin extends Component
             $employee->notify(new ResetPasswordLink($token));
 
             // Flash a message to the session
-            session()->flash('empIdMessageType', 'success');
-            session()->flash('empIdMessage', 'Password reset link sent successfully to ' . $employee->email);
+            FlashMessageHelper::flashSuccess('Password reset link sent successfully to ' . $employee->email);
             $this->remove();
         } catch (\Exception $e) {
             // If any exception occurs, catch and set an error message
-            $this->verify_error = 'There was an error processing your request: ' . $e->getMessage();
+            FlashMessageHelper::flashError('There was an error processing your request: ' . $e->getMessage());
         }
     }
 
