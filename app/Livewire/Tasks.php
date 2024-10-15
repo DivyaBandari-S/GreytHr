@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Client;
+use App\Mail\TaskAssignedNotification;
 use App\Models\ClientsEmployee;
 use App\Models\ClientsWithProjects;
 use App\Models\EmployeeDetails;
@@ -16,6 +17,7 @@ use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Session;
 use \Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class Tasks extends Component
 {
@@ -47,6 +49,7 @@ class Tasks extends Component
     public $employeeIdToComplete;
     public $record;
     public $isLoadingImage = false;
+    public $followerPeoples;
 
     public $followersList = false;
     public $selectedPeopleNames = [];
@@ -360,20 +363,20 @@ class Tasks extends Component
     //     $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
     // }
     public function updateFollowers()
-{
-    $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
-        $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-        return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
-    }, $this->selectedPeopleForFollowers);
+    {
+        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+            $selectedPerson = $this->peoples->where('emp_id', $id)->first();
+            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+        }, $this->selectedPeopleForFollowers);
 
-    // Filter out any empty results
-    $this->selectedPeopleNamesForFollowers = array_filter($this->selectedPeopleNamesForFollowers);
+        // Filter out any empty results
+        $this->selectedPeopleNamesForFollowers = array_filter($this->selectedPeopleNamesForFollowers);
 
-    // Convert to a string for display
-    $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
+        // Convert to a string for display
+        $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
 
-    $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
-}
+        $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
+    }
 
 
     public function openForTasks($taskId)
@@ -501,6 +504,32 @@ class Tasks extends Component
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
             $extracted = isset($matches[1]) ? $matches[1] : $this->assignee;
+            $assigneeDetails = EmployeeDetails::find($extracted);
+
+            if ($assigneeDetails) {
+                $assigneeEmail = $assigneeDetails->email;
+
+                if (!empty($assigneeEmail)) {
+                    Log::info("Sending email to: {$assigneeEmail}");
+
+                    // Assuming you have these variables available in your context
+                    $searchData =$this->filterData ?: $this->records;
+
+                    $taskName = $this->task_name;
+                    $description = $this->description;
+                    $assignee = $this->assignee;
+                 
+                    $dueDate = $this->due_date; // Make sure this variable is defined
+                    $priority = $this->priority; // Make sure this variable is defined
+                    $assignedBy = $this->employeeDetails->first_name; // You may want to get the full name of the person assigning the task
+
+                    Mail::to($assigneeEmail)->send(new TaskAssignedNotification($taskName, $description,$dueDate,$priority,$assignedBy,$assignee,$searchData));
+
+                    Log::info("Email sent successfully.");
+                }
+
+
+            }
 
 
             if ($extracted != $this->employeeDetails->emp_id) {
@@ -516,8 +545,9 @@ class Tasks extends Component
             session()->flash('showAlert', true);
             session()->flash('message', 'Task created successfully!');
             $this->resetFields();
+            Log::info("Redirecting to tasks page.");
+return redirect()->to('/tasks');
 
-            return redirect()->to('/tasks');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -591,24 +621,24 @@ class Tasks extends Component
         $trimmedSearchTerm = trim($this->searchTerm);
 
 
-            $this->filteredPeoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
-                foreach ($companyIdsArray as $companyId) {
-                    $query->orWhereJsonContains('company_id', $companyId);
-                }
-            })
-            ->where(function($query) {
+        $this->filteredPeoples = EmployeeDetails::where(function ($query) use ($companyIdsArray) {
+            foreach ($companyIdsArray as $companyId) {
+                $query->orWhereJsonContains('company_id', $companyId);
+            }
+        })
+            ->where(function ($query) {
                 $query->where('employee_status', 'active')
-                      ->orWhere('employee_status', 'on-probation');
+                    ->orWhere('employee_status', 'on-probation');
             })
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                        ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-                })
-                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
-->orderBy('first_name')
-->orderBy('last_name')
-                ->get();
-              
+            ->where(function ($query) use ($trimmedSearchTerm) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+            })
+            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+
 
 
         $this->peopleFound = count($this->filteredPeoples) > 0;
@@ -625,24 +655,37 @@ class Tasks extends Component
         $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
         $trimmedSearchTerm = trim($this->searchTermFollower);
+         // Assuming $this->selectedPeopleName contains the string
+         $selectedPeopleName = $this->selectedPeopleName;
 
-            $this->filteredFollowers = EmployeeDetails::where(function($query) use ($companyIdsArray) {
-                foreach ($companyIdsArray as $companyId) {
-                    $query->orWhereJsonContains('company_id', $companyId);
-                }
-            })
-            ->where(function($query) {
+         // Use a regular expression to extract the ID
+         preg_match('/#\((.*?)\)/', $selectedPeopleName, $matches);
+ 
+         // Check if a match was found
+         if (isset($matches[1])) {
+             $assignedEmployeeId = $matches[1]; // This will hold the extracted ID (e.g., XSS-0490)
+         } else {
+             $assignedEmployeeId = null; // Handle the case where no ID is found
+         }
+
+        $this->filteredFollowers = EmployeeDetails::where(function ($query) use ($companyIdsArray) {
+            foreach ($companyIdsArray as $companyId) {
+                $query->orWhereJsonContains('company_id', $companyId);
+            }
+        })
+            ->where(function ($query) {
                 $query->where('employee_status', 'active')
-                      ->orWhere('employee_status', 'on-probation');
+                    ->orWhere('employee_status', 'on-probation');
             })
-                ->where(function ($query) use ($trimmedSearchTerm) {
-                    $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                        ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-                })
-                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
-->orderBy('first_name')
-->orderBy('last_name')
-                ->get();
+            ->where(function ($query) use ($trimmedSearchTerm) {
+                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
+            })
+            ->where('emp_id', '!=', $assignedEmployeeId)
+            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
 
 
         $this->peopleFound = count($this->filteredFollowers) > 0;
@@ -802,22 +845,39 @@ class Tasks extends Component
         // Fetch employees, ensuring the authenticated employee is shown first
 
 
-            $this->peoples = EmployeeDetails::where(function($query) use ($companyIdsArray) {
-                foreach ($companyIdsArray as $companyId) {
-                    $query->orWhereJsonContains('company_id', $companyId);
-                }
-            })
-            ->where(function($query) {
+        $this->peoples = EmployeeDetails::where(function ($query) use ($companyIdsArray) {
+            foreach ($companyIdsArray as $companyId) {
+                $query->orWhereJsonContains('company_id', $companyId);
+            }
+        })
+            ->where(function ($query) {
                 $query->where('employee_status', 'active')
-                      ->orWhere('employee_status', 'on-probation');
+                    ->orWhere('employee_status', 'on-probation');
             })
-                ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
-                ->orderBy('first_name')
-                ->orderBy('last_name')
-                ->get();
-        
+            ->orderByRaw("FIELD(emp_id, ?) DESC", [$employeeId])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+        // Assuming $this->selectedPeopleName contains the string
+        $selectedPeopleName = $this->selectedPeopleName;
+
+        // Use a regular expression to extract the ID
+        preg_match('/#\((.*?)\)/', $selectedPeopleName, $matches);
+
+        // Check if a match was found
+        if (isset($matches[1])) {
+            $assignedEmployeeId = $matches[1]; // This will hold the extracted ID (e.g., XSS-0490)
+        } else {
+            $assignedEmployeeId = null; // Handle the case where no ID is found
+        }
+
+
+
+        $this->followerPeoples = $this->peoples->where('emp_id', '!=', $assignedEmployeeId);
+
+
         $peopleAssigneeData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-        $peopleFollowerData = $this->filteredFollowers ? $this->filteredFollowers : $this->peoples;
+        $peopleFollowerData = $this->filteredFollowers ? $this->filteredFollowers : $this->followerPeoples;
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
