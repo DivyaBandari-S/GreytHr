@@ -11,7 +11,7 @@
             @endif
 
 
-            <div class="d-flex border-0  align-items-center justify-content-center" style="height: 100px;">
+            <div class="d-flex border-0  align-items-center justify-content-center">
                 <div class="nav-buttons d-flex justify-content-center">
                     <ul class="nav custom-nav-tabs border rounded">
                         
@@ -51,7 +51,7 @@
 
 
         </div>
-        <div class="d-flex flex-row justify-content-end mt-2">
+        <div class="d-flex flex-row justify-content-end mt-2 mb-2">
 
 
 

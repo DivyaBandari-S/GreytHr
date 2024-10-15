@@ -40,7 +40,9 @@
                             @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                             @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
-                                <td wire:click="applyingTo({{ $leaveRequest->id }})"><input type="radio" name="leaveType" wire:model="selectedLeaveType"></td>
+                                <td wire:click="applyingTo({{ $leaveRequest->id }})">
+                                    <input type="radio" name="leaveType" value="{{ $leaveRequest->id }}" wire:model="selectedLeaveType">
+                                </td>
                                 <td>{{ $leaveRequest->leave_type }}</td>
                                 <td>{{ $leaveRequest->from_date->format('d M, Y') }}</td>
                                 <td>{{ $leaveRequest->to_date->format('d M, Y') }}</td>

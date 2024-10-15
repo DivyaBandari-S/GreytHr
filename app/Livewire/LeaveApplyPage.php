@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
@@ -171,7 +172,7 @@ class LeaveApplyPage extends Component
     {
         $this->showerrorMessage = false;
         $this->searchCCRecipients();
-   }
+    }
 
     //this method used to filter cc recipients from employee details
     public function searchCCRecipients()
@@ -354,9 +355,9 @@ class LeaveApplyPage extends Component
         $this->validate();
 
         // // Call handleFieldUpdate for relevant fields
-        // $this->handleFieldUpdate('from_date');
-        // $this->handleFieldUpdate('to_date');
-        // $this->handleFieldUpdate('leave_type');
+        $this->handleFieldUpdate('from_date');
+        $this->handleFieldUpdate('to_date');
+        $this->handleFieldUpdate('leave_type');
 
         // Check if there are existing error messages after field updates
         if ($this->showerrorMessage) {
@@ -455,14 +456,18 @@ class LeaveApplyPage extends Component
             $managerEmail = $applyingToDetails[0]['email'] ?? null; // Use null coalescing to avoid undefined index
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
 
+            // Limit CC emails to a maximum of 5 recipients
+            $ccEmails = array_slice($ccEmails, 0, 5);
+
             // Check if the manager email or CC emails are not empty
             if (!empty($managerEmail) || !empty($ccEmails)) {
                 // Send the email if we have at least one recipient
-                Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
+                Mail::to($managerEmail)
+                    ->cc($ccEmails)
+                    ->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
             }
 
-            logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-            session()->flash('message', 'Leave application submitted successfully!');
+            FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
             $this->resetFields();
             $this->showAlert = true;
         } catch (\Exception $e) {
@@ -488,11 +493,12 @@ class LeaveApplyPage extends Component
             // Step-by-step validation process:
 
             // 1. Check if the selected dates are on weekends
-            if ($this->isWeekend($this->from_date) || $this->isWeekend($this->to_date)) {
+            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
                 $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
                 $this->showerrorMessage = true;
                 return; // Stop further validation if error occurs
             }
+
 
             // 2. Check for overlapping leave requests
             if ($this->checkOverlappingLeave($employeeId)) {
@@ -530,30 +536,26 @@ class LeaveApplyPage extends Component
 
             // 6. Special validation for Casual Leave
             if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for the month.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError("You can only apply for a maximum of 2 days of Casual Leave for the month.");
                 return; // Stop further validation if error occurs
             }
 
             // 7. Validate date range
-            if (($this->from_date) > ($this->to_date)) {
-                $this->errorMessage = 'To date must be greater than or equal to from date.';
-                $this->showerrorMessage = true;
-                return; // Stop further validation if error occurs
-            }
-
-
-            // 8. Validate session range
-            if (empty($this->from_date) == empty($this->to_date) && $this->from_session > $this->to_session) {
+            if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
                 $this->errorMessage = 'To session must be greater than or equal to from session.';
                 $this->showerrorMessage = true;
                 return; // Stop further validation if error occurs
             }
 
+
             // All validations passed, now calculate the number of days
-            $this->showNumberOfDays = true;
-            if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
-                $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
+            if ($this->to_date) {
+                $this->showNumberOfDays = true;
+                if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
+                    $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
+                }
+            } else {
+                $this->showNumberOfDays = false;
             }
         } catch (\Exception $e) {
             // Log the error
@@ -570,21 +572,21 @@ class LeaveApplyPage extends Component
             // Parse and format the dates to ensure consistency
             $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date)->toDateString(); // 'Y-m-d'
             $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date)->toDateString();     // 'Y-m-d'
-    
+
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where(function ($query) use ($fromDate, $toDate) {
                     $query->where(function ($q) use ($fromDate) {
                         $q->where('from_date', '<=', $fromDate)
-                          ->where('to_date', '>=', $fromDate);
+                            ->where('to_date', '>=', $fromDate);
                     })
-                    ->orWhere(function ($q) use ($toDate) {
-                        $q->where('from_date', '<=', $toDate)
-                          ->where('to_date', '>=', $toDate);
-                    })
-                    ->orWhere(function ($q) use ($fromDate, $toDate) {
-                        $q->where('from_date', '>=', $fromDate)
-                          ->where('to_date', '<=', $toDate);
-                    });
+                        ->orWhere(function ($q) use ($toDate) {
+                            $q->where('from_date', '<=', $toDate)
+                                ->where('to_date', '>=', $toDate);
+                        })
+                        ->orWhere(function ($q) use ($fromDate, $toDate) {
+                            $q->where('from_date', '>=', $fromDate)
+                                ->where('to_date', '<=', $toDate);
+                        });
                 })
                 ->whereIn('status', ['approved', 'Pending'])
                 ->exists();
@@ -594,6 +596,7 @@ class LeaveApplyPage extends Component
             return false;
         }
     }
+
 
 
 
@@ -655,7 +658,7 @@ class LeaveApplyPage extends Component
         $currentMonth = now()->month;
         $currentYear = now()->year;
         $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_type', 'Casual Leave')
+            ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave'])
             ->whereYear('from_date', $currentYear)
             ->whereMonth('from_date', $currentMonth)
             ->whereIn('status', ['approved', 'Pending'])

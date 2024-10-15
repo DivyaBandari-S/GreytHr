@@ -2164,7 +2164,9 @@ color: #fff;
                                     <td>-</td>
                                     <td>-</td>
                                     <td>{{$this->work_hrs_in_shift_time}}</td>
-                                    <td>{{$this->shortFallHrs}}</td>
+                                    <td>
+                                         {{$this->shortFallHrs}}
+                                    </td>
                                     <td>-</td>
 
                                 </tr>

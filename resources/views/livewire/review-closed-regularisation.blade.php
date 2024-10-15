@@ -222,7 +222,7 @@
                     </ol>
                 </div>
             </div>
-        </div>
+        
         <div class="headers-details">
             <h6>Regularisation Applied on {{ $regularisationrequest->created_at->format('d M, Y') }} </h6>
         </div>
