@@ -15,8 +15,8 @@
         @endif
         <div class="col-md-12  mb-3 mt-1" >
             <div class="row bg-white rounded border py-1 d-flex align-items-center">
-                <div class="d-flex mt-2 flex-row align-items-center">
-                    <div class="d-flex align-items-center gap-2">
+                <div class="d-flex mt-2 flex-row align-items-center row m-0">
+                    <div class="align-items-center col-md-10 d-flex gap-2 mb-2">
                         <div class="d-flex align-items-center">
                             @if(auth('emp')->check() || auth('hr')->check())
                             @php
@@ -47,8 +47,8 @@
                             <p class="text-xs mb-0">Ready to dive in?</p>
                         </div>
                     </div>
-                    <div class="d-flex align-items-center ms-auto createpost">
-                        <button wire:click="addFeeds" class="btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
+                    <div class="align-items-center col-md-2 createpost d-flex ms-auto">
+                        <button wire:click="addFeeds" class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
                             <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -152,7 +152,7 @@
 
             <!-- Additional row -->
             <div class="row mt-2 d-flex">
-                <div class="col-md-3 feeds-custom-menu bg-white p-3" >
+                <div class="col-md-3 feeds-custom-menu bg-white p-3 mb-2" >
                     <p class="feeds-left-menu">Filters</p>
                     <hr style="width: 100%;border-bottom: 1px solid grey;">
                     <p class="feeds-left-menu">Activities</p>
@@ -715,7 +715,7 @@
 
 
 
-                        <div class="col-md-7 p-0">
+                        <div class="col-md-7">
                             <div class="col-md-7 mb-2">
                                 <div class="d-flex align-items-center">
                                     <span>
@@ -1152,7 +1152,7 @@
 
 
 
-                <div class="col-md-7 p-0">
+                <div class="col-md-7">
                     <div class="col-md-7 mb-2">
                         <div style="display: flex; align-items: center;">
                             <span>
@@ -1611,7 +1611,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-7 p-0">
+        <div class="col-md-7">
             <div class="col-md-7 mb-2">
                 <div style="display: flex; align-items: center;">
                     <span>
@@ -2061,7 +2061,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
 
 
-    <div class="col-md-7 p-0">
+    <div class="col-md-7">
         <div class="col-md-7 mb-2">
             <div style="display: flex; align-items: center;">
                 <span>
