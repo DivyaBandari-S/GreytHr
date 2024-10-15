@@ -40,7 +40,6 @@ class Attendance extends Component
 
     public $avgWorkHoursFromJuly = 0;
 
-    
     public $last_out_time;
 
     public $percentageDifference;
@@ -60,6 +59,9 @@ class Attendance extends Component
     public $CurrentDate;
     public $avgSignOutTime;
 
+    public $first_in_time_for_date;
+
+    public $last_out_time_for_date;
     public $swipe_records_count;
     public $clickedDate;
     public $currentWeekday;
@@ -82,6 +84,10 @@ class Attendance extends Component
     public $secondSwipeTime;
     public $swiperecords;
     public $currentDate1;
+
+    public $currentDate2recordin;
+
+    public $currentDate2recordout;
 
     public $showCalendar = true;
     public $date2;
@@ -859,13 +865,14 @@ class Attendance extends Component
                             Log::info('Employee Present On Date: ' . $date->toDateString());
                     
                             // Fetch both IN and OUT records together to minimize queries
+                            // Default to IN if no OUT time
                             $swipeRecords = SwipeRecord::where('emp_id', $employeeId)
                                 ->whereDate('created_at', $date->toDateString())
                                 ->whereIn('in_or_out', ['IN', 'OUT'])
                                 ->get();
                             
                             $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
-                            $outSwipeTime = $swipeRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;  // Default to IN if no OUT time
+                            $outSwipeTime = $swipeRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
                           
                             if ($inSwipeTime) {
                                 Log::info('Swipe In Time for Date: ' . $date->toDateString() . ' is ' . $inSwipeTime->swipe_time);
@@ -1901,11 +1908,11 @@ class Attendance extends Component
             if ($this->changeDate == 1) {
                 $this->currentDate2 = $this->dateclicked;
 
-                $this->currentDate2record = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
-
-                if (!empty($this->currentDate2record) && isset($this->currentDate2record[0]) && isset($this->currentDate2record[1])) {
-                    $this->first_in_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);
-                    $this->last_out_time = substr($this->currentDate2record[1]['swipe_time'], 0, 5);
+                $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->orderBy('updated_at', 'desc'   )->first();
+                $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->orderBy('updated_at', 'desc')->first();
+                if ( isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
+                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
+                    $this->last_out_time = substr($this->currentDate2recordout->swipe_time, 0, 5);
                     $firstInTime = Carbon::createFromFormat('H:i', $this->first_in_time);
                     $lastOutTime = Carbon::createFromFormat('H:i', $this->last_out_time);
 
@@ -1916,14 +1923,16 @@ class Attendance extends Component
                     if ($lastOutTime < $firstInTime) {
                         $lastOutTime->addDay();
                     }
-
+                    $this->first_in_time_for_date=$firstInTime;
+                    $this->last_out_time_for_date=$lastOutTime;
+             
                     $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
-                } elseif (!isset($this->currentDate2record[1]) && isset($this->currentDate2record[0])) {
-                    $this->first_in_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);
-                    $this->last_out_time = substr($this->currentDate2record[0]['swipe_time'], 0, 5);
+                } elseif (!isset($this->currentDate2recordout) && isset($this->currentDate2recordin)) {
+                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);;
+                    $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);;
                 } else {
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
