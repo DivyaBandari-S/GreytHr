@@ -137,8 +137,8 @@ class CasualProbationLeaveBalance extends Component
                 ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
                 ->whereYear('to_date', '>=', $this->year)
                 ->where(function ($query) {
-                    $query->where('status', 'approved')
-                        ->whereIn('cancel_status', ['Re-applied','Pending']);
+                    $query->whereIn('status', ['approved', 'rejected','Withdrawn'])  // Include both approved and rejected statuses
+                    ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
                 })
                 ->get();
 
@@ -151,7 +151,9 @@ class CasualProbationLeaveBalance extends Component
                     $leaveRequest->to_session
                 );
 
-                $this->totalSickDays += intval($days);
+                if( $leaveRequest->status=='approved'){
+                    $this->totalSickDays += $days;
+                }
 
                 // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
             }
