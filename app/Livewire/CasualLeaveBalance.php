@@ -141,6 +141,7 @@ class CasualLeaveBalance extends Component
             ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
             ->whereYear('to_date', '>=', $this->year)
             ->get();
+            // dd( $this->leaveGrantedData);
 
         $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
@@ -148,17 +149,19 @@ class CasualLeaveBalance extends Component
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave\"')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();
+            //   dd($this->employeeLeaveBalances);
 
         // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
         // where emp_id matches and leave_type is "Sick Leave"
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
-            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-            ->whereYear('to_date', '>=', $this->year)
-            ->where(function ($query) {
-                $query->where('status', 'approved')
-                    ->whereIn('cancel_status', ['Re-applied', 'Pending','rejected','Withdrawn']);
-            })
-            ->get();
+        ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+        ->whereYear('to_date', '>=', $this->year)
+        ->where(function ($query) {
+            $query->whereIn('status', ['approved', 'rejected','Withdrawn'])  // Include both approved and rejected statuses
+                ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
+        })
+        ->orderBy('created_at', 'desc')  // Order by created_at date in descending order
+        ->get();
 
         // dd(  $this->employeeleaveavlid);
 
@@ -171,7 +174,10 @@ class CasualLeaveBalance extends Component
                 $leaveRequest->to_session,
                 $leaveRequest->leave_type
             );
-            $this->totalSickDays += $days;
+            if( $leaveRequest->status=='approved' && $leaveRequest->category_type=='Leave'){
+                $this->totalSickDays += $days;
+            }
+
 
 
             // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
@@ -207,6 +213,8 @@ class CasualLeaveBalance extends Component
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
+                ->where('category_type','Leave')
+                ->where('cancel_status','!=','approved')
                 ->whereYear('from_date', $currentYear)
                 ->where(function ($query) use ($month) {
                     $query->whereMonth('from_date', $month)
@@ -215,6 +223,7 @@ class CasualLeaveBalance extends Component
                 ->get();
 
             foreach ($availedLeavesRequests as $availedleaveRequest) {
+                // dd($availedleaveRequest);
                 $originalStartDate = Carbon::parse($availedleaveRequest->from_date);
                 $originalEndDate = Carbon::parse($availedleaveRequest->to_date);
 
@@ -234,6 +243,7 @@ class CasualLeaveBalance extends Component
                 );
 
                 // Accumulate the days for this month
+
                 $this->availedLeavesCount += $days;
             }
 

@@ -94,7 +94,8 @@
             </div>
 
         </div>
-        <div class="accordion-body m-0 p-0"style="display:{{ $openAccordionForActive === $r->id ? 'block' : 'none' }} ">
+        @if($openAccordionForActive === $r->id)
+        <div class="accordion-body m-0 p-0"style="display:block ;">
 
             <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
 
@@ -196,7 +197,7 @@
                 @endif
             </div>
         </div>
-
+        @endif
 
 
     </div>
