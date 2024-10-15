@@ -16,7 +16,7 @@
         </div>
 
         <div id="alert-container" class="d-flex justify-content-center alert-container task-flash-message-container"
-            wire:poll.5s="hideAlert">
+            wire:poll.10s="hideAlert">
 
             @if ($showAlert)
                 <p class="alert alert-success task-flash-message-text" role="alert">
