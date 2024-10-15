@@ -6,15 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
-            font-family: Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-        }
-
-        .header {
-            background-color: #f4f4f4;
-            padding: 10px;
-            text-align: center;
         }
 
         .content {
@@ -30,36 +23,37 @@
 </head>
 
 <body>
-    <div class="header">
-        <h1>Task Assigned Notification</h1>
-    </div>
     <div class="content">
-     
-                <p>Hi {{ ucwords(strtolower($assignee)) }},</p>
-
-                <p>You have been assigned a new task:</p>
-                {{-- @if (!empty($searchData[0])) --}}
-               
-                <ul>
-                    {{-- <li><strong>Task ID: </strong> T-{{ $record->id }} </li> --}}
-                    <li><strong>Task Name: </strong> {{ strtoupper($taskName) }}</li>
-                    <li><strong>Description: </strong> {{ $description }}</li>
-                    <li><strong>Due Date: </strong>
-                        @if($dueDate && \Carbon\Carbon::createFromFormat('Y-m-d', $dueDate))
-                            {{ \Carbon\Carbon::parse($dueDate)->format('M d, Y') }}
-                        @else
-                            N/A
-                        @endif 
-                    </li>
-                    <li><strong>Priority: </strong> {{ $priority }}</li>
-                    <li><strong>Assigned By: </strong> {{ ucwords(strtolower($assignedBy)) }}</li>
-                    {{-- @endforeach --}}
-                </ul>
-                <p>Please make sure to complete it by the {{ \Carbon\Carbon::parse($dueDate)->format('M d, Y') }}</p>
+        @if ($isFollower)
+            <p>Hi <strong> {{ $formattedFollowerName }} </strong>,</p>
+            <p>A new task has been assigned to <strong>{{ $formattedAssignee }}</strong>. You can follow up on their progress.</p>
+        @else
+            <p>Hi <strong>{{ $formattedAssignee }}</strong>,</p>
+            <p>You have been assigned a new task:</p>
+        @endif
         
-        {{-- @else
-            <p>No tasks assigned.</p>
-        @endif --}}
+        <p>Below are the task details:</p>
+        
+        <ul>
+            <li><strong>Task Name: </strong> {{ strtoupper($taskName) }}</li>
+            <li><strong>Description: </strong> {{ ucwords(strtolower($description)) }}</li>
+            <li><strong>Due Date: </strong>
+                @if($dueDate && \Carbon\Carbon::createFromFormat('Y-m-d', $dueDate))
+                    {{ \Carbon\Carbon::parse($dueDate)->format('M d, Y') }}
+                @else
+                    N/A
+                @endif 
+            </li>
+            <li><strong>Priority: </strong> {{ $priority }}</li>
+            <li><strong>Assigned By: </strong> {{ ucwords(strtolower($assignedBy)) }}</li>
+        </ul>
+
+        @if ($isFollower)
+            <p>For more details and to track progress, <a href="https://s6.payg-india.com/tasks">click here</a>.</p>
+        @else
+            <p><a href="https://s6.payg-india.com/tasks">Click here</a> to view the Task.</p>
+            <p>Please make sure to complete it by <strong>{{ \Carbon\Carbon::parse($dueDate)->format('M d, Y') }}</strong>.</p>
+        @endif
     </div>
 
     <div class="footer">
