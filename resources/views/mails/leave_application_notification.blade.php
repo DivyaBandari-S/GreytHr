@@ -79,7 +79,8 @@
         @if($status === 'Withdrawn')
         <p></p>
         @else
-        <p><a href="https://s6.payg-india.com/employees-review">Click here </a>to approve/reject this request.</p>
+        <p><a href="{{ url(route('review')) }}">Click here</a> to approve/reject/view this request.</p>
+
         @endif
         <p>Regards</p>
 
