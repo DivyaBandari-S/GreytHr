@@ -2123,7 +2123,7 @@ color: #fff;
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In</th>
+                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In{{$dateToCheck}}</th>
                                     <th style="font-weight:normal;font-size:12px;">Last&nbsp;Out</th>
                                     <th style="font-weight:normal;font-size:12px;">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th style="font-weight:normal;font-size:12px;">Break&nbsp;Hrs</th>
@@ -2164,7 +2164,9 @@ color: #fff;
                                     <td>-</td>
                                     <td>-</td>
                                     <td>{{$this->work_hrs_in_shift_time}}</td>
-                                    <td>{{$this->shortFallHrs}}</td>
+                                    <td>
+                                         {{$this->shortFallHrs}}
+                                    </td>
                                     <td>-</td>
 
                                 </tr>

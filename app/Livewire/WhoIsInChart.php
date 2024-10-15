@@ -203,7 +203,7 @@ public function checkshift()
                 $swipeTime = Carbon::parse($employee->swipe_time);
                 $shiftStartTime = $employee->shift_start_time;
                 $swipeTime1 = Carbon::parse($employee['created_at'])->format('H:i:s');
-                $lateArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
+                $lateArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I:%S');
                 $isLateBy10AM = $swipeTime->format('H:i') >= $shiftStartTime;
                 if($isLateBy10AM)
                 {
@@ -274,7 +274,7 @@ public function checkshift()
             foreach ($swipes as $employee) {
                 $swipeTime = Carbon::parse($employee->swipe_time);
                 $shiftStartTime = (new DateTime($employee->shift_start_time))->format('H:i');
-                $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I');
+                $earlyArrivalTime = $swipeTime->diff(Carbon::parse($shiftStartTime))->format('%H:%I:%S');
                 $isEarlyBy10AM = $swipeTime->format('H:i') <=$shiftStartTime;
                 if($isEarlyBy10AM)
                 {
