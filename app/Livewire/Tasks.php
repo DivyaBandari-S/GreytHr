@@ -690,6 +690,8 @@ class Tasks extends Component
 
         $this->showDialog = false;
         $this->validate_tasks = false;
+        $this->assigneeList = false;
+        $this->followersList=false;
     }
 
     public function filter()
