@@ -17,6 +17,7 @@
                     <th>To</th>
                     <th>Reason</th>
                 </tr>
+                
             </thead>
             <tbody>
             @if(!empty($details['regularisationRequests']) && is_array($details['regularisationRequests']))
@@ -29,6 +30,7 @@
                             <td>{{ htmlspecialchars($entry['reason']) }}</td>
                         </tr>
                     @endforeach
+                    
             @else
                 <tr>
                     <td colspan="5">No regularisation entries available.</td>
