@@ -105,7 +105,7 @@
         <table class="teamOnLeavetable">
             <thead>
                 <tr>
-                    <th>Employee Id</th>
+                    <th>Employee ID</th>
                     <th>Employee Name</th>
                     <th>Leave Type</th>
                     <th>From Date</th>

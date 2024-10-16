@@ -77,11 +77,49 @@ class TeamOnLeaveChart extends Component
                 // Store the leave count for each employee on a specific day
                 $employeeLeaveDays = [];
 
-                // Accumulate leave days for each day in the range
+                if ($this->duration == 'today') {
+                    // Handle if today's date is within the fromDate and toDate range
+                    $today = Carbon::now();
+
+                    // Check if today's date is between fromDate and toDate (inclusive)
+                    if ($today->gte($fromDate) || $today->lte($toDate)) {
+                        $day = $today->format('M d'); // Set the label for today in 'Month Day' format
+
+                        $currentDayCount = $this->calculateNumberOfDays(
+                            $fromDate->toDateString(),
+                            $leaveApplication->from_session,
+                            $toDate->toDateString(),
+                            $leaveApplication->to_session,
+                            $leaveApplication->leave_type
+                        );
+
+                        // Ensure the total leave for today does not exceed 1 day
+                        if (!isset($employeeLeaveDays[$employeeId][$day])) {
+                            $employeeLeaveDays[$employeeId][$day] = 0;
+                        }
+
+                        $totalLeaveForDay = $employeeLeaveDays[$employeeId][$day] + $currentDayCount;
+                        if ($totalLeaveForDay > 1) {
+                            $currentDayCount = 1 - $employeeLeaveDays[$employeeId][$day];
+                        }
+
+                        $employeeLeaveDays[$employeeId][$day] += $currentDayCount;
+
+                        // Update the chart data
+                        if (!isset($chartData['datasets'][$leaveType][$day])) {
+                            $chartData['datasets'][$leaveType][$day] = 0;
+                        }
+
+                        $chartData['datasets'][$leaveType][$day] += $currentDayCount;
+                    }
+                    // $fromDate->addDay();
+                }
+                else{
                 while ($fromDate->lte($toDate)) {
                     // Ensure the date is within the current month
                     if ($fromDate->month == $currentMonth) {
                         $day = $fromDate->format('M d');
+
 
                         // Calculate the number of days for the current date
                         $currentDayCount = $this->calculateNumberOfDays(
@@ -125,6 +163,8 @@ class TeamOnLeaveChart extends Component
                 }
             }
 
+            }
+
             // Ensure all dates are present for each leave type
             foreach ($chartData['datasets'] as &$leaveTypeData) {
                 $leaveTypeData = array_replace(array_fill_keys($chartData['labels'], 0), $leaveTypeData);
@@ -151,6 +191,8 @@ class TeamOnLeaveChart extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
             $query = LeaveRequest::where('leave_applications.status', 'approved')
+            ->where('category_type', 'Leave')
+            ->where('leave_applications.cancel_status', '!=', 'approved')
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
