@@ -278,7 +278,7 @@ class Tasks extends Component
             ->where('notification_type', 'task')
             ->delete();
     }
-    public function updatedFilterPeriod()
+    public function updateFilterDropdown()
     {
         $this->loadTasks();
     }
@@ -623,7 +623,8 @@ class Tasks extends Component
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
             Log::info("Redirecting to tasks page.");
-            return redirect()->to('/tasks');
+            // return redirect()->to('/tasks');
+            $this->showDialog= false;
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -689,6 +690,8 @@ class Tasks extends Component
 
         $this->showDialog = false;
         $this->validate_tasks = false;
+        $this->assigneeList = false;
+        $this->followersList=false;
     }
 
     public function filter()
