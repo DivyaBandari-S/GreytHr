@@ -334,7 +334,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
     Route::get('/team-on-leave-chart', TeamOnLeaveChart::class)->name('team-on-leave');
-    Route::get('/testing', Test::class);
     // Route::get('/leaveBalChart', LeaveBalancesChart::class)->name('leave-details');
     // Route::get('/navigate-to-helpdesk', [EmployeesReview::class, 'navigateToHelpdesk'])->name('navigate.to.helpdesk');
 
@@ -470,17 +469,17 @@ Route::get('/clear', function () {
     foreach ($logFiles as $file) {
         File::put($file, ''); // This will empty the file without deleting it
     }
-
     // Perform other Artisan commands
-    Artisan::call('optimize:clear');
-    Artisan::call('optimize');
-    Artisan::call('config:cache');
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
+    Artisan::call(' event:clear');
+    Artisan::call('optimize');
+    Artisan::call('optimize:clear');
+    Artisan::call('queue:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
     Artisan::call('auth:clear-resets');
-
+    Artisan::call('config:cache');
     return 'Log contents cleared, and caches have been cleared and optimized!';
 });
 
