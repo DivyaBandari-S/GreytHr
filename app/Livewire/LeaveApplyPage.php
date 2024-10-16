@@ -347,21 +347,17 @@ class LeaveApplyPage extends Component
     }
     public function leaveApply()
     {
-        // Reset error message and state at the start
-        $this->errorMessage = '';
-        $this->showerrorMessage = false;
-
         // Validate input fields before further processing
         $this->validate();
-
-        // // Call handleFieldUpdate for relevant fields
-        $this->handleFieldUpdate('from_date');
-        $this->handleFieldUpdate('to_date');
-        $this->handleFieldUpdate('leave_type');
-
-        // Check if there are existing error messages after field updates
-        if ($this->showerrorMessage) {
-            return; // Don't proceed if there are existing errors
+        // Call handleFieldUpdate for relevant fields
+        if (
+            !$this->handleFieldUpdate('from_date') ||
+            !$this->handleFieldUpdate('to_date') ||
+            !$this->handleFieldUpdate('leave_type')
+        ) {
+            return; // Stop execution if there is an error
+        } else {
+            $this->handleFieldUpdate($this->field); // Handle the field update for the main field
         }
 
         try {
@@ -466,17 +462,14 @@ class LeaveApplyPage extends Component
                     ->cc($ccEmails)
                     ->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
             }
-
             FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
             $this->resetFields();
-            $this->showAlert = true;
         } catch (\Exception $e) {
             Log::error("Error: " . $e->getMessage());
-            session()->flash('error', 'Failed to submit leave application. Please try again later.');
+            FlashMessageHelper::flashError("Failed to submit leave application. Please try again later.");
             return redirect()->to('/leave-form-page');
         }
     }
-
     public function handleFieldUpdate($field)
     {
         try {
@@ -487,23 +480,18 @@ class LeaveApplyPage extends Component
             if ($this->showerrorMessage) {
                 return;
             }
-            // Initialize the error message
-            $errorMessages = [];
 
             // Step-by-step validation process:
 
             // 1. Check if the selected dates are on weekends
             if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
-                $this->errorMessage = 'Looks like it\'s already your non-working day. Please pick different date(s) to apply.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
                 return; // Stop further validation if error occurs
             }
 
-
             // 2. Check for overlapping leave requests
             if ($this->checkOverlappingLeave($employeeId)) {
-                $this->errorMessage = 'The selected leave dates overlap with an existing leave application.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('The selected leave dates overlap with an existing leave application.');
                 return; // Stop further validation if error occurs
             }
 
@@ -511,43 +499,43 @@ class LeaveApplyPage extends Component
             $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
             $leaveBalance = $this->getLeaveBalance($employeeId);
             if ($totalNumberOfDays > $leaveBalance) {
-                $this->errorMessage = 'It looks like you have already used all your leave balance, considering pending and approved leaves.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('It looks like you have already used all your leave balance, considering pending and approved leaves.');
                 return; // Stop further validation if error occurs
             }
 
             // 4. Check for holidays
             if ($this->checkForHolidays()) {
-                $this->errorMessage = 'The selected leave dates overlap with existing holidays. Please pick different dates.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('The selected leave dates overlap with existing holidays. Please pick different dates.');
                 return; // Stop further validation if error occurs
             }
 
             // 5. Validate from date for joining date
             $fromDate = Carbon::parse($this->from_date)->format('Y-m-d');
-
             $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
             if ($fromDate < $hireDate) {
-                $this->errorMessage = 'Entered From date and To dates are less than your Join date.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('Entered From date and To dates are less than your Join date.');
                 return; // Stop further validation if error occurs
             }
 
-
             // 6. Special validation for Casual Leave
             if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                FlashMessageHelper::flashError("You can only apply for a maximum of 2 days of Casual Leave for the month.");
+                FlashMessageHelper::flashError('You can only apply for a maximum of 2 days of Casual Leave for the month.');
                 return; // Stop further validation if error occurs
             }
 
             // 7. Validate date range
             if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
-                $this->errorMessage = 'To session must be greater than or equal to from session.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError('To session must be greater than or equal to from session.');
                 return; // Stop further validation if error occurs
             }
 
-
+            // 8. Validate date range
+            if ($this->to_date) {
+                if ($this->from_date > $this->to_date) {
+                    FlashMessageHelper::flashError('To date must be greater than or equal to from date.');
+                    return; // Stop further validation if error occurs
+                }
+            }
             // All validations passed, now calculate the number of days
             if ($this->to_date) {
                 $this->showNumberOfDays = true;
@@ -560,42 +548,41 @@ class LeaveApplyPage extends Component
         } catch (\Exception $e) {
             // Log the error
             Log::error('Error in handleFieldUpdate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while handling field update. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while handling field update. Please try again later.');
         }
     }
-
 
     // Additional methods for validation
     protected function checkOverlappingLeave($employeeId)
     {
         try {
-            // Parse and format the dates to ensure consistency
+            // Parse and format the entered dates
             $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date)->toDateString(); // 'Y-m-d'
             $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date)->toDateString();     // 'Y-m-d'
-
-            return LeaveRequest::where('emp_id', $employeeId)
-                ->where(function ($query) use ($fromDate, $toDate) {
-                    $query->where(function ($q) use ($fromDate) {
-                        $q->where('from_date', '<=', $fromDate)
-                            ->where('to_date', '>=', $fromDate);
-                    })
-                        ->orWhere(function ($q) use ($toDate) {
-                            $q->where('from_date', '<=', $toDate)
-                                ->where('to_date', '>=', $toDate);
-                        })
-                        ->orWhere(function ($q) use ($fromDate, $toDate) {
-                            $q->where('from_date', '>=', $fromDate)
-                                ->where('to_date', '<=', $toDate);
-                        });
-                })
+            // Retrieve leave requests for the employee
+            $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->whereIn('status', ['approved', 'Pending'])
-                ->exists();
+                ->get();
+
+            // Iterate over each leave request to format the dates and check for overlaps
+            foreach ($leaveRequests as $leaveRequest) {
+                $existingFromDate = Carbon::parse($leaveRequest->from_date)->toDateString(); // Format to 'Y-m-d'
+                $existingToDate = Carbon::parse($leaveRequest->to_date)->toDateString();     // Format to 'Y-m-d'
+                // Check for overlaps
+                if (
+                    ($fromDate <= $existingToDate && $toDate >= $existingFromDate)
+                ) {
+                    return true; // Overlap found
+                }
+            }
+
+            return false; // No overlaps found
         } catch (\Exception $e) {
             Log::error('Error in checkOverlappingLeave method: ' . $e->getMessage());
-            // Optionally, handle the exception or rethrow
             return false;
         }
     }
+
 
 
 

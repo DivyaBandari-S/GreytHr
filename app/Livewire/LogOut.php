@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
@@ -33,7 +34,7 @@ class LogOut extends Component
             session()->flush(); // Clear session data
 
             // Flash success message
-            session()->flash('success', 'You are logged out successfully!');
+            FlashMessageHelper::flashSuccess('You are logged out successfully!');
 
             // Redirect to the login page
             return redirect()->route('emplogin');
