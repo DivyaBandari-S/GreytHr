@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\HelpDesks;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
-
+use App\Helpers\FlashMessageHelper; 
 class Catalog extends Component
 {
 
@@ -443,7 +443,7 @@ class Catalog extends Component
     {
         if (count($this->selectedPeople) > 5) {
             // Flash an error message
-            session()->flash('selecterror', 'You can only select up to 5 people.');
+            FlashMessageHelper::flashWarning('You can only select up to 5 people.');
             
             // Optionally, reset the selected people array or remove the last selection
             $this->selectedPeople = array_slice($this->selectedPeople, 0, 5);
@@ -486,12 +486,12 @@ class Catalog extends Component
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
-                session()->flash('error', 'Failed to read the uploaded file.');
+                FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
 
             if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                session()->flash('error', 'File size exceeds the allowed limit.');
+                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                 return;
             }
 
@@ -516,7 +516,7 @@ class Catalog extends Component
             'mobile' => 'N/A',
         ]);
 
-        session()->flash('message', 'Request created successfully.');
+        FlashMessageHelper::flashSuccess ('Request created successfully.');
         $this->reset();
         return redirect()->to('/HelpDesk');
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -530,7 +530,7 @@ class Catalog extends Component
             'description' => $this->description,
             'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
         ]);
-        session()->flash('error', 'An error occurred while creating the request. Please try again.');
+        FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
     }
 }
 
@@ -568,13 +568,13 @@ class Catalog extends Component
             Log::error('Failed to read the uploaded file.', [
                 'file_path' => $this->file_path->getRealPath(),
             ]);
-            session()->flash('error', 'Failed to read the uploaded file.');
+            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
             return;
         }
 
         // Check if the file content is too large
         if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            session()->flash('error', 'File size exceeds the allowed limit.');
+            FlashMessageHelper::flashWarning( 'File size exceeds the allowed limit.');
             return;
         }
 
@@ -602,7 +602,7 @@ class Catalog extends Component
                 'mobile' => $this->mobile,
             ]);
 
-            session()->flash('message', 'Request created successfully.');
+            FlashMessageHelper::flashSuccess ( 'Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -615,7 +615,7 @@ class Catalog extends Component
                 'description' => $this->description,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -650,13 +650,13 @@ class Catalog extends Component
             Log::error('Failed to read the uploaded file.', [
                 'file_path' => $this->file_path->getRealPath(),
             ]);
-            session()->flash('error', 'Failed to read the uploaded file.');
+            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
             return;
         }
 
         // Check if the file content is too large
         if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            session()->flash('error', 'File size exceeds the allowed limit.');
+            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
             return;
         }
 
@@ -684,7 +684,7 @@ class Catalog extends Component
                 'distributor_name' => 'N/A',
             ]);
 
-            session()->flash('message', 'Request created successfully.');
+            FlashMessageHelper::flashSuccess  ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -697,7 +697,7 @@ class Catalog extends Component
                 'description' => $this->description,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -728,13 +728,13 @@ class Catalog extends Component
             Log::error('Failed to read the uploaded file.', [
                 'file_path' => $this->file_path->getRealPath(),
             ]);
-            session()->flash('error', 'Failed to read the uploaded file.');
+            FlashMessageHelper::flashError('Failed to read the uploaded file.');
             return;
         }
 
         // Check if the file content is too large
         if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            session()->flash('error', 'File size exceeds the allowed limit.');
+            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
             return;
         }
 
@@ -764,7 +764,7 @@ class Catalog extends Component
             'distributor_name' => 'N/A',
         ]);
 
-            session()->flash('message', 'Request created successfully.');
+        FlashMessageHelper::flashSuccess ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -777,7 +777,7 @@ class Catalog extends Component
                 'description' => $this->description,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
         }
     }
 
