@@ -623,7 +623,8 @@ class Tasks extends Component
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
             Log::info("Redirecting to tasks page.");
-            return redirect()->to('/tasks');
+            // return redirect()->to('/tasks');
+            $this->showDialog= false;
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
