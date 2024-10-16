@@ -15,6 +15,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\Admin;
 use App\Models\Company;
 use App\Models\EmployeeDetails;
@@ -357,10 +358,13 @@ class Settings extends Component
 
             // Update the password
             $this->employeeDetails->password = Hash::make($this->newPassword);
-            // $this->employeeDetails->save();
+            $this->employeeDetails->save();
             // Send password change notification
-            $this->employeeDetails->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
-            session()->flash('password', 'Your Password changed successfully.');
+            if ($this->employeeDetails && !empty($this->employeeDetails->email)) {
+                $this->employeeDetails->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
+            }
+
+            FlashMessageHelper::flashSuccess('Your Password changed successfully.');
             $this->resetForm();
             $this->showDialog = false;
         } catch (\Exception $e) {

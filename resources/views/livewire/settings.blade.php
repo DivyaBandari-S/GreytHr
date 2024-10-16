@@ -29,14 +29,14 @@
                 </div> --}}
 
                 <div class="setting-flash-message-container">
-                    @if (session()->has('password'))
+                    {{-- @if (session()->has('password'))
                         <div class="alert alert-success alert-dismissible fade show setting-flash-msg-text"
                             role="alert">
                             <strong>{{ session('password') }}</strong>
                             <button type="button" class="btn-close btn-xs" data-bs-dismiss="alert"
                                 aria-label="Close"></button>
                         </div>
-                    @endif
+                    @endif --}}
                 </div>
             </div>
         </div>
