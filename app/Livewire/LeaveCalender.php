@@ -380,17 +380,21 @@ class LeaveCalender extends Component
                         ->toArray();
                 } else {
                     $teamMembersIds = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
-                        ->where('manager_id', $managerId) // Filter by manager_id
+                        ->where('manager_id', $managerId)
+                        // Filter by manager_id
                         ->pluck('emp_id')
                         ->toArray();
-
                 }
                 // Fetch leave transactions for the team members
                 $leaveTransactionsOfTeam = LeaveRequest::with('employee')
+                    ->where('category_type', 'Leave')
                     ->whereIn('emp_id', $teamMembersIds)
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
-                    ->where('status', 'approved')
+                    ->where(function ($query) {
+                        $query->where('status', 'approved')
+                            ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
+                    })
                     ->where(function ($query) use ($searchTerm) {
                         $query->where('emp_id', 'like', $searchTerm)
                             ->orWhereHas('employee', function ($query) use ($searchTerm) {
@@ -444,9 +448,6 @@ class LeaveCalender extends Component
     public function render()
     {
         try {
-            $this->leaveData = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                ->where('status', 'approved')
-                ->get();
             $holidays = $this->getHolidays();
 
             return view('livewire.leave-calender', [
@@ -579,11 +580,11 @@ class LeaveCalender extends Component
             $userId = Auth::id();
             $user = EmployeeDetails::find($userId);
             $managerId = $user->manager_id;
+            $employeeId = auth()->guard('emp')->user()->emp_id;
             $startDate = Carbon::create($this->year, $this->month, 1)->startOfMonth();
             $endDate = Carbon::create($this->year, $this->month, 1)->endOfMonth();
-
-            $formattedStartDate = $startDate->toDateString();
-            $formattedEndDate = $endDate->toDateString();
+            $formattedStartDate = Carbon::create($this->year, $this->month, 1)->startOfMonth()->toDateString();
+            $formattedEndDate = Carbon::create($this->year, $this->month, 1)->endOfMonth()->toDateString();
 
             // Fetch company name and address based on user's company ID
             $companyIds = EmployeeDetails::where('emp_id', $userId)->value('company_id');
@@ -618,8 +619,26 @@ class LeaveCalender extends Component
             $concatenatedAddress = $companyAddress1 . ' ' . $companyAddress2;
 
             // Fetch employees on leave
-            if ($this->filterCriteria == 'MyTeam') {
+            if ($this->filterCriteria === 'MyTeam') {
+                // Fetch employee IDs of all team members under the same manager with active or on-probation status
+                $checkLoginIsManager = EmployeeDetails::where('manager_id', $employeeId)->value('manager_id');
+                $managerId = EmployeeDetails::where('emp_id', $employeeId)->value('manager_id');
+                if ($checkLoginIsManager) {
+                    $teamMembers = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
+                        ->where('manager_id', $checkLoginIsManager) // Filter by manager_id
+                        ->whereIn('employee_status', ['active', 'on-probation']) // Add this condition
+                        ->pluck('emp_id')
+                        ->toArray();
+                } else {
+                    $teamMembers = EmployeeDetails::whereJsonContains('company_id', $companyIdsArray)
+                        ->where('manager_id', $managerId)
+                        // Filter by manager_id
+                        ->pluck('emp_id')
+                        ->toArray();
+                }
+                // Fetch leave requests for the team members
                 $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                    ->where('leave_applications.category_type', 'Leave')
                     ->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
                         $query->whereBetween('from_date', [$formattedStartDate, $formattedEndDate])
                             ->orWhereBetween('to_date', [$formattedStartDate, $formattedEndDate])
@@ -628,14 +647,14 @@ class LeaveCalender extends Component
                                     ->where('to_date', '>=', $formattedEndDate);
                             });
                     })
-                    ->where('leave_applications.status', 'approved')
-                    ->where(function ($query) use ($managerId) {
-                        $query->whereJsonContains('leave_applications.applying_to', [['manager_id' => $managerId]])
-                            ->orWhereJsonContains('leave_applications.applying_to', ['manager_id' => $managerId]);
+                    ->where(function ($query) {
+                        $query->where('leave_applications.status', 'approved')
+                            ->where('leave_applications.cancel_status', '!=', 'approved');
                     })
+                    ->whereIn('leave_applications.emp_id', $teamMembers) // Use the team member IDs here
                     ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
                     ->get();
-            } elseif ($this->filterCriteria == 'Me') {
+            } elseif ($this->filterCriteria === 'Me') {
                 $employeesOnLeave = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                     ->where(function ($query) use ($formattedStartDate, $formattedEndDate) {
                         $query->whereBetween('from_date', [$formattedStartDate, $formattedEndDate])
@@ -650,6 +669,7 @@ class LeaveCalender extends Component
                     ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
                     ->get();
             }
+
 
             // Create a new spreadsheet
             $spreadsheet = new Spreadsheet();

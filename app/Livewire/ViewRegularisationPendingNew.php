@@ -20,9 +20,7 @@ class ViewRegularisationPendingNew extends Component
 
     public $showAlert=false;
     public $openAccordionForActive;
-    public $managerEmail = 'manikanta.asapu@paygdigitals.com'; // Example manager email
-
-    public $employeeEmailForRejection;
+    public $managerEmail = 'divya.bandari@paygdigitals.com'; // Example manager email
     public $messageContent;  // This will hold the message input from the form
     public $senderName;
 
@@ -33,7 +31,7 @@ class ViewRegularisationPendingNew extends Component
     public $regularised_date;
     public $user;
 
-    
+
 
     public $auto_approve=false;
     public $remarks;
