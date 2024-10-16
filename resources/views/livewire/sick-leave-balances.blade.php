@@ -11,7 +11,7 @@
                 <div aria-label="breadcrumb">
                     <ol class="breadcrumb d-flex align-items-center ">
                         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a  href="{{ route('leave-balance') }}">Leave Balance</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Sick Leave</li>
                     </ol>
                 </div>
@@ -23,7 +23,7 @@
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
                     @endif
 
-                    <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)'  wire:model='year'>
+                    <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)' wire:model='year'>
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
@@ -38,16 +38,16 @@
             </div>
             @if($employeeLeaveBalances == 0)
             <div class="row m-0 p-0">
-                <div class="col-md-12 leave-details-col-md-12" >
-                    <div class="card leave-details-card" >
+                <div class="col-md-12 leave-details-col-md-12">
+                    <div class="card leave-details-card">
                         <div class="card-body leave-details-card-body">
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
-                            <p class="card-text">No information found</p>
-                            @else
+                                <p class="card-text">No information found</p>
+                                @else
 
-                            <p class="card-text">HR will add the leaves</p>
-                            @endif
+                                <p class="card-text">HR will add the leaves</p>
+                                @endif
                         </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas class="leave-details-canvas" id="sickLeaveChart" ></canvas>
+                            <canvas class="leave-details-canvas" id="sickLeaveChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -105,16 +105,22 @@
                                 <tr>
                                     <td>
                                         @if($balance->category_type === 'Leave')
-                                       @if($balance->status == 'approved')
+                                        @if($balance->status == 'approved')
                                         Availed
+                                        @elseif($balance->status == 'Pending' )
+                                        Applied
                                         @elseif($balance->status == 'Withdrawn' )
                                         Withdrawn
                                         @else
                                         Rejected
                                         @endif
-                                       @else
-                                        Leave Cancel({{ucfirst($balance->cancel_status)}})
-                                       @endif
+                                        @else
+                                        @if($balance->cancel_status=='Pending Leave Cancel')
+                                        Leave Cancel-Applied
+                                        @else
+                                        Leave Cancel-{{ucfirst($balance->cancel_status)}}
+                                        @endif
+                                        @endif
                                     </td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
@@ -171,5 +177,3 @@
 
     });
 </script>
-
-
