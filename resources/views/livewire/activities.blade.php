@@ -1,13 +1,7 @@
 <div>
 <div class="px-4 " style="position: relative;">
 
-@if ($message)
-<div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-    {{ $message }}
-    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-        style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-</div>
-@endif
+
 <div class="col-md-12  mt-1" style="height:60px;">
 
     <div class="row bg-white rounded border d-flex" style="height:70px;">

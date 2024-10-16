@@ -1173,21 +1173,42 @@
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
 
+                                                        <div class="form-group col-md-6 mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                                @if($employeeDetails)
+                                                                <div class="input-group mb-3">
 
+                                                                <div class="input-group-prepend">
+                <span class="form-control" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+            </div>
+                                                                <input 
+                                                          
+        wire:model.lazy="full_name" 
+        type="text" 
+        class="form-control" 
+        readonly
+    >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
 
                                                             <div style="display:flex">
-                                                                <div class="form-group col-md-6 mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
+                                                         
+                                                            <div class="form-group col-md-6 mt-2">
+        <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
+        @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+<div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
+    <label for="contactDetails">Email <span style="color:red">*</span></label>
+    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
+    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
