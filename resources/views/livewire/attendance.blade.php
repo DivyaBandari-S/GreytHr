@@ -262,15 +262,7 @@ width: 170px; */
             border-bottom-right-radius: 5px;
             /* Adjust the value as needed */
         }
-        .info-button
-        {
-            font-size:12px;
-            background-color:transparent;
-            color:#24a7f8;
-            border:none;
-            text-decoration:underline;
-
-        }
+       
 
         .calendar-weekdays-attendance-info {
             display: flex;
@@ -590,28 +582,9 @@ width: 170px; */
             border: 1px solid #ccc;
         }
 
-        .container2 {
-            /* width: 600px;
-    /* Adjust the width as needed */
-            /* height: 140px; */
-            /* margin-right: 300px; */
-            background-color: #FFFFFF;
-            margin-top: 40px;
-            border-radius: 10px;
-            /* padding-bottom: -70px; */
-            /* float: right; */
-            /* Adjust the height as needed */
-            /* Background color of the container */
-            border: 1px solid #ccc;
-            /* Border style for the container */
-        }
+     
 
-        .container1,
-        .container2,
-        .container3,
-        .container6 {
-            display: block;
-        }
+        
 
         .container6 {
             /* width: 600px; */
@@ -809,14 +782,7 @@ width: 170px; */
             margin-top: -40px;
         }
 
-        .horizontal-line-attendance-info {
-            width: 100%;
-            /* Set the width to the desired value */
-            border-top: 1px solid #ccc;
-            /* You can adjust the color and thickness */
-            margin: 0px 0;
-            /* Adjust the margin as needed */
-        }
+       
 
 
         .horizontal-line2-attendance-info {
@@ -2123,15 +2089,15 @@ color: #fff;
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;">First&nbsp;In</th>
-                                    <th style="font-weight:normal;font-size:12px;">Last&nbsp;Out</th>
-                                    <th style="font-weight:normal;font-size:12px;">Total&nbsp;Work&nbsp;Hrs</th>
-                                    <th style="font-weight:normal;font-size:12px;">Break&nbsp;Hrs</th>
-                                    <th style="font-weight:normal;font-size:12px;">Actual&nbsp;Work&nbsp;Hrs</th>
-                                    <th style="font-weight:normal;font-size:12px;">
+                                    <th class="attendance-info-table-head">First&nbsp;In</th>
+                                    <th class="attendance-info-table-head">Last&nbsp;Out</th>
+                                    <th class="attendance-info-table-head">Total&nbsp;Work&nbsp;Hrs</th>
+                                    <th class="attendance-info-table-head">Break&nbsp;Hrs</th>
+                                    <th class="attendance-info-table-head">Actual&nbsp;Work&nbsp;Hrs</th>
+                                    <th class="attendance-info-table-head">
                                         Work&nbsp;Hours&nbsp;in&nbsp;Shift&nbsp;Time</th>
-                                    <th style="font-weight:normal;font-size:12px;">Shortfall&nbsp;Hrs</th>
-                                    <th style="font-weight:normal;font-size:12px;">Excess&nbsp;Hrs</th>
+                                    <th class="attendance-info-table-head">Shortfall&nbsp;Hrs</th>
+                                    <th class="attendance-info-table-head">Excess&nbsp;Hrs</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2139,14 +2105,14 @@ color: #fff;
 
                                 <tr>
 
-                                    <td style="font-size:12px;">
+                                    <td class="attendance-info-table-data">
                                         @if($changeDate==1)
                                         {{$this->first_in_time}}
                                         @else
                                         -
                                         @endif
                                     </td>
-                                    <td style="font-size:12px;">
+                                    <td class="attendance-info-table-data">
                                         @if($changeDate==1)
                                         {{$this->last_out_time}}
                                         @else
@@ -2182,15 +2148,15 @@ color: #fff;
                 @endif
                 @if($defaultfaCalendar==1)
                 <div class="container2">
-                    <h3 style="padding-left:10px;margin-top:10px;color: #7f8fa4;font-size:14px;">Status Details</h3>
+                    <h3 class="container2-status-details-heading">Status Details</h3>
 
-                    <div style=" overflow-x: auto; max-width: 100%;">
-                        <table style="margin-top:-10px;">
+                    <div class="container2-table-scrollable">
+                        <table class="container2-table">
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Status</th>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Remarks</th>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;"></th>
+                                    <th class="container2-table-head">Status</th>
+                                    <th class="container2-table-head">Remarks</th>
+                                    <th class="container2-table-head"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2225,30 +2191,30 @@ color: #fff;
                                         </button>
                                         @if($showRegularisationDialog==true)
 
-                                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                                        <div class="modal modal-show" tabindex="-1" role="dialog">
                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                 <div class="modal-content">
 
-                                                    <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-                                                        <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Regularisation&nbsp;&nbsp;Details</b></h5>
-                                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRegularisationModal" style="background-color: white; height:10px;width:10px;">
+                                                    <div class="modal-header regularisation-dialog-head-modal">
+                                                        <h5 class="regularisation-dialog-head-modal-heading modal-title"><b>Regularisation&nbsp;&nbsp;Details</b></h5>
+                                                        <button type="button" class="regularisation-close btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeRegularisationModal">
                                                         </button>
                                                     </div>
-                                                    <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                                                    <div class="regularisation-dialog-head-modal-body modal-body">
                                                         <div class="row m-0 mt-3">
 
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Status : <br /><span style="color: #000000;">Regularization</span></div>
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized By: <br /><span style="color: #000000;">{{ucwords(strtolower($regularised_by))}}</span></div>
+                                                            <div class="col regularisation-dialog-head-modal-body-label">Status : <br /><span class="regularisation-dialog-head-modal-body-insidelabel">Regularization</span></div>
+                                                            <div class="col regularisation-dialog-head-modal-body-label">Regularized By: <br /><span class="regularisation-dialog-head-modal-body-insidelabel">{{ucwords(strtolower($regularised_by))}}</span></div>
                                                         </div>
                                                         <div class="row m-0 mt-3">
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Date : <br /><span style="color: #000000;">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Regularized Time: <br /><span style="color: #000000;">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
+                                                            <div class="col regularisation-dialog-head-modal-body-label">Regularized Date : <br /><span class="regularisation-dialog-head-modal-body-insidelabel">{{ date('jS M,Y', strtotime($regularised_date)) }}</span></div>
+                                                            <div class="col regularisation-dialog-head-modal-body-label">Regularized Time: <br /><span class="regularisation-dialog-head-modal-body-insidelabel">{{ date('H:i:s', strtotime($regularised_date)) }}</span></div>
                                                         </div>
                                                         <div class="row m-0 mt-3">
-                                                            <div class="col" style="font-size: 11px;color:#778899;font-weight:500;"> Reason:<br /> <span style="color: #000000;">{{$regularised_reason}}</span></div>
+                                                            <div class="col regularisation-dialog-head-modal-body-label"> Reason:<br /> <span class="regularisation-dialog-head-modal-body-insidelabel">{{$regularised_reason}}</span></div>
                                                         </div>
-                                                        <div style="display: flex; justify-content: center; margin-top: 20px;">
-                                                                 <button class="cancel-btn" style="border:1px solid rgb(2, 17, 79);"wire:click="closeRegularisationModal">Close</button>
+                                                        <div class="regularisation-dialog-head-modal-body-button">
+                                                                 <button class="cancel-btn"wire:click="closeRegularisationModal">Close</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -2269,9 +2235,9 @@ color: #fff;
                 @endif
                 @if($defaultfaCalendar==1)
                 <div class="container3">
-                    <h3 style="padding-left:10px;margin-top:20px;color: #7f8fa4;font-size:14px;">Session Details</h3>
+                    <h3 class="container3-head">Session Details</h3>
 
-                    <div style=" overflow-x: auto; max-width: 100%;">
+                    <div class="container3-table-scrollable">
                         <table style="margin-top:-10px">
                             <thead>
                                 <tr>

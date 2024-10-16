@@ -1158,7 +1158,105 @@ button.close-button {
 .toDatefield input {
     width: 55%;
 }
-
+.attendance-info-table-head{
+    font-weight:normal;
+    font-size:12px;
+}
+.attendance-info-table-data
+{
+    font-size:12px;
+}
+.container1,
+        .container2,
+        .container3,
+        .container6 {
+            display: block;
+        }
+        .container2 {
+            background-color: #FFFFFF;
+            margin-top: 40px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+        .container2-status-details-heading
+        {
+            padding-left:10px;
+            margin-top:10px;
+            color: #7f8fa4;
+            font-size:14px;
+        }
+        .horizontal-line-attendance-info {
+            width: 100%;
+            border-top: 1px solid #ccc;
+            margin: 0px 0;
+        }
+        .container2-table-scrollable
+        {
+            overflow-x: auto; max-width: 100%;
+        }
+        .container2-table
+        {
+            margin-top:-10px;
+        }
+        .container2-table-head
+        {
+            font-weight:normal;
+            font-size:12px;
+            padding-top:16px;
+        }
+        .modal-show
+        {
+            display: block;
+        }
+        .regularisation-dialog-head-modal
+        {
+            background-color: #eef7fa; 
+            height: 50px;
+        }
+        .regularisation-dialog-head-modal-heading
+        {
+            padding: 5px; 
+            color: #778899; 
+            font-size: 15px;
+        }
+.regularisation-close
+{
+    background-color: white; 
+    height:10px;
+    width:10px;
+}
+.regularisation-dialog-head-modal-body
+{
+    max-height:300px;overflow-y:auto
+}
+.regularisation-dialog-head-modal-body-label
+{
+    font-size: 11px;
+    color:#778899;
+    font-weight:500;
+}
+.regularisation-dialog-head-modal-body-insidelabel
+{
+    color: #000000;
+}
+.regularisation-dialog-head-modal-body-button
+{
+    display: flex; 
+    justify-content: center; 
+    margin-top: 20px;
+}
+.container3-head
+{
+    padding-left:10px;
+    margin-top:20px;
+    color: #7f8fa4;
+    font-size:14px;
+}
+.container3-table-scrollable
+{
+    overflow-x: auto; 
+    max-width: 100%;
+}
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {

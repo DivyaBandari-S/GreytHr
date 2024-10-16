@@ -20,7 +20,12 @@ class ViewRegularisationPendingNew extends Component
 
     public $showAlert=false;
     public $openAccordionForActive;
-    public $managerEmail = 'divya.bandari@paygdigitals.com'; // Example manager email
+     public $managerEmail = 'manikanta.asapu@paygdigitals.com'; // Example manager email
+
+    public $employeeEmailForRejection;
+
+    
+
     public $messageContent;  // This will hold the message input from the form
     public $senderName;
 

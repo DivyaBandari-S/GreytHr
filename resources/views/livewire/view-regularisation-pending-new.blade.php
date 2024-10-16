@@ -27,15 +27,24 @@
 </div>
     
     <div class="row m-0 p-0 mt-3">
-                    <div class="search-container d-flex align-items-end justify-content-end p-1">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput"
-                            placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchRegularisation" id="searchButton"
-                            style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;">
-                            <i class="fas fa-search" style="width:7px;height:7px;"></i>
+                <div class="reviewCountShow p-0">
+                    <div class="d-flex align-items-center gap-2">
+                        @if(count($regularisations) > 0)
+                        <span class="totalRequestCount">Total Attendance  Requests
+                            <span class="leaveCountReview d-flex align-items-center justify-content-center">
+                                {{ $countofregularisations }}
+                            </span>
+                        </span>
+                        @endif
+                    </div>
+                    <div class="search-container d-flex align-items-end justify-content-end p-2" style="position: relative;">
+                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded" style="padding-right: 40px;">
+                        <button wire:click="searchRegularisation" id="searchButtonReports">
+                            <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                         </button>
                     </div>
-                </div>
+                </div>    
+    </div>
     @if(count($regularisations)>0)
     @foreach($regularisations as $r)
     @php
