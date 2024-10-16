@@ -15,52 +15,41 @@
             </ul>
         </div>
 
-        <div id="alert-container" class="d-flex justify-content-center alert-container task-flash-message-container"
-            wire:poll.10s="hideAlert">
-
-            @if ($showAlert)
-                <p class="alert alert-success task-flash-message-text" role="alert">
-                    {{ session('message') }}
-                    <span class="task-flash-message-icon" wire:click='hideAlert'>x</span>
-                </p>
-            @endif
-        </div>
-
 
         @if ($activeTab == 'open')
-        <div class="task-filter-container d-flex justify-content-end">
-            <div class="task-search-container">
-                <div class="input-group task-input-group-container">
-                    <input wire:input="searchActiveTasks" wire:model="search" type="text"
-                        class="form-control task-search-input" placeholder="Search..." aria-label="Search"
-                        aria-describedby="basic-addon1">
-                    <div class="input-group-append">
-                        <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
-                            <i class="fa fa-search task-search-icon"></i>
-                        </button>
+            <div class="task-filter-container d-flex justify-content-end">
+                <div class="task-search-container">
+                    <div class="input-group task-input-group-container">
+                        <input wire:input="searchActiveTasks" wire:model="search" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchActiveTasks" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="task-dropdown">
-                <div class="form-group">
+                <div class="task-dropdown">
+                    <div class="form-group">
 
-                    <select class="form-select task-custom-select-width" wire:model="filterPeriod">
-                        <option value="all" selected>All</option>
-                        <option value="this_week">This Week</option>
-                        <option value="this_month">This Month</option>
-                        <option value="last_month">Last Month</option>
-                        <option value="this_year">This Year</option>
-                    </select>
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                            <option value="all" selected>All</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                        </select>
 
+                    </div>
                 </div>
-            </div>
-            <div>
-                <button wire:click="show" class="task-add-new-task-button">Add
-                    New Task</button>
+                <div>
+                    <button wire:click="show" class="task-add-new-task-button">Add
+                        New Task</button>
+                </div>
+
             </div>
 
-        </div>
-            
             <div class="card-body task-open-card-body-container">
 
                 <div class="table-cresponsive">
@@ -251,37 +240,37 @@
         @endif
 
         @if ($activeTab == 'completed')
-        <div class="task-filter-container d-flex justify-content-end">
-            <div class="task-search-container">
-                <div class="input-group task-input-group-container">
-                    <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text"
-                        class="form-control task-search-input" placeholder="Search..." aria-label="Search"
-                        aria-describedby="basic-addon1">
-                    <div class="input-group-append">
-                        <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
-                            <i class="fa fa-search task-search-icon"></i>
-                        </button>
+            <div class="task-filter-container d-flex justify-content-end">
+                <div class="task-search-container">
+                    <div class="input-group task-input-group-container">
+                        <input wire:input="searchCompletedTasks" wire:model="closedSearch" type="text"
+                            class="form-control task-search-input" placeholder="Search..." aria-label="Search"
+                            aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <button wire:click="searchCompletedTasks" class="task-search-btn" type="button">
+                                <i class="fa fa-search task-search-icon"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="task-dropdown">
-                <div class="form-group">
-                    <select class="form-select task-custom-select-width" wire:model="filterPeriod">
-                        <option value="all" selected>All</option>
-                        <option value="this_week">This Week</option>
-                        <option value="this_month">This Month</option>
-                        <option value="last_month">Last Month</option>
-                        <option value="this_year">This Year</option>
-                    </select>
+                <div class="task-dropdown">
+                    <div class="form-group">
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                            <option value="all" selected>All</option>
+                            <option value="this_week">This Week</option>
+                            <option value="this_month">This Month</option>
+                            <option value="last_month">Last Month</option>
+                            <option value="this_year">This Year</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <button wire:click="show" class="task-add-new-task-button">Add
-                    New Task</button>
+                <div>
+                    <button wire:click="show" class="task-add-new-task-button">Add
+                        New Task</button>
+                </div>
+
             </div>
 
-        </div>
-           
             <div class="card-body task-closed-card-body">
 
                 <div class="table-responsive">
@@ -499,15 +488,12 @@
                                     <br>
                                     <i wire:click="forAssignee" wire:change="autoValidate" class="fa fa-user icon"
                                         id="profile-icon"></i>
-                                        @if ($showRecipients==true)
-
-                                            <strong class="col-4 task-modal-selected-assignee">Selected assignee:
-
-                                            </strong><input class="col-8" type="text" style="border: none; background: transparent" value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName" disabled
-    
-                                                wire:input="autoValidate">
-                                    
-                                       
+                                    @if ($showRecipients == true)
+                                        <strong class="col-4 task-modal-selected-assignee">Selected assignee:
+                                        </strong><input class="col-8" type="text"
+                                            style="border: none; background: transparent"
+                                            value="{{ $selectedPeopleName }}" wire:model="selectedPeopleName"
+                                            disabled wire:input="autoValidate">
                                     @else
                                         <a wire:click="forAssignee" class="hover-link task-modal-add-assignee"> Add
                                             Assignee</a>
@@ -716,14 +702,11 @@
                                     <br>
                                     <i wire:click="forFollowers" wire:change="autoValidate"
                                         class="fas fa-user icon task-follower-user-icon" id="profile-icon"></i>
-                                    @if ($showFollowers==true)
+                                    @if ($showFollowers == true)
                                         <strong class="task-selected-follower">Selected Followers:
                                         </strong>
-                                        <textarea style="border: none; width: 100%; height: 100%; resize: none; background: transparent" 
-                                        disabled 
-                                        wire:model="followers" 
-                                        wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
-                              
+                                        <textarea style="border: none; width: 100%; height: 100%; resize: none; background: transparent" disabled
+                                            wire:model="followers" wire:input="autoValidate">{{ implode(', ', array_unique($selectedPeopleNamesForFollowers)) }}</textarea>
                                     @else
                                         <a wire:click="forFollowers" class="hover-link task-add-followers"> Add
                                             Followers</a>
@@ -758,17 +741,17 @@
                                             </div>
                                         @else
                                             @foreach ($peopleFollowerData as $people)
-                                                <div wire:click="togglePersonSelection('{{ $people->emp_id }}')" 
+                                                <div wire:click="togglePersonSelection('{{ $people->emp_id }}')"
                                                     class="container task-modal-follower-peoples-container">
                                                     <div class="row align-items-center">
                                                         <div class="col-auto">
                                                             <label class="custom-checkbox">
-                                                            <input type="checkbox" value="{{ $people->emp_id }}"
-                                                                id="checkbox-{{ $people->emp_id }}"
-                                                                {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}
-                                                                wire:click="togglePersonSelection('{{ $people->emp_id }}')">
+                                                                <input type="checkbox" value="{{ $people->emp_id }}"
+                                                                    id="checkbox-{{ $people->emp_id }}"
+                                                                    {{ in_array($people->emp_id, $selectedPeopleForFollowers) ? 'checked' : '' }}
+                                                                    wire:click="togglePersonSelection('{{ $people->emp_id }}')">
                                                                 <span class="checkmark"></span>
-                                </label>
+                                                            </label>
                                                             {{-- {{ count($selectedPeopleForFollowers) >= $maxFollowers && !in_array($people->emp_id, $selectedPeopleForFollowers) ? 'disabled' : '' }} --}}
                                                         </div>
                                                         <div class="col-auto">
@@ -832,12 +815,7 @@
                                 <!-- File Input -->
 
                                 <div class="row">
-                                    {{-- <div class="col">
-                                        <label for="fileInput"
-                                            style="cursor: pointer; font-size: 13px;color:#778899; margin-left: 0px; margin-top: 0px; padding: 0 10px 0 0;">
-                                            Attach Image
-                                        </label>
-                                    </div> --}}
+                                    
                                     <div class="col">
                                         <label for="fileInput" class="task-file-input-label">
                                             <i class="fa fa-paperclip"></i> Attach Image
@@ -848,19 +826,14 @@
 
                                 <div>
                                     <input type="file" wire:model="file_path" id="file_path"
-                                        wire:change="autoValidate" class="form-control task-modal-filepath"
-                                        onchange="handleImageChange()">
+                                    wire:change="fileSelected" class="form-control task-modal-filepath"
+                                       >
                                     @error('file_path')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
 
                                 </div>
-                                <div id="flash-message-container" class="alert alert-success task-fileinput-success"
-                                    role="alert"></div>
-
-
-                                {{-- <input wire:change="autoValidate" style="font-size: 0.75rem;" wire:model="image"
-                                    type="file" accept="image/*" onchange="handleImageChange()"> --}}
+                              
 
                                 <div class="task-modal-save-container">
                                     <button wire:click="submit" class="submit-btn task-modal-save-button"
@@ -908,17 +881,7 @@
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                             wire:click="closeModal">
                     </div>
-                    <div id="alert-container"
-                        class="d-flex justify-content-center alert-container task-comment-modal-flash-message"
-                        wire:poll.5s="hideAlert">
-
-                        @if ($showAlert)
-                            <p class="alert alert-success task-comment-flash-text" role="alert">
-                                {{ session('comment_message') }}
-                                <span class="task-comment-flash-close-icon" wire:click='hideAlert'>x</span>
-                            </p>
-                        @endif
-                    </div>
+             
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">
@@ -992,32 +955,4 @@
     @endif
 </div>
 
-
-
-
-<script>
-    function handleImageChange() {
-        // Display a flash message
-        showFlashMessage('File uploaded successfully!');
-    }
-
-    function showFlashMessage(message) {
-        const container = document.getElementById('flash-message-container');
-        container.textContent = message;
-        container.style.fontSize = '0.75rem';
-        container.style.display = 'block';
-
-        // Hide the message after 3 seconds
-        setTimeout(() => {
-            container.style.display = 'none';
-        }, 3000);
-    }
-
-    function updateModalImage(imageSrc, recordId) {
-        const modalImage = document.querySelector(`#modalImage-${recordId}`);
-        if (modalImage) {
-            modalImage.src = imageSrc;
-        }
-    }
-</script>
 </div>
