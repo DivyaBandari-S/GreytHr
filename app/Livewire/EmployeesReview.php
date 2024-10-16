@@ -192,7 +192,7 @@ class EmployeesReview extends Component
         // Query leave requests for team members with specified conditions
         $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
             ->where(function ($query) {
-                $query->where('status', 'pending')
+                $query->where('status', 'Pending')
                     ->orWhere(function ($query) {
                         $query->where('status', 'approved')
                             ->where('cancel_status', 'Pending Leave Cancel');
@@ -269,7 +269,7 @@ class EmployeesReview extends Component
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
-                    $query->where('status', 'pending')
+                    $query->where('status', 'Pending')
                         ->orWhere(function ($query) {
                             $query->where('status', 'approved')
                                 ->where('cancel_status', 'Pending Leave Cancel');
@@ -409,7 +409,7 @@ class EmployeesReview extends Component
                 ->where(function ($query) {
                     $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
                         ->orWhere(function ($query) {
-                            $query->where('regularisation_dates.status', 'pending')
+                            $query->where('regularisation_dates.status', 'Pending')
                                 ->where('regularisation_dates.approver_remarks', 'Forwarded to HR');
                         });
                 })

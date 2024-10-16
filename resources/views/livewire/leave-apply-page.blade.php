@@ -7,11 +7,6 @@
         </button>
     </div>
     @endif
-    @if($showerrorMessage)
-    <div id="errorMessage" class="alert alert-danger d-flex gap-3 position-absolute align-items-center" style="right: 0;left:0;top:-18%;" wire:poll.5s="hideAlert">
-        {{ $errorMessage }}
-    </div>
-    @endif
 
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)

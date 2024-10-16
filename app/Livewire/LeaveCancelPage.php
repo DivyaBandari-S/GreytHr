@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Mail\LeaveApplicationNotification;
+use App\Mail\LeaveApprovalNotification;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
 use App\Models\LeaveRequest;
@@ -44,6 +45,7 @@ class LeaveCancelPage extends Component
     public $showApplyingToContainer = false;
     public $show_reporting = false;
     public  $fullName;
+    public $createdCancelLeaveRequest;
     public $searchQuery = '';
     public $showCasualLeaveProbation;
     public $empManagerDetails, $selectedManagerDetails;
@@ -411,7 +413,7 @@ class LeaveCancelPage extends Component
             $leaveRequest->cancel_status = 'Re-applied';
             $leaveRequest->save();
             // Create a new leave request record
-            LeaveRequest::create([
+            $this->createdCancelLeaveRequest =  LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
@@ -440,7 +442,16 @@ class LeaveCancelPage extends Component
             $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
 
-            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetails, $ccToDetails));
+            // Limit CC emails to a maximum of 5 recipients
+            $ccEmails = array_slice($ccEmails, 0, 5);
+
+            // Check if the manager email or CC emails are not empty
+            if (!empty($managerEmail) || !empty($ccEmails)) {
+                // Send the email if we have at least one recipient
+                Mail::to($managerEmail)
+                    ->cc($ccEmails)
+                    ->send(new LeaveApprovalNotification($this->createdCancelLeaveRequest, $applyingToDetails, $ccToDetails));
+            }
 
             $this->cancel();
             session()->flash('message', 'Leave cancel request submitted successfully.');

@@ -54,7 +54,7 @@ class ViewPendingDetails extends Component
 
             // Base query for fetching leave applications
             $query = LeaveRequest::where(function ($query) {
-                $query->where('leave_applications.status', 'pending')
+                $query->where('leave_applications.status', 'Pending')
                     ->orWhere('leave_applications.cancel_status', 'Pending Leave Cancel');
             })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -146,7 +146,7 @@ class ViewPendingDetails extends Component
     {
         try {
             // Check if there are pending leave requests
-            return $this->leaveRequests->where('status', 'pending')->isNotEmpty();
+            return $this->leaveRequests->where('status', 'Pending')->isNotEmpty();
         } catch (\Exception $e) {
             Log::error('An error occurred win hasPendingLeave: ' . $e->getMessage());
             session()->flash('error', 'Error while getting leave application. Please try again.');
@@ -249,34 +249,55 @@ class ViewPendingDetails extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            // Find the leave request by ID
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+            
+            // Get employee email
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
-            // Calculate the difference in days from the created date to now
+    
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-            // Check if status is already approved
+    
             if ($leaveRequest->status === 'approved') {
                 session()->flash('message', 'Leave application is already approved.');
             } else {
-                // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
-                    // Update status to 'approved'
                     $leaveRequest->status = 'approved';
-                    $leaveRequest->updated_at = now(); // Update timestamps
+                    $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
-                    // Send email notification
-                    if ($sendEmailToEmp) {
-                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+    
+                    // Sending email to employee and CC emails
+                    $applyingToDetails = json_decode($leaveRequest->applying_to, true);
+                    $ccToDetails = json_decode($leaveRequest->cc_to, true);
+    
+                    // Extract CC emails
+                    $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+                    $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
+    
+                    // Only send email if employee or CC emails are not empty
+                    if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
+                        // Send email to the main recipient (the employee)
+                        if (!empty($sendEmailToEmp)) {
+                            Mail::to($sendEmailToEmp)
+                                ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
+                        }
+    
+                        // Send emails to CC recipients with different content
+                        if (!empty($ccEmails)) {
+                            foreach ($ccEmails as $ccEmail) {
+                                Mail::to($ccEmail)
+                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            }
+                        }
+    
+                        $this->showAlert = true;
+                        session()->flash('message', 'Leave application approved successfully.');
                     }
-                    $this->showAlert = true;
-                    session()->flash('message', 'Leave application approved successfully.');
                 }
             }
+    
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
-            // Handle the exception
             Log::error('Error approving leave: ' . $e->getMessage());
             session()->flash('error', 'Failed to approve leave application. Please try again.');
         }
