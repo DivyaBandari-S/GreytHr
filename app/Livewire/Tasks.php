@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Session;
 use \Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use App\Helpers\FlashMessageHelper;
 
 class Tasks extends Component
 {
@@ -287,8 +288,9 @@ class Tasks extends Component
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
         $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
-        $this->selectedPeopleName = $this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name . ' #(' . $this->selectedPerson->emp_id . ')';
+        $this->selectedPeopleName = ucwords(strtolower(($this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name))) . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
+        $this->updateFollowers();
 
 
         if ($this->selectedPersonClients->isEmpty()) {
@@ -319,6 +321,7 @@ class Tasks extends Component
         }
 
         $this->updateFollowers();
+
         if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
             $this->validationFollowerMessage = "You can only select up to 5 followers.";
         } else {
@@ -342,6 +345,7 @@ class Tasks extends Component
         // Ensure state is updated correctly
 
         $this->updateFollowers();
+        // dd($this->maxFollowers, count($this->selectedPeopleForFollowers));
         if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
             $this->validationFollowerMessage = "You can only select up to 5 followers.";
         } else {
@@ -350,33 +354,34 @@ class Tasks extends Component
     }
 
 
-    // public function updateFollowers()
-    // {
 
-    //     $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
-    //         $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-    //         return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
-    //     }, $this->selectedPeopleForFollowers);
-
-    //     $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
-
-    //     $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
-    // }
     public function updateFollowers()
     {
-        $this->selectedPeopleNamesForFollowers = array_map(function ($id) {
+        // Extract the assigned employee ID from the selected assignee
+        preg_match('/#\((.*?)\)/', $this->selectedPeopleName, $matches);
+        $assignedEmployeeId = isset($matches[1]) ? $matches[1] : null;
+
+        // Map through selected followers to get their formatted names
+        $this->selectedPeopleNamesForFollowers = array_map(function ($id) use ($assignedEmployeeId) {
             $selectedPerson = $this->peoples->where('emp_id', $id)->first();
-            return $selectedPerson ? $selectedPerson->first_name . ' ' . $selectedPerson->last_name . ' #(' . $selectedPerson->emp_id . ')' : '';
+
+            // Only format and return the person if they are not the assigned employee
+            if ($selectedPerson && $selectedPerson->emp_id !== $assignedEmployeeId) {
+                return ucwords(strtolower($selectedPerson->first_name . ' ' . $selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+            }
+            return null; // Return null for assigned employee
         }, $this->selectedPeopleForFollowers);
 
-        // Filter out any empty results
+        // Filter out any null or empty results
         $this->selectedPeopleNamesForFollowers = array_filter($this->selectedPeopleNamesForFollowers);
 
         // Convert to a string for display
         $this->followers = implode(', ', array_unique($this->selectedPeopleNamesForFollowers));
 
+        // Determine if there are any followers to show
         $this->showFollowers = count($this->selectedPeopleNamesForFollowers) > 0;
     }
+
 
 
     public function openForTasks($taskId)
@@ -386,7 +391,8 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 'Completed']);
         }
-        session()->flash('message', 'Task closed successfully!');
+        // session()->flash('message', 'Task closed successfully!');
+        FlashMessageHelper::flashSuccess('Task closed successfully!');
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
@@ -403,7 +409,8 @@ class Tasks extends Component
             ]);
         }
 
-        session()->flash('message', 'Task has been Re-Opened.');
+        // session()->flash('message', 'Task has been Re-Opened.');
+        FlashMessageHelper::flashSuccess('Task has been Re-Opened.');
         session()->flash('showAlert', true);
 
         return redirect()->to('/tasks');
@@ -438,8 +445,10 @@ class Tasks extends Component
         try {
             $this->validate_tasks = true;
             $this->autoValidate();
+
             if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
                 session()->flash('error', 'You can only select up to 5 followers.');
+                // FlashMessageHelper::flashError('You can only select up to 5 followers.');
                 return;
             }
 
@@ -460,13 +469,15 @@ class Tasks extends Component
                     Log::error('Failed to read the uploaded file.', [
                         'file_path' => $this->file_path->getRealPath(),
                     ]);
-                    session()->flash('error', 'Failed to read the uploaded file.');
+                    // session()->flash('error', 'Failed to read the uploaded file.');
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
 
                 // Check if the file content is too large
                 if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    session()->flash('error', 'File size exceeds the allowed limit.');
+                    // session()->flash('error', 'File size exceeds the allowed limit.');
+                    FlashMessageHelper::flashError('File size exceeds the allowed limit.');
                     return;
                 }
 
@@ -566,35 +577,35 @@ class Tasks extends Component
                 } else {
                     $formattedAssignee = ucwords(strtolower($assignee)); // Fallback if the format doesn't match
                 }
-            
 
-            if ($followerDetails) {
-                $followerFirstName = ucwords(strtolower($followerDetails->first_name));
-                $followerLastName = ucwords(strtolower($followerDetails->last_name));
-                $followerIdFormatted = strtoupper(trim($followerDetails->emp_id)); // Assuming this is the ID
 
-                // Combine follower's name and ID
-                $formattedFollowerName = $followerFirstName . ' ' . $followerLastName . ' #( ' . $followerIdFormatted . ' )';
-                $dueDate = $this->due_date; // Make sure this variable is defined
-                $priority = $this->priority; // Make sure this variable is defined
-                $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
-                if (!empty($followerDetails->email)) {
-                    Log::info("Sending email to follower: {$followerDetails->email}");
-                    Mail::to($followerDetails->email)->send(new TaskAssignedNotification(
-                        $taskName,
-                        $description,
-                        $dueDate,
-                        $priority,
-                        $assignedBy,
-                        $formattedAssignee,
-                        $searchData,
-                        $formattedFollowerName, // Pass formatted follower name
-                        true
-                    ));
-                    Log::info("Email sent to follower successfully.");
+                if ($followerDetails) {
+                    $followerFirstName = ucwords(strtolower($followerDetails->first_name));
+                    $followerLastName = ucwords(strtolower($followerDetails->last_name));
+                    $followerIdFormatted = strtoupper(trim($followerDetails->emp_id)); // Assuming this is the ID
+
+                    // Combine follower's name and ID
+                    $formattedFollowerName = $followerFirstName . ' ' . $followerLastName . ' #( ' . $followerIdFormatted . ' )';
+                    $dueDate = $this->due_date; // Make sure this variable is defined
+                    $priority = $this->priority; // Make sure this variable is defined
+                    $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
+                    if (!empty($followerDetails->email)) {
+                        Log::info("Sending email to follower: {$followerDetails->email}");
+                        Mail::to($followerDetails->email)->send(new TaskAssignedNotification(
+                            $taskName,
+                            $description,
+                            $dueDate,
+                            $priority,
+                            $assignedBy,
+                            $formattedAssignee,
+                            $searchData,
+                            $formattedFollowerName, // Pass formatted follower name
+                            true
+                        ));
+                        Log::info("Email sent to follower successfully.");
+                    }
                 }
             }
-        }
 
 
             if ($extracted != $this->employeeDetails->emp_id) {
@@ -608,7 +619,8 @@ class Tasks extends Component
             }
 
             session()->flash('showAlert', true);
-            session()->flash('message', 'Task created successfully!');
+            // session()->flash('message', 'Task created successfully!');
+            FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
             Log::info("Redirecting to tasks page.");
             return redirect()->to('/tasks');
@@ -621,9 +633,15 @@ class Tasks extends Component
                 'description' => $this->description,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            // session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    public function fileSelected()
+    {
+        FlashMessageHelper::flashSuccess('File Uploaded successfully!');
+    }
+
     public function resetFields()
     {
         $this->task_name = null;
@@ -785,7 +803,8 @@ class Tasks extends Component
             'comment' => $this->newComment,
         ]);
 
-        session()->flash('comment_message', 'Comment updated successfully.');
+        // session()->flash('comment_message', 'Comment updated successfully.');
+        FlashMessageHelper::flashSuccess('Comment updated successfully.');
         $this->showAlert = true;
 
 
@@ -808,7 +827,8 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-        session()->flash('message', 'Comment added successfully.');
+        // session()->flash('message', 'Comment added successfully.');
+        FlashMessageHelper::flashSuccess('Comment added successfully.');
         $this->showAlert = true;
     }
     public function updatedNewComment($value)
@@ -822,12 +842,14 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            session()->flash('comment_message', 'Comment deleted successfully.');
+            // session()->flash('comment_message', 'Comment deleted successfully.');
+            FlashMessageHelper::flashSuccess('Comment deleted successfully.');
             $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
             // Handle any exceptions that occur during the deletion process
-            session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
+            // session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Failed to delete comment: ' . $e->getMessage());
         }
     }
     public function cancelEdit()
@@ -925,6 +947,7 @@ class Tasks extends Component
         // Assuming $this->selectedPeopleName contains the string
         $selectedPeopleName = $this->selectedPeopleName;
 
+
         // Use a regular expression to extract the ID
         preg_match('/#\((.*?)\)/', $selectedPeopleName, $matches);
 
@@ -938,6 +961,7 @@ class Tasks extends Component
 
 
         $this->followerPeoples = $this->peoples->where('emp_id', '!=', $assignedEmployeeId);
+
 
 
         $peopleAssigneeData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
