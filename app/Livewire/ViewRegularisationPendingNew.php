@@ -3,6 +3,8 @@
 namespace App\Livewire;
 
 use App\Mail\ManagerNotificationMail;
+use App\Mail\RegularisationApprovalMail;
+use App\Mail\RegularisationRejectionMail;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
@@ -18,10 +20,13 @@ class ViewRegularisationPendingNew extends Component
 
     public $showAlert=false;
     public $openAccordionForActive;
-    public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
+    public $managerEmail = 'manikanta.asapu@paygdigitals.com'; // Example manager email
+
+    public $employeeEmailForRejection;
     public $messageContent;  // This will hold the message input from the form
     public $senderName;
 
+    public $employeeEmailForApproval;
     public $regularisationEntries;
     public $searchQuery='';
     public $searching=0;
@@ -219,8 +224,31 @@ class ViewRegularisationPendingNew extends Component
         $this->closeApproveModal();
         Session::flash('success', 'Regularisation Request approved successfully');
         $this->showAlert=true;
+        $this->sendApprovalMail($id);
     }
+    public function sendApprovalMail($id)
+    {
+        $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
+ 
+        $regularisationEntriesforApproval = json_decode($item->regularisation_entries, true); // Decode the JSON entries
+   
+    $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
+    // Prepare the HTML table
     
+    $this->employeeEmailForApproval=$employee->email;
+    $details = [
+     
+        'regularisationRequests'=>$regularisationEntriesforApproval,
+        'sender_id'=>$employee->emp_id,
+        'sender_remarks'=>$item->employee_remarks,
+        'receiver_remarks'=>$item->approver_remarks,
+       
+    ];
+ 
+ 
+    // Send email to manager
+      Mail::to($this->employeeEmailForApproval)->send(new RegularisationApprovalMail($details));
+    }
     public function searchRegularisation()
     {
         $this->searching=1;
@@ -248,8 +276,31 @@ class ViewRegularisationPendingNew extends Component
         $this->closeRejectModal();
         Session::flash('success', 'Regularisation Request rejected successfully');
         $this->showAlert=true;
+        $this->sendRejectionMail($id);
     }
+    public function sendRejectionMail($id)
+    {
+        $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
+ 
+        $regularisationEntriesforRejection = json_decode($item->regularisation_entries, true); // Decode the JSON entries
+   
+    $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
+    // Prepare the HTML table
     
+    $this->employeeEmailForRejection=$employee->email;
+    $details = [
+     
+        'regularisationRequests'=>$regularisationEntriesforRejection,
+        'sender_id'=>$employee->emp_id,
+        'sender_remarks'=>$item->employee_remarks,
+        'receiver_remarks'=>$item->approver_remarks,
+       
+    ];
+ 
+ 
+    // Send email to manager
+      Mail::to($this->employeeEmailForRejection)->send(new RegularisationRejectionMail($details));
+    }
  
     public function render()
     {
