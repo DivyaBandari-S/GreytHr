@@ -102,17 +102,23 @@
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
                                     <td>
-                                       @if($balance->category_type === 'Leave')
-                                       @if($balance->status == 'approved')
+                                        @if($balance->category_type === 'Leave')
+                                        @if($balance->status == 'approved')
                                         Availed
+                                        @elseif($balance->status == 'Pending' )
+                                        Applied
                                         @elseif($balance->status == 'Withdrawn' )
                                         Withdrawn
                                         @else
                                         Rejected
                                         @endif
-                                       @else
-                                        Leave Cancel({{ucfirst($balance->cancel_status)}})
-                                       @endif
+                                        @else
+                                        @if($balance->cancel_status=='Pending Leave Cancel')
+                                        Leave Cancel-Applied
+                                        @else
+                                        Leave Cancel-{{ucfirst($balance->cancel_status)}}
+                                        @endif
+                                        @endif
                                     </td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>

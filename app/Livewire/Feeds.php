@@ -11,6 +11,7 @@
 // Models                          : Comment,AddComment,Emoji,EmojiReaction,EmployeeDetails
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\Comment;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Carbon;
@@ -182,7 +183,7 @@ class Feeds extends Component
             }
         } else {
             // If no parent company is found
-            dd('No parent company found with is_parent = yes.');
+           
         }
     }
     
@@ -273,7 +274,7 @@ class Feeds extends Component
     
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            session()->flash('error', 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError( 'Employee ID cannot be null.');
             return;
         }
     
@@ -292,8 +293,7 @@ class Feeds extends Component
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-        // Optionally, show a flash message
-        session()->flash('success', 'Emoji added successfully.');
+     
     }
     public function createemoji($emp_id)
     {
@@ -313,7 +313,7 @@ class Feeds extends Component
     
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            session()->flash('error', 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
     
@@ -335,8 +335,7 @@ class Feeds extends Component
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
     
-        // Optionally, show a flash message
-        session()->flash('message', 'Emoji added successfully.');
+      
     }
     public function getComments($sortType)
     {
@@ -371,7 +370,7 @@ class Feeds extends Component
     
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            session()->flash('error', 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError( 'Employee ID cannot be null.');
             return;
         }
     
@@ -403,8 +402,7 @@ class Feeds extends Component
             ->orderByDesc('created_at')
             ->get();
       
-   
-        session()->flash('message', 'Comment added successfully.');
+
     }
     public function createcomment($emp_id)
     {
@@ -424,7 +422,7 @@ class Feeds extends Component
   
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            session()->flash('error', 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
     
@@ -455,9 +453,7 @@ class Feeds extends Component
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-        // Flash a success message
-        session()->flash('message', 'Comment added successfully.');
-      
+       
    
  
     }
@@ -579,13 +575,13 @@ public function loadaddComments()
                 Log::error('Failed to read the uploaded file.', [
                     'file_path' => $this->file_path->getRealPath(),
                 ]);
-                session()->flash('error', 'Failed to read the uploaded file.');
+                FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
     
             // Check if the file content is too large (16MB limit for MEDIUMBLOB)
             if (strlen($fileContent) > 16777215) {
-                session()->flash('error', 'File size exceeds the allowed limit.');
+                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                 return;
             }
     
@@ -624,7 +620,7 @@ public function loadaddComments()
     
             // Reset form fields and display success message
             $this->reset(['category', 'description', 'file_path']);
-            session()->flash('message', 'Post created successfully!');
+            FlashMessageHelper::flashSuccess ( 'Post created successfully!');
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -634,7 +630,7 @@ public function loadaddComments()
                 'employee_id' => $employeeId ?? 'N/A',
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            session()->flash('error', 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError ('An error occurred while creating the request. Please try again.');
         }
     }
     
