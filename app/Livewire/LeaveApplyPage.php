@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
@@ -466,9 +467,7 @@ class LeaveApplyPage extends Component
                     ->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
             }
 
-
-            logger('LeaveRequest created successfully', ['leave_request' => $this->createdLeaveRequest]);
-            session()->flash('message', 'Leave application submitted successfully!');
+            FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
             $this->resetFields();
             $this->showAlert = true;
         } catch (\Exception $e) {
@@ -537,8 +536,7 @@ class LeaveApplyPage extends Component
 
             // 6. Special validation for Casual Leave
             if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                $this->errorMessage = 'You can only apply for a maximum of 2 days of Casual Leave for the month.';
-                $this->showerrorMessage = true;
+                FlashMessageHelper::flashError("You can only apply for a maximum of 2 days of Casual Leave for the month.");
                 return; // Stop further validation if error occurs
             }
 

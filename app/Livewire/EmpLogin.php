@@ -149,15 +149,25 @@ class EmpLogin extends Component
                 return redirect('/');
             } else {
                 FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
+                $this->resetForm();
+                $this->reset('form'); // Reset the entire form
             }
         } catch (ValidationException $e) {
             FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Illuminate\Database\QueryException $e) {
             FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             FlashMessageHelper::flashError('There is a server error. Please try again later.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
+            $this->resetForm();
+            $this->reset('form'); // Reset the entire form
         }
     }
 

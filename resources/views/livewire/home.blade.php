@@ -1,15 +1,4 @@
 <div class="position-relative">
-    <div class="msg-container">
-        @if ($showAlert)
-        <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
-            <!-- wire:poll.5s="hideAlert" -->
-            <p class="alert alert-success successContainer" role="alert">
-                {{ session('success') }} 😀
-                <span class="closeMsg ml-5" wire:click='hideAlert'>x</span>
-            </p>
-        </div>
-        @endif
-    </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-6 mb-3">

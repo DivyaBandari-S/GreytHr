@@ -10,7 +10,7 @@ class FlashMessageHelper
             message: $message,
             type: 'error',
             options: [
-                'position' => 'top-center',
+                'position' => 'top-right',
                 // 'timeout' => 3000, // Uncomment if needed
             ]
         );
@@ -33,7 +33,7 @@ class FlashMessageHelper
             message: $message,
             type: 'success',
             options: [
-                'position' => 'top-center',
+                'position' => 'top-right',
             ]
         );
     }
