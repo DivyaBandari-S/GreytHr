@@ -33,7 +33,7 @@
                 <div class="task-dropdown">
                     <div class="form-group">
 
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod" wire:change="updateFilterDropdown">
                             <option value="all" selected>All</option>
                             <option value="this_week">This Week</option>
                             <option value="this_month">This Month</option>
@@ -60,7 +60,7 @@
                                     <i class="fa fa-angle-down task-arrow-icon"></i>
                                 </th>
                                 <th class="task-open-table-2-th">
-                                    Task Id
+                                    Task ID
                                 </th>
                                 <th class="task-open-table-3-th">
                                     Task Name
@@ -255,7 +255,7 @@
                 </div>
                 <div class="task-dropdown">
                     <div class="form-group">
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod">
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod" wire:change="updateFilterDropdown">
                             <option value="all" selected>All</option>
                             <option value="this_week">This Week</option>
                             <option value="this_month">This Month</option>
@@ -281,7 +281,7 @@
                                     <i class="fa fa-angle-down" style="color: white; padding-left: 8px;"></i>
                                 </th>
                                 <th class="task-closed-table-2-th">
-                                    Task Id
+                                    Task ID
                                 </th>
                                 <th class="task-closed-table-3-th">
                                     Task Name

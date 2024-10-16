@@ -278,7 +278,7 @@ class Tasks extends Component
             ->where('notification_type', 'task')
             ->delete();
     }
-    public function updatedFilterPeriod()
+    public function updateFilterDropdown()
     {
         $this->loadTasks();
     }
