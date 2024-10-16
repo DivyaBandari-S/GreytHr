@@ -156,11 +156,12 @@ class CasualLeaveBalance extends Component
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
         ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
         ->whereYear('to_date', '>=', $this->year)
-        ->where(function ($query) {
-            $query->whereIn('status', ['approved', 'rejected','Withdrawn'])  // Include both approved and rejected statuses
-                ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
-        })
-        ->orderBy('created_at', 'desc')  // Order by created_at date in descending order
+        ->where('leave_type','Casual Leave')
+        // ->where(function ($query) {
+        //     $query->whereIn('status', ['approved', 'rejected','Withdrawn','Pending'])  // Include both approved and rejected statuses
+        //         ->whereIn('cancel_status', ['Re-applied', 'Pending Leave Cancel', 'rejected', 'Withdrawn','Pending','approved']);
+        // })
+        ->orderBy('created_at', 'desc')
         ->get();
 
         // dd(  $this->employeeleaveavlid);
@@ -174,7 +175,7 @@ class CasualLeaveBalance extends Component
                 $leaveRequest->to_session,
                 $leaveRequest->leave_type
             );
-            if( $leaveRequest->status=='approved' && $leaveRequest->category_type=='Leave'){
+            if( $leaveRequest->status=='approved' &&$leaveRequest->cancel_status!='approved' &&  $leaveRequest->category_type=='Leave'){
                 $this->totalSickDays += $days;
             }
 
@@ -213,13 +214,12 @@ class CasualLeaveBalance extends Component
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave')
                 ->where('status', 'approved')
-                ->where('category_type','Leave')
                 ->where('cancel_status','!=','approved')
                 ->whereYear('from_date', $currentYear)
                 ->where(function ($query) use ($month) {
                     $query->whereMonth('from_date', $month)
                         ->orWhereMonth('to_date', $month);
-                })
+                })->where('category_type','Leave')
                 ->get();
 
             foreach ($availedLeavesRequests as $availedleaveRequest) {
