@@ -472,10 +472,8 @@ Route::get('/clear', function () {
     // Perform other Artisan commands
     Artisan::call('cache:clear');
     Artisan::call('config:clear');
-    Artisan::call(' event:clear');
     Artisan::call('optimize');
     Artisan::call('optimize:clear');
-    Artisan::call('queue:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
     Artisan::call('auth:clear-resets');
