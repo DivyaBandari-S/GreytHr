@@ -394,8 +394,8 @@ class Catalog extends Component
             if ($selectedPerson) {
                 if (!in_array($personId, $this->selectedPeople)) {
                     // Ensure we don't exceed the limit of 5 selected people
-                    if (count($this->selectedPeople) >= 5) {
-                        session()->flash('error', 'You can only select up to 5 followers.');
+                    if (count($this->selectedPeople) >= 1) {
+                        session()->flash('error', 'You can only select up to 1 follower.');
                         return;
                     }
     
@@ -478,9 +478,9 @@ class Catalog extends Component
 
     public function updatedSelectedPeople()
     {
-        if (count($this->selectedPeople) > 5) {
+        if (count($this->selectedPeople) > 1) {
             // Flash an error message
-            FlashMessageHelper::flashWarning('You can only select up to 5 people.');
+            FlashMessageHelper::flashWarning('You can only select 1 people.');
     
             // Optionally, reset the selected people array or remove the last selection
             $this->selectedPeople = array_slice($this->selectedPeople, 0, 5);

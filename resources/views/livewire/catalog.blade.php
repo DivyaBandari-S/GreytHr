@@ -1157,7 +1157,7 @@
                                             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">New Laptop</h1>
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel"> Laptop Request</h1>
 
                                                     </div>
 
@@ -1176,19 +1176,14 @@
                                                         <div class="form-group col-md-6 mt-2">
                                                                 <label for="Name">Requested By:</label>
                                                                
-                                                                @if($employeeDetails)
+                                                             
                                                                 <div class="input-group mb-3">
+                                                               
 
-                                                                <div class="input-group-prepend">
-                <span class="form-control" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
-            </div>
-                                                                <input 
-                                                          
-        wire:model.lazy="full_name" 
-        type="text" 
-        class="form-control" 
-        readonly
-    >
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
     @else
         <p>No employee details found.</p>
     @endif

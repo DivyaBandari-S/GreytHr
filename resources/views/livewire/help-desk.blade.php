@@ -292,7 +292,7 @@
 
 
             <table class="help-desk-table-main" >
-                <thead>
+                <thead class="help">
                     <tr class="help-desk-table-row" >
                         <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
                         <th class="help-desk-table-column" style=" width: 10%;">Category</th>
@@ -313,7 +313,7 @@
     @else
                     @foreach ($searchData->sortByDesc('created_at') as $index => $record)
                     @if($record->status == "Recent")
-                    <tr style="background-color: white;">
+                    <tr class="helpdesk-main" style="background-color: white;border-bottom:none">
                         <td class="helpdesk-request" >
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
@@ -406,7 +406,7 @@
                     </tr>
 
                     @if (count($ccToArray) > 2)
-                    <tr class="border" tyle="border-top: none !important;">
+                    <tr class="border" style="border: none !important;">
                         <td class="boder" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
                             <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
                                 CC TO: {{ implode(', ', $ccToArray) }}

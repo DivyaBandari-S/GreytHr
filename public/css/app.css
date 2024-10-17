@@ -843,6 +843,7 @@ button.close-button {
 }
 .help-desk-table-row{
     background-color: rgb(2, 17, 79); 
+
     color: white;
 }
 .help-desk-table-column{
@@ -861,6 +862,9 @@ button.close-button {
     font-size: 12px;
      text-align: center;
       text-transform: capitalize;
+}
+.help-desk-table-main th,td{
+border-bottom:none;
 }
 
 .submit-button {
