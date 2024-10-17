@@ -8,5 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class StatusType extends Model
 {
     use HasFactory;
-    protected $fillable = ['status_name'];
+    protected $fillable = ['status_name', 'status_code'];
 }
