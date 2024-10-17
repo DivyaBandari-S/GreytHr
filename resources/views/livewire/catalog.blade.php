@@ -1162,10 +1162,10 @@
             </div>
         @else
             @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="addselectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
