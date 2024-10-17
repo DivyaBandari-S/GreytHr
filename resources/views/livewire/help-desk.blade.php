@@ -2,15 +2,7 @@
 
     <div style="overflow-x:hidden">
         <div class="row ">
-            @if (session()->has('message'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-                {{ session('message') }}
-                <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                    style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-            </div>
-            @endif
-
-
+    
             <div class="d-flex border-0  align-items-center justify-content-center">
                 <div class="nav-buttons d-flex justify-content-center">
                     <ul class="nav custom-nav-tabs border rounded">
@@ -57,12 +49,12 @@
 
 
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> IT Request </button>
+                <button onclick="location.href='/catalog'"  class="helpdesk-btn" > IT Request </button>
             </div>
 
 
             <div class="mx-2 ">
-                <button wire:click="open" style="font-size:12px;background-color:rgb(2, 17, 79);color:white;border-radius:5px;padding:4px 10px;"> HR Request </button>
+                <button wire:click="open"  class="helpdesk-btn"> HR Request </button>
             </div>
 
             <div>
@@ -74,21 +66,15 @@
         <div class="modal" tabindex="-1" role="dialog" style="display: block;overflow-y:auto;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header align-items-center" style="background-color: rgb(2, 17, 79); height: 50px">
-                        <h5 style="padding: 5px; color: white; font-size: 15px;" class="modal-title"><b>HR Request</b></h5>
+                    <div class="modal-header helpdesk-modal align-items-center">
+                        <h5  class="modal-title helpdesk-title"><b>HR Request</b></h5>
 
                         </button>
                     </div>
                     <div class="modal-body">
 
-                        @if (session()->has('error'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-                            {{ session('error') }}
-                            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                                style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-                        </div>
-                        @endif
-                        <label for="category" style="color:#778899;font-weight:500;font-size:12px;">Category <span style="color:red">*</span></label>
+         
+                        <label for="category" class="helpdesk-label">Category <span style="color:red">*</span></label>
                         <div class="input" type="" class="form-control placeholder-small">
                             <div style="position: relative;">
                                 <select wire:model.lazy="category" wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
@@ -105,7 +91,7 @@
                                     </optgroup>
                                 </select>
                                 @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                <div class="dropdown-toggle-icon" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">
+                                <div class="dropdown-toggle-icon helpdesk-toggler">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                                         <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z" />
                                     </svg>
@@ -118,13 +104,13 @@
                         </div>
 
                         <div class="form-group mt-2">
-                            <label for="subject" style="color: #778899; font-weight: 500; font-size: 12px;">Subject <span style="color: red;">*</span></label>
+                            <label for="subject" class="helpdesk-label">Subject <span style="color: red;">*</span></label>
                             <input type="text" wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('subject')" id="subject" class="form-control placeholder-small" placeholder="Enter subject" style="font-family: Montserrat, sans-serif;">
                             @error('subject') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div class="form-group mt-2">
-                            <label for="description" style="color: #778899; font-weight: 500; font-size: 12px;">Description <span style="color: red;">*</span></label>
+                            <label for="description" class="helpdesk-label" >Description <span style="color: red;">*</span></label>
                             <textarea wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
@@ -132,7 +118,7 @@
 
                         <div class="row mt-2">
                             <div class="col">
-                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                <label for="fileInput" class="helpdesk-label" >
                                     <i class="fa fa-paperclip"></i> Attach Image
                                 </label>
                             </div>
@@ -147,7 +133,7 @@
 
 
                         <div class="form-group mt-2">
-                            <label for="priority" style="color:#778899;font-weight:500;font-size:12px;margin-top:10px;">Priority<span style="color:red">*</span></label>
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                             <div class="input" class="form-control placeholder-small">
                                 <div style="position: relative;">
                                     <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
@@ -156,7 +142,7 @@
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>
                                     </select>
-                                    <div class="dropdown-toggle-icon" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%);">
+                                    <div class="dropdown-toggle-icon helpdesk-toggler" >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
                                             <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z" />
                                         </svg>
@@ -173,7 +159,7 @@
                                         <div style="margin: 0px; padding: 0;">
                                             <div>
 
-                                                <div style="font-size: 12px; color: #778899; margin-bottom: 10px; font-weight: 500;">
+                                                <div class="select-ccto">
                                                     Select CC To: {{ implode(', ', array_unique($selectedPeopleNames)) }}
                                                 </div>
                                                 @if (session()->has('selecterror'))
@@ -182,7 +168,7 @@
     </div>
 @endif
                                             </div>
-                                            <button type="button" style="border-radius: 50%; color: #778899; border: 1px solid #778899;" class="add-button" wire:click="toggleRotation">
+                                            <button type="button"  class="add-button" wire:click="toggleRotation">
                                                 <div class="icon-container">
                                                     <i class="fas fa-plus" style="color: #778899;"></i>
                                                 </div>
@@ -195,13 +181,13 @@
    
 
                                 @if($isRotated)
-                                <div style="border-radius: 5px; background-color: grey; padding: 8px; width: 330px; margin-top: 10px; height: 200px; overflow-y: auto;">
-                                    <div class="input-group3" style="display: flex; align-items: center; width: 100%;">
+                                <div class="helpdesk-rotate" >
+                                    <div class="input-group3 helpdesk-container" >
                                         <input
                                             wire:model="searchTerm"
-                                            style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;"
+                                    
                                             type="text"
-                                            class="form-control"
+                                            class="form-control helpdesk-search-term"
                                             placeholder="Search for Emp.Name or ID"
                                             aria-label="Search"
                                             aria-describedby="basic-addon1"   wire:input="autoValidate">
@@ -212,9 +198,9 @@
                                             <button
                                                 wire:click="closePeoples"
                                                 type="button"
-                                                class="close rounded px-1 py-0"
+                                                class="close hepldesk-close-people rounded px-1 py-0"
                                                 aria-label="Close"
-                                                style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
+                                              >
                                                 <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
                                             </button>
                                         </div>
@@ -276,8 +262,8 @@
 
 
         @if ($activeTab == "active")
-        <div class="row align-items-center">
-            <div class="col-12 col-md-3 ">
+        <div class="row align-items-center " style="margin-top:50px">
+            <div class="col-12 col-md-3  ">
             <div class="input-group task-input-group-container">
                         <input wire:input="searchActiveHelpDesk" wire:model="activeSearch" type="text"
                             class="form-control task-search-input" placeholder="Search..." aria-label="Search"
@@ -289,7 +275,7 @@
                         </div>
                     </div>
             </div>
-            <div class="col-12 col-md-3 ">
+            <div class="col-12 col-md-3 " style="margin-top:-5px">
                 <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                 <option value="" class="option-default">Select Request</option>
     @foreach($requestCategories as $request => $categories)
@@ -302,19 +288,19 @@
 
 
 
-        <div style="width: 100%; background-color: white; margin-top: 10px; overflow-x: auto;">
+        <div class="help-desk-table">
 
 
-            <table style="width: 100%; background-color: white; margin-top: 10px; border-collapse: collapse; overflow-x: auto;">
-                <thead>
-                    <tr style="background-color: rgb(2, 17, 79); color: white;">
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Request Raised By</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Category</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">Subject</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Description</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Attach Files</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 20%;">CC To</th>
-                        <th style="padding: 10px; font-size: 12px; text-align: center; width: 10%;">Priority</th>
+            <table class="help-desk-table-main" >
+                <thead class="help">
+                    <tr class="help-desk-table-row" >
+                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
+                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -327,21 +313,21 @@
     @else
                     @foreach ($searchData->sortByDesc('created_at') as $index => $record)
                     @if($record->status == "Recent")
-                    <tr style="background-color: white;">
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                    <tr class="helpdesk-main" style="background-color: white;border-bottom:none">
+                        <td class="helpdesk-request" >
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ $record->category }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ $record->subject }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ $record->description }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center;">
+                        <td class="helpdesk-request" >
 
 
 
@@ -408,19 +394,19 @@
 
 
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             @php
                             $ccToArray = explode(',', $record->cc_to ?? '-');
                             @endphp
                             {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ $record->priority }}
                         </td>
                     </tr>
 
                     @if (count($ccToArray) > 2)
-                    <tr class="border" tyle="border-top: none !important;">
+                    <tr class="border" style="border: none !important;">
                         <td class="boder" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
                             <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
                                 CC TO: {{ implode(', ', $ccToArray) }}
@@ -446,7 +432,7 @@
 
 
         @if ($activeTab == "closed")
-        <div class="row align-items-center">
+        <div class="row align-items-center" style="margin-top:50px">
        
             <div class="col-12 col-md-3 ">
             <div class="input-group task-input-group-container">
@@ -461,7 +447,7 @@
                     </div>
             </div>
      
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3" style="margin-top:-5px">
                 <select wire:model="closedCategory" wire:change="searchClosedHelpDesk"id="closedCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
@@ -470,18 +456,18 @@
                 </select>
             </div>
         </div>
-        <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
+        <div class="help-desk-table" >
 
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background-color: rgb(2, 17, 79); color: white;">
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:120px">Request Raised By</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Category</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Subject</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Description</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Attach Files</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">CC To</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Priority</th>
+            <table class="help-desk-table-main">
+            <thead>
+                    <tr class="help-desk-table-row" >
+                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
+                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -496,20 +482,20 @@
 
                     @if($record->status=="Completed")
                     <tr style="background-color: white;">
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request" >
                             {{ $record->category }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->subject }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->description }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center;">
+                        <td class="helpdesk-request" >
 
 
 
@@ -568,13 +554,13 @@
 
 
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize; border-top: none;">
+                        <td class="helpdesk-request">
                             @php
                             $ccToArray = explode(',', $record->cc_to??'-');
                             @endphp
                             {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->priority }}
                         </td>
                     </tr>
@@ -602,7 +588,7 @@
 
 
         @if ($activeTab == "pending")
-        <div class="row ">
+        <div class="row align-items-center" style="margin-top:50px">
             <div class="col-12 col-md-3 ">
             <div class="input-group task-input-group-container">
                         <input wire:input="searchPendingHelpDesk" wire:model="pendingSearch" type="text"
@@ -615,7 +601,7 @@
                         </div>
                     </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-3" style="margin-top:-2px" >
                 <select wire:model="pendingCategory" wire:change="searchPendingHelpDesk"  id="pendingCategory" class="form-select" style="height:33px; font-size:0.8rem;">
                     <option value="">Select Request</option>
                     @foreach($requestCategories as $request => $categories)
@@ -624,18 +610,18 @@
                 </select>
             </div>
         </div>
-        <div class="card-body" style="margin:0 auto;background-color:white;width:95%;margin-top:30px;border-radius:5px;max-height:400px;height:400px;overflow-y:auto">
+        <div class="help-desk-table" >
 
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="background-color: rgb(2, 17, 79); color: white;">
-                        <th style="padding: 10px;font-size:12px;text-align:center;width:120px">Request Raised By</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Category</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Subject</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Description</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Attach Files</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">CC To</th>
-                        <th style="padding: 10px;font-size:12px;text-align:center">Priority</th>
+            <table class="help-desk-table-main">
+            <thead>
+                    <tr class="help-desk-table-row" >
+                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
+                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
+                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
+                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -650,20 +636,20 @@
 
                     @if($record->status=="Pending")
                     <tr style="background-color: white;">
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->category }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->subject }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
+                        <td class="helpdesk-request">
                             {{ $record->description }}
                         </td>
-                        <td style="padding: 10px; font-size: 12px; text-align: center;">
+                        <td class="helpdesk-request">
 
 
 

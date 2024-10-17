@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
 use App\Mail\LeaveApprovalNotification;
 use App\Models\EmployeeDetails;
@@ -107,7 +108,7 @@ class LeaveCancelPage extends Component
             // Log the error
             Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while loading leave apply page. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while loading leave apply page. Please try again later.');
             // Redirect the user to a safe location
             return redirect()->back();
         }
@@ -452,14 +453,10 @@ class LeaveCancelPage extends Component
                     ->cc($ccEmails)
                     ->send(new LeaveApprovalNotification($this->createdCancelLeaveRequest, $applyingToDetails, $ccToDetails));
             }
-
             $this->cancel();
-            session()->flash('message', 'Leave cancel request submitted successfully.');
-            $this->showAlert = true;
+            FlashMessageHelper::flashSuccess("Leave cancel request submitted successfully.");
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to submit the leave cancel request. Please try again.');
-            $this->showAlert = true;
-            Log::error('Error marking leave request as cancel: ' . $e->getMessage());
+            FlashMessageHelper::flashError("Failed to submit the leave cancel request. Please try again.");
         }
     }
 
