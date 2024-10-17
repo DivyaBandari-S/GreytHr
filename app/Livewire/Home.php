@@ -13,6 +13,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
@@ -244,11 +245,11 @@ class Home extends Component
                 ? "You have successfully signed in."
                 : "You have successfully signed out.";
 
-            session()->flash('success', $message);
+            FlashMessageHelper::flashSuccess($message);
             $this->showAlert = true;
         } catch (Throwable $e) {
             // Log or handle the exception as needed
-            session()->flash('error', 'An error occurred while toggling sign state. Please try again later.');
+            FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }
     public function showEarlyEmployees()
