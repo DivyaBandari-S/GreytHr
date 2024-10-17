@@ -602,21 +602,7 @@ width: 170px; */
             /* Border style for the container */
         }
 
-        .container-body {
-            /* width: 600px; */
-            /* Adjust the width as needed */
-            /* height: 105px; */
-            /* margin-right: 0px; */
-            /* margin-bottom: 30px; */
-            background-color: #FFFFFF;
-            border-radius: 10px;
-            display: none;
-            /* border-radius:10px; */
-            /* float: right; */
-            /* Adjust the height as needed */
-            /* Background color of the container */
-            /* border: 1px solid #ccc; */
-        }
+        
 
         /* Basic styles for the input container */
         .date-range-container {
@@ -2238,37 +2224,37 @@ color: #fff;
                     <h3 class="container3-head">Session Details</h3>
 
                     <div class="container3-table-scrollable">
-                        <table style="margin-top:-10px">
+                        <table class="container3-table">
                             <thead>
                                 <tr>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session</th>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Session&nbsp;Timing</th>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">First&nbsp;In</th>
-                                    <th style="font-weight:normal;font-size:12px;padding-top:16px;">Last&nbsp;Out</th>
+                                    <th class="container3-table-head">Session</th>
+                                    <th class="container3-table-head">Session&nbsp;Timing</th>
+                                    <th class="container3-table-head">First&nbsp;In</th>
+                                    <th class="container3-table-head">Last&nbsp;Out</th>
 
                                 </tr>
                             </thead>
 
                             <tbody>
 
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="font-weight:normal;font-size:12px;">Session&nbsp;1</td>
-                                    <td style="font-weight:normal;font-size:12px;">10:00 - 14:00</td>
-                                    <td style="font-weight:normal;font-size:12px;">
+                                <tr class="container3-table-row">
+                                    <td class="container3-table-data">Session&nbsp;1</td>
+                                    <td class="container3-table-data">10:00 - 14:00</td>
+                                    <td class="container3-table-data">
                                         @if($changeDate==1)
                                         {{$this->first_in_time}}
                                         @else
                                         -
                                         @endif
                                     </td>
-                                    <td style="font-weight:normal;font-size:12px;">-</td>
+                                    <td class="container3-table-data">-</td>
 
                                 </tr>
-                                <tr style="border-bottom: 1px solid #ddd;">
-                                    <td style="font-weight:normal;font-size:12px;">Session&nbsp;2</td>
-                                    <td style="font-weight:normal;font-size:12px;">14:01 - 19:00</td>
-                                    <td style="font-weight:normal;font-size:12px;">-</td>
-                                    <td style="font-weight:normal;font-size:12px;">
+                                <tr class="container3-table-row">
+                                    <td class="container3-table-data">Session&nbsp;2</td>
+                                    <td class="container3-table-data">14:01 - 19:00</td>
+                                    <td class="container3-table-data">-</td>
+                                    <td class="container3-table-data">
                                         @if($changeDate==1)
                                         {{$this->last_out_time}}
                                         @else
@@ -2287,23 +2273,23 @@ color: #fff;
                 @endif
                 @if($defaultfaCalendar==1)
                 <div class="container6">
-                    <h3 style="margin-left:20px;color: #7f8fa4;font-size:14px;margin-top:15px;align-items:center;">Swipe Details</h3>
-                    <div class="arrow-btn" style="float:right;margin-top:-30px;margin-right:20px;cursor:pointer;color:{{ $toggleButton ? '#3a9efd' : '#778899' }};border:1px solid {{ $toggleButton ? '#3a9efd' : '#778899'}}" wire:click="opentoggleButton">
-                        <i class="fa fa-angle-{{ $toggleButton ? 'down' : 'up' }}"style="color:{{ $toggleButton ? '#3a9efd' : '#778899' }}"></i>
+                    <h3 class="container6-head">Swipe Details</h3>
+                    <div class="arrow-btn container6-button {{ $toggleButton ? 'arrow-btn-active' : 'arrow-btn-inactive' }}"wire:click="opentoggleButton">
+                        <i class="fa fa-angle-{{ $toggleButton ? 'down' : 'up' }} icon-btn {{ $toggleButton ? 'icon-btn-active' : 'icon-btn-inactive' }}"></i>
                     </div>
 
-                    <div class="container-body" style="margin-top:2px;height:auto;border-top:1px solid #ccc;display: {{ $toggleButton ? 'block' : 'none' }};">
+                    <div class="container-body {{ $toggleButton ? 'container-body-active' : 'container-body-inactive' }}">
                         <!-- Content of the container body -->
-                        <div class="table-responsive"style="max-width: 100%; text-align: center;">
+                        <div class="table-responsive container-body-scrollable">
 
                             <table>
                                @if ($swipe_records_count > 0)
                                 <thead>
 
                                     <tr>
-                                        <th style="font-weight:normal;font-size:12px;">In/Out</th>
-                                        <th style="font-weight:normal;font-size:12px;">Swipe&nbsp;Time</th>
-                                        <th style="font-weight:normal;font-size:12px;">Location</th>
+                                        <th class="container3-table-data">In/Out</th>
+                                        <th class="container3-table-data">Swipe&nbsp;Time</th>
+                                        <th class="container3-table-data">Location</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -2311,18 +2297,18 @@ color: #fff;
 
                                 @foreach ($swiperecordsfortoggleButton as $index =>$swiperecord)
                                 <tr>
-                                       <td style="font-weight:normal;font-size:12px;">{{ $swiperecord->in_or_out }}</td>
+                                       <td class="container3-table-data">{{ $swiperecord->in_or_out }}</td>
                                        <td>
-                                           <div style="display:flex;flex-direction:column;">
-                                               <p style="margin-bottom: 0;font-weight:normal;font-size:12px;white-space:nowrap;">
+                                           <div class="swipe-record">
+                                               <p class="swipe-record-swipe-time">
                                                    {{ date('h:i:s A', strtotime($swiperecord->swipe_time)) }}
                                                </p>
-                                               <p style="margin-bottom: 0;font-size: 10px;color: #a3b2c7;">
+                                               <p class="swipe-record-date">
                                                    {{ date('d M Y', strtotime($currentDate2)) }}
                                                </p>
                                            </div>
                                        </td>
-                                       <td style="font-size:10px;">{{$this->city}},{{$this->country}},{{$this->postal_code}}</td>
+                                       <td class="container3-table-location">{{$this->city}},{{$this->country}},{{$this->postal_code}}</td>
 
                                        <td><button class="info-button" wire:click="viewDetails('{{$swiperecord->id}}')">Info</button></td>
 
@@ -2330,7 +2316,7 @@ color: #fff;
                                    @if (($index + 1) % 2 == 0)
                                    <!-- Add a small container after every two records -->
                                    <tr>
-                                       <td colspan="4" style="height:1px; background-color: #f0f0f0; text-align: left;font-size:10px;">
+                                       <td colspan="4" class="container3-table-actual-hours">
                                            Actual Hrs:{{ $actualHours[($index + 1) / 2 - 1] }}</td>
                                    </tr>
 
@@ -2353,11 +2339,11 @@ color: #fff;
                     </div>
                     @endif
                     @if($showSR=="true")
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="modal modal-show" tabindex="-1" role="dialog">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content">
-                                <div class="modal-header" style="background-color: #eef7fa; height: 50px">
-                                    <h5 style="padding: 5px; color: #778899; font-size: 15px;" class="modal-title"><b>Swipe Details</b></h5>
+                                <div class="modal-header regularisation-dialog-head-modal">
+                                    <h5 class="regularisation-dialog-head-modal-heading" class="modal-title"><b>Swipe Details</b></h5>
                                     <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close" wire:click="closeSWIPESR" style="background-color: #eef7fa; height:10px;width:10px;">
                                     </button>
                                 </div>

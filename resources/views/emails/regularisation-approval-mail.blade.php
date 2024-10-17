@@ -44,48 +44,24 @@
             <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
             <thead>
                 <tr colspan="5">
-                    <th>Employee Remarks:</th>
+                    <th>Employee Remarks:<span style="font-weight:normal;">{{ $details['sender_remarks']}}</span></th>
                     
                 </tr>
              
             </thead>
-            <tbody>
-            
-                 
-                        <tr>
-                            <td>{{ $details['sender_remarks']}}</td>
-                          
-                        </tr>
-                 
-                  
-            
            
-        
-            </tbody>
             </table>
             @endif
             @if(!empty($details['regularisationRequests']) && is_array($details['regularisationRequests']))
             <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
             <thead>
                 <tr colspan="5">
-                    <th>Approver Remarks:</th>
+                    <th>Approver Remarks:<span style="font-weight:normal;">{{ $details['receiver_remarks']}}</span></th>
                     
                 </tr>
              
             </thead>
-            <tbody>
-            
-                 
-                        <tr>
-                            <td>{{ $details['receiver_remarks']}}</td>
-                          
-                        </tr>
-                 
-                  
-            
            
-        
-            </tbody>
             </table>
             @endif
             <p style="font-size: 12px; color: gray; margin-top: 20px;">

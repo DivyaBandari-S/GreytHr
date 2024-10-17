@@ -11,6 +11,8 @@
 // Database                        : MySQL
 // Models                          : LeaveRequest,EmployeeDetails,HolidayCalendar,SwipeRecord
 namespace App\Livewire;
+
+use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
@@ -75,7 +77,7 @@ class AttendenceMasterDataNew extends Component
             $this->attendanceYear = $this->selectedYear;
         } catch (\Exception $e) {
             Log::error('Error updating selected year: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the selected year. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while updating the selected year. Please try again.');
         }
         
     }
@@ -108,7 +110,8 @@ class AttendenceMasterDataNew extends Component
                     }
                 } catch (\Exception $e) {
                     Log::error('Error filtering search results: ' . $e->getMessage());
-                    session()->flash('error', 'An error occurred while performing the search. Please try again.');
+                    FlashMessageHelper::flashError('An error occurred while performing the search. Please try again.');
+    
                 }   
        
       
@@ -235,7 +238,7 @@ class AttendenceMasterDataNew extends Component
             return response()->download($filePath, 'Attendance_Muster_Report.xlsx');
         } catch (\Exception $e) {
             Log::error('Error generating Excel report: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the Excel report. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
         }
  
         
