@@ -1,11 +1,6 @@
 <div>
     <div class="row m-0">
-        @if (session()->has('message'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert" style="width:500px">
-            {{ session('message') }}
-            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close" style=" font-size: 0.75rem;padding: 0.25rem 0.5rem;margin-top:5px"></button>
-        </div>
-        @endif
+
 
         <div class="col-md-12 mb-4">
             <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;width:80px;height:40px;" onclick="location.href='/HelpDesk'">
@@ -53,7 +48,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">New Distribution List</h1>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add Members to Distribution List</h1>
                 </div>
                 <div class="modal-body">
                     <div class="row m-0">
@@ -67,6 +62,24 @@
                     <hr style="border: 1px solid #ccc; margin: 10px 0;">
 
                     <form wire:submit.prevent="DistributorRequest">
+                                               
+                    <div class="form-group  mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
+
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
                         <div class="form-group mt-2">
                             <label for="distributor_name">Provide the Name of Distribution List<span style="color:red">*</span></label>
                             <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')"  type="text" class="form-control" id="distributor_name">
@@ -90,11 +103,7 @@
                                 <div class="form-group">
                                     <div class="form-group m-0 p-0">
                                         <label for="cc_to">Members to be Added: <span style="font-size:12px"> {{ implode(', ', array_unique($selectedPeopleNames)) }}</span></label>
-                                        @if (session()->has('selecterror'))
-    <div class="alert alert-danger">
-        {{ session('selecterror') }}
-    </div>
-@endif
+ 
                                     </div>
                                 </div>
                                 <div class="form-group m-0">
@@ -127,33 +136,34 @@
                                             No People Found
                                         </div>
                                     @else
-                                        @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                            <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                <div class="row align-items-center">
-                                                    <div class="col-auto">
-                                                    <input type="checkbox"   id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        @if (!empty($people->image) && $people->image !== 'null')
-                                                            <img class="profile-image"  src="data:image/jpeg;base64,{{($people->image) }}">
-                                                        @else
-                                                            @php $gender = $people->gender ?? null; @endphp
-                                                            @if ($gender === 'Male')
-                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                            @elseif($gender === 'Female')
-                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                            @else
-                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                            @endif
-                                                        @endif
-                                                    </div>
-                                                    <div class="col">
-                                                        <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                        <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                    </div>
-                                                </div>
-                                            </label>
-                                        @endforeach
+                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
+    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+        <div class="row align-items-center">
+            <div class="col-auto">
+                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="addselectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+            </div>
+            <div class="col-auto">
+                @if (!empty($people->image) && $people->image !== 'null')
+                    <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
+                @else
+                    @php $gender = $people->gender ?? null; @endphp
+                    @if ($gender === 'Male')
+                        <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                    @elseif($gender === 'Female')
+                        <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                    @else
+                        <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                    @endif
+                @endif
+            </div>
+            <div class="col">
+                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
+                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
+            </div>
+        </div>
+    </label>
+@endforeach
+
                                     @endif
                                 </div>
                             @endif
@@ -224,7 +234,23 @@
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                     <form wire:submit.prevent="submit" >
 
+                                                    <div class="form-group  mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
 
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
                                                         <div class="form-group mt-2" >
                                                             <label for="selectedEquipment "   >Select Equipment<span style="color:red">*</span></label>
                                                             <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" class="form-control" style="font-size: 12px;">
@@ -419,14 +445,29 @@
                                                     <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                     <form wire:submit.prevent="Request">
 
+                                                    <div class="form-group mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
 
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Provide the Name of Mailbox<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
-                                                            @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                            <label for="distributor_name">Provide the Name of Mailbox<span style="color:red">*</span></label>
+                            <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')"  type="text" class="form-control" id="distributor_name">
+                            @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                                                       
 
                                                         <div class="form-group mt-2">
                                                             <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
@@ -496,10 +537,10 @@
             </div>
         @else
             @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                     <div class="row align-items-center">
                         <div class="col-auto">
-                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
+                        <input type="checkbox"  class="form-check-input custom-checkbox-helpdesk" id="person-{{ $people->emp_id }}" wire:model="addselectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}>
                         </div>
                         <div class="col-auto">
                         @if (!empty($people->image) && $people->image !== 'null')
@@ -604,18 +645,37 @@
 
 
 
+                                                      
+                                                        <div class="form-group col-md-6 mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
+
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
+
                                                             <div style="display:flex">
-                                                           
-    <div class="form-group col-md-6 mt-2">
-        <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-        <input wire:model="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
+                                                         
+                                                            <div class="form-group col-md-6 mt-2">
+        <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
         @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
     </div>
-    <div class="form-group col-md-6 mt-2" style="margin-left:5px">
-        <label for="contactDetails">Email<span style="color:red">*</span></label>
-        <input wire:model="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
-        @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
-    </div>
+<div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
+    <label for="contactDetails">Email <span style="color:red">*</span></label>
+    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
 
                                                             </div>
                                                             <div class="form-group mt-2">
@@ -791,20 +851,37 @@
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
                                                         <form wire:submit.prevent="Devops">
 
+                                                        <div class="form-group col-md-6 mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
+
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
 
                                                             <div style="display:flex">
-                                                                <div class="form-group col-md-6 mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mobile"  wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email<span  style="color:red">*</span></label>
-                                                                    <input wire:model="mail"  wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
+                                                         
+                                                            <div class="form-group col-md-6 mt-2">
+        <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+        @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+<div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
+    <label for="contactDetails">Email <span style="color:red">*</span></label>
+    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span  style="color:red">*</span></label>
@@ -983,6 +1060,23 @@
                                                         <hr style="border: 1px solid #ccc;margin: 10px 0;">
 
                                                         <form wire:submit.prevent="DistributorRequest">
+                                                        <div class="form-group  mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
+
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
 
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
@@ -1195,12 +1289,12 @@
                                                          
                                                             <div class="form-group col-md-6 mt-2">
         <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
+        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
         @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
     </div>
 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
     <label for="contactDetails">Email <span style="color:red">*</span></label>
-    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control">
+    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
     @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
 </div>
 
@@ -1211,6 +1305,7 @@
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
+        
                                                             <div class="form-group mt-2">
                                                                 <label for="reason">Specific Information<span style="color:red">*</span></label>
                                                                 <textarea wire:model.lazy="description"  wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
@@ -1395,20 +1490,37 @@
                                                         <form wire:submit.prevent="Devops">
 
 
+                                                        <div class="form-group col-md-6 mt-2">
+                                                                <label for="Name">Requested By:</label>
+                                                               
+                                                             
+                                                                <div class="input-group mb-3">
+                                                               
+
+                                                             
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                @if($employeeDetails)
+                <input  wire:model.lazy="full_name"  type="text"  class="form-control" aria-describedby="basic-addon1"  readonly  >
+    @else
+        <p>No employee details found.</p>
+    @endif
+    </div>
+                                                             
+                                                            </div>
 
                                                             <div style="display:flex">
-                                                                <div class="form-group col-md-6 mt-2">
-                                                                    <label for="contactDetails">Mobile Number<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" type="text" class="form-control">
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
-                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email<span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" type="text" class="form-control">
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span>
-                                                                    @enderror
-                                                                </div>
+                                                         
+                                                            <div class="form-group col-md-6 mt-2">
+        <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+        <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+        @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+    </div>
+<div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
+    <label for="contactDetails">Email <span style="color:red">*</span></label>
+    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                                                             </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
@@ -1582,24 +1694,18 @@
 
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
-                                        <p style="font-size: 12px;"><b>Other Request</b></p>
-                                        <div class="row m-0 mb-5">
-                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Other Service Request</p>
-                                        </div>
-        
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-4">
-                                    <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
-                                        <p style=" font-size: 12px;"><b>Privilege Access Request</b></p>
-                                        <div class="row m-0 mb-5">
-                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Privilege Access Request</p>
+                                        <p style="font-size: 12px;"><b>SIM Request</b></p>
+                                        <div class="row m-0">
+                                            <div class="col-12 text-center mb-2">
+                                                <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium" style="height:4em;">
+                                            </div>
+                                            <div class="col-12 mb-2">
+                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size: 12px;">New SIM Request</p>
+                                            </div>
                                         </div>
 
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row m-0">
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
                                         <p style="font-size: 12px;"><b>Remove from Distribution List</b></p>
@@ -1616,9 +1722,10 @@
 
                                     </div>
                                 </div>
-
-
-
+                              
+                            </div>
+                            <div class="row m-0">
+                               
 
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
@@ -1634,20 +1741,27 @@
                                        
                                 </div>
 </div>
+
                                 <div class="col-md-4 mb-4">
                                     <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
-                                        <p style="font-size: 12px;"><b>SIM Request</b></p>
-                                        <div class="row m-0">
-                                            <div class="col-12 text-center mb-2">
-                                                <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium" style="height:4em;">
-                                            </div>
-                                            <div class="col-12 mb-2">
-                                                <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size: 12px;">New SIM Request</p>
-                                            </div>
+                                        <p style=" font-size: 12px;"><b>Privilege Access Request</b></p>
+                                        <div class="row m-0 mb-5">
+                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Privilege Access Request</p>
                                         </div>
 
                                     </div>
                                 </div>
+
+         <div class="col-md-4 mb-4">
+                                    <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;height: 220px;">
+                                        <p style="font-size: 12px;"><b>Other Request</b></p>
+                                        <div class="row m-0 mb-5">
+                                            <p class="p-0" style="cursor: pointer; margin-bottom: 4.4em;text-decoration:underline;text-align: center;font-size:12px">Other Service Request</p>
+                                        </div>
+        
+                                    </div>
+                                </div>
+                             
                             </div>
                         </div>
                 </section>
@@ -1718,10 +1832,10 @@
                             <tr>
                                 <td class="item-td">
                                     <img src="https://snow.payg.in/1a00f1cb878cb950279786a50cbb35ea.iix?t=medium" class="me-3" style="height:4em;">
-                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="LapRequest">New Laptop Request</a>
+                                    <a style="cursor: pointer; color: blue; text-decoration: underline; font-size: 12px;white-space: nowrap;" wire:click="LapRequest"> Laptop Request</a>
                                 </td>
                                 <td class="descrption-td" style="vertical-align: middle;font-size:12px">
-                                    <p style="font-size: 12px">New Laptop Request</p>
+                                    <p style="font-size: 12px"> Laptop Request</p>
                                 </td>
                             </tr>
                             <tr>
