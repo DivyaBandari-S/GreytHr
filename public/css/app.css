@@ -1257,6 +1257,77 @@ button.close-button {
     overflow-x: auto; 
     max-width: 100%;
 }
+.container3-table
+{
+    margin-top:-10px
+}
+.container3-table-head
+{
+    font-weight:normal;
+    font-size:12px;
+    padding-top:16px;
+}
+.container3-table-row
+{
+    border-bottom: 1px solid #ddd;
+}
+.container3-table-data
+{
+    font-weight:normal;
+    font-size:12px;
+}
+.container6-head
+{
+    margin-left:20px;
+    color: #7f8fa4;
+    font-size:14px;
+    margin-top:15px;
+    align-items:center;
+}
+.container6-button
+{
+    float:right;margin-top:-30px;margin-right:20px;cursor:pointer;
+}
+.container6-button-active
+{
+    color: #3a9efd;
+    border: 1px solid #3a9efd;
+}
+.container6-button-inactive
+{
+    color: #778899;
+    border: 1px solid #778899;
+}
+.icon-btn-active {
+    color: #3a9efd;
+}
+
+/* Styles when the toggle button is inactive (up arrow) */
+.icon-btn-inactive {
+    color: #778899;
+}
+.container-body {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    display: none;
+    margin-top:2px;
+    height:auto;
+    border-top:1px solid #ccc;
+ 
+}
+.container-body-active
+{
+    display: block;
+}
+.container-body-inactive
+{
+    display: none;
+}
+.container-body-scrollable
+{
+    max-width: 100%; 
+    text-align: center;
+}
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
@@ -1271,7 +1342,35 @@ button.close-button {
     border: 1px solid #ccc;
     display: block;
 }
-
+.swipe-record
+{
+    display:flex;
+    flex-direction:column;
+}
+.swipe-record-swipe-time
+{
+    margin-bottom: 0;
+    font-weight:normal;
+    font-size:12px;
+    white-space:nowrap;
+}
+.swipe-record-date
+{
+    margin-bottom: 0;
+    font-size: 10px;
+    color: #a3b2c7;
+}
+.container3-table-location
+{
+    font-size:10px;
+}
+.container3-table-actual-hours
+{
+    height:1px; 
+    background-color: #f0f0f0; 
+    text-align: left;
+    font-size:10px;
+}
 /*Ending of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:who is in(Pranita Priyadarshi)*/
 .small-font

@@ -521,6 +521,7 @@ class Home extends Component
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
             })
+            ->where('employee_details.employee_status','active')
             ->get();
 
 
@@ -551,6 +552,7 @@ class Home extends Component
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
             })
+            ->where('employee_details.employee_status','active')
             ->get();
 
             $swipes_late1 = $swipes_late->count();

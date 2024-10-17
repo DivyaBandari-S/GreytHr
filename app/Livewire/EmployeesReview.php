@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails -->
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use Illuminate\Http\Request;
 
 use App\Models\EmployeeDetails;
@@ -130,7 +131,7 @@ class EmployeesReview extends Component
             $this->approvedLeaveApplicationsList = $approvedLeaveApplications;
         } catch (\Exception $e) {
             Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
     public function getEmpLeaveRequests()
@@ -165,7 +166,7 @@ class EmployeesReview extends Component
             }
         } catch (\Exception $e) {
             Log::error('Error in getEmpLeaveRequests method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching leave requests. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while fetching leave requests. Please try again later.');
         }
     }
 
@@ -282,7 +283,7 @@ class EmployeesReview extends Component
             $this->count = count($this->leaveApplications);
         } catch (\Exception $e) {
             Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
 
@@ -383,7 +384,7 @@ class EmployeesReview extends Component
             $this->getEmpLeaveRequests();
         } catch (\Exception $e) {
             Log::error('Error in searchPendingLeave method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
 
