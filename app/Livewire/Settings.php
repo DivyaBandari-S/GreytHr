@@ -68,7 +68,8 @@ class Settings extends Component
             $this->biography = $this->employeeDetails->empPersonalInfo->biography ?? '';
             $this->editingBiography = true;
         } catch (\Exception $e) {
-            Log::error('Error in editBiography method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in editBiography method:');
+            
         }
     }
 
@@ -101,7 +102,7 @@ class Settings extends Component
             }
             $this->editingBiography = false;
         } catch (\Exception $e) {
-            Log::error('Error in saveBiography method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in saveBiography method: ');
         }
     }
 
@@ -117,7 +118,7 @@ class Settings extends Component
             $this->linkedIn = $this->employeeDetails->empPersonalInfo->linked_in ?? '';
             $this->editingSocialMedia = true;
         } catch (\Exception $e) {
-            Log::error('Error in editSocialMedia method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in editSocialMedia method: ');
         }
     }
 
@@ -159,7 +160,7 @@ class Settings extends Component
             }
             $this->editingSocialMedia = false;
         } catch (\Exception $e) {
-            Log::error('Error in saveSocialMedia method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in saveSocialMedia method: ');
         }
     }
 
@@ -175,7 +176,7 @@ class Settings extends Component
             $this->wishMeOn = $this->employeeDetails->empPersonalInfo->date_of_birth ?? '';
             $this->editingNickName = true;
         } catch (\Exception $e) {
-            Log::error('Error in editProfile method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in editProfile method: ');
         }
     }
 
@@ -211,7 +212,7 @@ class Settings extends Component
 
             $this->editingNickName = false;
         } catch (\Exception $e) {
-            Log::error('Error in saveProfile method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in saveProfile method: ');
         }
     }
 
@@ -226,7 +227,7 @@ class Settings extends Component
             $this->editingTimeZone = true;
             $this->selectedTimeZone = $this->employeeDetails->time_zone ?? '';
         } catch (\Exception $e) {
-            Log::error('Error in editTimeZone method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in editTimeZone method: ');
         }
     }
 
@@ -248,7 +249,7 @@ class Settings extends Component
 
             $this->editingTimeZone = false;
         } catch (\Exception $e) {
-            Log::error('Error in saveTimeZone method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in saveTimeZone method: ');
         }
     }
 
@@ -368,7 +369,7 @@ class Settings extends Component
             $this->resetForm();
             $this->showDialog = false;
         } catch (\Exception $e) {
-            Log::error('Error in changePassword method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error in changePassword method: ');
         } finally {
             $this->isLoading = false; // Set loading state to false after processing
         }
@@ -421,7 +422,8 @@ class Settings extends Component
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             return view('livewire.settings', ['employees' => $this->employees]);
         } catch (\Exception $e) {
-            Log::error('Error in render method: ' . $e->getMessage());
+            
+            FlashMessageHelper::flashError('Error in render method: ');
             return view('livewire.settings')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }

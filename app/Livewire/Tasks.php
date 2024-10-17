@@ -466,10 +466,6 @@ class Tasks extends Component
 
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    // session()->flash('error', 'Failed to read the uploaded file.');
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
@@ -521,9 +517,6 @@ class Tasks extends Component
                 $assigneeEmail = $assigneeDetails->email;
 
                 if (!empty($assigneeEmail)) {
-                    Log::info("Sending email to: {$assigneeEmail}");
-
-                    // Assuming you have these variables available in your context
                     $searchData = $this->filterData ?: $this->records;
 
                     $taskName = $this->task_name;
@@ -555,13 +548,10 @@ class Tasks extends Component
                         '',
                         false
                     ));
-
-                    Log::info("Email sent successfully.");
                 }
             }
 
             foreach ($this->selectedPeopleForFollowers as $followerId) {
-                Log::info("Processing follower ID: {$followerId}");
                 $followerDetails = EmployeeDetails::find($followerId);
                 $searchData = $this->filterData ?: $this->records;
 
@@ -590,7 +580,6 @@ class Tasks extends Component
                     $priority = $this->priority; // Make sure this variable is defined
                     $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
                     if (!empty($followerDetails->email)) {
-                        Log::info("Sending email to follower: {$followerDetails->email}");
                         Mail::to($followerDetails->email)->send(new TaskAssignedNotification(
                             $taskName,
                             $description,
@@ -602,7 +591,6 @@ class Tasks extends Component
                             $formattedFollowerName, // Pass formatted follower name
                             true
                         ));
-                        Log::info("Email sent to follower successfully.");
                     }
                 }
             }
@@ -619,22 +607,12 @@ class Tasks extends Component
             }
 
             session()->flash('showAlert', true);
-            // session()->flash('message', 'Task created successfully!');
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
-            Log::info("Redirecting to tasks page.");
-            // return redirect()->to('/tasks');
             $this->showDialog= false;
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
-            ]);
-            // session()->flash('error', 'An error occurred while creating the request. Please try again.');
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }

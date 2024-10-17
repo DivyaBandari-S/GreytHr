@@ -18,6 +18,7 @@ use App\Services\GoogleDriveService;
 use Livewire\Features\SupportFileUploads\FileNotPreviewableException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\FlashMessageHelper;
 
 class ProfileInfo extends Component
 {
@@ -69,8 +70,6 @@ class ProfileInfo extends Component
 
             $this->isUploading = true;
 
-            Log::info('Upload started.');
-
             $empId = Auth::guard('emp')->user()->emp_id;
 
             $employee = EmployeeDetails::where('emp_id', $empId)->first();
@@ -98,13 +97,11 @@ class ProfileInfo extends Component
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation exceptions
-            session()->flash('error', 'The uploaded file must be an image' );
+            FlashMessageHelper::flashError('The uploaded file must be an image');
             $this->showAlert = true;
         } catch (\Exception $e) {
 
-            Log::error('Error in updateProfile method: ' . $e->getMessage());
-
-            session()->flash('error', 'An error occurred while updating the profile. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the profile. Please try again later.');
 
             $this->showAlert = true;
         } finally {
@@ -143,8 +140,8 @@ class ProfileInfo extends Component
                 'comments' => $this->comments,
                 'signature' => $signaturePath,
             ]);
-            Log::info('Resignation details submitted:', $data->toArray());
-            session()->flash('success', 'Resignation details have been submitted successfully.');
+            FlashMessageHelper::flashSuccess('Resignation details have been submitted successfully.');
+
             $this->showAlert = true;
             $this->resetInputFields();
         } catch (QueryException $e) {
@@ -156,23 +153,16 @@ class ProfileInfo extends Component
                     return;
                 }
             }
-            Log::error('Database error:', ['error' => $e->getMessage()]);
-            session()->flash('error', 'A database error occurred: ' . $e->getMessage());
+            FlashMessageHelper::flashError('A database error occurred:');
             $this->showAlert = true;
         } catch (\Illuminate\Validation\ValidationException $e) {
-            // Handle validation exceptions
-            Log::error('Validation failed:', ['error' => $e->getMessage()]);
             $this->addError('validation', 'Validation failed: ' . $e->getMessage());
             $this->showAlert = true;
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database exceptions
-            Log::error('Database error:', ['error' => $e->getMessage()]);
-            session()->flash('error', 'Database error: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Database error:');
             $this->showAlert = true;
         } catch (\Exception $e) {
-            // Handle any other exceptions
-            Log::error('An unexpected error occurred:', ['error' => $e->getMessage()]);
-            session()->flash('error', 'An unexpected error occurred: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An unexpected error occurred:');
             $this->showAlert = true;
         }
     }
@@ -213,8 +203,7 @@ class ProfileInfo extends Component
 
             return view('livewire.profile-info');
         } catch (\Exception $e) {
-            Log::error('Error in render method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred. Please try again later.');
         }
     }
 }
