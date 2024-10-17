@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
@@ -47,8 +48,8 @@ class LeavePending extends Component
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {
             // Handle the exception here
-            $errorMessage = 'Error occurred while getting leave request: ' . $e->getMessage();
-            session()->flash('error', $errorMessage);
+            FlashMessageHelper::flashError('An error occured please tray again later.');
+            return false;
         }
     }
 
@@ -212,6 +213,7 @@ class LeavePending extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occured while calulating no. of days');
             return 'Error: ' . $e->getMessage();
         }
     }
@@ -246,8 +248,7 @@ class LeavePending extends Component
             ]);
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
-            Log::error('Error rendering leave pending page: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while loading leave history page. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while loading leave history page. Please try again later.');
             return redirect()->back();
         }
     }

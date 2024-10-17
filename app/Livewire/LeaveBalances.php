@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails.
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Carbon;
 use Livewire\Component;
 use App\Helpers\LeaveHelper;
@@ -100,10 +101,8 @@ class LeaveBalances extends Component
                 $this->differenceInMonths = null;
             }
         } catch (\Exception $e) {
-            // Log the error if needed
-            logger()->error('Error during component mount: ' . $e->getMessage());
             // Set an error message in the session
-            session()->flash('mountError', 'An error occurred while loading the component. Please try again later.');
+           FlashMessageHelper::flashError( 'An error occurred while loading the component. Please try again later.');
         }
     }
     public function updatedSelectedYear($value)
@@ -156,8 +155,7 @@ class LeaveBalances extends Component
                 $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
             }
         } catch (\Exception $e) {
-            logger()->error('Error during component mount: ' . $e->getMessage());
-            session()->flash('mountError', 'An error occurred while loading the component. Please try again later.');
+            FlashMessageHelper::flashError( 'An error occurred while loading the component. Please try again later.');
         }
     }
 
@@ -183,7 +181,7 @@ class LeaveBalances extends Component
                 return '#0ea8fc';
             }
         } catch (\Exception $e) {
-            Log::error('Error in getTubeColor method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured while getting leave balance.');
             return '#000000';
         }
     }
@@ -261,9 +259,7 @@ class LeaveBalances extends Component
                 ]);
             }
         } catch (\Exception $e) {
-
-            Log::error($e->getMessage());
-            session()->flash('error', 'An error occurred. Please try again later.'); // Flash an error message to the user
+            FlashMessageHelper::flashError('error occurred. Please try again later.'); // Flash an error message to the user
             return redirect()->back(); // Redirect back to the previous page
         }
     }
@@ -308,11 +304,9 @@ class LeaveBalances extends Component
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
                 // Handle database query exceptions
-                Log::error("Database error in getLeaveBalances(): " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+                FlashMessageHelper::flashError('Database connection error occurred. Please try again later.');
             } else {
-                Log::error("Error in getLeaveBalances(): " . $e->getMessage());
-                session()->flash('emp_error', 'Failed to retrieve leave balances. Please try again later.');
+                FlashMessageHelper::flashError('Failed to retrieve leave balances. Please try again later.');
             }
             return null;
         }
@@ -397,7 +391,7 @@ class LeaveBalances extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured while calculating the no. of days.');
         }
     }
 
@@ -417,9 +411,7 @@ class LeaveBalances extends Component
             } else {
             }
         } catch (\Exception $e) {
-            // Add an error message or log a message indicating that an error occurred
-            $errorMessage = 'An error occurred in yearDropDown() method: ' . $e->getMessage();
-            $this->addError('session', 'An error occurred. Please try again later.');
+            FlashMessageHelper::flashError( 'An error occurred. Please try again later.');
         }
     }
     public function isTrue($year)

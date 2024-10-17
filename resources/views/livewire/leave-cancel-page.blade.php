@@ -1,14 +1,4 @@
 <div>
-    @if (session()->has('message'))
-    <div id="successMessage" class="alert alert-success text-align-center" wire:poll.5s="hideAlert">
-        {{ session('message') }}
-    </div>
-    @elseif (session()->has('error'))
-    <div id="errorMessage" class="alert alert-danger text-align-center" wire:poll.2s="hideAlert">
-        {{ session('error') }}
-    </div>
-    @endif
-
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
@@ -250,9 +240,6 @@
 
                     @if($showCcRecipents)
                     <div class="ccContainer " x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                        @if(session()->has('error'))
-                        <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;z-index:100;">{{ session('error') }}</div>
-                        @endif
                         <div class="row  d-flex align-items-center justify-content-between">
                             <div class="col-md-10 m-0 py-0 px-2">
                                 <div class="input-group">
@@ -274,15 +261,14 @@
                         <div class="scrollApplyingTO  mb-2 mt-2 ">
                             @if($ccRecipients->isNotEmpty())
                             @foreach($ccRecipients as $employee)
-                            <div class="borderContainer px-2 mb-2 rounded">
-                                <div class="downArrow d-flex align-items-center text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
-                                    <label class="custom-checkbox">
-                                        <input type="checkbox"
-                                            wire:model="selectedPeople.{{ $employee->emp_id }}"
-                                            @if(isset($selectedPeople[$employee->emp_id])) checked @endif
-                                        wire:click.prevent="toggleSelection('{{ $employee->emp_id }}')" />
-                                        <span class="checkmark"></span>
-                                    </label>
+                            <div class="borderContainer px-2 mb-2 rounded" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                                        <div class="downArrow d-flex align-items-center text-capitalize" wire:click.prevent>
+                                <label class="custom-checkbox">
+                                    <input type="checkbox"
+                                        wire:model="selectedPeople.{{ $employee->emp_id }}"
+                                         />
+                                    <span class="checkmark"></span>
+                                </label>
 
                                     <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
                                         <div>
