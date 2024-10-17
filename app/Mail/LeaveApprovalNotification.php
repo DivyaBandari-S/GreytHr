@@ -17,12 +17,18 @@ class LeaveApprovalNotification extends Mailable
 
     public $leaveRequest;
     public $employeeDetails;
+    public $applyingToDetails;
+    public $ccToDetails;
     public $cancelStatus;
     public $leaveCategory;
+    public $forMainRecipient;
 
-    public function __construct($leaveRequest)
+    public function __construct($leaveRequest, $applyingToDetails, $ccToDetails,$forMainRecipient = true)
     {
         $this->leaveRequest = $leaveRequest;
+        $this->applyingToDetails = $applyingToDetails;
+        $this->ccToDetails = $ccToDetails;
+        $this->forMainRecipient = $forMainRecipient;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
     }
 
@@ -40,36 +46,26 @@ class LeaveApprovalNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-        return $this->subject('Leave Approved')
+         // Different subject for main recipient and CC recipients
+
+
+        return $this->subject('Leave')
             ->view('mails.leave_approval_notification') // Create a view for the email
             ->with([
                 'leaveRequest' => $this->leaveRequest,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status, 
+                'status' => $this->leaveRequest->status,
                 'leaveCategory' => $this->leaveRequest->category_type,
-                'cancelStatus' => $this->leaveRequest->cancel_status
+                'cancelStatus' => $this->leaveRequest->cancel_status,
+                'forMainRecipient' => $this->forMainRecipient,
             ]);
     }
     public function envelope(): Envelope
     {
-        $status = $this->leaveRequest->status;
-        $cancelStatus = $this->leaveRequest->cancel_status;
-        $leaveCategory = $this->leaveRequest->category_type;
-        $subject = '';
-        if ($leaveCategory === 'Leave'){
-            if ($status === 'approved') {
-                $subject = 'Your Leave Application has been Accepted.';
-            } else {
-                $subject = 'Your Leave Application has been Rejected.';
-            }
-        }else{
-            if ($cancelStatus === 'approved') {
-                $subject = 'Your Leave Cancel Application has been Accepted.';
-            } else {
-                $subject = 'Your Leave Cancel Application has been Rejected.';
-            }
-        }
+        $subject = $this->forMainRecipient
+         ? 'Your leave application has been ' . ucfirst($this->leaveRequest->status)
+         : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($this->leaveRequest->status);
         return new Envelope(
             subject: $subject,
         );

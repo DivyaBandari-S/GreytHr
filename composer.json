@@ -31,6 +31,7 @@
         "sarfraznawaz2005/loading": "^1.4",
         "spatie/simple-excel": "^3.4",
         "torann/geoip": "*",
+        "twilio/sdk": "^8.3",
         "vinkla/hashids": "^11.0"
     },
     "require-dev": {

@@ -7,17 +7,16 @@
 </head>
 
 <body>
-    <h5>Leave Application Notification</h5>
     <p>Hi,</p>
-    @if($leaveCategory == 'Leave')
-    @if($status === 'Withdrawn')
+    @if($leaveRequest->category_type === 'Leave')
+    @if($leaveRequest->status === 'Withdrawn')
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
     @else
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
     <p>Please log on to and review the leave application.</p>
     @endif
     @else
-    @if($cancelStatus === 'Withdrawn')
+    @if($leaveRequest->cancel_status === 'Withdrawn')
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave cancel.</p>
     @else
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave cancel.</p>
@@ -30,41 +29,40 @@
         <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
             <thead>
                 <tr>
-                    <th></th>
-                    <th></th>
+                    <th colspan="2" style="text-align: center; font-weight: bold;">Leave Details</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>Category Type</td>
+                    <td class="fw-500">Category Type</td>
                     <td>{{ $leaveRequest->category_type }}</td>
                 </tr>
                 <tr>
-                    <td>Leave Type</td>
+                    <td class="fw-500">Leave Type</td>
                     <td>{{ $leaveRequest->leave_type }}</td>
                 </tr>
                 <tr>
-                    <td>From Date</td>
+                    <td class="fw-500">From Date</td>
                     <td>{{ $leaveRequest->from_date->format('d M Y') }}</td>
                 </tr>
                 <tr>
-                    <td>To Date</td>
+                    <td class="fw-500">To Date</td>
                     <td>{{ $leaveRequest->to_date->format('d M Y') }}</td>
                 </tr>
                 <tr>
-                    <td>From Session</td>
+                    <td class="fw-500">From Session</td>
                     <td>{{ $leaveRequest->from_session }}</td>
                 </tr>
                 <tr>
-                    <td>To Session</td>
+                    <td class="fw-500">To Session</td>
                     <td>{{ $leaveRequest->to_session }}</td>
                 </tr>
                 <tr>
-                    <td>Number of Days</td>
+                    <td class="fw-500">Number of Days</td>
                     <td>{{ $numberOfDays }}</td>
                 </tr>
                 <tr>
-                    <td>Reason</td>
+                    <td class="fw-500">Reason</td>
                     <td>
                         @if($leaveRequest->category_type === 'Leave')
                         {{ $leaveRequest->reason }}
