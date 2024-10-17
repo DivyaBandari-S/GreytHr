@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
@@ -31,17 +32,12 @@ class LeaveFormPage extends Component
 
     public  $resShowinfoMessage = true;
     public  $resShowinfoButton = false;
-    public $showAlert = false;
 
 
     public function toggleInfoRes()
     {
         $this->resShowinfoMessage = !$this->resShowinfoMessage;
         $this->resShowinfoButton = !$this->resShowinfoButton;
-    }
-    public function hideAlert()
-    {
-        $this->showAlert = false;
     }
     public  $compOffShowinfoMessage = true;
     public  $compOffShowinfoButton = false;
@@ -53,21 +49,30 @@ class LeaveFormPage extends Component
 
     public function toggleSection($section)
     {
-        // Manage the main section visibility
-        $this->activeSection = $section;
-        if ($section === 'applyButton') {
-            $this->showLeaveApply = true;
-        } else {
-            $this->showLeaveApply = false;
-        }
-        $this->showPending = $section === 'pendingButton';
-        if ($section === 'pendingButton') {
-            $this->hasPendingLeave();
-        } else {
-            $this->showHistory = $section === 'historyButton';
-            $this->getLeaveHistory();
+        try {
+            // Manage the main section visibility
+            $this->activeSection = $section;
+
+            if ($section === 'applyButton') {
+                $this->showLeaveApply = true;
+            } else {
+                $this->showLeaveApply = false;
+            }
+
+            $this->showPending = $section === 'pendingButton';
+
+            if ($section === 'pendingButton') {
+                $this->hasPendingLeave();
+            } else {
+                $this->showHistory = $section === 'historyButton';
+                $this->getLeaveHistory();
+            }
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occurred while toggling the section. Please try again.');
+            return false;
         }
     }
+
 
     public function toggleSideSection($subSection)
     {
@@ -119,9 +124,7 @@ class LeaveFormPage extends Component
                 }
             }
         } catch (\Exception $e) {
-            // Handle the exception, log it, or display an error message
-            Log::error('Error in hasPendingLeave method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking for pending leave requests. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking for pending leave requests. Please try again later.');
             return false; // or any other appropriate action
         }
     }
@@ -152,9 +155,7 @@ class LeaveFormPage extends Component
                 $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
             }
         } catch (\Exception $e) {
-            // Handle the exception, log it, or display an error message
-            Log::error('Error in hasPendingLeave method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking for leave requests. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking for leave requests. Please try again later.');
             return false; // or any other appropriate action
         }
     }
@@ -237,7 +238,8 @@ class LeaveFormPage extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured.please try again later.');
+            return false;
         }
     }
 
@@ -277,14 +279,12 @@ class LeaveFormPage extends Component
                     ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
             }
             $this->hasPendingLeave();
-            session()->flash('cancelMessage', 'Leave application Withdrawn.');
-            $this->showAlert = true;
+            FlashMessageHelper::flashSuccess('Leave application Withdrawn.');
         } catch (\Exception $e) {
-            Log::error('Error canceling leave: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while canceling leave request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while canceling leave request. Please try again later.');
+            return false;
         }
     }
-
 
 
     public function cancelLeaveCancel($leaveRequestId)
@@ -298,28 +298,28 @@ class LeaveFormPage extends Component
             if (!$leaveRequest) {
                 throw new \Exception("Leave request not found.");
             }
-                    // Find any other leave request matching from_date, from_session, to_date, to_session
-                    $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
-                        ->where('from_date', $leaveRequest->from_date)
-                        ->where('from_session', $leaveRequest->from_session)
-                        ->where('to_date', $leaveRequest->to_date)
-                        ->where('to_session', $leaveRequest->to_session)
-                        ->where('status', '!=', 'Re-applied')
-                        ->first();
-                    if ($matchingLeaveRequest) {
-                        // Update the matching request status to 'rejected'
-                        $matchingLeaveRequest->cancel_status = 'Withdrawn';
-                        $matchingLeaveRequest->updated_at = now();
-                        $matchingLeaveRequest->action_by = $employeeId;
-                        $matchingLeaveRequest->save();
-                    }
+            // Find any other leave request matching from_date, from_session, to_date, to_session
+            $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
+                ->where('from_date', $leaveRequest->from_date)
+                ->where('from_session', $leaveRequest->from_session)
+                ->where('to_date', $leaveRequest->to_date)
+                ->where('to_session', $leaveRequest->to_session)
+                ->where('status', '!=', 'Re-applied')
+                ->first();
+            if ($matchingLeaveRequest) {
+                // Update the matching request status to 'rejected'
+                $matchingLeaveRequest->cancel_status = 'Withdrawn';
+                $matchingLeaveRequest->updated_at = now();
+                $matchingLeaveRequest->action_by = $employeeId;
+                $matchingLeaveRequest->save();
+            }
 
-                    // Update the current leave request status to 'approved'
-                    $leaveRequest->cancel_status = 'Withdrawn';
-                    $leaveRequest->status = 'rejected';
-                    $leaveRequest->updated_at = now();
-                    $leaveRequest->action_by = $employeeId;
-                    $leaveRequest->save();
+            // Update the current leave request status to 'approved'
+            $leaveRequest->cancel_status = 'Withdrawn';
+            $leaveRequest->status = 'rejected';
+            $leaveRequest->updated_at = now();
+            $leaveRequest->action_by = $employeeId;
+            $leaveRequest->save();
 
             // Decode the JSON data from applying_to to get the email
             $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
@@ -335,13 +335,11 @@ class LeaveFormPage extends Component
                     ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
             }
             $this->hasPendingLeave();
-            session()->flash('cancelMessage', 'Leave application Withdrawn.');
-            $this->showAlert = true;
             // Flash success message
+            FlashMessageHelper::flashSuccess('Leave application Withdrawn.');
         } catch (\Exception $e) {
-            // Handle the exception, log it, or display an error message
-            Log::error('Error canceling leave: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while canceling leave request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while canceling leave request. Please try again later.');
+            return false;
         }
     }
     public function render()

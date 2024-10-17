@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
+use App\Mail\LeaveApprovalNotification;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
 use App\Models\LeaveRequest;
@@ -44,10 +46,10 @@ class LeaveCancelPage extends Component
     public $showApplyingToContainer = false;
     public $show_reporting = false;
     public  $fullName;
+    public $createdCancelLeaveRequest;
     public $searchQuery = '';
     public $showCasualLeaveProbation;
     public $empManagerDetails, $selectedManagerDetails;
-    public $showAlert = false;
     public $selectedLeaveType = null;
     protected $rules = [
         'leave_cancel_reason' => 'required',
@@ -86,7 +88,6 @@ class LeaveCancelPage extends Component
                             ->get();
 
                         if ($hrManagers->isNotEmpty()) {
-                            // Assuming you want the first manager or you can apply your own logic to select a specific manager
                             $firstManager = $hrManagers->first();
                             $fullName = ucfirst(strtolower($firstManager->first_name)) . ' ' . ucfirst(strtolower($firstManager->last_name));
                             $this->loginEmpManager = $fullName;
@@ -102,11 +103,9 @@ class LeaveCancelPage extends Component
                 $this->showCasualLeaveProbation = $this->employee && !$this->employee->probation_period && !$this->employee->confirmation_date;
             }
         } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while loading leave apply page. Please try again later.');
-            // Redirect the user to a safe location
+            FlashMessageHelper::flashError('An error occurred while loading leave apply page. Please try again later.');
+            // Redirect the user to back
             return redirect()->back();
         }
     }
@@ -146,11 +145,9 @@ class LeaveCancelPage extends Component
             })->toArray(); // Convert the collection back to an array
 
         } catch (\Exception $e) {
-            // Log the error message for debugging
-            Log::error('Error fetching employee details: ' . $e->getMessage());
-
-            // Optionally, you can set an error message to be displayed in the session
-            session()->flash('error', 'An error occurred while fetching employee details. Please try again later.');
+            // set an error message to be displayed in the session
+            FlashMessageHelper::flashError('An error occurred while fetching employee details. Please try again later.');
+            return false;
         }
     }
     public function openCcRecipientsContainer()
@@ -160,8 +157,8 @@ class LeaveCancelPage extends Component
             $this->searchCCRecipients();
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Error in openCcRecipientsContainer method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while opening CC recipients container. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while opening CC recipients container. Please try again later.');
+            return false;
         }
     }
 
@@ -172,8 +169,8 @@ class LeaveCancelPage extends Component
             $this->showCcRecipents = !$this->showCcRecipents;
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Error in closeCcRecipientsContainer method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while closing CC recipients container. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while closing CC recipients container. Please try again later.');
+            return false;
         }
     }
     public function searchCCRecipients()
@@ -189,7 +186,7 @@ class LeaveCancelPage extends Component
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
             // Initialize an empty collection for recipients
-            $this->ccRecipients = collect(); // Ensure it's initialized as a collection
+            $this->ccRecipients = collect();
 
             // Loop through each company ID and find employees
             foreach ($companyIdsArray as $companyId) {
@@ -221,45 +218,62 @@ class LeaveCancelPage extends Component
             $this->ccRecipients = $this->ccRecipients->unique('emp_id');
         } catch (\Exception $e) {
             // Log the error
-            Log::error('Error in searchCCRecipients method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while searching for CC recipients. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while searching for CC recipients. Please try again later.');
+            return false;
         }
     }
 
     public function toggleManager($empId)
     {
-        if ($empId) {
-            $this->fetchManagerDetails($empId);
-        } else {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            if ($applying_to) {
-                $managerId = $applying_to->manager_id;
-
-                // Fetch the logged-in employee's manager details
-                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-                if ($managerDetails) {
-                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-                    $this->loginEmpManager = $fullName;
-                    $this->empManagerDetails = $managerDetails;
+        try {
+            if ($empId) {
+                $this->fetchManagerDetails($empId);
+            } else {
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+                $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
+    
+                if ($applying_to) {
+                    $managerId = $applying_to->manager_id;
+    
+                    // Fetch the logged-in employee's manager details
+                    $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+    
+                    if ($managerDetails) {
+                        $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                        $this->loginEmpManager = $fullName;
+                        $this->empManagerDetails = $managerDetails;
+                    }
                 }
+                $this->selectedManager = [$empId];
+                $this->showApplyingToContainer = false;
             }
-            $this->selectedManager = [$empId];
-            $this->showApplyingToContainer = false;
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('There was an issue toggling the manager details. Please try again later.');
+            return false;
         }
     }
+
     // Method to fetch manager details
     private function fetchManagerDetails($empId)
     {
-        $employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
-        if ($employeeDetails) {
-            $fullName = ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name));
-            $this->loginEmpManager = $fullName;
-            $this->selectedManagerDetails = $employeeDetails;
-        } else {
+        try {
+            $employeeDetails = EmployeeDetails::where('emp_id', $empId)->first();
+    
+            if ($employeeDetails) {
+                $fullName = ucfirst(strtolower($employeeDetails->first_name)) . ' ' . ucfirst(strtolower($employeeDetails->last_name));
+                $this->loginEmpManager = $fullName;
+                $this->selectedManagerDetails = $employeeDetails;
+            } else {
+                $this->resetManagerDetails();
+            }
+        } catch (\Exception $e) {
             $this->resetManagerDetails();
+            // Optionally, you can display an error message using FlashMessageHelper
+            FlashMessageHelper::flashError('There was an issue fetching manager details. Please try again later.');
+            return false;
         }
     }
+
 
     private function resetManagerDetails()
     {
@@ -268,55 +282,30 @@ class LeaveCancelPage extends Component
 
     public function toggleSelection($empId)
     {
-        if (isset($this->selectedPeople[$empId])) {
-            // If already selected, unselect it
-            unset($this->selectedPeople[$empId]);
-        } else {
-            // Check if limit is reached
-            if (count($this->selectedPeople) < 5) {
-                // Add employee if under limit
-                $this->selectedPeople[$empId] = true;
-            } else {
-                // Show error if limit exceeded
-                session()->flash('error', 'You can only select up to 5 CC recipients.');
-                $this->showAlert = true;
-            }
-        }
-        // Update the recipients list
-        $this->searchCCRecipients();
-        // Fetch details if necessary
-        $this->fetchEmployeeDetails();
-    }
-
-
-    public function handleCheckboxChange($empId)
-    {
         try {
-            // Check if the employee is selected (checkbox is checked)
-            if (array_key_exists($empId, $this->selectedPeople) && $this->selectedPeople[$empId]) {
-                // Checkbox is currently checked, so it’s being unchecked
-                $this->removeFromCcTo($empId);
+            if (isset($this->selectedPeople[$empId])) {
+                unset($this->selectedPeople[$empId]);
             } else {
-                // Checkbox is currently unchecked, so it’s being checked
-                $this->selectedPeople[$empId] = true;
-
-                // Optionally add to selectedCcTo or perform other actions
-                $this->selectedCcTo[] = ['emp_id' => $empId];
+                if (count($this->selectedPeople) < 5) {
+                    $this->selectedPeople[$empId] = true;
+                } else {
+                    FlashMessageHelper::flashError("You can only select up to 5 CC recipients.");
+                }
             }
 
-            // Update cc_to field
-            $this->cc_to = implode(',', array_column($this->selectedCcTo, 'emp_id'));
-
-            // Fetch updated employee details and search CC recipients
-            $this->fetchEmployeeDetails();
-            $this->searchCCRecipients();
+            // Only update recipients list if a valid selection was made
+            if (count($this->selectedPeople) <= 5) {
+                $this->searchCCRecipients();
+                $this->fetchEmployeeDetails();
+            }
         } catch (\Exception $e) {
-            // Handle the exception (log it, show a message, etc.)
-            Log::error('Error handling checkbox change: ' . $e->getMessage());
-            // You might also want to notify the user in some way
-            session()->flash('error', 'An error occurred while updating CC recipients.');
+            // Optionally, use FlashMessageHelper to notify the user
+            FlashMessageHelper::flashError('An error occurred while processing your selection. Please try again.');
         }
     }
+
+
+
 
     public function removeFromCcTo($empId)
     {
@@ -337,19 +326,12 @@ class LeaveCancelPage extends Component
             $this->fetchEmployeeDetails();
             $this->searchCCRecipients();
         } catch (\Exception $e) {
-            // Handle the exception (log it, show a message, etc.)
-            Log::error('Error removing from CC: ' . $e->getMessage());
             // Notify the user
-            session()->flash('error', 'An error occurred while removing CC recipients.');
+            FlashMessageHelper::flashError('An error occurred while removing CC recipients.');
+            return false;
         }
     }
 
-
-    public function hideAlert()
-    {
-        $this->showAlert = false;
-        $this->searchCCRecipients();
-    }
 
     public function markAsLeaveCancel()
     {
@@ -411,7 +393,7 @@ class LeaveCancelPage extends Component
             $leaveRequest->cancel_status = 'Re-applied';
             $leaveRequest->save();
             // Create a new leave request record
-            LeaveRequest::create([
+            $this->createdCancelLeaveRequest =  LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
                 'category_type' => 'Leave Cancel',
                 'status' => 'approved',
@@ -440,15 +422,21 @@ class LeaveCancelPage extends Component
             $managerEmail = $applyingToDetails[0]['email']; // Assuming this contains the email
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
 
-            Mail::to($managerEmail)->cc($ccEmails)->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetails, $ccToDetails));
+            // Limit CC emails to a maximum of 5 recipients
+            $ccEmails = array_slice($ccEmails, 0, 5);
 
+            // Check if the manager email or CC emails are not empty
+            if (!empty($managerEmail) || !empty($ccEmails)) {
+                // Send the email if we have at least one recipient
+                Mail::to($managerEmail)
+                    ->cc($ccEmails)
+                    ->send(new LeaveApprovalNotification($this->createdCancelLeaveRequest, $applyingToDetails, $ccToDetails));
+            }
             $this->cancel();
-            session()->flash('message', 'Leave cancel request submitted successfully.');
-            $this->showAlert = true;
+            FlashMessageHelper::flashSuccess("Leave cancel request submitted successfully.");
         } catch (\Exception $e) {
-            session()->flash('error', 'Failed to submit the leave cancel request. Please try again.');
-            $this->showAlert = true;
-            Log::error('Error marking leave request as cancel: ' . $e->getMessage());
+            FlashMessageHelper::flashError("Failed to submit the leave cancel request. Please try again.");
+            return false;
         }
     }
 
@@ -544,7 +532,8 @@ class LeaveCancelPage extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured,please try again later.');
+            return false;
         }
     }
     private function getSessionNumber($session)
@@ -554,20 +543,27 @@ class LeaveCancelPage extends Component
 
     public function applyingTo($leaveRequestId)
     {
-        $leaveRequest = LeaveRequest::find($leaveRequestId);
-        if ($leaveRequest) {
-            $this->selectedLeaveRequestId = $leaveRequestId;
-            $this->leaveRequestDetails = $leaveRequest;
-            $this->showApplyingToContainer = false;
-            $this->show_reporting = true;
-            $this->showApplyingTo = false;
-        } else {
-            // Handle the case where the leave request is not found
+        try {
+            $leaveRequest = LeaveRequest::find($leaveRequestId);
+            if ($leaveRequest) {
+                $this->selectedLeaveRequestId = $leaveRequestId;
+                $this->leaveRequestDetails = $leaveRequest;
+                $this->showApplyingToContainer = false;
+                $this->show_reporting = true;
+                $this->showApplyingTo = false;
+            } else {
+                // Handle the case where the leave request is not found
+                $this->leaveRequestDetails = null;
+                $this->applyingToDetails = [];
+                $this->managerDetails = null;
+            }
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occurred while fetching leave request details. Please try again.');
             $this->leaveRequestDetails = null;
-            $this->applyingToDetails = [];
-            $this->managerDetails = null;
+            return false;
         }
     }
+
     public function toggleApplyingto()
     {
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
@@ -607,7 +603,6 @@ class LeaveCancelPage extends Component
         $this->selectedManager = $this->selectedManager ?? [];
         $managers = collect();
         $employeeGender = null;
-
         try {
             // Fetch details for the current employee
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -690,7 +685,8 @@ class LeaveCancelPage extends Component
             $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
 
         } catch (\Exception $e) {
-            Log::error('Error fetching employee or manager details: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured,please try again later.');
+            return false;
         }
 
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)

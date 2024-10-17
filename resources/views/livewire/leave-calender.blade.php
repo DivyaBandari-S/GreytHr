@@ -1,9 +1,4 @@
 <div>
-    @if(session()->has('error'))
-    <div class="alert alert-danger w-50">
-        {{ session('error') }}
-    </div>
-    @endif
 
     <style>
         .table thead {

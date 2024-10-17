@@ -11,6 +11,7 @@
 // Models                          : EmployeeDetails,LeaveRequest
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
@@ -46,11 +47,9 @@ class ViewDetails extends Component
             $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {
-            // Log the error
-            Log::error($e);
 
             // Flash a message to the session
-            session()->flash('error_message', 'An error occurred while fetching data. Please try again later.');
+           FlashMessageHelper::flashError( 'An error occurred while fetching data. Please try again later.');
 
             // Redirect back or to a specific route
             return redirect()->back(); // Or redirect()->route('route.name');
@@ -218,7 +217,7 @@ class ViewDetails extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured while calculating the no. of days.');
         }
     }
 
@@ -243,8 +242,7 @@ class ViewDetails extends Component
             $filePathsJson = trim($this->leaveRequest->file_paths);
             $this->leaveRequest->file_paths = is_array($filePathsJson) ? $filePathsJson : json_decode($filePathsJson, true);
         } catch (\Exception $e) {
-            Log::error("Exception occurred: " . $e->getMessage());
-            session()->flash('error_message', 'An error occurred while processing the details. Please try again later.');
+           FlashMessageHelper::flashError( 'An error occurred while processing the details. Please try again later.');
         }
 
         // Pass the leaveRequest data and leaveBalances to the Blade view

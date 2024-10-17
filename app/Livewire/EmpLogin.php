@@ -143,9 +143,11 @@ class EmpLogin extends Component
 
             } else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
+                FlashMessageHelper::flashSuccess("you are logged in successfully");
                 return redirect('/');
             } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
+                FlashMessageHelper::flashSuccess("you are logged in successfully");
                 return redirect('/');
             } else {
                 FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");

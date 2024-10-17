@@ -217,7 +217,7 @@ class Home extends Component
                 return 'mobile';
             }
         } catch (Throwable $e) {
-            return 'unknown'; // Return a default value or handle the error gracefully
+           FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
         }
     }
 
@@ -376,7 +376,9 @@ class Home extends Component
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
+                ->where('category_type',operator: 'Leave')
                 ->where('status', 'approved')
+                ->where('cancel_status','!=','approved')
                 ->where(function ($query) use ($currentDate) {
                     $query->whereDate('from_date', '=', $currentDate)
                         ->orWhereDate('to_date', '=', $currentDate);
@@ -655,13 +657,9 @@ class Home extends Component
 
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+           FlashMessageHelper::flashError( 'An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
-            // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
     public $filterPeriod = 'this_month';
@@ -774,21 +772,17 @@ class Home extends Component
             $this->postal_code = $location['postal_code'];
 
             // Get the base API URL from the .env file
-            $apiUrl = env('WEATHER_API_URL');
-
+            $apiUrl = env('WEATHER_API_URL', 'https://api.open-meteo.com/v1/forecast');
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
-
-            // Log request URL for debugging
-            Log::info("Request URL: $requestUrl");
 
             $response = Http::get($requestUrl);
 
             // Log response for debugging
-            Log::info('API Response:', $response->json() ?? []);
-            Log::info('API Response Status Code:', ['status' => $response->status()]);
-            Log::info('API Response Headers:', ['headers' => $response->headers()]);
-            Log::info('API Response Body:', ['body' => $response->body()]);
+            // Log::info('API Response:', $response->json() ?? []);
+            // Log::info('API Response Status Code:', ['status' => $response->status()]);
+            // Log::info('API Response Headers:', ['headers' => $response->headers()]);
+            // Log::info('API Response Body:', ['body' => $response->body()]);
 
             // Check if the request was successful
             if ($response->successful()) {
@@ -806,7 +800,7 @@ class Home extends Component
                 $this->isDay = $currentWeather['is_day'] ? 'Day' : 'Night';
             } else {
                 // Log the error response
-                Log::error('API Error:', ['status' => $response->status(), 'body' => $response->body()]);
+                // Log::error('API Error:', ['status' => $response->status(), 'body' => $response->body()]);
                 $this->weatherCondition = 'Unable to fetch weather data';
                 $this->temperature = 'Unknown';
                 $this->windspeed = 'Unknown';
@@ -814,7 +808,8 @@ class Home extends Component
                 $this->isDay = 'Unknown';
             }
         } catch (\Exception $e) {
-            Log::error("Exception: ", ['message' => $e->getMessage()]);
+            // Log::error("Exception: ", ['message' => $e->getMessage()]);
+            FlashMessageHelper::flashError('An error occured.please try again later.');
             $this->weatherCondition = 'An error occurred';
             $this->temperature = 'Unknown';
             $this->windspeed = 'Unknown';
@@ -878,7 +873,8 @@ class Home extends Component
             $response = Http::get($url);
             // dd($response->json());
         } catch (\Exception $e) {
-            Log::error("Exception: ", ['message' => $e->getMessage()]);
+            // Log::error("Exception: ", ['message' => $e->getMessage()]);
+            FlashMessageHelper::flashError('An error occured while getting location.');
         }
     }
 
@@ -921,7 +917,7 @@ class Home extends Component
     public function sendCoordinates($latitude, $longitude)
     {
         // Log the received coordinates
-        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        // Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
 
         // Build the API URL for reverse geocoding
         $apiUrl = "https://nominatim.openstreetmap.org/reverse";
@@ -950,10 +946,11 @@ class Home extends Component
                     'country_code' => $address['country_code'] ?? ''
                 ];
             } else {
-                Log::error("Failed to fetch address. Error: " . $response->body());
+                // Log::error("Failed to fetch address. Error: " . $response->body());
             }
         } catch (\Exception $e) {
-            Log::error("Error occurred while fetching address: " . $e->getMessage());
+            // Log::error("Error occurred while fetching address: " . $e->getMessage());
+            FlashMessageHelper::flashError('Error occurred while fetching address');
         }
     }
 }

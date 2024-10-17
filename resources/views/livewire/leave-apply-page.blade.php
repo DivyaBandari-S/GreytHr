@@ -1,17 +1,4 @@
 <div class="position-relative">
-    @if(session()->has('message'))
-    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-17%;" id="success-alert" wire:poll.5s="hideSuccessAlert">
-        {{ session('message') }}
-        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-        </button>
-    </div>
-    @endif
-    @if($showerrorMessage)
-    <div id="errorMessage" class="alert alert-danger d-flex gap-3 position-absolute align-items-center" style="right: 0;left:0;top:-18%;" wire:poll.5s="hideAlert">
-        {{ $errorMessage }}
-    </div>
-    @endif
 
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
@@ -457,13 +444,10 @@
 
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                    @if(session()->has('error'))
-                    <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;z-index:100;">{{ session('error') }}</div>
-                    @endif
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
-                                <input wire:model.debounce.500ms="searchTerm"  id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
+                                <input wire:model.debounce.500ms="searchTerm" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                 <div class="input-group-append searchBtnBg d-flex align-items-center">
                                     <button type="button" wire:click="searchCCRecipients" class="search-btn-leave">
                                         <i class="fas fa-search"></i>
@@ -479,15 +463,13 @@
                         </div>
                     </div>
                     <div class="scrollApplyingTO mb-2 mt-2 ">
-                        @if($ccRecipients)
+                        @if($ccRecipients && count($ccRecipients) > 0)
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer px-2 mb-2 rounded" wire:key="employee-{{ $employee->emp_id }}">
-                            <div class="downArrow d-flex align-items-center text-capitalize" wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                        <div class="borderContainer px-2 mb-2 rounded"  wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                            <div class="downArrow d-flex align-items-center text-capitalize" wire:click.prevent>
                                 <label class="custom-checkbox">
                                     <input type="checkbox"
-                                        wire:model="selectedPeople.{{ $employee->emp_id }}"
-                                        @if(isset($selectedPeople[$employee->emp_id])) checked @endif
-                                    wire:click.prevent="toggleSelection('{{ $employee->emp_id }}')" />
+                                        wire:model="selectedPeople.{{ $employee->emp_id }}"                                         />
                                     <span class="checkmark"></span>
                                 </label>
                                 <div class="d-flex align-items-center gap-2">
@@ -510,13 +492,13 @@
                             </div>
                         </div>
                         @endforeach
-
                         @else
                         <div class="mb-0 normalTextValue">
                             No data found
                         </div>
                         @endif
                     </div>
+
                 </div>
                 @endif
                 @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror

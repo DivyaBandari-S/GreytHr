@@ -51,7 +51,7 @@ class EmpPostrequest extends Component
     {
         $post = Post::find($postId);
     
-        if ($post && $post->status !== 'Closed') {
+        if ($post && $post->status !== 'a') {
             $post->status = 'Closed';
             $success = $post->save(); // Save and check if successful
     
