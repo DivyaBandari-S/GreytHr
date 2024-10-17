@@ -1,13 +1,4 @@
 <div class="position-relative">
-    @if(session()->has('message'))
-    <div class="alert alert-success w-50 position-absolute m-auto p-2 " style="right: 25%;top:-17%;" id="success-alert" wire:poll.5s="hideSuccessAlert">
-        {{ session('message') }}
-        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-        </button>
-    </div>
-    @endif
-
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
@@ -452,9 +443,6 @@
 
                 @if($showCcRecipents)
                 <div class="ccContainer" x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                    @if(session()->has('error'))
-                    <div class="alert alert-danger mb-2 position-absolute " wire:poll.2s="hideAlert" style="right:0;left:0;margin:0 10px;z-index:100;">{{ session('error') }}</div>
-                    @endif
                     <div class="row m-0 p-0 d-flex align-items-center justify-content-between">
                         <div class="col-md-10 m-0 p-0">
                             <div class="input-group">
