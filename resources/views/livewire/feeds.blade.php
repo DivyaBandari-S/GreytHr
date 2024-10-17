@@ -6,13 +6,7 @@
     @else
     <div class="px-4 " style="position: relative;">
 
-        @if ($message)
-        <div class="alert alert-success alert-dismissible fade show" role="alert" style="max-width: 500px; margin: auto;">
-            {{ $message }}
-            <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"
-                style="font-size: 0.75rem; padding: 0.2rem 0.4rem; margin-top: 4px;"></button>
-        </div>
-        @endif
+ 
         <div class="col-md-12  mb-3 mt-1" >
             <div class="row bg-white rounded border py-1 d-flex align-items-center">
                 <div class="d-flex mt-2 flex-row align-items-center row m-0">
