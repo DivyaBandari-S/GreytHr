@@ -760,111 +760,12 @@ button.close-button {
 .rotate.rotate-180 {
     transform: rotate(180deg);
 }
-.helpdesk-btn{
-    font-size:12px;
-    background-color:rgb(2, 17, 79);
-    color:white;
-    border-radius:5px;
-    padding:4px 10px;
-}
-.helpdesk-modal{
-    background-color: rgb(2, 17, 79);
-     height: 50px
-}
-.helpdesk-title{
-    padding: 5px; 
-    color: white; 
-    font-size: 15px;
-}
-.helpdesk-label{
-    color: #778899; 
-    font-weight: 500; 
-    font-size: 12px;
-}
-.helpdesk-toggler{
-    position: absolute;
-     right: 8px;
-      top: 50%; 
-      transform: translateY(-50%);
-}
-.select-ccto{
-    font-size: 12px; 
-    color: #778899;
-     margin-bottom: 10px; 
-     font-weight: 500;
-}
-.add-button{
-    border-radius: 50%;
-     color: #778899;
-      border: 1px solid #778899;
-}
-.helpdesk-rotate{
-    border-radius: 5px; 
-    background-color: grey; 
-    padding: 8px;
-     width: 330px; 
-     margin-top: 10px; 
-     height: 200px;
-      overflow-y: auto;
-}
-.helpdesk-container{
-    display: flex;
-     align-items: center; 
-     width: 100%;
-}
-.helpdesk-search-term{
-    font-size: 10px;
-     cursor: pointer;
-      border-radius: 5px 0 0 5px;
-       width: 250px; 
-       height: 30px;
-        padding: 5px;
-}
-.hepldesk-close-people{
-    background-color: rgb(2,17,79);
-     height: 30px; width: 30px;
-      margin-left: 5px; 
-      display: flex; 
-      align-items: center;
-       justify-content: center;
-}
-.help-desk-table{
-    width: 100%;
-     background-color: white;
-      margin-top: 10px;
-       overflow-x: auto;
-}
-.help-desk-table-main{
-    width: 100%;
-     background-color: white;
- 
-      border-collapse: collapse; 
-      overflow-x: auto;
-}
-.help-desk-table-row{
-    background-color: rgb(2, 17, 79); 
 
-    color: white;
-}
-.help-desk-table-column{
-    padding: 10px; 
-    font-size: 12px; 
-    text-align: center; 
-}
 .custom-button {
     border-radius: 5px;
     padding: 5px 10px;
     color: white;
     cursor: pointer;
-}
-.helpdesk-request{
-    padding: 10px; 
-    font-size: 12px;
-     text-align: center;
-      text-transform: capitalize;
-}
-.help-desk-table-main th,td{
-border-bottom:none;
 }
 
 .submit-button {
@@ -1257,105 +1158,7 @@ border-bottom:none;
 .toDatefield input {
     width: 55%;
 }
-.attendance-info-table-head{
-    font-weight:normal;
-    font-size:12px;
-}
-.attendance-info-table-data
-{
-    font-size:12px;
-}
-.container1,
-        .container2,
-        .container3,
-        .container6 {
-            display: block;
-        }
-        .container2 {
-            background-color: #FFFFFF;
-            margin-top: 40px;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-        .container2-status-details-heading
-        {
-            padding-left:10px;
-            margin-top:10px;
-            color: #7f8fa4;
-            font-size:14px;
-        }
-        .horizontal-line-attendance-info {
-            width: 100%;
-            border-top: 1px solid #ccc;
-            margin: 0px 0;
-        }
-        .container2-table-scrollable
-        {
-            overflow-x: auto; max-width: 100%;
-        }
-        .container2-table
-        {
-            margin-top:-10px;
-        }
-        .container2-table-head
-        {
-            font-weight:normal;
-            font-size:12px;
-            padding-top:16px;
-        }
-        .modal-show
-        {
-            display: block;
-        }
-        .regularisation-dialog-head-modal
-        {
-            background-color: #eef7fa; 
-            height: 50px;
-        }
-        .regularisation-dialog-head-modal-heading
-        {
-            padding: 5px; 
-            color: #778899; 
-            font-size: 15px;
-        }
-.regularisation-close
-{
-    background-color: white; 
-    height:10px;
-    width:10px;
-}
-.regularisation-dialog-head-modal-body
-{
-    max-height:300px;overflow-y:auto
-}
-.regularisation-dialog-head-modal-body-label
-{
-    font-size: 11px;
-    color:#778899;
-    font-weight:500;
-}
-.regularisation-dialog-head-modal-body-insidelabel
-{
-    color: #000000;
-}
-.regularisation-dialog-head-modal-body-button
-{
-    display: flex; 
-    justify-content: center; 
-    margin-top: 20px;
-}
-.container3-head
-{
-    padding-left:10px;
-    margin-top:20px;
-    color: #7f8fa4;
-    font-size:14px;
-}
-.container3-table-scrollable
-{
-    overflow-x: auto; 
-    max-width: 100%;
-}
+
 /*Ending of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Regularisation(Pranita Priyadarshi)*/
 .container-for-adding-regularisation-entries {
@@ -1935,7 +1738,6 @@ input[type="date"]::before {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: auto;
 }
 
 .employee-swipes-table thead {
@@ -8913,4 +8715,8 @@ peoples module styles started */
     border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg); /* Rotate to create the checkmark */
+}
+.bg-primary,
+.btn-primary {
+    background-color: #02114f !important;
 }
