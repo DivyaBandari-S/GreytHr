@@ -258,27 +258,27 @@
                     <div class="heading-2">
                         <div class="d-flex flex-row justify-content-between rounded">
                             <div class="field">
-                                @if($regularisationrequest->status=='pending')
+                                @if($regularisationrequest->status==4)
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                     Withdrawn by
                                 </span>
-                                @elseif($regularisationrequest->status=='rejected')
+                                @elseif($regularisationrequest->status==3)
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                     Rejected by
                                 </span>
-                                @elseif($regularisationrequest->status=='approved')
+                                @elseif($regularisationrequest->status==2)
                                 <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                     Regularization by
                                 </span>
                                 @endif
 
 
-                                @if($regularisationrequest->status=='pending')
+                                @if($regularisationrequest->status==4)
                                 <span style="color: #333; font-weight: 500;font-size:12px;">
                                     Me
                                 </span>
 
-                                @elseif($regularisationrequest->status=='approved'||$regularisationrequest->status=='rejected')
+                                @elseif($regularisationrequest->status==2||$regularisationrequest->status==3)
                                 <span style="color: #333; font-weight: 500;font-size:12px;">
                                     {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
                                 </span>
@@ -288,12 +288,12 @@
                             <div>
                                 <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
 
-                                    @if($regularisationrequest->status=='rejected')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
-                                    @elseif($regularisationrequest->status=='approved')
+                                    @if($regularisationrequest->status==3)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
+                                    @elseif($regularisationrequest->status==2)
                                     <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">closed</span>
-                                    @elseif($regularisationrequest->status=='pending'&&$regularisationrequest->is_withdraw==1)
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#cf9b17;text-transform:uppercase;">Withdrawn</span>
+                                    @elseif($regularisationrequest->status==4 &&$regularisationrequest->is_withdraw==1)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#cf9b17;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
                                     @endif
                                 </span>
                             </div>
@@ -339,7 +339,7 @@
                             <div class="group">
                                 <div style="margin-top:20px;">
                                     <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">
-                                        @if($regularisationrequest->status=='pending')
+                                        @if($regularisationrequest->status==4)
                                         Withdrawn <br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                                         <span style="color: #778899; font-weight: 500;">
                                             {{ucwords(strtolower($empName->first_name))}}&nbsp;{{ucwords(strtolower($empName->last_name))}}
@@ -354,7 +354,7 @@
                                             @endif
                                             &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('h:i A') }}
                                         </span>
-                                        @elseif($regularisationrequest->status=='approved')
+                                        @elseif($regularisationrequest->status==2)
                                         Accepted<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                                         <span style="color: #778899; font-weight: 500;">
                                             {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
@@ -370,7 +370,7 @@
                                             @endif
                                             &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('h:i A') }}
                                         </span>
-                                        @elseif($regularisationrequest->status=='rejected')
+                                        @elseif($regularisationrequest->status==3)
                                         Rejected<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                                         <span style="color: #778899; font-weight: 500;">
                                             {{ucwords(strtolower($ManagerName->first_name))}}&nbsp;{{ucwords(strtolower($ManagerName->last_name))}}
@@ -434,12 +434,12 @@
             @foreach($regularisationEntries as $entry)
             <tbody>
                 <td>{{ \Carbon\Carbon::parse($entry['date'])->format('d M, Y') }}</td>
-                @if($regularisationrequest->status=='pending')
-                <td style="text-transform: uppercase;color: #7f8fa4;">withdrawn</td>
-                @elseif($regularisationrequest->status=='approved')
-                <td style="text-transform: uppercase;color: #5bc67e;">{{$regularisationrequest->status}}</td>
-                @elseif($regularisationrequest->status=='rejected')
-                <td style="text-transform: uppercase;color:#f66;">{{$regularisationrequest->status}}</td>
+                @if($regularisationrequest->status==4)
+                <td style="text-transform: uppercase;color: #7f8fa4;">{{$regularisationrequest->status_name}}</td>
+                @elseif($regularisationrequest->status==2)
+                <td style="text-transform: uppercase;color: #5bc67e;">{{$regularisationrequest->status_name}}</td>
+                @elseif($regularisationrequest->status==3)
+                <td style="text-transform: uppercase;color:#f66;">{{$regularisationrequest->status_name}}</td>
                 @endif
                 <td>{{$regularisationrequest->approver_remarks}}</td>
                 <td>{{ \Carbon\Carbon::parse($empName->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empName->shift_end_time)->format('H:i a') }}</td>

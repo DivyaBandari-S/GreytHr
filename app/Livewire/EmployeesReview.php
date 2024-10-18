@@ -409,47 +409,37 @@ class EmployeesReview extends Component
 
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+                            ->whereIn('regularisation_dates.status', [2, 3])
+                            ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                            ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
+                            ->where(function ($query) {
+                                $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('status_types.status_name', 'LIKE', '%' . $this->searchQuery . '%'); // Search by status_name
+                            })
+                            ->select(
+                                'regularisation_dates.*', 
+                                'employee_details.first_name', 
+                                'employee_details.last_name', 
+                                'status_types.status_name' // Select status_name from status_types
+                            )
+                            ->orderByDesc('regularisation_dates.updated_at')
+                            ->get();
 
-                ->where(function ($query) {
-                    $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-                        ->orWhere(function ($query) {
-                            $query->where('regularisation_dates.status', 'Pending')
-                                ->where('regularisation_dates.approver_remarks', 'Forwarded to HR');
-                        });
-                })
-
-                ->orderByDesc('regularisation_dates.id')
-
-                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-
-                ->where(function ($query) {
-                    $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('regularisation_dates.status', 'LIKE', '%' . $this->searchQuery . '%');
-                })
-
-                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
-
-                ->orderByDesc('regularisation_dates.updated_at')
-
-                ->get();
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-
-                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-
-
-
-
-                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-
-
-                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
-
-                ->orderByDesc('updated_at')
-
-                ->get();
+                        ->whereIn('regularisation_dates.status', [2, 3])
+                        ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                        ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
+                        ->select(
+                            'regularisation_dates.*', 
+                            'employee_details.first_name', 
+                            'employee_details.last_name', 
+                            'status_types.status_name' // Select status_name from status_types table
+                        )
+                        ->orderByDesc('regularisation_dates.updated_at')
+                        ->get();
         }
         $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
 

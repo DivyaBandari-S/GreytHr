@@ -687,6 +687,7 @@ public function historyButton()
             $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
+                'status'=> 4,
             ]);
             $this->withdraw_session = true;
             $this->withdrawModal=false;
@@ -749,10 +750,12 @@ public function historyButton()
             $subordinateEmployeeIds = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->pluck('first_name', 'last_name')
                 ->toArray();
-            $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
-                ->where('status', 'pending')
-                ->where('is_withdraw', 0)
-                ->orderByDesc('updated_at')
+                $pendingRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
+                ->where('regularisation_dates.status', 5)
+                ->where('regularisation_dates.is_withdraw', 0)
+                ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code')
+                ->select('regularisation_dates.*', 'status_types.status_name') // Select fields from both tables
+                ->orderByDesc('regularisation_dates.updated_at')
                 ->get();
            
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
@@ -760,10 +763,13 @@ public function historyButton()
             });
         
     
-            $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
-                ->whereIn('status', ['pending', 'approved', 'rejected'])
-                ->orderByDesc('updated_at')
-                ->get();            
+            $historyRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
+                ->whereIn('regularisation_dates.status', [2, 4, 3]) // Use numeric status codes
+                ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types
+                ->select('regularisation_dates.*', 'status_types.status_name') // Select all from regularisation_dates and status_name from status_types
+                ->orderByDesc('regularisation_dates.updated_at')
+                ->get();        
+          
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });

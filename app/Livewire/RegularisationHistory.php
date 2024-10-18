@@ -30,7 +30,10 @@ class RegularisationHistory extends Component
     {
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
-        $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
+        $this->regularisationrequest = RegularisationDates::with('employee')
+        ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join status_types table
+        ->select('regularisation_dates.*', 'status_types.status_name') // Select all from regularisation_dates and status_name from status_types
+        ->find($id);
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
         $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
