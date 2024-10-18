@@ -262,7 +262,7 @@ class LeaveApplyPage extends Component
                 if (count($this->selectedPeople) < 5) {
                     $this->selectedPeople[$empId] = true;
                 } else {
-                    FlashMessageHelper::flashError("You can only select up to 5 CC recipients.");
+                    FlashMessageHelper::flashError("You reached maximum limit of CC To");
                 }
             }
 
@@ -487,12 +487,6 @@ class LeaveApplyPage extends Component
                 return false; // Stop further validation if error occurs
             }
 
-            // 2. Check for overlapping leave requests
-            if ($this->checkOverlappingLeave($employeeId)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with an existing leave application.');
-                return false; // Stop further validation if error occurs
-            }
-
             // 3. Validate leave balance
             $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
             $leaveBalance = $this->getLeaveBalance($employeeId);
@@ -533,6 +527,12 @@ class LeaveApplyPage extends Component
                     $this->errorMessageValidation = FlashMessageHelper::flashError('To date must be greater than or equal to from date.');
                     return false; // Stop further validation if error occurs
                 }
+
+                // 2. Check for overlapping leave requests
+                if ($this->checkOverlappingLeave($employeeId)) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with an existing leave application.');
+                    return false; // Stop further validation if error occurs
+                }
             }
             // All validations passed, now calculate the number of days
             if ($this->to_date) {
@@ -561,13 +561,14 @@ class LeaveApplyPage extends Component
             $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date)->toDateString();     // 'Y-m-d'
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                ->where('category_type', 'Leave')
                 ->whereIn('status', ['approved', 'Pending'])
                 ->get();
 
             // Iterate over each leave request to format the dates and check for overlaps
             foreach ($leaveRequests as $leaveRequest) {
-                $existingFromDate = Carbon::parse($leaveRequest->from_date)->toDateString(); // Format to 'Y-m-d'
-                $existingToDate = Carbon::parse($leaveRequest->to_date)->toDateString();     // Format to 'Y-m-d'
+                $existingFromDate = Carbon::parse($leaveRequest->from_date)->toDateString();
+                $existingToDate = Carbon::parse($leaveRequest->to_date)->toDateString();
                 // Check for overlaps
                 if (
                     ($fromDate <= $existingToDate && $toDate >= $existingFromDate)
@@ -590,9 +591,9 @@ class LeaveApplyPage extends Component
             $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', $this->leave_type)
                 ->whereNotIn('leave_type', ['Loss Of Pay'])
-                ->where('category_type','Leave')
+                ->where('category_type', 'Leave')
                 ->whereIn('status', ['approved', 'Pending'])
-                ->whereIn('cancel_status',['rejected','Re-applied','Pending'])
+                ->whereIn('cancel_status', ['rejected', 'Re-applied', 'Pending'])
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
@@ -672,11 +673,11 @@ class LeaveApplyPage extends Component
             $currentYear = now()->year;
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave'])
-                ->where('category_type','Leave')
+                ->where('category_type', 'Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
                 ->whereIn('status', ['approved', 'Pending'])
-                ->whereIn('cancel_status',['rejected','Re-applied','Pending'])
+                ->whereIn('cancel_status', ['rejected', 'Re-applied', 'Pending'])
                 ->get();
 
             $totalLeaveDays = 0;
