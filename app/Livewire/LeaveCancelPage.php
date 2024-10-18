@@ -693,7 +693,7 @@ class LeaveCancelPage extends Component
             ->where('status', 'approved')
             ->where('from_date', '>=', now()->subMonths(2))
             ->where('category_type', 'Leave')
-            ->where('cancel_status', '!=', 'Re-applied')
+            ->whereIn('cancel_status',  ['Pending','rejected'])
             ->with('employee')
             ->get();
 

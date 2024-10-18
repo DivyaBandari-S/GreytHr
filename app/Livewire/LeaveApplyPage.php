@@ -590,7 +590,9 @@ class LeaveApplyPage extends Component
             $checkLeaveBalance = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', $this->leave_type)
                 ->whereNotIn('leave_type', ['Loss Of Pay'])
+                ->where('category_type','Leave')
                 ->whereIn('status', ['approved', 'Pending'])
+                ->whereIn('cancel_status',['rejected','Re-applied','Pending'])
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
@@ -670,9 +672,11 @@ class LeaveApplyPage extends Component
             $currentYear = now()->year;
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave'])
+                ->where('category_type','Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
                 ->whereIn('status', ['approved', 'Pending'])
+                ->whereIn('cancel_status',['rejected','Re-applied','Pending'])
                 ->get();
 
             $totalLeaveDays = 0;
