@@ -171,14 +171,27 @@
                               </span>
 
                            </div>
+                           @php
+                           $statusMap = [
+                           0 => 'Active',
+                           1 => 'InActive',
+                           2 => 'Approved',
+                           3 => 'Rejected',
+                           4 => 'Withdrawn',
+                           5 => 'Pending',
+                           6=> 'Re-applied',
+                           7 => 'Pending Leave Cancel'
+                           ];
+                           $statusText = $statusMap[$leaveRequest->status] ?? 'Unknown';
+                           @endphp
                            <!-- Add other details based on your leave request structure -->
                            @if(($leaveRequest->category_type === 'Leave') )
                            <div class="col accordion-content">
-                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->status) }}</span>
+                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($statusText) }}</span>
                            </div>
                            @else
                            <div class="col accordion-content">
-                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($statusText) }}</span>
                            </div>
                            @endif
                            <div class="arrow-btn">
@@ -305,46 +318,41 @@
                               </span>
 
                            </div>
+                           @php
+                           $statusMap = [
+                           0 => 'Active',
+                           1 => 'InActive',
+                           2 => 'Approved',
+                           3 => 'Rejected',
+                           4 => 'Withdrawn',
+                           5 => 'Pending',
+                           6 => 'Re-applied',
+                           7 => 'Pending Leave Cancel'
+                           ];
+                           // Get the text representation for the status and cancel status
+                           $leaveStatusText = $statusMap[$leaveRequest->status] ?? 'Unknown';
+                           $cancelStatusText = $statusMap[$leaveRequest->cancel_status] ?? 'Unknown';
+                           @endphp
 
-
-
-                           <!-- Add other details based on your leave request structure -->
-                           @if($leaveRequest->category_type == 'Leave Cancel')
+                           @if($leaveRequest->category_type === 'Leave Cancel')
                            <div class="col accordion-content">
-
-                              @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
-
-                              <span class="approvedColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
-
-                              @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
-
-                              <span class="rejectColor">{{ strtoupper($leaveRequest->cancel_status) }}</span>
-
+                              @if(strtoupper($cancelStatusText) === 'APPROVED')
+                              <span class="approvedColor">{{ strtoupper($cancelStatusText) }}</span>
+                              @elseif(strtoupper($cancelStatusText) === 'REJECTED')
+                              <span class="rejectColor">{{ strtoupper($cancelStatusText) }}</span>
                               @else
-
-                              <span class="normalTextValue">{{ strtoupper($leaveRequest->cancel_status) }}</span>
-
+                              <span class="normalTextValue">{{ strtoupper($cancelStatusText) }}</span>
                               @endif
-
                            </div>
-
                            @else
                            <div class="col accordion-content">
-
-                              @if(strtoupper($leaveRequest->status) == 'APPROVED')
-
-                              <span class="approvedColor">{{ strtoupper($leaveRequest->status) }}</span>
-
-                              @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
-
-                              <span class="rejectColor">{{ strtoupper($leaveRequest->status) }}</span>
-
+                              @if(strtoupper($leaveStatusText) === 'APPROVED')
+                              <span class="approvedColor">{{ strtoupper($leaveStatusText) }}</span>
+                              @elseif(strtoupper($leaveStatusText) === 'REJECTED')
+                              <span class="rejectColor">{{ strtoupper($leaveStatusText) }}</span>
                               @else
-
-                              <span class="normalTextValue">{{ strtoupper($leaveRequest->status) }}</span>
-
+                              <span class="normalTextValue">{{ strtoupper($leaveStatusText) }}</span>
                               @endif
-
                            </div>
                            @endif
 

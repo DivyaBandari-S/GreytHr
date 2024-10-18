@@ -52,7 +52,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="from_date">From Date <span class="requiredMark">*</span> </label>
-                                <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
+                                <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="l('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>

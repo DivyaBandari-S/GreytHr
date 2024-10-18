@@ -51,6 +51,7 @@
                     </table>
                 </div>
                 <!-- inputs fields -->
+                @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                 <div>
                     @if($showApplyingTo)
                     <div class="form-group mt-3">
@@ -320,6 +321,9 @@
                     <button type="submit" class="submit-btn">Submit</button>
                     <button type="button" class="cancel-btn" wire:click="cancel">Cancel</button>
                 </div>
+                @else
+                <span></span>
+                @endif
             </div>
         </form>
     </div>

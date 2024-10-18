@@ -35,7 +35,20 @@ class LeaveHistory extends Component
     public $showViewFileDialog = false;
     public $files = [];
     public $selectedFile;
-
+    public $statusMap = [
+        0 => 'Active',
+        1 => 'InActive',
+        2 => 'Approved',
+        3 => 'Rejected',
+        4 => 'Withdrawn',
+        5 => 'Pending',
+        6 => 'Re-applied',
+        7 => 'Pending Leave Cancel'
+    ];
+    public function getStatusText($statusCode)
+    {
+        return $this->statusMap[$statusCode] ?? 'Unknown';
+    }
     public function mount($leaveRequestId)
     {
         try {

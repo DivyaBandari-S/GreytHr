@@ -396,6 +396,7 @@ class ViewPendingDetails extends Component
                         ->first();
                     if ($matchingLeaveRequest) {
                         // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->cancel_status = 'rejected';
                         $matchingLeaveRequest->updated_at = now();
                         $matchingLeaveRequest->action_by = $employeeId;
                         $matchingLeaveRequest->save();

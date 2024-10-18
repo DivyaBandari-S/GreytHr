@@ -343,10 +343,12 @@ class LeaveCalender extends Component
 
             if ($filterType === 'Me') {
                 $leaveTransactions = LeaveRequest::with('employee')
+                ->where('category_type', 'Leave')
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('emp_id', $employeeId)
                     ->where('status', 'approved')
+                    ->whereIn('cancel_status',['Re-applied','Pending','rejected'])
                     ->where(function ($query) use ($searchTerm) {
                         $query->where('emp_id', 'like', $searchTerm)
                             ->orWhereHas('employee', function ($query) use ($searchTerm) {
