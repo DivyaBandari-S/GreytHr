@@ -13,6 +13,7 @@
 // Models                          : LeaveRequest,EmployeeDetails,HolidayCalendar,SwipeRecord
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\SwipeRecord;
 use App\Models\HolidayCalendar;
@@ -402,7 +403,8 @@ class Attendance extends Component
             $this->session1ArrowDirection = 'right';
 
             // You can also set a session message or an error message to inform the user
-            session()->flash('error', 'An error occurred while toggling session fields. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while toggling session fields. Please try again later.');
+            
         }
     }
     //This function will help us to toggle the arrow present in session fields
@@ -421,7 +423,8 @@ class Attendance extends Component
             $this->session2ArrowDirection = 'right';
 
             // You can also set a session message or an error message to inform the user
-            session()->flash('error', 'An error occurred while toggling session fields. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while toggling session fields. Please try again later.');
+            
         }
     }
     public  $averageWorkingHours, $percentageOfHoursWorked, $yearA, $monthA;
@@ -632,7 +635,8 @@ class Attendance extends Component
             $this->month = now()->month;
 
             // Optionally, you can set a session message or an error message to inform the user
-            session()->flash('error', 'An error occurred while initializing the component. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while initializing the component. Please try again later.');
+            
         }
     }
 
@@ -658,7 +662,8 @@ class Attendance extends Component
             $this->showMessage = false;
         } catch (\Exception $e) {
             Log::error('Error in showBars method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while showing the bars. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while showing the bars. Please try again later.');
+            
         }
     }
     //This function will help us to calculate the number of public holidays in a particular month
@@ -670,7 +675,7 @@ class Attendance extends Component
                 ->get();
         } catch (\Exception $e) {
             Log::error('Error in getPublicHolidaysForMonth method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching public holidays. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while fetching public holidays. Please try again later.');
             return collect(); // Return an empty collection to handle the error gracefully
         }
     }
@@ -682,7 +687,8 @@ class Attendance extends Component
             $this->dispatchBrowserEvent('refreshModal', ['k1' => $this->k1]);
         } catch (\Exception $e) {
             Log::error('Error in showlargebox method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while showing the large box. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while showing the large box. Please try again later.');
+            
         }
     }
     private function isEmployeeRegularisedOnDate($date)
@@ -692,7 +698,7 @@ class Attendance extends Component
             return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking employee presence. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
             return false; // Return false to handle the error gracefully
         }
     }
@@ -707,7 +713,7 @@ class Attendance extends Component
             return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking employee presence. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
             return false; // Return false to handle the error gracefully
         }
     }
@@ -727,7 +733,7 @@ class Attendance extends Component
                 ->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
             return false; // Return false to handle the error gracefully
         }
     }
@@ -763,7 +769,7 @@ class Attendance extends Component
                 ->value('leave_type');
         } catch (\Exception $e) {
             Log::error('Error in getLeaveType method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching leave type. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while fetching leave type. Please try again later.');
             return null; // Return null to handle the error gracefully
         }
     }
@@ -988,7 +994,8 @@ class Attendance extends Component
         $this->calendar = $calendar;
     } catch (\Exception $e) {
         Log::error('Error in generateCalendar method: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while generating the calendar. Please try again later.');
+        FlashMessageHelper::flashError('An error occurred while generating the calendar. Please try again later.');
+
         $this->calendar = []; // Set calendar to empty array in case of error
     }
 }
@@ -1007,7 +1014,7 @@ class Attendance extends Component
 
         } catch (\Exception $e) {
             Log::error('Error in updateDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the date. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the date. Please try again later.');
         }
     }
     //This function will help us to check whether the employee is absent 'A' or present 'P'
@@ -1035,7 +1042,8 @@ class Attendance extends Component
             $this->dateclicked = $date1;
         } catch (\Exception $e) {
             Log::error('Error in dateClicked method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing the date click. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing the date click. Please try again later.');
+            
         }
     }
 
@@ -1047,7 +1055,8 @@ class Attendance extends Component
             $this->updateModalTitle();
         } catch (\Exception $e) {
             Log::error('Error in updatedFromDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the from date. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the from date. Please try again later.');
+    
         }
     }
 
@@ -1059,7 +1068,8 @@ class Attendance extends Component
             $this->updateModalTitle();
         } catch (\Exception $e) {
             Log::error('Error in updatedToDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the to date. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the to date. Please try again later.');
+          
         }
     }
     public function openlegend()
@@ -1223,7 +1233,8 @@ class Attendance extends Component
             }
         } catch (\Exception $e) {
             Log::error('Error in updateModalTitle method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the modal title. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the modal title. Please try again later.');
+            
         }
     }
     
@@ -1535,7 +1546,8 @@ class Attendance extends Component
           
         } catch (\Exception $e) {
             Log::error('Error in calculateTotalDays method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while calculating total days. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while calculating total days. Please try again later.');
+           
         }
     }
     private function calculateNumberofWeekends($startDate, $endDate)
@@ -1568,7 +1580,8 @@ class Attendance extends Component
             return $workingDays;
         } catch (\Exception $e) {
             Log::error('Error in calculateWorkingDays method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while calculating working days. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while calculating working days. Please try again later.');
+            
             return 0;
         }
     }
@@ -1589,7 +1602,8 @@ class Attendance extends Component
             return $workingDays;
         } catch (\Exception $e) {
             Log::error('Error in calculateWorkingDays method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while calculating working days. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while calculating working days. Please try again later.');
+        
             return 0;
         }
     }
@@ -1612,7 +1626,8 @@ class Attendance extends Component
             }
         } catch (\Exception $e) {
             Log::error('Error in calculateActualHours method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while calculating actual hours. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while calculating actual hours. Please try again later.');
+           
         }
     }
     public function viewDetails($id)
@@ -1625,7 +1640,8 @@ class Attendance extends Component
             $this->view_student_in_or_out = $student->in_or_out;
         } catch (\Exception $e) {
             Log::error('Error in viewDetails method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while viewing details. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while viewing details. Please try again later.');
+            
         }
     }
     public function closeViewStudentModal()
@@ -1636,7 +1652,7 @@ class Attendance extends Component
             $this->view_student_in_or_out = '';
         } catch (\Exception $e) {
             Log::error('Error in closeViewStudentModal method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while closing view student modal. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while closing view student modal. Please try again later.');
         }
     }
     public $show = false;
@@ -1647,7 +1663,7 @@ class Attendance extends Component
             $this->show = true;
         } catch (\Exception $e) {
             Log::error('Error in showViewStudentModal method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while showing view student modal. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while showing view student modal. Please try again later.');
         }
     }
 
@@ -1657,7 +1673,8 @@ class Attendance extends Component
             $this->show1 = true;
         } catch (\Exception $e) {
             Log::error('Error in showViewTableModal method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while showing view table modal. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while showing view table modal. Please try again later.');
+
         }
     }
 
@@ -1668,7 +1685,7 @@ class Attendance extends Component
             $this->showSR = true;
         } catch (\Exception $e) {
             Log::error('Error in openSwipes method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while opening swipes. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while opening swipes. Please try again later.');
         }
     }
     public function closeSWIPESR()
@@ -1677,7 +1694,7 @@ class Attendance extends Component
             $this->showSR = false;
         } catch (\Exception $e) {
             Log::error('Error in closeSWIPESR method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while closing SWIPESR. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while closing SWIPESR. Please try again later.');
         }
     }
     public function close1()
@@ -1686,7 +1703,8 @@ class Attendance extends Component
             $this->show1 = false;
         } catch (\Exception $e) {
             Log::error('Error in close1 method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while closing 1. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while closing 1. Please try again later.');
+            
         }
     }
     public function calculateAvgWorkHoursForPreviousMonth()
@@ -1784,7 +1802,8 @@ class Attendance extends Component
             $this->dateClicked($date->startOfMonth()->toDateString());
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while navigating to the previous month. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while navigating to the previous month. Please try again later.');
+
         }
     }
 
@@ -1814,7 +1833,8 @@ class Attendance extends Component
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
         } catch (\Exception $e) {
             Log::error('Error in nextMonth method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while navigating to the next month. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while navigating to the next month. Please try again later.');
+          
         }
     }
 
@@ -1979,7 +1999,7 @@ class Attendance extends Component
             ]);
         } catch (\Exception $e) {
             Log::error('Error in render method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while rendering the page. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while rendering the page. Please try again later.');
             return view('livewire.attendance'); // Return an empty view or handle it as appropriate
         }
     }

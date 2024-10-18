@@ -1,12 +1,4 @@
 <div>
-    @if($showAlert)
-    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="right: 25%;top:18%;" id="success-alert">
-        {{ session('message') }}
-        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-        </button>
-    </div>
-    @endif
     <div class="col" id="leavePending">
         <div class="row m-0 p-0 mt-3">
             <div class="reviewCountShow p-0">

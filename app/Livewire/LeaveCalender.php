@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails,HolidayCalendar
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\Company;
 use Livewire\Component;
 use Carbon\Carbon;
@@ -73,12 +74,10 @@ class LeaveCalender extends Component
             }
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            return view('error', ['message' => 'An error occurred while processing your request. Please try again later.']);
+             FlashMessageHelper::flashError(  'An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            return view('error', ['message' => 'An unexpected error occurred. Please try again later.']);
+             FlashMessageHelper::flashError(  'An unexpected error occurred. Please try again later.');
         }
     }
     public function toggleDeptSelection($dept)
@@ -104,12 +103,10 @@ class LeaveCalender extends Component
             }
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -273,12 +270,10 @@ class LeaveCalender extends Component
             $this->calendar = $calendar;
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -290,12 +285,10 @@ class LeaveCalender extends Component
                 ->get();
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -309,12 +302,10 @@ class LeaveCalender extends Component
             $this->generateCalendar();
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -327,12 +318,10 @@ class LeaveCalender extends Component
             $this->generateCalendar();
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+           FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+           FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
     public function searchData()
@@ -354,10 +343,12 @@ class LeaveCalender extends Component
 
             if ($filterType === 'Me') {
                 $leaveTransactions = LeaveRequest::with('employee')
+                ->where('category_type', 'Leave')
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('emp_id', $employeeId)
                     ->where('status', 'approved')
+                    ->whereIn('cancel_status',['Re-applied','Pending','rejected'])
                     ->where(function ($query) use ($searchTerm) {
                         $query->where('emp_id', 'like', $searchTerm)
                             ->orWhereHas('employee', function ($query) use ($searchTerm) {
@@ -408,11 +399,9 @@ class LeaveCalender extends Component
             }
             return $leaveCount;
         } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+           FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+           FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
     protected function getTeamOnLeaveDataForDay($day)
@@ -436,32 +425,26 @@ class LeaveCalender extends Component
             $this->selectedDate = Carbon::createFromDate($this->year, $this->month, (int)$date)->format('Y-m-d');
             $this->loadLeaveTransactions($this->selectedDate, $this->filterCriteria);
         } catch (\Exception $e) {
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
-            Log::error('Error in dateClicked: ' . $e->getMessage());
+            FlashMessageHelper::flashError( 'An error occurred while processing your request. Please try again later.');
             return redirect()->back();
         }
     }
-
-
 
 
     public function render()
     {
         try {
             $holidays = $this->getHolidays();
-
             return view('livewire.leave-calender', [
                 'holidays' => $holidays,
                 'leaveTransactions' => $this->leaveTransactions,
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+           FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+           FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -481,12 +464,10 @@ class LeaveCalender extends Component
             return HolidayCalendar::whereDate('date', $clickedDate->toDateString())->get();
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+           FlashMessageHelper::flashError( 'An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+           FlashMessageHelper::flashError( 'An unexpected error occurred. Please try again later.');
         }
     }
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
@@ -566,7 +547,7 @@ class LeaveCalender extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured while calculating the no. of days.');
         }
     }
     private function getSessionNumber($session)
@@ -735,8 +716,7 @@ class LeaveCalender extends Component
             // Return file for download
             return response()->download($filePath, 'leave calendar.xlsx');
         } catch (\Exception $e) {
-            Log::error('Error generating Excel: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
 }

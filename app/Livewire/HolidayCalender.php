@@ -12,6 +12,7 @@
 // Models                          : HolidayCalendar
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use Carbon\Carbon;
 use Livewire\Component;
 use App\Models\HolidayCalendar;
@@ -36,10 +37,8 @@ class HolidayCalender extends Component
             $this->nextYear = $this->selectedYear + 1;
             $this->fetchCalendarData($this->selectedYear);
         } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in mount method: ' . $e->getMessage());
             // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while loading the calendar data. Please try again later.');
+           FlashMessageHelper::flashError('An error occurred while loading the calendar data. Please try again later.');
             // Redirect the user to a safe location
             return redirect()->back();
         }
@@ -55,10 +54,7 @@ class HolidayCalender extends Component
                 $this->fetchCalendarData($selected_Year);
             }
         } catch (\Exception $e) {
-            // Log the error
-            Log::error('Error in selectYear method: ' . $e->getMessage());
-            // Display a friendly error message to the user
-            session()->flash('error', 'An error occurred while updating the calendar data. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while updating the calendar data. Please try again later.');
             // Redirect the user to a safe location
             return redirect()->back();
         }
@@ -78,12 +74,10 @@ class HolidayCalender extends Component
     
             // Check if calendar data is empty
             if ($this->calendarData->isEmpty()) {
-                session()->flash('error', 'Calendar data not found for the selected year.');
+                FlashMessageHelper::flashError( 'Calendar data not found for the selected year.');
             }
         } catch (\Exception $e) {
-            // Handle the exception, log it, or display an error message
-            Log::error('Error fetching calendar data: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching calendar data. Please try again later.');
+            FlashMessageHelper::flashError( 'An error occurred while fetching calendar data. Please try again later.');
             $this->calendarData = [];
         }
     }

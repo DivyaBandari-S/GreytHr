@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\ManagerNotificationMail;
 use App\Mail\RegularisationApprovalMail;
 use App\Mail\RegularisationRejectionMail;
@@ -10,7 +11,7 @@ use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
+
 use Livewire\Component;
 
 class ViewRegularisationPendingNew extends Component
@@ -225,7 +226,7 @@ class ViewRegularisationPendingNew extends Component
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeApproveModal();
-        Session::flash('success', 'Regularisation Request approved successfully');
+        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
         $this->showAlert=true;
         $this->sendApprovalMail($id);
     }
@@ -277,7 +278,7 @@ class ViewRegularisationPendingNew extends Component
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeRejectModal();
-        Session::flash('success', 'Regularisation Request rejected successfully');
+        FlashMessageHelper::flashError('Regularisation Request rejected successfully');
         $this->showAlert=true;
         $this->sendRejectionMail($id);
     }

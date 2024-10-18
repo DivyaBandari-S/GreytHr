@@ -66,11 +66,11 @@
                         <div>
                             @if($leaveRequest->category_type == 'Leave')
                             <span>
-                                @if(strtoupper($leaveRequest->status) == 'APPROVED')
+                                @if(strtoupper($leaveRequest->status) === 'APPROVED')
 
                                 <span class="approvedStatus">{{ strtoupper($leaveRequest->status) }}</span>
 
-                                @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
+                                @elseif(strtoupper($leaveRequest->status) === 'REJECTED')
 
                                 <span class="rejectedStatus">{{ strtoupper($leaveRequest->status) }}</span>
 

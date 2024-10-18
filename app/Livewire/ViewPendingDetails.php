@@ -11,6 +11,7 @@
 // Models                          : EmployeeDetails,LeaveRequest
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApprovalNotification;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
@@ -35,7 +36,6 @@ class ViewPendingDetails extends Component
     public $leaveApplications = [];
     public $selectedYear;
     public $filter = '';
-    public $showAlert = false;
     public $index;
     public function mount()
     {
@@ -43,10 +43,7 @@ class ViewPendingDetails extends Component
         $this->selectedYear = Carbon::now()->format('Y');
         $this->fetchPendingLeaveApplications($this->filter = null);
     }
-    public function hideAlert()
-    {
-        $this->showAlert = false;
-    }
+
     public function fetchPendingLeaveApplications($filter = null)
     {
         try {
@@ -87,13 +84,13 @@ class ViewPendingDetails extends Component
             foreach ($this->leaveRequests as $leaveRequest) {
                 $leaveRequest->from_date = Carbon::parse($leaveRequest->from_date);
                 $leaveRequest->to_date = Carbon::parse($leaveRequest->to_date);
-            
+
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-            
+
                 $ccToJson = trim($leaveRequest->cc_to);
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
-            
+
                 // Collect all cc_to emp_ids
                 if (!empty($ccArray)) {
                     foreach ($ccArray as $cc) {
@@ -102,41 +99,38 @@ class ViewPendingDetails extends Component
                         }
                     }
                 }
-            
+
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'];
-            
+
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
-            
+
                     $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
-            
+
                     if ($fromDateYear == $this->selectedYear) {
                         $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
                     } else {
                         $leaveBalances = 0;
                     }
-            
+
                     $matchingLeaveApplications[] = [
                         'leaveRequest' => $leaveRequest,
                         'leaveBalances' => $leaveBalances,
                     ];
                 }
             }
-            
+
             // After the foreach, compare the collection with the logged-in emp_id
             $this->isLoggedInEmpInCcTo = in_array($employeeId, $allCcToEmpIds);
             $this->leaveApplications = $matchingLeaveApplications;
             $this->count = count($matchingLeaveApplications);
         } catch (\Illuminate\Database\QueryException $e) {
-            Log::error('A database query error occurred: ' . $e->getMessage());
-            session()->flash('error', 'Error while getting the data. Please try again.');
+           FlashMessageHelper::flashError('Error while getting the data. Please try again.');
         } catch (PDOException $e) {
-            Log::error('Database connection error occurred: ' . $e->getMessage());
-            session()->flash('error', 'Connection error . Please try again.');
+           FlashMessageHelper::flashError('Connection error . Please try again.');
         } catch (\Exception $e) {
-            Log::error('An unexpected error occurred: ' . $e->getMessage());
-            session()->flash('error', 'Connection error . Please try again.');
+           FlashMessageHelper::flashError('Connection error . Please try again.');
         }
     }
 
@@ -148,8 +142,7 @@ class ViewPendingDetails extends Component
             // Check if there are pending leave requests
             return $this->leaveRequests->where('status', 'Pending')->isNotEmpty();
         } catch (\Exception $e) {
-            Log::error('An error occurred win hasPendingLeave: ' . $e->getMessage());
-            session()->flash('error', 'Error while getting leave application. Please try again.');
+           FlashMessageHelper::flashError('Error while getting leave request. Please try again.');
         }
     }
 
@@ -250,30 +243,28 @@ class ViewPendingDetails extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
-            
             // Get employee email
             $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
-    
             $createdDate = Carbon::parse($leaveRequest->created_at);
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
-    
+
             if ($leaveRequest->status === 'approved') {
-                session()->flash('message', 'Leave application is already approved.');
+                FlashMessageHelper::flashWarning('Leave application is already approved.');
             } else {
                 if ($daysSinceCreation > 3 || $leaveRequest->status !== 'approved') {
                     $leaveRequest->status = 'approved';
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
-    
+                    FlashMessageHelper::flashSuccess('Leave application approved successfully.');
                     // Sending email to employee and CC emails
                     $applyingToDetails = json_decode($leaveRequest->applying_to, true);
                     $ccToDetails = json_decode($leaveRequest->cc_to, true);
-    
+
                     // Extract CC emails
                     $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
                     $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
-    
+
                     // Only send email if employee or CC emails are not empty
                     if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
                         // Send email to the main recipient (the employee)
@@ -281,7 +272,7 @@ class ViewPendingDetails extends Component
                             Mail::to($sendEmailToEmp)
                                 ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
                         }
-    
+
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
                             foreach ($ccEmails as $ccEmail) {
@@ -289,17 +280,13 @@ class ViewPendingDetails extends Component
                                     ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
                             }
                         }
-    
-                        $this->showAlert = true;
-                        session()->flash('message', 'Leave application approved successfully.');
                     }
                 }
             }
-    
+
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
-            Log::error('Error approving leave: ' . $e->getMessage());
-            session()->flash('error', 'Failed to approve leave application. Please try again.');
+            FlashMessageHelper::flashError('Failed to approve leave application. Please try again.');
         }
     }
 
@@ -319,7 +306,7 @@ class ViewPendingDetails extends Component
 
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'approved') {
-                session()->flash('message', 'Leave application is already approved.');
+                FlashMessageHelper::flashWarning('Leave application is already approved.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'approved') {
@@ -347,18 +334,36 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
-                    session()->flash('message', 'Leave cancel application approved successfully.');
-                    if ($sendEmailToEmp) {
-                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+                    FlashMessageHelper::flashSuccess('Leave cancel application approved successfully.');
+                    // Sending email to employee and CC emails
+                    $applyingToDetails = json_decode($leaveRequest->applying_to, true);
+                    $ccToDetails = json_decode($leaveRequest->cc_to, true);
+
+                    // Extract CC emails
+                    $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+                    $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
+
+                    // Only send email if employee or CC emails are not empty
+                    if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
+                        // Send email to the main recipient (the employee)
+                        if (!empty($sendEmailToEmp)) {
+                            Mail::to($sendEmailToEmp)
+                                ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
+                        }
+
+                        // Send emails to CC recipients with different content
+                        if (!empty($ccEmails)) {
+                            foreach ($ccEmails as $ccEmail) {
+                                Mail::to($ccEmail)
+                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            }
+                        }
+                        $this->fetchPendingLeaveApplications();
                     }
-                    $this->showAlert = true;
-                    $this->fetchPendingLeaveApplications();
                 }
             }
         } catch (\Exception $e) {
-            // Handle the exception
-            Log::error('Error approving leave: ' . $e->getMessage());
-            session()->flash('error', 'Failed to approve leave application. Please try again.');
+            FlashMessageHelper::flashError('Failed to approve leave application. Please try again.');
         }
     }
 
@@ -377,7 +382,7 @@ class ViewPendingDetails extends Component
 
             // Check if status is already approved
             if ($leaveRequest->cancel_status === 'rejecetd') {
-                session()->flash('message', 'Leave application is already rejected.');
+                FlashMessageHelper::flashWarning('Leave cancel application is already rejected.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved
                 if ($daysSinceCreation > 3 || $leaveRequest->cancel_status !== 'rejected') {
@@ -391,6 +396,7 @@ class ViewPendingDetails extends Component
                         ->first();
                     if ($matchingLeaveRequest) {
                         // Update the matching request status to 'rejected'
+                        $matchingLeaveRequest->cancel_status = 'rejected';
                         $matchingLeaveRequest->updated_at = now();
                         $matchingLeaveRequest->action_by = $employeeId;
                         $matchingLeaveRequest->save();
@@ -402,18 +408,37 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
-                    session()->flash('message', 'Leave cancel application approved successfully.');
-                    if ($sendEmailToEmp) {
-                        Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+                    FlashMessageHelper::flashSuccess('Leave cancel application rejected successfully.');
+                    // Sending email to employee and CC emails
+                    $applyingToDetails = json_decode($leaveRequest->applying_to, true);
+                    $ccToDetails = json_decode($leaveRequest->cc_to, true);
+
+                    // Extract CC emails
+                    $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+                    $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
+
+                    // Only send email if employee or CC emails are not empty
+                    if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
+                        // Send email to the main recipient (the employee)
+                        if (!empty($sendEmailToEmp)) {
+                            Mail::to($sendEmailToEmp)
+                                ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
+                        }
+
+                        // Send emails to CC recipients with different content
+                        if (!empty($ccEmails)) {
+                            foreach ($ccEmails as $ccEmail) {
+                                Mail::to($ccEmail)
+                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            }
+                        }
+                        $this->fetchPendingLeaveApplications();
                     }
-                    $this->showAlert = true;
-                    $this->fetchPendingLeaveApplications();
                 }
             }
         } catch (\Exception $e) {
             // Handle the exception
-            Log::error('Error approving leave: ' . $e->getMessage());
-            session()->flash('error', 'Failed to approve leave application. Please try again.');
+            FlashMessageHelper::flashError('Failed to approve leave application. Please try again.');
         }
     }
 
@@ -430,19 +455,35 @@ class ViewPendingDetails extends Component
             $leaveRequest->updated_at = now();
             $leaveRequest->action_by = $employeeId;
             $leaveRequest->save();
+            FlashMessageHelper::flashSuccess('Leave application rejected successfully.');
+            // Sending email to employee and CC emails
+            $applyingToDetails = json_decode($leaveRequest->applying_to, true);
+            $ccToDetails = json_decode($leaveRequest->cc_to, true);
 
-            session()->flash('message', 'Leave application rejected.');
-            // Send email notification
-            if ($sendEmailToEmp) {
-                Mail::to($sendEmailToEmp)->send(new LeaveApprovalNotification($leaveRequest));
+            // Extract CC emails
+            $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+            $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
+
+            // Only send email if employee or CC emails are not empty
+            if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
+                // Send email to the main recipient (the employee)
+                if (!empty($sendEmailToEmp)) {
+                    Mail::to($sendEmailToEmp)
+                        ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
+                }
+
+                // Send emails to CC recipients with different content
+                if (!empty($ccEmails)) {
+                    foreach ($ccEmails as $ccEmail) {
+                        Mail::to($ccEmail)
+                            ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                    }
+                }
             }
-            $this->showAlert = true;
             $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
-            // Log the error
-            Log::error($e);
             // Flash a message to the session
-            session()->flash('error_message', 'An error occurred while rejecting leave application.');
+            FlashMessageHelper::flashError('An error occurred while rejecting leave application.');
         }
     }
     // Method to handle search input change
@@ -454,9 +495,6 @@ class ViewPendingDetails extends Component
     }
     public function render()
     {
-        // Call fetchPendingLeaveApplications with $filter
-        $this->fetchPendingLeaveApplications($this->filter);
-
         return view('livewire.view-pending-details', [
             'leaveApplications' => $this->leaveApplications,
             'filter' => $this->filter,

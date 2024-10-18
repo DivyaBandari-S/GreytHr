@@ -12,6 +12,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
@@ -55,24 +56,20 @@ class ApprovedDetails extends Component
             $this->leaveBalances = LeaveBalances::getLeaveBalances($this->leaveRequest->emp_id, $this->selectedYear);
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
-                // Handle database query exceptions
-                Log::error("Database error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+
+                FlashMessageHelper::flashError( 'Database connection error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
-                session()->flash('emp_error', 'Please upload an image.');
+                FlashMessageHelper::flashError( 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
                 // Handle network request exceptions
-                Log::error("Network error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+                FlashMessageHelper::flashError( 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
                 // Handle database connection errors
-                Log::error("Database connection error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error. Please try again later.');
+                FlashMessageHelper::flashError( 'Database connection error. Please try again later.');
             } else {
                 // Handle other generic exceptions
-                Log::error("Error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+                FlashMessageHelper::flashError( 'Failed to register employee. Please try again later.');
             }
             // Redirect the user back to the registration page or any other appropriate action
             return redirect()->back();
@@ -238,7 +235,7 @@ class ApprovedDetails extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured please try again later.');
         }
     }
 
@@ -276,24 +273,18 @@ class ApprovedDetails extends Component
             $this->fetchLeaveApplications();
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
-                // Handle database query exceptions
-                Log::error("Database error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+               FlashMessageHelper::flashError( 'Database connection error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
-                session()->flash('emp_error', 'Please upload an image.');
+               FlashMessageHelper::flashError( 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
-                // Handle network request exceptions
-                Log::error("Network error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+
+               FlashMessageHelper::flashError( 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
-                // Handle database connection errors
-                Log::error("Database connection error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error. Please try again later.');
+
+               FlashMessageHelper::flashError( 'Database connection error. Please try again later.');
             } else {
-                // Handle other generic exceptions
-                Log::error("Error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+               FlashMessageHelper::flashError( 'Failed to register employee. Please try again later.');
             }
             // Redirect the user back to the registration page or any other appropriate action
             return redirect()->back();
@@ -326,24 +317,16 @@ class ApprovedDetails extends Component
             $this->leaveCount =  $this->leaveApplications->count();
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
-                // Handle database query exceptions
-                Log::error("Database error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+               FlashMessageHelper::flashError( 'Database connection error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
-                session()->flash('emp_error', 'Please upload an image.');
+               FlashMessageHelper::flashError( 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
-                // Handle network request exceptions
-                Log::error("Network error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+               FlashMessageHelper::flashError( 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
-                // Handle database connection errors
-                Log::error("Database connection error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error. Please try again later.');
+               FlashMessageHelper::flashError( 'Database connection error. Please try again later.');
             } else {
-                // Handle other generic exceptions
-                Log::error("Error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+               FlashMessageHelper::flashError( 'Failed to register employee. Please try again later.');
             }
             // Redirect the user back to the registration page or any other appropriate action
             return redirect()->back();
@@ -380,9 +363,7 @@ class ApprovedDetails extends Component
                 $filePathsJson = trim($this->leaveRequest->file_paths);
                 $this->leaveRequest->file_paths = is_array($filePathsJson) ? $filePathsJson : json_decode($filePathsJson, true);
             } catch (\Exception $e) {
-                Log::error('Error in JSON decoding: ' . $e->getMessage());
-                // Handle the error gracefully
-                // You can set an error message or take other actions here
+                FlashMessageHelper::flashError('An error occured while loading the page.');
             }
 
             // Pass the leaveRequest data and leaveBalances to the Blade view
@@ -394,24 +375,16 @@ class ApprovedDetails extends Component
             ]);
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {
-                // Handle database query exceptions
-                Log::error("Database error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error occurred. Please try again later.');
+               FlashMessageHelper::flashError( 'Database connection error occurred. Please try again later.');
             } elseif (strpos($e->getMessage(), 'Call to a member function store() on null') !== false) {
                 // Display a user-friendly error message for null image
-                session()->flash('emp_error', 'Please upload an image.');
+               FlashMessageHelper::flashError( 'Please upload an image.');
             } elseif ($e instanceof \Illuminate\Http\Client\RequestException) {
-                // Handle network request exceptions
-                Log::error("Network error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Network error occurred. Please try again later.');
+               FlashMessageHelper::flashError( 'Network error occurred. Please try again later.');
             } elseif ($e instanceof \PDOException) {
-                // Handle database connection errors
-                Log::error("Database connection error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Database connection error. Please try again later.');
+               FlashMessageHelper::flashError( 'Database connection error. Please try again later.');
             } else {
-                // Handle other generic exceptions
-                Log::error("Error registering employee: " . $e->getMessage());
-                session()->flash('emp_error', 'Failed to register employee. Please try again later.');
+               FlashMessageHelper::flashError( 'Failed to register employee. Please try again later.');
             }
             // Redirect the user back to the registration page or any other appropriate action
             return redirect()->back();
