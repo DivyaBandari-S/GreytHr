@@ -175,12 +175,12 @@ class EmployeesReview extends Component
             $loggedInEmpId = auth()->guard('emp')->user()->emp_id;
             $this->isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $companyIds = auth()->guard('emp')->user()->company_id;
-    
+
             // Ensure $companyIds is an array
             if (!is_array($companyIds)) {
                 $companyIds = [$companyIds]; // Wrap in an array if it's a single value
             }
-            
+
             // Retrieve team members' emp_ids where the logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where(function ($query) use ($companyIds) {
                 foreach ($companyIds as $companyId) {
@@ -189,7 +189,7 @@ class EmployeesReview extends Component
             })
             ->pluck('emp_id')
             ->toArray();
-            
+
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
@@ -200,15 +200,15 @@ class EmployeesReview extends Component
                           });
                 })
                 ->orderBy('created_at', 'desc');
-    
+
             // Execute the query
             $this->sendLeaveApplications = $query->get();
-            
+
             // Decode JSON fields for each leave application
             foreach ($this->sendLeaveApplications as $leaveRequest) {
                 $leaveRequest->applying_to = json_decode($leaveRequest->applying_to, true);
                 $leaveRequest->cc_to = json_decode($leaveRequest->cc_to, true);
-                
+
                 // Check if cc_to contains an entry with emp_id matching loginempid
                 if (isset($leaveRequest->cc_to)) {
                     foreach ($leaveRequest->cc_to as $cc) {
@@ -218,11 +218,11 @@ class EmployeesReview extends Component
                     }
                 }
             }
-    
+
             // Dump the entire collection to inspect
             $this->getEmpLeaveRequests();
             $this->getPendingLeaveRequest();
-            
+
             $tab = $request->query('tab');
 
             if ($tab === 'attendance') {
@@ -234,7 +234,7 @@ class EmployeesReview extends Component
                 $this->showleave = true;
                 $this->showattendance = false;
             }
-    
+
             // Reduce notification count by marking as read related to leave and leaveCancel
             $employeeId = auth()->guard('emp')->user()->emp_id;
             DB::table('notifications')
@@ -243,7 +243,7 @@ class EmployeesReview extends Component
                 })
                 ->whereIn('notification_type', ['leave', 'leaveCancel'])
                 ->delete();
-    
+
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
