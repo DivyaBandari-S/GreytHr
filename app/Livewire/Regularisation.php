@@ -341,7 +341,7 @@ class Regularisation extends Component
     
         // Fetch the regularisation record for the employee
         $regularisationRecord = RegularisationDates::where('emp_id', $employeeId)
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->where('is_withdraw', 0)
             ->get(['regularisation_entries']);  // Get only the JSON field
     
@@ -743,26 +743,24 @@ public function historyButton()
             $this->reportingmanagerfullName=EmployeeDetails::where('emp_id',$this->reportingmanager)->first();
             $this->heademployees = EmployeeDetails::whereIn('emp_id', [ $this->reportingmanagerinloop,$this->headreportingmanager])->get();
 
-
             $employeeDetails1 = $empid ? EmployeeDetails::where('emp_id', $empid)->first() : null;
            
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $subordinateEmployeeIds = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->pluck('first_name', 'last_name')
                 ->toArray();
-                $pendingRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
+            $pendingRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
                 ->where('regularisation_dates.status', 5)
                 ->where('regularisation_dates.is_withdraw', 0)
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code')
                 ->select('regularisation_dates.*', 'status_types.status_name') // Select fields from both tables
                 ->orderByDesc('regularisation_dates.updated_at')
                 ->get();
-           
+
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
-        
-    
+
             $historyRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
                 ->whereIn('regularisation_dates.status', [2, 4, 3]) // Use numeric status codes
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types
@@ -774,12 +772,12 @@ public function historyButton()
                 return $regularisation->regularisation_entries !== "[]";
             });
           
-            $manager = EmployeeDetails::select('manager_id')->distinct()->get();   
-            $this->data10 = RegularisationDates::where('status', 'pending')->get();
+            $manager = EmployeeDetails::select('manager_id')->distinct()->get();
+            $this->data10 = RegularisationDates::where('status', 5)->get();
             $this->manager1 = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
             $this->data = RegularisationDates::where('is_withdraw', '0')->count();
             $this->data8 = RegularisationDates::where('is_withdraw', '0')->get();
-            $this->data1 = RegularisationDates::where('status', 'pending')->first();
+            $this->data1 = RegularisationDates::where('status', 5)->first();
             $this->data4 = RegularisationDates::where('is_withdraw', '1')->count();
             $this->data7 = RegularisationDates::all();
             $employee = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
