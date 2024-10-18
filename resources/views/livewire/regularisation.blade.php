@@ -1357,17 +1357,20 @@ $lastItem = end($regularisationEntries); // Get the last item
         @if($numberOfEntries>1)
         <span style="font-size: 11px;">
 
-            <span style="font-size: 11px; font-weight: 500;"></span>
-
-            {{ date('(d', strtotime($firstItem['date'])) }} -
-
-
-            <span style="font-size: 11px; font-weight: 500;"></span>
-
-            @if (!empty($lastItem['date']))
-            {{ date('d)', strtotime($lastItem['date'])) }} {{ date('M Y', strtotime($lastItem['date'])) }}
+        @foreach ($regularisationEntries as $key => $entry)
+        <span style="font-size: 11px; font-weight: 500;">
+            <!-- Display the date in (d format -->
+            {{ date('d', strtotime($entry['date'])) }}{{ date(' M Y', strtotime($entry['date'])) }}
+            
+            @if ($key !== count($regularisationEntries) - 1)
+                <!-- Display the separator for entries in between, without comma for the last entry -->
+                ,
             @endif
+        </span>
+    @endforeach
 
+    <!-- For the last item, display the formatted date -->
+                
 
         </span>
         @else

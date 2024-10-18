@@ -11,6 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails,SwipeRecord
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\SwipeRecord;
 use App\Models\LeaveRequest;
@@ -216,7 +217,9 @@ public function checkshift()
             return response()->download($filePath, 'late_employees.xlsx');
         } catch (\Exception $e) {
             Log::error('Error generating Excel report for late arrivals: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the Excel report. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
+   
+            
             return redirect()->back();
         }
     }
@@ -286,7 +289,8 @@ public function checkshift()
             return response()->download($filePath, 'employees_on_time.xlsx');
         } catch (\Exception $e) {
             Log::error('Error generating Excel report for early/on-time arrivals: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the Excel report. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
+            
             return redirect()->back();
         }
     }
@@ -334,7 +338,7 @@ public function checkshift()
             return response()->download($filePath, 'employees_on_leave.xlsx');
         } catch (\Exception $e) {
             Log::error('Error generating Excel report for leave: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the Excel report. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
             return redirect()->back();
         }
     }
@@ -400,7 +404,7 @@ public function checkshift()
             return response()->download($filePath, 'absent_employees.xlsx');
         } catch (\Exception $e) {
             Log::error('Error generating Excel report for absent: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while generating the Excel report. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
             return redirect()->back();
         }
     }
@@ -420,7 +424,7 @@ public function checkshift()
             })->get();
         } catch (\Exception $e) {
             Log::error('Error performing search: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while performing the search. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while performing the search. Please try again.');
         }
     }
     //This function will help us to get the details of the status of all the employees based on the particular date
@@ -432,7 +436,8 @@ public function checkshift()
             $this->currentDate = $this->from_date;
         } catch (\Exception $e) {
             Log::error('Error updating date: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating the date. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while updating the date. Please try again.');
+           
         }
     }
     //After seraching about any particular employee it will remove the data from the search bar
@@ -443,7 +448,8 @@ public function checkshift()
             $this->results = [];
         } catch (\Exception $e) {
             Log::error('Error clearing search: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while clearing the search. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while clearing the search. Please try again.');
+            
         }
     }
     public function openSelector()
