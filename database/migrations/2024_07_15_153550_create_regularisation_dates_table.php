@@ -22,7 +22,7 @@ return new class extends Migration
             $table->dateTime('approved_date')->nullable();
             $table->dateTime('rejected_date')->nullable();
             $table->dateTime('withdraw_date')->nullable();
-            $table->enum('status', ['approved', 'pending','rejected'])->default('pending');
+            $table->smallInteger('status')->default(5);
             $table->string('approved_by')->nullable();
             $table->string('rejected_by')->nullable();
             $table->string('mail_sent')->nullable();

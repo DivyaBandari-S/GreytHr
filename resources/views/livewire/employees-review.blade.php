@@ -151,7 +151,7 @@
                 <div class="row m-0 p-0 mt-3">
                     <div class="search-container d-flex align-items-end justify-content-end p-1">
                         <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchApprovedLeave" id="searchButton" style="border:none;outline:none;background:#fff;border-radius:5px;padding:1px 10px;">
+                        <button wire:click="searchApprovedLeave" id="searchButtonReports">
                             <i class="fas fa-search" style="width:7px;height:7px;"></i>
                         </button>
                     </div>
@@ -220,12 +220,11 @@
                             <!-- Add other details based on your leave request structure -->
 
                             <div class="col accordion-content">
-                                @if($arrl->status=='approved')
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status}}</span>
-                                @elseif($arrl->status=='rejected')
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status}}</span>
-                                @elseif($arrl->approver_remarks=='Forwarded to HR'&&$arrl->status=='pending')
-                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:yellow;text-transform:uppercase;">FORWARDED</span>
+                                @if($arrl->status==2)
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status_name}}</span>
+                                @elseif($arrl->status==3)
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status_name}}</span>
+ 
 
                                 @endif
                             </div>
