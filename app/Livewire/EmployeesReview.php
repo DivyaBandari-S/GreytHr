@@ -73,7 +73,7 @@ class EmployeesReview extends Component
             $selectedYear = $this->selectedYear;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             //query to fetch the approved leave appplications............
-            $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
+            $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.leave_status', [2,3])
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
@@ -83,12 +83,12 @@ class EmployeesReview extends Component
                     $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('leave_applications.leave_status', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
                 })
                 ->where(function ($query) {
-                    $query->whereIn('leave_applications.status', ['approved', 'rejected'])
-                        ->where('leave_applications.cancel_status', '!=', 'Pending Leave Cancel'); // Exclude Pending cancel status
+                    $query->whereIn('leave_applications.leave_status', [2,3])
+                        ->where('leave_applications.cancel_status', '!=', 7); // Exclude Pending cancel status
                 })
                 ->orderBy('created_at', 'desc')
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
@@ -140,7 +140,7 @@ class EmployeesReview extends Component
             // Query leave requests with search filter
             $query = LeaveRequest::with('employee')
                 ->where('emp_id', $employeeId)
-                ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
+                ->whereIn('leave_status', [2,3,4])
                 ->orderBy('created_at', 'desc');
 
             // Apply search filter if searchQuery is not empty
@@ -151,7 +151,7 @@ class EmployeesReview extends Component
                             ->orWhere('last_name', 'LIKE', '%' . $this->searchQuery . '%');
                     })
                         ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
+                        ->orWhere('leave_status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
 
@@ -194,10 +194,10 @@ class EmployeesReview extends Component
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('leave_status', 5)
                           ->orWhere(function ($query) {
-                              $query->where('status', 'approved')
-                                    ->where('cancel_status', 'Pending Leave Cancel');
+                              $query->where('leave_status', 2)
+                                    ->where('cancel_status', 7);
                           });
                 })
                 ->orderBy('created_at', 'desc');
@@ -273,10 +273,10 @@ class EmployeesReview extends Component
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
-                            $query->where('status', 'approved')
-                                ->where('cancel_status', 'Pending Leave Cancel');
+                            $query->where('leave_status', 2)
+                                ->where('cancel_status', 7);
                         });
                 })
                 ->orderBy('created_at', 'desc');

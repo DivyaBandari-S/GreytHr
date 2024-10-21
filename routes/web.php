@@ -238,7 +238,6 @@ Route::middleware(['auth:finance', 'handleSession'])->group(function () {
 
 Route::middleware(['auth:it', 'handleSession'])->group(function () {
     Route::get('/itPage', AuthChecking::class)->name('IT-requests');
-    Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
     Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
 });
 

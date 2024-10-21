@@ -562,7 +562,7 @@ class LeaveApplyPage extends Component
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('category_type', 'Leave')
-                ->whereIn('status', ['approved', 'Pending'])
+                ->whereIn('leave_status', [2, 5])
                 ->get();
 
             // Iterate over each leave request to format the dates and check for overlaps
@@ -592,8 +592,8 @@ class LeaveApplyPage extends Component
                 ->where('leave_type', $this->leave_type)
                 ->whereNotIn('leave_type', ['Loss Of Pay'])
                 ->where('category_type', 'Leave')
-                ->whereIn('status', ['approved', 'Pending'])
-                ->whereIn('cancel_status', ['rejected', 'Re-applied', 'Pending'])
+                ->whereIn('leave_status', [2, 5])
+                ->whereIn('cancel_status', [5,3,6])
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
@@ -676,8 +676,8 @@ class LeaveApplyPage extends Component
                 ->where('category_type', 'Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
-                ->whereIn('status', ['approved', 'Pending'])
-                ->whereIn('cancel_status', ['rejected', 'Re-applied', 'Pending'])
+                ->whereIn('leave_status', [2,5])
+                ->whereIn('cancel_status', [3,6,5])
                 ->get();
 
             $totalLeaveDays = 0;

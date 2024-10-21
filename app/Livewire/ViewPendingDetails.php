@@ -51,8 +51,8 @@ class ViewPendingDetails extends Component
 
             // Base query for fetching leave applications
             $query = LeaveRequest::where(function ($query) {
-                $query->where('leave_applications.status', 'Pending')
-                    ->orWhere('leave_applications.cancel_status', 'Pending Leave Cancel');
+                $query->where('leave_applications.leave_status', 5)
+                    ->orWhere('leave_applications.cancel_status', 7);
             })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->orderBy('leave_applications.created_at', 'desc');
@@ -140,7 +140,7 @@ class ViewPendingDetails extends Component
     {
         try {
             // Check if there are pending leave requests
-            return $this->leaveRequests->where('status', 'Pending')->isNotEmpty();
+            return $this->leaveRequests->where('leave_status', 5)->isNotEmpty();
         } catch (\Exception $e) {
            FlashMessageHelper::flashError('Error while getting leave request. Please try again.');
         }
@@ -305,7 +305,7 @@ class ViewPendingDetails extends Component
             $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
 
             // Check if status is already approved
-            if ($leaveRequest->cancel_status === 'approved') {
+            if ($leaveRequest->cancel_status === 5) {
                 FlashMessageHelper::flashWarning('Leave application is already approved.');
             } else {
                 // Check if days since creation is more than 3 days or status is not yet approved

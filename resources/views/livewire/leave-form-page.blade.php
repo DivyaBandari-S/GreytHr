@@ -173,8 +173,6 @@
                            </div>
                            @php
                            $statusMap = [
-                           0 => 'Active',
-                           1 => 'InActive',
                            2 => 'Approved',
                            3 => 'Rejected',
                            4 => 'Withdrawn',
@@ -182,7 +180,7 @@
                            6=> 'Re-applied',
                            7 => 'Pending Leave Cancel'
                            ];
-                           $statusText = $statusMap[$leaveRequest->status] ?? 'Unknown';
+                           $statusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
                            @endphp
                            <!-- Add other details based on your leave request structure -->
                            @if(($leaveRequest->category_type === 'Leave') )
@@ -279,7 +277,7 @@
             <div id="historyButton" class="historyContent {{ $activeSection === 'historyButton' ? '' : 'd-none;' }} row rounded mt-3">
                @if($this->leaveRequests->isNotEmpty())
 
-               @foreach($this->leaveRequests->whereIn('status', ['approved', 'rejected','Withdrawn']) as $leaveRequest)
+               @foreach($this->leaveRequests as $leaveRequest)
 
                <div class="containerWidth mt-4">
 
@@ -330,7 +328,7 @@
                            7 => 'Pending Leave Cancel'
                            ];
                            // Get the text representation for the status and cancel status
-                           $leaveStatusText = $statusMap[$leaveRequest->status] ?? 'Unknown';
+                           $leaveStatusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
                            $cancelStatusText = $statusMap[$leaveRequest->cancel_status] ?? 'Unknown';
                            @endphp
 

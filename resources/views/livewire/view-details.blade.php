@@ -24,25 +24,13 @@
                         @if($leaveRequest->category_type == 'Leave')
                         <div class="field">
                             <span class="normalTextValue">
-                                @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
-                                Withdrawn by
-                                @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
-                                Approved by
-                                @else
-                                Rejected by
-                                @endif
+                                Applied by
                             </span>
                             <br>
-                            @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
+                            @if(!empty($leaveRequest['emp_id']))
                             <span class="normalText">
-                                {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
+                                {{ ucwords(strtoupper($leaveRequest['emp_id'] ))}}
                             </span>
-                            @elseif(!empty($leaveRequest['applying_to']))
-                            @foreach($leaveRequest['applying_to'] as $applyingTo)
-                            <span class="normalText">
-                                {{ ucwords(strtoupper($applyingTo['report_to'] ))}}
-                            </span>
-                            @endforeach
                             @endif
                         </div>
                         @else
