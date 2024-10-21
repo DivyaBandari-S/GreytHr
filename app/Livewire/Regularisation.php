@@ -432,7 +432,6 @@ class Regularisation extends Component
                 }
                 $calendar[] = $week;
             }
-    
             $this->calendar = $calendar;
         } catch (\Exception $e) {
             Log::error('Error in generateCalendar method: ' . $e->getMessage());
@@ -693,7 +692,7 @@ public function historyButton()
             $this->withdrawModal=false;
             FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn  successfully');
            
-            
+
         } catch (\Exception $ex) {
             FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
           
@@ -732,7 +731,7 @@ public function historyButton()
             if($this->istogglehigherManagers==true)
             {
                 $this->reportingmanager = $this->reportingmanager;
-              
+
             }
             else
             {
