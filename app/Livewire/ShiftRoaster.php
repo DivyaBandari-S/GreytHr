@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\LeaveRequest;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -41,6 +42,7 @@ class ShiftRoaster extends Component
 
     public $nextMonthWithNextYear;
 
+    public $selectedMonthWithoutFormat;
     public $attendanceYear;
     public $previousMonthWithCurrentYear;
 
@@ -56,6 +58,7 @@ class ShiftRoaster extends Component
         $this->nextMonth = now()->addMonth(1)->format('F'); // Next month
         $this->currentYear = $currentDate->year;
         $this->selectedMonth=now()->format('F');
+        $this->selectedMonthWithoutFormat=now()->format('n');
         
     }
     
@@ -166,12 +169,43 @@ class ShiftRoaster extends Component
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
         $currentMonth=$this->selectedMonth;
+        $currentMonthWithoutFormat=$this->selectedMonthWithoutFormat;
         $currentYear = date('Y');  
         $year = $currentYear;
         $employees=EmployeeDetails::where('manager_id',$loggedInEmpId)->where('employee_status','active')->select('emp_id', 'first_name', 'last_name','job_role','job_location','shift_type')->get();
+        $employeeIds = $employees->pluck('emp_id')->toArray();
         $this->holiday = HolidayCalendar::where('month',$currentMonth)
         ->where('year', $year)
         ->get('date');
+        $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+        ->where('leave_applications.status', 'approved')
+        ->whereIn('leave_applications.emp_id', $employeeIds)
+        ->whereDate('from_date', '>=', $year . '-' . $currentMonthWithoutFormat . '-01') // Dynamically set year and month
+        ->whereDate('to_date', '<=', $year . '-' . $currentMonthWithoutFormat . '-31') // Dynamically set year and month
+        ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name'])
+        ->mapWithKeys(function ($leaveRequest) {
+            $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
+            $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+            $number_of_days = $fromDate->diffInDays($toDate) + 1;
+            $dates = [];
+            for ($i = 0; $i < $number_of_days; $i++) {
+                $dates[] = $fromDate->copy()->addDays($i)->toDateString();
+            }
+            return [
+                $leaveRequest->emp_id => [
+                    'emp_id' => $leaveRequest->emp_id,
+                    'dates' => $dates,
+                ],
+            ];
+        }); 
+        $leaveDates = [];
+        foreach ($approvedLeaveRequests1 as $emp_id => $leaveRequest) {
+            foreach ($leaveRequest['dates'] as $date) {
+                $leaveDates[$emp_id][] = $date;
+            }
+        }
+       
+      
         $count_of_holiday=count($this->holiday);
         if($this->searching==1)
         {
@@ -194,6 +228,6 @@ class ShiftRoaster extends Component
         {
             $filteredEmployees=$employees;
         }
-        return view('livewire.shift-roaster',['Employees'=>$filteredEmployees,'Holiday'=> $this->holiday,'CountOfHoliday'=>$count_of_holiday,'Month'=>$currentMonth]);
+        return view('livewire.shift-roaster',['Employees'=>$filteredEmployees,'Holiday'=> $this->holiday,'CountOfHoliday'=>$count_of_holiday,'Month'=>$currentMonth,'ApprovedLeaveRequests1'=>$approvedLeaveRequests1]);
     }
 }

@@ -97,10 +97,10 @@ class LeaveFormPage extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->combinedRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('status', 5)
                         ->orWhere(function ($query) {
-                            $query->where('status', 'approved')
-                                ->where('cancel_status', 'Pending Leave Cancel');
+                            $query->where('status', 2)
+                                ->where('cancel_status', 7);
                         });
                 })
                 ->orderBy('created_at', 'desc')

@@ -24,8 +24,8 @@ return new class extends Migration
             $table->json('applying_to');
             $table->string(column: 'action_by')->nullable();
             $table->json('cc_to')->nullable();
-            $table->string('status')->default('Pending');
-            $table->string('cancel_status')->default('Pending');
+            $table->smallInteger('status')->default(5);
+            $table->smallInteger('cancel_status')->default(5);
             $table->string('leave_cancel_reason')->nullable();
             $table->string('contact_details')->nullable();
             $table->text('reason')->nullable();
