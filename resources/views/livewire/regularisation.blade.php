@@ -1600,7 +1600,7 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
     @endforeach
     @else
     <div class="history-box">
-        <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/review-list-empty.svg" style="margin-top:80px;">
+        <img src="{{ asset('images/pending.png') }}" style="margin-top:80px;">
         <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
             regularization records to view.</p>
     </div>
