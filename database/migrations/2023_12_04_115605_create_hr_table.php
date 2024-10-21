@@ -13,16 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hr', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('hr_emp_id')->unique()->nullable();
-            $table->string('emp_id');
+            $table->string('emp_id', 10);
             $table->string('employee_name')->nullable();
-            $table->binary('image')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->string('emergency_contact_number')->unique()->nullable();
             $table->string('password')->nullable();
-            $table->string('phone_number')->unique()->nullable();
-            $table->string('email')->unique()->nullable();
+            $table->tinyInteger('status')->default(1);
+            $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
             $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')

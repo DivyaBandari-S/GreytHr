@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('company_industry', 100)->nullable();
             $table->string('company_description')->nullable();
             $table->string('company_present_address')->nullable();
-            $table->string('company_perminent_address')->nullable();
+            $table->string('company_permanent_address')->nullable();
             $table->string('branch_locations')->nullable();
             $table->date('company_registration_date')->nullable();
             $table->string('company_registration_no', 100)->unique();

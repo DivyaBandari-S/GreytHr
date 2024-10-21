@@ -17,12 +17,9 @@ return new class extends Migration
             $table->string('ad_emp_id', 10)->unique()->nullable();
             $table->string('emp_id', 10);
             $table->string('employee_name', 100)->nullable();
-            $table->binary('image')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->string('emergency_contact_number', 20)->unique()->nullable();
-            $table->string('password',100)->nullable();
-            $table->string('phone_number', 20)->unique()->nullable();
-            $table->string('email', 200)->unique()->nullable();
+            $table->string('password')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
             $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
