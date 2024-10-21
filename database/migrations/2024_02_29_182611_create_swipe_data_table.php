@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendance_periods', function (Blueprint $table) {
-            $table->id();
+        Schema::create('swipe_data', function (Blueprint $table) {
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('emp_id', 10);
+            $table->string('direction', 20);
+            $table->timestamp('DownloadDate');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendance_periods');
+        Schema::dropIfExists('swipedata');
     }
 };

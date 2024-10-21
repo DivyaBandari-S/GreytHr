@@ -16,9 +16,9 @@ return new class extends Migration
     {
         Schema::create('emp_sub_departments', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            $table->string('sub_dept_id',10)->unique();
-            $table->string('sub_department',100);
-            $table->string('dept_id',10);
+            $table->string('sub_dept_id', 10)->unique();
+            $table->string('sub_department', 100);
+            $table->string('dept_id', 10);
             $table->foreign('dept_id')->references('dept_id')->on('emp_departments')->onDelete('cascade');
             $table->timestamps();
         });
