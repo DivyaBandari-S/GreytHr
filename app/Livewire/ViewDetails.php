@@ -29,7 +29,7 @@ class ViewDetails extends Component
     public $employeeId;
     public $leaveRequestId;
     public $full_name;
-    public  $firstName;
+    public  $fullName;
     public $selectedYear;
     public $employeeDetails = [];
     public $leaveRequest;
@@ -43,7 +43,7 @@ class ViewDetails extends Component
             $this->selectedYear = Carbon::now()->format('Y');
             // Call the getLeaveBalances function to get leave balances
             $this->leaveRequest->leaveBalances = LeaveBalances::getLeaveBalances($this->leaveRequest->emp_id, $this->selectedYear);
-            $this->firstName = $this->leaveRequest->employee->first_name . ' ' . $this->leaveRequest->employee->last_name;
+            $this->fullName = $this->leaveRequest->employee->first_name . ' ' . $this->leaveRequest->employee->last_name;
             $this->leaveRequest->from_date = Carbon::parse($this->leaveRequest->from_date);
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {
@@ -248,6 +248,7 @@ class ViewDetails extends Component
         // Pass the leaveRequest data and leaveBalances to the Blade view
         return view('livewire.view-details', [
             'leaveRequest' => $this->leaveRequest,
+            'fullName' => $this->fullName
         ]);
     }
 }
