@@ -18,6 +18,7 @@ use App\Services\GoogleDriveService;
 use Livewire\Features\SupportFileUploads\FileNotPreviewableException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\FlashMessageHelper;
 
 class ProfileInfo extends Component
 {
@@ -36,29 +37,45 @@ class ProfileInfo extends Component
     public  $last_working_day;
     public $comments;
     public $signature;
+    public $isResigned;
     public $showAlert = false;
     public $isUploading = false;
     protected $rules = [
         'resignation_date' => 'required|date|after_or_equal:today',
-        'last_working_day' => 'required|date|after_or_equal:resignation_date',
+        // 'last_working_day' => 'required|date|after_or_equal:resignation_date',
         'reason' => 'required|string|max:255',
-        'comments' => 'nullable|string',
-        'signature' => 'required|file|mimes:png,jpg,jpeg,pdf|max:1024',
+        // 'comments' => 'nullable|string',
+        'signature' => 'nullable|file|mimes:jpg,jpeg,png,pdf|:1024',
     ];
     // Custom validation messages (optional)
     protected $messages = [
-        'resignation_date.required' => 'Resignation date must be today or later.',
+        'resignation_date.after_or_equal' => 'Resignation date must be today or later.',
+        'resignation_date.required' => 'Resignation date is required.',
         'last_working_day.required' => 'Last working day must be the same as or after the resignation date.',
         'reason' => 'Reason required',
-        'signature' => 'Signature required'
+        'signature.max' => 'Signature field must not be greater than 1 MB.',
+        'signature.mimes' => 'Signature field must be a file of type: jpg, jpeg, png, pdf, doc, docx.'
     ];
     public function validateFields($propertyName)
     {
         $this->validateOnly($propertyName);
     }
+    public function updatedSignature()
+    {
+        $this->validateOnly('signature');
+    }
     public function mount()
     {
         $this->updateProfile();
+        $empId = Auth::guard('emp')->user()->emp_id;
+        $resig_requests=EmpResignations::where('emp_id', $empId)->where('status','Pending')->first();
+
+        // if($resig_requests->status=='Pending'){
+        //     $this->isResigned='pending';
+        // }else{
+        //     $this->isResigned='approved';
+        // }
+
     }
 
     public function updateProfile()
@@ -89,7 +106,7 @@ class ProfileInfo extends Component
 
             if ($this->image) {
 
-                $imagePath = base64_encode (file_get_contents($this->image->getRealPath()));
+                $imagePath = base64_encode(file_get_contents($this->image->getRealPath()));
                 $employee->image = $imagePath;
 
                 $employee->save();
@@ -98,7 +115,7 @@ class ProfileInfo extends Component
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation exceptions
-            session()->flash('error', 'The uploaded file must be an image' );
+            session()->flash('error', 'The uploaded file must be an image');
             $this->showAlert = true;
         } catch (\Exception $e) {
 
@@ -121,32 +138,47 @@ class ProfileInfo extends Component
         $this->validate();
 
         // Manually validate the file size
-        if ($this->signature) {
-            $fileSizeKB = $this->signature->getSize() / 1024; // Convert bytes to KB
-            if ($fileSizeKB < 10 || $fileSizeKB > 20) {
-                $this->addError('signature', 'The signature must be between 10KB and 20KB.');
-                return;
-            }
-            $signaturePath = $this->signature->store('signatures');
-        } else {
-            $signaturePath = null;
-        }
 
         try {
+
+            $fileContent = null;
+            $mime_type = null;
+            $file_name = null;
+
+            if ($this->signature) {
+                $fileContent = file_get_contents($this->signature->getRealPath());
+
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->signature->getRealPath(),
+                    ]);
+                    session()->flashError('error', 'Failed to read the uploaded file.');
+                    return;
+                }
+                // Check if the file content is too large
+                $mime_type = $this->signature->getMimeType();
+                $file_name = $this->signature->getClientOriginalName();
+
+            }
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             // Create a new EmpResignation record
             $data = EmpResignations::create([
                 'emp_id' => $employeeId,
                 'resignation_date' => $this->resignation_date,
-                'last_working_day' => $this->last_working_day,
+                'file_name' => $file_name,
+                'mime_type' => $mime_type,
+                // 'last_working_day' => $this->last_working_day,
                 'reason' => $this->reason,
-                'comments' => $this->comments,
-                'signature' => $signaturePath,
+                // 'comments' => $this->comments,
+                'signature' => $fileContent,
             ]);
-            Log::info('Resignation details submitted:', $data->toArray());
-            session()->flash('success', 'Resignation details have been submitted successfully.');
+            // Log::info('Resignation details submitted:', $data->toArray());
+            FlashMessageHelper::flashSuccess ("Resignation details have been submitted successfully.");
+            // session()->flash('success', 'Resignation details have been submitted successfully.');
             $this->showAlert = true;
             $this->resetInputFields();
+           $this->showModal = false;
         } catch (QueryException $e) {
             if ($e->getCode() == '23000') { // Integrity constraint violation code
                 // Check if the error message contains 'Duplicate entry'
@@ -179,11 +211,17 @@ class ProfileInfo extends Component
 
     public function resetInputFields()
     {
+
         $this->resignation_date = '';
         $this->reason = '';
-        $this->last_working_day = '';
-        $this->comments = '';
         $this->signature = '';
+        $this->resetErrorBag();
+    }
+    public function closeModel(){
+
+        $this->showModal = false;
+        $this->reset(['resignation_date', 'reason', 'signature']);
+        $this->resetErrorBag();
     }
     public function closeMessage()
     {
