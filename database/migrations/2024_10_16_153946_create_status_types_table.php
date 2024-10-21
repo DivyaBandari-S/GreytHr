@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('status_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('status_name')->unique();
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('status_name', 20)->unique();
             $table->smallInteger('status_code')->unique();
             $table->timestamps();
         });
