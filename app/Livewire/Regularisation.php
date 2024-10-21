@@ -341,7 +341,7 @@ class Regularisation extends Component
     
         // Fetch the regularisation record for the employee
         $regularisationRecord = RegularisationDates::where('emp_id', $employeeId)
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->where('is_withdraw', 0)
             ->get(['regularisation_entries']);  // Get only the JSON field
     
@@ -775,11 +775,11 @@ public function historyButton()
             });
           
             $manager = EmployeeDetails::select('manager_id')->distinct()->get();   
-            $this->data10 = RegularisationDates::where('status', 'pending')->get();
+            $this->data10 = RegularisationDates::where('status', 5)->get();
             $this->manager1 = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
             $this->data = RegularisationDates::where('is_withdraw', '0')->count();
             $this->data8 = RegularisationDates::where('is_withdraw', '0')->get();
-            $this->data1 = RegularisationDates::where('status', 'pending')->first();
+            $this->data1 = RegularisationDates::where('status', 5)->first();
             $this->data4 = RegularisationDates::where('is_withdraw', '1')->count();
             $this->data7 = RegularisationDates::all();
             $employee = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
