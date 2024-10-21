@@ -27,6 +27,14 @@ class TimeSheet extends Model
         'date_and_day_with_tasks' => 'array',
     ];
 
+
+    public function approvalStatusForManager()
+    {
+        return $this->belongsTo(StatusType::class, 'approval_status_for_manager', 'status_code');
+    }
+
+
+
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
