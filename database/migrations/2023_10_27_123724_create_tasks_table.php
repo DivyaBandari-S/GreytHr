@@ -14,16 +14,16 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id', 10);
-            $table->string('task_name')->nullable();
+            $table->string('task_name',100)->nullable();
             $table->string('assignee');
             $table->enum('priority', ['High', 'Medium', 'Low']);
-            $table->string('due_date', 10);
+            $table->date('due_date');
             $table->string('reopened_date', 10)->nullable();
             $table->string('tags', 100)->nullable();
             $table->string('client_id', 20)->nullable();
             $table->string('project_name', 100)->nullable();
             $table->string('followers')->nullable();
-            $table->string('subject')->nullable();
+            $table->string('subject',100)->nullable();
             $table->text('description')->nullable();
             $table->binary('file_path')->nullable();
             $table->string('file_name')->nullable();

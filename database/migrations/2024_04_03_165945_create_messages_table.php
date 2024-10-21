@@ -12,25 +12,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('chating_id')->constrained()->cascadeOnDelete();
-
-            $table->string('sender_id')->nullable();// or uuid()
-            $table->foreign('sender_id')->references('emp_id')->on('employee_details')->nullOnDelete();
-
-            $table->string('receiver_id')->nullable();// or uuid()
-            $table->foreign('receiver_id')->references('emp_id')->on('employee_details')->nullOnDelete();
-
-
+            $table->smallInteger('id')->autoIncrement();
+            $table->foreignId('chating_id', 10)->constrained()->cascadeOnDelete();
+            $table->string('sender_id', 10)->nullable(); // or uuid()
+            $table->foreign('sender_id', 10)->references('emp_id')->on('employee_details')->nullOnDelete();
+            $table->string('receiver_id', 10)->nullable(); // or uuid()
+            $table->foreign('receiver_id', 10)->references('emp_id')->on('employee_details')->nullOnDelete();
             $table->timestamp('read_at')->nullable();
-
             //delete actions
             $table->timestamp('receiver_deleted_at')->nullable();
             $table->timestamp('sender_deleted_at')->nullable();
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
             $table->binary('file_path')->nullable();
-            $table->text('body')->nullable();
+            $table->longText('body')->nullable();
             $table->timestamps();
         });
         // Schema::create('messages', function (Blueprint $table) {

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('set_time_for_emails', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('queue')->index(); // Name of the queue the job belongs to
             $table->longText('payload'); // Serialized representation of the job and its data
             $table->unsignedTinyInteger('attempts')->default(0); // Number of attempts made to process the job
