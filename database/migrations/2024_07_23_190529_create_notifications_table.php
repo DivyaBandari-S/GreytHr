@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->string('emp_id');
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('emp_id',10);
             $table->integer('chatting_id')->nullable();
-            $table->string('task_name')->nullable();
-            $table->string('assignee')->nullable();
+            $table->string('task_name',100)->nullable();
+            $table->string('assignee',50)->nullable();
             $table->string('leave_reason')->nullable();
             $table->string('leave_status')->default('Pending');
             $table->string('applying_to')->nullable();

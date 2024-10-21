@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
 use App\Models\LeaveRequest;
+use App\Models\StatusType;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -260,14 +261,23 @@ class LeaveFormPage extends Component
                 throw new \Exception("Leave request not found.");
             }
 
-            // Update status to 'Withdrawn'
-            $leaveRequest->status = 'Withdrawn';
+            // Retrieve the status code for 'Withdrawn' from StatusType
+            $withdrawnStatus = StatusType::where('status_name', 'Withdrawn')->first();
+
+            // Check if the status code exists
+            if (!$withdrawnStatus) {
+                throw new \Exception("Withdrawn status not found.");
+            }
+
+            // Update status to the corresponding status code
+            $leaveRequest->status = $withdrawnStatus->status_code;
             $leaveRequest->updated_at = now();
             $leaveRequest->save();
 
             // Decode the JSON data from applying_to to get the email
             $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
             $applyingToEmail = null;
+
             // Check if the array is not empty and access the email from the first element
             if (!empty($applyingToDetailsArray) && isset($applyingToDetailsArray[0]['email'])) {
                 $applyingToEmail = $applyingToDetailsArray[0]['email']; // Access the email
@@ -278,6 +288,7 @@ class LeaveFormPage extends Component
                 Mail::to($applyingToEmail)
                     ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
             }
+
             $this->hasPendingLeave();
             FlashMessageHelper::flashSuccess('Leave application Withdrawn.');
         } catch (\Exception $e) {

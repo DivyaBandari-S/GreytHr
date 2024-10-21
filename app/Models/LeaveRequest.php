@@ -39,7 +39,15 @@ class LeaveRequest extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
+    public function leaveStatusField()
+    {
+        return $this->belongsTo(StatusType::class, 'status', 'status_code');
+    }
 
+    public function leaveCancelStatusField()
+    {
+        return $this->belongsTo(StatusType::class, 'cancel_status', 'status_code');
+    }
     // Corrected relationship method name
     public function employeeDetails()
     {
