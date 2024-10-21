@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SwipeData extends Model
 {
     use HasFactory;
-    protected $table = 'swipedata';
+    protected $table = 'swipe_data';
     protected $fillable = ['emp_id', 'direction', 'DownloadDate'];
     public function employeeSwipes()
     {
