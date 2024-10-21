@@ -272,7 +272,7 @@ class Attendance extends Component
         // Convert the difference back to hours and minutes
         $hoursDifference = intdiv($differenceInMinutes, 60);
         $minutesDifference = $differenceInMinutes % 60;
-        
+          
         return $this->percentageDifference;
     }
     public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
@@ -293,12 +293,15 @@ class Attendance extends Component
 
         // Get leave requests for the employee within the date range
         $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved') // Filter for approved leave requests
-            ->where(function ($query) use ($startDate, $endDate) {
-                $query->whereDate('from_date', '<=', $endDate)
-                    ->whereDate('to_date', '>=', $startDate);
-            })
-            ->get();
+    ->where('leave_applications.leave_status', 2) // Filter for approved leave requests
+    ->where(function ($query) use ($startDate, $endDate) {
+        $query->whereDate('from_date', '<=', $endDate)
+            ->whereDate('to_date', '>=', $startDate);
+    })
+    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types table
+    ->select('leave_applications.*', 'status_types.status_name') // Select the fields you need
+    ->get();
+
 
         $totalMinutes = 0;
         $workingDaysCount = 0;
@@ -616,6 +619,7 @@ class Attendance extends Component
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
+            
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
             // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];
@@ -725,11 +729,12 @@ class Attendance extends Component
 
      
             return LeaveRequest::where('emp_id', $employeeId)
-                ->where('status', 'approved')
+                ->where('leave_applications.leave_status', 2)
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
                 })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
                 ->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
@@ -744,12 +749,14 @@ class Attendance extends Component
         $flag=false;
 
         while ($currentDate->lt($endDate)) {
-            $flag=LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved')
-            ->where(function ($query) use ($currentDate) {
-                $query->whereDate('from_date', '<=', $currentDate)
-                    ->whereDate('to_date', '>=', $currentDate);
-            })->exists();
+            $flag = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where(function ($query) use ($currentDate) {
+                        $query->whereDate('from_date', '<=', $currentDate)
+                            ->whereDate('to_date', '>=', $currentDate);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types table
+                    ->exists();
             if ($flag==true) {
                 $countofleaves++;
             }
@@ -1795,10 +1802,11 @@ class Attendance extends Component
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
             //$this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
-
+            
 
             // $previousMonthStart = $date->subMonth()->startOfMonth()->toDateString();
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
+            
             $this->dateClicked($date->startOfMonth()->toDateString());
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());
@@ -1856,8 +1864,11 @@ class Attendance extends Component
             $this->showRegularisationDialog = true;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $regularisationRecords = RegularisationDates::where('emp_id', $employeeId)
-                ->where('status', 'approved')
-                ->get();
+    ->where('regularisation_dates.status', 2) // Filter for approved status
+    ->join('status_types', 'status_types.status_code', '=', 'regularisation_dates.status') // Join with status_types table
+    ->select('regularisation_dates.*', 'status_types.status_name') // Select all fields from regularisation_dates and status_name from status_types
+    ->get();
+
             $dateFound = false;
             $result = null;
 
