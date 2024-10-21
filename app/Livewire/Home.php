@@ -287,9 +287,9 @@ class Home extends Component
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
-                    $query->where('status', )
+                    $query->where('leave_status', )
                         ->orWhere(function ($query) {
-                            $query->where('status', 5)
+                            $query->where('leave_status', 5)
                                 ->where('cancel_status',6 );
                         });
                 })
@@ -378,7 +378,7 @@ class Home extends Component
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
                 ->where('category_type',operator: 'Leave')
-                ->where('status', 2)
+                ->where('leave_status', 2)
                 ->where('cancel_status','!=',2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereDate('from_date', '=', $currentDate)
@@ -407,7 +407,7 @@ class Home extends Component
 
             $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 2)
+                ->where('leave_status', 2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
                 })
@@ -460,7 +460,7 @@ class Home extends Component
 
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 2)
+                ->where('leave_applications.leave_status', 2)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->whereDate('from_date', '<=', $currentDate)
                 ->whereDate('to_date', '>=', $currentDate)
@@ -718,7 +718,7 @@ class Home extends Component
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-        $tasksSummary = \App\Models\Task::with('emp')
+        $tasksSummary = Task::with('emp')
             ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
             COALESCE(SUM(CASE WHEN status = 11 THEN 1 ELSE 0 END), 0) AS tasks_completed_count,

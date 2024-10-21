@@ -27,6 +27,8 @@ class LeaveRequest extends Model
         'leave_cancel_reason',
         'is_read',
         'file_paths',
+        'leave_status',
+        'cancel_status',
         'action_by'
     ];
 

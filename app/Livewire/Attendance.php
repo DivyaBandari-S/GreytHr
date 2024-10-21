@@ -726,8 +726,6 @@ class Attendance extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
-     
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
                 ->where(function ($query) use ($date) {
