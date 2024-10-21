@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('emp_resignations', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement();
+            $table->smallInteger('id')->primary();
             $table->string('emp_id', 10); // Foreign key to employee table
             $table->text('reason')->nullable(); // Reason for resignation
             $table->date('resignation_date'); // Date of resignation
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->binary('signature')->nullable();
             $table->string('mime_type', 100)->nullable();
             $table->string('file_name')->nullable();
-            $table->smallInteger('status')->default(5);
+            $table->tinyInteger('status')->default(5);
             $table->timestamps();
             $table->foreign('emp_id')
                 ->references('emp_id')
