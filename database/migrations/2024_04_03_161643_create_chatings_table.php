@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chatings', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('sender_id');
             $table->string('receiver_id');
             $table->softDeletes();

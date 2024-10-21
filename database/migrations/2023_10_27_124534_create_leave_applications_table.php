@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('leave_applications', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id', 10);
-            $table->string('category_type')->default('Leave');
+            $table->string('category_type',)->default('Leave');
             $table->enum('leave_type', ['Casual Leave Probation', 'Maternity Leave', 'Loss Of Pay','Sick Leave','Marriage Leave','Casual Leave','Petarnity Leave','Work From Home'])->nullable();
             $table->date('from_date')->nullable();
             $table->string('from_session')->nullable();
