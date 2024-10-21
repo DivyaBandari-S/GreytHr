@@ -405,7 +405,7 @@
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
-                                    @elseif($leaveRequest->status === 2)
+                                    @elseif($leaveRequest->leave_status === 2)
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($actionTakenBy))
                                     <span class="normalText text-start">
@@ -540,7 +540,11 @@
                                     </td>
                                     <td> {{ $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session, $leaveApplication->leave_type) }}</td>
                                     <td>
-                                        {{ ucfirst($leaveApplication->leave_status === 'approved' ? 'Availed' : $leaveApplication->status) }}
+                                        @if($leaveApplication->category_type === 'Leave')
+                                        {{ ucfirst($leaveApplication->leave_status === 2 ? 'Availed' : $leaveApplication->leave_status) }}
+                                        @else
+                                        {{ ucfirst($leaveApplication->cancel_status === 2 ? 'Applied-Approved' : $leaveApplication->leave_status) }}
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
