@@ -54,8 +54,7 @@ class ViewRegularisationPendingNew extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-        ->where('status','pending')
-        ->whereNull('mail_sent')        
+        ->where('status',5)      
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
         ->with('employee')
@@ -317,7 +316,7 @@ class ViewRegularisationPendingNew extends Component
                 $this->regularisations = RegularisationDates::join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->whereIn('regularisation_dates.emp_id', $empIds)
                 ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-                ->where('regularisation_dates.status','pending')
+                ->where('regularisation_dates.status',5)
                 ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
                 ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
                 ->with('employee') 
@@ -333,7 +332,7 @@ class ViewRegularisationPendingNew extends Component
         {
             $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status','pending')
+            ->where('status',5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
             ->with('employee') 
