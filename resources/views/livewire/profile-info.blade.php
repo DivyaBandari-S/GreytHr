@@ -100,7 +100,7 @@
                                 @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
-                                Mobile Number
+                            Primary Contact No.
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
                                 @if ($employeeDetails->emergency_contact)
@@ -293,15 +293,6 @@
 
                             </div>
 
-
-
-                            <div style="margin-top: 20px; font-size: 11px;color:#000; color: #778899; margin-left: 15px">
-                                Name
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ ucwords(strtolower($employeeDetails->first_name)) }}
-                                {{ ucwords(strtolower($employeeDetails->last_name)) }}
-                            </div>
                         </div>
                         <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -314,20 +305,17 @@
                                 @else
                                 <span style="padding-left: 41px;">-</span>
                                 @endif
-
                             </div>
 
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
-                                Mobile Number
-                            </div>
+                                Mobile
+                            </div>h
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
                                 {{ $employeeDetails->empPersonalInfo->mobile_number }}
                                 @else
                                 <span style="padding-left: 35px;">-</span>
                                 @endif
-
-
                             </div>
                         </div>
                         <div class="col-6 col-md-4">
@@ -335,8 +323,12 @@
                                 Email
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->email)
-                                {{ $employeeDetails->email }}
+                                @if ($employeeDetails->empPersonalInfo)
+                                 @if( $employeeDetails->empPersonalInfo->email)
+                                 {{ $employeeDetails->empPersonalInfo->email }}
+                                 @else
+                                 <span style="padding-left: 15px;">-</span>
+                                 @endif
                                 @else
                                 <span style="padding-left: 15px;">-</span>
                                 @endif

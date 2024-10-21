@@ -24,6 +24,7 @@ use Livewire\Component;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 use App\Models\SalaryRevision;
+use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -140,7 +141,7 @@ class Home extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
             ->with('employee')
@@ -148,7 +149,7 @@ class Home extends Component
 
         $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
             ->with('employee')
@@ -286,10 +287,10 @@ class Home extends Component
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('status', )
                         ->orWhere(function ($query) {
-                            $query->where('status', 'Pending')
-                                ->where('cancel_status', 'Pending Leave Cancel');
+                            $query->where('status', 5)
+                                ->where('cancel_status',6 );
                         });
                 })
                 ->orderBy('created_at', 'desc')
@@ -377,8 +378,8 @@ class Home extends Component
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
                 ->where('category_type',operator: 'Leave')
-                ->where('status', 'approved')
-                ->where('cancel_status','!=','approved')
+                ->where('status', 2)
+                ->where('cancel_status','!=',2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereDate('from_date', '=', $currentDate)
                         ->orWhereDate('to_date', '=', $currentDate);
@@ -406,7 +407,7 @@ class Home extends Component
 
             $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'approved')
+                ->where('status', 2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
                 })
@@ -459,7 +460,7 @@ class Home extends Component
 
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
+                ->where('leave_applications.status', 2)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->whereDate('from_date', '<=', $currentDate)
                 ->whereDate('to_date', '>=', $currentDate)
@@ -697,7 +698,7 @@ class Home extends Component
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
 
-        $totalTasksAssignedBy = \App\Models\Task::with('emp')
+        $totalTasksAssignedBy = Task::with('emp')
             ->where(function ($query) use ($employeeId) {
                 $query->where('assignee', 'LIKE', "%($employeeId)%");
             })
@@ -707,7 +708,7 @@ class Home extends Component
 
         $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
 
-        $totalTasksAssignedTo = \App\Models\Task::with('emp')
+        $totalTasksAssignedTo = Task::with('emp')
             ->where('emp_id', $employeeId)
             ->where(function ($query) use ($employeeId) {
                 $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
@@ -720,8 +721,8 @@ class Home extends Component
         $tasksSummary = \App\Models\Task::with('emp')
             ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
-            COALESCE(SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
-            COALESCE(SUM(CASE WHEN status = 'Open' THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
+            COALESCE(SUM(CASE WHEN status = 11 THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
+            COALESCE(SUM(CASE WHEN status = 10 THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
         ")
             ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
             ->whereBetween('created_at', [$startDate, $endDate])
