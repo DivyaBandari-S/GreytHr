@@ -16,6 +16,8 @@ class EmpResignations extends Model
         'last_working_day',
         'comments',
         'signature',
+        'mime_type',
+        'file_name',
         'status'
     ];
     public function employee()
