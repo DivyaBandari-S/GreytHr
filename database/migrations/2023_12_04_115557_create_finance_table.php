@@ -13,17 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('finance', function (Blueprint $table) {
-            $table->id();
-            $table->string('fi_emp_id')->nullable()->default(null)->unique();
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('fi_emp_id',10)->nullable()->default(null)->unique();
             $table->string('emp_id');
             $table->string('employee_name');
-            $table->binary('image')->nullable();
-            $table->date('date_of_birth')->nullable();
-            $table->string('emergency_contact_number')->unique()->nullable();
             $table->string('password')->nullable();
-            $table->string('phone_number')->unique()->nullable();
-            $table->string('email')->unique()->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->tinyInteger('status')->default(1);
+            $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
                 $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')

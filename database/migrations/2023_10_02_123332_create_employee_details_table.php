@@ -22,6 +22,8 @@ return new class extends Migration
             $table->binary('image')->nullable();
             $table->string('dept_id',10)->nullable();
             $table->string('sub_dept_id',10)->nullable();
+            $table->string('dept_id',10)->nullable();
+            $table->string('sub_dept_id',10)->nullable();
             $table->date('hire_date')->nullable();
             $table->string('employee_type',100)->nullable();
             $table->string('job_role',100)->nullable();
@@ -29,6 +31,7 @@ return new class extends Migration
             $table->string('dept_head',10)->nullable();
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); //Define ENUM for roles
             $table->enum('employee_status', ['active', 'on-leave', 'terminated', 'resigned', 'on-probation'])->default('active');
+            $table->string('emergency_contact',20)->nullable();
             $table->string('emergency_contact',20)->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);
