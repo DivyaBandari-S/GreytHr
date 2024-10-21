@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('company_shifts', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            $table->string('company_id', 10);
-            $table->string('shift_name', 20);
+            $table->string('company_id',10);
+            $table->string('shift_name',10);
             $table->time('shift_start_time');
             $table->time('shift_end_time');
             $table->timestamps();
