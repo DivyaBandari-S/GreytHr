@@ -20,8 +20,8 @@
 
             </div>
         </div>
-        @if(!empty($this->leaveApplications))
-        @foreach($this->leaveApplications as $leaveRequest)
+        @if(!empty($leaveApplications))
+        @foreach($leaveApplications as $leaveRequest)
         <div class="approved-leave-container mt-1 px-1 rounded">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">

@@ -143,7 +143,7 @@ class ViewRegularisationPendingNew extends Component
        
         $employeeId=$item->emp_id;
        
-        $item->status='approved';
+        $item->status=2;
         if(empty($this->remarks))
         {
             if($this->auto_approve==true)
@@ -270,7 +270,7 @@ class ViewRegularisationPendingNew extends Component
         {
             $item->approver_remarks=$this->remarks;
         }
-        $item->status='rejected';
+        $item->status=3;
         $item->rejected_date = $currentDateTime; 
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();

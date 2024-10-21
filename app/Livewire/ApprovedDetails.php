@@ -303,7 +303,7 @@ class ApprovedDetails extends Component
         try {
             // Fetch leave applications where status is approved, rejected, or withdrawn
             // and emp_id matches the logged-in employee's ID, and the leave period overlaps with the selected week
-            $this->leaveApplications = LeaveRequest::whereIn('status', ['approved'])
+            $this->leaveApplications = LeaveRequest::whereIn('leave_status', [2,3])
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
                     $query->whereBetween('from_date', [$this->startOfWeek, $this->endOfWeek])

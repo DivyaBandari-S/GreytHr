@@ -2130,7 +2130,7 @@ color: #fff;
                                     <td>
                                          {{$this->shortFallHrs}}
                                     </td>
-                                    <td>-</td>
+                                    <td>{{$this->excessHrs}}</td>
 
                                 </tr>
 

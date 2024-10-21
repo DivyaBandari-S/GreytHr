@@ -43,6 +43,7 @@ class Attendance extends Component
 
     public $last_out_time;
 
+    public $excessHrs;
     public $percentageDifference;
     public $currentDate;
     public $date1;
@@ -720,6 +721,11 @@ class Attendance extends Component
             FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
             return false; // Return false to handle the error gracefully
         }
+    }
+    private function isHolidayOnDate($date)
+    {
+        $checkHoliday=HolidayCalendar::where('date',$date)->exists(); 
+        return $checkHoliday;  
     }
     //This function will help us to check if the employee is on leave for this particular date or not
     private function isEmployeeLeaveOnDate($date, $employeeId)
@@ -1971,13 +1977,47 @@ class Attendance extends Component
                 {  
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
-
+                    $this->excessHrs='-';
+                }
+                elseif($this->isHolidayOnDate($this->currentDate2))
+                {
+                    $this->shortFallHrs = '-';
+                    $this->work_hrs_in_shift_time = '-';
+                    $this->excessHrs='-';
                 }
                 elseif ($this->first_in_time == $this->last_out_time) {
                     $this->shortFallHrs = '08:59';
                     $this->work_hrs_in_shift_time = '-';
+                    $this->excessHrs='-';
                 } else {
-                    $this->shortFallHrs = '-';
+                    $standardMinutesForShortFall = 9 * 60; // 9 hours in minutes (540 minutes)
+                    $timeDifferenceForShortFall = $standardMinutesForShortFall - $this->timeDifferenceInMinutesForCalendar; // Subtracting the time difference
+
+                    // Convert the result to hours and minutes
+                    $shortfallhours = floor($timeDifferenceForShortFall / 60); // Get the full hours
+                    $shortfallminutes = $timeDifferenceForShortFall % 60; // Get the remaining minutes
+
+                    // Format the result in HH:MM format
+                    if($timeDifferenceForShortFall==0)
+                    {
+                        $this->shortFallHrs='08:59';
+                        $this->excessHrs='-';
+                    }
+                    elseif($this->timeDifferenceInMinutesForCalendar>$standardMinutesForShortFall)
+                    {
+                        $this->shortFallHrs='-'; 
+                        $timeDifferenceForExcess=$this->timeDifferenceInMinutesForCalendar-$standardMinutesForShortFall; 
+                        $excesshours = floor($timeDifferenceForExcess / 60); // Get the full hours
+                        $excessminutes = $timeDifferenceForExcess % 60; // Get the remaining minutes
+                        $this->excessHrs = sprintf('%02d:%02d', $excesshours, $excessminutes);
+                    }
+                    else
+                    {
+                        $this->shortFallHrs = sprintf('%02d:%02d', $shortfallhours, $shortfallminutes);
+                        $this->excessHrs='-';
+                    }
+                    
+                  
                     $this->work_hrs_in_shift_time = '09:00';
                 }
                 $this->currentDate2recordexists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->exists();
