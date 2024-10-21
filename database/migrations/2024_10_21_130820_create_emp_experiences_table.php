@@ -11,16 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('emp_bank_details', function (Blueprint $table) {
+        Schema::create('emp_experiences', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id',10);
-            $table->string('bank_name',100);
-            $table->string('bank_branch',100);
-            $table->string('account_number',20);
-            $table->string('ifsc_code',15);
-            $table->string('bank_address');
-            $table->foreign('emp_id')->references('emp_id')->on('employee_details')->onDelete('cascade');
+            $table->json('experience');
             $table->timestamps();
+            $table->foreign('emp_id')->references('emp_id')->on('employee_details')->onDelete('cascade');
         });
     }
 
@@ -29,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('emp_bank_details');
+        Schema::dropIfExists('emp_experiences');
     }
 };
