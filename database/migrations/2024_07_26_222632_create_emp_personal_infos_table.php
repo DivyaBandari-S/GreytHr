@@ -12,30 +12,30 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('emp_personal_infos', function (Blueprint $table) {
-            $table->id();
-            $table->string('emp_id');
-            $table->string('title')->nullable();
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('emp_id',10);
+            $table->string('title',20)->nullable();
+            $table->string('first_name',100);
+            $table->string('last_name',100);
             $table->date('date_of_birth')->nullable();
-            $table->string('gender');
-            $table->string('blood_group')->nullable();
+            $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();
+            $table->string('blood_group',10)->nullable();
             $table->binary('image')->nullable();
             $table->binary('signature')->nullable();
-            $table->string('nationality')->nullable();
-            $table->string('religion')->nullable();
+            $table->string('nationality',20)->nullable();
+            $table->string('religion',20)->nullable();
             $table->enum('marital_status', ['married', 'unmarried']);
             $table->enum('physically_challenge', ['yes', 'no']);
-            $table->string('email')->nullable();
-            $table->string('mobile_number')->nullable();
-            $table->string('alternate_mobile_number')->nullable();
-            $table->string('city')->nullable();
-            $table->string('state')->nullable();
-            $table->string('postal_code')->nullable();
-            $table->string('country')->nullable();
+            $table->string('email',200)->nullable();
+            $table->string('mobile_number',20)->nullable();
+            $table->string('alternate_mobile_number',20)->nullable();
+            $table->string('city',20)->nullable();
+            $table->string('state',20)->nullable();
+            $table->string('postal_code',10)->nullable();
+            $table->string('country',20)->nullable();
             $table->json('qualification')->nullable();
-            $table->string('company_name')->nullable();
-            $table->string('designation')->nullable();
+            $table->string('company_name',200)->nullable();
+            $table->string('designation',100)->nullable();
             $table->json('experience')->nullable();
             $table->string('skill_set')->nullable();
             $table->text('present_address')->nullable();
