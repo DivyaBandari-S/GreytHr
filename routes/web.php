@@ -238,7 +238,6 @@ Route::middleware(['auth:finance', 'handleSession'])->group(function () {
 
 Route::middleware(['auth:it', 'handleSession'])->group(function () {
     Route::get('/itPage', AuthChecking::class)->name('IT-requests');
-    Route::get('/emp-assets-details', EmployeeAssetsDetails::class)->name('employee-asset-details');
     Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
 });
 
@@ -348,7 +347,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     // Route::get('/chat',Index::class)->name('chat.index');
     Route::get('/chat/{query}', Chat::class)->name('chat');
     Route::get('/users', EmployeeList::class)->name('employee');
-    Route::get('/image', ImageUpload::class)->name('image');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

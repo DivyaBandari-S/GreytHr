@@ -1,6 +1,6 @@
 <div>
     @php
-    $leaveStatusText = $this->getStatusText($leaveRequest->status);
+    $leaveStatusText = $this->getStatusText($leaveRequest->leave_status);
     $cancelStatusText = $this->getStatusText($leaveRequest->cancel_status);
     @endphp
     <div class="detail-container ">
@@ -32,14 +32,14 @@
                     <div class="d-flex flex-row justify-content-between rounded">
                         <div class="field">
                             <span class="normalTextValue">
-                                @if (strtoupper($leaveStatusText) === 'PENDING')
+                                @if ($leaveStatusText === 5)
                                 Pending with
                                 @else
                                 Withdrawn by
                                 @endif
                             </span>
                             <br>
-                            @if (strtoupper($leaveStatusText) === 'WITHDRAWN')
+                            @if ($leaveStatusText === 4)
                             <span class="normalText">
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }}
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
@@ -342,13 +342,13 @@
                         <div class="group">
                             <div>
                                 <h5 class="normalText text-start">
-                                    @if (strtoupper($leaveRequest->status) == 'WITHDRAWN')
+                                    @if ($leaveRequest->leave_status === 4)
                                     Withdrawn <br><span class="normalText text-start">by</span>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }}
                                         {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->status) == 'PENDING')
+                                    @elseif($leaveRequest->leave_status === 5)
                                     <span class="normalTextValue text-start"> Pending <br> with</span>
                                     @if (!empty($leaveRequest['applying_to']))
                                     @foreach ($leaveRequest['applying_to'] as $applyingTo)

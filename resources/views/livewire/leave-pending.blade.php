@@ -27,18 +27,18 @@
                     <div class="d-flex flex-row justify-content-between rounded">
                         <div class="field">
                             <span class="normalTextValue">
-                                @if($leaveRequest->category_type == 'Leave')
-                                @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
+                                @if($leaveRequest->category_type === 'Leave')
+                                @if($leaveRequest->leave_status === 4)
                                 Withdrawn by
-                                @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
+                                @elseif($leaveRequest->leave_status === 2)
                                 Approved by
                                 @else
                                 Rejected by
                                 @endif
                                 @else
-                                @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                @if($leaveRequest->cancel_status === 4)
                                 Withdrawn by
-                                @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                @elseif($leaveRequest->cancel_status === 2)
                                 Approved by
                                 @else
                                 Rejected by
@@ -46,7 +46,7 @@
                                 @endif
                             </span>
                             <br>
-                            @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
+                            @if($leaveRequest->leave_status === 4)
                             <span class="normalText">
                                 {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
                             </span>
@@ -64,35 +64,35 @@
                         </div>
 
                         <div>
-                            @if($leaveRequest->category_type == 'Leave')
+                            @if($leaveRequest->category_type === 'Leave')
                             <span>
-                                @if(strtoupper($leaveRequest->status) === 'APPROVED')
+                                @if($leaveRequest->leave_status === 2)
 
-                                <span class="approvedStatus">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="approvedStatus">APPROVED</span>
 
-                                @elseif(strtoupper($leaveRequest->status) === 'REJECTED')
+                                @elseif($leaveRequest->leave_status === 3)
 
-                                <span class="rejectedStatus">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="rejectedStatus">REJECTED</span>
 
                                 @else
 
-                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->status) }}</span>
+                                <span class="withDrawnStatus">-</span>
 
                                 @endif
                             </span>
                             @else
                             <span>
-                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                @if($leaveRequest->cancel_status === 2)
 
-                                <span class="approvedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="approvedStatus">APPROVED</span>
 
-                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
+                                @elseif($leaveRequest->cancel_status === 3)
 
-                                <span class="rejectedStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="rejectedStatus">REJECTED</span>
 
                                 @else
 
-                                <span class="withDrawnStatus">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="withDrawnStatus">-</span>
 
                                 @endif
                             </span>
@@ -366,16 +366,16 @@
                     <div class="mt-4 d-flex flex-column" style="gap: 60px;">
                         <div class="group">
                             <div>
-                                @if($leaveRequest->category_type == 'Leave')
+                                @if($leaveRequest->category_type === 'Leave')
                                 <h5 class="normalText text-start">
-                                    @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
+                                    @if($leaveRequest->leave_status === 4)
                                     Withdrawn
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
+                                    @elseif($leaveRequest->leave_status === 2)
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($actionTakenBy))
                                     <span class="normalText text-start">
@@ -402,14 +402,14 @@
                                 </h5>
                                 @else
                                 <h5 class="normalText text-start">
-                                    @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
+                                    @if($leaveRequest->cancel_status === 4)
                                     Withdrawn
                                     <span class="normalText text-start">by</span> <br>
                                     <span class="normalTextValue text-start">
                                         {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }} <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
                                     </span>
-                                    @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                    @elseif($leaveRequest->cancel_status === 2)
                                     <span class="normalTextValue text-start"> Approved <br> by</span>
                                     @if(!empty($actionTakenBy))
                                     {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->smallInteger('id')->autoIncrement();
             $table->string('fi_emp_id',10)->nullable()->default(null)->unique();
             $table->string('emp_id');
-            $table->string('employee_name');
+            $table->string('employee_name',100);
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles

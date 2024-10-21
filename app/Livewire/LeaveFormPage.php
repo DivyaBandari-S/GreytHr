@@ -98,9 +98,9 @@ class LeaveFormPage extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->combinedRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where(function ($query) {
-                    $query->where('status', 5)
+                    $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
-                            $query->where('status', 2)
+                            $query->where('leave_status', 2)
                                 ->where('cancel_status', 7);
                         });
                 })
@@ -138,14 +138,14 @@ class LeaveFormPage extends Component
                 ->where(function ($query) {
                     // Include records if status is in the given list, excluding those with 'Pending Leave Cancel' cancel_status when status is 'approved'
                     $query->where(function ($q) {
-                        $q->whereIn('status', ['approved', 'rejected', 'withdrawn'])
+                        $q->whereIn('leave_status', [2,3,4])
                             ->where(function ($q) {
-                                $q->where('status', '!=', 'approved')
-                                    ->orWhere('cancel_status', '!=', 'Pending Leave Cancel');
+                                $q->where('leave_status', '!=', 2)
+                                    ->orWhere('cancel_status', '!=', 7);
                             });
                     })->orWhere(function ($q) {
-                        $q->whereIn('cancel_status', ['approved', 'rejected', 'withdrawn'])
-                            ->where('cancel_status', '!=', 'Pending Leave Cancel');
+                        $q->whereIn('cancel_status', [2,3,4])
+                            ->where('cancel_status', '!=', 7);
                     });
                 })
                 ->orderBy('created_at', 'desc')
@@ -315,7 +315,7 @@ class LeaveFormPage extends Component
                 ->where('from_session', $leaveRequest->from_session)
                 ->where('to_date', $leaveRequest->to_date)
                 ->where('to_session', $leaveRequest->to_session)
-                ->where('status', '!=', 'Re-applied')
+                ->where('leave_status', '!=', 6)
                 ->first();
             if ($matchingLeaveRequest) {
                 // Update the matching request status to 'rejected'

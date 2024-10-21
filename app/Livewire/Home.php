@@ -287,10 +287,10 @@ class Home extends Component
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
-                    $query->where('leave_status', )
+                    $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
                             $query->where('leave_status', 5)
-                                ->where('cancel_status',6 );
+                                ->where('cancel_status',6);
                         });
                 })
                 ->orderBy('created_at', 'desc')

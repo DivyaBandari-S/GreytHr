@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('emp_id', 10);
             $table->string('employee_name', 100)->nullable();
             $table->string('password')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->tinyInteger('status')->default(1);
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
             $table->foreign('emp_id')
                 ->references('emp_id')
