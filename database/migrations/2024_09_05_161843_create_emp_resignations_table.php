@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('emp_resignations', function (Blueprint $table) {
-            $table->smallInteger('id')->primary();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id', 10); // Foreign key to employee table
             $table->text('reason')->nullable(); // Reason for resignation
             $table->date('resignation_date'); // Date of resignation
