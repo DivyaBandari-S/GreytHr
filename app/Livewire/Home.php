@@ -218,7 +218,7 @@ class Home extends Component
                 return 'mobile';
             }
         } catch (Throwable $e) {
-           FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
+            FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
         }
     }
 
@@ -290,7 +290,7 @@ class Home extends Component
                     $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
                             $query->where('leave_status', 5)
-                                ->where('cancel_status',6);
+                                ->where('cancel_status', 6);
                         });
                 })
                 ->orderBy('created_at', 'desc')
@@ -377,9 +377,9 @@ class Home extends Component
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
-                ->where('category_type',operator: 'Leave')
+                ->where('category_type', operator: 'Leave')
                 ->where('leave_status', 2)
-                ->where('cancel_status','!=',2)
+                ->where('cancel_status', '!=', 2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereDate('from_date', '=', $currentDate)
                         ->orWhereDate('to_date', '=', $currentDate);
@@ -508,25 +508,25 @@ class Home extends Component
                     ->whereDate('swipe_records.created_at', $currentDate)
                     ->groupBy('swipe_records.emp_id');
             })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
-            ->leftJoin('company_shifts', function ($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
-                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
-            })
-            ->select(
-                'swipe_records.*', 
-                'employee_details.first_name', 
-                'employee_details.last_name', 
-                'emp_personal_infos.mobile_number', // Selecting fields from emp_personal_infos
-                'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
-                'company_shifts.shift_end_time',
-            )
-            ->where(function ($query) {
-                $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
-            })
-            ->where('employee_details.employee_status','active')
-            ->get();
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                        ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select(
+                    'swipe_records.*',
+                    'employee_details.first_name',
+                    'employee_details.last_name',
+                    'employee_details.emergency_contact', // Selecting fields from emp_personal_infos
+                    'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
+                    'company_shifts.shift_end_time',
+                )
+                ->where(function ($query) {
+                    $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
+                })
+                ->where('employee_details.employee_status', 'active')
+                ->get();
 
 
             $swipes_early1 = $swipes_early->count();
@@ -539,25 +539,25 @@ class Home extends Component
                     ->whereDate('swipe_records.created_at', $currentDate)
                     ->groupBy('swipe_records.emp_id');
             })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
-            ->leftJoin('company_shifts', function ($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
-                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
-            })
-            ->select(
-                'swipe_records.*', 
-                'employee_details.first_name', 
-                'employee_details.last_name',
-                'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
-                'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
-                'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
-            )
-            ->where(function ($query) {
-                $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
-            })
-            ->where('employee_details.employee_status','active')
-            ->get();
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                        ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select(
+                    'swipe_records.*',
+                    'employee_details.first_name',
+                    'employee_details.last_name',
+                    'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
+                    'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
+                    'employee_details.emergency_contact',  // Include fields from emp_personal_infos
+                )
+                ->where(function ($query) {
+                    $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
+                })
+                ->where('employee_details.employee_status', 'active')
+                ->get();
 
             $swipes_late1 = $swipes_late->count();
 
@@ -658,7 +658,8 @@ class Home extends Component
 
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
-           FlashMessageHelper::flashError( 'An error occurred while processing your request. Please try again later.');
+            Log::error('Error in home component: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
