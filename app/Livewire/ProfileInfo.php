@@ -249,6 +249,7 @@ class ProfileInfo extends Component
                 ->where('emp_id', $empId)
                 ->first();
 
+
             return view('livewire.profile-info');
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred. Please try again later.');
