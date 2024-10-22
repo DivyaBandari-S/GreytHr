@@ -113,7 +113,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 'Open');
+            ->where('status', 1);
 
         // Filter by period
         switch ($this->filterPeriod) {
@@ -171,7 +171,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 'Completed');
+            ->where('status', 2);
 
 
         switch ($this->filterPeriod) {
@@ -389,7 +389,7 @@ class Tasks extends Component
         $task = Task::find($taskId);
 
         if ($task) {
-            $task->update(['status' => 'Completed']);
+            $task->update(['status' => 2]);
         }
         // session()->flash('message', 'Task closed successfully!');
         FlashMessageHelper::flashSuccess('Task closed successfully!');
@@ -404,7 +404,7 @@ class Tasks extends Component
 
         if ($task) {
             $task->update([
-                'status' => 'Open',
+                'status' => 1,
                 'reopened_date' => now()
             ]);
         }
@@ -502,11 +502,12 @@ class Tasks extends Component
                 'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
-                'status' => "Open",
+                'status' => 1,
             ]);
             // $this->showRecipients = false;
 
             // $this->selectedPeopleName=null;
+
 
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
@@ -609,10 +610,13 @@ class Tasks extends Component
             session()->flash('showAlert', true);
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
+            return redirect()->to('/tasks');
             $this->showDialog= false;
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
+
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
@@ -950,13 +954,23 @@ class Tasks extends Component
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        // $this->records = Task::with('emp')
+        //     ->where(function ($query) use ($employeeId, $employeeName) {
+        //         $query->where('emp_id', $employeeId)
+        //             ->orWhere('assignee', 'LIKE', "%$employeeName%");
+        //     })
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
         $this->records = Task::with('emp')
-            ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId)
-                    ->orWhere('assignee', 'LIKE', "%$employeeName%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+    ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
+    ->where(function ($query) use ($employeeId, $employeeName) {
+        $query->where('tasks.emp_id', $employeeId)
+            ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
+    })
+    ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
+    ->orderBy('tasks.created_at', 'desc')
+    ->get();
+
         $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [
             'peopleAssigneeData' => $peopleAssigneeData,
