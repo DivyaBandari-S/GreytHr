@@ -99,7 +99,7 @@
                             @else
                                 @foreach ($searchData as $index => $record)
                                 
-                                    @if ($record->status == 1)
+                                    @if ($record->status == 10)
                                         <tr>
                                             <td class="task-open-table-1-td">
                                                 <div class="arrow-btn"
@@ -321,7 +321,7 @@
                                 </tr>
                             @else
                                 @foreach ($searchData as $record)
-                                    @if ($record->status == 2)
+                                    @if ($record->status == 11)
                                         <tr>
 
                                             <td class="task-closed-table-1-td">

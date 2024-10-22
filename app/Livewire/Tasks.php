@@ -113,7 +113,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 1);
+            ->where('status', 10);
 
         // Filter by period
         switch ($this->filterPeriod) {
@@ -171,7 +171,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 2);
+            ->where('status', 11);
 
 
         switch ($this->filterPeriod) {
@@ -389,7 +389,7 @@ class Tasks extends Component
         $task = Task::find($taskId);
 
         if ($task) {
-            $task->update(['status' => 2]);
+            $task->update(['status' => 11]);
         }
         // session()->flash('message', 'Task closed successfully!');
         FlashMessageHelper::flashSuccess('Task closed successfully!');
@@ -400,11 +400,12 @@ class Tasks extends Component
 
     public function closeForTasks($taskId)
     {
+
         $task = Task::find($taskId);
 
         if ($task) {
             $task->update([
-                'status' => 1,
+                'status' => 10,
                 'reopened_date' => now()
             ]);
         }
@@ -502,7 +503,7 @@ class Tasks extends Component
                 'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
-                'status' => 1,
+                'status' => 10,
             ]);
             // $this->showRecipients = false;
 

@@ -40,6 +40,7 @@ class ProfileInfo extends Component
     public $isResigned;
     public $showAlert = false;
     public $isUploading = false;
+    public $qualifications = [];
     protected $rules = [
         'resignation_date' => 'required|date|after_or_equal:today',
         // 'last_working_day' => 'required|date|after_or_equal:resignation_date',
@@ -75,7 +76,13 @@ class ProfileInfo extends Component
         // }else{
         //     $this->isResigned='approved';
         // }
+        $this->qualifications = $this->getEducationData($empId);
 
+    }
+    protected function getEducationData($empId)
+    {
+        $info = EmpPersonalInfo::where('emp_id', $empId)->first();
+        return $info ? json_decode($info->qualification, true) : [];
     }
 
     public function updateProfile()
