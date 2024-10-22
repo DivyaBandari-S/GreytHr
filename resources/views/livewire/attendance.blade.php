@@ -2163,7 +2163,7 @@ color: #fff;
 
 
                                         $CurrentDate = $currentDate2;
-                                        $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularised',1)->get(); // Example query
+                                        $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularized',1)->get(); // Example query
 
                                         if ($swiperecord && is_iterable($swiperecord)) {
                                         $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {

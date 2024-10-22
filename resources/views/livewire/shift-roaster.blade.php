@@ -605,7 +605,9 @@
 
 
                 @endforeach
-
+                @if($notFound)
+                        <td colspan="22" style="text-align: center;font-size:12px">Record not found</td>
+                        @endif
             </tbody>
         </table>
     </div>
