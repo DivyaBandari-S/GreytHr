@@ -10,13 +10,13 @@
     @if($forMainRecipient)
     <p>Hi, {{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}],</p>
     @if($leaveRequest->category_type === 'Leave')
-    @if($leaveRequest->status === 'approved')
+    @if($leaveRequest->leave_status === 2)
     <p>Your leave application has been accepted.</p>
     @else
     <p>Your leave application has been rejected.</p>
     @endif
     @elseif($leaveRequest->category_type === 'Leave Cancel')
-    @if($leaveRequest->cancel_status === 'approved')
+    @if($leaveRequest->cancel_status === 2)
     <p>Your leave cancel application has been accepted.</p>
     @else
     <p>Your leave cancel application has been rejected.</p>
@@ -26,9 +26,22 @@
     <p>Hi,</p>
 
     @if($leaveRequest->category_type === 'Leave')
-    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave application has been {{ $leaveRequest->status }}.</p>
+    @php
+    $statusMap = [
+    2 => 'Approved',
+    3 => 'Rejected',
+    4 => 'Withdrawn',
+    5 => 'Pending',
+    6 => 'Re-applied',
+    7 => 'Pending Leave Cancel'
+    ];
+
+    $leaveStatusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
+    $cancelStatusText = $statusMap[$leaveRequest->cancel_status] ?? 'Unknown';
+    @endphp
+    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave application has been {{$leaveStatusText }}.</p>
     @else
-    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave cancel application has been {{ $leaveRequest->cancel_status }}.</p>
+    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave cancel application has been {{ $cancelStatusText }}.</p>
     @endif
     @endif
 

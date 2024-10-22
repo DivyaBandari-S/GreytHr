@@ -49,7 +49,7 @@ class LeaveApplicationNotification extends Mailable
                 'ccToDetails' => $this->ccToDetails,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status,
+                'leave_status' => $this->leaveRequest->leave_status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
             ]);
@@ -62,13 +62,13 @@ class LeaveApplicationNotification extends Mailable
     {
         $subject = '';
         if ($this->leaveRequest->category_type === 'Leave'){
-            if ($this->leaveRequest->status === 'Withdrawn') {
+            if ($this->leaveRequest->leave_status === 4) {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
             }
         }else{
-            if ($this->leaveRequest->cancel_status === 'Withdrawn') {
+            if ($this->leaveRequest->cancel_status === 4) {
                 $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
                 $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
