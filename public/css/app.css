@@ -906,7 +906,7 @@ border-bottom:none;
 
 /* Default option styling */
 .option-default {
-    color:var(--main-color) ;  /* Different color for placeholder */
+    color:var(--main-color) ;
 }
 
 
@@ -4889,7 +4889,11 @@ select .yearSelect {
     font-size: var(--normal-font-size);
     color: var(--main-heading-color);
     padding: 5px;
+    cursor: pointer;
     outline: none;
+}
+.filterDropdown .option{
+    cursor: pointer;
 }
 .nav-btn {
     background: none;
