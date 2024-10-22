@@ -390,22 +390,22 @@ class LeaveCancelPage extends Component
                 ];
             }
             // Update the existing leave request's cancel_status to 'Re-applied'
-            $leaveRequest->cancel_status = 'Re-applied';
+            $leaveRequest->cancel_status = 6;
             $leaveRequest->save();
             // Create a new leave request record
             $this->createdCancelLeaveRequest =  LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
                 'category_type' => 'Leave Cancel',
-                'status' => 'approved',
-                'cancel_status' => 'Pending Leave Cancel', // This should reflect the current state of the new request
+                'leave_status' => 2,
+                'cancel_status' => 7,
                 'from_date' => $leaveRequest->from_date,
                 'to_date' => $leaveRequest->to_date,
                 'to_session' => $leaveRequest->to_session,
                 'from_session' => $leaveRequest->from_session,
                 'leave_type' => $leaveRequest->leave_type,
                 'leave_cancel_reason' => $this->leave_cancel_reason,
-                'applying_to' => json_encode($applyingToDetails), // Assuming applyingto is a JSON field
-                'cc_to' => json_encode($ccToDetails), // Assuming ccto is a JSON field
+                'applying_to' => json_encode($applyingToDetails),
+                'cc_to' => json_encode($ccToDetails),
             ]);
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -690,10 +690,10 @@ class LeaveCancelPage extends Component
         }
 
         $this->cancelLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('status', 'approved')
+            ->where('leave_status', 2)
             ->where('from_date', '>=', now()->subMonths(2))
             ->where('category_type', 'Leave')
-            ->whereIn('cancel_status',  ['Pending','rejected'])
+            ->whereIn('cancel_status',  [5,3])
             ->with('employee')
             ->get();
 

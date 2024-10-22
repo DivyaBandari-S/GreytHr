@@ -23,7 +23,7 @@ class LeaveApprovalNotification extends Mailable
     public $leaveCategory;
     public $forMainRecipient;
 
-    public function __construct($leaveRequest, $applyingToDetails, $ccToDetails,$forMainRecipient = true)
+    public function __construct($leaveRequest, $applyingToDetails, $ccToDetails, $forMainRecipient = true)
     {
         $this->leaveRequest = $leaveRequest;
         $this->applyingToDetails = $applyingToDetails;
@@ -46,7 +46,7 @@ class LeaveApprovalNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-         // Different subject for main recipient and CC recipients
+        // Different subject for main recipient and CC recipients
 
 
         return $this->subject('Leave')
@@ -55,7 +55,7 @@ class LeaveApprovalNotification extends Mailable
                 'leaveRequest' => $this->leaveRequest,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status,
+                'leave_status' => $this->leaveRequest->leave_status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
                 'forMainRecipient' => $this->forMainRecipient,
@@ -63,13 +63,29 @@ class LeaveApprovalNotification extends Mailable
     }
     public function envelope(): Envelope
     {
+        // Define the status mapping
+        $statusMap = [
+            2 => 'Approved',
+            3 => 'Rejected',
+            4 => 'Withdrawn',
+            5 => 'Pending',
+            6 => 'Re-applied',
+            7 => 'Pending Leave Cancel'
+        ];
+
+        // Get the leave status text using the mapping
+        $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
+
+        // Determine the subject based on the recipient type
         $subject = $this->forMainRecipient
-         ? 'Your leave application has been ' . ucfirst($this->leaveRequest->status)
-         : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($this->leaveRequest->status);
+            ? 'Your leave application has been ' . ucfirst($leaveStatusText)
+            : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveStatusText);
+
         return new Envelope(
             subject: $subject,
         );
     }
+
 
     /**
      * Get the message content definition.

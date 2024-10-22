@@ -151,13 +151,11 @@
                                 0
                                 @endif
                             </span>
-                            <!-- Add a condition to check if the number of days exceeds the leave balance -->
                             @if(isset($leaveBalances) && !empty($leaveBalances))
-                            <!-- Directly access the leave balance for the selected leave type -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type);
                             @endphp
-                            @if($leave_type == 'Casual Leave Probation')
+                            @if($leave_type === 'Casual Leave Probation')
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > ($leaveBalances['casualProbationLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
@@ -170,7 +168,7 @@
                             <span></span>
                             @endif
 
-                            @elseif($leave_type == 'Casual Leave')
+                            @elseif($leave_type === 'Casual Leave')
                             <!-- Casual Leave Probation -->
                             @if($calculatedNumberOfDays > ($leaveBalances['casualLeaveBalance'] ?? 0))
                             <!-- Display an error message if the number of days exceeds the leave balance -->
