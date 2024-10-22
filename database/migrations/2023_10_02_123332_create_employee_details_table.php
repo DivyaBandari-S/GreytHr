@@ -13,15 +13,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_details', function (Blueprint $table) {
-            $table->string('emp_id')->primary();
+            $table->string('emp_id',10)->primary();
             $table->string('first_name',100);
             $table->string('last_name',100);
             $table->enum('gender', ['MALE', 'FEMALE', 'OTHER'])->nullable();
             $table->string('email',100)->unique()->nullable();
             $table->json('company_id');
             $table->binary('image')->nullable();
-            $table->string('dept_id',10)->nullable();
-            $table->string('sub_dept_id',10)->nullable();
             $table->string('dept_id',10)->nullable();
             $table->string('sub_dept_id',10)->nullable();
             $table->date('hire_date')->nullable();
@@ -31,7 +29,6 @@ return new class extends Migration
             $table->string('dept_head',10)->nullable();
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); //Define ENUM for roles
             $table->enum('employee_status', ['active', 'on-leave', 'terminated', 'resigned', 'on-probation'])->default('active');
-            $table->string('emergency_contact',20)->nullable();
             $table->string('emergency_contact',20)->nullable();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);

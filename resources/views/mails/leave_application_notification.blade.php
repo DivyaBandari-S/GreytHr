@@ -9,14 +9,14 @@
 <body>
     <p>Hi,</p>
     @if($leaveRequest->category_type === 'Leave')
-    @if($leaveRequest->status === 'Withdrawn')
+    @if($leaveRequest->leave_status === 4)
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave.</p>
     @else
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave.</p>
     <p>Please log on to and review the leave application.</p>
     @endif
     @else
-    @if($leaveRequest->cancel_status === 'Withdrawn')
+    @if($leaveRequest->cancel_status === 4)
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong>has withdrawn the leave cancel.</p>
     @else
     <p><strong>{{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}]</strong> has applied for a leave cancel.</p>
@@ -74,7 +74,7 @@
             </tbody>
         </table>
 
-        @if($status === 'Withdrawn')
+        @if($leave_status === 4)
         <p></p>
         @else
         <p><a href="https://s6.payg-india.com/employees-review">Click here </a>to approve/reject/view this request.</p>

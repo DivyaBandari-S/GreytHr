@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('emp_personal_infos', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            // $table->string('emp_id');
+            $table->string('emp_id');
             // $table->string('title')->nullable();
             // $table->string('first_name');
             // $table->string('last_name');

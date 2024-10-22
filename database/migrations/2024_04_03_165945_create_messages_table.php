@@ -12,12 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('messages', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement();
-            $table->foreignId('chating_id', 10)->constrained()->cascadeOnDelete();
+            $table->id();
+            $table->unsignedBigInteger('chating_id');
             $table->string('sender_id', 10)->nullable(); // or uuid()
-            $table->foreign('sender_id', 10)->references('emp_id')->on('employee_details')->nullOnDelete();
             $table->string('receiver_id', 10)->nullable(); // or uuid()
-            $table->foreign('receiver_id', 10)->references('emp_id')->on('employee_details')->nullOnDelete();
             $table->timestamp('read_at')->nullable();
             //delete actions
             $table->timestamp('receiver_deleted_at')->nullable();
@@ -27,6 +25,12 @@ return new class extends Migration
             $table->binary('file_path')->nullable();
             $table->longText('body')->nullable();
             $table->timestamps();
+            $table->foreign('chating_id')
+                ->references('id')
+                ->on('chatings')
+                ->onDelete('cascade');
+            $table->foreign('receiver_id')->references('emp_id')->on('employee_details')->nullOnDelete();
+            $table->foreign('sender_id')->references('emp_id')->on('employee_details')->nullOnDelete();
         });
         // Schema::create('messages', function (Blueprint $table) {
         //     $table->id();

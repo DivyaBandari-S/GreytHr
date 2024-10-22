@@ -40,7 +40,7 @@ class LeaveBalances extends Component
     public $leaveTypeModal = 'all';
     public $transactionTypeModal = 'all';
     public $employeeId;
-    public $status;
+    public $leave_status;
     public $fromDateModal;
     public $toDateModal;
     public $leaveType;
@@ -466,7 +466,7 @@ class LeaveBalances extends Component
                     'approved' => 'Approved'
                 ];
                 if (array_key_exists($this->transactionType, $transactionTypes)) {
-                    $query->where('status', $transactionTypes[$this->transactionType]);
+                    $query->where('leave_status', $transactionTypes[$this->transactionType]);
                 }
             })
             ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')

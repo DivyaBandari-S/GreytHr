@@ -309,7 +309,7 @@
 
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
                                 Mobile
-                            </div>h
+                            </div>
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
                                 {{ $employeeDetails->empPersonalInfo->mobile_number }}
@@ -714,9 +714,19 @@
                                     CURRENT POSITION </div>
                             </div>
                             <div class="col-6 col-md-6">
-                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
-                                    Resign
-                                </div>
+                            @if($isResigned=='')
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                                Resign
+                            </div>
+                            @elseif($isResigned=='pending')
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                             Edit Resignation
+                            </div>
+                            @else
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                             View Resignation
+                            </div>
+                            @endif
                             </div>
                         </div>
                         @php
@@ -901,8 +911,12 @@
                                     @error('comments') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>--}}
                                 <div class="form-group mt-2">
-                                    <label for="signature">Files</label> <br>
-                                    <input type="file" class="form-control-file" wire:change="validateFields('signature')" wire:model="signature" id="signature" name="signature" style="font-size:12px;">
+                                    <label for="">Files</label> <br>
+                                    <input type="file" class="form-control-file" wire:change="validateFields('signature')" wire:model="signature" id="signature" name="signature" style="font-size:12px;display:none;">
+                                    <label for="signature">
+                                        <img  style="cursor: pointer;" width="20" src="{{ asset('images/attachments.png') }}" alt="">
+                                    </label>
+                                    <label for="">{{ $fileName}}</label>
                                     <br>
                                     @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>

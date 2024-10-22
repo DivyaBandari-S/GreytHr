@@ -14,13 +14,14 @@ return new class extends Migration
     {
         Schema::create('finance', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            $table->string('fi_emp_id',10)->nullable()->default(null)->unique();
+            $table->string('fi_emp_id', 10)->nullable()->unique();
             $table->string('emp_id');
-            $table->string('employee_name',100);
+            $table->string('employee_name', 100);
+            $table->string('email', 100)->unique();
             $table->string('password')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
-                $table->foreign('emp_id')
+            $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
                 ->onDelete('restrict')
@@ -34,10 +35,10 @@ return new class extends Migration
             -- Check if bill_number is NULL
             IF NEW.fi_emp_id IS NULL THEN
                 -- Find the maximum bill_number value in the bills table
-                SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(fi_emp_id, 3) AS UNSIGNED)) + 1 FROM finance), 100000);
+                SET @max_id := IFNULL((SELECT MAX(CAST(SUBSTRING(fi_emp_id, 3) AS UNSIGNED)) + 1 FROM finance), 10000);
 
                 -- Increment the max_id and assign it to the new bill_number
-                SET NEW.fi_emp_id = CONCAT('FI-', LPAD(@max_id, 6, '0'));
+                SET NEW.fi_emp_id = CONCAT('FI-', LPAD(@max_id, 5, '0'));
             END IF;
         END;
     SQL;
@@ -50,6 +51,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        DB::unprepared('DROP TRIGGER IF EXISTS generate_fi_emp_id');
         Schema::dropIfExists('finance');
     }
 };

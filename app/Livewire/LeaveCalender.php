@@ -347,8 +347,8 @@ class LeaveCalender extends Component
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where('emp_id', $employeeId)
-                    ->where('status', 'approved')
-                    ->whereIn('cancel_status',['Re-applied','Pending','rejected'])
+                    ->where('leave_status', 2)
+                    ->whereIn('cancel_status',[6,5,3,4])
                     ->where(function ($query) use ($searchTerm) {
                         $query->where('emp_id', 'like', $searchTerm)
                             ->orWhereHas('employee', function ($query) use ($searchTerm) {
@@ -383,8 +383,8 @@ class LeaveCalender extends Component
                     ->whereDate('from_date', '<=', $dateFormatted)
                     ->whereDate('to_date', '>=', $dateFormatted)
                     ->where(function ($query) {
-                        $query->where('status', 'approved')
-                            ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
+                        $query->where('leave_status', 2)
+                            ->whereIn('cancel_status', [6,3,4,5]);
                     })
                     ->where(function ($query) use ($searchTerm) {
                         $query->where('emp_id', 'like', $searchTerm)
@@ -629,8 +629,8 @@ class LeaveCalender extends Component
                             });
                     })
                     ->where(function ($query) {
-                        $query->where('leave_applications.status', 'approved')
-                            ->where('leave_applications.cancel_status', '!=', 'approved');
+                        $query->where('leave_applications.leave_status', 2)
+                            ->where('leave_applications.cancel_status', '!=', 2);
                     })
                     ->whereIn('leave_applications.emp_id', $teamMembers) // Use the team member IDs here
                     ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
@@ -645,7 +645,7 @@ class LeaveCalender extends Component
                                     ->where('to_date', '>=', $formattedEndDate);
                             });
                     })
-                    ->where('leave_applications.status', 'approved')
+                    ->where('leave_applications.leave_status', 2)
                     ->where('employee_details.emp_id', $userId)
                     ->select('employee_details.first_name', 'employee_details.last_name', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.leave_type', 'employee_details.emp_id')
                     ->get();

@@ -658,7 +658,6 @@
                                 @endif
 
                             </div>
-
                             @else
                             <div class="col accordion-content">
 
