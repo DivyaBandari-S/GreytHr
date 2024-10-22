@@ -34,6 +34,7 @@ class ProfileInfo extends Component
     public $showSuccessMessage = false;
     public $resignation_date;
     public  $reason;
+    public $fileName;
     public  $last_working_day;
     public $comments;
     public $signature;
@@ -68,13 +69,18 @@ class ProfileInfo extends Component
     {
         $this->updateProfile();
         $empId = Auth::guard('emp')->user()->emp_id;
-        $resig_requests=EmpResignations::where('emp_id', $empId)->where('status','Pending')->first();
+        $resig_requests=EmpResignations::where('emp_id', $empId)->where('status',['5','2'])->first();
+// dd($resig_requests);
+        if($resig_requests->status=='5'){
+            $this->isResigned='pending';
+            $this->resignation_date=$resig_requests->resignation_date;
+            $this->reason=$resig_requests->reason;
+            $this->fileName=$resig_requests->file_name;
 
-        // if($resig_requests->status=='Pending'){
-        //     $this->isResigned='pending';
-        // }else{
-        //     $this->isResigned='approved';
-        // }
+
+        }else{
+            $this->isResigned='approved';
+        }
 
     }
 
