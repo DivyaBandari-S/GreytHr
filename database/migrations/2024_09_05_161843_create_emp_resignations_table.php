@@ -21,7 +21,7 @@ return new class extends Migration
             $table->binary('signature')->nullable();
             $table->string('mime_type', 100)->nullable();
             $table->string('file_name')->nullable();
-            $table->smallInteger('status')->default(5);
+            $table->tinyInteger('status')->default(5);
             $table->timestamps();
             $table->foreign('emp_id')
                 ->references('emp_id')

@@ -14,9 +14,10 @@ return new class extends Migration
     {
         Schema::create('i_t', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            $table->string('it_emp_id', 10)->nullable()->default(null)->unique();
-            $table->string('employee_name',100);
-            $table->string('emp_id', 10)->nullable();
+            $table->string('it_emp_id', 10)->nullable()->unique(); // Increased to 15 characters
+            $table->string('employee_name', 100);
+            $table->string('emp_id', 10);
+            $table->string('email', 100)->unique();
             $table->string('delete_itmember_reason', 10)->nullable();
             $table->tinyInteger('status')->default(1);
             $table->enum('role', ['user', 'admin', 'super_admin'])->default('user'); // Define ENUM for roles
@@ -37,12 +38,12 @@ return new class extends Migration
             IF NEW.it_emp_id IS NULL THEN
                 -- Fetch the maximum numeric value from it_emp_id
                 SET @max_id := IFNULL(
-                    (SELECT MAX(CAST(SUBSTRING(it_emp_id, 4) AS UNSIGNED)) FROM i_t),
-                    10000
+                    (SELECT MAX(CAST(SUBSTRING(it_emp_id, 3) AS UNSIGNED)) FROM i_t),
+                    9999
                 );
 
                 -- Increment and assign the new it_emp_id
-                SET NEW.it_emp_id = CONCAT('IT-', @max_id + 1);
+                SET NEW.it_emp_id = CONCAT('IT-', LPAD(@max_id + 1, 5, '0'));
             END IF;
         END;
         SQL;

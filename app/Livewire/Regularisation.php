@@ -196,12 +196,14 @@ class Regularisation extends Component
 
 
             return LeaveRequest::where('emp_id', $employeeId)
-                ->where('status', 'approved')
+                ->where('leave_applications.leave_status', 'approved')
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
                 })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types table
                 ->exists();
+
         } catch (\Exception $e) {
             Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
