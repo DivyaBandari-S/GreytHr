@@ -74,12 +74,20 @@ class LeaveApprovalNotification extends Mailable
         ];
 
         // Get the leave status text using the mapping
-        $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
+        if ($this->leaveRequest->category_type === 'Leave'){
+            $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
+             // Determine the subject based on the recipient type
+             $subject = $this->forMainRecipient
+             ? 'Your leave application has been ' . ucfirst($leaveStatusText)
+             : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveStatusText);
 
-        // Determine the subject based on the recipient type
-        $subject = $this->forMainRecipient
-            ? 'Your leave application has been ' . ucfirst($leaveStatusText)
-            : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveStatusText);
+        }else{
+            $leaveCancelStatusText = $statusMap[$this->leaveRequest->cancel_status] ?? 'Unknown';
+             // Determine the subject based on the recipient type
+             $subject = $this->forMainRecipient
+             ? 'Your leave application has been ' . ucfirst($leaveCancelStatusText)
+             : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveCancelStatusText);
+        }
 
         return new Envelope(
             subject: $subject,

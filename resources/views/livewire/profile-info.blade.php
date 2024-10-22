@@ -309,7 +309,7 @@
 
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
                                 Mobile
-                            </div>h
+                            </div>
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
                                 {{ $employeeDetails->empPersonalInfo->mobile_number }}

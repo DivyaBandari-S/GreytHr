@@ -178,9 +178,10 @@
                            4 => 'Withdrawn',
                            5 => 'Pending',
                            6=> 'Re-applied',
-                           7 => 'Pending Leave Cancel'
+                           7 => 'Pending'
                            ];
                            $statusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
+                           $cancelStatusText = $statusMap[$leaveRequest->cancel_status] ?? 'Unknown';
                            @endphp
                            <!-- Add other details based on your leave request structure -->
                            @if(($leaveRequest->category_type === 'Leave') )
@@ -189,7 +190,7 @@
                            </div>
                            @else
                            <div class="col accordion-content">
-                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($statusText) }}</span>
+                              <span class="accordionContentSpanValue" style="color:#cf9b17 !important;">{{ strtoupper($cancelStatusText) }}</span>
                            </div>
                            @endif
                            <div class="arrow-btn">
