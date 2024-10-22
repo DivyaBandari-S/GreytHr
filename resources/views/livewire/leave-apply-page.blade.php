@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper mb-2" style="width: 65%;">
-                            <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" wire:keydown.debounce.500ms="validateField('leave_type')" name="leave_type">
+                            <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" name="leave_type" wire:change="validateField('leave_type')">
                                 <option value="default">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
@@ -52,7 +52,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="from_date">From Date <span class="requiredMark">*</span> </label>
-                                <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="l('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
+                                <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -512,9 +512,9 @@
                 @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
             </div>
             <div class="form-group mt-3">
-                <label for="file">Attachments</label> <br>
-                <input id="file" type="file" wire:model="file_paths" wire:loading.attr="disabled" multiple /> <br>
-                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror
+                <label for="file_paths">Attachments</label> <br>
+                <input id="file_paths" style="font-size:12px;" type="file"  wire:loading.attr="disabled" wire:model.lazy="file_paths" wire:change="handleFieldUpdate('file_paths')"  multiple /> <br>
+                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror  <br>
                 <span class="normalTextValue mt-2 fw-normal">File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
             </div>
 
