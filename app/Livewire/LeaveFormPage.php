@@ -138,7 +138,7 @@ class LeaveFormPage extends Component
                 ->where(function ($query) {
                     // Include records if status is in the given list, excluding those with 'Pending Leave Cancel' cancel_status when status is 'approved'
                     $query->where(function ($q) {
-                        $q->whereIn('leave_status', [2,3,4])
+                        $q->whereIn('leave_status',[2,3,4])
                             ->where(function ($q) {
                                 $q->where('leave_status', '!=', 2)
                                     ->orWhere('cancel_status', '!=', 7);
@@ -270,7 +270,7 @@ class LeaveFormPage extends Component
             }
 
             // Update status to the corresponding status code
-            $leaveRequest->status = $withdrawnStatus->status_code;
+            $leaveRequest->leave_status = $withdrawnStatus->status_code;
             $leaveRequest->updated_at = now();
             $leaveRequest->save();
 
@@ -319,15 +319,15 @@ class LeaveFormPage extends Component
                 ->first();
             if ($matchingLeaveRequest) {
                 // Update the matching request status to 'rejected'
-                $matchingLeaveRequest->cancel_status = 'Withdrawn';
+                $matchingLeaveRequest->cancel_status = 4;
                 $matchingLeaveRequest->updated_at = now();
                 $matchingLeaveRequest->action_by = $employeeId;
                 $matchingLeaveRequest->save();
             }
 
             // Update the current leave request status to 'approved'
-            $leaveRequest->cancel_status = 'Withdrawn';
-            $leaveRequest->status = 'rejected';
+            $leaveRequest->cancel_status = 4;
+            $leaveRequest->leave_status = 3;
             $leaveRequest->updated_at = now();
             $leaveRequest->action_by = $employeeId;
             $leaveRequest->save();

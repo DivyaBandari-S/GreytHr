@@ -339,34 +339,34 @@
                                     @endif
                                 </div>
 
-                                <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
-                                    Mobile
-                                </div>
-                                <div style="margin-left: 15px; font-size: 12px">
-                                    @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
-                                        {{ $employeeDetails->empPersonalInfo->mobile_number }}
-                                    @else
-                                        <span style="padding-left: 35px;">-</span>
-                                    @endif
-                                </div>
+                            <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
+                                Mobile
                             </div>
-                            <div class="col-6 col-md-4">
-                                <div style="font-size: 11px;  color: #778899; margin-left: 15px">
-                                    Email
-                                </div>
-                                <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                    @if ($employeeDetails->empPersonalInfo)
-                                        @if ($employeeDetails->empPersonalInfo->email)
-                                            {{ $employeeDetails->empPersonalInfo->email }}
-                                        @else
-                                            <span style="padding-left: 15px;">-</span>
-                                        @endif
-                                    @else
-                                        <span style="padding-left: 15px;">-</span>
-                                    @endif
-                                </div>
+                            <div style="margin-left: 15px; font-size: 12px">
+                                @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
+                                {{ $employeeDetails->empPersonalInfo->mobile_number }}
+                                @else
+                                <span style="padding-left: 35px;">-</span>
+                                @endif
                             </div>
                         </div>
+                        <div class="col-6 col-md-4">
+                            <div style="font-size: 11px;  color: #778899; margin-left: 15px">
+                                Email
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
+                                @if ($employeeDetails->empPersonalInfo)
+                                 @if( $employeeDetails->empPersonalInfo->email)
+                                 {{ $employeeDetails->empPersonalInfo->email }}
+                                 @else
+                                 <span style="padding-left: 15px;">-</span>
+                                 @endif
+                                @else
+                                <span style="padding-left: 15px;">-</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
 
                         <div class="row p-3 gx-0"
                             style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
@@ -782,32 +782,38 @@
                 </div>
 
 
-                {{-- Employment & Job --}}
-                <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;"
-                    id="employeeJobDetails">
-                    <div class="col">
-                        <div class="row p-3 gx-0"
-                            style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
-                            <div class="row mt-2 p-0 gx-0">
-                                <div class="col-6 col-md-6">
-                                    <div
-                                        style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
-                                        CURRENT POSITION </div>
-                                </div>
-                                <div class="col-6 col-md-6">
-                                    <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                        wire:click="showPopupModal">
-                                        Resign
-                                    </div>
-                                </div>
+            {{-- Employment & Job --}}
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;" id="employeeJobDetails">
+                <div class="col">
+                    <div class="row p-3 gx-0" style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div class="row mt-2 p-0 gx-0">
+                            <div class="col-6 col-md-6">
+                                <div style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
+                                    CURRENT POSITION </div>
                             </div>
-                            @php
-                                // Fetch the manager details directly in Blade
-                                $manager = \App\Models\EmployeeDetails::where(
-                                    'emp_id',
-                                    $employeeDetails->manager_id,
-                                )->first();
-                            @endphp
+                            <div class="col-6 col-md-6">
+                            @if($isResigned=='')
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                                Resign
+                            </div>
+                            @elseif($isResigned=='pending')
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                             Edit Resignation
+                            </div>
+                            @else
+                            <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px" wire:click="showPopupModal">
+                             View Resignation
+                            </div>
+                            @endif
+                            </div>
+                        </div>
+                        @php
+                        // Fetch the manager details directly in Blade
+                        $manager = \App\Models\EmployeeDetails::where(
+                        'emp_id',
+                        $employeeDetails->manager_id,
+                        )->first();
+                        @endphp
 
                             <div class="col-6 col-md-3">
                                 <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -1006,30 +1012,29 @@
                                     <label for="comments">Comments</label>
                                     <textarea class="form-control placeholder-small" wire:keydown.debounce.500ms="validateFields('comments')" wire:model.lazy="comments" id="comments" name="comments"></textarea>
                                     @error('comments') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div> --}}
-                                        <div class="form-group mt-2">
-                                            <label for="signature">Files</label> <br>
-                                            <input type="file" class="form-control-file"
-                                                wire:change="validateFields('signature')" wire:model="signature"
-                                                id="signature" name="signature" style="font-size:12px;">
-                                            <br>
-                                            @error('signature')
-                                                <span class="text-danger">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer d-flex justify-content-center">
-                                        <button type="submit" class="submit-btn">Submit</button>
-                                        <button type="button" class="cancel-btn" wire:click="resetInputFields"
-                                            style="border:1px solid rgb(2,17,79);">Clear</button>
-                                    </div>
-                                </form>
+                                </div>--}}
+                                <div class="form-group mt-2">
+                                    <label for="">Files</label> <br>
+                                    <input type="file" class="form-control-file" wire:change="validateFields('signature')" wire:model="signature" id="signature" name="signature" style="font-size:12px;display:none;">
+                                    <label for="signature">
+                                        <img  style="cursor: pointer;" width="20" src="{{ asset('images/attachments.png') }}" alt="">
+                                    </label>
+                                    <label for="">{{ $fileName}}</label>
+                                    <br>
+                                    @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
+                                </div>
                             </div>
-                        </div>
+                            <div class="modal-footer d-flex justify-content-center">
+                                <button type="submit" class="submit-btn">Submit</button>
+                                <button type="button" class="cancel-btn" wire:click="resetInputFields" style="border:1px solid rgb(2,17,79);">Clear</button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="modal-backdrop fade show"></div>
-                @endif
-                {{-- Assets --}}
+                </div>
+            </div>
+            <div class="modal-backdrop fade show"></div>
+            @endif
+            {{-- Assets --}}
 
                 <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;"
                     id="assetsDetails">
