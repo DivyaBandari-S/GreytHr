@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Mail\ManagerNotificationMail;
 use App\Mail\RegularisationApprovalMail;
 use App\Mail\RegularisationRejectionMail;
@@ -10,7 +11,7 @@ use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Session;
+
 use Livewire\Component;
 
 class ViewRegularisationPendingNew extends Component
@@ -53,8 +54,8 @@ class ViewRegularisationPendingNew extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-        ->where('status','pending')
-        ->whereNull('mail_sent')        
+        ->where('status',5)
+        ->whereNull('mail_sent')
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
         ->with('employee')
@@ -142,7 +143,7 @@ class ViewRegularisationPendingNew extends Component
        
         $employeeId=$item->emp_id;
        
-        $item->status='approved';
+        $item->status=2;
         if(empty($this->remarks))
         {
             if($this->auto_approve==true)
@@ -225,7 +226,7 @@ class ViewRegularisationPendingNew extends Component
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeApproveModal();
-        Session::flash('success', 'Regularisation Request approved successfully');
+        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
         $this->showAlert=true;
         $this->sendApprovalMail($id);
     }
@@ -269,7 +270,7 @@ class ViewRegularisationPendingNew extends Component
         {
             $item->approver_remarks=$this->remarks;
         }
-        $item->status='rejected';
+        $item->status=3;
         $item->rejected_date = $currentDateTime; 
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
@@ -277,7 +278,7 @@ class ViewRegularisationPendingNew extends Component
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeRejectModal();
-        Session::flash('success', 'Regularisation Request rejected successfully');
+        FlashMessageHelper::flashError('Regularisation Request rejected successfully');
         $this->showAlert=true;
         $this->sendRejectionMail($id);
     }
@@ -316,7 +317,7 @@ class ViewRegularisationPendingNew extends Component
                 $this->regularisations = RegularisationDates::join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->whereIn('regularisation_dates.emp_id', $empIds)
                 ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-                ->where('regularisation_dates.status','pending')
+                ->where('regularisation_dates.status',5)
                 ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
                 ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
                 ->with('employee') 
@@ -332,7 +333,7 @@ class ViewRegularisationPendingNew extends Component
         {
             $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status','pending')
+            ->where('status',5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0') 
             ->with('employee') 

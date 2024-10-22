@@ -24,6 +24,7 @@ use Livewire\Component;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 use App\Models\SalaryRevision;
+use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -140,7 +141,7 @@ class Home extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
             ->with('employee')
@@ -148,7 +149,7 @@ class Home extends Component
 
         $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
             ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 'pending')
+            ->where('status', 5)
             ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
             ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
             ->with('employee')
@@ -217,7 +218,7 @@ class Home extends Component
                 return 'mobile';
             }
         } catch (Throwable $e) {
-            return 'unknown'; // Return a default value or handle the error gracefully
+            FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
         }
     }
 
@@ -286,10 +287,10 @@ class Home extends Component
             $today = Carbon::now()->format('Y-m-d');
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
-                            $query->where('status', 'Pending')
-                                ->where('cancel_status', 'Pending Leave Cancel');
+                            $query->where('leave_status', 5)
+                                ->where('cancel_status', 6);
                         });
                 })
                 ->orderBy('created_at', 'desc')
@@ -376,7 +377,9 @@ class Home extends Component
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'approved')
+                ->where('category_type', operator: 'Leave')
+                ->where('leave_status', 2)
+                ->where('cancel_status', '!=', 2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereDate('from_date', '=', $currentDate)
                         ->orWhereDate('to_date', '=', $currentDate);
@@ -404,7 +407,7 @@ class Home extends Component
 
             $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('status', 'approved')
+                ->where('leave_status', 2)
                 ->where(function ($query) use ($currentDate) {
                     $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
                 })
@@ -457,7 +460,7 @@ class Home extends Component
 
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
+                ->where('leave_applications.leave_status', 2)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->whereDate('from_date', '<=', $currentDate)
                 ->whereDate('to_date', '>=', $currentDate)
@@ -515,13 +518,14 @@ class Home extends Component
                     'swipe_records.*',
                     'employee_details.first_name',
                     'employee_details.last_name',
-                    'emp_personal_infos.mobile_number', // Selecting fields from emp_personal_infos
+                    'employee_details.emergency_contact', // Selecting fields from emp_personal_infos
                     'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
                     'company_shifts.shift_end_time',
                 )
                 ->where(function ($query) {
                     $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
                 })
+                ->where('employee_details.employee_status', 'active')
                 ->get();
 
 
@@ -547,11 +551,12 @@ class Home extends Component
                     'employee_details.last_name',
                     'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
                     'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
-                    'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
+                    'employee_details.emergency_contact',  // Include fields from emp_personal_infos
                 )
                 ->where(function ($query) {
                     $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
                 })
+                ->where('employee_details.employee_status', 'active')
                 ->get();
 
             $swipes_late1 = $swipes_late->count();
@@ -653,13 +658,10 @@ class Home extends Component
 
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
-            // Handle database query exceptions
-            Log::error('Database Error: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            Log::error('Error in home component: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
-            // Handle other general exceptions
-            Log::error('General Error: ' . $e->getMessage());
-            session()->flash('error', 'An unexpected error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
     public $filterPeriod = 'this_month';
@@ -697,7 +699,7 @@ class Home extends Component
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
 
-        $totalTasksAssignedBy = \App\Models\Task::with('emp')
+        $totalTasksAssignedBy = Task::with('emp')
             ->where(function ($query) use ($employeeId) {
                 $query->where('assignee', 'LIKE', "%($employeeId)%");
             })
@@ -707,7 +709,7 @@ class Home extends Component
 
         $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
 
-        $totalTasksAssignedTo = \App\Models\Task::with('emp')
+        $totalTasksAssignedTo = Task::with('emp')
             ->where('emp_id', $employeeId)
             ->where(function ($query) use ($employeeId) {
                 $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
@@ -717,11 +719,11 @@ class Home extends Component
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
 
-        $tasksSummary = \App\Models\Task::with('emp')
+        $tasksSummary = Task::with('emp')
             ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
-            COALESCE(SUM(CASE WHEN status = 'Completed' THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
-            COALESCE(SUM(CASE WHEN status = 'Open' THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
+            COALESCE(SUM(CASE WHEN status = 11 THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
+            COALESCE(SUM(CASE WHEN status = 10 THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
         ")
             ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
             ->whereBetween('created_at', [$startDate, $endDate])
@@ -776,16 +778,13 @@ class Home extends Component
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
 
-            // Log request URL for debugging
-            Log::info("Request URL: $requestUrl");
-
             $response = Http::get($requestUrl);
 
             // Log response for debugging
-            Log::info('API Response:', $response->json() ?? []);
-            Log::info('API Response Status Code:', ['status' => $response->status()]);
-            Log::info('API Response Headers:', ['headers' => $response->headers()]);
-            Log::info('API Response Body:', ['body' => $response->body()]);
+            // Log::info('API Response:', $response->json() ?? []);
+            // Log::info('API Response Status Code:', ['status' => $response->status()]);
+            // Log::info('API Response Headers:', ['headers' => $response->headers()]);
+            // Log::info('API Response Body:', ['body' => $response->body()]);
 
             // Check if the request was successful
             if ($response->successful()) {
@@ -803,7 +802,7 @@ class Home extends Component
                 $this->isDay = $currentWeather['is_day'] ? 'Day' : 'Night';
             } else {
                 // Log the error response
-                Log::error('API Error:', ['status' => $response->status(), 'body' => $response->body()]);
+                // Log::error('API Error:', ['status' => $response->status(), 'body' => $response->body()]);
                 $this->weatherCondition = 'Unable to fetch weather data';
                 $this->temperature = 'Unknown';
                 $this->windspeed = 'Unknown';
@@ -811,7 +810,8 @@ class Home extends Component
                 $this->isDay = 'Unknown';
             }
         } catch (\Exception $e) {
-            Log::error("Exception: ", ['message' => $e->getMessage()]);
+            // Log::error("Exception: ", ['message' => $e->getMessage()]);
+            FlashMessageHelper::flashError('An error occured.please try again later.');
             $this->weatherCondition = 'An error occurred';
             $this->temperature = 'Unknown';
             $this->windspeed = 'Unknown';
@@ -875,7 +875,8 @@ class Home extends Component
             $response = Http::get($url);
             // dd($response->json());
         } catch (\Exception $e) {
-            Log::error("Exception: ", ['message' => $e->getMessage()]);
+            // Log::error("Exception: ", ['message' => $e->getMessage()]);
+            FlashMessageHelper::flashError('An error occured while getting location.');
         }
     }
 
@@ -918,7 +919,7 @@ class Home extends Component
     public function sendCoordinates($latitude, $longitude)
     {
         // Log the received coordinates
-        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        // Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
 
         // Build the API URL for reverse geocoding
         $apiUrl = "https://nominatim.openstreetmap.org/reverse";
@@ -947,10 +948,11 @@ class Home extends Component
                     'country_code' => $address['country_code'] ?? ''
                 ];
             } else {
-                Log::error("Failed to fetch address. Error: " . $response->body());
+                // Log::error("Failed to fetch address. Error: " . $response->body());
             }
         } catch (\Exception $e) {
-            Log::error("Error occurred while fetching address: " . $e->getMessage());
+            // Log::error("Error occurred while fetching address: " . $e->getMessage());
+            FlashMessageHelper::flashError('Error occurred while fetching address');
         }
     }
 }

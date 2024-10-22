@@ -49,7 +49,7 @@ class LeaveApplicationNotification extends Mailable
                 'ccToDetails' => $this->ccToDetails,
                 'employeeDetails' => $this->employeeDetails,
                 'numberOfDays' => $numberOfDays,
-                'status' => $this->leaveRequest->status,
+                'leave_status' => $this->leaveRequest->leave_status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
             ]);
@@ -60,24 +60,20 @@ class LeaveApplicationNotification extends Mailable
      */
     public function envelope(): Envelope
     {
-        $status = $this->leaveRequest->status;
-        $cancelStatus = $this->leaveRequest->cancel_status;
-        $leaveCategory = $this->leaveRequest->category_type;
         $subject = '';
-        if ($leaveCategory === 'Leave'){
-            if ($status === 'Withdrawn') {
+        if ($this->leaveRequest->category_type === 'Leave'){
+            if ($this->leaveRequest->leave_status === 4) {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
             }
         }else{
-            if ($cancelStatus === 'Withdrawn') {
+            if ($this->leaveRequest->cancel_status === 4) {
                 $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
                 $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
             }
         }
-
 
         return new Envelope(
             subject: $subject // Use the subject variable here

@@ -21,85 +21,38 @@
             <div class="heading rounded mb-3">
                 <div class="heading-2 rounded">
                     <div class="d-flex flex-row justify-content-between rounded">
-                        @if($leaveRequest->category_type == 'Leave')
+                        @if($leaveRequest->category_type === 'Leave')
                         <div class="field">
                             <span class="normalTextValue">
-                                @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
-                                Withdrawn by
-                                @elseif(strtoupper($leaveRequest->status) == 'APPROVED')
-                                Approved by
-                                @else
-                                Rejected by
-                                @endif
+                                Applied by
                             </span>
                             <br>
-                            @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
                             <span class="normalText">
-                                {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
+                                {{ $fullName}}
                             </span>
-                            @elseif(!empty($leaveRequest['applying_to']))
-                            @foreach($leaveRequest['applying_to'] as $applyingTo)
-                            <span class="normalText">
-                                {{ ucwords(strtoupper($applyingTo['report_to'] ))}}
-                            </span>
-                            @endforeach
-                            @endif
-                        </div>
-                        @else
-                        <div class="field">
-                            <span class="normalTextValue">
-                                @if($leaveRequest->cancel_status == 'Pending Leave Cancel')
-                                Pending with
-                                @elseif(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
-                                Approved by
-                                @else
-                                Rejected by
-                                @endif
-                            </span>
-                            <br>
-                            @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
-                            <span class="normalText">
-                                {{ ucwords(strtoupper($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtoupper($this->leaveRequest->employee->last_name)) }}
-                            </span>
-                            @elseif(!empty($leaveRequest['applying_to']))
-                            @foreach($leaveRequest['applying_to'] as $applyingTo)
-                            <span class="normalText">
-                                {{ ucwords(strtoupper($applyingTo['report_to'] ))}}
-                            </span>
-                            @endforeach
-                            @endif
                         </div>
                         @endif
                         <div>
-                            @if($leaveRequest->category_type == 'Leave')
+                            @if($leaveRequest->category_type === 'Leave')
                             <span>
-                                @if(strtoupper($leaveRequest->status) == 'APPROVED')
+                                @if($leaveRequest->leave_status === 5)
 
-                                <span class="approvedColor mt-2">{{ strtoupper($leaveRequest->status) }}</span>
-
-                                @elseif(strtoupper($leaveRequest->status) == 'REJECTED')
-
-                                <span class="rejectColor mt-2">{{ strtoupper($leaveRequest->status) }}</span>
-
+                                <span class="otherStatus mt-2">PENDING</span>
                                 @else
 
-                                <span class="otherStatus mt-2">{{ strtoupper($leaveRequest->status) }}</span>
-
+                                <span class="otherStatus mt-2">-</span>
+v
                                 @endif
                             </span>
                             @else
                             <span>
-                                @if(strtoupper($leaveRequest->cancel_status) == 'APPROVED')
+                                @if($leaveRequest->cancel_status === 7)
 
-                                <span class="approvedColor mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
-
-                                @elseif(strtoupper($leaveRequest->cancel_status) == 'REJECTED')
-
-                                <span class="rejectColor mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="rejectColor mt-2">PENDING</span>
 
                                 @else
 
-                                <span class="otherStatus mt-2">{{ strtoupper($leaveRequest->cancel_status) }}</span>
+                                <span class="otherStatus mt-2">-</span>
 
                                 @endif
                             </span>
@@ -213,8 +166,6 @@
 
                                 </div>
                                 @endif
-
-
                             </div>
                         </div>
                         <div class="col-md-3 m-0 p-0">
@@ -232,7 +183,9 @@
                                     <div class="custom-grid-item">
                                         <span class="custom-label">Applied to</span>
                                         <span class="custom-label">Reason</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-label">Contact</span>
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-label">CC to</span>
                                         @endif
@@ -243,14 +196,19 @@
 
                                     <div class="custom-grid-item">
                                         @if(!empty($leaveRequest['applying_to']))
+                                        @php
+                                        // Access the first element of the applying_to array
+                                        $applyingTo = $leaveRequest['applying_to'][0];
+                                        @endphp
                                         <span class="custom-value">{{ ucwords(strtolower($applyingTo['report_to'])) }}</span>
                                         @else
                                         <span class="custom-value">-</span>
                                         @endif
 
                                         <span class="custom-value">{{ ucfirst($leaveRequest->reason) }}</span>
+                                        @if($leaveRequest->category_type === 'Leave')
                                         <span class="custom-value">{{ ucfirst($leaveRequest->contact_details) }}</span>
-
+                                        @endif
                                         @if (!empty($leaveRequest->cc_to))
                                         <span class="custom-value">
                                             @if (is_string($leaveRequest->cc_to))
@@ -428,14 +386,9 @@
                     <div class="mt-4 d-flex flex-column" style="gap: 60px;">
                         <div class="group">
                             <div>
-                                @if($leaveRequest->category_type == 'Leave')
+                                @if($leaveRequest->category_type === 'Leave')
                                 <h5 class="normalText text-start">
-                                    @if(strtoupper($leaveRequest->status) == 'WITHDRAWN')
-                                    Withdrawn <br><span class="normalText text-start">by</span>
-                                    <span class="normalTextValue text-start">
-                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
-                                    </span>
-                                    @elseif($leaveRequest->status == 'Pending')
+                                    @if($leaveRequest->leave_status === 5)
                                     <span class="normalTextValue text-start"> Pending <br> with</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)
@@ -452,12 +405,7 @@
                                 </h5>
                                 @else
                                 <h5 class="normalText text-start">
-                                    @if(strtoupper($leaveRequest->cancel_status) == 'WITHDRAWN')
-                                    Withdrawn <br><span class="normalText text-start">by</span>
-                                    <span class="normalTextValue text-start">
-                                        {{ ucwords(strtolower($this->leaveRequest->employee->first_name)) }} {{ ucwords(strtolower($this->leaveRequest->employee->last_name)) }}
-                                    </span>
-                                    @elseif($leaveRequest->cancel_status == 'Pending Leave Cancel')
+                                    @if($leaveRequest->cancel_status === 7)
                                     <span class="normalTextValue text-start"> Pending <br> with</span>
                                     @if(!empty($leaveRequest['applying_to']))
                                     @foreach($leaveRequest['applying_to'] as $applyingTo)

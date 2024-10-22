@@ -383,6 +383,8 @@
     $currentMonth=$monthNumber = DateTime::createFromFormat('F', $Month)->format('n');
     $currentYear = 2024;
     $isHoliday=0;
+    $leaveTake=0;
+    $leaveType=null;
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp
     @for ($i = 1; $i <= $daysInMonth; $i++) @php $timestamp=mktime(0, 0, 0, $currentMonth, $i, $currentYear); $dayName=date('D', $timestamp); $fullDate=date('Y-m-d', $timestamp); @endphp @endfor <div class="row m-0">
@@ -546,7 +548,26 @@
 
                                    @endforeach
 
+                                   @foreach($ApprovedLeaveRequests1 as $empId => $leaveDetails)
 
+
+                                        @if($empId==$emp->emp_id)
+                    <p>
+                        @php
+                        foreach ($leaveDetails['dates'] as $date)
+                        {
+                                if($date == $fullDate)
+                                {
+                                    $leaveTake=1;
+                                
+                                }
+                        }
+                        @endphp
+                    </p>
+
+                    @endif
+
+@endforeach
 
 
 
@@ -557,6 +578,9 @@
                         @elseif($isHoliday==1)
                         <p style="font-weight:bold;padding-top:15px;">H</p>
 
+                        @elseif($leaveTake==1)
+
+                        <p style="font-weight:bold;padding-top:15px;">L</p>
                         @else
 
                             <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
@@ -568,7 +592,8 @@
                         
                         @php
                         $isHoliday=0;
-
+                        $leaveTake=0;
+                      
                         @endphp
 
 

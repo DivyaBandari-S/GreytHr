@@ -49,8 +49,8 @@ class EmployeeDetails extends Authenticatable
         'extension',
         'experience',
         'shift_type',
-        'shift_start_time',
-        'shift_end_time',
+        // 'shift_start_time',
+        // 'shift_end_time',
         'emp_domain',
         'referral',
         'probation_Period',
@@ -141,7 +141,7 @@ class EmployeeDetails extends Authenticatable
 
     // public function sendPasswordResetNotification($token)
     // {
-        
+
     //     // Your own implementation.
     //     $this->notify(new ResetPasswordLink($token));
     // }

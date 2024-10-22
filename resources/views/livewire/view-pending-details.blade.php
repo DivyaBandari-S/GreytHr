@@ -1,12 +1,4 @@
 <div>
-    @if($showAlert)
-    <div class="alert alert-success w-50 position-absolute m-auto p-2" wire:poll.1s="hideAlert" style="right: 25%;top:18%;" id="success-alert">
-        {{ session('message') }}
-        <button type="button" class="alert-close" data-dismiss="alert" aria-label="Close">
-            <span>X</span>
-        </button>
-    </div>
-    @endif
     <div class="col" id="leavePending">
         <div class="row m-0 p-0 mt-3">
             <div class="reviewCountShow p-0">
@@ -28,8 +20,8 @@
 
             </div>
         </div>
-        @if(!empty($this->leaveApplications))
-        @foreach($this->leaveApplications as $leaveRequest)
+        @if(!empty($leaveApplications))
+        @foreach($leaveApplications as $leaveRequest)
         <div class="approved-leave-container mt-1 px-1 rounded">
             <div class="accordion rounded mb-4 p-0">
                 <div class="accordion-heading rounded m-0 p-0" onclick="toggleAccordion(this)">

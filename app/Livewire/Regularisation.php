@@ -2,6 +2,8 @@
 // Created by : Pranita Priyadarshi
 // About this component: It shows allowing employees to adjust or provide reasons for discrepancies in their recorded work hours
 namespace App\Livewire;
+
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -194,15 +196,18 @@ class Regularisation extends Component
 
 
             return LeaveRequest::where('emp_id', $employeeId)
-                ->where('status', 'approved')
+                ->where('leave_applications.leave_status', 'approved')
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
                 })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types table
                 ->exists();
+
         } catch (\Exception $e) {
             Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+      
             return false; // Return false to handle the error gracefully
         }
     }
@@ -219,14 +224,16 @@ class Regularisation extends Component
         $selecteddateday=$selectedDate->day;
         if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
         {
-            session()->flash('error', 'Attendance Period is locked');
+
+            FlashMessageHelper::flashError('Attendance Period is locked');
               $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
         }
         if((Carbon::today()->month)-$selecteddatemonth==1&&$selecteddateyear==(Carbon::today()->year)&&$selecteddateday<25)
         {
-            session()->flash('error', 'Attendance Period is locked');
+           
+            FlashMessageHelper::flashError('Attendance Period is locked');
               $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
@@ -234,48 +241,59 @@ class Regularisation extends Component
         if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1&&$selecteddateday<=(Carbon::today()->year))
         {
               // Throw a validation error or set a message for the user
-              session()->flash('error', 'Attendance Period is locked');
+           
+              FlashMessageHelper::flashError('Attendance Period is locked');
               $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
         }
         if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
-            session()->flash('error', 'Future dates are not allowed for regularisation');
+            
+            FlashMessageHelper::flashError('Future dates are not allowed for regularisation');
             $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->EqualTo(Carbon::today())) {
             // Throw a validation error or set a message for the user
-            session()->flash('error', 'Today dates are not allowed for regularisation');
+            FlashMessageHelper::flashError('Current date is not applicable for regularisation');
             $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
         }
         if ($selectedDate->isWeekend()) {
             // Throw a validation error for weekends
-            session()->flash('error', 'This is a weekend. Regularisation is not allowed on weekends');
+            
+            FlashMessageHelper::flashError('This is a weekend. Regularisation is not allowed on weekends');
             $this->showAlert=true;
             return;
         }
         $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
         if ($holiday) {
-            session()->flash('error', 'The selected date is a holiday. Regularisation is not allowed on holidays.');
+
+            FlashMessageHelper::flashError('The selected date is a holiday. Regularisation is not allowed on holidays.');
             $this->showAlert=true;
             return;
         }
         if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
-            session()->flash('error', 'You are on leave on this date. Regularisation is not allowed.');
+            FlashMessageHelper::flashError('The selected date is a holiday. Regularisation is not allowed on holidays.');
             $this->showAlert=true;
             return;
         }
         if ($this->isEmployeeRegularisedOnDate($selectedDate) ){
-            session()->flash('error', 'Your regularisation is already approved for this date.');
+
+            FlashMessageHelper::flashError('Your regularisation is already approved for this date.');
             $this->showAlert=true;
             return;
         }
-        
+        if($this->isEmployeeAppRegOnDate($selectedDate))
+        { 
+            FlashMessageHelper::flashError('You have already applied regularisation for  this date.Its status is pending from manager side.');
+            $this->showAlert=true;
+            return;
+
+        }
 
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
@@ -312,9 +330,47 @@ class Regularisation extends Component
             return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while checking employee presence. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
             return false; // Return false to handle the error gracefully
         }
+    }
+    private function isEmployeeAppRegOnDate($date)
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+    
+        // Log the employee ID and the date we're checking
+        Log::info("Checking regularisation entries for employee ID: $employeeId on date: {$date->toDateString()}");
+    
+        // Fetch the regularisation record for the employee
+        $regularisationRecord = RegularisationDates::where('emp_id', $employeeId)
+            ->where('status', 5)
+            ->where('status', 5)
+            ->where('is_withdraw', 0)
+            ->get(['regularisation_entries']);  // Get only the JSON field
+    
+        // Log the query result count
+        Log::info("Number of regularisation records fetched: " . $regularisationRecord->count());
+    
+        // Iterate over the records and check the JSON field
+        foreach ($regularisationRecord as $record) {
+            // Decode the JSON only once
+            $entries = json_decode($record->regularisation_entries, true);
+            
+            if (is_array($entries)) {
+                foreach ($entries as $entry) {
+                    // Check if 'date' exists in entry and matches the given date
+                    if (isset($entry['date']) && $entry['date'] === $date->toDateString()) {
+                        Log::info("Date found in regularisation entries: " . $entry['date']);
+                        return true; // Date exists in one of the regularisation entries
+                    }
+                }
+            }
+        }
+    
+        // Log when the date is not found
+        Log::info('Date not found in any regularisation entries.');
+    
+        return false; // Date not found in any regularisation entries
     }
     //This function is used to create calendar
     public function generateCalendar()
@@ -379,7 +435,6 @@ class Regularisation extends Component
                 }
                 $calendar[] = $week;
             }
-    
             $this->calendar = $calendar;
         } catch (\Exception $e) {
             Log::error('Error in generateCalendar method: ' . $e->getMessage());
@@ -540,7 +595,8 @@ public function nextMonth()
             'is_withdraw' => 0,
             'regularisation_date' => '2024-03-26',
         ]);
-        session()->flash('message', 'Hurry Up! Regularisation Created Successfully.');
+        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
+       
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
@@ -548,8 +604,10 @@ public function nextMonth()
     } catch (\Exception $e) {
         // Log the error or handle it as needed
         Log::error('Error in storearraydates method: ' . $e->getMessage());
+        
         // You might want to inform the user about the error or take other appropriate actions
-        session()->flash('error1', 'Please enter the fields before submitting for regularisation.');
+        FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
+        
     }
 }
 
@@ -565,7 +623,8 @@ public function applyButton()
         // Handle any exceptions that might occur
         // For example, log the error or show a message to the user
         Log::error('Error occurred while applying: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while applying.');
+        FlashMessageHelper::flashError('An error occurred while applying.');
+        
     }
 }
 //This function will show the page where we can see the pending regularisation details
@@ -579,7 +638,8 @@ public function pendingButton()
     } catch (\Exception $e) {
         // Handle any exceptions that might occur
         Log::error('Error occurred while changing to pending state: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while changing to pending state.');
+        FlashMessageHelper::flashError('An error occurred while changing to pending state.');
+       
     }
 }
 //This function will show the page where we can see the approved,rejected and withdrawn regularisation details
@@ -593,7 +653,8 @@ public function historyButton()
     } catch (\Exception $e) {
         // Handle any exceptions that might occur
         Log::error('Error occurred while changing to history state: ' . $e->getMessage());
-        session()->flash('error', 'An error occurred while changing to history state.');
+        FlashMessageHelper::flashError('An error occurred while changing to history state.');
+        
     }
 }
 
@@ -612,9 +673,11 @@ public function historyButton()
                 'is_withdraw' => 0,
                 'regularisation_date' => $this->selectedDate,
             ]);
-            session()->flash('success', 'Hurry Up! Action completed successfully');
+            FlashMessageHelper::flashSuccess('Hurry Up! Action completed successfully');
+           
         } catch (\Exception $ex) {
-            session()->flash('error', 'Something goes wrong!!');
+            FlashMessageHelper::flashError('Something goes wrong!!');
+            
         }
     }
  //This function will withdraw the regularisation page 
@@ -626,13 +689,16 @@ public function historyButton()
             $this->data = RegularisationDates::where('id', $id)->update([
                 'is_withdraw' => 1,
                 'withdraw_date' => $currentDateTime,
+                'status'=> 4,
             ]);
             $this->withdraw_session = true;
             $this->withdrawModal=false;
-            session()->flash('success', 'Hurry Up! Regularisation withdrawn  successfully');
-            
+            FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn  successfully');
+           
+
         } catch (\Exception $ex) {
-            session()->flash('error', 'Something went wrong while withdrawing regularisation.');
+            FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
+          
         }
     }
     //This function will update the count of regularisation
@@ -642,7 +708,7 @@ public function historyButton()
             $this->c = true;
         } catch (\Exception $e) {
             Log::error('Error occurred while updating count: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while updating count.');
+            FlashMessageHelper::flashError('An error occurred while updating count.');
         }
     }
 
@@ -668,7 +734,7 @@ public function historyButton()
             if($this->istogglehigherManagers==true)
             {
                 $this->reportingmanager = $this->reportingmanager;
-              
+
             }
             else
             {
@@ -679,38 +745,41 @@ public function historyButton()
             $this->reportingmanagerfullName=EmployeeDetails::where('emp_id',$this->reportingmanager)->first();
             $this->heademployees = EmployeeDetails::whereIn('emp_id', [ $this->reportingmanagerinloop,$this->headreportingmanager])->get();
 
-
             $employeeDetails1 = $empid ? EmployeeDetails::where('emp_id', $empid)->first() : null;
            
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $subordinateEmployeeIds = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->pluck('first_name', 'last_name')
                 ->toArray();
-            $pendingRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
-                ->where('status', 'pending')
-                ->where('is_withdraw', 0)
-                ->orderByDesc('updated_at')
+            $pendingRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
+                ->where('regularisation_dates.status', 5)
+                ->where('regularisation_dates.is_withdraw', 0)
+                ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code')
+                ->select('regularisation_dates.*', 'status_types.status_name') // Select fields from both tables
+                ->orderByDesc('regularisation_dates.updated_at')
                 ->get();
-           
+
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
-        
-    
-            $historyRegularisations = RegularisationDates::where('emp_id', $loggedInEmpId)
-                ->whereIn('status', ['pending', 'approved', 'rejected'])
-                ->orderByDesc('updated_at')
-                ->get();            
+
+            $historyRegularisations = RegularisationDates::where('regularisation_dates.emp_id', $loggedInEmpId)
+                ->whereIn('regularisation_dates.status', [2, 4, 3]) // Use numeric status codes
+                ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types
+                ->select('regularisation_dates.*', 'status_types.status_name') // Select all from regularisation_dates and status_name from status_types
+                ->orderByDesc('regularisation_dates.updated_at')
+                ->get();        
+          
             $this->historyRegularisations = $historyRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
           
             $manager = EmployeeDetails::select('manager_id')->distinct()->get();   
-            $this->data10 = RegularisationDates::where('status', 'pending')->get();
+            $this->data10 = RegularisationDates::where('status', 5)->get();
             $this->manager1 = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
             $this->data = RegularisationDates::where('is_withdraw', '0')->count();
             $this->data8 = RegularisationDates::where('is_withdraw', '0')->get();
-            $this->data1 = RegularisationDates::where('status', 'pending')->first();
+            $this->data1 = RegularisationDates::where('status', 5)->first();
             $this->data4 = RegularisationDates::where('is_withdraw', '1')->count();
             $this->data7 = RegularisationDates::all();
             $employee = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();

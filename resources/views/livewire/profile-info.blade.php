@@ -100,7 +100,7 @@
                                 @endif
                             </div>
                             <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
-                                Mobile Number
+                            Primary Contact No.
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
                                 @if ($employeeDetails->emergency_contact)
@@ -293,15 +293,6 @@
 
                             </div>
 
-
-
-                            <div style="margin-top: 20px; font-size: 11px;color:#000; color: #778899; margin-left: 15px">
-                                Name
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                {{ ucwords(strtolower($employeeDetails->first_name)) }}
-                                {{ ucwords(strtolower($employeeDetails->last_name)) }}
-                            </div>
                         </div>
                         <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -314,20 +305,17 @@
                                 @else
                                 <span style="padding-left: 41px;">-</span>
                                 @endif
-
                             </div>
 
                             <div style="font-size: 11px; margin-top: 20px; color: #778899; margin-left: 15px">
-                                Mobile Number
-                            </div>
+                                Mobile
+                            </div>h
                             <div style="margin-left: 15px; font-size: 12px">
                                 @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->mobile_number)
                                 {{ $employeeDetails->empPersonalInfo->mobile_number }}
                                 @else
                                 <span style="padding-left: 35px;">-</span>
                                 @endif
-
-
                             </div>
                         </div>
                         <div class="col-6 col-md-4">
@@ -335,8 +323,12 @@
                                 Email
                             </div>
                             <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->email)
-                                {{ $employeeDetails->email }}
+                                @if ($employeeDetails->empPersonalInfo)
+                                 @if( $employeeDetails->empPersonalInfo->email)
+                                 {{ $employeeDetails->empPersonalInfo->email }}
+                                 @else
+                                 <span style="padding-left: 15px;">-</span>
+                                 @endif
                                 @else
                                 <span style="padding-left: 15px;">-</span>
                                 @endif
@@ -869,7 +861,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h6 class="modal-title">Apply For Resignation</h6>
-                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                            <button type="button" wire:click='closeModel' class="btn-close" data-dismiss="modal" aria-label="Close"
                                 wire:click="closeModal">
                             </button>
                         </div>
@@ -887,30 +879,30 @@
                                 </div>
                                 @endif
                                 <div class="form-group ">
-                                    <label for="resignation_date">Resignation Date</label>
-                                    <input type="date" class="form-control placeholder-small" wire:model="resignation_date" wire:keydown.debounce.500ms="validateFields('resignation_date')" id="resignation_date" name="resignation_date"
+                                    <label for="resignation_date">Resignation Date<span class="text-danger onboard-Valid">*</span></label>
+                                    <input type="date" class="form-control placeholder-small" wire:model="resignation_date" wire:change="validateFields('resignation_date')" id="resignation_date" name="resignation_date"
                                         min="<?php echo date('Y-m-d'); ?>">
                                     @error('resignation_date') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
 
-                                <div class="form-group mt-2">
+                               {{-- <div class="form-group mt-2">
                                     <label for="last_working_day">Last Working Day</label>
                                     <input type="date" wire:model="last_working_day" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateFields('last_working_day')" id="last_working_day" name="last_working_day" min="<?php echo date('Y-m-d'); ?>">
                                     @error('last_working_day') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                </div>--}}
                                 <div class="form-group mt-2">
-                                    <label for="reason">Reason</label>
-                                    <input type="text" wire:keydown.debounce.500ms="validateFields('reason')" wire:model.lazy="reason" class="form-control placeholder-small" id="reason" name="reason">
+                                    <label for="reason">Reason<span class="text-danger onboard-Valid">*</span></label>
+                                    <input type="text" wire:keydown="validateFields('reason')" wire:model="reason" class="form-control placeholder-small" id="reason" name="reason">
                                     @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
-                                <div class="form-group mt-2 mb-2">
+                                {{--<div class="form-group mt-2 mb-2">
                                     <label for="comments">Comments</label>
                                     <textarea class="form-control placeholder-small" wire:keydown.debounce.500ms="validateFields('comments')" wire:model.lazy="comments" id="comments" name="comments"></textarea>
                                     @error('comments') <span class="text-danger">{{ $message }}</span> @enderror
-                                </div>
+                                </div>--}}
                                 <div class="form-group mt-2">
-                                    <label for="signature">Signature</label> <br>
-                                    <input type="file" class="form-control-file" wire:keydown.debounce.500ms="validateFields('signature')" wire:model.lazy="signature" id="signature" name="signature" style="font-size:12px;">
+                                    <label for="signature">Files</label> <br>
+                                    <input type="file" class="form-control-file" wire:change="validateFields('signature')" wire:model="signature" id="signature" name="signature" style="font-size:12px;">
                                     <br>
                                     @error('signature') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>

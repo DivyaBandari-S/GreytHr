@@ -1334,7 +1334,7 @@ $lastItem = end($regularisationEntries); // Get the last item
 
         <div class="col accordion-content">
 
-            <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">{{$pr->status}}</span>
+            <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">{{$pr->status_name}}</span>
 
         </div>
 
@@ -1357,17 +1357,20 @@ $lastItem = end($regularisationEntries); // Get the last item
         @if($numberOfEntries>1)
         <span style="font-size: 11px;">
 
-            <span style="font-size: 11px; font-weight: 500;"></span>
-
-            {{ date('(d', strtotime($firstItem['date'])) }} -
-
-
-            <span style="font-size: 11px; font-weight: 500;"></span>
-
-            @if (!empty($lastItem['date']))
-            {{ date('d)', strtotime($lastItem['date'])) }} {{ date('M Y', strtotime($lastItem['date'])) }}
+        @foreach ($regularisationEntries as $key => $entry)
+        <span style="font-size: 11px; font-weight: 500;">
+            <!-- Display the date in (d format -->
+            {{ date('d', strtotime($entry['date'])) }}{{ date(' M Y', strtotime($entry['date'])) }}
+            
+            @if ($key !== count($regularisationEntries) - 1)
+                <!-- Display the separator for entries in between, without comma for the last entry -->
+                ,
             @endif
+        </span>
+    @endforeach
 
+    <!-- For the last item, display the formatted date -->
+                
 
         </span>
         @else
@@ -1448,9 +1451,9 @@ $lastItem = end($regularisationEntries); // Get the last item
 
 @elseif($isHistory==1&&$defaultApply==0)
 @if(count($historyRegularisations)>0)
-@foreach($historyRegularisations as $hr)
+    @foreach($historyRegularisations as $hr)
 
-@php
+    @php
 $regularisationEntries = json_decode($hr->regularisation_entries, true);
 // Count the number of elements in the array
 $numberOfEntries = count($regularisationEntries);
@@ -1476,7 +1479,7 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
     $maxDate = $maxDate !== null ? date('Y-m-d', $maxDate) : null;
     @endphp
 
-    @if(($hr->status=='pending'&&$hr->is_withdraw==1)||$hr->status=='approved'||$hr->status=='rejected')
+    @if(($hr->status==4&&$hr->is_withdraw==1)||$hr->status==2||$hr->status==3)
 
     <div class="mt-4">
         <div class="accordion-heading rounded" style="margin-top:10px;">
@@ -1486,14 +1489,14 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
                 <!-- Display leave details here based on $leaveRequest -->
 
                 <div class="col accordion-content">
-                    @if($hr->status=='pending')
+                    @if($hr->status==4)
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">Withdrawn&nbsp;By</span>
-                    @elseif($hr->status=='rejected')
+                    @elseif($hr->status==3)
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">Rejected&nbsp;By</span>
-                    @elseif($hr->status=='approved')
+                    @elseif($hr->status==2)
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">Regularized&nbsp;By</span>
                     @endif
-                    @if($hr->status=='pending'&&$hr->is_withdraw==1)
+                    @if($hr->status==4&&$hr->is_withdraw==1)
                     <span style="color: #36454F; font-size: 12px; font-weight: 500;">Me</span>
                     @else
                     <span style="color: #36454F; font-size: 12px; font-weight: 500; max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; display: inline-block;" data-toggle="tooltip" data-placement="top" title="{{ ucwords(strtolower($EmployeeDetails->first_name)) }} {{ ucwords(strtolower($EmployeeDetails->last_name)) }}">{{ ucwords(strtolower($EmployeeDetails->first_name)) }}&nbsp;{{ ucwords(strtolower($EmployeeDetails->last_name)) }}</span>
@@ -1519,12 +1522,12 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
                 <!-- Add other details based on your leave request structure -->
 
                 <div class="col accordion-content">
-                    @if($hr->status=='approved')
+                    @if($hr->status==2)
                     <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">closed</span>
-                    @elseif($hr->status=='rejected')
-                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$hr->status}}</span>
-                    @elseif($hr->status=='pending'&&$hr->is_withdraw==1)
-                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">withdrawn</span>
+                    @elseif($hr->status==3)
+                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$hr->status_name}}</span>
+                    @elseif($hr->status==4&&$hr->is_withdraw==1)
+                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#cf9b17;text-transform:uppercase;">{{$hr->status_name}}</span>
                     @endif
                 </div>
 
@@ -1568,13 +1571,13 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
         <div style="display:flex; flex-direction:row; justify-content:space-between;">
 
             <div class="content px-2">
-                @if($hr->status=='pending')
+                @if($hr->status==4)
                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Withdrawn on:</span><br>
                 <span style="color: #333; font-size:12px; font-weight: 500;">{{ date('d M, Y', strtotime($hr->created_at)) }}</span>
-                @elseif($hr->status=='rejected')
+                @elseif($hr->status==3)
                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Rejected on:</span><br>
                 <span style="color: #333; font-size:12px; font-weight: 500;">{{ date('d M, Y', strtotime($hr->created_at)) }}</span>
-                @elseif($hr->status=='approved')
+                @elseif($hr->status==2)
                 <span style="color: #778899; font-size: 12px; font-weight: 500;">Regularized on:</span><br>
                 <span style="color: #333; font-size:12px; font-weight: 500;">{{ date('d M, Y', strtotime($hr->created_at)) }}</span>
                 @endif
@@ -1597,7 +1600,7 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
     @endforeach
     @else
     <div class="history-box">
-        <img src="https://gt-linckia.s3.amazonaws.com/static-ess-v6.3.0-prod-144/review-list-empty.svg" style="margin-top:80px;">
+        <img src="{{ asset('images/pending.png') }}" style="margin-top:80px;">
         <p style="color: #a3b2c7;font-weight:400;font-size: 20px;margin-top:20px;">Hey, you have no
             regularization records to view.</p>
     </div>

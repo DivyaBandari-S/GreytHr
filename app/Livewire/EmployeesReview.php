@@ -11,8 +11,9 @@
 // Models                          : LeaveRequest,EmployeeDetails -->
 namespace App\Livewire;
 
-use Illuminate\Http\Request;
+use App\Helpers\FlashMessageHelper;
 
+use Illuminate\Http\Request;
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
@@ -72,7 +73,7 @@ class EmployeesReview extends Component
             $selectedYear = $this->selectedYear;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             //query to fetch the approved leave appplications............
-            $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.status', ['approved', 'rejected'])
+            $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.leave_status', [2,3])
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
@@ -82,12 +83,12 @@ class EmployeesReview extends Component
                     $query->where('leave_applications.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('leave_applications.leave_type', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('leave_applications.status', 'LIKE', '%' . $this->searchQuery . '%')
+                        ->orWhere('leave_applications.leave_status', 'LIKE', '%' . $this->searchQuery . '%')
                         ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
                 })
                 ->where(function ($query) {
-                    $query->whereIn('leave_applications.status', ['approved', 'rejected'])
-                        ->where('leave_applications.cancel_status', '!=', 'Pending Leave Cancel'); // Exclude Pending cancel status
+                    $query->whereIn('leave_applications.leave_status', [2,3])
+                        ->where('leave_applications.cancel_status', '!=', 7); // Exclude Pending cancel status
                 })
                 ->orderBy('created_at', 'desc')
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name']);
@@ -129,8 +130,7 @@ class EmployeesReview extends Component
 
             $this->approvedLeaveApplicationsList = $approvedLeaveApplications;
         } catch (\Exception $e) {
-            Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
     public function getEmpLeaveRequests()
@@ -140,7 +140,7 @@ class EmployeesReview extends Component
             // Query leave requests with search filter
             $query = LeaveRequest::with('employee')
                 ->where('emp_id', $employeeId)
-                ->whereIn('status', ['approved', 'rejected', 'Withdrawn'])
+                ->whereIn('leave_status', [2,3,4])
                 ->orderBy('created_at', 'desc');
 
             // Apply search filter if searchQuery is not empty
@@ -151,7 +151,7 @@ class EmployeesReview extends Component
                             ->orWhere('last_name', 'LIKE', '%' . $this->searchQuery . '%');
                     })
                         ->orWhere('leave_type', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('status', 'LIKE', '%' . $this->searchQuery . '%');
+                        ->orWhere('leave_status', 'LIKE', '%' . $this->searchQuery . '%');
                 });
             }
 
@@ -164,8 +164,7 @@ class EmployeesReview extends Component
                 $leaveRequest->formatted_to_date = Carbon::parse($leaveRequest->to_date)->format('d-m-Y');
             }
         } catch (\Exception $e) {
-            Log::error('Error in getEmpLeaveRequests method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching leave requests. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
 
@@ -173,79 +172,84 @@ class EmployeesReview extends Component
 
     public function mount(Request $request)
     {
-        $loggedInEmpId = auth()->guard('emp')->user()->emp_id;
-        $this->isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
-        $companyIds = auth()->guard('emp')->user()->company_id;
+        try {
+            $loggedInEmpId = auth()->guard('emp')->user()->emp_id;
+            $this->isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
+            $companyIds = auth()->guard('emp')->user()->company_id;
 
-        // Ensure $companyIds is an array
-        if (!is_array($companyIds)) {
-            $companyIds = [$companyIds]; // Wrap in an array if it's a single value
-        }
-        // Retrieve team members' emp_ids where the logged-in user is the manager
-        $teamMembersIds = EmployeeDetails::where(function ($query) use ($companyIds) {
-            foreach ($companyIds as $companyId) {
-                $query->orWhereJsonContains('company_id', $companyId);
+            // Ensure $companyIds is an array
+            if (!is_array($companyIds)) {
+                $companyIds = [$companyIds]; // Wrap in an array if it's a single value
             }
-        })
+
+            // Retrieve team members' emp_ids where the logged-in user is the manager
+            $teamMembersIds = EmployeeDetails::where(function ($query) use ($companyIds) {
+                foreach ($companyIds as $companyId) {
+                    $query->orWhereJsonContains('company_id', $companyId);
+                }
+            })
             ->pluck('emp_id')
             ->toArray();
-        // Query leave requests for team members with specified conditions
-        $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
-            ->where(function ($query) {
-                $query->where('status', 'Pending')
-                    ->orWhere(function ($query) {
-                        $query->where('status', 'approved')
-                            ->where('cancel_status', 'Pending Leave Cancel');
-                    });
-            })
-            ->orderBy('created_at', 'desc');
 
-        // Execute the query
-        $this->sendLeaveApplications = $query->get();
-        // Decode JSON fields for each leave application
-        foreach ($this->sendLeaveApplications as $leaveRequest) {
-            $leaveRequest->applying_to = json_decode($leaveRequest->applying_to, true);
-            $leaveRequest->cc_to = json_decode($leaveRequest->cc_to, true);
-            // Check if cc_to contains an entry with emp_id matching loginempid
-            if (isset($leaveRequest->cc_to)) {
-                foreach ($leaveRequest->cc_to as $cc) {
-                    if (isset($cc['emp_id']) && $cc['emp_id'] === $loggedInEmpId) {
-                        $leaveRequest->isCcToLoginEmp = true;
+            // Query leave requests for team members with specified conditions
+            $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
+                ->where(function ($query) {
+                    $query->where('leave_status', 5)
+                          ->orWhere(function ($query) {
+                              $query->where('leave_status', 2)
+                                    ->where('cancel_status', 7);
+                          });
+                })
+                ->orderBy('created_at', 'desc');
+
+            // Execute the query
+            $this->sendLeaveApplications = $query->get();
+
+            // Decode JSON fields for each leave application
+            foreach ($this->sendLeaveApplications as $leaveRequest) {
+                $leaveRequest->applying_to = json_decode($leaveRequest->applying_to, true);
+                $leaveRequest->cc_to = json_decode($leaveRequest->cc_to, true);
+
+                // Check if cc_to contains an entry with emp_id matching loginempid
+                if (isset($leaveRequest->cc_to)) {
+                    foreach ($leaveRequest->cc_to as $cc) {
+                        if (isset($cc['emp_id']) && $cc['emp_id'] === $loggedInEmpId) {
+                            $leaveRequest->isCcToLoginEmp = true;
+                        }
                     }
                 }
             }
+
+            // Dump the entire collection to inspect
+            $this->getEmpLeaveRequests();
+            $this->getPendingLeaveRequest();
+
+            $tab = $request->query('tab');
+
+            if ($tab === 'attendance') {
+                $this->setActiveTab('attendance'); // Default tab logic if needed
+                $this->showleave = false;
+                $this->showattendance = true;
+            } else {
+                $this->setActiveTab('leave');
+                $this->showleave = true;
+                $this->showattendance = false;
+            }
+
+            // Reduce notification count by marking as read related to leave and leaveCancel
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            DB::table('notifications')
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
+                })
+                ->whereIn('notification_type', ['leave', 'leaveCancel'])
+                ->delete();
+
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
-
-        // Dump the entire collection to inspect
-        $this->getEmpLeaveRequests();
-        $this->getPendingLeaveRequest();
-        // if ($request->query('tab') === 'leave') {
-        //     $this->setActiveTab('leave');
-        //     $this->showleave = true;
-        //     $this->showattendance = false;
-        // }
-
-        $tab = $request->query('tab');
-        Log::info('Tab parameter: ' . $tab);
-
-        if ($tab === 'attendance') {
-            $this->setActiveTab('attendance'); // Default tab logic if needed
-            $this->showleave = false;
-            $this->showattendance = true;
-        } else {
-            $this->setActiveTab('leave');
-            $this->showleave = true;
-            $this->showattendance = false;
-        }
-        // TO reduce notification count by making as read related to leave and leaveCancel
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        DB::table('notifications')
-            ->where(function ($query) use ($employeeId) {
-                $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
-            })
-            ->whereIn('notification_type', ['leave', 'leaveCancel'])
-            ->delete();
     }
+
 
     public function getPendingLeaveRequest()
     {
@@ -269,10 +273,10 @@ class EmployeesReview extends Component
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
-                    $query->where('status', 'Pending')
+                    $query->where('leave_status', 5)
                         ->orWhere(function ($query) {
-                            $query->where('status', 'approved')
-                                ->where('cancel_status', 'Pending Leave Cancel');
+                            $query->where('leave_status', 2)
+                                ->where('cancel_status', 7);
                         });
                 })
                 ->orderBy('created_at', 'desc');
@@ -281,8 +285,7 @@ class EmployeesReview extends Component
             $this->leaveApplications = $query->get();
             $this->count = count($this->leaveApplications);
         } catch (\Exception $e) {
-            Log::error('Error in getPendingLeaveRequest method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
 
@@ -367,7 +370,7 @@ class EmployeesReview extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occured please try again later.');
         }
     }
 
@@ -382,8 +385,8 @@ class EmployeesReview extends Component
         try {
             $this->getEmpLeaveRequests();
         } catch (\Exception $e) {
-            Log::error('Error in searchPendingLeave method: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while processing your request. Please try again later.');
+
+            FlashMessageHelper::flashError( 'An error occurred while processing your request. Please try again later.');
         }
     }
 
@@ -405,47 +408,37 @@ class EmployeesReview extends Component
 
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
+                            ->whereIn('regularisation_dates.status', [2, 3])
+                            ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                            ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
+                            ->where(function ($query) {
+                                $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
+                                    ->orWhere('status_types.status_name', 'LIKE', '%' . $this->searchQuery . '%'); // Search by status_name
+                            })
+                            ->select(
+                                'regularisation_dates.*', 
+                                'employee_details.first_name', 
+                                'employee_details.last_name', 
+                                'status_types.status_name' // Select status_name from status_types
+                            )
+                            ->orderByDesc('regularisation_dates.updated_at')
+                            ->get();
 
-                ->where(function ($query) {
-                    $query->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-                        ->orWhere(function ($query) {
-                            $query->where('regularisation_dates.status', 'Pending')
-                                ->where('regularisation_dates.approver_remarks', 'Forwarded to HR');
-                        });
-                })
-
-                ->orderByDesc('regularisation_dates.id')
-
-                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-
-                ->where(function ($query) {
-                    $query->where('regularisation_dates.emp_id', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.first_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%')
-                        ->orWhere('regularisation_dates.status', 'LIKE', '%' . $this->searchQuery . '%');
-                })
-
-                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
-
-                ->orderByDesc('regularisation_dates.updated_at')
-
-                ->get();
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-
-                ->whereIn('regularisation_dates.status', ['approved', 'rejected'])
-
-
-
-
-                ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
-
-
-                ->select('regularisation_dates.*', 'employee_details.first_name', 'employee_details.last_name')
-
-                ->orderByDesc('updated_at')
-
-                ->get();
+                        ->whereIn('regularisation_dates.status', [2, 3])
+                        ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
+                        ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
+                        ->select(
+                            'regularisation_dates.*', 
+                            'employee_details.first_name', 
+                            'employee_details.last_name', 
+                            'status_types.status_name' // Select status_name from status_types table
+                        )
+                        ->orderByDesc('regularisation_dates.updated_at')
+                        ->get();
         }
         $this->approvedRegularisationRequestList = $this->approvedRegularisationRequestList->filter(function ($regularisation) {
 

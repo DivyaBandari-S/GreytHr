@@ -11,7 +11,7 @@
 // Models                          : LeaveRequest,EmployeeDetails
 namespace App\Livewire;
 
-
+use App\Helpers\FlashMessageHelper;
 use App\Models\LeaveRequest;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
@@ -32,7 +32,23 @@ class LeaveHistory extends Component
     public $leaveRequest;
     public $selectedYear;
     public $showViewImageDialog = false;
-
+    public $showViewFileDialog = false;
+    public $files = [];
+    public $selectedFile;
+    public $statusMap = [
+        0 => 'Active',
+        1 => 'InActive',
+        2 => 'Approved',
+        3 => 'Rejected',
+        4 => 'Withdrawn',
+        5 => 'Pending',
+        6 => 'Re-applied',
+        7 => 'Pending Leave Cancel'
+    ];
+    public function getStatusText($statusCode)
+    {
+        return $this->statusMap[$statusCode] ?? 'Unknown';
+    }
     public function mount($leaveRequestId)
     {
         try {
@@ -43,9 +59,9 @@ class LeaveHistory extends Component
             $this->leaveRequest->to_date = Carbon::parse($this->leaveRequest->to_date);
         } catch (\Exception $e) {
             // Handle the exception, log it, or display an error message
-            Log::error('Error mounting leave request: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while fetching leave request details. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while fetching leave request details. Please try again later.');
             $this->leaveRequest = null;
+            return false;
         }
     }
     public function downloadImage()
@@ -59,56 +75,52 @@ class LeaveHistory extends Component
             $fileDataArray,
             fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
         );
-            // If only one image, provide direct download
-    if (count($images) === 1) {
-        $image = reset($images); // Get the single image
-        $base64File = $image['data'];
-        $mimeType = $image['mime_type'];
-        $originalName = $image['original_name'];
- 
-        // Decode base64 content
-        $fileContent = base64_decode($base64File);
- 
-        // Return the image directly
-        return response()->stream(
-            function () use ($fileContent) {
-                echo $fileContent;
-            },
-            200,
-            [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
-            ]
-        );
-    }
+        // If only one image, provide direct download
+        if (count($images) === 1) {
+            $image = reset($images); // Get the single image
+            $base64File = $image['data'];
+            $mimeType = $image['mime_type'];
+            $originalName = $image['original_name'];
+
+            // Decode base64 content
+            $fileContent = base64_decode($base64File);
+
+            // Return the image directly
+            return response()->stream(
+                function () use ($fileContent) {
+                    echo $fileContent;
+                },
+                200,
+                [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+                ]
+            );
+        }
 
         // Create a zip file for the images
         if (count($images) > 1) {
-        $zipFileName = 'images.zip';
-        $zip = new \ZipArchive();
-        $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+            $zipFileName = 'images.zip';
+            $zip = new \ZipArchive();
+            $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        foreach ($images as $image) {
-            $base64File = $image['data'];
-            $mimeType = $image['mime_type'];
-            $extension = explode('/', $mimeType)[1];
-            $imageName = uniqid() . '.' . $extension;
+            foreach ($images as $image) {
+                $base64File = $image['data'];
+                $mimeType = $image['mime_type'];
+                $extension = explode('/', $mimeType)[1];
+                $imageName = uniqid() . '.' . $extension;
 
-            $zip->addFromString($imageName, base64_decode($base64File));
+                $zip->addFromString($imageName, base64_decode($base64File));
+            }
+
+            $zip->close();
+
+            // Return the zip file as a download
+            return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
         }
-
-        $zip->close();
-
-        // Return the zip file as a download
-        return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+        // If no images, return an appropriate response
+        return response()->json(['message' => 'No images found'], 404);
     }
-      // If no images, return an appropriate response
-      return response()->json(['message' => 'No images found'], 404);
-}
-    public $showViewFileDialog = false; // Toggle modal visibility
-    public $files = []; // Store files array
-    public $selectedFile; // Store the selected file's data
-
 
     public function closeViewFile()
     {
@@ -116,20 +128,20 @@ class LeaveHistory extends Component
     }
     public function showViewFile()
     {
-      
+
         $this->showViewFileDialog = true;
     }
 
     public function showViewImage()
     {
-      
+
         $this->showViewImageDialog = true;
     }
     public function closeViewImage()
     {
         $this->showViewImageDialog = false;
     }
-    
+
 
     //used to calculate number of days for leave
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
@@ -209,6 +221,7 @@ class LeaveHistory extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occured while calulating no. of days');
             return 'Error: ' . $e->getMessage();
         }
     }
@@ -228,7 +241,7 @@ class LeaveHistory extends Component
             // Attempt to decode applying_to
             $applyingToJson = trim($this->leaveRequest->applying_to);
             $this->leaveRequest->applying_to = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
-        
+
             // Attempt to decode cc_to
             $ccToJson = trim($this->leaveRequest->cc_to);
             $this->leaveRequest->cc_to = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
@@ -237,7 +250,8 @@ class LeaveHistory extends Component
             $filePathsJson = trim($this->leaveRequest->file_paths);
             $this->leaveRequest->file_paths = is_array($filePathsJson) ? $filePathsJson : json_decode($filePathsJson, true);
         } catch (\Exception $e) {
-            session()->flash('error', "Error in getting details: " . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured while getting details');
+            return false;
         }
 
         // Pass the leaveRequest data and leaveBalances to the Blade view

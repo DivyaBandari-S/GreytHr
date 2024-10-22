@@ -2,7 +2,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -12,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('images', function (Blueprint $table) {
-            $table->id();
-            $table->binary('image')->nullable();
+        Schema::create('status_types', function (Blueprint $table) {
+            $table->smallInteger('id')->autoIncrement();
+            $table->string('status_name', 20)->unique();
+            $table->tinyInteger('status_code')->unique();
             $table->timestamps();
         });
-
-        DB::statement('ALTER TABLE images modify image MEDIUMBLOB NULL DEFAULT NULL');
     }
 
     /**
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('images');
+        Schema::dropIfExists('status_types');
     }
 };
