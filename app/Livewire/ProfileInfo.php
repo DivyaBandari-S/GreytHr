@@ -72,15 +72,15 @@ class ProfileInfo extends Component
         $empId = Auth::guard('emp')->user()->emp_id;
         $resig_requests=EmpResignations::where('emp_id', $empId)->where('status',['5','2'])->first();
 // dd($resig_requests);
-        if($resig_requests->status=='5'){
-            $this->isResigned='pending';
-            $this->resignation_date=$resig_requests->resignation_date;
-            $this->reason=$resig_requests->reason;
-            $this->fileName=$resig_requests->file_name;
-
-
-        }else{
-            $this->isResigned='approved';
+        if($resig_requests){
+            if($resig_requests->status =='5'){
+                $this->isResigned='pending';
+                $this->resignation_date=$resig_requests->resignation_date;
+                $this->reason=$resig_requests->reason;
+                $this->fileName=$resig_requests->file_name;
+            }else{
+                $this->isResigned='approved';
+            }
         }
         $this->qualifications = $this->getEducationData($empId);
     }

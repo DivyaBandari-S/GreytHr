@@ -89,7 +89,9 @@ class LeaveApplyPage extends Component
         'to_session' => 'required',
         'contact_details' => 'required',
         'reason' => 'required',
+        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
     ];
+
     protected $messages = [
         'leave_type.required' => 'Leave type is required',
         'from_date.required' => 'From date is required',
@@ -98,6 +100,8 @@ class LeaveApplyPage extends Component
         'to_session.required' => 'Session is required',
         'contact_details.required' => 'Contact details are required',
         'reason.required' => 'Reason is required',
+        'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
+        'file_paths.*.mimes' => 'Please upload a file of type: xls, csv, xlsx, pdf, jpeg, png, jpg, gif.',
     ];
     public function validateField($propertyName)
     {
@@ -405,7 +409,9 @@ class LeaveApplyPage extends Component
 
             // Validate file uploads
             $this->validate([
-                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:2048',
+                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+            ], [
+                'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
             ]);
 
             // Store files
@@ -471,8 +477,11 @@ class LeaveApplyPage extends Component
         }
     }
     public $errorMessageValidation;
+    public $propertyName;
     public function handleFieldUpdate($field)
     {
+        $this->validateOnly($field);
+        $this->resetErrorBag($field);
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
