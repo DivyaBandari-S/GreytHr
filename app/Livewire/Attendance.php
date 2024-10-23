@@ -287,13 +287,13 @@ class Attendance extends Component
             ->whereDate('created_at', '<', $endDate)
             ->orderBy('created_at')
             ->get();
-
+       
         // Group swipes by date
         $dailySwipes = $records->groupBy(function ($swipe) {
             return Carbon::parse($swipe->created_at)->toDateString();
         });
-
-        // Get leave requests for the employee within the date range
+        
+         // Get leave requests for the employee within the date range
         $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
     ->where('leave_applications.leave_status', 2) // Filter for approved leave requests
     ->where(function ($query) use ($startDate, $endDate) {
@@ -303,7 +303,7 @@ class Attendance extends Component
     ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types table
     ->select('leave_applications.*', 'status_types.status_name') // Select the fields you need
     ->get();
-
+   
 
         $totalMinutes = 0;
         $workingDaysCount = 0;
@@ -1190,26 +1190,26 @@ class Attendance extends Component
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
            
          
-         
+            $this->averageWorkHoursForModalTitle=$this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));         
           
-            $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
-            if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
-                    preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
+            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
+            // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
+            //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
 
-                    $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
-                    $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
+            //         $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
+            //         $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
                     
-                    // Calculate time difference if both times are valid
-                    $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
-                    $this->averageWorkHoursForModalTitle = $timeDifferenceFormatted;
+            //         // Calculate time difference if both times are valid
+            //         $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
+            //         $this->averageWorkHoursForModalTitle = $timeDifferenceFormatted;
 
-                } else {
-                    // Log the issue for debugging purposes
-                    Log::warning('Invalid time format for averageLastOutTime or avergageFirstInTime.');
+            //     } else {
+            //         // Log the issue for debugging purposes
+            //         Log::warning('Invalid time format for averageLastOutTime or avergageFirstInTime.');
                     
-                    // Set fallback value
-                    $this->averageWorkHoursForModalTitle = '00:00'; 
-                }
+            //         // Set fallback value
+            //         $this->averageWorkHoursForModalTitle = '00:00'; 
+            //     }
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
