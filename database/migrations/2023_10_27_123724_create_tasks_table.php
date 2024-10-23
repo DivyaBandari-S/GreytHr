@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('assignee');
             $table->enum('priority', ['High', 'Medium', 'Low']);
             $table->date('due_date');
-            $table->string('reopened_date', 10)->nullable();
+            $table->date('reopened_date')->nullable();
             $table->string('tags', 100)->nullable();
             $table->string('client_id', 20)->nullable();
             $table->string('project_name', 100)->nullable();
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->binary('file_path')->nullable();
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
-            $table->string('status', 10)->default('Open'); // CC to field (nullable)
+            $table->smallInteger('status')->default(1); // CC to field (nullable)
             $table->timestamps();
             $table->foreign('emp_id')
                 ->references('emp_id')

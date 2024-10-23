@@ -113,7 +113,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 'Open');
+            ->where('status', 10);
 
         // Filter by period
         switch ($this->filterPeriod) {
@@ -171,7 +171,7 @@ class Tasks extends Component
             $query->where('emp_id', $employeeId)
                 ->orWhereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '(', -1), ')', 1) = ?", [$employeeId]);
         })
-            ->where('status', 'Completed');
+            ->where('status', 11);
 
 
         switch ($this->filterPeriod) {
@@ -389,7 +389,7 @@ class Tasks extends Component
         $task = Task::find($taskId);
 
         if ($task) {
-            $task->update(['status' => 'Completed']);
+            $task->update(['status' => 11]);
         }
         // session()->flash('message', 'Task closed successfully!');
         FlashMessageHelper::flashSuccess('Task closed successfully!');
@@ -400,11 +400,12 @@ class Tasks extends Component
 
     public function closeForTasks($taskId)
     {
+
         $task = Task::find($taskId);
 
         if ($task) {
             $task->update([
-                'status' => 'Open',
+                'status' => 10,
                 'reopened_date' => now()
             ]);
         }
@@ -466,10 +467,6 @@ class Tasks extends Component
 
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    // session()->flash('error', 'Failed to read the uploaded file.');
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
@@ -506,11 +503,12 @@ class Tasks extends Component
                 'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
-                'status' => "Open",
+                'status' => 10,
             ]);
             // $this->showRecipients = false;
 
             // $this->selectedPeopleName=null;
+
 
 
             preg_match('/\((.*?)\)/', $this->assignee, $matches);
@@ -521,9 +519,6 @@ class Tasks extends Component
                 $assigneeEmail = $assigneeDetails->email;
 
                 if (!empty($assigneeEmail)) {
-                    Log::info("Sending email to: {$assigneeEmail}");
-
-                    // Assuming you have these variables available in your context
                     $searchData = $this->filterData ?: $this->records;
 
                     $taskName = $this->task_name;
@@ -555,13 +550,10 @@ class Tasks extends Component
                         '',
                         false
                     ));
-
-                    Log::info("Email sent successfully.");
                 }
             }
 
             foreach ($this->selectedPeopleForFollowers as $followerId) {
-                Log::info("Processing follower ID: {$followerId}");
                 $followerDetails = EmployeeDetails::find($followerId);
                 $searchData = $this->filterData ?: $this->records;
 
@@ -590,7 +582,6 @@ class Tasks extends Component
                     $priority = $this->priority; // Make sure this variable is defined
                     $assignedBy = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
                     if (!empty($followerDetails->email)) {
-                        Log::info("Sending email to follower: {$followerDetails->email}");
                         Mail::to($followerDetails->email)->send(new TaskAssignedNotification(
                             $taskName,
                             $description,
@@ -602,7 +593,6 @@ class Tasks extends Component
                             $formattedFollowerName, // Pass formatted follower name
                             true
                         ));
-                        Log::info("Email sent to follower successfully.");
                     }
                 }
             }
@@ -619,22 +609,15 @@ class Tasks extends Component
             }
 
             session()->flash('showAlert', true);
-            // session()->flash('message', 'Task created successfully!');
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
-            Log::info("Redirecting to tasks page.");
-            // return redirect()->to('/tasks');
+            return redirect()->to('/tasks');
             $this->showDialog= false;
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $employeeId,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
-            ]);
-            // session()->flash('error', 'An error occurred while creating the request. Please try again.');
+
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
@@ -972,13 +955,23 @@ class Tasks extends Component
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        // $this->records = Task::with('emp')
+        //     ->where(function ($query) use ($employeeId, $employeeName) {
+        //         $query->where('emp_id', $employeeId)
+        //             ->orWhere('assignee', 'LIKE', "%$employeeName%");
+        //     })
+        //     ->orderBy('created_at', 'desc')
+        //     ->get();
         $this->records = Task::with('emp')
-            ->where(function ($query) use ($employeeId, $employeeName) {
-                $query->where('emp_id', $employeeId)
-                    ->orWhere('assignee', 'LIKE', "%$employeeName%");
-            })
-            ->orderBy('created_at', 'desc')
-            ->get();
+    ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
+    ->where(function ($query) use ($employeeId, $employeeName) {
+        $query->where('tasks.emp_id', $employeeId)
+            ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
+    })
+    ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
+    ->orderBy('tasks.created_at', 'desc')
+    ->get();
+
         $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [
             'peopleAssigneeData' => $peopleAssigneeData,
