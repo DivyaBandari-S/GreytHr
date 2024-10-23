@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Services\GoogleDriveService;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\FlashMessageHelper;
 
 class Peoples extends Component
 {
@@ -29,7 +30,7 @@ class Peoples extends Component
         try {
             $this->selectedPerson = EmployeeDetails::where('emp_id', $empId)->first();
         } catch (\Exception $e) {
-            Log::error('Error in selectPerson method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
     public function selectMyTeamPerson($empId)
@@ -37,7 +38,7 @@ class Peoples extends Component
         try {
             $this->selectedMyTeamPerson = EmployeeDetails::where('emp_id', $empId)->first();
         } catch (\Exception $e) {
-            Log::error('Error in selectPerson method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');            
         }
     }
 
@@ -48,7 +49,7 @@ class Peoples extends Component
         try {
             $this->selectStarredPeoples = StarredPeople::with('emp')->where('id', $id)->first();
         } catch (\Exception $e) {
-            Log::error('Error in starredPersonById method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -79,7 +80,7 @@ class Peoples extends Component
 
             $this->peopleFound = count($this->filteredPeoples) > 0;
         } catch (\Exception $e) {
-            Log::error('Error in filter method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
     public function filterMyTeam()
@@ -114,7 +115,7 @@ class Peoples extends Component
 
             $this->peopleFound = count($this->filteredMyTeamPeoples) > 0;
         } catch (\Exception $e) {
-            Log::error('Error in filter method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -149,7 +150,7 @@ class Peoples extends Component
 
             $this->peopleFound = count($this->filteredStarredPeoples) > 0;
         } catch (\Exception $e) {
-            Log::error('Error in starredFilter method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -187,14 +188,14 @@ class Peoples extends Component
                             'starred_status' => 'starred'
                         ]);
                     } catch (\Exception $e) {
-                        Log::error('Exception occurred: ' . $e->getMessage());
+                        FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
                         $this->addError('duplicate', 'You have already starred this people.');
                     }
                 }
             }
             return redirect()->to('/PeoplesList');
         } catch (\Exception $e) {
-            Log::error('Error in toggleStar method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -211,7 +212,7 @@ class Peoples extends Component
 
             return redirect('/PeoplesList');
         } catch (\Exception $e) {
-            Log::error('Error in removeToggleStar method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
 
@@ -270,7 +271,7 @@ class Peoples extends Component
                 'myTeamData' => $myTeamData,
             ]);
         } catch (\Exception $e) {
-            Log::error('Error in render method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
             return view('livewire.peoples')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }
     }
