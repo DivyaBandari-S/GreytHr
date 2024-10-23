@@ -389,7 +389,7 @@ class Attendance extends Component
         $minutes = $averageMinutes % 60;
 
         $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-
+        
         return $averageWorkHours;
     }
 
@@ -574,15 +574,7 @@ class Attendance extends Component
             }
 
             // Optionally, calculate average time difference per day
-            $averageDifferences = [];
-            $this->timeDifferences=$timeDifferences;
-            foreach ($timeDifferences as $date => $differences) {
-
-                if (count($differences) > 0) {
-                    $averageDifference = array_sum($differences) / count($differences);
-                    $averageDifferences[$date] = $averageDifference;
-                }
-            }
+           
 
             
             
@@ -621,7 +613,7 @@ class Attendance extends Component
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
-            
+      
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
             // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];

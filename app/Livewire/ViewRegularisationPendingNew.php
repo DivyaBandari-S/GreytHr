@@ -137,6 +137,7 @@ class ViewRegularisationPendingNew extends Component
     }
     public function approve($id)
     {
+  
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
        
@@ -191,13 +192,13 @@ class ViewRegularisationPendingNew extends Component
                     $swiperecord->in_or_out='IN';
                     $swiperecord->swipe_time= '10:00';
                     $swiperecord->created_at=$date;
-                    $swiperecord->is_regularised=true;
+                    $swiperecord->is_regularized=true;
                     
                 } else {
                     $swiperecord->in_or_out='IN';
                     $swiperecord->swipe_time= $from;
                     $swiperecord->created_at=$date;
-                    $swiperecord->is_regularised=true;
+                    $swiperecord->is_regularized=true;
                 }
                 $swiperecord->save();
                 $swiperecord1=new SwipeRecord();
@@ -209,13 +210,13 @@ class ViewRegularisationPendingNew extends Component
                     $swiperecord1->in_or_out='OUT';
                     $swiperecord1->swipe_time= '19:00';
                     $swiperecord1->created_at=$date;
-                    $swiperecord1->is_regularised=true;
+                    $swiperecord1->is_regularized=true;
                     
                 } else {
                     $swiperecord1->in_or_out='OUT';
                     $swiperecord1->swipe_time= $to;
                     $swiperecord1->created_at=$date;
-                    $swiperecord1->is_regularised=true;
+                    $swiperecord1->is_regularized=true;
                 }
                 $swiperecord1->save();
                 // Exit the loop after the first entry since the example has one entry
