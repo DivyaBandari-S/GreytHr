@@ -54,8 +54,7 @@ class ViewRegularisationPendingNew extends Component
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
         ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-        ->where('status',5)
-        ->whereNull('mail_sent')
+        ->where('status',5)      
         ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
         ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
         ->with('employee')

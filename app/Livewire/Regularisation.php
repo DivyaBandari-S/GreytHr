@@ -327,7 +327,7 @@ class Regularisation extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularized', 1)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');

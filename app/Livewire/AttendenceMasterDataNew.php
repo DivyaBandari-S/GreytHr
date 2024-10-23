@@ -164,20 +164,21 @@ class AttendenceMasterDataNew extends Component
                 ->toArray();
                 
             
-            $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
+                $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join status_type to get status_name
+                ->where('leave_applications.leave_status', 3) // Instead of 'approved', check for leave_status = 3
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->where('employee_details.manager_id', $loggedInEmpId) 
                 ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth1 . '-01') 
-                ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth1 . '-' . $daysInMonth) 
-                ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name'])
+                ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth1 . '-' . $daysInMonth)
+                ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_type.status_name']) // Retrieve status_name
                 ->map(function ($leaveRequest) {
                     $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
                     $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
                     $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; 
                     return $leaveRequest;
                 });
-    
+
             $year = $currentYear;
             $holiday = HolidayCalendar::where('month', $currentMonth)
                 ->where('year', $AttendanceYear)
@@ -309,12 +310,14 @@ class AttendenceMasterDataNew extends Component
                 return $dates->pluck('distinct_date')->toArray();
             })
             ->toArray();
+            
             $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
+            ->where('leave_applications.leave_status', 3) // Filter by leave_status = 3 instead of status = 'approved'
             ->whereIn('leave_applications.emp_id', $employeeIds)
             ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth . '-01') // Dynamically set year and month
             ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth . '-31') // Dynamically set year and month
-            ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name'])
+            ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
             ->mapWithKeys(function ($leaveRequest) {
                 $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
                 $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
@@ -327,16 +330,18 @@ class AttendenceMasterDataNew extends Component
                     $leaveRequest->emp_id => [
                         'emp_id' => $leaveRequest->emp_id,
                         'dates' => $dates,
+                        'status_name' => $leaveRequest->status_name, // Include status_name in the output
                     ],
                 ];
             }); 
+
             $leaveDates = [];
             foreach ($approvedLeaveRequests1 as $emp_id => $leaveRequest) {
                 foreach ($leaveRequest['dates'] as $date) {
                     $leaveDates[$emp_id][] = $date;
                 }
             }
-          
+
             $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth)
             ->whereYear('swipe_records.created_at', $this->selectedYear)
@@ -359,20 +364,7 @@ class AttendenceMasterDataNew extends Component
        
                     
         
-        $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
-            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-            ->where('employee_details.manager_id', $managerId) // Add condition for manager's ID
-            ->whereDate('from_date', '>=', '2023-12-01') // Start of the current month
-            ->whereDate('to_date', '<=','2023-12-31') // End of the current month
-            ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-            ->map(function ($leaveRequest) {
-                
-                $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-                $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
-                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
-                return $leaveRequest;
-            });
+        
       
          
 
