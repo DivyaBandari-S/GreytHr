@@ -69,7 +69,8 @@ class LeaveApplyPage extends Component
     public $searchTerm = '';
     public $filter = '';
     public $errorMessage = '';
-    public $fromDate, $file_paths;
+    public $fromDate;
+    public  $file_paths;
     public $fromSession;
     public $toSession;
     public $toDate;
@@ -89,7 +90,9 @@ class LeaveApplyPage extends Component
         'to_session' => 'required',
         'contact_details' => 'required',
         'reason' => 'required',
+        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
     ];
+
     protected $messages = [
         'leave_type.required' => 'Leave type is required',
         'from_date.required' => 'From date is required',
@@ -98,6 +101,8 @@ class LeaveApplyPage extends Component
         'to_session.required' => 'Session is required',
         'contact_details.required' => 'Contact details are required',
         'reason.required' => 'Reason is required',
+        'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
+        'file_paths.*.mimes' => 'Please upload a file of type: xls, csv, xlsx, pdf, jpeg, png, jpg, gif.',
     ];
     public function validateField($propertyName)
     {
@@ -353,7 +358,8 @@ class LeaveApplyPage extends Component
         if (
             !$this->handleFieldUpdate('from_date') ||
             !$this->handleFieldUpdate('to_date') ||
-            !$this->handleFieldUpdate('leave_type')
+            !$this->handleFieldUpdate('leave_type')||
+            !$this->handleFieldUpdate('file_paths')
         ) {
             return; // Stop execution if there is an error
         } else {
@@ -405,7 +411,9 @@ class LeaveApplyPage extends Component
 
             // Validate file uploads
             $this->validate([
-                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:2048',
+                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+            ], [
+                'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
             ]);
 
             // Store files
@@ -471,9 +479,13 @@ class LeaveApplyPage extends Component
         }
     }
     public $errorMessageValidation;
+    public $propertyName;
     public function handleFieldUpdate($field)
     {
+
         try {
+            $this->validateOnly($field);
+            $this->resetErrorBag($field);
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -534,6 +546,14 @@ class LeaveApplyPage extends Component
                     return false; // Stop further validation if error occurs
                 }
             }
+            // New validation for file uploads
+            if ($this->file_paths) {
+                if ($this->checkFileSize()) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('The file size must not exceed 1 MB. Please upload a smaller file.');
+                    return false;
+                }
+            }
+
             // All validations passed, now calculate the number of days
             if ($this->to_date) {
                 $this->showNumberOfDays = true;
@@ -551,6 +571,24 @@ class LeaveApplyPage extends Component
             return false;
         }
     }
+
+    //checkfilesize
+    public function checkFileSize()
+    {
+        try {
+            foreach ($this->file_paths as $file) {
+                if ($file->getSize() > 1024 * 1024) {
+                    return true;
+                }
+            }
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occurred while uploading the file, please try again later.');
+            return false; // Handle any error during file size check
+        }
+
+        return false; // All files are within size limit
+    }
+
 
     // check leave overlap
     protected function checkOverlappingLeave($employeeId)
@@ -593,7 +631,7 @@ class LeaveApplyPage extends Component
                 ->whereNotIn('leave_type', ['Loss Of Pay'])
                 ->where('category_type', 'Leave')
                 ->whereIn('leave_status', [2, 5])
-                ->whereIn('cancel_status', [5,3,6])
+                ->whereIn('cancel_status', [5, 3, 6])
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
@@ -676,8 +714,8 @@ class LeaveApplyPage extends Component
                 ->where('category_type', 'Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
-                ->whereIn('leave_status', [2,5])
-                ->whereIn('cancel_status', [3,6,5])
+                ->whereIn('leave_status', [2, 5])
+                ->whereIn('cancel_status', [3, 6, 5])
                 ->get();
 
             $totalLeaveDays = 0;

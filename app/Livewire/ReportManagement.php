@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\LeaveHelper;
+use App\Helpers\FlashMessageHelper;
 
 class ReportManagement extends Component
 {
@@ -119,6 +120,7 @@ class ReportManagement extends Component
 
     public function downloadLeaveAvailedReportInExcel()
     {
+        try {
         $this->validate([
             'fromDate' => 'required|date',
             'toDate' => 'required|date|after_or_equal:fromDate',
@@ -142,11 +144,11 @@ class ReportManagement extends Component
             'leave_applications.created_at',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status',
+            'leave_applications.leave_status',
             'leave_applications.updated_at',
         )
         ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-        ->where('leave_applications.status', 'approved')
+        ->where('leave_applications.leave_status', 2)
         ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
 
             $leaveTypes = [
@@ -200,7 +202,7 @@ class ReportManagement extends Component
             'leave_applications.created_at',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status',
+            'leave_applications.leave_status',
             'leave_applications.updated_at',
         )
         ->orderBy('date_only', 'asc')
@@ -234,7 +236,7 @@ class ReportManagement extends Component
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_status' => $item->status,
+                        'leave_Status' => $item->status,
                     ];
                 })
             ];
@@ -248,10 +250,17 @@ class ReportManagement extends Component
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
         ]);
+        FlashMessageHelper::flashSuccess('Leave Availed Report Downloaded Successfully!');
     
         return response()->streamDownload(function() use($pdf) {
             echo $pdf->stream();
         }, 'leave_availed_report.pdf');
+    } catch (\Exception $e) {
+      
+
+        // Optionally, return a user-friendly error message
+        FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
+    }
 
         
     }
@@ -290,6 +299,7 @@ public  function updateTransactionType($event){
 
     public function dayWiseLeaveTransactionReport()
     {
+        try{
 
         $this->validate([
             'fromDate' => 'required|date',
@@ -321,7 +331,7 @@ public  function updateTransactionType($event){
             'leave_applications.reason',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status',
+            'leave_applications.leave_status',
         )
             // ->where('leave_applications.status', 'approved')
             ->where(function ($query) use ($loggedInEmpId) {
@@ -337,10 +347,10 @@ public  function updateTransactionType($event){
                     });
             })
             ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->groupBy('date_only', 'leave_applications.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.reason', 'leave_applications.from_session', 'leave_applications.to_session','leave_applications.status'); // Group by the date-only field
+            ->groupBy('date_only', 'leave_applications.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.reason', 'leave_applications.from_session', 'leave_applications.to_session','leave_applications.leave_status'); // Group by the date-only field
 
             if ($this->transactionType !== 'all') {
-                $query->where('leave_applications.status', $this->transactionType);
+                $query->where('leave_applications.leave_status', $this->transactionType);
             }
 
            if($this->employeeType=='active'){
@@ -385,7 +395,7 @@ public  function updateTransactionType($event){
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_status'=>$item->status,
+                        'leave_Status'=>$item->status,
                     ];
                 })
             ];
@@ -399,17 +409,24 @@ public  function updateTransactionType($event){
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
         ]);
+        FlashMessageHelper::flashSuccess('DayWise Leave Transaction Report Downloaded Successfully!');
 
         return response()->streamDownload(function() use($pdf){
             echo $pdf->stream();
         }, 'Daywise_leave_transactions.pdf');
+    } catch (\Exception $e) {
+      
+
+        // Optionally, return a user-friendly error message
+        FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
+    }
     }
   
 
 
 public function leaveBalanceAsOnADayReport()
 {
-
+try{
 
     // Validate the 'toDate' input
     $this->validate([
@@ -462,6 +479,12 @@ public function leaveBalanceAsOnADayReport()
                 echo $pdf->stream();
             }, 'leave_balance_as_on_a_day.pdf');
         }
+    } catch (\Exception $e) {
+      
+
+        // Optionally, return a user-friendly error message
+        FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
+    }
     
 }
 
@@ -470,6 +493,7 @@ public function leaveBalanceAsOnADayReport()
    
     public function downloadLeaveTransactionReport()
     {
+        try{
   
         $this->validate([
             'fromDate' => 'required|date',
@@ -495,7 +519,7 @@ public function leaveBalanceAsOnADayReport()
             'leave_applications.created_at',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status'
+            'leave_applications.leave_status'
         )
         ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
@@ -528,18 +552,18 @@ public function leaveBalanceAsOnADayReport()
         });
     
         if ($this->transactionType === 'availed') {
-            $query->where('leave_applications.status', 'approved');
+            $query->where('leave_applications.leave_status', 2);
         }
         if ($this->transactionType === 'rejected') {
-            $query->where('leave_applications.status', 'rejected');
+            $query->where('leave_applications.leave_status', 3);
         }
         
         if ($this->transactionType === 'withdrawn') {
-            $query->where('leave_applications.status', 'Withdrawn');
+            $query->where('leave_applications.leave_status', 4);
         }
         
         if ($this->transactionType === 'all') {
-            $query->whereIn('leave_applications.status', ['approved', 'rejected', 'Withdrawn']);
+            $query->whereIn('leave_applications.leave_status', [2, 3, 4]);
         }
     
         if ($this->employeeType == 'active') {
@@ -566,7 +590,7 @@ public function leaveBalanceAsOnADayReport()
             'leave_applications.created_at',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status'
+            'leave_applications.leave_status'
         )
         ->orderBy('date_only', 'asc')
         ->get();
@@ -599,7 +623,7 @@ public function leaveBalanceAsOnADayReport()
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_status' => $item->status,
+                        'leave_Status' => $item->status,
                     ];
                 })
             ];
@@ -612,14 +636,23 @@ public function leaveBalanceAsOnADayReport()
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
         ]);
+        FlashMessageHelper::flashSuccess('Leave Transaction Report Downloaded Successfully!');
     
         return response()->streamDownload(function() use($pdf) {
             echo $pdf->stream();
         }, 'leave_transactions_report.pdf');
+    } catch (\Exception $e) {
+      
+
+        // Optionally, return a user-friendly error message
+        FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
+    }
     }
     
     public function downloadNegativeLeaveBalanceReport()
     {
+        try
+        {
 
         $this->validate([
             'toDate' => 'required|date',
@@ -642,7 +675,7 @@ public function leaveBalanceAsOnADayReport()
             'leave_applications.to_date as leave_to_date',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status'
+            'leave_applications.leave_status'
         )
         ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
@@ -666,7 +699,7 @@ public function leaveBalanceAsOnADayReport()
                 ->orWhereJsonContains('cc_to', [['emp_id' => $loggedInEmpId]]);
         })
         ->where('to_date', '<=', $this->toDate)
-        ->where('leave_applications.status', 'approved');
+        ->where('leave_applications.leave_status', 2);
 
        
     
@@ -697,7 +730,7 @@ public function leaveBalanceAsOnADayReport()
             'leave_applications.from_date',
             'leave_applications.from_session',
             'leave_applications.to_session',
-            'leave_applications.status',
+            'leave_applications.leave_status',
         )
         ->orderBy('date_only', 'asc')
         ->get();
@@ -733,7 +766,7 @@ public function leaveBalanceAsOnADayReport()
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_status' => $item->status,
+                        'leave_Status' => $item->status,
                     ];
                 })
             ];
@@ -748,10 +781,18 @@ public function leaveBalanceAsOnADayReport()
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
         ]);
+        FlashMessageHelper::flashSuccess('Negative Leave Balance Report Downloaded Successfully!');
     
         return response()->streamDownload(function() use($pdf) {
             echo $pdf->stream();
         }, 'negative_leave_balance_report.pdf');
+       
+    } catch (\Exception $e) {
+      
+
+        // Optionally, return a user-friendly error message
+        FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
+    }
     }
     public $totalCasualDays;
     public $totalSickDays;
