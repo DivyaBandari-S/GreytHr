@@ -69,7 +69,10 @@ class AttendanceTable extends Component
         'update',
     ];
 
-
+    protected $rules = [
+        'fromDate' => 'required|date',
+        'toDate' => 'required|date|after_or_equal:fromDate', // Ensuring toDate is after or equal to fromDate
+    ];
     public function mount()
     {
         // First initialize

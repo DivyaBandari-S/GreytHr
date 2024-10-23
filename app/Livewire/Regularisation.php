@@ -593,6 +593,7 @@ public function nextMonth()
             'employee_remarks' => $this->remarks,
             'regularisation_entries' => $regularisationEntriesJson,
             'is_withdraw' => 0,
+            'status'=>5,
             'regularisation_date' => '2024-03-26',
         ]);
         FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
@@ -758,7 +759,7 @@ public function historyButton()
                 ->select('regularisation_dates.*', 'status_types.status_name') // Select fields from both tables
                 ->orderByDesc('regularisation_dates.updated_at')
                 ->get();
-
+            
             $this->pendingRegularisations = $pendingRegularisations->filter(function ($regularisation) {
                 return $regularisation->regularisation_entries !== "[]";
             });
