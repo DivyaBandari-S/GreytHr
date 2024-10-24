@@ -85,6 +85,7 @@ class LeaveHelper
             // Fetch approved leave requests
             $selectedYear = (int) $selectedYear;
             $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
+            ->where('category_type','Leave')
                 ->where(function ($query) {
                     $query->where('leave_status', 2)
                         ->whereIn('cancel_status', [6, 5, 3, 4]);
@@ -100,7 +101,6 @@ class LeaveHelper
                 ])
                 ->whereYear('to_date', '=', $selectedYear)
                 ->get();
-
             $totalCasualDays = 0;
             $totalCasualLeaveProbationDays = 0;
             $totalSickDays = 0;

@@ -20,7 +20,7 @@
                     <div class="form-group">
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper mb-2" style="width: 65%;">
-                            <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" name="leave_type" wire:change="validateField('leave_type')">
+                            <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" name="leave_type" wire:change="handleFieldUpdate('leave_type')">
                                 <option value="default">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
@@ -103,15 +103,15 @@
                             <div class="downArrow d-flex align-items-center justify-content-center">
                                 @if($leave_type == 'Sick Leave')
                                 <span class="sickLeaveBalance" title="Sick Leave">
-                                    {{ ($leaveBalances['sickLeaveBalance']) ?? '0' }}
+                                    {{ ($leaveBalances['sickLeaveBalance'] ?? '0') }}
                                 </span>
                                 @elseif($leave_type == 'Casual Leave')
-                                <span class="sickLeaveBalance" title="Casual Leave Probation">
-                                    {{ ($leaveBalances['casualLeaveBalance']) ?? '0' }}
+                                <span class="sickLeaveBalance" title="Casual Leave">
+                                    {{ ($leaveBalances['casualLeaveBalance'] ?? '0') }}
                                 </span>
                                 @elseif($leave_type == 'Casual Leave Probation')
                                 <span class="sickLeaveBalance">
-                                    {{ ($leaveBalances['casualProbationLeaveBalance']) ?? '0' }}
+                                    {{ ($leaveBalances['casualProbationLeaveBalance'] ?? '0') }}
                                 </span>
                                 @elseif($leave_type == 'Loss of Pay')
                                 <span class="sickLeaveBalance">
@@ -120,116 +120,38 @@
                                     @else
                                     {{ $leaveBalances['lossOfPayBalance'] ?? '0' }}
                                     @endif
-
                                 </span>
                                 @elseif($leave_type == 'Maternity Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ ($leaveBalances['maternityLeaveBalance']) ?? '0' }}
+                                    {{ ($leaveBalances['maternityLeaveBalance'] ?? '0') }}
                                 </span>
                                 @elseif($leave_type == 'Paternity Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ ($leaveBalances['paternityLeaveBalance']) ?? '0' }}
+                                    {{ ($leaveBalances['paternityLeaveBalance'] ?? '0') }}
                                 </span>
                                 @elseif($leave_type == 'Marriage Leave')
                                 <span class="sickLeaveBalance">
-                                    {{ ($leaveBalances['marriageLeaveBalance']) ?? '0' }}
+                                    {{ ($leaveBalances['marriageLeaveBalance'] ?? '0') }}
                                 </span>
                                 @endif
                             </div>
                             @else
-                            <span class="normalText"></span>
+                            <span class="normalText">0</span>
                             @endif
-
                         </div>
+
                         <div class="form-group mb-0">
                             <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
-                            <span id="numberOfDays" class="sickLeaveBalance">
-                                @if($from_date && $to_date && $from_session && $to_session)
-                                {{ $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type) }}
-                                @else
-                                0
-                                @endif
-                            </span>
-                            @if(isset($leaveBalances) && !empty($leaveBalances))
+                            @if($from_date && $to_date && $from_session && $to_session) <!-- Check for all date inputs -->
                             @php
-                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session,$leave_type);
+                            $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session, $leave_type);
                             @endphp
-                            @if($leave_type === 'Casual Leave Probation')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['casualProbationLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <span class="Insufficient">Insufficient leave balance</span>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
+                            <span id="numberOfDays" class="sickLeaveBalance">
+                                {{ $calculatedNumberOfDays }}
+                            </span>
                             @else
-                            <span></span>
-                            @endif
-
-                            @elseif($leave_type === 'Casual Leave')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['casualLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <span class="Insufficient">Insufficient leave balance</span>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
-                            @else
-                            <span></span>
-                            @endif
-                            @elseif($leave_type == 'Sick Leave')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['sickLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <span class="Insufficient">Insufficient leave balance</span>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
-                            @else
-                            <span></span>
-                            @endif
-                            @elseif($leave_type == 'Maternity Leave')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['maternityLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <div class="alert-danger Insufficient">Insufficient leave balance</div>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
-                            @else
-                            <span></span>
-                            @endif
-                            @elseif($leave_type == 'Paternity Leave')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['paternityLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <span class="Insufficient">Insufficient leave balance</span>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
-                            @else
-                            <span></span>
-                            @endif
-                            @elseif($leave_type == 'Marriage Leave')
-                            <!-- Casual Leave Probation -->
-                            @if($calculatedNumberOfDays > ($leaveBalances['marriageLeaveBalance'] ?? 0))
-                            <!-- Display an error message if the number of days exceeds the leave balance -->
-                            <div class="error-message">
-                                <span class="Insufficient">Insufficient leave balance</span>
-                            </div>
-                            @php
-                            $insufficientBalance = true; @endphp
-                            @else
-                            <span></span>
-                            @endif
-                            <!-- end of leavevtyopes -->
-                            @endif
+                            <span class="normalText">0</span>
                             @endif
                             @else
                             <span class="normalText">0</span>
@@ -237,6 +159,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
             <div>
                 @if($showApplyingTo)
@@ -463,11 +386,11 @@
                     <div class="scrollApplyingTO mb-2 mt-2 ">
                         @if($ccRecipients && count($ccRecipients) > 0)
                         @foreach($ccRecipients as $employee)
-                        <div class="borderContainer px-2 mb-2 rounded"  wire:click="toggleSelection('{{ $employee->emp_id }}')">
+                        <div class="borderContainer px-2 mb-2 rounded" wire:click="toggleSelection('{{ $employee->emp_id }}')">
                             <div class="downArrow d-flex align-items-center text-capitalize" wire:click.prevent>
                                 <label class="custom-checkbox">
                                     <input type="checkbox"
-                                        wire:model="selectedPeople.{{ $employee->emp_id }}"                                         />
+                                        wire:model="selectedPeople.{{ $employee->emp_id }}" />
                                     <span class="checkmark"></span>
                                 </label>
                                 <div class="d-flex align-items-center gap-2">
@@ -513,8 +436,12 @@
             </div>
             <div class="form-group mt-3">
                 <label for="file_paths">Attachments</label> <br>
-                <input id="file_paths" style="font-size:12px;" type="file"  wire:loading.attr="disabled" wire:model.lazy="file_paths" wire:change="handleFieldUpdate('file_paths')"  multiple /> <br>
-                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror  <br>
+                <input id="file_paths" style="font-size:12px;" type="file"
+                    wire:model.lazy="file_paths"
+                    wire:keydown.debounce.500ms="validateField('file_paths')"
+                    wire:change="handleFieldUpdate('file_paths')"
+                    multiple />
+                @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror <br>
                 <span class="normalTextValue mt-2 fw-normal">File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
             </div>
 

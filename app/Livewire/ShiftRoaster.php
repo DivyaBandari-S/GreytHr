@@ -178,34 +178,35 @@ class ShiftRoaster extends Component
         ->where('year', $year)
         ->get('date');
         $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-        ->where('leave_applications.status', 'approved')
-        ->whereIn('leave_applications.emp_id', $employeeIds)
-        ->whereDate('from_date', '>=', $year . '-' . $currentMonthWithoutFormat . '-01') // Dynamically set year and month
-        ->whereDate('to_date', '<=', $year . '-' . $currentMonthWithoutFormat . '-31') // Dynamically set year and month
-        ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name'])
-        ->mapWithKeys(function ($leaveRequest) {
-            $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-            $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
-            $number_of_days = $fromDate->diffInDays($toDate) + 1;
-            $dates = [];
-            for ($i = 0; $i < $number_of_days; $i++) {
-                $dates[] = $fromDate->copy()->addDays($i)->toDateString();
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
+            ->where('leave_applications.leave_status', 3) // Filter by leave_status = 3 instead of status = 'approved'
+            ->whereIn('leave_applications.emp_id', $employeeIds)
+            ->whereDate('from_date', '>=', $year . '-' . $currentMonthWithoutFormat . '-01') // Dynamically set year and month
+            ->whereDate('to_date', '<=', $year . '-' . $currentMonthWithoutFormat . '-31') // Dynamically set year and month
+            ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
+            ->mapWithKeys(function ($leaveRequest) {
+                $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
+                $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+                $number_of_days = $fromDate->diffInDays($toDate) + 1;
+                $dates = [];
+                for ($i = 0; $i < $number_of_days; $i++) {
+                    $dates[] = $fromDate->copy()->addDays($i)->toDateString();
+                }
+                return [
+                    $leaveRequest->emp_id => [
+                        'emp_id' => $leaveRequest->emp_id,
+                        'dates' => $dates,
+                        'status_name' => $leaveRequest->status_name, // Include status_name in the output
+                    ],
+                ];
+            });
+ 
+            $leaveDates = [];
+            foreach ($approvedLeaveRequests1 as $emp_id => $leaveRequest) {
+                foreach ($leaveRequest['dates'] as $date) {
+                    $leaveDates[$emp_id][] = $date;
+                }
             }
-            return [
-                $leaveRequest->emp_id => [
-                    'emp_id' => $leaveRequest->emp_id,
-                    'dates' => $dates,
-                ],
-            ];
-        }); 
-        $leaveDates = [];
-        foreach ($approvedLeaveRequests1 as $emp_id => $leaveRequest) {
-            foreach ($leaveRequest['dates'] as $date) {
-                $leaveDates[$emp_id][] = $date;
-            }
-        }
-       
-      
         $count_of_holiday=count($this->holiday);
         if($this->searching==1)
         {

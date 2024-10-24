@@ -75,9 +75,7 @@ class WhoIsInChart extends Component
     public function mount()
     {
         $this->currentDate = Carbon::now()->format('Y-m-d');
-        $this->shiftsforAttendance = EmployeeDetails::select('shift_type', 'shift_start_time', 'shift_end_time')
-                        ->distinct()
-                        ->get();
+       
         $this->from_date=$this->currentDate;               
                  
 
@@ -162,21 +160,26 @@ public function checkshift()
                 $currentDate = $this->from_date;
             }
 
-            $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->whereDate('from_date', '<=', $currentDate)
-                ->whereDate('to_date', '>=', $currentDate)
-                ->where('employee_details.employee_status','active')
-                ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-                ->map(function ($leaveRequest) {
-                    $fromDate = Carbon::parse($leaveRequest->from_date);
-                    $toDate = Carbon::parse($leaveRequest->to_date);
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
-                    return $leaveRequest;
-                });
+            $approvedLeaveRequests =LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_types
+            ->where('leave_applications.leave_status', 3)
+            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->whereDate('from_date', '<=', $currentDate)
+            ->whereDate('to_date', '>=', $currentDate)
+            ->where('employee_details.employee_status', 'active')
+            ->get([
+                'leave_applications.*',
+                'employee_details.first_name', 
+                'employee_details.last_name', 
+                'status_types.status_name as leave_status' // Select status_name as leave_status
+            ])
+            ->map(function ($leaveRequest) {
+                $fromDate = Carbon::parse($leaveRequest->from_date);
+                $toDate = Carbon::parse($leaveRequest->to_date);
+                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+                return $leaveRequest;
+            });
 
-            
             
                 $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                     $query->selectRaw('MIN(swipe_records.id)')
@@ -192,8 +195,9 @@ public function checkshift()
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
-                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
+                ->distinct()
                 ->get();
             $data = [
                 ['List of Late Arrival Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
@@ -235,20 +239,24 @@ public function checkshift()
                 $currentDate = $this->from_date;
             }
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->whereDate('from_date', '<=', $currentDate)
-                ->whereDate('to_date', '>=', $currentDate)
-                ->where('employee_details.employee_status','active')
-                ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-                ->map(function ($leaveRequest) {
-                    $fromDate = Carbon::parse($leaveRequest->from_date);
-                    $toDate = Carbon::parse($leaveRequest->to_date);
-
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
-
-                    return $leaveRequest;
-                });
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_types
+            ->where('leave_applications.leave_status', 3)
+            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->whereDate('from_date', '<=', $currentDate)
+            ->whereDate('to_date', '>=', $currentDate)
+            ->where('employee_details.employee_status', 'active')
+            ->get([
+                'leave_applications.*',
+                'employee_details.first_name', 
+                'employee_details.last_name', 
+                'status_types.status_name as leave_status' // Select status_name as leave_status
+            ])
+            ->map(function ($leaveRequest) {
+                $fromDate = Carbon::parse($leaveRequest->from_date);
+                $toDate = Carbon::parse($leaveRequest->to_date);
+                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+                return $leaveRequest;
+            });
 
 
             
@@ -266,8 +274,9 @@ public function checkshift()
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
-                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->select('swipe_records.*', 'employee_details.first_name','employee_details.last_name','company_shifts.shift_start_time', 'company_shifts.shift_end_time','employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
+                ->distinct()
                 ->get();
             $data = [
                 ['List of On Time Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
@@ -306,22 +315,26 @@ public function checkshift()
                 $currentDate = $this->from_date;
             }
 
-            $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
+            $approvedLeaveRequests=LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+                ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_types
+                ->where('leave_applications.leave_status', 3)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->whereDate('from_date', '<=', $currentDate)
                 ->whereDate('to_date', '>=', $currentDate)
-                ->where('employee_details.employee_status','active')
-                ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
+                ->where('employee_details.employee_status', 'active')
+                ->get([
+                    'leave_applications.*',
+                    'employee_details.first_name', 
+                    'employee_details.last_name', 
+                    'status_types.status_name as leave_status' // Select status_name as leave_status
+                ])
                 ->map(function ($leaveRequest) {
-                    // Calculate the number of days between from_date and to_date
                     $fromDate = Carbon::parse($leaveRequest->from_date);
                     $toDate = Carbon::parse($leaveRequest->to_date);
-
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
-
+                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
                     return $leaveRequest;
                 });
+
             $data = [
                 ['List of On Leave Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
                 ['Employee ID', 'Name', 'Leave Type', 'Leave Days'],
@@ -347,7 +360,7 @@ public function checkshift()
     {
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_start_time')->get();
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
 
             if ($this->isdatepickerclicked == 0) {
                 $currentDate = now()->toDateString();
@@ -355,19 +368,26 @@ public function checkshift()
                 $currentDate = $this->from_date;
             }
 
-            $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->where('leave_applications.status', 'approved')
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->whereDate('from_date', '<=', $currentDate)
-                ->whereDate('to_date', '>=', $currentDate)
-                ->where('employee_details.employee_status','active')
-                ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-                ->map(function ($leaveRequest) {
-                    $fromDate = Carbon::parse($leaveRequest->from_date);
-                    $toDate = Carbon::parse($leaveRequest->to_date);
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
-                    return $leaveRequest;
-                });
+            $approvedLeaveRequests =LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_types
+            ->where('leave_applications.leave_status', 3)
+            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->whereDate('from_date', '<=', $currentDate)
+            ->whereDate('to_date', '>=', $currentDate)
+            ->where('employee_details.employee_status', 'active')
+            ->get([
+                'leave_applications.*',
+                'employee_details.first_name', 
+                'employee_details.last_name', 
+                'status_types.status_name as leave_status' // Select status_name as leave_status
+            ])
+            ->map(function ($leaveRequest) {
+                $fromDate = Carbon::parse($leaveRequest->from_date);
+                $toDate = Carbon::parse($leaveRequest->to_date);
+                $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
+                return $leaveRequest;
+            });
+
 
                 $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
                 ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
@@ -377,7 +397,7 @@ public function checkshift()
                 })
                 ->select(
                     'employee_details.*',
-                    'emp_personal_infos.mobile_number', // Selecting the mobile number from emp_personal_infos
+                     // Selecting the mobile number from emp_personal_infos
                     'company_shifts.shift_name', // Selecting shift_name from company_shifts
                     'company_shifts.shift_start_time',
                     'company_shifts.shift_end_time'
@@ -390,7 +410,9 @@ public function checkshift()
                 })
                 ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_details.employee_status', 'active')
+                ->distinct('employee_details.emp_id')
                 ->get();
+          
             $data = [
                 ['List of Absent Employees on ' . Carbon::parse($currentDate)->format('jS F, Y')],
                 ['Employee ID', 'Name','Shift_Start_Time'],
@@ -474,7 +496,7 @@ public function checkshift()
         $employees2 = EmployeeDetails::where('manager_id', $loggedInEmpId)
         ->where('employee_status','active')
                     ->count(); // Count the results
-    
+        
         if ($this->isdatepickerclicked == 0) {
             $currentDate = now()->toDateString();
         } else {
@@ -484,7 +506,7 @@ public function checkshift()
      {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
-        ->where('leave_applications.status', 'approved')
+        ->where('leave_applications.leave_status', 2)
         ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
         ->whereDate('from_date', '<=', $currentDate)
         ->whereDate('to_date', '>=', $currentDate)
@@ -492,7 +514,6 @@ public function checkshift()
         ->get([
             'leave_applications.*', // To get leave date and leave type
             'employee_details.*', 
-            'emp_personal_infos.mobile_number'
         ]) 
         ->map(function ($leaveRequest) {
             // Calculating the number of leave days
@@ -517,7 +538,7 @@ public function checkshift()
      {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
         ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
-        ->where('leave_applications.status', 'approved')
+        ->where('leave_applications.leave_status', 2)
         ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
         ->whereDate('from_date', '<=', $currentDate)
         ->whereDate('to_date', '>=', $currentDate)
@@ -526,7 +547,7 @@ public function checkshift()
         ->get([
             'leave_applications.*', // To get leave date and leave type
             'employee_details.*', 
-            'emp_personal_infos.mobile_number'
+           
         ]) 
         ->map(function ($leaveRequest) {
             // Calculating the number of leave days
@@ -546,21 +567,21 @@ public function checkshift()
             return $leaveRequest;
         });
      }
-
+    
 
 
 
 
     $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
     ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos
-    ->where('leave_applications.status', 'approved')
+    ->where('leave_applications.leave_status', 2)
     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
     ->whereDate('leave_applications.from_date', '<=', $currentDate)
     ->whereDate('leave_applications.to_date', '>=', $currentDate)
     ->select(
         'leave_applications.*', 
         'employee_details.*', 
-        'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
+        // Include fields from emp_personal_infos
     )
     ->count();
     
@@ -582,8 +603,7 @@ public function checkshift()
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
     })
     ->select(
-        'employee_details.*',
-        'emp_personal_infos.mobile_number', // Selecting the mobile number from emp_personal_infos
+        'employee_details.*',// Selecting the mobile number from emp_personal_infos
         'company_shifts.shift_name', // Selecting shift_name from company_shifts
         'company_shifts.shift_start_time',
         'company_shifts.shift_end_time'
@@ -596,6 +616,7 @@ public function checkshift()
     })
     ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
     ->where('employee_details.employee_status', 'active')
+    ->distinct('employee_details.emp_id')
     ->get();
                 $countOfAbsentEmployees =EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
                 ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
@@ -605,7 +626,7 @@ public function checkshift()
                 })
                 ->select(
                     'employee_details.*',
-                    'emp_personal_infos.mobile_number', // Selecting the mobile number from emp_personal_infos
+                    // Selecting the mobile number from emp_personal_infos
                     'company_shifts.shift_name', // Selecting shift_name from company_shifts
                     'company_shifts.shift_start_time',
                     'company_shifts.shift_end_time'
@@ -618,6 +639,7 @@ public function checkshift()
                 })
                 ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_details.employee_status', 'active')
+                ->distinct('employee_details.emp_id')
                 ->count();
              
             }
@@ -631,7 +653,7 @@ public function checkshift()
     })
     ->select(
         'employee_details.*',
-        'emp_personal_infos.mobile_number', // Selecting the mobile number from emp_personal_infos
+        // Selecting the mobile number from emp_personal_infos
         'company_shifts.shift_name' // Selecting shift_name from company_shifts
     )
     ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
@@ -648,7 +670,7 @@ public function checkshift()
     ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
     ->select(
         'employee_details.*',
-        'emp_personal_infos.mobile_number' // Selecting the mobile number from emp_personal_infos, will be null if no match
+         // Selecting the mobile number from emp_personal_infos, will be null if no match
     )
     ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
         $query->select('emp_id')
@@ -675,45 +697,46 @@ public function checkshift()
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+              
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name', 'company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'emp_personal_infos.mobile_number', 'company_shifts.shift_name') // Include shift_name in select
+                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name', 'company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
+                ->distinct()
                 ->orderBy('swipe_records.swipe_time', 'DESC') // Order by swipe_time in descending order
                 ->get();
-
+             
                 
        
-            $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
-        $query->selectRaw('MIN(swipe_records.id)')
-            ->from('swipe_records')
-            ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
-            ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
-            ->whereDate('swipe_records.created_at', $currentDate)
-            ->groupBy('swipe_records.emp_id');
-    })
-    ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-    ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
-    ->leftJoin('company_shifts', function ($join) {
-        $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
-             ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
-    })
-    ->select(
-        'swipe_records.*', 
-        'employee_details.first_name', 
-        'employee_details.last_name',
-        'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
-        'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
-        'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
-    )
-    ->where(function ($query) {
-        $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
-    })
-    ->count();
-    
+                $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
+                    $query->selectRaw('MIN(swipe_records.id)')
+                        ->from('swipe_records')
+                        ->whereNotIn('swipe_records.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                        ->whereIn('swipe_records.emp_id', $employees->pluck('emp_id'))
+                        ->whereDate('swipe_records.created_at', $currentDate)
+                        ->groupBy('swipe_records.emp_id');
+                })
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select(
+                    'swipe_records.emp_id',  // Ensure that you are selecting emp_id for distinct comparison
+                    'swipe_records.swipe_time',
+                    'employee_details.first_name', 
+                    'employee_details.last_name',
+                    'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
+                    'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
+                    'employee_details.emergency_contact'  // Include fields from emp_personal_infos
+                )
+                ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
+                ->distinct('swipe_records.emp_id') // Apply distinct on emp_id to avoid duplicates
+                ->count(); // Count distinct late swipes
+           
     $earlySwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
         $query->selectRaw('MIN(swipe_records.id)')
             ->from('swipe_records')
@@ -728,17 +751,19 @@ public function checkshift()
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
     })
+
     ->select(
         'swipe_records.*', 
         'employee_details.first_name', 
         'employee_details.last_name', 
-        'emp_personal_infos.mobile_number', // Selecting fields from emp_personal_infos
+        'employee_details.emergency_contact', // Selecting fields from emp_personal_infos
         'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
         'company_shifts.shift_end_time',
     )
     ->where(function ($query) {
         $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
     })
+    ->distinct('swipe_records.emp_id')
     ->count();
 
             }
@@ -754,11 +779,11 @@ public function checkshift()
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->leftjoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
-                ->select('swipe_records.*', 'employee_details.*', 'emp_personal_infos.mobile_number','employee_details.shift_type')
+                ->select('swipe_records.*', 'employee_details.*','employee_details.shift_type')
                 ->where('employee_details.shift_type',$this->selectedShift)
                 ->where('employee_details.employee_status','active')
                 ->get();
-                
+           
        
             $lateSwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
@@ -776,7 +801,7 @@ public function checkshift()
                 'employee_details.last_name',
                 'employee_details.shift_start_time', 
                 'employee_details.shift_end_time',
-                'emp_personal_infos.mobile_number'  // Include fields from emp_personal_infos
+                'employee_details.emergency_contact'  // Include fields from emp_personal_infos
             )
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time > employee_details.shift_start_time");
@@ -797,7 +822,7 @@ public function checkshift()
                 'swipe_records.*', 
                 'employee_details.first_name', 
                 'employee_details.last_name', 
-                'emp_personal_infos.mobile_number' // Selecting fields from emp_personal_infos
+                'employee_details.emergency_contact' // Selecting fields from emp_personal_infos
             )
             ->where(function ($query) {
                 $query->whereRaw("swipe_records.swipe_time <= employee_details.shift_start_time");
@@ -843,9 +868,18 @@ public function checkshift()
         $swipes_count = $swipes2->count();
         $countOfEmployees=
         $employeesCount = $employees1->count();
-
-        $calculateAbsent = ($countOfAbsentEmployees / $employees2) * 100;
-        $calculateApprovedLeaves = ($approvedLeaveRequests1 / $employees2) * 100;
+      
+        if($employees2>0)
+        {
+            $calculateAbsent = ($countOfAbsentEmployees / $employees2) * 100;
+            $calculateApprovedLeaves = ($approvedLeaveRequests1 / $employees2) * 100;
+        }
+        else
+        {
+            $calculateAbsent = 0;
+            $calculateApprovedLeaves = 0;
+        }
+      
         $nameFilter = $this->search;
         $swipes = $swipes->filter(function ($swipe) use ($nameFilter) {
             return stripos($swipe->first_name, $nameFilter) !== false ||

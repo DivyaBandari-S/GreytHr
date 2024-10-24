@@ -1437,13 +1437,10 @@ color: #fff;
                             
                           
                             <div>
-                            @if($avgWorkHoursPreviousMonth==0)
-                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
-                                            </span>
-                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
-                                            </span>
+                                
+                            
                               
-                            @elseif($percentageinworkhrsforattendance>0)
+                            @if($percentageinworkhrsforattendance>=0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
@@ -1453,12 +1450,7 @@ color: #fff;
                                         </span>
                                         <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
                                         </span> 
-                                        @elseif($percentageinworkhrsforattendance==0) 
-                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> -100%
-                                        </span>
-                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                        </span> 
-                                    
+                                       
                                     @endif
                                      
                             </div>
@@ -1476,13 +1468,9 @@ color: #fff;
                                     
 
                             <div>
-                                   @if($avgWorkHoursPreviousMonth==0)
-                                   <span class="text-success ng-star-inserted" style="font-size:10px;">
-                                            </span>
-                                            <span class="text-muted" style="font-size:10px;margin-left:0px;">
-                                            </span>
+                                  
 
-                                   @elseif($percentageinworkhrsforattendance>0)
+                                   @if($percentageinworkhrsforattendance>=0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
@@ -1492,11 +1480,7 @@ color: #fff;
                                         </span>
                                         <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
                                         </span> 
-                                        @elseif($percentageinworkhrsforattendance==0) 
-                                       <span class="text-danger ng-star-inserted" style="font-size:10px;"> -100%
-                                        </span>
-                                        <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                        </span> 
+                                       
                                     @endif
                             </div>
 
@@ -2163,7 +2147,7 @@ color: #fff;
 
 
                                         $CurrentDate = $currentDate2;
-                                        $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularised',1)->get(); // Example query
+                                        $swiperecord = App\Models\SwipeRecord::where('emp_id', $employeeIdForRegularisation)->where('is_regularized',1)->get(); // Example query
 
                                         if ($swiperecord && is_iterable($swiperecord)) {
                                         $swipeRecordExists = $swiperecord->contains(function ($record) use ($CurrentDate) {

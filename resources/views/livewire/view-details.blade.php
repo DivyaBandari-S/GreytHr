@@ -187,7 +187,7 @@ v
                                         <span class="custom-label">Contact</span>
                                         @endif
                                         @if (!empty($leaveRequest->cc_to))
-                                        <span class="custom-label">CC to</span>
+                                        <span class="custom-label">CC To</span>
                                         @endif
                                         @if (!empty($leaveRequest->file_paths))
                                         <span class="custom-label">Attachments</span>

@@ -68,6 +68,7 @@ class Attendance extends Component
     public $clickedDate;
     public $currentWeekday;
 
+    public $timeDifferences;
 
     public $totalWorkingDays;
     public $calendar;
@@ -186,6 +187,9 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $previousMonthTotalMinutes;
+
+    public $currentMonthTotalMinutes;
     public $avergageFirstInTime=0;
 
     public $averageLastOutTime=0;
@@ -222,77 +226,123 @@ class Attendance extends Component
         }
     }
     public function calculateDifferenceInAvgWorkHours($date)
-    {
-       
+{
     // Get the current month and previous month dates
-      $currentMonthStart = \Carbon\Carbon::parse($date. '-01')->startOfMonth()->toDateString();
-      $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
-      $previousMonthDate=\Carbon\Carbon::now()->subMonth()->format('Y-m');
-    //   dd($date.' '.$previousMonthDate);
-      if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&(\Carbon\Carbon::parse($currentMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&\Carbon\Carbon::parse($currentMonthEnd)->isSameYear(\Carbon\Carbon::today()))) {
-         $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
-      }
-      elseif(\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()))
-      {
-         return '-';
-      }
+    $currentMonthStart = \Carbon\Carbon::parse($date . '-01')->startOfMonth()->toDateString();
+    $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
+    $previousMonthDate = \Carbon\Carbon::parse($date)->subMonth()->format('Y-m');
+    
+    // Log the initial dates
+    Log::info('Initial dates:', [
+        'date' => $date,
+        'currentMonthStart' => $currentMonthStart,
+        'currentMonthEnd' => $currentMonthEnd,
+        'previousMonthDate' => $previousMonthDate
+    ]);
 
-      
- 
-      $previousMonthStart = \Carbon\Carbon::parse($previousMonthDate. '-01')->startOfMonth()->toDateString();
-      $previousMonthEnd = \Carbon\Carbon::parse($previousMonthDate)->endOfMonth()->toDateString(); // Today's date
-      if (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&(\Carbon\Carbon::parse($previousMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&\Carbon\Carbon::parse($previousMonthEnd)->isSameYear(\Carbon\Carbon::today()))) {
-        $previousMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
-     }
-     elseif(\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()))
-     {
+    if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($currentMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($currentMonthEnd)->isSameYear(\Carbon\Carbon::today())) {
+        $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+        Log::info('Current month end adjusted to today:', ['currentMonthEnd' => $currentMonthEnd]);
+    } elseif (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today())) {
+        Log::warning('Current month end is greater than today. Returning \'-\'');
         return '-';
-     }
-    //   dd('Start Date'.$currentMonthStart.'-'.$currentMonthEnd.'End Date'.$previousMonthStart.'-'.$previousMonthEnd);
+    }
+
+    $previousMonthStart = \Carbon\Carbon::parse($previousMonthDate . '-01')->startOfMonth()->toDateString();
+    $previousMonthEnd = \Carbon\Carbon::parse($previousMonthDate)->endOfMonth()->toDateString(); // End of previous month
+
+    // Log previous month dates
+    Log::info('Previous month dates:', [
+        'previousMonthStart' => $previousMonthStart,
+        'previousMonthEnd' => $previousMonthEnd
+    ]);
+
+    if (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($previousMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($previousMonthEnd)->isSameYear(\Carbon\Carbon::today())) {
+        $previousMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+        Log::info('Previous month end adjusted to today:', ['previousMonthEnd' => $previousMonthEnd]);
+    } elseif (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today())) {
+        Log::warning('Previous month end is greater than today. Returning \'-\'');
+        return '-';
+    }
+
+    // Log before calculation
+    Log::info('Calling calculateAverageWorkHoursAndPercentage for current and previous months', [
+        'currentMonthStart' => $currentMonthStart,
+        'currentMonthEnd' => $currentMonthEnd,
+        'previousMonthStart' => $previousMonthStart,
+        'previousMonthEnd' => $previousMonthEnd
+    ]);
+
     // Calculate average work hours for current and previous months
     $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
-    $this->avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
-     
-        // Convert the average work hours (HH:MM) to total minutes for comparison
-        list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
-        list($previousMonthHours, $previousMonthMinutes) = explode(':', $this->avgWorkHoursPreviousMonth);
+    $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
 
-        $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
-        $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
-        
-        // Calculate the difference in minutes
-        $differenceInMinutes = $currentMonthTotalMinutes - $previousMonthTotalMinutes;
-        
-       if ($previousMonthTotalMinutes != 0) {
-            $this->percentageDifference = ($differenceInMinutes / $previousMonthTotalMinutes) * 100;
-        } 
-        else
-        {
-            $this->percentageDifference = 0;
-        }
-        // Convert the difference back to hours and minutes
-        $hoursDifference = intdiv($differenceInMinutes, 60);
-        $minutesDifference = $differenceInMinutes % 60;
-          
-        return $this->percentageDifference;
+    // Log average work hours
+    Log::info('Average work hours:', [
+        'avgWorkHoursCurrentMonth' => $avgWorkHoursCurrentMonth,
+        'avgWorkHoursPreviousMonth' => $avgWorkHoursPreviousMonth
+    ]);
+
+    // Convert the average work hours (HH:MM) to total minutes for comparison
+    list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
+    list($previousMonthHours, $previousMonthMinutes) = explode(':', $avgWorkHoursPreviousMonth);
+
+    $this->currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
+    $this->previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
+
+    // Log total minutes
+    Log::info('Total minutes:', [
+        'currentMonthTotalMinutes' => $this->currentMonthTotalMinutes,
+        'previousMonthTotalMinutes' => $this->previousMonthTotalMinutes
+    ]);
+    if($this->previousMonthTotalMinutes==0)
+    {
+        $this->previousMonthTotalMinutes=1;
     }
+    // Calculate the difference in minutes
+    $differenceInMinutes = $this->currentMonthTotalMinutes - $this->previousMonthTotalMinutes;
+   
+    Log::info('Difference in minutes:', ['differenceInMinutes' => $differenceInMinutes]);
+
+    if ($this->previousMonthTotalMinutes != 0) {
+        $this->percentageDifference = ($differenceInMinutes / $this->previousMonthTotalMinutes) * 100;
+    } else {
+        $this->percentageDifference = 0;
+    }
+
+    // Convert the difference back to hours and minutes
+    $hoursDifference = intdiv($differenceInMinutes, 60);
+    $minutesDifference = $differenceInMinutes % 60;
+
+    Log::info('Final difference:', [
+        'hoursDifference' => $hoursDifference,
+        'minutesDifference' => $minutesDifference,
+        'percentageDifference' => $this->percentageDifference
+    ]);
+
+    return $this->percentageDifference;
+}
     public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-
+          
         // Retrieve swipe records within the given date range
         $records = SwipeRecord::where('emp_id', $employeeId)
             ->whereDate('created_at', '>=', $startDate)
             ->whereDate('created_at', '<', $endDate)
             ->orderBy('created_at')
             ->get();
-
+       
         // Group swipes by date
         $dailySwipes = $records->groupBy(function ($swipe) {
             return Carbon::parse($swipe->created_at)->toDateString();
         });
-
-        // Get leave requests for the employee within the date range
+        
+         // Get leave requests for the employee within the date range
         $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
     ->where('leave_applications.leave_status', 2) // Filter for approved leave requests
     ->where(function ($query) use ($startDate, $endDate) {
@@ -302,7 +352,7 @@ class Attendance extends Component
     ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types table
     ->select('leave_applications.*', 'status_types.status_name') // Select the fields you need
     ->get();
-
+   
 
         $totalMinutes = 0;
         $workingDaysCount = 0;
@@ -388,7 +438,7 @@ class Attendance extends Component
         $minutes = $averageMinutes % 60;
 
         $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-
+        
         return $averageWorkHours;
     }
 
@@ -513,7 +563,7 @@ class Attendance extends Component
 
         try {
 
-            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
+            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type')->first();
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
             $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
             $this->to_date = Carbon::now()->toDateString();
@@ -536,10 +586,10 @@ class Attendance extends Component
             
             // Get the current date of the current month
             $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
+            
             $this->year = now()->year;
             $this->month = now()->month;
             $this->generateCalendar();
-            
             $startOfMonth = '2024-08-01';
             $endOfMonth = '2024-08-31';
 
@@ -573,15 +623,7 @@ class Attendance extends Component
             }
 
             // Optionally, calculate average time difference per day
-            $averageDifferences = [];
-
-            foreach ($timeDifferences as $date => $differences) {
-
-                if (count($differences) > 0) {
-                    $averageDifference = array_sum($differences) / count($differences);
-                    $averageDifferences[$date] = $averageDifference;
-                }
-            }
+           
 
             
             
@@ -620,7 +662,7 @@ class Attendance extends Component
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
-            
+      
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
             // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];
@@ -700,7 +742,7 @@ class Attendance extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularized', 1)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
@@ -1137,6 +1179,7 @@ class Attendance extends Component
     {
         try {
             // Format the dates and update the modal title
+            
             $formattedFromDate = Carbon::parse($this->start_date_for_insights)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
             if ($formattedFromDate > $formattedToDate) {
@@ -1187,20 +1230,35 @@ class Attendance extends Component
             $insights=$this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $outsights=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalLateInSwipes = $insights['lateSwipeCount'];
-
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
-            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));                     
+            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));                  
             $this->totalnumberofEarlyOut=$outsights['EarlyOutCount'];
             $this->averageLastOutTime=$outsights['averageLastOutTime'];
             $this->avergageFirstInTime=$insights['averageFirstInTime'];
+           
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-            $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
-            $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
-            $timeDifferenceInMinutes = $lastOutTime->diffInMinutes($firstInTime);
-            $timeDifferenceInHours = $lastOutTime->diffInHours($firstInTime);
+           
          
-            $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
-            $this->averageWorkHoursForModalTitle=$timeDifferenceFormatted;
+            $this->averageWorkHoursForModalTitle=$this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));         
+          
+            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
+            // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
+            //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
+
+            //         $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
+            //         $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
+                    
+            //         // Calculate time difference if both times are valid
+            //         $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
+            //         $this->averageWorkHoursForModalTitle = $timeDifferenceFormatted;
+
+            //     } else {
+            //         // Log the issue for debugging purposes
+            //         Log::warning('Invalid time format for averageLastOutTime or avergageFirstInTime.');
+                    
+            //         // Set fallback value
+            //         $this->averageWorkHoursForModalTitle = '00:00'; 
+            //     }
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
@@ -1334,6 +1392,7 @@ class Attendance extends Component
     }
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
+        log::info('early out method called');
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
@@ -1810,7 +1869,7 @@ class Attendance extends Component
 
             // $previousMonthStart = $date->subMonth()->startOfMonth()->toDateString();
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
-            
+       
             $this->dateClicked($date->startOfMonth()->toDateString());
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());
@@ -1924,7 +1983,7 @@ class Attendance extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeIdForRegularisation = auth()->guard('emp')->user()->emp_id;
             $this->swiperecord = SwipeRecord::where('swipe_records.emp_id', $employeeId)
-                ->where('is_regularised', 1)
+                ->where('is_regularized', 1)
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();
