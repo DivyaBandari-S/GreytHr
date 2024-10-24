@@ -116,6 +116,7 @@ class Home extends Component
     public $lon;
     public $lat;
     public $latitude;
+    public $loginEmpManagerDetails;
     public  $longitude;
     public function mount()
     {
@@ -136,7 +137,8 @@ class Home extends Component
             $this->greetingText = 'Good Night';
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->first();
+        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name','manager_id')->first();
+        $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')->where('emp_id', $this->loginEmployee->manager_id)->first();
         $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
@@ -155,12 +157,8 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
- 
- 
- 
- 
- 
- 
+
+
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
@@ -655,6 +653,7 @@ class Home extends Component
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
+                'loginEmpManagerDetails' => $this->loginEmpManagerDetails
  
             ]);
         } catch (\Illuminate\Database\QueryException $e) {

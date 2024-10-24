@@ -166,10 +166,10 @@ class AttendenceMasterDataNew extends Component
             
                 $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join status_type to get status_name
-                ->where('leave_applications.leave_status', 3) // Instead of 'approved', check for leave_status = 3
+                ->where('leave_applications.leave_status', 2) // Instead of 'approved', check for leave_status = 3
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
                 ->where('employee_details.manager_id', $loggedInEmpId) 
-                ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth1 . '-01') 
+                ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth1 . '-01')
                 ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth1 . '-' . $daysInMonth)
                 ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_type.status_name']) // Retrieve status_name
                 ->map(function ($leaveRequest) {
