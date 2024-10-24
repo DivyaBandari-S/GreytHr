@@ -608,7 +608,7 @@ class Tasks extends Component
             session()->flash('showAlert', true);
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
-            return redirect()->to('/tasks');
+            $this->loadTasks();
             $this->showDialog= false;
 
         } catch (\Illuminate\Validation\ValidationException $e) {

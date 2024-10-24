@@ -1,4 +1,13 @@
-<div>
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="loginfo,show,close,remove,cancelProfile,saveProfile,editProfile,cancelTimeZone,saveTimeZone,editTimeZone,cancelBiography,saveBiography,editBiography,cancelSocialMedia,saveSocialMedia,editSocialMedia,changePassword">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+
+        </div>
+    </div>
     @if (session()->has('emp_error'))
         <div class="alert alert-danger">
             {{ session('emp_error') }}
