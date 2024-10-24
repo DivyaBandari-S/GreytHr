@@ -1607,6 +1607,7 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
 
     @endif
     @endif
+
     <script>
         function toggleAccordion(element) {
 
