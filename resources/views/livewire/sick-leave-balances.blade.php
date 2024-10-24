@@ -103,22 +103,27 @@
                             <tbody>
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
-                                    <td>
+                                <td>
                                         @if($balance->category_type === 'Leave')
-                                        @if($balance->status == 'approved')
+                                        @if($balance->leave_status == '2')
                                         Availed
-                                        @elseif($balance->status == 'Pending' )
+                                        @elseif($balance->leave_status == '5' )
                                         Applied
-                                        @elseif($balance->status == 'Withdrawn' )
+                                        @elseif($balance->leave_status == '4' )
                                         Withdrawn
                                         @else
                                         Rejected
                                         @endif
                                         @else
-                                        @if($balance->cancel_status=='Pending Leave Cancel')
+                                        @if($balance->cancel_status=='7')
                                         Leave Cancel-Applied
-                                        @else
-                                        Leave Cancel-{{ucfirst($balance->cancel_status)}}
+
+                                        @elseif($balance->cancel_status=='2')
+                                        Leave Cancel-Approved
+                                        @elseif($balance->cancel_status=='3')
+                                        Leave Cancel-Rejected
+                                        @elseif($balance->cancel_status=='4')
+                                        Leave Cancel-Withdrawn
                                         @endif
                                         @endif
                                     </td>
