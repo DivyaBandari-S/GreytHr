@@ -299,10 +299,13 @@ class Attendance extends Component
         'currentMonthTotalMinutes' => $this->currentMonthTotalMinutes,
         'previousMonthTotalMinutes' => $this->previousMonthTotalMinutes
     ]);
-
+    if($this->previousMonthTotalMinutes==0)
+    {
+        $this->previousMonthTotalMinutes=1;
+    }
     // Calculate the difference in minutes
     $differenceInMinutes = $this->currentMonthTotalMinutes - $this->previousMonthTotalMinutes;
-
+   
     Log::info('Difference in minutes:', ['differenceInMinutes' => $differenceInMinutes]);
 
     if ($this->previousMonthTotalMinutes != 0) {

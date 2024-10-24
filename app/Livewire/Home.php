@@ -442,21 +442,7 @@ class Home extends Component
                 ->get();
             $arrayofabsentemployees = $this->absent_employees->toArray();
  
-            $this->absent_employees_count = EmployeeDetails::where('manager_id', $loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name')
-                ->whereNotIn('emp_id', function ($query) {
-                    $query->select('emp_id')
-                        ->from('swipe_records')
-                        ->whereDate('created_at', today());
-                })
-                ->whereNotIn('emp_id', function ($query) {
-                    $query->select('emp_id')
-                        ->from('leave_applications')
-                        ->whereDate('from_date', '>=', today())
-                        ->whereDate('to_date', '<=', today());
-                })
-                ->where('employee_status', 'active')
-                ->count();
+            
  
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
@@ -474,6 +460,7 @@ class Home extends Component
  
                     return $leaveRequest;
                 });
+                
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -488,18 +475,31 @@ class Home extends Component
  
             $arrayofabsentemployees = $this->absent_employees->toArray();
  
-            $this->absent_employees_count = EmployeeDetails::where('manager_id', $loggedInEmpId)
-                ->select('emp_id', 'first_name', 'last_name')
-                ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
-                    $query->select('emp_id')
-                        ->from('swipe_records')
-                        ->where('manager_id', $loggedInEmpId)
-                        ->whereDate('created_at', $currentDate);
-                })
-                ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
-                ->where('employee_status', 'active')
-                ->count();
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+            $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
+            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+            ->leftJoin('company_shifts', function ($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
+            })
+            ->select(
+                'employee_details.*',
+                // Selecting the mobile number from emp_personal_infos
+                'company_shifts.shift_name', // Selecting shift_name from company_shifts
+                'company_shifts.shift_start_time',
+                'company_shifts.shift_end_time'
+            )
+            ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                $query->select('emp_id')
+                    ->from('swipe_records')
+                    ->where('manager_id', $loggedInEmpId)
+                    ->whereDate('created_at', $currentDate);
+            })
+            ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+            ->where('employee_details.employee_status', 'active')
+            ->distinct('employee_details.emp_id')
+            ->count();
+         
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
             $swipes_early = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -526,6 +526,7 @@ class Home extends Component
                     $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
                 })
                 ->where('employee_details.employee_status', 'active')
+                ->distinct('swipe_records.emp_id')
                 ->get();
  
  
@@ -539,28 +540,28 @@ class Home extends Component
                     ->whereDate('swipe_records.created_at', $currentDate)
                     ->groupBy('swipe_records.emp_id');
             })
-                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
-                ->leftJoin('company_shifts', function ($join) {
-                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
-                        ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
-                })
-                ->select(
-                    'swipe_records.*',
-                    'employee_details.first_name',
-                    'employee_details.last_name',
-                    'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
-                    'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
-                    'employee_details.emergency_contact',  // Include fields from emp_personal_infos
-                )
-                ->where(function ($query) {
-                    $query->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
-                })
-                ->where('employee_details.employee_status', 'active')
-                ->get();
- 
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
+            ->leftJoin('company_shifts', function ($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+            })
+            ->select(
+                'swipe_records.emp_id',  // Ensure that you are selecting emp_id for distinct comparison
+                'swipe_records.swipe_time',
+                'employee_details.first_name', 
+                'employee_details.last_name',
+                'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
+                'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
+                'employee_details.emergency_contact'  // Include fields from emp_personal_infos
+            )
+            ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
+            // Apply distinct on emp_id to avoid duplicates
+            ->distinct('swipe_records.emp_id')
+            ->get();
+           
             $swipes_late1 = $swipes_late->count();
- 
+        
             $this->swipeDetails = DB::table('swipe_records')
                 ->whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
