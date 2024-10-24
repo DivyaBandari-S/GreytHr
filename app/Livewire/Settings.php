@@ -186,39 +186,36 @@ class Settings extends Component
         $this->editingNickName = false;
     }
     public function saveProfile()
-    {
-        try {
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        // Log::info('Attempting to save profile for employee ID: ' . $employeeId);
 
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
-            if ($empPersonalInfo) {;
-                $empPersonalInfo->nick_name = !empty($this->nickName) ? $this->nickName : null;
-                $empPersonalInfo->date_of_birth = !empty($this->wishMeOn) ? $this->wishMeOn : null;
-                $empPersonalInfo->save();
-            } else {
-                $empPersonalInfo = EmpPersonalInfo::create([
-                    'emp_id' => $employeeId,
-                    'nick_name' => !empty($this->nickName) ? $this->nickName : null, // Handle empty nick_name
-                    'date_of_birth' => !empty($this->wishMeOn) ? $this->wishMeOn : null, // Handle empty date_of_birth
-                    'first_name' => '',
-                    'last_name' => '',
-                    'gender' => '',
-                    'email' => null,
-                    'mobile_number' => null,
-                    'alternate_mobile_number' => null,
-                ]);
-            }
-
-            $this->editingNickName = false;
-        } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Error in saveProfile method: ');
+        $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
+        if ($empPersonalInfo) {
+            // Log::info('Updating existing employee personal info for ID: ' . $employeeId);
+            $empPersonalInfo->nick_name = !empty($this->nickName) ? $this->nickName : null;
+            $empPersonalInfo->date_of_birth = !empty($this->wishMeOn) ? $this->wishMeOn : null;
+            $empPersonalInfo->save();
+            // Log::info('Successfully updated employee personal info for ID: ' . $employeeId);
+        } else {
+            // Log::info('Creating new employee personal info for ID: ' . $employeeId);
+            $empPersonalInfo = EmpPersonalInfo::create([
+                'emp_id' => $employeeId,
+                'nick_name' => !empty($this->nickName) ? $this->nickName : null,
+                'date_of_birth' => !empty($this->wishMeOn) ? $this->wishMeOn : null,
+                'email' => null,
+                'alternate_mobile_number' => null,
+            ]);
+            // Log::info('Successfully created new employee personal info for ID: ' . $employeeId);
         }
+
+        $this->editingNickName = false;
+    } catch (\Exception $e) {
+        // Log::error('Error in saveProfile method for employee ID: ' . $employeeId . ' - ' . $e->getMessage());
+        FlashMessageHelper::flashError('Error in saveProfile method: ');
     }
-
-
-
-
+}
     public function editTimeZone()
     {
         try {
