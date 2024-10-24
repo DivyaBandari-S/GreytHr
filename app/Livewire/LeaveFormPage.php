@@ -33,21 +33,30 @@ class LeaveFormPage extends Component
 
     public  $resShowinfoMessage = true;
     public  $resShowinfoButton = false;
-
+    public  $compOffShowinfoMessage = true;
+    public  $compOffShowinfoButton = false;
 
     public function toggleInfoRes()
     {
         $this->resShowinfoMessage = !$this->resShowinfoMessage;
         $this->resShowinfoButton = !$this->resShowinfoButton;
     }
-    public  $compOffShowinfoMessage = true;
-    public  $compOffShowinfoButton = false;
+
     public function toggleInfoCompOff()
     {
         $this->compOffShowinfoMessage = !$this->compOffShowinfoMessage;
         $this->compOffShowinfoButton = !$this->compOffShowinfoButton;
     }
 
+    //routing to view deatils
+    public function navigateToPendingDetails($leaveRequestId)
+    {
+        return redirect()->route('leave-history', ['leaveRequestId' => $leaveRequestId]);
+    }
+    public function navigateToHistoryDetails($leaveRequestId)
+    {
+        return redirect()->route('leave-pending', ['leaveRequestId' => $leaveRequestId]);
+    }
     public function toggleSection($section)
     {
         try {

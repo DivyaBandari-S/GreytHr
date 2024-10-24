@@ -100,34 +100,28 @@
                                 <tr>
                                 <td>
                                         @if($balance->category_type === 'Leave')
-                                        @if($balance->status == 'approved')
+                                        @if($balance->leave_status == '2')
                                         Availed
-                                        @elseif($balance->status == 'Pending' )
+                                        @elseif($balance->leave_status == '5' )
                                         Applied
-                                        @elseif($balance->status == 'Withdrawn' )
+                                        @elseif($balance->leave_status == '4' )
                                         Withdrawn
                                         @else
                                         Rejected
                                         @endif
                                         @else
-                                        @if($balance->cancel_status=='Pending Leave Cancel')
+                                        @if($balance->cancel_status=='7')
                                         Leave Cancel-Applied
-                                        @else
-                                        Leave Cancel-{{ucfirst($balance->cancel_status)}}
+
+                                        @elseif($balance->cancel_status=='2')
+                                        Leave Cancel-Approved
+                                        @elseif($balance->cancel_status=='3')
+                                        Leave Cancel-Rejected
+                                        @elseif($balance->cancel_status=='4')
+                                        Leave Cancel-Withdrawn
                                         @endif
                                         @endif
                                     </td>
-                                    <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
-                                    <td>
-                                        @php
-                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session);
-                                        @endphp
-                                        {{ $days }}
-                                    </td>
-                                    <td>{{ $balance->reason }}</td>
-                                </tr>
                                 @endforeach
                                 @foreach($leaveGrantedData as $index => $balance)
                                 <tr>

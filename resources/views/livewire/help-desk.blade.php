@@ -190,7 +190,7 @@
                                             class="form-control helpdesk-search-term"
                                             placeholder="Search for Emp.Name or ID"
                                             aria-label="Search"
-                                            aria-describedby="basic-addon1"   wire:input="autoValidate">
+                                            aria-describedby="basic-addon1"  >
                                         <div class="input-group-append" style="display: flex; align-items: center;">
                                             <button wire:click="filter" class="helpdesk-search-btn" type="button">
                                                 <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
