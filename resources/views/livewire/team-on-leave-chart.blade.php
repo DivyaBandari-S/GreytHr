@@ -92,7 +92,7 @@
                 <label for="leaveTypeFilter" class="normalTextValue ">Select Leave Type:</label>
                 <select class="rounded border normalText p-1 team-on-leave-type-select"  id="leaveTypeFilter" wire:model="leaveTypeFilter" wire:change=updateLeaveTypeFilter($event.target.value)>
                     <option value="">All</option>
-                    @foreach($this->leaveTypes as $leaveType)
+                    @foreach($leaveTypes as $leaveType)
                     <option value="{{ $leaveType }}">{{ $leaveType }}</option>
                     @endforeach
                 </select>
