@@ -67,12 +67,14 @@ if ($companyIds) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
+    {{-- <link rel="stylesheet" href="{{ asset('css/loader.css?v=' . filemtime(public_path('css/loader.css'))) }}"> --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @livewireStyles
 </head>
 
 <body>
+    {{-- @livewire('loader') --}}
     @guest
         {{ $slot }}
     @else
@@ -95,6 +97,7 @@ if ($companyIds) {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
+    {{-- <script src="{{ asset('js/loader.js') }}"></script> --}}
     @livewireScripts
 </body>
 

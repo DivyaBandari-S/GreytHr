@@ -8,6 +8,6 @@ class Loader extends Component
 {
     public function render()
     {
-        return view('laravel-livewire-loader::loader');
+        return view('livewire.loader');
     }
 }
