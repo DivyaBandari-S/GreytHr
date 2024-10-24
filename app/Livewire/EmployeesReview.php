@@ -52,6 +52,7 @@ class EmployeesReview extends Component
 
     public $matchingLeaveApplications = [];
     public $activeTab = 'leave';
+    public $showActiveLeaveContent = true;
 
     public function setActiveTab($tab)
     {
@@ -65,6 +66,12 @@ class EmployeesReview extends Component
             $this->showattendance = false;
             $this->showleave = true;
         }
+    }
+    public function setActiveLeaveTab($tab)
+    {
+        $this->leaveactiveTab = $tab;
+        $this->showActiveLeaveContent = ($tab === 'active');
+
     }
     public function getApprovedLeaveRequests()
     {
