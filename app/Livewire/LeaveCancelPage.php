@@ -396,7 +396,7 @@ class LeaveCancelPage extends Component
             $this->createdCancelLeaveRequest =  LeaveRequest::create([
                 'emp_id' => $leaveRequest->emp_id, // Keep the original employee ID
                 'category_type' => 'Leave Cancel',
-                'leave_status' => 2,
+                'leave_status' => 5,
                 'cancel_status' => 7,
                 'from_date' => $leaveRequest->from_date,
                 'to_date' => $leaveRequest->to_date,

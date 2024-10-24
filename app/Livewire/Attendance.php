@@ -68,6 +68,7 @@ class Attendance extends Component
     public $clickedDate;
     public $currentWeekday;
 
+    public $timeDifferences;
 
     public $totalWorkingDays;
     public $calendar;
@@ -286,13 +287,13 @@ class Attendance extends Component
             ->whereDate('created_at', '<', $endDate)
             ->orderBy('created_at')
             ->get();
-
+       
         // Group swipes by date
         $dailySwipes = $records->groupBy(function ($swipe) {
             return Carbon::parse($swipe->created_at)->toDateString();
         });
-
-        // Get leave requests for the employee within the date range
+        
+         // Get leave requests for the employee within the date range
         $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
     ->where('leave_applications.leave_status', 2) // Filter for approved leave requests
     ->where(function ($query) use ($startDate, $endDate) {
@@ -302,7 +303,7 @@ class Attendance extends Component
     ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types table
     ->select('leave_applications.*', 'status_types.status_name') // Select the fields you need
     ->get();
-
+   
 
         $totalMinutes = 0;
         $workingDaysCount = 0;
@@ -388,7 +389,7 @@ class Attendance extends Component
         $minutes = $averageMinutes % 60;
 
         $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-
+        
         return $averageWorkHours;
     }
 
@@ -513,7 +514,7 @@ class Attendance extends Component
 
         try {
 
-            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'shift_start_time', 'shift_end_time')->first();
+            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type')->first();
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
             $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
             $this->to_date = Carbon::now()->toDateString();
@@ -536,10 +537,10 @@ class Attendance extends Component
             
             // Get the current date of the current month
             $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
+            
             $this->year = now()->year;
             $this->month = now()->month;
             $this->generateCalendar();
-            
             $startOfMonth = '2024-08-01';
             $endOfMonth = '2024-08-31';
 
@@ -573,15 +574,7 @@ class Attendance extends Component
             }
 
             // Optionally, calculate average time difference per day
-            $averageDifferences = [];
-
-            foreach ($timeDifferences as $date => $differences) {
-
-                if (count($differences) > 0) {
-                    $averageDifference = array_sum($differences) / count($differences);
-                    $averageDifferences[$date] = $averageDifference;
-                }
-            }
+           
 
             
             
@@ -620,7 +613,7 @@ class Attendance extends Component
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
            
             $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(),$today->toDateString());
-            
+      
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
             // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];
@@ -700,7 +693,7 @@ class Attendance extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularised', 1)->exists();
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularized', 1)->exists();
         } catch (\Exception $e) {
             Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
@@ -1137,6 +1130,7 @@ class Attendance extends Component
     {
         try {
             // Format the dates and update the modal title
+            
             $formattedFromDate = Carbon::parse($this->start_date_for_insights)->format('Y-m-d');
             $formattedToDate = Carbon::parse($this->to_date)->format('Y-m-d');
             if ($formattedFromDate > $formattedToDate) {
@@ -1187,20 +1181,35 @@ class Attendance extends Component
             $insights=$this->calculatetotalLateInSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $outsights=$this->calculatetotalEarlyOutSwipes(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalLateInSwipes = $insights['lateSwipeCount'];
-
             $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
-            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));                     
+            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));                  
             $this->totalnumberofEarlyOut=$outsights['EarlyOutCount'];
             $this->averageLastOutTime=$outsights['averageLastOutTime'];
             $this->avergageFirstInTime=$insights['averageFirstInTime'];
+           
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-            $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
-            $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
-            $timeDifferenceInMinutes = $lastOutTime->diffInMinutes($firstInTime);
-            $timeDifferenceInHours = $lastOutTime->diffInHours($firstInTime);
+           
          
-            $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
-            $this->averageWorkHoursForModalTitle=$timeDifferenceFormatted;
+            $this->averageWorkHoursForModalTitle=$this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));         
+          
+            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
+            // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
+            //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
+
+            //         $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
+            //         $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
+                    
+            //         // Calculate time difference if both times are valid
+            //         $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
+            //         $this->averageWorkHoursForModalTitle = $timeDifferenceFormatted;
+
+            //     } else {
+            //         // Log the issue for debugging purposes
+            //         Log::warning('Invalid time format for averageLastOutTime or avergageFirstInTime.');
+                    
+            //         // Set fallback value
+            //         $this->averageWorkHoursForModalTitle = '00:00'; 
+            //     }
             
             $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
@@ -1334,6 +1343,7 @@ class Attendance extends Component
     }
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
+        log::info('early out method called');
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
@@ -1924,7 +1934,7 @@ class Attendance extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeIdForRegularisation = auth()->guard('emp')->user()->emp_id;
             $this->swiperecord = SwipeRecord::where('swipe_records.emp_id', $employeeId)
-                ->where('is_regularised', 1)
+                ->where('is_regularized', 1)
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();

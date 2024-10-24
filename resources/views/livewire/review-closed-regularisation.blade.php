@@ -234,11 +234,11 @@
                     <div class="d-flex flex-row justify-content-between rounded">
                     <div class="field">
 
-                                    @if($regularisationrequest->status=='approved')
+                                    @if($regularisationrequest->status==2)
                                         <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Approved by
                                         </span>
-                                    @elseif($regularisationrequest->status=='rejected')
+                                    @elseif($regularisationrequest->status==3)
                                         <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Rejected by
                                         </span>
@@ -247,11 +247,11 @@
 
 
                                    
-                                    @if($regularisationrequest->status=='approved')
+                                    @if($regularisationrequest->status==2)
                                         <span style="color: #333; font-weight: 500;font-size:12px;">
                                         {{ucwords(strtolower($regularisationrequest->approved_by))}}
                                         </span>
-                                    @elseif($regularisationrequest->status=='rejected')
+                                    @elseif($regularisationrequest->status==3)
                                         <span style="color: #333; font-weight: 500;font-size:12px;">
                                         {{ucwords(strtolower($regularisationrequest->rejected_by))}}
                                         </span>
@@ -264,10 +264,10 @@
                      <div>
                         <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
 
-                                @if($regularisationrequest->status=='rejected')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
-                                @elseif($regularisationrequest->status=='approved')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
+                                @if($regularisationrequest->status==3)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
+                                @elseif($regularisationrequest->status==2)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
                                 @endif
                         </span>
                    </div>
@@ -310,22 +310,22 @@
               <div class="group">
               <div style="padding-top:20px;margin-top:-15px;">
                 <h5 style="color: #333; font-size: 12px; font-weight: 400; text-align:start;">
-                          @if($regularisationrequest->status=='approved')
+                          @if($regularisationrequest->status==2)
                                Accept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
-                          @elseif($regularisationrequest->status=='rejected')
+                          @elseif($regularisationrequest->status==3)
                                rccept<br><span style="color: #778899; font-size: 12px; font-weight: 400; text-align:start;">by</span>
                           @endif
-                          @if($regularisationrequest->status=='approved')  
+                          @if($regularisationrequest->status==2)  
                            <span style="color: #778899; font-weight: 500;">
                                {{ucwords(strtolower($regularisationrequest->approved_by))}}
                            </span>
-                          @elseif($regularisationrequest->status=='rejected')
+                          @elseif($regularisationrequest->status==3)
                           <span style="color: #778899; font-weight: 500;">
                                {{ucwords(strtolower($regularisationrequest->rejected_by))}}
                            </span>
                           @endif     
                            <br>
-                        @if($regularisationrequest->status=='approved')
+                        @if($regularisationrequest->status==2)
                            <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
 
 
@@ -340,7 +340,7 @@
                                                     &nbsp;&nbsp;&nbsp;
                                                         {{ \Carbon\Carbon::parse($regularisationrequest->approved_date)->format('h:i A') }}
                                     </span>
-                        @elseif($regularisationrequest->status=='rejected')
+                        @elseif($regularisationrequest->status==3)
                         <span style="color: #778899; font-size: 11px; font-weight: 400;text-align:start;">
 
 
@@ -408,10 +408,10 @@
     <tbody>
         <tr>
             <td style="width: 30%; font-size: 12px;padding:8px;">{{ \Carbon\Carbon::parse($r1['date'])->format('d M, Y') }}</td>
-            @if($regularisationrequest->status == 'rejected')
-            <td style="width: 20%; text-transform: uppercase; color: #f66; font-size: 12px;padding:8px;">{{$regularisationrequest->status}}</td>
-            @elseif($regularisationrequest->status == 'approved')
-            <td style="width: 20%; text-transform: uppercase; color: #32CD32; font-size: 12px;padding:8px;">{{$regularisationrequest->status}}</td>
+            @if($regularisationrequest->status == 3)
+            <td style="width: 20%; text-transform: uppercase; color: #f66; font-size: 12px;padding:8px;">{{$regularisationrequest->status_name}}</td>
+            @elseif($regularisationrequest->status == 2)
+            <td style="width: 20%; text-transform: uppercase; color: #32CD32; font-size: 12px;padding:8px;">{{$regularisationrequest->status_name}}</td>
             @endif
             @if(empty($regularisationrequest->approver_remarks))
             <td style="width: 50%; border-right: 1px solid #dcdcdc; font-size: 12px;padding:8px;">-</td>
