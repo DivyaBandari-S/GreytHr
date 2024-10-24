@@ -504,10 +504,10 @@
                     <div>
                         <!-- Add more details here -->
                         <p style="font-size:10px;display:flex;font-weight:600;">Leave Dates:<span style="margin-left:5px;font-weight:500;">
-                                                  {{ implode(', ', array_map(function($date) {
+                                  {{ implode(', ', array_map(function($date) {
                                       return \Carbon\Carbon::parse($date)->format('jS M Y');
                                   }, $alr->leave_dates)) }}
-                        </span></p> 
+                              </span></p> 
                         <p style="font-size:10px;font-weight:600;">Leave Type:<span style="margin-left:5px;font-weight:500;">{{$alr->leave_type}}</span></p> 
                         <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
                             <div style="font-size: 8px;">
