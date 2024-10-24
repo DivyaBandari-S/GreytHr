@@ -1,5 +1,12 @@
-<div>
-
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="previousMonth,nextMonth,filterBy,dateClicked,downloadexcelforLeave,searchData">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .table thead {
             border: none;
@@ -217,7 +224,7 @@
                                                 {{ ucwords(strtolower($transaction->employee->first_name)) }} {{ ucwords(strtolower($transaction->employee->last_name)) }} <span style="font-size: 11px; color: #778899;">(#{{ $transaction->emp_id }})</span>
                                             </span> <br>
                                             <span title="{{ $transaction->employee->job_location ? $transaction->employee->job_location . ', ' : '' }}{{ $transaction->employee->job_title }}" class="normalTextSmall fw-normal">
-                                            {{ $transaction->employee->job_location ? $transaction->employee->job_location . ($transaction->employee->job_title ? ', ' : '') : '' }}{{ $transaction->employee->job_title }}
+                                                {{ $transaction->employee->job_location ? $transaction->employee->job_location . ($transaction->employee->job_title ? ', ' : '') : '' }}{{ $transaction->employee->job_title }}
                                             </span>
                                         </td>
 

@@ -1,4 +1,12 @@
 <div class="leavePageContent position-relative">
+   <div class="position-absolute" wire:loading
+      wire:target="toggleSection,toggleSideSection,navigateToPendingDetails,navigateToHistoryDetails">
+      <div class="loader-overlay">
+         <div class="loader">
+            <div></div>
+         </div>
+      </div>
+   </div>
    <div class="toggle-container">
       <!-- Navigation Buttons -->
       <div class="nav-buttons mt-2 d-flex justify-content-center">
@@ -247,11 +255,10 @@
 
                            <div class="content d-flex gap-2 align-items-center ">
 
-                              <a href="{{ route('leave-history', ['leaveRequestId' => $leaveRequest->id]) }}">
+                              <span wire:click="navigateToPendingDetails({{ $leaveRequest->id }})" class="anchorTagDetails">
+                                 View Details
+                              </span>
 
-                                 <span class="anchorTagDetails">View
-                                    Details</span>
-                              </a>
                               @if($leaveRequest->category_type === 'Leave')
                               <button class="withdraw" wire:click="cancelLeave({{ $leaveRequest->id }})">Withdraw</button>
                               @else
@@ -406,10 +413,10 @@
                            </div>
 
                            <div class="content px-1 ">
-                              <a href="{{ route('leave-pending', ['leaveRequestId' => $leaveRequest->id]) }}">
-                                 <span class="anchorTagDetails">View
+
+                                 <span wire:click="navigateToHistoryDetails({{ $leaveRequest->id }})" class="anchorTagDetails">View
                                     Details</span>
-                              </a>
+
 
                            </div>
 
