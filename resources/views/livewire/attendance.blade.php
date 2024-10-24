@@ -1440,7 +1440,7 @@ color: #fff;
                                 
                             
                               
-                            @if($percentageinworkhrsforattendance>=0)
+                            @if($percentageinworkhrsforattendance>0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
@@ -1470,7 +1470,7 @@ color: #fff;
                             <div>
                                   
 
-                                   @if($percentageinworkhrsforattendance>=0)
+                                   @if($percentageinworkhrsforattendance>0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}

@@ -196,7 +196,7 @@ class Regularisation extends Component
 
 
             return LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_applications.leave_status', 'approved')
+                ->where('leave_applications.leave_status', 2)
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
@@ -277,7 +277,7 @@ class Regularisation extends Component
             return;
         }
         if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
-            FlashMessageHelper::flashError('The selected date is a holiday. Regularisation is not allowed on holidays.');
+            FlashMessageHelper::flashError('You are on leave on this date.');
             $this->showAlert=true;
             return;
         }
