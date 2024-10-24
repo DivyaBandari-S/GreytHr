@@ -104,7 +104,6 @@ class ViewPendingDetails extends Component
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'];
 
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
-                    $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
 
                     $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
 
@@ -113,7 +112,6 @@ class ViewPendingDetails extends Component
                     } else {
                         $leaveBalances = 0;
                     }
-
                     $matchingLeaveApplications[] = [
                         'leaveRequest' => $leaveRequest,
                         'leaveBalances' => $leaveBalances,

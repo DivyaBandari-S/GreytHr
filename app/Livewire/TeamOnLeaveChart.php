@@ -61,7 +61,7 @@ class TeamOnLeaveChart extends Component
 
             // Extract unique leave types
             $leaveTypes = $leaveApplications->pluck('leave_type')->unique();
-
+            $this->leaveTypes=$leaveApplications->pluck('leave_type')->unique();
             // Initialize datasets for each leave type
             foreach ($leaveTypes as $leaveType) {
                 $chartData['datasets'][$leaveType] = array_fill_keys($chartData['labels'], 0);
@@ -190,9 +190,9 @@ class TeamOnLeaveChart extends Component
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            $query = LeaveRequest::where('leave_applications.status', 'approved')
+            $query = LeaveRequest::where('leave_applications.leave_status', '2')
             ->where('category_type', 'Leave')
-            ->where('leave_applications.cancel_status', '!=', 'approved')
+            ->where('leave_applications.cancel_status', '!=', '2')
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
@@ -388,12 +388,13 @@ class TeamOnLeaveChart extends Component
             }
 
             $chartData = $this->prepareChartData($this->leaveApplications);
-            $this->leaveTypes = $this->fetchLeaveTypes();
+            // $this->leaveTypes = $this->fetchLeaveTypes();
 
             $this->chartData = [
                 'labels' => $chartData['labels'],
                 'datasets' => $chartData['datasets'],
             ];
+            // dd( $this->chartData);
 
 
             $this->chartOptions = [
