@@ -310,7 +310,7 @@
         class="form-control" 
         placeholder="Search for Emp.Name or ID" 
         aria-label="Search" 
-        aria-describedby="basic-addon1"  wire:input="autoValidate"
+        aria-describedby="basic-addon1"  
     >
     <div class="input-group-append" style="display: flex; align-items: center;">
         <button 
