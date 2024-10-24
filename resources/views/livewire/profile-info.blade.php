@@ -1042,7 +1042,9 @@
                                                 <img style="cursor: pointer;" width="20"
                                                     src="{{ asset('images/attachments.png') }}" alt="">
                                             </label>
-                                            <label for="">{{ $fileName }}</label>
+                                            @if($file_name!=null)
+                                            <label for="">{{ $file_name }}</label>
+                                            @endif
                                             <br>
                                             @error('signature')
                                                 <span class="text-danger">{{ $message }}</span>
