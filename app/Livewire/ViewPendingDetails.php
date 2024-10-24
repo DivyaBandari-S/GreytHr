@@ -48,25 +48,26 @@ class ViewPendingDetails extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
             // Base query for fetching leave applications
             $query = LeaveRequest::where(function ($query) {
                 $query->where('leave_applications.leave_status', 5)
-                    ->orWhere('leave_applications.cancel_status', 7);
+                      ->orWhere('leave_applications.cancel_status', 7);
             })
-                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->orderBy('leave_applications.created_at', 'desc');
-
-            // Search query conditions
-            if ($filter !== null) {
-                $query->where(function ($query) use ($filter) {
-                    $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
-                        ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
-                        ->orWhere('leave_applications.category_type', 'like', '%' . $filter . '%')
-                        ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
-                        ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%');
-                });
-            }
+            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Ensure the table is correctly joined
+            ->orderBy('leave_applications.created_at', 'desc');
+        
+        // Search query conditions
+        if ($filter !== null) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
+                      ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
+                      ->orWheree('leave_applications.category_type', 'like', '%' . $filter . '%')
+                      ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
+                      ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%')
+                      ->orWhere('status_types.status_name', 'like', '%' . $filter . '%');
+            });
+        }
 
             // Applying conditions for employee's role in the leave application
             $query->where(function ($query) use ($employeeId) {
@@ -104,7 +105,6 @@ class ViewPendingDetails extends Component
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'];
 
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
-                    $leaveBalances = LeaveBalances::getLeaveBalances($leaveRequest->emp_id, $this->selectedYear);
 
                     $fromDateYear = Carbon::parse($leaveRequest->from_date)->format('Y');
 
@@ -113,7 +113,6 @@ class ViewPendingDetails extends Component
                     } else {
                         $leaveBalances = 0;
                     }
-
                     $matchingLeaveApplications[] = [
                         'leaveRequest' => $leaveRequest,
                         'leaveBalances' => $leaveBalances,

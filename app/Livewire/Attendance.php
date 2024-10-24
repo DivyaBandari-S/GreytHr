@@ -187,6 +187,9 @@ class Attendance extends Component
     public $weekendDays = 0;
     public $daysWithRecords = 0;
 
+    public $previousMonthTotalMinutes;
+
+    public $currentMonthTotalMinutes;
     public $avergageFirstInTime=0;
 
     public $averageLastOutTime=0;
@@ -223,64 +226,110 @@ class Attendance extends Component
         }
     }
     public function calculateDifferenceInAvgWorkHours($date)
-    {
-       
+{
     // Get the current month and previous month dates
-      $currentMonthStart = \Carbon\Carbon::parse($date. '-01')->startOfMonth()->toDateString();
-      $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
-      $previousMonthDate=\Carbon\Carbon::now()->subMonth()->format('Y-m');
-    //   dd($date.' '.$previousMonthDate);
-      if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&(\Carbon\Carbon::parse($currentMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&\Carbon\Carbon::parse($currentMonthEnd)->isSameYear(\Carbon\Carbon::today()))) {
-         $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
-      }
-      elseif(\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()))
-      {
-         return '-';
-      }
+    $currentMonthStart = \Carbon\Carbon::parse($date . '-01')->startOfMonth()->toDateString();
+    $currentMonthEnd = \Carbon\Carbon::parse($date)->endOfMonth()->toDateString(); // Today's date
+    $previousMonthDate = \Carbon\Carbon::parse($date)->subMonth()->format('Y-m');
+    
+    // Log the initial dates
+    Log::info('Initial dates:', [
+        'date' => $date,
+        'currentMonthStart' => $currentMonthStart,
+        'currentMonthEnd' => $currentMonthEnd,
+        'previousMonthDate' => $previousMonthDate
+    ]);
 
-      
- 
-      $previousMonthStart = \Carbon\Carbon::parse($previousMonthDate. '-01')->startOfMonth()->toDateString();
-      $previousMonthEnd = \Carbon\Carbon::parse($previousMonthDate)->endOfMonth()->toDateString(); // Today's date
-      if (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&(\Carbon\Carbon::parse($previousMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&\Carbon\Carbon::parse($previousMonthEnd)->isSameYear(\Carbon\Carbon::today()))) {
-        $previousMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
-     }
-     elseif(\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()))
-     {
+    if (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($currentMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($currentMonthEnd)->isSameYear(\Carbon\Carbon::today())) {
+        $currentMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+        Log::info('Current month end adjusted to today:', ['currentMonthEnd' => $currentMonthEnd]);
+    } elseif (\Carbon\Carbon::parse($currentMonthEnd)->greaterThan(\Carbon\Carbon::today())) {
+        Log::warning('Current month end is greater than today. Returning \'-\'');
         return '-';
-     }
-    //   dd('Start Date'.$currentMonthStart.'-'.$currentMonthEnd.'End Date'.$previousMonthStart.'-'.$previousMonthEnd);
+    }
+
+    $previousMonthStart = \Carbon\Carbon::parse($previousMonthDate . '-01')->startOfMonth()->toDateString();
+    $previousMonthEnd = \Carbon\Carbon::parse($previousMonthDate)->endOfMonth()->toDateString(); // End of previous month
+
+    // Log previous month dates
+    Log::info('Previous month dates:', [
+        'previousMonthStart' => $previousMonthStart,
+        'previousMonthEnd' => $previousMonthEnd
+    ]);
+
+    if (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($previousMonthEnd)->isSameMonth(\Carbon\Carbon::today()) &&
+        \Carbon\Carbon::parse($previousMonthEnd)->isSameYear(\Carbon\Carbon::today())) {
+        $previousMonthEnd = \Carbon\Carbon::today()->toDateString(); // Set to today's date if greater
+        Log::info('Previous month end adjusted to today:', ['previousMonthEnd' => $previousMonthEnd]);
+    } elseif (\Carbon\Carbon::parse($previousMonthEnd)->greaterThan(\Carbon\Carbon::today())) {
+        Log::warning('Previous month end is greater than today. Returning \'-\'');
+        return '-';
+    }
+
+    // Log before calculation
+    Log::info('Calling calculateAverageWorkHoursAndPercentage for current and previous months', [
+        'currentMonthStart' => $currentMonthStart,
+        'currentMonthEnd' => $currentMonthEnd,
+        'previousMonthStart' => $previousMonthStart,
+        'previousMonthEnd' => $previousMonthEnd
+    ]);
+
     // Calculate average work hours for current and previous months
     $avgWorkHoursCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($currentMonthStart, $currentMonthEnd);
-    $this->avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
-     
-        // Convert the average work hours (HH:MM) to total minutes for comparison
-        list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
-        list($previousMonthHours, $previousMonthMinutes) = explode(':', $this->avgWorkHoursPreviousMonth);
+    $avgWorkHoursPreviousMonth = $this->calculateAverageWorkHoursAndPercentage($previousMonthStart, $previousMonthEnd);
 
-        $currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
-        $previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
-        
-        // Calculate the difference in minutes
-        $differenceInMinutes = $currentMonthTotalMinutes - $previousMonthTotalMinutes;
-        
-       if ($previousMonthTotalMinutes != 0) {
-            $this->percentageDifference = ($differenceInMinutes / $previousMonthTotalMinutes) * 100;
-        } 
-        else
-        {
-            $this->percentageDifference = 0;
-        }
-        // Convert the difference back to hours and minutes
-        $hoursDifference = intdiv($differenceInMinutes, 60);
-        $minutesDifference = $differenceInMinutes % 60;
-          
-        return $this->percentageDifference;
+    // Log average work hours
+    Log::info('Average work hours:', [
+        'avgWorkHoursCurrentMonth' => $avgWorkHoursCurrentMonth,
+        'avgWorkHoursPreviousMonth' => $avgWorkHoursPreviousMonth
+    ]);
+
+    // Convert the average work hours (HH:MM) to total minutes for comparison
+    list($currentMonthHours, $currentMonthMinutes) = explode(':', $avgWorkHoursCurrentMonth);
+    list($previousMonthHours, $previousMonthMinutes) = explode(':', $avgWorkHoursPreviousMonth);
+
+    $this->currentMonthTotalMinutes = ($currentMonthHours * 60) + $currentMonthMinutes;
+    $this->previousMonthTotalMinutes = ($previousMonthHours * 60) + $previousMonthMinutes;
+
+    // Log total minutes
+    Log::info('Total minutes:', [
+        'currentMonthTotalMinutes' => $this->currentMonthTotalMinutes,
+        'previousMonthTotalMinutes' => $this->previousMonthTotalMinutes
+    ]);
+    if($this->previousMonthTotalMinutes==0)
+    {
+        $this->previousMonthTotalMinutes=1;
     }
+    // Calculate the difference in minutes
+    $differenceInMinutes = $this->currentMonthTotalMinutes - $this->previousMonthTotalMinutes;
+   
+    Log::info('Difference in minutes:', ['differenceInMinutes' => $differenceInMinutes]);
+
+    if ($this->previousMonthTotalMinutes != 0) {
+        $this->percentageDifference = ($differenceInMinutes / $this->previousMonthTotalMinutes) * 100;
+    } else {
+        $this->percentageDifference = 0;
+    }
+
+    // Convert the difference back to hours and minutes
+    $hoursDifference = intdiv($differenceInMinutes, 60);
+    $minutesDifference = $differenceInMinutes % 60;
+
+    Log::info('Final difference:', [
+        'hoursDifference' => $hoursDifference,
+        'minutesDifference' => $minutesDifference,
+        'percentageDifference' => $this->percentageDifference
+    ]);
+
+    return $this->percentageDifference;
+}
     public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-
+          
         // Retrieve swipe records within the given date range
         $records = SwipeRecord::where('emp_id', $employeeId)
             ->whereDate('created_at', '>=', $startDate)
@@ -1820,7 +1869,7 @@ class Attendance extends Component
 
             // $previousMonthStart = $date->subMonth()->startOfMonth()->toDateString();
             $this->percentageinworkhrsforattendance=$this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
-            
+       
             $this->dateClicked($date->startOfMonth()->toDateString());
         } catch (\Exception $e) {
             Log::error('Error in beforeMonth method: ' . $e->getMessage());

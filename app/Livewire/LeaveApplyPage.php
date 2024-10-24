@@ -491,12 +491,12 @@ class LeaveApplyPage extends Component
                 // Clear any previous error messages
                 $this->errorMessageValidation = null;
 
-                // Step-by-step validation process:
 
-                //
+                //check insuffecilen blance
                     if($this->leave_type){
-                        if ($this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type)) {
-                            return false; // Stop further validation if there's insufficient balance
+                        $leaveBalance = $this->getLeaveBalance($employeeId);
+                        if ($leaveBalance <= 0 && $this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type)) {
+                            return false;
                         }
                     }
                 // 1. Check if the selected dates are on weekends
@@ -1117,7 +1117,7 @@ class LeaveApplyPage extends Component
                 ->where(function ($query) use ($companyIdsArray) {
                     // Check if any of the company IDs match
                     foreach ($companyIdsArray as $companyId) {
-                        $query->orWhere('company_id', 'like', "%\"$companyId\"%"); // Assuming company_id is stored as JSON
+                        $query->orWhere('company_id', 'like', "%\"$companyId\"%");
                     }
                 })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);

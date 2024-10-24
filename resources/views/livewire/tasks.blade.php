@@ -1,4 +1,13 @@
 <div>
+    <div wire:loading
+        wire:target="setActiveTab,show,toggleAccordion,openAddCommentModal,openForTasks,showViewFile,close,forAssignee,closeAssignee,selectPerson,forFollowers,closeFollowers,togglePersonSelection,submit,downloadImage,closeViewFile,closeModal,openEditCommentModal,deleteComment,updateComment,cancelEdit,addComment,updateFilterDropdown,closeForTasks">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
 
     <div class="container task-first-container">
         <div class="nav-buttons d-flex justify-content-center task-tab-button-container">
@@ -33,7 +42,8 @@
                 <div class="task-dropdown">
                     <div class="form-group">
 
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod" wire:change="updateFilterDropdown">
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod"
+                            wire:change="updateFilterDropdown">
                             <option value="all" selected>All</option>
                             <option value="this_week">This Week</option>
                             <option value="this_month">This Month</option>
@@ -98,7 +108,6 @@
                                 </tr>
                             @else
                                 @foreach ($searchData as $index => $record)
-                                
                                     @if ($record->status == 10)
                                         <tr>
                                             <td class="task-open-table-1-td">
@@ -256,7 +265,8 @@
                 </div>
                 <div class="task-dropdown">
                     <div class="form-group">
-                        <select class="form-select task-custom-select-width" wire:model="filterPeriod" wire:change="updateFilterDropdown">
+                        <select class="form-select task-custom-select-width" wire:model="filterPeriod"
+                            wire:change="updateFilterDropdown">
                             <option value="all" selected>All</option>
                             <option value="this_week">This Week</option>
                             <option value="this_month">This Month</option>
@@ -816,7 +826,7 @@
                                 <!-- File Input -->
 
                                 <div class="row">
-                                    
+
                                     <div class="col">
                                         <label for="fileInput" class="task-file-input-label">
                                             <i class="fa fa-paperclip"></i> Attach Image
@@ -827,14 +837,13 @@
 
                                 <div>
                                     <input type="file" wire:model="file_path" id="file_path"
-                                    wire:change="fileSelected" class="form-control task-modal-filepath"
-                                       >
+                                        wire:change="fileSelected" class="form-control task-modal-filepath">
                                     @error('file_path')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
 
                                 </div>
-                              
+
 
                                 <div class="task-modal-save-container">
                                     <button wire:click="submit" class="submit-btn task-modal-save-button"
@@ -882,7 +891,7 @@
                         <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
                             wire:click="closeModal">
                     </div>
-             
+
                     <div class="modal-body">
                         <form wire:submit.prevent="addComment">
                             <div class="form-group">
