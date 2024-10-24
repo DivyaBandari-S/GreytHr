@@ -172,7 +172,7 @@ class SickLeaveBalances extends Component
                     $leaveRequest->to_session,
                     $leaveRequest->leave_type
                 );
-                if( $leaveRequest->status=='approved' &&$leaveRequest->cancel_status!='approved' &&  $leaveRequest->category_type=='Leave'){
+                if( $leaveRequest->leave_status=='2' &&$leaveRequest->cancel_status!='2' &&  $leaveRequest->category_type=='Leave'){
                     $this->totalSickDays += $days;
                 }
 
@@ -205,8 +205,8 @@ class SickLeaveBalances extends Component
                 // Fetch leave requests that overlap with the current month
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Sick Leave')
-                    ->where('status', 'approved')
-                    ->where('cancel_status','!=','approved')
+                    ->where('leave_status', '2')
+                    ->where('cancel_status','!=','2')
                     ->whereYear('from_date', $currentYear)
                     ->where(function ($query) use ($month) {
                         $query->whereMonth('from_date', $month)

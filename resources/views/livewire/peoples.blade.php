@@ -1,6 +1,15 @@
 <!-- resources/views/livewire/people-lists.blade.php -->
 
 <div>
+    <div wire:loading
+    wire:target="$set,starredPersonById,removeToggleStar,selectPerson,toggleStar,selectMyTeamPerson">
+    <div class="loader-overlay">
+        <div class="loader">
+            <div></div>
+        </div>
+        
+    </div>
+</div>
 
     <div class="container">
         @if (session()->has('emp_error'))

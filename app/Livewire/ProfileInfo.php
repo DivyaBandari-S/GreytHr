@@ -61,6 +61,9 @@ class ProfileInfo extends Component
     public function validateFields($propertyName)
     {
         $this->validateOnly($propertyName);
+        if($propertyName=='signature'){
+            
+        }
     }
     public function updatedSignature()
     {

@@ -391,11 +391,10 @@ class Tasks extends Component
         if ($task) {
             $task->update(['status' => 11]);
         }
-        // session()->flash('message', 'Task closed successfully!');
         FlashMessageHelper::flashSuccess('Task closed successfully!');
         session()->flash('showAlert', true);
-
-        return redirect()->to('/tasks');
+        $this->activeTab = 'completed';
+        $this->loadTasks();
     }
 
     public function closeForTasks($taskId)
@@ -409,12 +408,10 @@ class Tasks extends Component
                 'reopened_date' => now()
             ]);
         }
-
-        // session()->flash('message', 'Task has been Re-Opened.');
         FlashMessageHelper::flashSuccess('Task has been Re-Opened.');
         session()->flash('showAlert', true);
-
-        return redirect()->to('/tasks');
+        $this->activeTab = 'open';
+        $this->loadTasks();
     }
 
     public function autoValidate()

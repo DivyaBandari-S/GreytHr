@@ -43,7 +43,7 @@ class LeaveRequest extends Model
     }
     public function leaveStatusField()
     {
-        return $this->belongsTo(StatusType::class, 'status', 'status_code');
+        return $this->belongsTo(StatusType::class, 'leave_status', 'status_code');
     }
 
     public function leaveCancelStatusField()

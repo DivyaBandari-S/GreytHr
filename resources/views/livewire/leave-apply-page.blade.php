@@ -1,5 +1,12 @@
 <div class="position-relative">
-
+    <div class="position-absolute" wire:loading
+        wire:target="leaveApply,toggleInfo,applyingTo,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,resetFields">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
@@ -439,15 +446,15 @@
                 <input id="file_paths" style="font-size:12px;" type="file"
                     wire:model.lazy="file_paths"
                     wire:keydown.debounce.500ms="validateField('file_paths')"
-                    wire:change="handleFieldUpdate('file_paths')"
+                    wire:click="handleFieldUpdate('file_paths')"
                     multiple />
                 @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror <br>
                 <span class="normalTextValue mt-2 fw-normal">File type : xls,csv,xlsx,pdf,jpeg,png,jpg,gif</span>
             </div>
 
             <div class="buttons-leave">
-                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="resetFields">Cancel</button>
+                <button type="submit" class="submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="button" class="cancel-btn" wire:click="resetFields">Cancel</button>
             </div>
         </form>
     </div>
