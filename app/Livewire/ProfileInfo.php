@@ -69,6 +69,12 @@ class ProfileInfo extends Component
     {
         $this->validateOnly('signature');
     }
+    public $activeTab = 'personalDetails';
+
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
     public function mount()
     {
         $this->updateProfile();
@@ -233,6 +239,7 @@ class ProfileInfo extends Component
     public function showPopupModal()
     {
         $this->showModal = true;
+        $this->activeTab ='employeeJobDetails';   
     }
     public function closeModal()
     {

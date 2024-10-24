@@ -1,15 +1,15 @@
 <!-- resources/views/livewire/people-lists.blade.php -->
 
-<div>
-    <div wire:loading
-    wire:target="$set,starredPersonById,removeToggleStar,selectPerson,toggleStar,selectMyTeamPerson">
-    <div class="loader-overlay">
-        <div class="loader">
-            <div></div>
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="setActiveTab,starredPersonById,removeToggleStar,selectPerson,toggleStar,selectMyTeamPerson">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+
         </div>
-        
     </div>
-</div>
 
     <div class="container">
         @if (session()->has('emp_error'))
@@ -18,29 +18,29 @@
             </div>
         @endif
         @php
-    $employeeId = auth()->guard('emp')->user()->emp_id;
-    $managerId = DB::table('employee_details')
-    ->where('manager_id', $employeeId)->value('manager_id');
-    @endphp
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $managerId = DB::table('employee_details')->where('manager_id', $employeeId)->value('manager_id');
+        @endphp
         @if ($managerId)
             <div class="row justify-content-center people-tab-container">
                 <div class="col-4 text-center people-starred-tab-container">
                     <a id="starred-tab-link"
                         class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
-                        wire:click="$set('activeTab', 'starred')" class="links">
+                        wire:click="setActiveTab('starred')" class="links">
                         Starred
                     </a>
                 </div>
                 <div class="col-4 text-center people-starred-tab-container">
-                    <a id="myteam-tab-link" class="people-manager-tab-link {{ $activeTab === 'myteam' ? 'active' : '' }}"
-                        wire:click="$set('activeTab', 'myteam')" class="links">
+                    <a id="myteam-tab-link"
+                        class="people-manager-tab-link {{ $activeTab === 'myteam' ? 'active' : '' }}"
+                        wire:click="setActiveTab('myteam')" class="links">
                         My Team
                     </a>
                 </div>
                 <div class="col-4 text-center people-starred-tab-container">
                     <a id="everyone-tab-link"
                         class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
-                        wire:click="$set('activeTab', 'everyone')" class="links">
+                        wire:click="setActiveTab('everyone')" class="links">
                         Everyone
                     </a>
                 </div>
@@ -53,14 +53,14 @@
                 <div class="col-3 text-start people-starred-tab-container">
                     <a id="starred-tab-link"
                         class="people-manager-tab-link {{ $activeTab === 'starred' ? 'active' : '' }}"
-                        wire:click="$set('activeTab', 'starred')" class="links">
+                        wire:click="setActiveTab('starred')" class="links">
                         Starred
                     </a>
                 </div>
                 <div class="col-3 text-start people-starred-tab-container">
                     <a id="everyone-tab-link"
                         class="people-manager-tab-link {{ $activeTab === 'everyone' ? 'active' : '' }}"
-                        wire:click="$set('activeTab', 'everyone')" class="links">
+                        wire:click="setActiveTab('everyone')" class="links">
                         Everyone
                     </a>
                 </div>

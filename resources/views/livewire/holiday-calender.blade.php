@@ -1,5 +1,5 @@
 <div>
-<div class="position-absolute" wire:loading
+    <div class="position-absolute" wire:loading
         wire:target="selectYear">
         <div class="loader-overlay">
             <div class="loader">
