@@ -1,11 +1,22 @@
 <div>
+<div wire:loading
+        wire:target="file_path,AddRequest,DistributorRequest,ItRequest,submit,MailRequest,Request,IdRequest,Devops,MmsRequest,DistributionRequest,DistributorRequest,LapRequest,DevopsRequest,closecatalog,redirectToHelpDesk">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
     <div class="row m-0">
 
 
         <div class="col-md-12 mb-4">
-            <button style="background-color: rgb(2, 17, 79); color: white; border-radius: 5px; margin: 0; padding: 1px 0; font-size: 12px;width:80px;height:40px;" onclick="location.href='/HelpDesk'">
-                Back
-            </button>
+           
+        <button class="helpdesk-back" wire:click="redirectToHelpDesk">
+    Back
+</button>
+
         </div>
         <div class="row">
             <div class="col-md-12 mb-4">

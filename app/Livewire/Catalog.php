@@ -346,7 +346,11 @@ class Catalog extends Component
         $this->resetValidation(); // Reset validation state
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
     }
-    
+    public function redirectToHelpDesk()
+{
+    return redirect('/HelpDesk');
+}
+
     public function closeIdRequestaccess()
     {
       
