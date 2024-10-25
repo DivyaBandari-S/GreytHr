@@ -1,5 +1,13 @@
 <div>
-
+  <div wire:loading
+        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
     @if( $employeeDetails->isEmpty())
     <p>No employee details found.</p>
 
@@ -106,7 +114,7 @@
                                                 <div style="text-align: start;">
 
 
-                                                    <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" onchange="handleImageChange()">
+                                                    <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" >
                                                     @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
 
                                                     <!-- Success Message -->
@@ -114,7 +122,7 @@
 
                                                 </div>
                                             </div>
-                                            <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
+                                            <div id="flash-message-container" wire:loading.remove wire:target="file_path" style="display: none;margin-top:10px" class="alert alert-success"
                                                 role="alert"></div>
                                         </div>
 
@@ -152,7 +160,7 @@
                     <p class="feeds-left-menu">Activities</p>
                     <div class="activities">
                         <label class="custom-radio-label">
-                            <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+                            <input type="radio" name="radio" value="activities" checked data-url="/Feeds" wire:click="handleRadioChange('activities')">
                             <div class="feed-icon-container" style="margin-left: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
                                     <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -169,7 +177,7 @@
                     <div class="posts">
                         <label class="custom-radio-label">
 
-                            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                            <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" wire:click="handleRadioChange('posts')">
 
                             <div class="feed-icon-container" style="margin-left: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
@@ -185,7 +193,7 @@
                     <div class="post-requests">
                         <label class="custom-radio-label">
 
-                            <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+                            <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests"  wire:click="handleRadioChange('post-requests')">
 
                             <div class="feed-icon-container" style="margin-left: 10px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
@@ -1750,7 +1758,7 @@ return $comments->count();
 
 // Get card IDs with more than 2 comments
 $validCardIds = $cardCommentsCount->filter(function ($count) {
-return $count > 2;
+return $count > 1;
 })->keys();
 $filteredComments = $addcomments->whereIn('card_id', $validCardIds);
 
@@ -2127,7 +2135,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
     // Get card IDs with more than 2 comments
     $validCardIds = $cardCommentsCount->filter(function ($count) {
-    return $count >= 2; // Use >= 2 to include cards with exactly 2 comments
+    return $count >= 1; // Use >= 2 to include cards with exactly 2 comments
     })->keys();
 
     // Filter comments to include only those for cards with at least 2 comments
@@ -2240,12 +2248,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
     });
 </script>
 @endpush
-<script>
-    function handleRadioChange(element) {
-        const url = element.getAttribute('data-url');
-        window.location.href = url;
-    }
-</script>
+
 
 
 <script>

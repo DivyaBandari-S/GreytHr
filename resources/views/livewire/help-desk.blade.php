@@ -1,5 +1,13 @@
 <div>
-
+<div wire:loading
+        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
     <div style="overflow-x:hidden">
         <div class="row ">
     
@@ -49,7 +57,8 @@
 
 
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'"  class="helpdesk-btn" > IT Request </button>
+            <button wire:click="Catalog" class="helpdesk-btn"> IT Request </button>
+
             </div>
 
 
