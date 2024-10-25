@@ -3722,10 +3722,10 @@ input[type="radio"] {
     overflow-X: hidden;
 }
 ::-webkit-scrollbar {
-    width: 5px; /* Adjust as needed */
+    width: 5px;
 }
 ::-webkit-scrollbar-thumb {
-    background: #9f9e9e; /* Adjust color */
+    background: #9f9e9e; 
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {

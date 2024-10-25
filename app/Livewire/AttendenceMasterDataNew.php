@@ -175,7 +175,7 @@ class AttendenceMasterDataNew extends Component
                 ->map(function ($leaveRequest) {
                     $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
                     $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
-            
+
                     // Get today's date
                     $today = \Carbon\Carbon::today();
             
