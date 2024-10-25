@@ -219,7 +219,6 @@ class Home extends Component
             FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
         }
     }
- 
     public function toggleSignState()
     {
         try {
@@ -239,17 +238,19 @@ class Home extends Component
             $flashMessage = $this->swipes
                 ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                 : 'IN';
- 
+
             $message = $flashMessage == "IN"
                 ? "You have successfully signed in."
                 : "You have successfully signed out.";
- 
-            FlashMessageHelper::flashSuccess($message);
-            $this->showAlert = true;
+                if($message){
+                    FlashMessageHelper::flashSuccess($message);
+                    return false;
+                }
         } catch (Throwable $e) {
             // Log or handle the exception as needed
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
+        
     }
     public function showEarlyEmployees()
     {
