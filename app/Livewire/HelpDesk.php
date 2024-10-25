@@ -272,7 +272,15 @@ public $closedSearch = '';
         }
         return redirect()->to('/HelpDesk');
     }
-
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
+    public function Catalog()
+    {
+        return redirect()->to('/catalog');
+    }
+        
     public function selectPerson($personId)
     {
         try {
