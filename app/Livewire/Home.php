@@ -219,14 +219,42 @@ class Home extends Component
             FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
         }
     }
- 
-    public function toggleSignState()
+    private function isEmployeeLeaveOnDate($date, $employeeId)
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            return LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
+                ->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    public function toggleSignState()
+    {
+        try {
+            $todayDate=Carbon::now()->format('Y-m-d');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $isonleave=$this->isEmployeeLeaveOnDate($todayDate,$employeeId);
+            $isholiday=HolidayCalendar::where('date',$todayDate)->exists();
+            
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->signIn = !$this->signIn;
             $swipeDevice = $this->determineSwipeDevice();
+            if ($isonleave) {
+                FlashMessageHelper::flashError( 'You cannot swipe on this date as you are on leave.');
+                return;
+            } elseif ($isholiday) {
+                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+                return;
+            }
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
@@ -235,7 +263,7 @@ class Home extends Component
                     : 'IN',
                 'sign_in_device' => $swipeDevice,
             ]);
- 
+            
             $flashMessage = $this->swipes
                 ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                 : 'IN';
