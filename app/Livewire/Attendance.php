@@ -299,10 +299,8 @@ class Attendance extends Component
         'currentMonthTotalMinutes' => $this->currentMonthTotalMinutes,
         'previousMonthTotalMinutes' => $this->previousMonthTotalMinutes
     ]);
-    if($this->previousMonthTotalMinutes==0)
-    {
-        $this->previousMonthTotalMinutes=1;
-    }
+
+    
     // Calculate the difference in minutes
     $differenceInMinutes = $this->currentMonthTotalMinutes - $this->previousMonthTotalMinutes;
    
@@ -1931,7 +1929,7 @@ class Attendance extends Component
     ->join('status_types', 'status_types.status_code', '=', 'regularisation_dates.status') // Join with status_types table
     ->select('regularisation_dates.*', 'status_types.status_name') // Select all fields from regularisation_dates and status_name from status_types
     ->get();
-
+   
             $dateFound = false;
             $result = null;
 

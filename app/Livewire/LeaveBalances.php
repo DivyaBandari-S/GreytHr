@@ -283,6 +283,7 @@ class LeaveBalances extends Component
 
             // Get the logged-in employee's approved leave days for all leave types
             $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
+         
             // Calculate leave balances
             $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
             $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];

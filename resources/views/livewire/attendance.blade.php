@@ -1435,7 +1435,7 @@ color: #fff;
                             <div>
 
                             
-
+                              
                             @if($percentageinworkhrsforattendance>0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>

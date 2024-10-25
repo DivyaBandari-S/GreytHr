@@ -116,6 +116,7 @@ class Home extends Component
     public $lon;
     public $lat;
     public $latitude;
+    public $loginEmpManagerDetails;
     public  $longitude;
     public function mount()
     {
@@ -136,7 +137,8 @@ class Home extends Component
             $this->greetingText = 'Good Night';
         }
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->first();
+        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name','manager_id')->first();
+        $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')->where('emp_id', $this->loginEmployee->manager_id)->first();
         $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
         $empIds = $employees->pluck('emp_id')->toArray();
         $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
@@ -155,12 +157,8 @@ class Home extends Component
             ->with('employee')
             ->count();
     }
- 
- 
- 
- 
- 
- 
+
+
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
@@ -279,7 +277,6 @@ class Home extends Component
             $loggedInEmpId = Session::get('emp_id');
             // Check if the logged-in user is a manager by comparing emp_id with manager_id in employeedetails
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
- 
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->currentDay = now()->format('l');
@@ -301,9 +298,9 @@ class Home extends Component
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
  
                 $ccToJson = trim($leaveRequest->cc_to);
- 
+
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
- 
+
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
                 if (!empty($ccArray) && !empty($applyingArray)) {
@@ -377,12 +374,12 @@ class Home extends Component
             //team on leave
             $currentDate = Carbon::today();
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
-                ->where('category_type', operator: 'Leave')
+                ->where('category_type',  'Leave')
                 ->where('leave_status', 2)
-                ->where('cancel_status', '!=', 2)
+                ->where('cancel_status', '!=', 6)
                 ->where(function ($query) use ($currentDate) {
-                    $query->whereDate('from_date', '=', $currentDate)
-                        ->orWhereDate('to_date', '=', $currentDate);
+                    $query->whereDate('from_date', '<=', $currentDate)
+                        ->whereDate('to_date', '>=', $currentDate);
                 })
                 ->get();
             $teamOnLeaveApplications = [];
@@ -656,6 +653,7 @@ class Home extends Component
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
+                'loginEmpManagerDetails' => $this->loginEmpManagerDetails
  
             ]);
         } catch (\Illuminate\Database\QueryException $e) {

@@ -1,4 +1,12 @@
-<div>
+<div class="position-relative">
+<div class="position-absolute" wire:loading
+        wire:target="approveLeave,approveLeaveCancel,rejectLeaveCancel,rejectLeave,fetchPendingLeaveApplications">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="col" id="leavePending">
         <div class="row m-0 p-0 mt-3">
             <div class="reviewCountShow p-0">
