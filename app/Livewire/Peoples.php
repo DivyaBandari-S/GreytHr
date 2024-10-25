@@ -24,6 +24,18 @@ class Peoples extends Component
     public $activeTab = 'starred';
     public $peopleFound = true;
     public $employeeDetails;
+    public function setActiveTab($tab)
+    {
+        if ($tab === 'starred') {
+            $this->activeTab = 'starred';
+        } elseif ($tab === 'myteam') {
+            $this->activeTab = 'myteam';
+            $this->selectedPerson=null;
+        }else{
+            $this->activeTab = 'everyone';
+            $this->selectedPerson=null;
+        }
+    }
 
     public function selectPerson($empId)
     {
@@ -155,49 +167,64 @@ class Peoples extends Component
     }
 
     public $employee;
-
     public function toggleStar($employeeId)
-    {
-        try {
-            $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
-            if ($this->employee) {
-                $this->starredPerson = StarredPeople::where('people_id', $employeeId)
-                    ->where('starred_status', 'starred')
-                    ->where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->first();
+{
+    try {
+        // Log::info("Toggling star for employee ID: {$employeeId}");
+        
+        $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
+        
+        if ($this->employee) {
+            // Log::info("Employee found: ", ['employee' => $this->employee]);
 
-                if ($this->starredPerson) {
-                    $this->starredPerson->delete();
-                } else {
+            $this->starredPerson = StarredPeople::where('people_id', $employeeId)
+                ->where('starred_status', 'starred')
+                ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->first();
 
-                    $employeeId = auth()->guard('emp')->user()->emp_id;
-                    $this->employeeDetails = EmployeeDetails::find($employeeId);
-                    try {
-                        $category = $this->employee->job_role ?? '';
-                        $this->starredPerson = StarredPeople::create([
-                            'people_id' => $this->employee->emp_id,
-                            'emp_id' => $this->employeeDetails->emp_id,
-                            'company_id' => is_array($this->employee->company_id) ? json_encode($this->employee->company_id) : $this->employee->company_id,
-                            'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '',
-                            'profile' => $this->employee->image ?? 'null',
-                            'contact_details' => $this->employee->emergency_contact ?? '',
-                            'category' => $category,
-                            'location' => $this->employee->job_location ?? '',
-                            'joining_date' => $this->employee->hire_date ?? '',
-                            'date_of_birth' => $this->employee->empPersonalInfo ? $this->employee->empPersonalInfo->date_of_birth : '',
-                            'starred_status' => 'starred'
-                        ]);
-                    } catch (\Exception $e) {
-                        FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
-                        $this->addError('duplicate', 'You have already starred this people.');
-                    }
+            if ($this->starredPerson) {
+                // Log::info("Starred person found, deleting: ", ['starredPerson' => $this->starredPerson]);
+                $this->starredPerson->delete();
+                // Log::info("Starred person deleted successfully.");
+            } else {
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+                $this->employeeDetails = EmployeeDetails::find($employeeId);
+                try {
+                    $category = $this->employee->job_role ?? '';
+                    $joiningDate = $this->employee->hire_date ? \Carbon\Carbon::parse($this->employee->hire_date)->format('Y-m-d H:i:s') : null;
+                    $dateOfBirth = $this->employee->empPersonalInfo ? \Carbon\Carbon::parse($this->employee->empPersonalInfo->date_of_birth)->format('Y-m-d H:i:s') : null;
+                    
+                    $this->starredPerson = StarredPeople::create([
+                        'people_id' => $this->employee->emp_id,
+                        'emp_id' => $this->employeeDetails->emp_id,
+                        'company_id' => is_array($this->employee->company_id) ? json_encode($this->employee->company_id) : $this->employee->company_id,
+                        'name' => $this->employee->first_name . ' ' . $this->employee->last_name ?? '',
+                        'profile' => $this->employee->image ?? 'null',
+                        'contact_details' => $this->employee->emergency_contact ?? '',
+                        'category' => $category,
+                        'location' => $this->employee->job_location ?? '',
+                        'joining_date' => $joiningDate,
+                        'date_of_birth' => $dateOfBirth,
+                        'starred_status' => 'starred'
+                    ]);
+
+                    // Log::info("Starred person created successfully: ", ['starredPerson' => $this->starredPerson]);
+                } catch (\Exception $e) {
+                    // Log::error("Error while creating starred person: " . $e->getMessage());
+                    FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+                    $this->addError('duplicate', 'You have already starred this person.');
                 }
             }
-            return redirect()->to('/PeoplesList');
-        } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+        } else {
+            Log::warning("Employee not found for ID: {$employeeId}");
         }
+        
+        // return redirect()->to('/PeoplesList');
+    } catch (\Exception $e) {
+        Log::error("An error occurred: " . $e->getMessage());
+        FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
     }
+}
 
     public function removeToggleStar($personId)
     {
@@ -210,7 +237,7 @@ class Peoples extends Component
                 $starredPerson->delete();
             }
 
-            return redirect('/PeoplesList');
+            // return redirect('/PeoplesList');
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
