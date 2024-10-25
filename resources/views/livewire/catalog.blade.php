@@ -1,6 +1,6 @@
 <div>
 <div wire:loading
-        wire:target="file_path,AddRequest,DistributorRequest,ItRequest,submit,MailRequest,Request,IdRequest,Devops,MmsRequest,DistributionRequest,DistributorRequest,LapRequest,DevopsRequest,closecatalog,">
+        wire:target="file_path,AddRequest,DistributorRequest,ItRequest,submit,MailRequest,Request,IdRequest,Devops,MmsRequest,DistributionRequest,DistributorRequest,LapRequest,DevopsRequest,closecatalog,redirectToHelpDesk">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -12,9 +12,11 @@
 
 
         <div class="col-md-12 mb-4">
-            <button class="helpdesk-back"  onclick="location.href='/HelpDesk'">
-                Back
-            </button>
+           
+        <button class="helpdesk-back" wire:click="redirectToHelpDesk">
+    Back
+</button>
+
         </div>
         <div class="row">
             <div class="col-md-12 mb-4">
