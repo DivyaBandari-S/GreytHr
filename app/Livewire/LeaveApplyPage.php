@@ -411,7 +411,6 @@ class LeaveApplyPage extends Component
             }
 
             $filePaths = $this->file_paths ?? [];
-            dd( $filePaths);
             // Validate file uploads
             $validator = Validator::make($filePaths, [
                 'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif,zip|max:1024',
@@ -591,7 +590,7 @@ class LeaveApplyPage extends Component
     }
 
     //checkfilesize
-    public function checkFileSize()
+    protected function checkFileSize()
     {
         try {
             foreach ($this->file_paths as $file) {
@@ -600,7 +599,6 @@ class LeaveApplyPage extends Component
                 }
                 // Check if the file extension is 'zip'
                 if ($file->getClientOriginalExtension() === '.zip') {
-                    dd('zip');
                     return true;
                 }
             }
@@ -718,7 +716,8 @@ class LeaveApplyPage extends Component
     protected function checkForHolidays()
     {
         try {
-            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->exists();
+            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date]) ->whereNotNull('festivals')
+            ->where('festivals', '!=', '')->exists();
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking for holidays. Please try again.');
             return false;
