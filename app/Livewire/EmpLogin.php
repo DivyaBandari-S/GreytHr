@@ -52,6 +52,7 @@ class EmpLogin extends Component
     public $showErrorModal = false;
     public $showLoader = false;
     public $passwordChangedModal = false;
+    public $showPassword = false; // State variable for password visibility
     public $empIdMessageType;
     public $emp_id;
     public $form = [
@@ -63,6 +64,7 @@ class EmpLogin extends Component
     public $pass_change_error = '';
     public $showAlert = false;
     public $alertMessage = '';
+    public $showEyeIcon = false;
     protected $rules = [
         'form.emp_id' => 'required',
         'form.password' => 'required',
@@ -97,6 +99,19 @@ class EmpLogin extends Component
         'email.email' => 'Please enter a valid email.',
 
     ];
+
+
+
+    public function togglePasswordVisibility()
+    {
+        $this->showPassword = !$this->showPassword;
+    }
+
+    // This method will be called automatically when any property is updated
+    public function updatedFormPassword()
+    {
+        $this->showEyeIcon = !empty($this->form['password']);
+    }
 
     public function jobs()
     {
