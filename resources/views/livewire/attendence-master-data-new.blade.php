@@ -398,7 +398,7 @@
     $currentYear = intval($attendanceYear);
     } else {
     // Set a default value if $attendanceYear is not set
-    $currentYear = 2023;
+    $currentYear = 2024;
     }
     $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth, $currentYear);
     @endphp

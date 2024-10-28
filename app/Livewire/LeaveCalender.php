@@ -574,7 +574,7 @@ class LeaveCalender extends Component
             if (count($companyIdsArray) === 1) {
                 $companyName = Company::whereIn('company_id', $companyIdsArray)->value('company_name');
                 $companyDetails = Company::whereIn('company_id', $companyIdsArray)
-                    ->select('company_present_address', 'company_perminent_address')
+                    ->select('company_present_address', 'company_permanent_address')
                     ->first();
             } else {
                 $companyName = Company::whereIn('company_id', $companyIdsArray)
@@ -582,7 +582,7 @@ class LeaveCalender extends Component
                     ->value('company_name');
                 $companyDetails = Company::whereIn('company_id', $companyIdsArray)
                     ->where('is_parent', 'yes')
-                    ->select('company_present_address', 'company_perminent_address')
+                    ->select('company_present_address', 'company_permanent_address')
                     ->first();
             }
 
@@ -591,12 +591,12 @@ class LeaveCalender extends Component
                 $companyName = 'N/A';
                 $companyDetails = (object)[
                     'company_present_address' => 'N/A',
-                    'company_perminent_address' => 'N/A'
+                    'company_permanent_address' => 'N/A'
                 ];
             }
 
             $companyAddress1 = $companyDetails->company_present_address;
-            $companyAddress2 = $companyDetails->company_perminent_address;
+            $companyAddress2 = $companyDetails->company_permanent_address;
             $concatenatedAddress = $companyAddress1 . ' ' . $companyAddress2;
 
             // Fetch employees on leave

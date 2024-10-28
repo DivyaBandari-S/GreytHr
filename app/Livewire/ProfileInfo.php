@@ -61,10 +61,19 @@ class ProfileInfo extends Component
     public function validateFields($propertyName)
     {
         $this->validateOnly($propertyName);
+        if($propertyName=='signature'){
+            
+        }
     }
     public function updatedSignature()
     {
         $this->validateOnly('signature');
+    }
+    public $activeTab = 'personalDetails';
+
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
     }
     public function mount()
     {
@@ -230,6 +239,7 @@ class ProfileInfo extends Component
     public function showPopupModal()
     {
         $this->showModal = true;
+        $this->activeTab ='employeeJobDetails';   
     }
     public function closeModal()
     {

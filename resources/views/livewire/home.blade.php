@@ -1,16 +1,23 @@
 <div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="open,toggleSignState">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-12 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content row p-0 m-0">
-                        <div class="col-md-6 p-0 ps-3 pt-4">
+                        <div class="col-md-3 p-0 ps-3 pt-4">
                             @if ($greetingText)
                             <p class="morning-city">{{ $greetingText }}</p>
                             @endif
                             <p class="morning-city">Welcome<br>
-                                {{ ucwords(strtolower($loginEmployee->first_name)) }}
-                                &nbsp;{{ ucwords(strtolower($loginEmployee->last_name)) }}
+                                {{ ucwords(strtolower($loginEmployee->first_name)) }} {{ ucwords(strtolower($loginEmployee->last_name)) }}
                             </p>
                             <div class="locationGlobe row m-0 p-0 pt-5">
                                 <div class="col-1 p-0">
@@ -39,8 +46,36 @@
 
                             </div>
                         </div>
-
-                        <div class="col-md-6 p-0">
+                        @if($loginEmpManagerDetails)
+                        <div class="col-md-3 pt-4">
+                            <div class="new_site">
+                                <div class="new_site_ribbon">Reports To..</div>
+                            </div>
+                            <div class="row m-0 text-center">
+                                @if($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !=='null')
+                                <div class="p-0 mb-2">
+                                    <img class="rounded-circle" width="50" height="50" src="data:image/jpeg;base64,{{ ($loginEmpManagerDetails->image) }} " alt="">
+                                </div>
+                                @else
+                                <div class="p-0">
+                                    <i class="fa-regular fa-user reportMangerImg"></i>
+                                </div>
+                                @endif
+                                <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
+                                <div class="row m-0 p-0 desigMainDiv text-start">
+                                    <div class="row p-0 desigSecondDiv">
+                                        <div class="p-0 borderDiv">&nbsp;</div>
+                                        <p class="mb-0 desigText" style="color: #02114f !important;">
+                                            <i class="fa-regular fa-compass me-2"></i> {{ ucwords(strtolower($loginEmpManagerDetails->job_role)) }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                        <span></span>
+                        @endif
+                        <div class="col-md-3 p-0">
                             <div class="morning-cardContainer w-100">
                                 <div class="morning-card w-100">
 
@@ -91,124 +126,129 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <img src="images/admin_banner.png" style="width: 100%;">
-            </div>
-            <!-- <div class="col-md-6">
-                <div class="globe pt-4">
-                    <div class="section-banner">
-                        <div id="star-1">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
+
+                        <div class="col-md-3">
+                            <div class="mb-4 mt-4">
+                                <div style="position: relative">
+                                    <div class="bigCircle">
+                                        <div class="smallCircle"></div>
+                                    </div>
+                                    <div class="homeBaneerCard">
+
+                                        <div class="p-3">
+                                            <p class="payslip-card-title">{{ $currentDate }}</p>
+                                            <p class="normalText mt-2">
+                                                @php
+                                                // Fetch shift times
+                                                $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
+                                                $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
+
+                                                // Default times
+                                                $defaultStartShiftTime = '10:00 am';
+                                                $defaultEndShiftTime = '7:00 pm';
+
+                                                // Format the times if they are not null
+                                                $formattedStartShiftTime = $EmployeeStartshiftTime
+                                                ? (new DateTime($EmployeeStartshiftTime))->format('h:i a')
+                                                : $defaultStartShiftTime;
+                                                $formattedEndShiftTime = $EmployeeEndshiftTime
+                                                ? (new DateTime($EmployeeEndshiftTime))->format('h:i a')
+                                                : $defaultEndShiftTime;
+
+                                                @endphp
+                                                {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
+                                                {{ $formattedEndShiftTime }}
+                                            </p>
+                                            <div class="d-flex" style="font-size: 14px; margin-top: 2em;" x-data="{
+                                                time: '',
+                                                updateTime() {
+                                                    const now = new Date();
+                                                    const hours = String(now.getHours()).padStart(2, '0');
+                                                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                                                    const seconds = String(now.getSeconds()).padStart(2, '0');
+                                                    this.time = `${hours} : ${minutes} : ${seconds}`;
+                                                }
+                                            }"
+                                                x-init="setInterval(() => updateTime(), 1000)">
+                                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
+                                                    style="width: 2.7em;">
+                                                <template x-if="time">
+                                                    <p x-text="time" class="showTimer"></p>
+                                                </template>
+                                            </div>
+
+                                            <div class="A d-flex justify-content-between align-items-center flex-row"
+                                                style="margin-top: 2em">
+                                                <a class="viewSwipesList" wire:click="open">View Swipes</a>
+                                                <button id="signButton" class="signInButton" wire:click="toggleSignState">
+                                                    @if ($swipes)
+                                                    @if ($swipes->in_or_out === 'OUT')
+                                                    Sign In
+                                                    @else
+                                                    Sign Out
+                                                    @endif
+                                                    @else
+                                                    Sign In
+                                                    @endif
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
-                        <div id="star-2">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
                     </div>
-                    <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" id="openMapIcon"
-                            style="color: red;cursor: pointer;"></i>
-                        {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
-                        {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
-                        {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ',' : '' }}
-                        {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
-                        {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
-
-                    </div>
-
                 </div>
-
-            </div> -->
-
+            </div>
         </div>
-
 
         <!-- main content -->
         <div class="row m-0">
-            <div class="col-md-3 ">
-                <div class="mb-4">
-                    <div class="homeCard4">
-                        <div class="p-3">
-                            <p class="payslip-card-title">{{ $currentDate }}</p>
-                            <p class="normalText mt-2">
-                                @php
-                                // Fetch shift times
-                                $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
-                                $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
+            <div class="col-md-3">
+                <div class="payslip-card mb-4" style="height: 195px;">
+                    <p class="payslip-card-title mb-0">Upcoming Holidays</p>
+                    @if ($calendarData->isEmpty())
+                    <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
+                    @else
+                    @php
+                    $count = 0;
+                    @endphp
 
-                                // Default times
-                                $defaultStartShiftTime = '10:00 am';
-                                $defaultEndShiftTime = '7:00 pm';
-
-                                // Format the times if they are not null
-                                $formattedStartShiftTime = $EmployeeStartshiftTime
-                                ? (new DateTime($EmployeeStartshiftTime))->format('h:i a')
-                                : $defaultStartShiftTime;
-                                $formattedEndShiftTime = $EmployeeEndshiftTime
-                                ? (new DateTime($EmployeeEndshiftTime))->format('h:i a')
-                                : $defaultEndShiftTime;
-
-                                @endphp
-                                {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
-                                {{ $formattedEndShiftTime }}
-                            </p>
-                            <div class="d-flex" style="font-size: 14px; margin-top: 2em;" x-data="{
-                                time: '',
-                                updateTime() {
-                                    const now = new Date();
-                                    const hours = String(now.getHours()).padStart(2, '0');
-                                    const minutes = String(now.getMinutes()).padStart(2, '0');
-                                    const seconds = String(now.getSeconds()).padStart(2, '0');
-                                    this.time = `${hours} : ${minutes} : ${seconds}`;
-                                }
-                            }"
-                                x-init="setInterval(() => updateTime(), 1000)">
-                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
-                                    style="width: 2.7em;">
-                                <template x-if="time">
-                                    <p x-text="time" class="showTimer"></p>
-                                </template>
+                    <div class="row m-0">
+                        <div class="col-12 p-0">
+                            @foreach ($calendarData as $entry)
+                            @if (!empty($entry->festivals))
+                            <div>
+                                <p class="payslip-small-desc mt-3">
+                                    <span
+                                        class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
+                                        <span
+                                            class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
+                                    <br>
+                                    <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
+                                </p>
                             </div>
+                            @php
+                            $count++;
+                            @endphp
+                            @endif
 
-                            <div class="A d-flex justify-content-between align-items-center flex-row"
-                                style="margin-top: 2em">
-                                <a class="viewSwipesList" wire:click="open">View Swipes</a>
-                                <button id="signButton" class="signInButton" wire:click="toggleSignState">
-                                    @if ($swipes)
-                                    @if ($swipes->in_or_out == 'OUT')
-                                    Sign In
-                                    @else
-                                    Sign Out
-                                    @endif
-                                    @else
-                                    Sign In
-                                    @endif
-                                </button>
-                            </div>
+                            @if ($count >= 2)
+                            @break
+                            @endif
+                            @endforeach
                         </div>
                     </div>
+                    @endif
+                    <a href="/holiday-calendar">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
                 </div>
             </div>
-
-
             <div class="col-md-3 ">
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <div class="row m-0 avatarImgDiv">
@@ -442,47 +482,7 @@
             <div class="modal-backdrop fade show blurred-backdrop"></div>
             @endif
             @endif
-            <div class="payslip-card mb-4" style="height: 195px;">
-                <p class="payslip-card-title mb-0">Upcoming Holidays</p>
-                @if ($calendarData->isEmpty())
-                <p class="payslip-small-desc mt-3">Uh oh! No holidays to show.</p>
-                @else
-                @php
-                $count = 0;
-                @endphp
 
-                <div class="row m-0">
-                    <div class="col-12 p-0">
-                        @foreach ($calendarData as $entry)
-                        @if (!empty($entry->festivals))
-                        <div>
-                            <p class="payslip-small-desc mt-3">
-                                <span
-                                    class="payslip-small-desc fw-500">{{ date('d M', strtotime($entry->date)) }}
-                                    <span
-                                        class="smallTextMin">{{ date('l', strtotime($entry->date)) }}</span></span>
-                                <br>
-                                <span class="smallTextMax">{{ ucfirst($entry->festivals) }}</span>
-                            </p>
-                        </div>
-                        @php
-                        $count++;
-                        @endphp
-                        @endif
-
-                        @if ($count >= 2)
-                        @break
-                        @endif
-                        @endforeach
-                    </div>
-                </div>
-                @endif
-                <a href="/holiday-calendar">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-            </div>
             <div class="payslip-card mb-4">
                 <p class="payslip-card-title">IT Declaration</p>
                 <p class="payslip-small-desc">
@@ -711,7 +711,7 @@
             @if ($this->showLeaveApplies)
             <div class="payslip-card  mb-4">
                 <div class="reviews">
-                    <div >
+                    <div>
                         <div class="team-heading mt-2 d-flex justify-content-between">
                             <div>
                                 <p class="payslip-card-title"> Team On Leave</p>
