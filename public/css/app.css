@@ -293,7 +293,7 @@
 
 .signInButton:active {
     transform: scale(0.95);
-    background-color: #e0e0e0; /* Change color on click */
+    background-color: #81b6e9; /* Change color on click */
 }
 .clicked {
     animation: bounce 0.3s;
@@ -9159,3 +9159,5 @@ peoples module styles started */
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
 }
+
+
