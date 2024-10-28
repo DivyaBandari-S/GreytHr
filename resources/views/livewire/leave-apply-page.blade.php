@@ -193,7 +193,7 @@
                     @else
                     @if($selectedManagerDetails->gender=='FEMALE')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/FEMALE-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
                     @elseif($selectedManagerDetails->gender=='MALE')
                     <div class="employee-profile-image-container">
@@ -271,7 +271,7 @@
                             @else
                             @if($employee['gender'] === 'FEMALE')
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/FEMALE-default.jpg') }}" class="navProfileImg rounded-circle" alt="Default Image">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
                             @elseif($employee['gender'] === 'MALE')
                             <div class="employee-profile-image-container">
@@ -408,7 +408,7 @@
                                         </div>
                                         @else
                                         <div class="employee-profile-image-container">
-                                            <img src="{{ $employee->gender === 'MALE' ? asset('images/male-default.png') : ($employee->gender === 'FEMALE' ? asset('images/FEMALE-default.jpg') : asset('images/user.jpg')) }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                            <img src="{{ $employee->gender === 'MALE' ? asset('images/male-default.png') : ($employee->gender === 'FEMALE' ? asset('images/female-default.jpg') : asset('images/user.jpg')) }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                         </div>
                                         @endif
                                     </div>
