@@ -74,7 +74,6 @@ if ($companyIds) {
 </head>
 
 <body>
-    @livewire('loader')
     @guest
         {{ $slot }}
     @else
