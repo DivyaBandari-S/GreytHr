@@ -11,7 +11,7 @@ class IT extends Authenticatable
 {
     use Notifiable;
     use HasFactory;
-    protected $table = 'i_t'; // Adjust the table name accordingly
+    protected $table = 'it_employees'; // Adjust the table name accordingly
     const ROLE_USER = 0;
     const ROLE_ADMIN = 1;
     const ROLE_SUPER_ADMIN = 2;
