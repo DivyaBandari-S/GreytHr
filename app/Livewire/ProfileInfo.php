@@ -34,16 +34,19 @@ class ProfileInfo extends Component
     public $showSuccessMessage = false;
     public $resignation_date;
     public  $reason;
-    public $fileName;
-    public  $last_working_day;
+    public $fileName = 'No File Choosen';
+    public  $last_working_date;
+    public  $approvedOn;
     public $comments;
     public $signature;
     public $isResigned;
+    public $filecontents,$mime_types;
+    public $resignId = '';
     public $showAlert = false;
     public $isUploading = false;
     public $qualifications = [];
     protected $rules = [
-        'resignation_date' => 'required|date|after_or_equal:today',
+
         // 'last_working_day' => 'required|date|after_or_equal:resignation_date',
         'reason' => 'required|string|max:255',
         // 'comments' => 'nullable|string',
@@ -53,17 +56,22 @@ class ProfileInfo extends Component
     protected $messages = [
         'resignation_date.after_or_equal' => 'Resignation date must be today or later.',
         'resignation_date.required' => 'Resignation date is required.',
-        'last_working_day.required' => 'Last working day must be the same as or after the resignation date.',
+        'last_working_date.required' => 'Last working day must be the same as or after the resignation date.',
         'reason' => 'Reason required',
         'signature.max' => 'Signature field must not be greater than 1 MB.',
         'signature.mimes' => 'Signature field must be a file of type: jpg, jpeg, png, pdf, doc, docx.'
     ];
     public function validateFields($propertyName)
     {
-        $this->validateOnly($propertyName);
-        if($propertyName=='signature'){
-            
+        if ($propertyName == 'signature') {
+            // dd();
+            if ($this->signature) {
+                // dd( $this->signature);
+                $this->fileName = $this->signature->getClientOriginalName();
+                // dd( $this->fileName);
+            }
         }
+        $this->validateOnly($propertyName);
     }
     public function updatedSignature()
     {
@@ -71,21 +79,37 @@ class ProfileInfo extends Component
     }
     public function mount()
     {
-        $this->updateProfile();
         $empId = Auth::guard('emp')->user()->emp_id;
-        $resig_requests=EmpResignations::where('emp_id', $empId)->where('status',['5','2'])->first();
-// dd($resig_requests);
-        if($resig_requests){
-            if($resig_requests->status =='5'){
-                $this->isResigned='pending';
-                $this->resignation_date=$resig_requests->resignation_date;
-                $this->reason=$resig_requests->reason;
-                $this->fileName=$resig_requests->file_name;
-            }else{
-                $this->isResigned='approved';
-            }
-        }
+
+        $this->updateProfile();
+        $this->getResignationDetails();
         $this->qualifications = $this->getEducationData($empId);
+    }
+    public function getResignationDetails()
+    {
+        $empId = Auth::guard('emp')->user()->emp_id;
+        $resig_requests = EmpResignations::where('emp_id', $empId)->whereIn('status', ['5', '2'])->first();
+        // dd($resig_requests);
+        if ($resig_requests) {
+            $this->resignId = $resig_requests->id;
+            $this->resignation_date = $resig_requests->resignation_date;
+            $this->reason = $resig_requests->reason;
+            $this->fileName = $resig_requests->file_name;
+            $this->mime_types=$resig_requests->mime_type;
+            if ($resig_requests->status == '5') {
+                $this->isResigned = 'Pending';
+            } elseif($resig_requests->status == '2') {
+                $this->isResigned = 'Approved';
+                $this->last_working_date = EmployeeDetails::where('emp_id', $empId)->value('last_working_date');
+                $this->approvedOn = EmployeeDetails::where('emp_id', $empId)->value('resignation_date');
+                // dd( $this->last_working_date);
+            }
+            elseif($resig_requests->status == '2') {
+                $this->isResigned = 'Rejected';
+            }
+        }else{
+            $this->isResigned = '';
+        }
     }
     protected function getEducationData($empId)
     {
@@ -146,15 +170,35 @@ class ProfileInfo extends Component
     public function applyForResignation()
     {
         // Perform validation for the inputs
+        if ($this->resignId == '') {
+            $this->validate([
+                'resignation_date' => 'required|date|after_or_equal:today',
+            ]);
+        }
+
         $this->validate();
 
         // Manually validate the file size
 
         try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            if ($this->resignId == '') {
+                $fileContent = null;
+                $mime_type = null;
+                $file_name = null;
 
-            $fileContent = null;
-            $mime_type = null;
-            $file_name = null;
+            }else{
+                $resig_requests = EmpResignations::where('emp_id', $employeeId)->where('status', ['5', '2'])->first();
+                if ($resig_requests) {
+                    if ($resig_requests->status == '5') {
+                        $fileContent= $resig_requests->signature;
+                        $mime_type = $this->mime_types;
+                        $file_name = $this->fileName;
+                    }
+                }
+
+            }
+
 
             if ($this->signature) {
                 $fileContent = file_get_contents($this->signature->getRealPath());
@@ -169,26 +213,33 @@ class ProfileInfo extends Component
                 // Check if the file content is too large
                 $mime_type = $this->signature->getMimeType();
                 $file_name = $this->signature->getClientOriginalName();
-
             }
 
-            $employeeId = auth()->guard('emp')->user()->emp_id;
             // Create a new EmpResignation record
-            $data = EmpResignations::create([
-                'emp_id' => $employeeId,
-                'resignation_date' => $this->resignation_date,
-                'file_name' => $file_name,
-                'mime_type' => $mime_type,
-                // 'last_working_day' => $this->last_working_day,
-                'reason' => $this->reason,
-                // 'comments' => $this->comments,
-                'signature' => $fileContent,
-            ]);
-            FlashMessageHelper::flashSuccess('Resignation details have been submitted successfully.');
+            $data = EmpResignations::updateorCreate(
+                ['id' => $this->resignId],
+                [
+                    'emp_id' => $employeeId,
+                    'resignation_date' => $this->resignation_date,
+                    'file_name' => $file_name,
+                    'mime_type' => $mime_type,
+                    // 'last_working_day' => $this->last_working_day,
+                    'reason' => $this->reason,
+                    // 'comments' => $this->comments,
+                    'signature' => $fileContent,
+                ]
+            );
 
-            $this->showAlert = true;
-            $this->resetInputFields();
-           $this->showModal = false;
+            if ($this->isResigned == 'Pending') {
+                FlashMessageHelper::flashSuccess('Resignation request have been updated successfully.');
+            } else {
+                FlashMessageHelper::flashSuccess('Resignation request have been submitted successfully.');
+            }
+
+
+            // $this->resetInputFields();
+            $this->showModal = false;
+            $this->getResignationDetails();
         } catch (QueryException $e) {
             if ($e->getCode() == '23000') { // Integrity constraint violation code
                 // Check if the error message contains 'Duplicate entry'
@@ -211,6 +262,24 @@ class ProfileInfo extends Component
             $this->showAlert = true;
         }
     }
+    public function withdrawResignation(){
+        try {
+            // Find the resignation request by ID
+            $resignationRequest = EmpResignations::findOrFail($this->resignId);
+
+            // Update the status to 'withdrawn'
+            $resignationRequest->status = '4';
+            $resignationRequest->save();
+            $this->showModal = false;
+            $this->getResignationDetails();
+            $this->resetInputFields();
+            FlashMessageHelper::flashSuccess('Resignation request withdrawn successfully.');
+        } catch (\Exception $e) {
+            // Handle any exceptions that may occur
+            FlashMessageHelper::flashError('An error occured, please try after some time.');
+        }
+
+    }
 
     public function resetInputFields()
     {
@@ -219,12 +288,15 @@ class ProfileInfo extends Component
         $this->reason = '';
         $this->signature = '';
         $this->resetErrorBag();
+        $this->fileName='No File Choosen';
     }
-    public function closeModel(){
-
+    public function closeModel()
+    {
         $this->showModal = false;
-        $this->reset(['resignation_date', 'reason', 'signature']);
-        $this->resetErrorBag();
+        if ($this->isResigned == '') {
+            $this->reset(['resignation_date', 'reason', 'signature']);
+            $this->resetErrorBag();
+        }
     }
     public function closeMessage()
     {

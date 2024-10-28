@@ -46,6 +46,7 @@ class EmployeeDetails extends Authenticatable
         'resignation_date',
         'resignation_reason',
         'notice_period',
+        'last_working_date',
         'extension',
         'experience',
         'shift_type',
