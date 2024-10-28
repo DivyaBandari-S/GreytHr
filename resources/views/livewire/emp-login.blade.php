@@ -74,11 +74,11 @@
                     <input type="{{ $showPassword ? 'text' : 'password' }}" class="form-control" id="password"
                         placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login"
                         wire:keydown.debounce.500ms="validateField('form.password')" />
-                    @if ($showEyeIcon)
+                    {{-- @if ($showEyeIcon)
                         <span class="show-eye-icon" wire:click="togglePasswordVisibility">
                             <i class="{{ $showPassword ? 'fas fa-eye' : 'fas fa-eye-slash' }}"></i>
                         </span>
-                    @endif
+                    @endif --}}
                     @error('form.password')
                         <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
                     @enderror
