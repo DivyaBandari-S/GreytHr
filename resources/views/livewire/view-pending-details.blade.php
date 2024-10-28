@@ -40,9 +40,9 @@
                                 @if(isset($leaveRequest['leaveRequest']->image) !== null && $leaveRequest['leaveRequest']->image !== 'null' && $leaveRequest['leaveRequest']->image != "Null" && $leaveRequest['leaveRequest']->image != "")
                                 <img height="40" width="40" src="data:image/jpeg;base64,{{ ($leaveRequest['leaveRequest']->image) }}" style="border-radius: 50%;">
                                 @else
-                                @if($leaveRequest['leaveRequest']->gender === 'Female')
+                                @if($leaveRequest['leaveRequest']->gender === 'FEMALE')
                                 <img src="{{ asset('images/female-default.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                @elseif($leaveRequest['leaveRequest']->gender === 'Male')
+                                @elseif($leaveRequest['leaveRequest']->gender === 'MALE')
                                 <img src="{{ asset('images/male-default.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                 @else
                                 <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">

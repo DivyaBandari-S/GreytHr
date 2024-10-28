@@ -151,11 +151,11 @@
                                     <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($employee['image'])}}">
                                 </div>
                                 @else
-                                @if($employee['gender'] === "Male")
+                                @if($employee['gender'] === "MALE")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
-                                @elseif($employee['gender'] === "Female")
+                                @elseif($employee['gender'] === "FEMALE")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
@@ -285,11 +285,11 @@
                                                 <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
                                             </div>
                                             @else
-                                            @if($employee->gender === "Male")
+                                            @if($employee->gender === "MALE")
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                             </div>
-                                            @elseif($employee->gender === "Female")
+                                            @elseif($employee->gender === "FEMALE")
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                             </div>

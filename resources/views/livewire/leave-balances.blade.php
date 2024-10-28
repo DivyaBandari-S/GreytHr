@@ -152,9 +152,9 @@
                         <div class="balance d-flex flex-row justify-content-between ">
                             <div class="field">
                                 <span class="leaveTypeTitle font-weight-500">
-                                    @if($gender === 'Female')
+                                    @if($gender === 'FEMALE')
                                     Maternity Leave
-                                    @elseif($gender === 'Male')
+                                    @elseif($gender === 'MALE')
                                     Paternity Leave
                                     @else
                                     Leave Type
@@ -164,9 +164,9 @@
                             <div>
                                 <span class="leave-gran font-weight-500">Granted:
                                     <span class="leave-gran font-weight-500">
-                                        @if($gender === 'Female')
+                                        @if($gender === 'FEMALE')
                                         {{$maternityLeaves}}
-                                        @elseif($gender === 'Male')
+                                        @elseif($gender === 'MALE')
                                         {{$paternityLeaves}}
                                         @else
                                         0
@@ -176,16 +176,16 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0"> @if($gender === 'Female')
+                            <h5 class="mb-0"> @if($gender === 'FEMALE')
                                 {{$maternityLeaves}}
-                                @elseif($gender === 'Male')
+                                @elseif($gender === 'MALE')
                                 {{$paternityLeaves}}
                                 @else
                                 0
                                 @endif
                             </h5>
                             <p class="mb-0 remaining">Balance</p>
-                            @if($gender === 'Female' && $maternityLeaves > 0)
+                            @if($gender === 'FEMALE' && $maternityLeaves > 0)
                             <a href="#" class="anchorTagDetails">View Details</a>
                             @elseif($gender === 'Male' && $paternityLeaves > 0)
                             <a href="#" class="anchorTagDetails">View Details</a>

@@ -66,7 +66,7 @@
                                     <div class="row p-0 desigSecondDiv">
                                         <div class="p-0 borderDiv">&nbsp;</div>
                                         <p class="mb-0 desigText" style="color: #02114f !important;">
-                                            <i class="fa-regular fa-compass me-2"></i> {{ $loginEmpManagerDetails->empSubDepartment->sub_department }}
+                                            <i class="fa-regular fa-compass me-2"></i> {{ ucwords(strtolower($loginEmpManagerDetails->job_role)) }}
                                         </p>
                                     </div>
                                 </div>
@@ -182,7 +182,7 @@
                                                 <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                                 <button id="signButton" class="signInButton" wire:click="toggleSignState">
                                                     @if ($swipes)
-                                                    @if ($swipes->in_or_out == 'OUT')
+                                                    @if ($swipes->in_or_out === 'OUT')
                                                     Sign In
                                                     @else
                                                     Sign Out
