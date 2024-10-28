@@ -91,7 +91,7 @@ class LeaveApplyPage extends Component
         'to_session' => 'required',
         'contact_details' => 'required',
         'reason' => 'required',
-        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif,zip|max:1024',
     ];
 
     protected $messages = [
@@ -411,9 +411,10 @@ class LeaveApplyPage extends Component
             }
 
             $filePaths = $this->file_paths ?? [];
+            dd( $filePaths);
             // Validate file uploads
             $validator = Validator::make($filePaths, [
-                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif,zip|max:1024',
             ], [
                 'file_paths.*.required' => 'You must upload at least one file.',
                 'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
@@ -595,6 +596,11 @@ class LeaveApplyPage extends Component
         try {
             foreach ($this->file_paths as $file) {
                 if ($file->getSize() > 1024 * 1024) {
+                    return true;
+                }
+                // Check if the file extension is 'zip'
+                if ($file->getClientOriginalExtension() === '.zip') {
+                    dd('zip');
                     return true;
                 }
             }
@@ -1062,7 +1068,7 @@ class LeaveApplyPage extends Component
         $managers = collect();
 
         $employeeGender = null;
-    
+
         try {
             // Fetch details for the current employee
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1079,7 +1085,7 @@ class LeaveApplyPage extends Component
                 $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
                 $this->loginEmpManager = $fullName;
                 $this->empManagerDetails = $managerDetails;
-    
+
                 // Add the logged-in manager to the collection
                 $managers->push([
                     'full_name' => $fullName,
@@ -1128,7 +1134,7 @@ class LeaveApplyPage extends Component
                     }
                 })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
-    
+
             // Add HR managers to the collection
             $hrManagers->each(function ($hrManager) use ($managers) {
                 $fullName = ucfirst(strtolower($hrManager->first_name)) . ' ' . ucfirst(strtolower($hrManager->last_name));
@@ -1155,7 +1161,7 @@ class LeaveApplyPage extends Component
                 'showCasualLeaveProbation' => $this->showCasualLeaveProbation,
             ]);
         }
-    
+
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,

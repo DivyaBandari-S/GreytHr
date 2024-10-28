@@ -444,7 +444,7 @@
             <div class="form-group mt-3">
                 <label for="file_paths">Attachments</label> <br>
                 <input id="file_paths" style="font-size:12px;" type="file"
-                    wire:model.lazy="file_paths"
+                    wire:model.lazy="file_paths" 
                     wire:keydown.debounce.500ms="validateField('file_paths')"
                     wire:click="handleFieldUpdate('file_paths')"
                     multiple />
