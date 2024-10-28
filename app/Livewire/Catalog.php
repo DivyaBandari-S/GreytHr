@@ -182,7 +182,7 @@ class Catalog extends Component
         $this->ItRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'Request For IT';
+        $this->category = 15;
     }
     
     public function AddRequest()
@@ -191,7 +191,7 @@ class Catalog extends Component
         $this->AddRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'Distribution List Request';
+        $this->category = 10;
     }
     
     public function LapRequest()
@@ -200,7 +200,7 @@ class Catalog extends Component
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'Laptop Request';
+        $this->category = 11;
     }
     
     public function DistributionRequest()
@@ -209,7 +209,7 @@ class Catalog extends Component
         $this->DistributionRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'New Distribution Request';
+        $this->category = 12;
     }
     
     public function MailRequest()
@@ -218,7 +218,7 @@ class Catalog extends Component
         $this->MailRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'New Mailbox Request';
+        $this->category = 13;
     }
     
     public function DevopsRequest()
@@ -227,7 +227,7 @@ class Catalog extends Component
         $this->DevopsRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'Devops Access Request';
+        $this->category = 16;
     }
     
     public function IdRequest()
@@ -236,7 +236,7 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'New ID Card';
+        $this->category = 17;
     }
     
     public function MmsRequest()
@@ -245,7 +245,7 @@ class Catalog extends Component
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'MMS Request';
+        $this->category = 18;
     }
     
     public function DesktopRequest()
@@ -254,7 +254,7 @@ class Catalog extends Component
         $this->DesktopRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
-        $this->category = 'Desktop Request';
+        $this->category = 14;
     }
     
     public function openItRequestaccess()
