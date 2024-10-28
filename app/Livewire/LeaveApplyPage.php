@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Validator;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
 
@@ -409,17 +410,24 @@ class LeaveApplyPage extends Component
                 ];
             }
 
+            $filePaths = $this->file_paths ?? [];
             // Validate file uploads
-            $this->validate([
-                'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+            $validator = Validator::make($filePaths, [
+                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
             ], [
+                'file_paths.*.required' => 'You must upload at least one file.',
                 'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
+                'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, gif are allowed.',
             ]);
+
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
 
             // Store files
             $fileDataArray = [];
-            if ($this->file_paths) {
-                foreach ($this->file_paths as $file) {
+            if ($filePaths) {
+                foreach ($filePaths as $file) {
                     $fileContent = file_get_contents($file->getRealPath());
                     $mimeType = $file->getMimeType();
                     $base64File = base64_encode($fileContent);
@@ -430,6 +438,7 @@ class LeaveApplyPage extends Component
                     ];
                 }
             }
+
 
             // Create the leave request
             $this->createdLeaveRequest = LeaveRequest::create([
@@ -446,7 +455,6 @@ class LeaveApplyPage extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
-
             // Notify
             Notification::create([
                 'emp_id' => auth()->guard('emp')->user()->emp_id,
@@ -485,95 +493,95 @@ class LeaveApplyPage extends Component
         try {
             $this->validateOnly($field);
             $this->resetErrorBag($field);
-                $employeeId = auth()->guard('emp')->user()->emp_id;
-                $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-                // Clear any previous error messages
-                $this->errorMessageValidation = null;
+            // Clear any previous error messages
+            $this->errorMessageValidation = null;
 
 
-                //check insuffecilen blance
-                    if($this->leave_type){
-                        $leaveBalance = $this->getLeaveBalance($employeeId);
-                        if ($leaveBalance <= 0 && $this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type)) {
-                            return false;
-                        }
-                    }
-                // 1. Check if the selected dates are on weekends
-                if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
-                    $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
+            //check insuffecilen blance
+            if ($this->leave_type) {
+                $leaveBalance = $this->getLeaveBalance($employeeId);
+                if ($leaveBalance <= 0 && $this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type)) {
+                    return false;
+                }
+            }
+            // 1. Check if the selected dates are on weekends
+            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
+                return false; // Stop further validation if error occurs
+            }
+
+            // 3. Validate leave balance
+            if ($this->leave_type) {
+                $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
+                $leaveBalance = $this->getLeaveBalance($employeeId);
+                if ($totalNumberOfDays > $leaveBalance) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('It looks like you have already used all your leave balance.');
+                    return false; // Stop further validation if error occurs
+                }
+            }
+
+            // 4. Check for holidays
+            if ($this->checkForHolidays()) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with existing holidays. Please pick different dates.');
+                return false; // Stop further validation if error occurs
+            }
+
+            // 5. Validate from date for joining date
+            $fromDate = Carbon::parse($this->from_date)->format('Y-m-d');
+            $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
+            if ($fromDate < $hireDate) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('Entered From date and To dates are less than your Join date.');
+                return; // Stop further validation if error occurs
+            }
+
+            // 6. Special validation for Casual Leave
+            if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 2 days of Casual Leave for the month.');
+                return false; // Stop further validation if error occurs
+            }
+
+            // 7. Validate date range
+            if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('To session must be greater than or equal to from session.');
+                return false; // Stop further validation if error occurs
+            }
+
+            // 8. Validate date range
+            if ($this->to_date) {
+                if ($this->from_date > $this->to_date) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('To date must be greater than or equal to from date.');
                     return false; // Stop further validation if error occurs
                 }
 
-                // 3. Validate leave balance
-                if($this->leave_type){
-                    $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
-                    $leaveBalance = $this->getLeaveBalance($employeeId);
-                    if ($totalNumberOfDays > $leaveBalance) {
-                        $this->errorMessageValidation = FlashMessageHelper::flashError('It looks like you have already used all your leave balance.');
-                        return false; // Stop further validation if error occurs
-                    }
-                }
-
-                // 4. Check for holidays
-                if ($this->checkForHolidays()) {
-                    $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with existing holidays. Please pick different dates.');
+                // 2. Check for overlapping leave requests
+                if ($this->checkOverlappingLeave($employeeId)) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with an existing leave application.');
                     return false; // Stop further validation if error occurs
                 }
+            }
 
-                // 5. Validate from date for joining date
-                $fromDate = Carbon::parse($this->from_date)->format('Y-m-d');
-                $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
-                if ($fromDate < $hireDate) {
-                    $this->errorMessageValidation = FlashMessageHelper::flashError('Entered From date and To dates are less than your Join date.');
-                    return; // Stop further validation if error occurs
+            // New validation for file uploads
+            if ($this->file_paths) {
+                if ($this->checkFileSize()) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('The file size must not exceed 1 MB. Please upload a smaller file.');
+                    return false;
                 }
+            }
 
-                // 6. Special validation for Casual Leave
-                if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                    $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 2 days of Casual Leave for the month.');
-                    return false; // Stop further validation if error occurs
+            // All validations passed, now calculate the number of days
+            if ($this->to_date) {
+                $this->showNumberOfDays = true;
+                if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
+                    $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
                 }
-
-                // 7. Validate date range
-                if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
-                    $this->errorMessageValidation = FlashMessageHelper::flashError('To session must be greater than or equal to from session.');
-                    return false; // Stop further validation if error occurs
-                }
-
-                // 8. Validate date range
-                if ($this->to_date) {
-                    if ($this->from_date > $this->to_date) {
-                        $this->errorMessageValidation = FlashMessageHelper::flashError('To date must be greater than or equal to from date.');
-                        return false; // Stop further validation if error occurs
-                    }
-
-                    // 2. Check for overlapping leave requests
-                    if ($this->checkOverlappingLeave($employeeId)) {
-                        $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with an existing leave application.');
-                        return false; // Stop further validation if error occurs
-                    }
-                }
-
-                // New validation for file uploads
-                if ($this->file_paths) {
-                    if ($this->checkFileSize()) {
-                        $this->errorMessageValidation = FlashMessageHelper::flashError('The file size must not exceed 1 MB. Please upload a smaller file.');
-                        return false;
-                    }
-                }
-
-                // All validations passed, now calculate the number of days
-                if ($this->to_date) {
-                    $this->showNumberOfDays = true;
-                    if (in_array($field, ['from_date', 'to_date', 'from_session', 'to_session', 'leave_type'])) {
-                        $this->calculateNumberOfDays($this->from_date, $this->from_session, $this->to_date, $this->to_session, $this->leave_type);
-                    }
-                } else {
-                    $this->showNumberOfDays = false;
-                }
-                // Return true if all validations pass
-                return true;
+            } else {
+                $this->showNumberOfDays = false;
+            }
+            // Return true if all validations pass
+            return true;
         } catch (\Exception $e) {
             // Log the error
             FlashMessageHelper::flashError('An error occurred while handling field update. Please try again later.');
@@ -796,7 +804,7 @@ class LeaveApplyPage extends Component
             FlashMessageHelper::flashError('Insufficient leave balance for ' . $leave_type);
             return true; // Indicates insufficient balance
         }
-    
+
         return false; // Indicates sufficient balance
     }
 
@@ -1052,41 +1060,42 @@ class LeaveApplyPage extends Component
         $this->loginEmpManager = null;
         $this->selectedManager = $this->selectedManager ?? [];
         $managers = collect();
-        $employeeGender = null;
 
+        $employeeGender = null;
+    
         try {
             // Fetch details for the current employee
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
-            if ($applying_to) {
-                $managerId = $applying_to->manager_id;
-                // Fetch the logged-in employee's manager details
-                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-                if ($managerDetails) {
-                    $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
-                    $this->loginEmpManager = $fullName;
-                    $this->empManagerDetails = $managerDetails;
+            if (!$applying_to) {
+                throw new \Exception("Employee details not found.");
+            }
 
-                    // Add the logged-in manager to the collection
-                    $managers->push([
-                        'full_name' => $fullName,
-                        'emp_id' => $managerDetails->emp_id,
-                        'gender' => $managerDetails->gender,
-                        'image' => $managerDetails->image,
-                    ]);
-                }
+            $managerId = $applying_to->manager_id;
+
+            // Fetch the logged-in employee's manager details
+            $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+
+            if ($managerDetails) {
+                $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
+                $this->loginEmpManager = $fullName;
+                $this->empManagerDetails = $managerDetails;
+    
+                // Add the logged-in manager to the collection
+                $managers->push([
+                    'full_name' => $fullName,
+                    'emp_id' => $managerDetails->emp_id,
+                    'gender' => $managerDetails->gender,
+                    'image' => $managerDetails->image,
+                ]);
             }
 
             // Fetch the gender of the logged-in employee
-            $employeeGender = EmployeeDetails::where('emp_id', $employeeId)->select('gender')->first();
-
+            $employeeGender = $applying_to->gender;
             // Fetch employees with job roles CTO, Chairman, and HR
             $jobRoles = ['CTO', 'Chairman'];
             $filteredManagers = EmployeeDetails::whereIn('job_role', $jobRoles)
-                ->where(function ($query) {
-                    // Apply search functionality
-                    if ($this->searchQuery) {
-                        $query->whereRaw('CONCAT(first_name, " ", last_name) LIKE ?', ["%{$this->searchQuery}%"]);
-                    }
+                ->when($this->searchQuery, function ($query) {
+                    return $query->whereRaw('CONCAT(first_name, " ", last_name) LIKE ?', ["%{$this->searchQuery}%"]);
                 })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
 
@@ -1109,19 +1118,17 @@ class LeaveApplyPage extends Component
             // Convert the company IDs to an array if it's in JSON format
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
 
-            // Fetch emp_ids flrom the HR table
+            // Fetch emp_ids from the HR table
             $hrEmpIds = Hr::pluck('emp_id');
-
             // Now, fetch employee details for these HR emp_ids
             $hrManagers = EmployeeDetails::whereIn('emp_id', $hrEmpIds)
                 ->where(function ($query) use ($companyIdsArray) {
-                    // Check if any of the company IDs match
                     foreach ($companyIdsArray as $companyId) {
                         $query->orWhere('company_id', 'like', "%\"$companyId\"%");
                     }
                 })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
-
+    
             // Add HR managers to the collection
             $hrManagers->each(function ($hrManager) use ($managers) {
                 $fullName = ucfirst(strtolower($hrManager->first_name)) . ' ' . ucfirst(strtolower($hrManager->last_name));
@@ -1135,13 +1142,20 @@ class LeaveApplyPage extends Component
 
             // Keep only unique emp_ids
             $managers = $managers->unique('emp_id')->values(); // Ensure we reset the keys
-
         } catch (\Exception $e) {
             FlashMessageHelper::flashError("Error fetching employee or manager details. Please try again.");
-            return false;
+            return view('livewire.leave-apply-page', [
+                'employeeGender' => null, // or handle accordingly
+                'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
+                'empManagerDetails' => null, // Handle as needed
+                'selectedManagerDetails' => null, // Handle as needed
+                'loginEmpManager' => null, // Handle as needed
+                'managers' => collect(), // Return an empty collection
+                'ccRecipients' => $this->ccRecipients,
+                'showCasualLeaveProbation' => $this->showCasualLeaveProbation,
+            ]);
         }
-
-
+    
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
@@ -1150,9 +1164,10 @@ class LeaveApplyPage extends Component
             'loginEmpManager' => $this->loginEmpManager,
             'managers' => $managers,
             'ccRecipients' => $this->ccRecipients,
-            'showCasualLeaveProbation' => $this->showCasualLeaveProbation
+            'showCasualLeaveProbation' => $this->showCasualLeaveProbation,
         ]);
     }
+
     // Add a method to update the search query
     public function getFilteredManagers()
     {

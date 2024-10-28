@@ -74,12 +74,11 @@ if ($companyIds) {
 </head>
 
 <body>
-    {{-- @livewire('loader') --}}
     @guest
         {{ $slot }}
     @else
         <section>
-            @livewire('main-layout')
+             @livewire('main-layout')
             <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
                 {{ $slot }}
             </main>
