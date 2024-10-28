@@ -245,6 +245,22 @@ class Feeds extends Component
     
         $this->showDialogEmoji = true;
     }
+    public function handleRadioChange($value)
+{
+    // Define the URLs based on the radio button value
+    $urls = [
+        'posts' => '/everyone',
+        'activities' => '/Feeds',
+        'post-requests'=>'/emp-post-requests'
+        // Add more mappings if necessary
+    ];
+
+    // Redirect to the correct URL
+    if (array_key_exists($value, $urls)) {
+        return redirect()->to($urls[$value]);
+    }
+}
+
     public function closeEmojiDialog()
     {
         $this->showDialogEmoji = false;

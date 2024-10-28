@@ -1,5 +1,13 @@
 <div>
-
+<div wire:loading
+        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
     <div style="overflow-x:hidden">
         <div class="row ">
     
@@ -49,7 +57,8 @@
 
 
             <div class="mx-2 ">
-                <button onclick="location.href='/catalog'"  class="helpdesk-btn" > IT Request </button>
+            <button wire:click="Catalog" class="helpdesk-btn"> IT Request </button>
+
             </div>
 
 
@@ -190,7 +199,7 @@
                                             class="form-control helpdesk-search-term"
                                             placeholder="Search for Emp.Name or ID"
                                             aria-label="Search"
-                                            aria-describedby="basic-addon1"   wire:input="autoValidate">
+                                            aria-describedby="basic-addon1"  >
                                         <div class="input-group-append" style="display: flex; align-items: center;">
                                             <button wire:click="filter" class="helpdesk-search-btn" type="button">
                                                 <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>

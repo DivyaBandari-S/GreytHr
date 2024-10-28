@@ -77,6 +77,12 @@ class ProfileInfo extends Component
     {
         $this->validateOnly('signature');
     }
+    public $activeTab = 'personalDetails';
+
+    public function setActiveTab($tab)
+    {
+        $this->activeTab = $tab;
+    }
     public function mount()
     {
         $empId = Auth::guard('emp')->user()->emp_id;
@@ -305,6 +311,7 @@ class ProfileInfo extends Component
     public function showPopupModal()
     {
         $this->showModal = true;
+        $this->activeTab ='employeeJobDetails';   
     }
     public function closeModal()
     {

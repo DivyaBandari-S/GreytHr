@@ -1,4 +1,12 @@
-<div>
+<div class="position-relative">
+    <div class="position-absolute"  wire:loading
+        wire:target="markAsLeaveCancel,toggleInfoLeave,applyingTo,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,cancel,toggleApplyingto">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="applyContainer">
         @if($LeaveShowinfoMessage)
         <div class="hide-info p-2 mb-2 mt-2 rounded d-flex justify-content-between align-items-center">
@@ -143,11 +151,11 @@
                                     <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($employee['image'])}}">
                                 </div>
                                 @else
-                                @if($employee['gender'] === "Male")
+                                @if($employee['gender'] === "MALE")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
-                                @elseif($employee['gender'] === "Female")
+                                @elseif($employee['gender'] === "FEMALE")
                                 <div class="employee-profile-image-container">
                                     <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                 </div>
@@ -263,13 +271,12 @@
                             @if($ccRecipients->isNotEmpty())
                             @foreach($ccRecipients as $employee)
                             <div class="borderContainer px-2 mb-2 rounded" wire:click="toggleSelection('{{ $employee->emp_id }}')">
-                                        <div class="downArrow d-flex align-items-center text-capitalize" wire:click.prevent>
-                                <label class="custom-checkbox">
-                                    <input type="checkbox"
-                                        wire:model="selectedPeople.{{ $employee->emp_id }}"
-                                         />
-                                    <span class="checkmark"></span>
-                                </label>
+                                <div class="downArrow d-flex align-items-center text-capitalize" wire:click.prevent>
+                                    <label class="custom-checkbox">
+                                        <input type="checkbox"
+                                            wire:model="selectedPeople.{{ $employee->emp_id }}" />
+                                        <span class="checkmark"></span>
+                                    </label>
 
                                     <div class="d-flex align-items-center gap-2" wire:key="{{ $employee->emp_id }}">
                                         <div>
@@ -278,11 +285,11 @@
                                                 <img class="navProfileImg rounded-circle" src="data:image/jpeg;base64,{{ $employee->image }}">
                                             </div>
                                             @else
-                                            @if($employee->gender === "Male")
+                                            @if($employee->gender === "MALE")
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                             </div>
-                                            @elseif($employee->gender === "Female")
+                                            @elseif($employee->gender === "FEMALE")
                                             <div class="employee-profile-image-container">
                                                 <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                             </div>

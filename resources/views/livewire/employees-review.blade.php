@@ -1,4 +1,12 @@
-<div>
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="setActiveTab,searchPendingLeave,setActiveLeaveTab">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .emp-side-page-nav-item-group {
             font-weight: 600;
@@ -129,7 +137,6 @@
 
         @if($showattendance )
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
-
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
                     <li class="custom-item m-0 p-0 flex-grow-1">
@@ -137,7 +144,7 @@
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
-                    </li>
+                    </li>v
                 </ul>
             </div>
 
@@ -224,7 +231,7 @@
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status_name}}</span>
                                 @elseif($arrl->status==3)
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status_name}}</span>
- 
+
 
                                 @endif
                             </div>
@@ -302,20 +309,19 @@
         @endif
 
         @if($showleave)
-
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'active')">Active</div>
+                        <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
-                        <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('leaveactiveTab', 'closed')">Closed</div>
+                        <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}"  wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
                     </li>
                 </ul>
             </div>
 
-            @if ($leaveactiveTab === "active")
+            @if ($showActiveLeaveContent)
             <div class="pending-leavves-container">
                 @if($count > 0 || $sendLeaveApplications)
                 <div class="reviewList">
@@ -366,9 +372,9 @@
                                     @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null' && $leaveRequest['approvedLeaveRequest']->image != "Null" && $leaveRequest['approvedLeaveRequest']->image != "")
                                     <img height="40" width="40" src="data:image/jpeg;base64,{{ ($leaveRequest['approvedLeaveRequest']->image) }}" style="border-radius: 50%;">
                                     @else
-                                    @if($leaveRequest['approvedLeaveRequest']->gender === 'Female')
+                                    @if($leaveRequest['approvedLeaveRequest']->gender === 'FEMALE')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                    @elseif($leaveRequest['approvedLeaveRequest']->gender === 'Male')
+                                    @elseif($leaveRequest['approvedLeaveRequest']->gender === 'MALE')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                     @else
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">

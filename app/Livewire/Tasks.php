@@ -608,7 +608,7 @@ class Tasks extends Component
             session()->flash('showAlert', true);
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
-            return redirect()->to('/tasks');
+            $this->loadTasks();
             $this->showDialog= false;
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -672,6 +672,8 @@ class Tasks extends Component
         $this->validate_tasks = false;
         $this->assigneeList = false;
         $this->followersList=false;
+        $this->validationFollowerMessage = '';
+        $this->selectedPeopleForFollowers = [];
     }
 
     public function filter()

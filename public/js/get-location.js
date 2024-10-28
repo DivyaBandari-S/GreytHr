@@ -26,9 +26,9 @@ function getLocation() {
                 latitude = position.coords.latitude;
                 longitude = position.coords.longitude;
 
-                console.log("Latitude: " + latitude);
-                console.log("Longitude: " + longitude);
-                console.log("Coordinates: (" + latitude + ", " + longitude + ")");
+                // console.log("Latitude: " + latitude);
+                // console.log("Longitude: " + longitude);
+                // console.log("Coordinates: (" + latitude + ", " + longitude + ")");
 
                 // Dispatch a Livewire event with the coordinates
                 Livewire.dispatch("sendCoordinates", {

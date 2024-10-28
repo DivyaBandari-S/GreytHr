@@ -524,15 +524,11 @@ width: 170px; */
 
         .clickable-date:active {
             background-color: #f3faff;
-            /* Set the desired background color when clicked */
             border: 1px solid #c5cdd4;
-            /* Set the desired border color */
         }
 
         .clickable-date1 {
             background-color: pink;
-            /* Set the desired background color when clicked */
-            /* Set the desired border color */
         }
 
         .calendar-day {
@@ -1437,10 +1433,10 @@ color: #fff;
                             
                           
                             <div>
-                                
+
                             
                               
-                            @if($percentageinworkhrsforattendance>=0)
+                            @if($percentageinworkhrsforattendance>0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
@@ -1449,10 +1445,10 @@ color: #fff;
                                        <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
                                         </span>
                                         <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                        </span> 
-                                       
+                                        </span>
+
                                     @endif
-                                     
+
                             </div>
 
                         </section>
@@ -1463,14 +1459,14 @@ color: #fff;
                         <h6 class="text-secondary text-regular text-center" style="font-size:12px;border-bottom:1px solid #ccc;padding-bottom:5px;">
                             Avg.&nbsp;Actual&nbsp;Work&nbsp;Hrs</h6>
                         <section class="text-center">
-                                   
+
                                             <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
-                                    
+
 
                             <div>
-                                  
 
-                                   @if($percentageinworkhrsforattendance>=0)
+
+                                   @if($percentageinworkhrsforattendance>0)
                                             <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
                                             </span>
                                             <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}

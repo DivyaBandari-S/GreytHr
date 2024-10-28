@@ -1,5 +1,12 @@
-<div>
-
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="yearDropDown,showPopupModal,closeModal">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="buttons-container d-flex justify-content-end mt-2 px-3 ">
         <button class="submit-btn  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
         <button type="button" class="submit-btn mx-2 px-4 rounded " wire:click="showPopupModal">
@@ -21,14 +28,14 @@
 
     <!-- modal -->
     @if($showModal)
-    <div wire:ignore.self class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+    <div wire:ignore.self class="modal fade show d-block" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h6 class="modal-title">Download Leave Transaction Report</h6>
                     <button type="button" class="btn-close" aria-label="Close"
-                     wire:click="closeModal" >
-                                    </button>
+                        wire:click="closeModal">
+                    </button>
                 </div>
                 <form novalidate class="ng-valid ng-touched ng-dirty" wire:submit.prevent="generatePdf">
                     @csrf
@@ -43,7 +50,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">From date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" >
+                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate">
                                     </div>
                                     @error('fromDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -52,7 +59,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">To date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate" >
+                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate">
                                     </div>
                                     @error('toDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -112,202 +119,202 @@
 
 
 
-<!-- 2024 -->
-<div>
-    <div class="bal-container">
-        <div class="row my-3 mx-auto">
-            <div class="col-md-4 containerBalanceHeight mb-2">
-                <div class="leave-bal mb-2 bg-white   ">
-                    <div class="balance d-flex flex-row justify-content-between ">
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
+    <!-- 2024 defualt -->
+    <div>
+        <div class="bal-container">
+            <div class="row my-3 mx-auto">
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white   ">
+                        <div class="balance d-flex flex-row justify-content-between ">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
+                            </div>
+                            <div>
+                                <span class="leave-grane font-weight-500">Granted: <span class="leave-grane font-weight-500">{{$lossOfPayPerYear}}</span></span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="leave-grane font-weight-500">Granted:  <span class="leave-grane font-weight-500">{{$lossOfPayPerYear}}</span></span>
+                        <div class="center d-flex flex-column align-items-center justify-content-center text-center">
+                            @if($lossOfPayBalance > 0)
+                            <h5 class="mb-0">
+                                &minus;{{($lossOfPayBalance)}}
+                            </h5>
+                            @else
+                            <h5 class="mb-0">
+                                0
+                            </h5>
+                            @endif
+                            <p class="mb-0 remaining">Balance</p>
                         </div>
-                    </div>
-                    <div class="center d-flex flex-column align-items-center justify-content-center text-center" >
-                        @if($lossOfPayBalance > 0)
-                        <h5 class="mb-0" >
-                            &minus;{{($lossOfPayBalance)}}
-                        </h5>
-                        @else
-                        <h5 class="mb-0" >
-                            0
-                        </h5>
-                        @endif
-                        <p class="mb-0 remaining" >Balance</p>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 containerBalanceHeight mb-2">
-                <div class="leave-bal mb-2 bg-white  ">
-                    <div class="balance d-flex flex-row justify-content-between ">
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500">
-                                @if($gender === 'Female')
-                                Maternity Leave
-                                @elseif($gender === 'Male')
-                                Paternity Leave
-                                @else
-                                Leave Type
-                                @endif
-                            </span>
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white  ">
+                        <div class="balance d-flex flex-row justify-content-between ">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">
+                                    @if($gender === 'FEMALE')
+                                    Maternity Leave
+                                    @elseif($gender === 'MALE')
+                                    Paternity Leave
+                                    @else
+                                    Leave Type
+                                    @endif
+                                </span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted:
+                                    <span class="leave-gran font-weight-500">
+                                        @if($gender === 'FEMALE')
+                                        {{$maternityLeaves}}
+                                        @elseif($gender === 'MALE')
+                                        {{$paternityLeaves}}
+                                        @else
+                                        0
+                                        @endif
+                                    </span>
+                                </span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:
-                                <span  class="leave-gran font-weight-500">
-                                @if($gender === 'Female')
+                        <div class="center text-center d-flex flex-column align-items-center justify-content-center">
+                            <h5 class="mb-0"> @if($gender === 'FEMALE')
                                 {{$maternityLeaves}}
-                                @elseif($gender === 'Male')
+                                @elseif($gender === 'MALE')
                                 {{$paternityLeaves}}
                                 @else
                                 0
                                 @endif
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="center text-center d-flex flex-column align-items-center justify-content-center" >
-                        <h5 class="mb-0"> @if($gender === 'Female')
-                            {{$maternityLeaves}}
-                            @elseif($gender === 'Male')
-                            {{$paternityLeaves}}
-                            @else
-                            0
+                            </h5>
+                            <p class="mb-0 remaining">Balance</p>
+                            @if($gender === 'FEMALE' && $maternityLeaves > 0)
+                            <a href="#" class="anchorTagDetails">View Details</a>
+                            @elseif($gender === 'Male' && $paternityLeaves > 0)
+                            <a href="#" class="anchorTagDetails">View Details</a>
                             @endif
-                        </h5>
-                        <p class="mb-0 remaining" >Balance</p>
-                        @if($gender === 'Female' && $maternityLeaves > 0)
-                        <a href="#" class="anchorTagDetails">View Details</a>
-                        @elseif($gender === 'Male' && $paternityLeaves > 0)
-                        <a href="#" class="anchorTagDetails">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white ">
+                        <div class="balance mb-2 d-flex flex-row justify-content-between ">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Casual Leave
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted: <span class="leave-gran font-weight-500">{{$casualLeavePerYear}}</span></span>
+                            </div>
+                        </div>
+                        <div class="center text-center d-flex flex-column align-items-center justify-content-center">
+                            <h5 class="mb-0">{{$casualLeaveBalance}}</h5>
+                            <p class="mb-0 remaining">Balance</p>
+                            @if($casualLeavePerYear)
+                            <a href="/leave-balances/casualleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            @endif
+                        </div>
+                        @if($casualLeavePerYear > 0)
+                        <div class="px-3">
+                            <div class="tube-container">
+                                <p class="consumedContent mb-0">
+                                    @if($consumedCasualLeaves > 0)
+                                    {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
+                                    @else
+                                    0 of {{ $casualLeavePerYear }} Consumed
+                                    @endif
+                                </p>
+                                <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
+                            </div>
+                        </div>
                         @endif
                     </div>
                 </div>
-            </div>
-            <div class="col-md-4 containerBalanceHeight mb-2">
-                <div class="leave-bal mb-2 bg-white ">
-                    <div class="balance mb-2 d-flex flex-row justify-content-between ">
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500">Casual Leave
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white   ">
+                        <div class="balance d-flex flex-row justify-content-between">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted: <span class="leave-gran font-weight-500">{{ $sickLeavePerYear }}</span></span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:  <span class="leave-gran font-weight-500">{{$casualLeavePerYear}}</span></span>
+                        <div class="center text-center d-flex flex-column align-items-center justify-content-center">
+                            <h5 class="mb-0">{{ $sickLeaveBalance }}</h5>
+                            <p class="mb-0 remaining">Balance</p>
+                            @if($sickLeavePerYear > 0)
+                            <a href="/leave-balances/sickleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
+                            @endif
                         </div>
-                    </div>
-                    <div class="center text-center d-flex flex-column align-items-center justify-content-center" >
-                        <h5 class="mb-0">{{$casualLeaveBalance}}</h5>
-                        <p class="mb-0 remaining" >Balance</p>
-                        @if($casualLeavePerYear)
-                        <a href="/leave-balances/casualleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
-                        @endif
-                    </div>
-                    @if($casualLeavePerYear > 0)
-                    <div class="px-3">
-                        <div class="tube-container">
-                            <p class="consumedContent mb-0">
-                                @if($consumedCasualLeaves > 0)
-                                {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
-                                @else
-                                0 of {{ $casualLeavePerYear }} Consumed
-                                @endif
-                            </p>
-                            <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-            <div class="col-md-4 containerBalanceHeight mb-2">
-                <div class="leave-bal mb-2 bg-white   ">
-                    <div class="balance d-flex flex-row justify-content-between">
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500">Sick Leave</span>
-                        </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:  <span class="leave-gran font-weight-500">{{ $sickLeavePerYear }}</span></span>
-                        </div>
-                    </div>
-                    <div class="center text-center d-flex flex-column align-items-center justify-content-center" >
-                        <h5 class="mb-0">{{ $sickLeaveBalance }}</h5>
-                        <p class="mb-0 remaining" >Balance</p>
                         @if($sickLeavePerYear > 0)
-                        <a href="/leave-balances/sickleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
+                        <div class="px-3">
+                            <div class="tube-container">
+                                <p class="mb-0 consumedContent">
+                                    @if($consumedSickLeaves > 0)
+                                    {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
+                                    @else
+                                    0 of {{ $sickLeavePerYear }} Consumed
+                                    @endif
+                                </p>
+                                <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
+                            </div>
+                        </div>
                         @endif
                     </div>
-                    @if($sickLeavePerYear > 0)
-                    <div class="px-3">
-                    <div class="tube-container">
-                        <p class="mb-0 consumedContent" >
-                            @if($consumedSickLeaves > 0)
-                            {{ $consumedSickLeaves }} of {{ $sickLeavePerYear }} Consumed
-                            @else
-                            0 of {{ $sickLeavePerYear }} Consumed
-                            @endif
-                        </p>
-                        <div class="tube" style="width: {{ $percentageSick }}%; background-color: {{ $this->getTubeColor($consumedSickLeaves, $sickLeavePerYear, 'Sick Leave') }};"></div>
-                    </div>
-                    </div>
-                    @endif
                 </div>
-            </div>
-            @if( $casualProbationLeavePerYear > 0)
-            <div class="col-md-4 containerBalanceHeight mb-2">
-                <div class="leave-bal mb-2 bg-white   ">
-                    <div class="balance d-flex flex-row justify-content-between">
-                        <div class="field">
-                            <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
+                @if( $casualProbationLeavePerYear > 0)
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white   ">
+                        <div class="balance d-flex flex-row justify-content-between">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Casual Leave Probation</span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted: {{ $casualProbationLeavePerYear }}</span>
+                            </div>
                         </div>
-                        <div>
-                            <span class="leave-gran font-weight-500">Granted:  {{ $casualProbationLeavePerYear }}</span>
+                        <div class="center text-center d-flex flex-column align-items-center justify-content-center">
+                            <h5 class="mb-0">{{ $casualProbationLeaveBalance }}</h5>
+                            <p class="mb-0 remaining">Balance</p>
+                            @if($casualProbationLeavePerYear > 0)
+                            <a href="/leave-balances/casualprobationleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
+                            @endif
+                        </div>
+                        <div class="px-3">
+                            <div class="tube-container">
+                                <p class="mb-0 consumedContent">
+                                    @if($consumedProbationLeaveBalance > 0)
+                                    {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
+                                    @else
+                                    0 of {{ $casualProbationLeaveBalance }} Consumed
+                                    @endif
+                                </p>
+                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                            </div>
                         </div>
                     </div>
-                    <div class="center text-center d-flex flex-column align-items-center justify-content-center" >
-                        <h5 class="mb-0">{{ $casualProbationLeaveBalance }}</h5>
-                        <p class="mb-0 remaining" >Balance</p>
-                        @if($casualProbationLeavePerYear > 0)
-                        <a href="/leave-balances/casualprobationleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
-                        @endif
-                    </div>
-                    <div class="px-3">
-                    <div class="tube-container">
-                        <p class="mb-0 consumedContent" >
-                            @if($consumedProbationLeaveBalance > 0)
-                            {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
-                            @else
-                            0 of {{ $casualProbationLeaveBalance }} Consumed
+                </div>
+                @endif
+                <div class="col-md-4 containerBalanceHeight mb-2">
+                    <div class="leave-bal mb-2 bg-white   ">
+                        <div class="balance d-flex flex-row justify-content-between">
+                            <div class="field">
+                                <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
+                            </div>
+                            <div>
+                                <span class="leave-gran font-weight-500">Granted: <span class="leave-gran font-weight-500">{{ $marriageLeaves }}</span></span>
+                            </div>
+                        </div>
+                        <div class="center text-center d-flex flex-column align-items-center justify-content-center">
+                            <h5 class="mb-0">{{ $marriageLeaves }}</h5>
+                            <p class="mb-0 remaining">Balance</p>
+                            @if($marriageLeaves > 0)
+                            <a href="#" class="anchorTagDetails">View Details</a>
                             @endif
-                        </p>
-                        <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
-                    </div>
-                    </div>
-                </div>
-            </div>
-        @endif
-        <div class="col-md-4 containerBalanceHeight mb-2">
-            <div class="leave-bal mb-2 bg-white   ">
-                <div class="balance d-flex flex-row justify-content-between">
-                    <div class="field">
-                        <span class="leaveTypeTitle font-weight-500">Marriage Leave</span>
-                    </div>
-                    <div>
-                        <span class="leave-gran font-weight-500">Granted:  <span class="leave-gran font-weight-500">{{ $marriageLeaves }}</span></span>
-                    </div>
-                </div>
-                <div class="center text-center d-flex flex-column align-items-center justify-content-center" >
-                    <h5 class="mb-0">{{ $marriageLeaves }}</h5>
-                    <p class="mb-0 remaining" >Balance</p>
-                    @if($marriageLeaves > 0)
-                    <a href="#" class="anchorTagDetails">View Details</a>
-                    @endif
-                </div>
+                        </div>
 
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</div>
 </div>
 </body>
 

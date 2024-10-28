@@ -1,5 +1,5 @@
-<div>
-    <div wire:loading
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
         wire:target="setActiveTab,show,toggleAccordion,openAddCommentModal,openForTasks,showViewFile,close,forAssignee,closeAssignee,selectPerson,forFollowers,closeFollowers,togglePersonSelection,submit,downloadImage,closeViewFile,closeModal,openEditCommentModal,deleteComment,updateComment,cancelEdit,addComment,updateFilterDropdown,closeForTasks">
         <div class="loader-overlay">
             <div class="loader">

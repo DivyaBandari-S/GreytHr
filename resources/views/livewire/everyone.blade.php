@@ -1,4 +1,13 @@
 <div>
+<div wire:loading
+        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,closeFeeds">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+            
+        </div>
+    </div>
 <div class="px-4 " style="position: relative;">
 
 
@@ -160,7 +169,7 @@
             <p class="feeds-left-menu">Activities</p>
             <div class="activities">
                 <label class="custom-radio-label">
-                    <input type="radio" name="radio" value="activities" checked data-url="/Feeds" onclick="handleRadioChange(this)">
+                    <input type="radio" name="radio" value="activities" checked data-url="/Feeds" wire:click="handleRadioChange('activities')">
                     <div class="feed-icon-container" style="margin-left: 10px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
@@ -177,7 +186,7 @@
             <div class="posts">
                 <label class="custom-radio-label">
 
-                    <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" onclick="handleRadioChange(this)">
+                    <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/everyone" wire:click="handleRadioChange('posts')">
 
                     <div class="feed-icon-container" style="margin-left: 10px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1">
@@ -193,7 +202,7 @@
             <div class="post-requests">
                 <label class="custom-radio-label">
 
-                    <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests" onclick="handleRadioChange(this)">
+                    <input type="radio" id="radio-emp" name="radio" value="post-requests" data-url="/emp-post-requests" wire:click="handleRadioChange('post-requests')">
 
                     <div class="feed-icon-container" style="margin-left: 10px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current text-purple-400 stroke-1" style="width: 1rem; height: 1rem;">
@@ -395,7 +404,7 @@
                         @else
 
                         @foreach($posts as $post)
-                        <div class="col-12 col-md-8" style="margin-top: 10px;">
+                        <div class="col-12 col-md-8" style="margin-top: 10px;margin-left:-60px">
                             <!-- Upcoming Birthdays List -->
                             <div class="cards">
                                 <div class="row mt-2">
@@ -419,7 +428,7 @@
                                     @if($employee)
                                     <div class="col-3 text-center">
                                         @if($employee->image && $employee->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="{{ $employee->image_url }}" alt="Employee Image">
+                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image">
                                         @else
                                         @if($employee->gender == "Male")
                                         <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
@@ -438,7 +447,7 @@
                                     @else($manager)
                                     <div class="col-3 text-center">
                                         @if($manager->image && $manager->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="{{ $manager->image_url }}" alt="Manager Image">
+                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$manager->image}}" alt="Manager Image">
                                         @else
                                         @if($manager->gender == "Male")
                                         <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">

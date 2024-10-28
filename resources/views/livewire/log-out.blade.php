@@ -1,4 +1,13 @@
-<div>
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="handleLogout,confirmLogout,cancelLogout">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+
+        </div>
+    </div>
     <div class="logout-icon-container">
         <span wire:click="handleLogout"> <i class='fas fa-sign-out-alt'></i></span>
     </div>

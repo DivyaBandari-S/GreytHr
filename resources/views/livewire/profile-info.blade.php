@@ -1,4 +1,13 @@
-<div>
+<div class="position-relative">
+    <div class="position-absolute" wire:loading
+        wire:target="setActiveTab,showPopupModal,closeModel,resetInputFields,applyForResignation">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+
+        </div>
+    </div>
     @if (session()->has('emp_error'))
     <div class="alert alert-danger">
         {{ session('emp_error') }}
@@ -9,41 +18,42 @@
         <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
-                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link active"
-                        onclick="toggleDetails('personalDetails', this)">Personal</div>
+                    <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeTab === 'personalDetails' ? 'active' : '' }}"
+                 wire:click="setActiveTab('personalDetails')">Personal</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link "
-                        onclick="toggleDetails('accountDetails', this)">Accounts & Statements</a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'accountDetails' ? 'active' : '' }}"
+                 wire:click="setActiveTab('accountDetails')">Accounts & Statements</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link "
-                        onclick="toggleDetails('familyDetails', this)">Family</a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'familyDetails' ? 'active' : '' }}"
+                 wire:click="setActiveTab('familyDetails')">Family</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
-                    <a href="#" style="border-radius:none;" class="custom-nav-link "
-                        onclick="toggleDetails('employeeJobDetails', this)">Employment & Job</a>
+                    <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'employeeJobDetails' ? 'active' : '' }}"
+                 wire:click="setActiveTab('employeeJobDetails')">Employment & Job</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
-                        class="custom-nav-link " onclick="toggleDetails('assetsDetails', this)">Assets</a>
+                        class="custom-nav-link {{ $activeTab === 'assetsDetails' ? 'active' : '' }}"
+                 wire:click="setActiveTab('assetsDetails')">Assets</a>
                 </li>
             </ul>
         </div>
         <div>
             @if ($employeeDetails)
 
-            {{-- Personal Tab --}}
-            <div class="row p-0 gx-0" id="personalDetails" style=" margin:20px 0px;">
-                <div class="col">
-                    <div class="row p-3 gx-0"
-                        style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div
-                            style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
-                            PROFILE</div>
+                {{-- Personal Tab --}}
+                <div class="row p-0 gx-0" id="personalDetails" style=" margin:20px 0px;{{ $activeTab === 'personalDetails' ? 'display: block;' : 'display: none;' }}">
+                    <div class="col">
+                        <div class="row p-3 gx-0"
+                            style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
+                            <div
+                                style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
+                                PROFILE</div>
 
                         <div class="col-12 col-md-4 position-relative">
                             @if (session()->has('error'))
@@ -419,7 +429,7 @@
 
             {{-- Accounts & Statements --}}
 
-            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;"
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'accountDetails' ? 'display: block;' : 'display: none;' }}"
                 id="accountDetails">
                 <div class="col">
                     <div class="row p-3 gx-0"
@@ -543,16 +553,16 @@
 
 
 
-            <div style="margin:20px auto;border-radius: 5px;display: none;" id="familyDetails">
-                <div class="row p-0 gx-0"
-                    style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
-                    <!-- Header -->
-                    <div
-                        style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">
-                        FATHER
-                        DETAILS</div>
-                    <div class="row p-3 gx-0">
-                        <div class="col-12 col-md-3">
+                <div style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'familyDetails' ? 'display: block;' : 'display: none;' }}" id="familyDetails">
+                    <div class="row p-0 gx-0"
+                        style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
+                        <!-- Header -->
+                        <div
+                            style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">
+                            FATHER
+                            DETAILS</div>
+                        <div class="row p-3 gx-0">
+                            <div class="col-12 col-md-3">
 
                             @if (
                             $employeeDetails->empParentDetails &&
@@ -791,44 +801,44 @@
             </div>
 
 
-            {{-- Employment & Job --}}
-            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;"
-                id="employeeJobDetails">
-                <div class="col">
-                    <div class="row p-3 gx-0"
-                        style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div class="row mt-2 p-0 gx-0">
-                            <div class="col-6 col-md-6">
-                                <div
-                                    style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
-                                    CURRENT POSITION </div>
+                {{-- Employment & Job --}}
+                <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'employeeJobDetails' ? 'display: block;' : 'display: none;' }}"
+                    id="employeeJobDetails">
+                    <div class="col">
+                        <div class="row p-3 gx-0"
+                            style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                            <div class="row mt-2 p-0 gx-0">
+                                <div class="col-6 col-md-6">
+                                    <div
+                                        style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
+                                        CURRENT POSITION </div>
+                                </div>
+                                <div class="col-6 col-md-6">
+                                    @if ($isResigned == '')
+                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                            wire:click="showPopupModal">
+                                            Resign
+                                        </div>
+                                    @elseif($isResigned == 'pending')
+                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                            wire:click="showPopupModal">
+                                            Edit Resignation
+                                        </div>
+                                    @else
+                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                            wire:click="showPopupModal">
+                                            View Resignation
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
-                            <div class="col-6 col-md-6">
-                                @if ($isResigned == '')
-                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                    wire:click="showPopupModal">
-                                    Resign
-                                </div>
-                                @elseif($isResigned == 'Pending')
-                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                    wire:click="showPopupModal">
-                                    Edit Resignation
-                                </div>
-                                @else
-                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                    wire:click="showPopupModal">
-                                    View Resignation
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                        @php
-                        // Fetch the manager details directly in Blade
-                        $manager = \App\Models\EmployeeDetails::where(
-                        'emp_id',
-                        $employeeDetails->manager_id,
-                        )->first();
-                        @endphp
+                            @php
+                                // Fetch the manager details directly in Blade
+                                $manager = \App\Models\EmployeeDetails::where(
+                                    'emp_id',
+                                    $employeeDetails->manager_id,
+                                )->first();
+                            @endphp
 
                         <div class="col-6 col-md-3">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -1104,24 +1114,24 @@
             @endif
             {{-- Assets --}}
 
-            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px;display: none;"
-                id="assetsDetails">
-                <div class="col">
-                    <div class="row p-3 gx-0"
-                        style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
-                        <div
-                            style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
-                            ACESS CARD DETAILS</div>
-                        <div class="col-6">
-                            <div style="font-size: 11px; color: #778899; margin-left: 15px">
-                                Card No
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px">
-                                @if (optional($employeeDetails->empPersonalInfo)->adhar_no)
-                                {{ optional($employeeDetails->empPersonalInfo)->adhar_no }}
-                                @else
-                                <span style="padding-left: 20px;">-</span>
-                                @endif
+                <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'assetsDetails' ? 'display: block;' : 'display: none;' }}"
+                    id="assetsDetails">
+                    <div class="col">
+                        <div class="row p-3 gx-0"
+                            style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                            <div
+                                style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
+                                ACESS CARD DETAILS</div>
+                            <div class="col-6">
+                                <div style="font-size: 11px; color: #778899; margin-left: 15px">
+                                    Card No
+                                </div>
+                                <div style="margin-left: 15px; font-size: 12px">
+                                    @if (optional($employeeDetails->empPersonalInfo)->adhar_no)
+                                        {{ optional($employeeDetails->empPersonalInfo)->adhar_no }}
+                                    @else
+                                        <span style="padding-left: 20px;">-</span>
+                                    @endif
 
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">
@@ -1170,47 +1180,47 @@
 
         </div>
         <script>
-            function toggleAccordion(element) {
+            // function toggleAccordion(element) {
 
-                const accordionBody = element.nextElementSibling;
+            //     const accordionBody = element.nextElementSibling;
 
-                if (accordionBody.style.display === 'block') {
+            //     if (accordionBody.style.display === 'block') {
 
-                    accordionBody.style.display = 'none';
+            //         accordionBody.style.display = 'none';
 
-                    element.classList.remove('active'); // Remove active class
+            //         element.classList.remove('active'); // Remove active class
 
-                } else {
+            //     } else {
 
-                    accordionBody.style.display = 'block';
+            //         accordionBody.style.display = 'block';
 
-                    element.classList.add('active'); // Add active class
+            //         element.classList.add('active'); // Add active class
 
-                }
-            }
+            //     }
+            // }
 
-            function toggleDetails(sectionId, clickedLink) {
-                const tabs = ['personalDetails', 'accountDetails', 'familyDetails', 'employeeJobDetails', 'assetsDetails'];
+            // function toggleDetails(sectionId, clickedLink) {
+            //     const tabs = ['personalDetails', 'accountDetails', 'familyDetails', 'employeeJobDetails', 'assetsDetails'];
 
-                // Remove active class from all links
-                const links = document.querySelectorAll('.custom-nav-link');
-                links.forEach(link => link.classList.remove('active'));
+            //     // Remove active class from all links
+            //     const links = document.querySelectorAll('.custom-nav-link');
+            //     links.forEach(link => link.classList.remove('active'));
 
-                // Add active class to the clicked link
-                clickedLink.classList.add('active');
+            //     // Add active class to the clicked link
+            //     clickedLink.classList.add('active');
 
-                // Toggle tab visibility
-                tabs.forEach(tab => {
-                    const tabElement = document.getElementById(tab);
-                    if (tabElement) {
-                        tabElement.style.display = (tab === sectionId) ? 'block' : 'none';
-                    }
-                });
-            }
+            //     // Toggle tab visibility
+            //     tabs.forEach(tab => {
+            //         const tabElement = document.getElementById(tab);
+            //         if (tabElement) {
+            //             tabElement.style.display = (tab === sectionId) ? 'block' : 'none';
+            //         }
+            //     });
+            // }
 
-            document.getElementById('employeeJobDetails').style.display = 'none';
-            document.addEventListener('DOMContentLoaded', function() {
-                var today = new Date().toISOString().split('T')[0];
-                document.getElementById('resignation_date').setAttribute('min', today);
-            });
+            // document.getElementById('employeeJobDetails').style.display = 'none';
+            // document.addEventListener('DOMContentLoaded', function() {
+            //     var today = new Date().toISOString().split('T')[0];
+            //     document.getElementById('resignation_date').setAttribute('min', today);
+            // });
         </script>

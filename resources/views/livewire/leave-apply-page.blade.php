@@ -1,5 +1,12 @@
 <div class="position-relative">
-
+    <div class="position-absolute" wire:loading
+        wire:target="leaveApply,toggleInfo,applyingTo,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,resetFields">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <div class="applyContainer bg-white position-relative">
         @if($showinfoMessage)
         <div class="hide-leave-info p-2 px-2 mb-2 mt-2 rounded d-flex gap-2 align-items-center">
@@ -32,9 +39,9 @@
                                 @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
-                                @if($employeeGender && $employeeGender->gender === 'Female')
+                                @if($employeeGender && $employeeGender === 'FEMALE')
                                 <option value="Maternity Leave">Maternity Leave</option>
-                                @elseif($employeeGender && $employeeGender->gender === 'Male')
+                                @elseif($employeeGender && $employeeGender === 'MALE')
                                 <option value="Paternity Leave">Paternity Leave</option>
                                 @endif
                                 <option value="Sick Leave">Sick Leave</option>
@@ -184,11 +191,11 @@
                         <img class=" navProfileImg rounded-circle" height="40" width="40" src="data:image/jpeg;base64,{{($selectedManagerDetails->image)}} ">
                     </div>
                     @else
-                    @if($selectedManagerDetails->gender=='Female')
+                    @if($selectedManagerDetails->gender=='FEMALE')
                     <div class="employee-profile-image-container">
                         <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
-                    @elseif($selectedManagerDetails->gender=='Male')
+                    @elseif($selectedManagerDetails->gender=='MALE')
                     <div class="employee-profile-image-container">
                         <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
@@ -262,11 +269,11 @@
                                 <img class="rounded-circle navProfileImg" src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
-                            @if($employee['gender'] == 'Female')
+                            @if($employee['gender'] === 'FEMALE')
                             <div class="employee-profile-image-container">
                                 <img src="{{ asset('images/female-default.jpg') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
-                            @elseif($employee['gender'] == 'Male')
+                            @elseif($employee['gender'] === 'MALE')
                             <div class="employee-profile-image-container">
                                 <img src="{{ asset('images/male-default.png') }}" class="navProfileImg rounded-circle" alt="Default Image">
                             </div>
@@ -401,7 +408,7 @@
                                         </div>
                                         @else
                                         <div class="employee-profile-image-container">
-                                            <img src="{{ $employee->gender === 'Male' ? asset('images/male-default.png') : ($employee->gender === 'Female' ? asset('images/female-default.jpg') : asset('images/user.jpg')) }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                            <img src="{{ $employee->gender === 'MALE' ? asset('images/male-default.png') : ($employee->gender === 'FEMALE' ? asset('images/female-default.jpg') : asset('images/user.jpg')) }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
                                         </div>
                                         @endif
                                     </div>
@@ -446,8 +453,8 @@
             </div>
 
             <div class="buttons-leave">
-                <button type="submit" class=" submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
-                <button type="button" class=" cancel-btn" wire:click="resetFields">Cancel</button>
+                <button type="submit" class="submit-btn" @if(isset($insufficientBalance)) disabled @endif>Submit</button>
+                <button type="button" class="cancel-btn" wire:click="resetFields">Cancel</button>
             </div>
         </form>
     </div>
