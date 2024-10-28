@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpFoundation\Response;
@@ -42,7 +43,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
 
-        if ($e instanceof \Illuminate\Database\QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException) {
+        if ($e instanceof QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException) {
             Log::error($e->getMessage(), ['exception' => $e]);
             return response()->view('errors.db_error');
         }
