@@ -98,7 +98,8 @@ class Regularisation extends Component
     public $currentDate;
     public $defaultApply=1;
     public $currentDateTime;
-   
+
+    public $intervalInMinutes = 5; 
     public $shift_times = []; 
     public $count=0;
 
@@ -225,7 +226,9 @@ class Regularisation extends Component
         if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
         {
 
+        
             FlashMessageHelper::flashError('Attendance Period is locked');
+            sleep(1);
               $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
@@ -234,7 +237,9 @@ class Regularisation extends Component
         {
            
             FlashMessageHelper::flashError('Attendance Period is locked');
+            sleep(1);
               $this->showAlert=true;
+
               // Stop further execution if the date is in the future
               return;
         }
@@ -243,6 +248,7 @@ class Regularisation extends Component
               // Throw a validation error or set a message for the user
            
               FlashMessageHelper::flashError('Attendance Period is locked');
+              sleep(1);
               $this->showAlert=true;
               // Stop further execution if the date is in the future
               return;
@@ -251,6 +257,7 @@ class Regularisation extends Component
             // Throw a validation error or set a message for the user
             
             FlashMessageHelper::flashError('Future dates are not allowed for regularisation');
+            sleep(1);
             $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
@@ -258,6 +265,7 @@ class Regularisation extends Component
         if ($selectedDate->EqualTo(Carbon::today())) {
             // Throw a validation error or set a message for the user
             FlashMessageHelper::flashError('Current date is not applicable for regularisation');
+            sleep(1);
             $this->showAlert=true;
             // Stop further execution if the date is in the future
             return;
@@ -266,6 +274,7 @@ class Regularisation extends Component
             // Throw a validation error for weekends
             
             FlashMessageHelper::flashError('This is a weekend. Regularisation is not allowed on weekends');
+            sleep(1);
             $this->showAlert=true;
             return;
         }
@@ -273,23 +282,27 @@ class Regularisation extends Component
         if ($holiday) {
 
             FlashMessageHelper::flashError('The selected date is a holiday. Regularisation is not allowed on holidays.');
+            sleep(1);
             $this->showAlert=true;
             return;
         }
         if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
             FlashMessageHelper::flashError('You are on leave on this date.');
+            sleep(1);
             $this->showAlert=true;
             return;
         }
         if ($this->isEmployeeRegularisedOnDate($selectedDate) ){
 
             FlashMessageHelper::flashError('Your regularisation is already approved for this date.');
+            sleep(1);
             $this->showAlert=true;
             return;
         }
         if($this->isEmployeeAppRegOnDate($selectedDate))
         { 
             FlashMessageHelper::flashError('You have already applied regularisation for  this date.Its status is pending from manager side.');
+            sleep(1);
             $this->showAlert=true;
             return;
 
