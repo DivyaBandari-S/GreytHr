@@ -6535,8 +6535,8 @@ select .yearSelect {
     color: var(--main-heading-color);
 }
 .privacycontentlinks {
-    color: #3a9efd;
-    text-decoration: none;
+    color:  var(--main-heading-color);;
+    /* text-decoration: none; */
 }
 
 .privacyheadings {
