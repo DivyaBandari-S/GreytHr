@@ -117,11 +117,37 @@ class ProfileInfo extends Component
             $this->isResigned = '';
         }
     }
+
     protected function getEducationData($empId)
     {
         $info = EmpPersonalInfo::where('emp_id', $empId)->first();
-        return $info ? json_decode($info->qualification, true) : [];
+    
+        if ($info && !empty($info->qualification)) {
+            // Log the raw qualification data
+            Log::info('Raw Qualification Data: ' . $info->qualification);
+    
+            // Decode the JSON twice to handle double encoding
+            $decodedData = json_decode($info->qualification, true);
+            if (is_string($decodedData)) {
+                // If the first decode gives a string, decode it again
+                $decodedData = json_decode($decodedData, true);
+            }
+    
+            // Log the decoded data
+            Log::info('Decoded Qualification Data: ', (array) $decodedData);
+    
+            // Check if decoding was successful
+            if (is_array($decodedData)) {
+                return $decodedData;
+            } else {
+                Log::error('JSON decoding failed: ' . json_last_error_msg());
+            }
+        }
+    
+        // Return an empty array if no valid data is found
+        return [];
     }
+      
 
     public function updateProfile()
 
