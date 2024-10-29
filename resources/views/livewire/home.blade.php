@@ -46,8 +46,8 @@
 
                             </div>
                         </div>
-                        @if($loginEmpManagerDetails)
                         <div class="col-md-3 pt-4">
+                            @if($loginEmpManagerDetails)
                             <div class="new_site">
                                 <div class="new_site_ribbon">Reports To..</div>
                             </div>
@@ -66,15 +66,33 @@
                                     <div class="row p-0 desigSecondDiv">
                                         <div class="p-0 borderDiv">&nbsp;</div>
                                         <p class="mb-0 desigText" style="color: #02114f !important;">
-                                            <i class="fa-regular fa-compass me-2"></i> {{ ucwords(strtolower($loginEmpManagerDetails->job_role)) }}
+                                            @php
+                                            $jobTitle = $loginEmpManagerDetails->job_role;
+
+                                            // Replace specific titles with desired formats
+                                            $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
+                                            $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
+                                            $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
+                                            $convertedTitle = preg_replace('/\bIII\b/i', 'III', $convertedTitle);
+
+                                            // Capitalize the first letter of each word, while keeping 'II' intact
+                                            $convertedTitle = preg_replace_callback('/\b([a-z])([a-z]*)/i', function ($matches) {
+                                            return strtoupper($matches[1]) . strtolower($matches[2]);
+                                            }, $convertedTitle);
+
+                                            // Ensure 'II' and 'HR' stay capitalized after the callback
+                                            $convertedTitle = str_replace([' Ii', ' Hr', ' IIi','Iii'], [' II', ' HR', ' III'], $convertedTitle);
+                                            @endphp
+                                            <i class="fa-regular fa-compass me-2"></i> {{ $convertedTitle ? $convertedTitle : 'N/A' }}
                                         </p>
                                     </div>
                                 </div>
                             </div>
+                            @else
+                            <span></span>
+                            @endif
                         </div>
-                        @else
-                        <span></span>
-                        @endif
+
                         <div class="col-md-3 p-0">
                             <div class="morning-cardContainer w-100">
                                 <div class="morning-card w-100">
@@ -892,6 +910,8 @@
                                 Swipe Time</th>
                             <th>
                                 Sign-In / Sign-Out</th>
+                                <th>
+                                Device</th>
                         </tr>
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
@@ -901,6 +921,9 @@
                             </td>
                             <td>
                                 {{ $swipe->in_or_out }}
+                            </td>
+                            <td>
+                                {{ $swipe->sign_in_device }}
                             </td>
                         </tr>
                         @endforeach

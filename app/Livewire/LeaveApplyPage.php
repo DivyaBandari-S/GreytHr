@@ -91,7 +91,7 @@ class LeaveApplyPage extends Component
         'to_session' => 'required',
         'contact_details' => 'required',
         'reason' => 'required',
-        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
+        'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif,zip|max:1024',
     ];
 
     protected $messages = [
@@ -359,8 +359,7 @@ class LeaveApplyPage extends Component
         if (
             !$this->handleFieldUpdate('from_date') ||
             !$this->handleFieldUpdate('to_date') ||
-            !$this->handleFieldUpdate('leave_type') ||
-            !$this->handleFieldUpdate('file_paths')
+            !$this->handleFieldUpdate('leave_type')
         ) {
             return; // Stop execution if there is an error
         } else {
@@ -419,6 +418,7 @@ class LeaveApplyPage extends Component
                 'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
                 'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, gif are allowed.',
             ]);
+
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
@@ -492,7 +492,6 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->validateOnly($field);
-            $this->resetErrorBag($field);
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -590,11 +589,15 @@ class LeaveApplyPage extends Component
     }
 
     //checkfilesize
-    public function checkFileSize()
+    protected function checkFileSize()
     {
         try {
             foreach ($this->file_paths as $file) {
                 if ($file->getSize() > 1024 * 1024) {
+                    return true;
+                }
+                // Check if the file extension is 'zip'
+                if ($file->getClientOriginalExtension() === 'zip') {
                     return true;
                 }
             }
@@ -712,7 +715,8 @@ class LeaveApplyPage extends Component
     protected function checkForHolidays()
     {
         try {
-            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->exists();
+            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date]) ->whereNotNull('festivals')
+            ->where('festivals', '!=', '')->exists();
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking for holidays. Please try again.');
             return false;
@@ -1048,7 +1052,7 @@ class LeaveApplyPage extends Component
         $this->selectedManagerDetails = null;
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
-        $this->file_paths = null;
+        $this->file_paths = [];
         $this->selectedPeople = [];
     }
 
@@ -1062,7 +1066,7 @@ class LeaveApplyPage extends Component
         $managers = collect();
 
         $employeeGender = null;
-    
+
         try {
             // Fetch details for the current employee
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1079,7 +1083,7 @@ class LeaveApplyPage extends Component
                 $fullName = ucfirst(strtolower($managerDetails->first_name)) . ' ' . ucfirst(strtolower($managerDetails->last_name));
                 $this->loginEmpManager = $fullName;
                 $this->empManagerDetails = $managerDetails;
-    
+
                 // Add the logged-in manager to the collection
                 $managers->push([
                     'full_name' => $fullName,
@@ -1128,7 +1132,7 @@ class LeaveApplyPage extends Component
                     }
                 })
                 ->get(['first_name', 'last_name', 'emp_id', 'gender', 'image']);
-    
+
             // Add HR managers to the collection
             $hrManagers->each(function ($hrManager) use ($managers) {
                 $fullName = ucfirst(strtolower($hrManager->first_name)) . ' ' . ucfirst(strtolower($hrManager->last_name));
@@ -1155,7 +1159,7 @@ class LeaveApplyPage extends Component
                 'showCasualLeaveProbation' => $this->showCasualLeaveProbation,
             ]);
         }
-    
+
         return view('livewire.leave-apply-page', [
             'employeeGender' => $employeeGender,
             'calculatedNumberOfDays' => $this->calculatedNumberOfDays,
