@@ -819,7 +819,7 @@
                                             wire:click="showPopupModal">
                                             Resign
                                         </div>
-                                    @elseif($isResigned == 'pending')
+                                    @elseif($isResigned == 'Pending')
                                         <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
                                             wire:click="showPopupModal">
                                             Edit Resignation
