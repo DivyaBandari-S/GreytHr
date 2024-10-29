@@ -46,8 +46,8 @@
 
                             </div>
                         </div>
-                        @if($loginEmpManagerDetails)
                         <div class="col-md-3 pt-4">
+                            @if($loginEmpManagerDetails)
                             <div class="new_site">
                                 <div class="new_site_ribbon">Reports To..</div>
                             </div>
@@ -71,10 +71,11 @@
                                     </div>
                                 </div>
                             </div>
+                            @else
+                            <span></span>
+                            @endif
                         </div>
-                        @else
-                        <span></span>
-                        @endif
+
                         <div class="col-md-3 p-0">
                             <div class="morning-cardContainer w-100">
                                 <div class="morning-card w-100">
