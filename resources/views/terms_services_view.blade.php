@@ -4,11 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>HR Xpert</title></title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
 <body>
+<style>
+p {
+    text-transform: capitalize;
+}
+</style>
+
     <div style="padding: 0px 30px 0px 30px;">
         <div style="padding-top: 20px;">
             <img src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 12em !important; height: auto !important; margin-bottom: 10px;">
