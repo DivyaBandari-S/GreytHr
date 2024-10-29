@@ -247,7 +247,7 @@ class Home extends Component
             
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->signIn = !$this->signIn;
-            $swipeDevice = $this->determineSwipeDevice();
+           
             if ($isonleave) {
                 FlashMessageHelper::flashError( 'You cannot swipe on this date as you are on leave.');
                 return;
@@ -255,15 +255,36 @@ class Home extends Component
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
+        
+            $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device'; 
+            $agent = new Agent();
+
+            // Determine the device type
+            if ($agent->isMobile()) {
+                $deviceName = 'Mobile';
+            } elseif ($agent->isTablet()) {
+                $deviceName = 'Tablet';
+            } elseif ($agent->isDesktop()) {
+                $deviceName = 'Desktop/Laptop';
+            } else {
+                $deviceName = 'Unknown Device';
+            }
+            Log::info('Creating SwipeRecord:', [
+                'emp_id' => $this->employeeDetails->emp_id,
+                'swipe_time' => now()->format('H:i:s'),
+                'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
+                'sign_in_device' => $deviceName,
+            ]);
+        
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
                 'in_or_out' => $this->swipes
                     ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                     : 'IN',
-                'sign_in_device' => $swipeDevice,
+                'sign_in_device' => $deviceName,
             ]);
-            
+           
             $flashMessage = $this->swipes
                 ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                 : 'IN';
