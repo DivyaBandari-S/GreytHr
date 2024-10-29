@@ -161,7 +161,7 @@ class Catalog extends Component
     {
         if (in_array($field, ['mail', 'description', 'subject','category','selected_equipment','distributor_name','mobile'])) {
             $this->validateOnly($field, $this->rules);
-        } 
+        }
     }
     public function resetDialogs() {
         // Close all dialogs
