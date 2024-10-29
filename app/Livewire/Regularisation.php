@@ -610,7 +610,7 @@ public function nextMonth()
             'regularisation_date' => '2024-03-26',
         ]);
         FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
-       
+        sleep(1);
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];

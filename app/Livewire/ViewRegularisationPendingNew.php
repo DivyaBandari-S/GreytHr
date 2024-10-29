@@ -45,6 +45,8 @@ class ViewRegularisationPendingNew extends Component
     public $openRejectPopupModal=false;
 
     public $openApprovePopupModal=false;
+
+    public $openAccordions = [];
     public $countofregularisations;
     public function mount()
     {
@@ -105,15 +107,13 @@ class ViewRegularisationPendingNew extends Component
 
     public function toggleActiveAccordion($id)
     {
-        
-        if ($this->openAccordionForActive === $id) {
-            $this->openAccordionForActive = null; // Close if already open
-           
-            
-        } else {
-            $this->openAccordionForActive = $id; // Set to open
-          
-        }
+            if (in_array($id, $this->openAccordions)) {
+                // Remove from open accordions if already open
+                $this->openAccordions = array_diff($this->openAccordions, [$id]);
+            } else {
+                // Add to open accordions if not open
+                $this->openAccordions[] = $id;
+            }
     }
     public function openRejectModal()
     {

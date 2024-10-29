@@ -96,14 +96,17 @@
 
 
 
-                <div class="arrow-btn"wire:click="toggleActiveAccordion({{ $r->id }})"style="color:{{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}">
-                <i class="fa fa-angle-{{ $openAccordionForActive === $r->id ? 'up' : 'down' }}"style="color:{{ $openAccordionForActive === $r->id ? '#3a9efd' : '#778899' }}"></i>
+                <div class="arrow-btn" wire:click="toggleActiveAccordion({{ $r->id }})"
+                        style="color:{{ in_array($r->id, $openAccordions) ? '#3a9efd' : '#778899' }};
+                                border:1px solid {{ in_array($r->id, $openAccordions) ? '#3a9efd' : '#778899' }};">
+                        <i class="fa fa-angle-{{ in_array($r->id, $openAccordions) ? 'up' : 'down' }}"
+                        style="color:{{ in_array($r->id, $openAccordions) ? '#3a9efd' : '#778899' }}"></i>
                 </div>
 
             </div>
 
         </div>
-        @if($openAccordionForActive === $r->id)
+        @if(in_array($r->id, $openAccordions))
         <div class="accordion-body m-0 p-0"style="display:block ;">
 
             <div style="width:100%; height:1px; border-bottom:1px solid #ccc;"></div>
@@ -120,9 +123,9 @@
 
                     <span style="font-size: 11px; font-weight: 500;"></span>
 
-                    @if (!empty($lastItem['date']))
-                    {{ date('d)', strtotime($lastItem['date'])) }} {{ date('M Y', strtotime($lastItem['date'])) }}
-                    @endif
+                                @if (!empty($lastItem['date']))
+                                {{ date('d)', strtotime($lastItem['date'])) }} {{ date('M Y', strtotime($lastItem['date'])) }}
+                                @endif
                     @else
                     {{ date('d', strtotime($firstItem['date'])) }} {{ date('M Y', strtotime($lastItem['date'])) }}
                     @endif
