@@ -672,6 +672,8 @@ class Tasks extends Component
         $this->validate_tasks = false;
         $this->assigneeList = false;
         $this->followersList=false;
+        $this->validationFollowerMessage = '';
+        $this->selectedPeopleForFollowers = [];
     }
 
     public function filter()

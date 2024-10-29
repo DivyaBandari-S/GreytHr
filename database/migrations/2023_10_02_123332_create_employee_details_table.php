@@ -40,6 +40,7 @@ return new class extends Migration
             $table->string('job_mode',20)->nullable();
             $table->json('emp_domain')->nullable();
             $table->string('notice_period',10)->nullable();
+            $table->date('last_working_date')->nullable();
             $table->date('resignation_date')->nullable();
             $table->text('resignation_reason')->nullable();
             $table->string('extension',10)->nullable();

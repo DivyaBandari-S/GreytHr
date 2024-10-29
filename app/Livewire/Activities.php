@@ -164,7 +164,21 @@ class Activities extends Component
         $this->comments = Comment::where('emp_id', $this->currentCardEmpId)->get();
     }
    
- 
+    public function handleRadioChange($value)
+    {
+        // Define the URLs based on the radio button value
+        $urls = [
+            'posts' => '/everyone',
+            'activities' => '/Feeds',
+            'post-requests'=>'/emp-post-requests'
+            // Add more mappings if necessary
+        ];
+    
+        // Redirect to the correct URL
+        if (array_key_exists($value, $urls)) {
+            return redirect()->to($urls[$value]);
+        }
+    }
     public function saveEmojiReaction()
     {
         // Get the authenticated user's employee ID

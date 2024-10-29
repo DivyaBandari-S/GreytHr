@@ -46,6 +46,7 @@ class EmployeeDetails extends Authenticatable
         'resignation_date',
         'resignation_reason',
         'notice_period',
+        'last_working_date',
         'extension',
         'experience',
         'shift_type',
@@ -83,6 +84,10 @@ class EmployeeDetails extends Authenticatable
     public function empDepartment()
     {
         return $this->hasOne(EmpDepartment::class, 'dept_id', 'dept_id');
+    }
+    public function empSubDepartment()
+    {
+        return $this->hasOne(EmpSubDepartments::class, 'dept_id', 'dept_id');
     }
     public function leaveRequests()
     {

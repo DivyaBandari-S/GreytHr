@@ -372,9 +372,9 @@
                                     @if(isset($leaveRequest['approvedLeaveRequest']->image) && $leaveRequest['approvedLeaveRequest']->image !== 'null' && $leaveRequest['approvedLeaveRequest']->image != "Null" && $leaveRequest['approvedLeaveRequest']->image != "")
                                     <img height="40" width="40" src="data:image/jpeg;base64,{{ ($leaveRequest['approvedLeaveRequest']->image) }}" style="border-radius: 50%;">
                                     @else
-                                    @if($leaveRequest['approvedLeaveRequest']->gender === 'Female')
+                                    @if($leaveRequest['approvedLeaveRequest']->gender === 'FEMALE')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                    @elseif($leaveRequest['approvedLeaveRequest']->gender === 'Male')
+                                    @elseif($leaveRequest['approvedLeaveRequest']->gender === 'MALE')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
                                     @else
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
