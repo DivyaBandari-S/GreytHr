@@ -10,9 +10,7 @@
 
 <body>
 <style>
-p {
-    text-transform: capitalize;
-}
+
 </style>
 
     <div style="padding: 0px 30px 0px 30px;">
@@ -63,7 +61,7 @@ p {
             <p class="privacyContent">
                 1. We do not permit any other person using the registered sections under your name; or </p>
             <p class="privacyContent">
-                2. access through a single name being made available to multiple users on a network. You are responsible for preventing such unauthorized use. </p>
+                2. Access through a single name being made available to multiple users on a network. You are responsible for preventing such unauthorized use. </p>
             <p class="privacyContent">
                 3.You are responsible for maintaining the confidentiality of Your User Account access information and passwords. You shall be responsible for all uses of this Website registrations and passwords created by you, whether or not authorized by You. You are not authorized to share your password or other account access information with any other party, temporarily or permanently, and breach of this obligation may tantamount to disabling Your account. You agree to immediately notify the Company of any unauthorized use of your Account.
             </p>
@@ -76,38 +74,38 @@ p {
                 Your license for access and use of the Service and any information, materials or documents (collectively defined as "Content and Materials") therein are subject to the following restrictions and prohibitions on use: You agree that either you or a third party facilitated by you will not:
             </p>
             <p class="privacyContent">
-                1.copy, print (except for the express limited purpose mentioned in this agreement), republish, display, distribute, transmit, sell, rent, lease, loan or otherwise make available in any form or by any means all or any portion of the Site or any Content and Materials retrieved there from;
+                1.Copy, print (except for the express limited purpose mentioned in this agreement), republish, display, distribute, transmit, sell, rent, lease, loan or otherwise make available in any form or by any means all or any portion of the Site or any Content and Materials retrieved there from;
             </p>
 
             <p class="privacyContent">
-                2. use the Site or any materials obtained from the Site to develop, of as a component of, any information, storage and retrieval system, database, information base, or similar resource (in any media now existing or hereafter developed), that is offered for commercial distribution of any kind, including through sale, license, lease, rental, subscription, or any other commercial distribution mechanism;
+                2. Use the Site or any materials obtained from the Site to develop, of as a component of, any information, storage and retrieval system, database, information base, or similar resource (in any media now existing or hereafter developed), that is offered for commercial distribution of any kind, including through sale, license, lease, rental, subscription, or any other commercial distribution mechanism;
             </p>
             <p class="privacyContent">
-                3.create compilations or derivative works of any Content and Materials from the Site; use any Content and Materials from the Site in any manner that may infringe any copyright, intellectual property right, proprietary right, or property right of us or any third parties;
+                3.Create compilations or derivative works of any Content and Materials from the Site; use any Content and Materials from the Site in any manner that may infringe any copyright, intellectual property right, proprietary right, or property right of us or any third parties;
             </p>
             <p class="privacyContent">
-                4.remove, change or obscure any copyright notice or other proprietary notice or terms of use contained in the Site;
+                4.Remove, change or obscure any copyright notice or other proprietary notice or terms of use contained in the Site;
             </p>
             <p class="privacyContent">
-                5.make any portion of the Site available through the Internet or any other technology existing now or developed in the future;
+                5.Make any portion of the Site available through the Internet or any other technology existing now or developed in the future;
             </p>
             <p class="privacyContent">
-                6.remove, decompile, disassemble or reverse engineer any Site software or use any network monitoring or discovery software to determine the Site architecture;
+                6.Remove, decompile, disassemble or reverse engineer any Site software or use any network monitoring or discovery software to determine the Site architecture;
             </p>
             <p class="privacyContent">
-                7. use any automatic or manual process to harvest information from the Site;
+                7. Use any automatic or manual process to harvest information from the Site;
             </p>
             <p class="privacyContent">
-                8. use the Site for the purpose of gathering information for or transmitting unsolicited commercial email; email that makes use of headers, invalid or nonexistent domain names, or other means of deceptive addressing; and unsolicited telephone calls or facsimile transmissions; </p>
+                8. Use the Site for the purpose of gathering information for or transmitting unsolicited commercial email; email that makes use of headers, invalid or nonexistent domain names, or other means of deceptive addressing; and unsolicited telephone calls or facsimile transmissions; </p>
             <p class="privacyContent">
-                9. use the Site in a manner that violates any state or national law regulating email, facsimile transmissions or telephone solicitations; and </p>
+                9. Use the Site in a manner that violates any state or national law regulating email, facsimile transmissions or telephone solicitations; and </p>
 
             <p class="privacyContent">
-                10. export or re-export the Site or any portion thereof, or any software available on or through the Site, in violation of the export control laws or regulations of India, take any action that imposes an unreasonable or disproportionately large load on any of this Website's infrastructure; </p>
+                10. Export or re-export the Site or any portion thereof, or any software available on or through the Site, in violation of the export control laws or regulations of India, take any action that imposes an unreasonable or disproportionately large load on any of this Website's infrastructure; </p>
             <p class="privacyContent">
                 11. Violate, or attempt to violate the security of the Website or gain un-authorized access to any information regarded as private by other users or persons, including but not limited to, accessing data and information not intended for You, or logging onto a server or account which You are not authorized to access, attempting to probe, scan or test the vulnerability of a system or network or attempting to breach security or authentication; </p>
             <p class="privacyContent">
-                12. allow any person other than the authorized person(s) named in the Service or explicitly notified to the Company, to use the Service.
+                12. Allow any person other than the authorized person(s) named in the Service or explicitly notified to the Company, to use the Service.
             </p>
 
         </div>
@@ -116,7 +114,7 @@ p {
             <p class="privacyContent">You may provide links to the Site, provided:</p>
 
             <p class="privacyContent">
-                1. that You do not remove or obscure, by framing or otherwise, advertisements, the copyright notice, or other notices on the Site,
+                1. That You do not remove or obscure, by framing or otherwise, advertisements, the copyright notice, or other notices on the Site,
             </p>
             <p class="privacyContent">
                 2. Your site does not engage in illegal or pornographic activities, and
@@ -193,7 +191,7 @@ p {
             <p class="privacyContent">By accepting these Terms, You agree to indemnify, defend and hold us and our partners, agents, officers, directors, employees, subcontractors, successors, assigns, third party suppliers of information and documents, attorneys, advertisers, product and service providers, representatives and affiliates (collectively, "Affiliated Parties") harmless from and against any liability, loss, claim and expense, arising out of or in connection with:</p>
 
             <p class="privacyContent">
-                1. your violation or breach of these Terms or any applicable law or regulation;
+                1. Your violation or breach of these Terms or any applicable law or regulation;
             </p>
             <p class="privacyContent">
                 2. Your violation of any rights of any third party;
@@ -202,7 +200,7 @@ p {
                 3. Your use or misuse of the Site or Service;
             </p>
             <p class="privacyContent">
-                4. any and all third-party claims based upon the content of any communications transmitted by You.
+                4. Any and all third-party claims based upon the content of any communications transmitted by You.
             </p>
 
         </div>
@@ -266,13 +264,13 @@ p {
             <p class="privacyContent">We may tell you about third party products or services, including via the Service or through Unite marketplace. HR-Xpert may offer products and services on behalf of third parties who are not affiliated with Us ("Third Party Products"). If you decide to use any Third Party Products, you are solely responsible for your selection, review of separate product terms, website terms and privacy policies. We are not affiliated with these Third Party Products and do not endorse or recommend Third Party Products even if such products are marketed or distributed via our products or website or Unite marketplace. You agree that the third parties, and not HR-Xpert, are solely responsible for their Product's performance (including technical support), the content on their websites and their use or disclosure of your data. HR-Xpert will not be liable for any damages, claims or liabilities arising from the third parties, Third Party Products or Third Party Sites. You agree that you will</p>
 
             <p class="privacyContent">
-                1.comply with all applicable laws, regulation and ordinances;
+                1.Comply with all applicable laws, regulation and ordinances;
             </p>
             <p class="privacyContent">
-                2. not use the Third Party Products in any manner that would infringe or violate the rights of HR-Xpert or any other party; and
+                2. Not use the Third Party Products in any manner that would infringe or violate the rights of HR-Xpert or any other party; and
             </p>
             <p class="privacyContent">
-                3. not use the Third Party Products in any way in furtherance of criminal, fraudulent or other unlawful activity.Your use or misuse of the Site or Service;
+                3. Not use the Third Party Products in any way in furtherance of criminal, fraudulent or other unlawful activity.Your use or misuse of the Site or Service;
             </p>
         </div>
 
@@ -373,10 +371,10 @@ p {
             <p class="privacyContent">All notices to be provided by HR-Xpert to You under this Agreement may be delivered in writing</p>
 
             <p class="privacyContent">
-                1. by Courier, mail to the contact mailing address provided by You on any Form; or
+                1. By Courier, mail to the contact mailing address provided by You on any Form; or
             </p>
             <p class="privacyContent">
-                2. electronic mail to the electronic mail address provided You. You must give notice to HR-Xpert in writing by Courier or Mail to the registered address available on the Contact Us section of our corporate website www.HR-Xpert.com.
+                2. Electronic mail to the electronic mail address provided You. You must give notice to HR-Xpert in writing by Courier or Mail to the registered address available on the Contact Us section of our corporate website www.HR-Xpert.com.
             </p>
             <p class="privacyContent">
                 3. All notices shall be deemed to have been given immediately upon delivery by electronic mail, or if otherwise delivered upon receipt or, if earlier, two (2) business days after being deposited in the mail or with a Courier as permitted above.

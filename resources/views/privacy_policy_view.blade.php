@@ -10,9 +10,7 @@
 
 <body>
 <style>
-p {
-    text-transform: capitalize;
-}
+
 </style>
     <div style="padding: 0px 30px 0px 30px;">
         <div style="padding-top: 20px;">
@@ -31,7 +29,7 @@ p {
             At HR-Expert Software Pvt. Ltd., our subsidiaries and affiliated companies ('we' or 'us' or 'our', "The Company", "HR-Expert", "HR-Expert mobile application", "Service", "Site", "Product"), we collect and process personal information ("Customer Data"). We are committed to protecting your privacy. This Privacy Policy sets forth HR-Expert's policy with respect to the Personal Data and other information that is collected from visitors ("you", "your", "visitors") to the Site.
         </p>
         <p class="privacyContent">
-            Please note that your use of the Site and any of our Services is subject to our Terms of Service which you may access at the homepage. Our Privacy Policy and <span class="privacycontentlinks"> <a  class="privacycontentlinks"  href="/Terms&Services">Terms of Use</a></span> are integral to your use of our Site. Your continued use of the Site will constitute your acceptance of the Terms of Service and this Privacy Policy.
+            Please note that your use of the Site and any of our Services is subject to our Terms of Service which you may access at the homepage. Our Privacy Policy and <span class="privacycontentlinks"> <a  class="privacycontentlinks"  href="/Terms&Services">Terms of Service</a></span> are integral to your use of our Site. Your continued use of the Site will constitute your acceptance of the Terms of Service and this Privacy Policy.
         </p>
         <p class="privacyheadings">Scope of the Privacy Policy</p>
         <p class="privacyContent"> The Privacy Policy applies to HR-Expert's clients (individuals or entities who have subscribed to our services and have agreed to those applicable Terms of our Service for the subscription) "Customers" and individuals or entities who have gained access to this Service through our Customers. If you are a user of our Services as an employee of Our Customer, we recommend you clarify your queries with your employer.
@@ -243,7 +241,7 @@ p {
             <hr>
             <div class="row" style="display: flex;">
                 <div>
-                <span class="privacycontentlinks"><a class="privacycontentlinks"  href="/emplogin">Home</a></span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Privacy&Policy">Privacy Policy</a> </span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Terms&Services">Terms of Use</a> </span>
+                <span class="privacycontentlinks"><a class="privacycontentlinks"  href="/emplogin">Home</a></span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Privacy&Policy">Privacy Policy</a> </span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Terms&Services">Terms of Service</a> </span>
 
             </div>
             <div style="margin-left: auto;">
