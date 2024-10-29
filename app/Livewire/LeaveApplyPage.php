@@ -359,8 +359,7 @@ class LeaveApplyPage extends Component
         if (
             !$this->handleFieldUpdate('from_date') ||
             !$this->handleFieldUpdate('to_date') ||
-            !$this->handleFieldUpdate('leave_type') ||
-            !$this->handleFieldUpdate('file_paths')
+            !$this->handleFieldUpdate('leave_type')
         ) {
             return; // Stop execution if there is an error
         } else {
@@ -413,12 +412,13 @@ class LeaveApplyPage extends Component
             $filePaths = $this->file_paths ?? [];
             // Validate file uploads
             $validator = Validator::make($filePaths, [
-                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif,zip|max:1024',
+                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024',
             ], [
                 'file_paths.*.required' => 'You must upload at least one file.',
                 'file_paths.*.max' => 'Your file is larger than 1 MB. Please select a file of up to 1 MB only.',
                 'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, gif are allowed.',
             ]);
+
 
             if ($validator->fails()) {
                 return response()->json($validator->errors(), 422);
@@ -492,7 +492,6 @@ class LeaveApplyPage extends Component
     {
         try {
             $this->validateOnly($field);
-            $this->resetErrorBag($field);
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -598,7 +597,7 @@ class LeaveApplyPage extends Component
                     return true;
                 }
                 // Check if the file extension is 'zip'
-                if ($file->getClientOriginalExtension() === '.zip') {
+                if ($file->getClientOriginalExtension() === 'zip') {
                     return true;
                 }
             }
@@ -1053,7 +1052,7 @@ class LeaveApplyPage extends Component
         $this->selectedManagerDetails = null;
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
-        $this->file_paths = null;
+        $this->file_paths = [];
         $this->selectedPeople = [];
     }
 

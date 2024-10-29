@@ -444,8 +444,8 @@
             <div class="form-group mt-3">
                 <label for="file_paths">Attachments</label> <br>
                 <input id="file_paths" style="font-size:12px;" type="file"
-                    wire:model.lazy="file_paths"
-                    wire:keydown.debounce.500ms="validateField('file_paths')"
+                    wire:model="file_paths"
+                    wire:keydown="validateField('file_paths')"
                     wire:change="handleFieldUpdate('file_paths')"
                     multiple />
                 @error('file_paths.*') <span class="text-danger">{{ $message }}</span> @enderror <br>
