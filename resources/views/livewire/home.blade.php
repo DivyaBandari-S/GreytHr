@@ -910,6 +910,8 @@
                                 Swipe Time</th>
                             <th>
                                 Sign-In / Sign-Out</th>
+                                <th>
+                                Device</th>
                         </tr>
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
                         @foreach ($swipeDetails as $swipe)
@@ -919,6 +921,9 @@
                             </td>
                             <td>
                                 {{ $swipe->in_or_out }}
+                            </td>
+                            <td>
+                                {{ $swipe->sign_in_device }}
                             </td>
                         </tr>
                         @endforeach

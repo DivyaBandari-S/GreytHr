@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('swipe_time',50);
             $table->string('in_or_out',10);
             $table->string('is_regularized',10)->nullable();
+            $table->string('sign_in_device',100)->nullable();
             $table->foreign('emp_id')
             ->references('emp_id')
             ->on('employee_details')
