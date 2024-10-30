@@ -256,7 +256,7 @@ class Home extends Component
                 return;
             }
         
-            $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device'; 
+            // $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device'; 
             $agent = new Agent();
 
             // Determine the device type
