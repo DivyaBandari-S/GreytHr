@@ -195,7 +195,6 @@ class Catalog extends Component
 
     public function LapRequest()
     {
-	
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -204,7 +203,7 @@ class Catalog extends Component
 
     public function DistributionRequest(){
 	
-        $this->DistributionRequestaceessDialog = true; 
+        $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New Distribution Request';
