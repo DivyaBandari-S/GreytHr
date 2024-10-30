@@ -383,7 +383,7 @@
                         <div
                             style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             EDUCATION</div>
-                        <div style="margin-left: 15px; font-size: 12px">
+                        {{-- <div style="margin-left: 15px; font-size: 12px">
                             @if ($qualifications && count($qualifications) > 0)
                             @foreach ($qualifications as $index => $education)
                             @if (count($qualifications) > 1)
@@ -417,7 +417,53 @@
                                 No Data Found
                             </div>
                             @endif
+                        </div> --}}
+                        <div style="margin-left: 15px; font-size: 12px">
+                            @if ($qualifications && count($qualifications) > 0)
+                                @php $detailIndex = 1; @endphp  <!-- Initialize the counter for Education Details -->
+                                
+                                @foreach ($qualifications as $index => $education)
+                                    @if (is_array($education) && count($education) > 0)
+                                        <!-- Show "Education Details" without a number for the first qualification -->
+                                        @if (count($qualifications) === 1)
+                                            <div style="margin-bottom: 10px;">
+                                                <strong style="font-size: 13px; color: #778899;">Education Details</strong>
+                                            </div>
+                                        @elseif (count($qualifications) > 1)
+                                            <div style="margin-bottom: 10px;">
+                                                <strong style="font-size: 13px; color: #778899;">Education Details {{ $detailIndex }}</strong>
+                                            </div>
+                                        @endif
+                                        
+                                        <div class="row p-0" style="margin-bottom: 10px;">
+                                            <div class="col-4" style="font-size: 11px; color: #778899;">Degree</div>
+                                            <div class="col-4" style="font-size: 11px; color: #778899;">Year of Passing</div>
+                                            <div class="col-4" style="font-size: 11px; color: #778899;">Institution</div>
+                                        </div>
+                        
+                                        <div class="row p-0" style="margin-bottom: 10px;">
+                                            <div class="col-4" style="font-size: 12px; color: #000;">
+                                                {{ $education['level'] ?? 'N/A' }}
+                                            </div>
+                                            <div class="col-4" style="font-size: 12px; color: #000;">
+                                                {{ $education['year_of_passing'] ?? 'N/A' }}
+                                            </div>
+                                            <div class="col-4" style="font-size: 12px; color: #000;">
+                                                {{ $education['institution'] ?? 'N/A' }}
+                                            </div>
+                                        </div>
+                        
+                                        @php $detailIndex++; @endphp  <!-- Increment the counter for the next qualification -->
+                                    @endif
+                                @endforeach
+                            @else
+                                <div style="font-size: 12px; color: #778899; margin-left: 15px">
+                                    No Data Found
+                                </div>
+                            @endif
                         </div>
+                        
+                        
                         {{-- <div class="col" style="margin-left: 15px; font-size: 12px">
                             <div style="font-size: 12px; color: #778899; margin-left: 15px">
                                 No Data Found
@@ -564,13 +610,19 @@
                         <div class="row p-3 gx-0">
                             <div class="col-12 col-md-3">
 
-                            @if (
-                            $employeeDetails->empParentDetails &&
+                                @if ($employeeDetails->empParentDetails &&
+                                !empty(optional($employeeDetails->empParentDetails)->father_image) &&
+                                optional($employeeDetails->empParentDetails)->father_image !== null && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->father_image) &&
-                            optional($employeeDetails->empParentDetails)->father_image !== 'null')
-                            <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
-                                height="100" width="100"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->father_image) }}">
+                            optional($employeeDetails->empParentDetails)->father_image != 'null' && $employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->father_image) &&
+                            optional($employeeDetails->empParentDetails)->father_image != 'Null' && $employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->father_image) &&
+                            optional($employeeDetails->empParentDetails)->father_image != '')
+                                                <!-- It's binary, convert to base64 -->
+                                                <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
+                                                height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->father_image) }}" alt="base"
+                                                     /> 
                             @else
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
                                 height="100" width="100" src="{{ asset('images/male-default.png') }}"
@@ -685,13 +737,20 @@
                         DETAILS</div>
                     <div class="row p-3 gx-0">
                         <div class="col-12 col-md-3">
-                            @if (
-                            $employeeDetails->empParentDetails &&
+                            @if ( $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
-                            optional($employeeDetails->empParentDetails)->mother_image !== 'null')
+                            optional($employeeDetails->empParentDetails)->mother_image !== null &&  $employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
+                            optional($employeeDetails->empParentDetails)->mother_image != 'null' &&  $employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
+                            optional($employeeDetails->empParentDetails)->mother_image != 'Null' &&  $employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
+                            optional($employeeDetails->empParentDetails)->mother_image != '')
+                            <!-- It's binary, convert to base64 -->
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
-                                height="100" width="100"
-                                src="{{ 'data:image/jpeg;base64,' . base64_encode(optional($employeeDetails->empParentDetails)->mother_image) }}">
+                            height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->mother_image) }}" alt="base"
+                               />
+                           
                             @else
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
                                 height="100" width="100" src="{{ asset('images/female-default.jpg') }}"
@@ -713,7 +772,7 @@
                                 ucwords(strtolower($motherLastName)),
                                 );
                                 $displayName = $combinedName ?: '-';
-                                $paddingLeft = $displayValue === '-' ? '39px' : '0px';
+                                $paddingLeft = $displayName === '-' ? '39px' : '0px';
                                 @endphp
 
                                 <span style="padding-left: {{ $paddingLeft }};">
