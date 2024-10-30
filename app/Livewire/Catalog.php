@@ -161,7 +161,7 @@ class Catalog extends Component
     {
         if (in_array($field, ['mail', 'description', 'subject','category','selected_equipment','distributor_name','mobile'])) {
             $this->validateOnly($field, $this->rules);
-        } 
+        }
     }
     public function resetDialogs() {
         // Close all dialogs
@@ -184,79 +184,71 @@ class Catalog extends Component
         $this->reset(['category']);
         $this->category = 'Request For IT';
     }
-    
-    public function AddRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function AddRequest(){
+
         $this->AddRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Distribution List Request';
     }
-    
+
     public function LapRequest()
     {
-        $this->resetDialogs(); // Close other dialogs
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Laptop Request';
     }
-    
-    public function DistributionRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
-        $this->DistributionRequestaceessDialog = true; 
+
+    public function DistributionRequest(){
+	
+        $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New Distribution Request';
     }
-    
-    public function MailRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function MailRequest(){
+
         $this->MailRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New Mailbox Request';
     }
-    
-    public function DevopsRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function DevopsRequest(){
+
+  
         $this->DevopsRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Devops Access Request';
     }
-    
-    public function IdRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function IdRequest(){
+	
         $this->IdRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New ID Card';
     }
-    
-    public function MmsRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function MmsRequest(){
+	
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'MMS Request';
     }
-    
-    public function DesktopRequest()
-    {
-        $this->resetDialogs(); // Close other dialogs
+
+    public function DesktopRequest(){
+	
         $this->DesktopRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Desktop Request';
     }
-    
     public function openItRequestaccess()
     {
         $this->ItRequestaceessDialog = true; // Open the Sec 80C modal
