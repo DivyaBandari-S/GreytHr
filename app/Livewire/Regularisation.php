@@ -32,6 +32,8 @@ class Regularisation extends Component
 
     public $pendingRegularisations;
 
+
+
     public $historyRegularisations;
 
     public $regularisationEntriesArray;
@@ -225,126 +227,193 @@ class Regularisation extends Component
         $selecteddateday=$selectedDate->day;
         if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
         {
-
-        
-            if (!session()->has('flash_error')) {
+            $sessionKey = 'attendance_lock_flash_time';
+            $currentTimestamp = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey) || $currentTimestamp->diffInSeconds(session($sessionKey)) >= 5) {
+                sleep(1);
                 FlashMessageHelper::flashError('Attendance Period is locked');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey => $currentTimestamp]);
             }
-              $this->showAlert=true;
-              // Stop further execution if the date is in the future
-              return;
+    
+            // Stop further execution
+            return;
+    
+          
         }
         if((Carbon::today()->month)-$selecteddatemonth==1&&$selecteddateyear==(Carbon::today()->year)&&$selecteddateday<25)
         {
            
-            if (!session()->has('flash_error')) {
+            $sessionKey1 = 'attendance_lock_flash_time1';
+            $currentTimestamp1 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey1) || $currentTimestamp1->diffInSeconds(session($sessionKey1)) >= 5) {
+                sleep(1);
                 FlashMessageHelper::flashError('Attendance Period is locked');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey1 => $currentTimestamp1]);
             }
-              $this->showAlert=true;
-
-              // Stop further execution if the date is in the future
-              return;
+    
+            // Stop further execution
+            return;
         }
         if($selecteddateyear<=(Carbon::today()->year)&&(Carbon::today()->month)-$selecteddatemonth>1&&$selecteddateday<=(Carbon::today()->year))
         {
               // Throw a validation error or set a message for the user
            
-              if (!session()->has('flash_error')) {
+              $sessionKey3 = 'attendance_lock1_flash_time';
+            $currentTimestamp3 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey3) || $currentTimestamp3->diffInSeconds(session($sessionKey3)) >= 5) {
+                sleep(1);
                 FlashMessageHelper::flashError('Attendance Period is locked');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey3 => $currentTimestamp3]);
             }
-              $this->showAlert=true;
-              // Stop further execution if the date is in the future
-              return;
+    
+            // Stop further execution
+            return;
         }
         if ($selectedDate->greaterThan(Carbon::today())) {
             // Throw a validation error or set a message for the user
             
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('Future dates are not allowed for regularisation');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey4 = 'future_date_flash_time';
+            $currentTimestamp4 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey4) || $currentTimestamp4->diffInSeconds(session($sessionKey4)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('Future Dates are not applicable for regularisation.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey4 => $currentTimestamp4]);
             }
-         
-           
-            $this->showAlert=true;
-            // Stop further execution if the date is in the future
+    
+            // Stop further execution
             return;
         }
         if ($selectedDate->EqualTo(Carbon::today())) {
-            // Throw a validation error or set a message for the user
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('Current date is not applicable for regularisation');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey5 = 'today_date_flash_time';
+            $currentTimestamp5 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey5) || $currentTimestamp5->diffInSeconds(session($sessionKey5)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('Today date is not applicable for Regularisation.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey5 => $currentTimestamp5]);
             }
-          
-            $this->showAlert=true;
-            // Stop further execution if the date is in the future
+    
+            // Stop further execution
             return;
         }
         if ($selectedDate->isWeekend()) {
             // Throw a validation error for weekends
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('This is a weekend. Regularisation is not allowed on weekends');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey6 = 'weekend_flash_time';
+            $currentTimestamp6 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey6) || $currentTimestamp6->diffInSeconds(session($sessionKey6)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('This is a weekend.Regularisation is not allowed on weekends.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey6 => $currentTimestamp6]);
             }
-
-            $this->showAlert=true;
+    
+            // Stop further execution
             return;
         }
         $holiday = HolidayCalendar::where('date', $selectedDate->toDateString())->first();
         if ($holiday) {
 
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('The selected date is a holiday. Regularisation is not allowed on holidays.');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey7 = 'holiday_flash_time';
+            $currentTimestamp7 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey7) || $currentTimestamp7->diffInSeconds(session($sessionKey7)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('This is Holiday.Regularisation is not allowed on holidays.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey7 => $currentTimestamp7]);
             }
-           
-            $this->showAlert=true;
+    
+            // Stop further execution
             return;
         }
         if ($this->isEmployeeLeaveOnDate($selectedDate, auth()->guard('emp')->user()->emp_id)) {
-            
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('You are on leave on this date.');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey8 = 'Employee_Leave_On_Date';
+            $currentTimestamp8 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey8) || $currentTimestamp8->diffInSeconds(session($sessionKey8)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('You are on leave On this Date.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey8 => $currentTimestamp8]);
             }
-            $this->showAlert=true;
+    
+            // Stop further execution
             return;
         }
         if ($this->isEmployeeRegularisedOnDate($selectedDate) ){
 
-            
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('Your regularisation is already approved for this date.');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
+            $sessionKey9 = 'Employee_Regularised_On_Date';
+            $currentTimestamp9 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey9) || $currentTimestamp9->diffInSeconds(session($sessionKey9)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('Your Regularisation is Already Approved For this date.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey9 => $currentTimestamp9]);
             }
-            $this->showAlert=true;
+    
+            // Stop further execution
             return;
         }
         if($this->isEmployeeAppRegOnDate($selectedDate))
         { 
-            if (!session()->has('flash_error')) {
-                FlashMessageHelper::flashError('You have already applied regularisation for  this date.Its status is pending from manager side.');
-                session()->flash('flash_error', true); // Set a session flash to indicate a message has been flashed
-                sleep(2);
-            }
             
-            $this->showAlert=true;
+            return;
+            $sessionKey10 = 'employee_regularised_on_date';
+            $currentTimestamp10 = now();
+    
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey10) || $currentTimestamp10->diffInSeconds(session($sessionKey10)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('You have already applied regularisation for  this date.Its status is pending from manager side.');
+                $this->showAlert = true;
+    
+                // Update the session with the current timestamp
+                session([$sessionKey10 => $currentTimestamp10]);
+            }
+    
+            // Stop further execution
             return;
 
         }
-
+ 
         if (!in_array($date, $this->selectedDates)) {
             // Add the date to the selectedDates array only if it's not already selected
             $this->selectedDates[] = $date;
@@ -371,7 +440,8 @@ class Regularisation extends Component
                 // Handle invalid input format for end time
             }
         }
-         
+       
+        
     }
     private function isEmployeeRegularisedOnDate($date)
     {
@@ -646,11 +716,8 @@ public function nextMonth()
             'status'=>5,
             'regularisation_date' => '2024-03-26',
         ]);
-        if (!session()->has('flash_success')) {
-            FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created successfully');
-            session()->flash('flash_success', true); // Set a session flash to indicate a message has been flashed
-            sleep(2);
-        }
+        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
+        sleep(1);
         $this->remarks='';
         $regularisationEntriesJson = [];
         $this->regularisationEntries = [];
