@@ -202,7 +202,6 @@ class Catalog extends Component
     }
 
     public function DistributionRequest(){
-
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -210,25 +209,21 @@ class Catalog extends Component
     }
 
     public function MailRequest(){
-
-        $this->MailRequestaceessDialog = true; 
+        $this->MailRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New Mailbox Request';
     }
 
     public function DevopsRequest(){
-
-  
-        $this->DevopsRequestaceessDialog = true; 
+        $this->DevopsRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'Devops Access Request';
     }
 
     public function IdRequest(){
-	
-        $this->IdRequestaceessDialog = true; 
+        $this->IdRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
         $this->category = 'New ID Card';
