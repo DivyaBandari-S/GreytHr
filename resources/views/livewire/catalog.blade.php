@@ -49,7 +49,7 @@
                                 <p style="font-size: 12px;"><b>Add Members to Distribution List</b></p>
                                 <div class="row m-0">
                                     <div class="col-12 text-center mb-2">
-                                        <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em;">
+                                    <img src="images/it-images/add-user.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="AddRequest" >Add Members to Distribution List</p>
@@ -64,7 +64,7 @@
                 <div class="modal-body">
                     <div class="row m-0">
                         <div class="col-4 m-auto">
-                            <img src="https://snow.payg.in/89294c29871c7510279786a50cbb35b5.iix?t=medium" style="height:4em">
+                        <img src="images/it-images/add-user.png" style="height:4em;" />
                         </div>
                         <div class="col-8 m-auto">
                             <p style="font-size:15px;">Use this Catalogue Item to raise New Request for Adding a New Distribution List</p>
@@ -217,7 +217,7 @@
                                 <p style="font-size: 12px;"><b>Request for IT Accessories</b></p>
                                 <div class="row m-0">
                                     <div class="col-12 text-center mb-2">
-                                        <img src="https://snow.payg.in/cc7c281087dc7150fc21ed7bbbbb356b.iix?t=medium" style="width: 4em; height:4em;">
+                                    <img src="images/it-images/headphone.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="ItRequest">Request for IT Accessories</p>
@@ -430,7 +430,7 @@
                                 <p style="font-size: 12px;"><b>Add Members to Mailbox</b></p>
                                 <div class="row m-0">
                                     <div class="col-12 text-center mb-2">
-                                        <img src="https://snow.payg.in/c3d8c429871c7510279786a50cbb3564.iix?t=medium" style="height:4em;">
+                                    <img src="images/it-images/add.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="MailRequest">Add Members to Mailbox</p>
@@ -628,7 +628,7 @@
                                     <p style="font-size: 12px;"><b>ID Card Request</b></p>
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2">
-                                            <img src="https://snow.payg.in/673ac469871c7510279786a50cbb3563.iix?t=medium" style="height:4em;">
+                                        <img src="images/it-images/id-card.png" style="height:4em;" />
                                         </div>
                                         <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="IdRequest">New ID Card Request</p>
@@ -836,7 +836,7 @@
                                     <p style="font-size: 12px;"><b>MMS Account Request</b></p>
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2">
-                                            <img src="https://snow.payg.in/79ee2f8187c0b510e34c63d70cbb355f.iix?t=medium" style="width: 4em; height:4em;">
+                                        <img src="images/it-images/mobile-phone.png" style="height:4em;" />
                                         </div>
                                         <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="MmsRequest">MMS Account Request</p>
@@ -853,7 +853,7 @@
                                                     <div class="modal-body">
                                                         <div class="row m-0">
                                                             <div class="col-4 m-auto">
-                                                                <img src="https://snow.payg.in/79ee2f8187c0b510e34c63d70cbb355f.iix?t=medium" style="height:7em">
+                                                            <img src="images/it-images/mobile-phone.png" style="height:4em;" />
                                                             </div>
                                                             <div class="col-8 m-auto">
                                                                 <p style="font-size:15px;">MMS Account Request</p>
@@ -1045,7 +1045,7 @@
                                     <p style="font-size: 12px;"><b>New Distribution List</b></p>
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2" style="font-size:12px">
-                                            <img src="https://snow.payg.in/feaa4ca9871c7510279786a50cbb3576.iix?t=medium" style="height:4em;">
+                                        <img src="images/it-images/distribution.png" style="height:4em;"  class="me-3"/>
                                         </div>
                                         <div class="col-12 mb-2">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;font-size:12px;" wire:click="DistributionRequest">New Distribution List</p>
@@ -1062,7 +1062,7 @@
                                                     <div class="modal-body">
                                                         <div class="row m-0">
                                                             <div class="col-4 m-auto">
-                                                                <img src="https://snow.payg.in/feaa4ca9871c7510279786a50cbb3576.iix?t=medium" style="height:7em">
+                                                            <img src="images/it-images/laptop.png"  class="me-3" style="height:4em;" />
                                                             </div>
                                                             <div class="col-8 m-auto">
                                                                 <p style="font-size:15px;">Use this Catalogue Item to raise New Request for Adding a New Distribution List</p>
@@ -1460,7 +1460,7 @@
                                     <p style="font-size: 12px;"><b>New Mailbox Request</b></p>
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2" style="font-size:12px">
-                                            <img src="https://snow.payg.in/723bc4e9871c7510279786a50cbb3585.iix?t=medium" style="width: 4em; height:4em;">
+                                        <img src="images/it-images/mail.png" class="me-3" style="height:4em;" />
                                         </div>
                                         <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;">New Mailbox Request</p>
