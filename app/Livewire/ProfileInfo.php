@@ -107,8 +107,9 @@ class ProfileInfo extends Component
             } elseif($resig_requests->status == '2') {
                 $this->isResigned = 'Approved';
                 $this->last_working_date = EmployeeDetails::where('emp_id', $empId)->value('last_working_date');
-                $this->approvedOn = EmployeeDetails::where('emp_id', $empId)->value('resignation_date');
+                $this->approvedOn = EmpResignations::where('emp_id', $empId)->where('status','2')->value('approved_date');
                 // dd( $this->last_working_date);
+
             }
             elseif($resig_requests->status == '2') {
                 $this->isResigned = 'Rejected';
@@ -121,21 +122,21 @@ class ProfileInfo extends Component
     protected function getEducationData($empId)
     {
         $info = EmpPersonalInfo::where('emp_id', $empId)->first();
-    
+
         if ($info && !empty($info->qualification)) {
             // Log the raw qualification data
             Log::info('Raw Qualification Data: ' . $info->qualification);
-    
+
             // Decode the JSON twice to handle double encoding
             $decodedData = json_decode($info->qualification, true);
             if (is_string($decodedData)) {
                 // If the first decode gives a string, decode it again
                 $decodedData = json_decode($decodedData, true);
             }
-    
+
             // Log the decoded data
             Log::info('Decoded Qualification Data: ', (array) $decodedData);
-    
+
             // Check if decoding was successful
             if (is_array($decodedData)) {
                 return $decodedData;
@@ -143,11 +144,11 @@ class ProfileInfo extends Component
                 Log::error('JSON decoding failed: ' . json_last_error_msg());
             }
         }
-    
+
         // Return an empty array if no valid data is found
         return [];
     }
-      
+
 
     public function updateProfile()
 
@@ -337,7 +338,7 @@ class ProfileInfo extends Component
     public function showPopupModal()
     {
         $this->showModal = true;
-        $this->activeTab ='employeeJobDetails';   
+        $this->activeTab ='employeeJobDetails';
     }
     public function closeModal()
     {

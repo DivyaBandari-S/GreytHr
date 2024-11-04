@@ -13,6 +13,7 @@ class EmpResignations extends Model
         'emp_id',
         'reason',
         'resignation_date',
+        'approved_date',
         'last_working_day',
         'comments',
         'signature',
