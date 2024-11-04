@@ -364,7 +364,7 @@ class Regularisation extends Component
             // Check if the flash message has been shown recently (e.g., within 5 seconds)
             if (!session()->has($sessionKey8) || $currentTimestamp8->diffInSeconds(session($sessionKey8)) >= 5) {
                 sleep(1);
-                FlashMessageHelper::flashError('You are on leave On this Date.');
+                FlashMessageHelper::flashError('You are on leave on this Date.');
                 $this->showAlert = true;
     
                 // Update the session with the current timestamp
@@ -440,7 +440,7 @@ class Regularisation extends Component
                 // Handle invalid input format for end time
             }
         }
-       
+
         
     }
     private function isEmployeeRegularisedOnDate($date)
