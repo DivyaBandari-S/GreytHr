@@ -65,89 +65,91 @@
                 </div>
                 <div class=" mt-2 bg-white d-flex align-items-center ">
                     <div class="d-flex ms-auto">
-                        @if($showFeedsDialog)
-                        <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header d-flex justify-content-between align-items-center">
-                                        <p class="mb-0">Create a post</p>
-                                        <span class="img d-flex align-items-end">
-                                            <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
-                                        </span>
-                                    </div>
-                                    @if(Session::has('error'))
-                                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert"
-                                        style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
-                                        {{ Session::get('error') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
-                                    </div>
-                                    @endif
-                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                                        <div class="modal-body" style="padding: 20px;">
-                                            <!-- Category Selection -->
-                                            <div class="form-group mb-15">
-                                                <label for="category" style="font-size: 12px;">You are posting in:</label>
-                                                <select wire:model.lazy="category" class="form-select" id="category" style="font-size: 12px;">
-                                                    <option value="">Select Category</option>
-                                                    <option value="Appreciations">Appreciations</option>
-
-                                                    <option value="Companynews">Company News</option>
-                                                    <option value="Events">Events</option>
-                                                    <option value="Everyone">Everyone</option>
-                                                    <option value="Hyderabad">Hyderabad</option>
-                                                    <option value="US">US</option>
-                                                </select>
-                                                @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-
-                                            <!-- Description Input -->
-                                            <div class="form-group mt-1">
-                                                <label for="content">Write something here:</label>
-                                                <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
-                                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                            <!-- File Input -->
-
-                                            <!-- File Upload -->
-                                            <div class="form-group mt-1">
-                                                <label for="file_path">Upload Attachment:</label>
-                                                <div style="text-align: start;">
-
-
-                                                    <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" >
-                                                    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-
-                                                    <!-- Success Message -->
-
-
-                                                </div>
-                                            </div>
-                                            <div id="flash-message-container" wire:loading.remove wire:target="file_path" style="display: none;margin-top:10px" class="alert alert-success"
-                                                role="alert"></div>
-                                        </div>
-
-                                        <!-- Submit & Cancel Buttons -->
-                                        <div class="modal-footer border-top">
-                                            <div class="d-flex justify-content-center w-100">
-                                                <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
-                                                <button wire:click="closeFeeds" type="button" class="cancel-btn1 ms-2">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-
-
-
-
-                                </div>
+                    @if($showFeedsDialog)
+                <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header d-flex justify-content-between align-items-center">
+                                <p class="mb-0">Create a post</p>
+                                <span class="img d-flex align-items-end">
+                                    <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
+                                </span>
                             </div>
+
+
+
+                            @if(Session::has('error'))
+                            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert"
+                                style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
+                                {{ Session::get('error') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
+                            </div>
+                            @endif
+                            <form wire:submit.prevent="submit" enctype="multipart/form-data">
+                                <div class="modal-body" style="padding: 20px;width: 80%;">
+                                    <!-- Category Selection -->
+                                    <div class="form-group mb-15" >
+                                        <label for="category">You are posting in:</label>
+                                        <select wire:model.lazy="category" class="form-select" id="category">
+                                            <option value="">Select Category</option>
+                                            <option value="Appreciations">Appreciations</option>
+                                         
+                                            <option value="Companynews">Company News</option>
+                                            <option value="Events">Events</option>
+                                            <option value="Everyone">Everyone</option>
+                                            <option value="Hyderabad">Hyderabad</option>
+                                            <option value="US">US</option>
+                                        </select>
+                                        @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+
+                                    <!-- Description Input -->
+                                    <div class="form-group mt-3">
+                                        <label for="content">Write something here:</label>
+                                        <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+                                        @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+                                    </div>
+                                    <!-- File Input -->
+                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
+                                        role="alert"></div>
+                                    <!-- File Upload -->
+                                    <div class="form-group mt-3">
+                                        <label for="file_path">Upload Attachment:</label>
+                                        <div style="text-align: start;">
+
+
+                                            <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" onchange="handleImageChange()">
+                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+
+                                            <!-- Success Message -->
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Submit & Cancel Buttons -->
+                                <div class="modal-footer border-top">
+                                    <div class="d-flex justify-content-center w-100">
+                                        <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
+                                        <button wire:click="closeFeeds" type="button" class="cancel-btn1 ms-2">Cancel</button>
+                                    </div>
+                                </div>
+                            </form>
+
+
+
+
+
                         </div>
+                    </div>
+                </div>
 
 
 
 
-                        <div class="modal-backdrop fade show"></div>
-                        @endif
+                <div class="modal-backdrop fade show"></div>
+                @endif
                     </div>
                 </div>
             </div>

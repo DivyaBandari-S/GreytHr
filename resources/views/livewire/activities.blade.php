@@ -70,7 +70,7 @@
             <div class="d-flex ms-auto">
 
 
-                @if($showFeedsDialog)
+            @if($showFeedsDialog)
                 <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -91,14 +91,14 @@
                             </div>
                             @endif
                             <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                                <div class="modal-body" style="padding: 20px;">
+                                <div class="modal-body" style="padding: 20px;width: 80%;">
                                     <!-- Category Selection -->
-                                    <div class="form-group mb-15">
+                                    <div class="form-group mb-15" >
                                         <label for="category">You are posting in:</label>
                                         <select wire:model.lazy="category" class="form-select" id="category">
                                             <option value="">Select Category</option>
                                             <option value="Appreciations">Appreciations</option>
-                                          
+                                         
                                             <option value="Companynews">Company News</option>
                                             <option value="Events">Events</option>
                                             <option value="Everyone">Everyone</option>
@@ -109,7 +109,7 @@
                                     </div>
 
                                     <!-- Description Input -->
-                                    <div class="form-group mt-1">
+                                    <div class="form-group mt-3">
                                         <label for="content">Write something here:</label>
                                         <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
                                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
@@ -118,7 +118,7 @@
                                     <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
                                         role="alert"></div>
                                     <!-- File Upload -->
-                                    <div class="form-group mt-1">
+                                    <div class="form-group mt-3">
                                         <label for="file_path">Upload Attachment:</label>
                                         <div style="text-align: start;">
 

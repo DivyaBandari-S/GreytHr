@@ -61,18 +61,18 @@ class EmpPostrequest extends Component
             }
             return redirect()->to('/everyone');
         }
-    }
+    } 
     public function downloadImage()
     {
         if ($this->imageUrl) {
             // Decode the Base64 data if necessary
             $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageUrl));
- 
+
             // Determine MIME type and file extension
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mimeType = finfo_buffer($finfo, $fileData);
             finfo_close($finfo);
- 
+
             $extension = '';
             switch ($mimeType) {
                 case 'image/jpeg':
@@ -87,7 +87,7 @@ class EmpPostrequest extends Component
                 default:
                     return abort(415, 'Unsupported Media Type');
             }
- 
+
             // Prepare file name and response
             $fileName = 'image-' . time() . '.' . $extension;
             return response()->streamDownload(
@@ -103,6 +103,7 @@ class EmpPostrequest extends Component
         }
         return abort(404, 'Image not found');
     }
+
     public function handleRadioChange($value)
     {
         // Define the URLs based on the radio button value
