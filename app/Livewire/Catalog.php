@@ -202,7 +202,7 @@ class Catalog extends Component
     }
 
     public function DistributionRequest(){
-	
+
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
