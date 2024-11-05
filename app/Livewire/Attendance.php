@@ -764,7 +764,7 @@ class Attendance extends Component
     }
     private function isHolidayOnDate($date)
     {
-        $checkHoliday=HolidayCalendar::where('date',$date)->exists(); 
+        $checkHoliday=HolidayCalendar::where('date',$date)->exists();
         return $checkHoliday;  
     }
     //This function will help us to check if the employee is on leave for this particular date or not

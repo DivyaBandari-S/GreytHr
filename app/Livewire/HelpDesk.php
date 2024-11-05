@@ -108,7 +108,7 @@ public $closedSearch = '';
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])->get();
 
         $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->selectedPeople = [];
@@ -122,7 +122,7 @@ public $closedSearch = '';
             ->orderBy('created_at', 'desc')
             ->get();
         // dd( $this->records);
-        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
@@ -558,7 +558,7 @@ public $closedSearch = '';
         $companyId = Auth::user()->company_id;
     
         // Fetch people data based on company ID and search term
-        $this->peopleData = EmployeeDetails::whereJsonContains('company_id', $companyId)
+        $this->peopleData = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->where(function ($query) {
                 $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
                       ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
@@ -596,11 +596,11 @@ public $closedSearch = '';
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])->get();
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
 
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+        $this->peoples = EmployeeDetails::where('company_id', $companyId) ->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
