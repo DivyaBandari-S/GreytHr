@@ -764,7 +764,7 @@ class Attendance extends Component
     }
     private function isHolidayOnDate($date)
     {
-        $checkHoliday=HolidayCalendar::where('date',$date)->exists(); 
+        $checkHoliday=HolidayCalendar::where('date',$date)->exists();
         return $checkHoliday;  
     }
     //This function will help us to check if the employee is on leave for this particular date or not
@@ -2043,7 +2043,7 @@ class Attendance extends Component
                     $this->excessHrs='-';
                 }
                 elseif ($this->first_in_time == $this->last_out_time) {
-                    $this->shortFallHrs = '08:59';
+                    $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs='-';
                 } else {
