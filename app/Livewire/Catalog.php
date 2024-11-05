@@ -124,7 +124,10 @@ class Catalog extends Component
     $employeeId = auth()->guard('emp')->user()->emp_id;
     $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
     $companyId = auth()->guard('emp')->user()->company_id;
-    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+    ->whereNotIn('employee_status', ['rejected', 'terminated'])
+    ->get();
+
     if ($this->employeeDetails) {
         // Combine first and last names
         $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
@@ -144,8 +147,9 @@ class Catalog extends Component
         ->orderBy('created_at', 'desc')
         ->get();
     // dd( $this->records);
-    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-            ->orderBy('first_name')
+   $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+    ->whereNotIn('employee_status', ['rejected', 'terminated'])
+->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
 
@@ -164,9 +168,10 @@ class Catalog extends Component
         }
     }
     public function resetDialogs() {
+        $this->AddRequestaceessDialog = false;
         // Close all dialogs
         $this->ItRequestaceessDialog = false;
-        $this->AddRequestaceessDialog = false;
+    
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
         $this->MailRequestaceessDialog = false;
@@ -181,12 +186,12 @@ class Catalog extends Component
         $this->resetDialogs(); // Close other dialogs
         $this->ItRequestaceessDialog = true; 
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','cc_to']);
         $this->category = 'Request For IT';
     }
 
     public function AddRequest(){
-
+        $this->resetDialogs();
         $this->AddRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
@@ -195,6 +200,7 @@ class Catalog extends Component
 
     public function LapRequest()
     {
+        $this->resetDialogs();
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -202,6 +208,7 @@ class Catalog extends Component
     }
 
     public function DistributionRequest(){
+        $this->resetDialogs();
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -209,6 +216,7 @@ class Catalog extends Component
     }
 
     public function MailRequest(){
+        $this->resetDialogs();
         $this->MailRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -216,6 +224,7 @@ class Catalog extends Component
     }
 
     public function DevopsRequest(){
+        $this->resetDialogs();
         $this->DevopsRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -223,6 +232,7 @@ class Catalog extends Component
     }
 
     public function IdRequest(){
+        $this->resetDialogs();
         $this->IdRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -230,7 +240,7 @@ class Catalog extends Component
     }
 
     public function MmsRequest(){
-	
+        $this->resetDialogs();
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category']);
@@ -238,7 +248,7 @@ class Catalog extends Component
     }
 
     public function DesktopRequest(){
-	
+        $this->resetDialogs();
         $this->DesktopRequestaceessDialog = true; 
         $this->showModal = true;
         $this->reset(['category']);
@@ -466,7 +476,8 @@ class Catalog extends Component
         $companyId = Auth::user()->company_id;
     
         // Fetch people data based on company ID and search term
-        $this->peopleData = EmployeeDetails::whereJsonContains('company_id', $companyId)
+        $this->peopleData =  EmployeeDetails::whereJsonContains('company_id', $companyId)
+    ->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->where(function ($query) {
                 $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
                       ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
@@ -511,51 +522,44 @@ class Catalog extends Component
         // Update cc_to field
         $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
     }
-    
     public function updatedSelectedPeople()
 {
-    // Ensure $this->addselectedPeople is always an array
- 
-    // Update the cc_to field based on the selected people
-  
-
-    // Ensure $this->selectedPeople is always an array
+    // Ensure $this->selectedPeople is an array
     if (!is_array($this->selectedPeople)) {
-        $this->selectedPeople = [];  // Initialize as an empty array if it's not already an array
+        $this->selectedPeople = [];
     }
 
-    // Limit the selection in selectedPeople to only one
+    // Limit selection to only one person
     if (count($this->selectedPeople) > 1) {
         if (!session()->get('flash_message_shown')) {
             FlashMessageHelper::flashWarning('You can only select 1 person.');
             session()->put('flash_message_shown', true);
         }
-        // Limit to the first selected person
         $this->selectedPeople = array_slice($this->selectedPeople, 0, 1);
     } else {
-        // Reset the session flag to allow flash messages in the future
         session()->forget('flash_message_shown');
+    }
 
-        // Handle the case when at least one person is selected
-        if (!empty($this->selectedPeople)) {
-            // Get the last selected person's ID
-            $lastSelectedId = end($this->selectedPeople);
-
-            // Retrieve the selected person's details from the database
-            $lastSelectedPerson = EmployeeDetails::where('emp_id', $lastSelectedId)->first();
-
-            // If the person exists, update the email and mobile fields
-            if ($lastSelectedPerson) {
-                $this->mail = $lastSelectedPerson->email;
-                $this->mobile = $lastSelectedPerson->emergency_contact;
-            }
-        } else {
-            // Clear the email and mobile fields if no one is selected
-            $this->mail = null;
-            $this->mobile = null;
+    // Update the name display if a person is selected
+    $this->selectedPeopleNames = [];
+    foreach ($this->selectedPeople as $empId) {
+        $person = EmployeeDetails::where('emp_id', $empId)->first();
+        if ($person) {
+            $this->selectedPeopleNames[] = $person->first_name . ' ' . $person->last_name;
         }
     }
+
+    // Update the email and mobile if only one person is selected
+    if (!empty($this->selectedPeople)) {
+        $selectedPerson = EmployeeDetails::where('emp_id', $this->selectedPeople[0])->first();
+        $this->mail = $selectedPerson->email ?? null;
+        $this->mobile = $selectedPerson->emergency_contact ?? null;
+    } else {
+        $this->mail = null;
+        $this->mobile = null;
+    }
 }
+
 
     
     public function NamesSearch()
@@ -919,7 +923,10 @@ class Catalog extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+           $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+        ->whereNotIn('employee_status', ['rejected', 'terminated'])
+        ->get();
+    
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
         $employee = auth()->guard('emp')->user();

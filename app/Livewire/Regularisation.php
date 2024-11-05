@@ -395,7 +395,7 @@ class Regularisation extends Component
         if($this->isEmployeeAppRegOnDate($selectedDate))
         { 
             
-            return;
+        
             $sessionKey10 = 'employee_regularised_on_date';
             $currentTimestamp10 = now();
     
