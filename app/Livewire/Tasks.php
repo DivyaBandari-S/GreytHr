@@ -19,6 +19,8 @@ use \Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Helpers\FlashMessageHelper;
+use Illuminate\Support\Facades\Validator;
+
 
 class Tasks extends Component
 {
@@ -222,16 +224,29 @@ class Tasks extends Component
     }
 
     protected $rules = [
-        'newComment' => 'required',
+        'newComment' => 'required|string|word_count:500|max:3000',
     ];
     protected $messages = [
         'newComment.required' => 'Comment is required.',
+        'newComment.word_count' => 'Comment must not exceed 500 words.',
         'image.image' => 'File must be an image.',
         'image.max' => 'Image size must not exceed 2MB.',
         'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
         'file_path.max' => 'Document size must not exceed 2MB.',
 
     ];
+    public function boot()
+    {
+        // Register custom validation rule for word count
+        Validator::extend('word_count', function ($attribute, $value, $parameters, $validator) {
+            // Get the maximum word count from parameters (default to 500)
+            $maxWords = $parameters[0] ?? 500;
+            // Count words in the comment
+            $wordCount = str_word_count($value);
+            return $wordCount <= $maxWords;
+        });
+    }
+
     public function validateField($field)
     {
 
@@ -460,8 +475,6 @@ class Tasks extends Component
 
             // Store the file as binary data
             if ($this->file_path) {
-
-
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
@@ -614,7 +627,7 @@ class Tasks extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-
+            // Log::error('Uploaded file error: ' . $e->getMessage(), ['exception' => $e]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
@@ -674,6 +687,10 @@ class Tasks extends Component
         $this->followersList=false;
         $this->validationFollowerMessage = '';
         $this->selectedPeopleForFollowers = [];
+        $this->searchTerm = '';
+        $this->filteredPeoples = []; 
+        $this->filteredFollowers =[]; 
+    
     }
 
     public function filter()
@@ -780,7 +797,7 @@ class Tasks extends Component
     public function updateComment($commentId)
     {
         $this->validate([
-            'newComment' => 'required|string',
+            'newComment' => 'required|string|word_count:500|max:3000',
         ]);
 
         $comment = TaskComment::findOrFail($commentId);
@@ -800,7 +817,7 @@ class Tasks extends Component
     public function addComment()
     {
         $this->validate([
-            'newComment' => 'required|string',
+            'newComment' => 'required|string|word_count:500|max:3000',
         ]);
         $employeeId = auth()->guard('emp')->user()->emp_id;
         TaskComment::create([
@@ -819,6 +836,7 @@ class Tasks extends Component
     public function updatedNewComment($value)
     {
         $this->newComment = ucfirst($value); // Capitalize the first letter
+        $this->validateOnly('newComment');
     }
 
     // Delete a comment

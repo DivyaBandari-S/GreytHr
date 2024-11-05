@@ -170,12 +170,18 @@ class Peoples extends Component
     public function toggleStar($employeeId)
 {
     try {
+
         // Log::info("Toggling star for employee ID: {$employeeId}");
         
         $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
         
         if ($this->employee) {
             // Log::info("Employee found: ", ['employee' => $this->employee]);
+            if ($this->employee->employee_status === 'terminated' || $this->employee->employee_status === 'resigned') {
+                // Flash error message and prevent starring
+                FlashMessageHelper::flashError('You cannot star this employee as they have been terminated or resigned.');
+                return; // Exit the function early if the status is terminated or resigned
+            }
 
             $this->starredPerson = StarredPeople::where('people_id', $employeeId)
                 ->where('starred_status', 'starred')
