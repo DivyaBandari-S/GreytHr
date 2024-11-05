@@ -70,6 +70,7 @@
             <div class="accordion-title p-2 rounded">
 
                 <!-- Display leave details here based on $leaveRequest -->
+                
 
                 <div class="accordion-content col">
 
