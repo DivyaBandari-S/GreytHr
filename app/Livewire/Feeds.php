@@ -40,8 +40,9 @@ class Feeds extends Component
    public $currentCardEmojis;
    public $card_id;
    public $file_path;
+   public $description = '';
     public $category;
-    public $description;
+  
     public $search;
 
   
@@ -367,6 +368,30 @@ class Feeds extends Component
     
         return view('feeds', compact('currentCardComments', 'sortType'));
     }
+    public function removeReaction($emojiId)
+    {
+        try {
+            // Locate the emoji based on ID
+            $emoji = Emoji::find($emojiId);
+    
+            if ($emoji && $emoji->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
+                $emoji->delete();
+    
+                // Dispatch a success message
+                FlashMessageHelper::flashSuccess('You have removed your reaction.');
+    
+                // Dispatch an event for emoji removal if needed
+                $this->dispatch('reactionRemoved', ['emojiId' => $emojiId]);
+            } else {
+                // Throw an exception if the emoji does not belong to the user
+                throw new \Exception('You can only remove your own reactions.');
+            }
+        } catch (\Exception $e) {
+            // Handle the exception and flash an error message
+            FlashMessageHelper::flashError($e->getMessage());
+        }
+    }
+    
     
     public function add_comment($emp_id)
     {

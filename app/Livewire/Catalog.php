@@ -179,6 +179,10 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
+        $this->isNames = false;
+        $this->cc_to='';
+    
+        
     }
     
     public function ItRequest()
@@ -734,15 +738,13 @@ class Catalog extends Component
         try {
             $messages=[
                 'subject.required' => 'Business Justification is required',
-            
+              'cc_to.required' =>'Add members is required',
                 'description' => 'Specific Information is required',
-                'mail.required' => ' Email  is required.',
-                'mail.email' => ' Email must be a valid email address.',
                
             ];
             $this->validate([
                 'subject' => 'required|string|max:255',
-                'mail' => 'required|email',
+               'cc_to'=>'required',
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
               
@@ -782,7 +784,7 @@ class Catalog extends Component
 
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-                'mail' => $this->mail,
+              
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_path' =>  $fileContent ,
@@ -791,6 +793,7 @@ class Catalog extends Component
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
                 'distributor_name' => 'N/A',
             ]);
 

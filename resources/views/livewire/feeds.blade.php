@@ -1,6 +1,6 @@
 <div>
   <div wire:loading
-        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds">
+        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -106,7 +106,15 @@
                                     <!-- Description Input -->
                                     <div class="form-group mt-3">
                                         <label for="content">Write something here:</label>
-                                        <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+
+                                        <textarea 
+       id="myTextarea"
+        wire:model.lazy="description" 
+        class="form-control" 
+        rows="2" 
+        style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-top: 5px;" 
+        placeholder="Enter your description here...">
+    </textarea>
                                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <!-- File Input -->
@@ -762,12 +770,13 @@
 
                                             </div>
                                             <div class="col-md-11" style="position: relative;">
-                                                <textarea
-                                                    wire:model="newComment"
-                                                    placeholder="Post your comments here.."
-                                                    name="comment"
-                                                    class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
-                    </textarea>
+                                            <textarea
+        id="comment-textarea"
+        wire:model.lazy="newComment"
+        placeholder="Post your comments here.."
+        name="comment"
+        class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
+    </textarea>
                                                 <input
                                                     type="submit"
                                                     class=" addcomment"
@@ -1475,9 +1484,14 @@
 </span>
 
                                     <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
-   
-                                    </div>
+                                    <span 
+    style="font-size: 16px; cursor: pointer; color: inherit;" 
+    wire:click="removeReaction('{{ $emoji->id }}')" 
+    onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
+    onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
+    {{ $emoji->emoji }}
+</span>
+                      </div>
                                 @endforeach
                             </div>
                         </div>
@@ -1921,7 +1935,13 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 </span>
 
                                     <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
+                                    <span 
+    style="font-size: 16px; cursor: pointer; color: inherit;" 
+    wire:click="removeReaction('{{ $emoji->id }}')" 
+    onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
+    onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
+    {{ $emoji->emoji }}
+</span>
    
                                     </div>
                                 @endforeach
@@ -2667,7 +2687,12 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
         alert('Employees do not have permission to create a post.');
     });
 </script>
+<script>
+tinymce.init({
+  selector: '#myTextarea'
+});
 
+</script>
 <script>
     document.addEventListener('click', function(event) {
         const dropdowns = document.querySelectorAll('.cus-button');
@@ -2761,7 +2786,22 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
         });
     }
 </script>
-
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        tinymce.init({
+            selector: '#comment-textarea',
+            plugins: 'lists link image preview',
+            toolbar: 'undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | outdent indent | link image | preview',
+            height: 300,
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save(); // Save content back to the textarea
+                    @this.set('newComment', editor.getContent()); // Update Livewire property
+                });
+            }
+        });
+    });
+</script>
 
 </div>
 @endif
