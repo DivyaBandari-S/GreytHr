@@ -278,7 +278,7 @@ class ViewRegularisationPendingNew extends Component
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeRejectModal();
-        FlashMessageHelper::flashError('Regularisation Request rejected successfully');
+        FlashMessageHelper::flashSuccess('Regularisation Request rejected successfully');
         $this->showAlert=true;
         $this->sendRejectionMail($id);
     }

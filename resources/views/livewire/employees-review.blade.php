@@ -144,7 +144,7 @@
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
-                    </li>v
+                    </li>
                 </ul>
             </div>
 

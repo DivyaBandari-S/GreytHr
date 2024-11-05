@@ -2043,7 +2043,7 @@ class Attendance extends Component
                     $this->excessHrs='-';
                 }
                 elseif ($this->first_in_time == $this->last_out_time) {
-                    $this->shortFallHrs = '08:59';
+                    $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs='-';
                 } else {

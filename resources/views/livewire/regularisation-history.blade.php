@@ -442,7 +442,7 @@
                 <td style="text-transform: uppercase;color:#f66;">{{$regularisationrequest->status_name}}</td>
                 @endif
                 <td>{{$regularisationrequest->approver_remarks}}</td>
-                <td>{{ \Carbon\Carbon::parse($empName->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empName->shift_end_time)->format('H:i a') }}</td>
+                <td>{{ \Carbon\Carbon::parse($empShiftStartTime)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empShiftEndTime)->format('H:i a') }}</td>
                 <td>
                     @if(empty($entry['from']))
                     10:00
