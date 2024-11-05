@@ -71,18 +71,26 @@
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
-                    <input type="{{ $showPassword ? 'text' : 'password' }}" class="form-control" id="password"
-                        placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login"
-                        wire:keydown.debounce.500ms="validateField('form.password')" />
-                    {{-- @if ($showEyeIcon)
-                        <span class="show-eye-icon" wire:click="togglePasswordVisibility">
-                            <i class="{{ $showPassword ? 'fas fa-eye' : 'fas fa-eye-slash' }}"></i>
-                        </span>
-                    @endif --}}
+                    <div class="input-group">
+                        <input type="{{ $showPassword ? 'text' : 'password' }}" class="form-control" id="password"
+                            placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login"
+                            wire:keydown.debounce.500ms="validateField('form.password')">
+
+                        @if ($showEyeIcon)
+                            <span class="input-group-text pointer" style="cursor: pointer;"
+                                wire:click="togglePasswordVisibility">
+                                <i class="{{ $showPassword ? 'fas fa-eye' : 'fas fa-eye-slash' }}"></i>
+                            </span>
+                        @endif
+                    </div>
+
                     @error('form.password')
-                        <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
+                        <p class="pt-2 px-1 text-danger">
+                            {{ str_replace('form.password', 'Password', $message) }}
+                        </p>
                     @enderror
                 </div>
+
                 <div style="margin-left: 60%; text-align: center;" wire:click="show">
                     <span><a href="#" wire:click="show" style="color: rgb(2, 17, 79);font-size:12px;">Forgot
                             Password?</a></span>
@@ -161,7 +169,7 @@
                             </h5>
                             <button type="button" class="btn-close btn-primary" data-dismiss="modal"
                                 aria-label="Close" wire:click="remove"
-                                style="background-color: white; height:10px;width:10px;" wire:ignore>
+                                style="background-color: white; height:10px;width:10px;">
                             </button>
                         </div>
                         <div class="modal-body" style="background-color: #f0f0f0; padding: 20px;">
