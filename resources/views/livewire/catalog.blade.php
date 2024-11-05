@@ -50,7 +50,6 @@
                                 <div class="row m-0">
                                     <div class="col-12 text-center mb-2">
                                     <img src="images/it-images/add-user.png" style="height:4em;" />
-                                    <img src="images/it-images/add-user.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="AddRequest" >Add Members to Distribution List</p>
@@ -65,7 +64,6 @@
                 <div class="modal-body">
                     <div class="row m-0">
                         <div class="col-4 m-auto">
-                        <img src="images/it-images/add-user.png" style="height:4em;" />
                         <img src="images/it-images/add-user.png" style="height:4em;" />
                         </div>
                         <div class="col-8 m-auto">
@@ -228,7 +226,6 @@
                                 <p style="font-size: 12px;"><b>Request for IT Accessories</b></p>
                                 <div class="row m-0">
                                     <div class="col-12 text-center mb-2">
-                                    <img src="images/it-images/headphone.png" style="height:4em;" />
                                     <img src="images/it-images/headphone.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
@@ -604,7 +601,6 @@
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2">
                                         <img src="images/it-images/id-card.png" style="height:4em;" />
-                                        <img src="images/it-images/id-card.png" style="height:4em;" />
                                         </div>
                                         <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="IdRequest">New ID Card Request</p>
@@ -791,7 +787,6 @@
                                     <div class="row m-0">
                                         <div class="col-12 text-center mb-2">
                                         <img src="images/it-images/mobile-phone.png" style="height:4em;" />
-                                        <img src="images/it-images/mobile-phone.png" style="height:4em;" />
                                         </div>
                                         <div class="col-12 mb-2" style="font-size:12px">
                                             <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="MmsRequest">MMS Account Request</p>
@@ -808,7 +803,6 @@
                                                     <div class="modal-body">
                                                         <div class="row m-0">
                                                             <div class="col-4 m-auto">
-                                                            <img src="images/it-images/mobile-phone.png" style="height:4em;" />
                                                             <img src="images/it-images/mobile-phone.png" style="height:4em;" />
                                                             </div>
                                                             <div class="col-8 m-auto">
