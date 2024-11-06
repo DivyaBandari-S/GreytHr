@@ -71,7 +71,6 @@ class EmployeesReview extends Component
     {
         $this->leaveactiveTab = $tab;
         $this->showActiveLeaveContent = ($tab === 'active');
-
     }
     public function getApprovedLeaveRequests()
     {
@@ -268,6 +267,7 @@ class EmployeesReview extends Component
             if (!is_array($companyIds)) {
                 $companyIds = [$companyIds]; // Wrap in an array if it's a single value
             }
+
             // Retrieve team members' emp_ids where the logged-in user is the manager
             $teamMembersIds = EmployeeDetails::where('manager_id', $employeeId)
                 ->where(function ($query) use ($companyIds) {
@@ -277,6 +277,10 @@ class EmployeesReview extends Component
                 })
                 ->pluck('emp_id')
                 ->toArray();
+
+            // Calculate the date 3 working days ago, excluding weekends
+            $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
+
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
@@ -286,6 +290,7 @@ class EmployeesReview extends Component
                                 ->where('cancel_status', 7);
                         });
                 })
+                ->where('created_at', '>=', $threeWorkingDaysAgo) // Exclude requests older than 3 working days
                 ->orderBy('created_at', 'desc');
 
             // Execute the query
@@ -295,10 +300,21 @@ class EmployeesReview extends Component
             FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         }
     }
+    private function subtractWorkingDays($days)
+    {
+        $date = Carbon::now();
 
+        while ($days > 0) {
+            $date->subDay();
 
+            // Check if it's a weekday (Monday to Friday)
+            if ($date->isWeekday()) {
+                $days--;
+            }
+        }
 
-
+        return $date;
+    }
 
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {

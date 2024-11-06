@@ -440,7 +440,7 @@ class Regularisation extends Component
                 // Handle invalid input format for end time
             }
         }
-       
+
         
     }
     private function isEmployeeRegularisedOnDate($date)
