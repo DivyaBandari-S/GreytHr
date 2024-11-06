@@ -623,7 +623,8 @@ class Tasks extends Component
             $this->resetFields();
             $this->loadTasks();
             $this->showDialog= false;
-
+            $this->filteredPeoples = [];
+            $this->filteredFollowers = [];
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
