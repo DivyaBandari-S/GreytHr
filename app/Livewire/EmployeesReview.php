@@ -249,7 +249,8 @@ class EmployeesReview extends Component
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
                 })
-                ->whereIn('notification_type', ['leave', 'leaveCancel'])
+                ->orWhere('assignee', $employeeId)
+                ->whereIn('notification_type', ['leave', 'leaveCancel','leaveApprove','leaveReject'])
                 ->delete();
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
