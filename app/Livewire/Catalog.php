@@ -179,8 +179,7 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
-        $this->isNames = false;
-        $this->cc_to='';
+
     
         
     }
@@ -396,53 +395,56 @@ class Catalog extends Component
     public function selectPerson($personId)
     {
         try {
-            // Check if the selected person is already in the list
-            $selectedPerson = EmployeeDetails::where('emp_id', $personId)->first();
+            // Retrieve the selected person's details
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
     
             if ($selectedPerson) {
-                if (!in_array($personId, $this->selectedPeople)) {
-                    // Ensure we don't exceed the limit of 5 selected people
-                    if (count($this->selectedPeople) >= 1) {
-                        
-                        return;
+                // Create the formatted name with the emp_id
+                $nameWithId = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+    
+                if (in_array($personId, $this->selectedPeople)) {
+                    // Add the formatted name if not already in the list
+                    if (!in_array($nameWithId, $this->selectedPeopleNames)) {
+                        // Remove any instances of the plain name
+                        $plainName = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name));
+                        $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$plainName]);
+    
+                    
                     }
-    
-                    // Add selected person's details
-                    $this->selectedPeopleNames[] = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-                    $this->selectedPeople[] = $personId;
-    
-                    // Automatically set email and mobile fields
-                    $this->mail = $selectedPerson->email;
-                    $this->mobile = $selectedPerson->emergency_contact;
+                  
                 } else {
-                    // Remove unselected person's details
-                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')']);
-                    $this->selectedPeople = array_diff($this->selectedPeople, [$personId]);
+                    // Remove the person's name from selectedPeopleNames if they are unselected
+                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$nameWithId]);
+                }
+                // Update cc_to field
+
+                
+                // Update email and mobile if there are any selected people left
+                if (!empty($this->selectedPeople)) {
+                    $lastSelectedId = end($this->selectedPeople);
+                    $lastSelectedPerson = EmployeeDetails::where('emp_id', $lastSelectedId)->first();
     
-                    // Check if there are any remaining selected people
-                    if (empty($this->selectedPeople)) {
-                        // Clear email and mobile if no one is selected
-                        $this->mail = null;
-                        $this->mobile = null;
-                    } else {
-                        // If there are still selected people, update mail and mobile with the last selected person
-                        $lastSelectedId = end($this->selectedPeople);
-                        $lastSelectedPerson = EmployeeDetails::where('emp_id', $lastSelectedId)->first();
-                        if ($lastSelectedPerson) {
-                            $this->mail = $lastSelectedPerson->email;
-                            $this->mobile = $lastSelectedPerson->emergency_contact;
-                        }
+                    if ($lastSelectedPerson) {
+                        $this->mail = $lastSelectedPerson->email;
+                        $this->mobile = $lastSelectedPerson->emergency_contact;
                     }
+                } else {
+                    // Clear email and mobile if no one is selected
+                    $this->mail = null;
+                    $this->mobile = null;
                 }
     
-                // Update cc_to field with the selected names
+                // Update cc_to field with unique selected names
                 $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+          
             }
+         
         } catch (\Exception $e) {
             Log::error('Error selecting person: ' . $e->getMessage());
             $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
+    
     
 
     public function addselectPerson($personId)
@@ -469,7 +471,7 @@ class Catalog extends Component
             }
         } catch (\Exception $e) {
             Log::error('Error selecting person: ' . $e->getMessage());
-            $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
+            $this->dispatch('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
 
@@ -514,7 +516,7 @@ class Catalog extends Component
     {
         // Ensure $this->addselectedPeople is always an array
         if (!is_array($this->addselectedPeople)) {
-            $this->selectedPeople = [];
+            $this->addselectedPeople = [];
         }
     
         // Limit the selection in addselectedPeople to a maximum of 5
@@ -534,14 +536,15 @@ class Catalog extends Component
     }
 
     // Limit selection to only one person
-    if (count($this->selectedPeople) > 1) {
-        if (!session()->get('flash_message_shown')) {
-            FlashMessageHelper::flashWarning('You can only select 1 person.');
-            session()->put('flash_message_shown', true);
+    
+        if (count($this->selectedPeople) > 1)  {
+            FlashMessageHelper::flashWarning('You can only select up to 1 people.');
+            $this->addselectedPeople = array_slice($this->addselectedPeople, 0, 1);
+            $this->selectedPeople = array_slice($this->selectedPeople, 0, 1);
         }
-        $this->selectedPeople = array_slice($this->selectedPeople, 0, 1);
-    } else {
-        session()->forget('flash_message_shown');
+
+    else {
+        $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
     }
 
     // Update the name display if a person is selected
@@ -549,7 +552,7 @@ class Catalog extends Component
     foreach ($this->selectedPeople as $empId) {
         $person = EmployeeDetails::where('emp_id', $empId)->first();
         if ($person) {
-            $this->selectedPeopleNames[] = $person->first_name . ' ' . $person->last_name;
+            $this->selectedPeopleNames[] = $person->first_name . ' ' . $person->last_name. ' #(' . $person->emp_id . ')';
         }
     }
 
@@ -568,11 +571,10 @@ class Catalog extends Component
     
     public function NamesSearch()
     {
-        $this->isNames = true;
+        $this->isNames = !$this->isNames;
 
 
-        $this->selectedPeopleNames = [];
-        $this->cc_to = '';
+  
     }
   public function DistributorRequest()
 {

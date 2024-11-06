@@ -105,7 +105,7 @@
                                                                     value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                     class="form-control"
                                                                     aria-describedby="basic-addon1"
-                                                                    >
+                                                                   readonly >
 
 
 
@@ -348,22 +348,30 @@
                                                             @endif
 
                                                         </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="selectedEquipment ">Select Equipment<span style="color:red">*</span></label>
-                                                            <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" class="form-control" style="font-size: 12px;">
-                                                            <option value="" disabled hidden>Selected Equipment</option>
-                                                               
-                                                                <option value="keyboard">Keyboard</option>
-                                                                <option value="mouse">Mouse</option>
-                                                                <option value="headset">Headset</option>
-                                                                <option value="monitor">Monitor</option>
-                                                                <option value="others">Others</option>
-                                                            </select>
+                                                        <div class="form-group mt-2" style="position: relative;">
+    <label for="selectedEquipment">Select Equipment<span style="color:red">*</span></label>
+    <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" 
+            class="form-control" style="font-size: 12px; appearance: none; padding-right: 30px;">
+        <option value="" disabled hidden>Selected Equipment</option>
+        <option value="keyboard">Keyboard</option>
+        <option value="mouse">Mouse</option>
+        <option value="headset">Headset</option>
+        <option value="monitor">Monitor</option>
+        <option value="others">Others</option>
+    </select>
+    
+    <!-- Dropdown Toggler Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
 
-                                                            @error('selected_equipment')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+    @error('selected_equipment')
+    <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
+
 
 
                                                         <div class="form-group mt-2">
@@ -688,10 +696,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -871,10 +879,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1056,10 +1064,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1238,10 +1246,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1405,7 +1413,7 @@
                                                                     <!-- Employee details input -->
 
                                                                     <input type="text" wire:click="NamesSearch"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
+                                                                    wire:model="cc_to" 
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
                                                                         >
@@ -1439,10 +1447,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
