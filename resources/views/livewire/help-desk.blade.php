@@ -87,7 +87,7 @@
                         <div class="input" type="" class="form-control placeholder-small">
                             <div style="position: relative;">
                                 <select wire:model.lazy="category" wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
-                                    <option style="color: #778899; " value="">Select Category</option>
+                                    <option style="color: #778899; " value="" hidden disabled>Select Category</option>
                                     <optgroup label="HR">
 
                                         <option value="Employee Information">Employee Information</option>
@@ -100,11 +100,9 @@
                                     </optgroup>
                                 </select>
                                 @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                <div class="dropdown-toggle-icon helpdesk-toggler">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
-                                        <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z" />
-                                    </svg>
-                                </div>
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/></svg>
 
 
 
@@ -146,16 +144,15 @@
                             <div class="input" class="form-control placeholder-small">
                                 <div style="position: relative;">
                                     <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                                        <option style="color: grey;" value="">Select Priority</option>
+                                        <option style="color: grey;" value="" hidden disabled>Select Priority</option>
                                         <option value="High">High</option>
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>
                                     </select>
-                                    <div class="dropdown-toggle-icon helpdesk-toggler" >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-down" viewBox="0 0 16 16">
-                                            <path d="M14.146 5.146a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 1 1 .708-.708L8 10.293l5.146-5.147a.5.5 0 0 1 .708 0z" />
-                                        </svg>
-                                    </div>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
                                 </div>
                             </div>
                             @error('priority') <span class="text-danger">{{ $message }}</span> @enderror

@@ -628,6 +628,7 @@ class Catalog extends Component
             'mime_type' => $mimeType,
             'cc_to' => $this->cc_to ?? '-',
             'category' => $this->category,
+            'priority' => 'N/A',
             'mail' => 'N/A',
             'mobile' => 'N/A',
         ]);
@@ -716,6 +717,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mail' => $this->mail,
                 'mobile' => $this->mobile,
+                'priority' => 'N/A',
             ]);
 
             FlashMessageHelper::flashSuccess ( 'Request created successfully.');
@@ -796,6 +798,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mobile' => 'N/A',
                 'mail' => $this->mail??'-',
+                'priority' => 'N/A',
                 'distributor_name' => 'N/A',
             ]);
 
@@ -876,6 +879,7 @@ class Catalog extends Component
             'category' => $this->category ?? '-',
             'mail' => 'N/A',
             'mobile' => 'N/A',
+            'priority' => 'N/A',
             'distributor_name' => 'N/A',
         ]);
 
