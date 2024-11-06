@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Regularisation Approval Mail</title>
+    <title>Regularization Approval Mail</title>
 </head>
 <body>
 
-    <h1>Regularisation Approval Mail</h1>
-    <p>Your regularisation request has been accepted for the following dates.</p>
+    <h1>Regularization Approval Mail</h1>
+    <p>Your regularization request has been accepted for the following dates.</p>
     
     <div style="margin-bottom: 20px;">
         <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
@@ -24,11 +24,11 @@
             @if(!empty($details['regularisationRequests']) && is_array($details['regularisationRequests']))
                     @foreach($details['regularisationRequests'] as $entry)
                         <tr>
-                            <td>{{ $details['sender_id']}}</td>
-                            <td> {{ \Carbon\Carbon::parse($entry['date'])->format('jS F Y') }} </td>
-                            <td>{{ htmlspecialchars($entry['from']) }}</td>
-                            <td>{{ htmlspecialchars($entry['to']) }}</td>
-                            <td>{{ htmlspecialchars($entry['reason']) }}</td>
+                            <td class="text-center">{{ $details['sender_id']}}</td>
+                            <td class="text-center"> {{ \Carbon\Carbon::parse($entry['date'])->format('jS F Y') }} </td>
+                            <td class="text-center">{{ htmlspecialchars($entry['from']) }}</td>
+                            <td class="text-center">{{ htmlspecialchars($entry['to']) }}</td>
+                            <td class="text-center">{{ htmlspecialchars($entry['reason']) }}</td>
                         </tr>
                     @endforeach
                   

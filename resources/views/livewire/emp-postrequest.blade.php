@@ -466,8 +466,18 @@
     
 @endif
                                
-<div class="col-md-5 ml-2" style="font-size:12px">
+<div class="col-md-2 ml-2" style="font-size:12px">
 <div class="row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+    <div class="col-md-1">
+    @if($post->status !== 'Rejected')
+        <button class="cancel-btn"
+            wire:click="rejectPost('{{ $post->id }}')" >
+            Reject
+        </button>
+  
+    @endif
+    </div>
+    <div class="col-md-1 " style="margin-left:-150px">
     @if($post->status !== 'Closed')
         <button class="post-button"
             wire:click="closePost('{{ $post->id }}')" >
@@ -479,6 +489,8 @@
             Closed
         </button>
     @endif
+        </div>
+ 
 </div>
 
             </div>  

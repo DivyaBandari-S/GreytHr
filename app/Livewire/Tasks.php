@@ -622,7 +622,7 @@ class Tasks extends Component
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
             $this->loadTasks();
-            $this->showDialog = false;
+            $this->showDialog= false;
             $this->filteredPeoples = [];
             $this->filteredFollowers = [];
         } catch (\Illuminate\Validation\ValidationException $e) {

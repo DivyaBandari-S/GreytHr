@@ -16,6 +16,8 @@ class Notification extends Component
     public $matchingLeaveRequests;
     public $senderDetails;
     public $messagenotifications;
+    public $leaveApproveNotification;
+    public $leaveRejectNotification;
     public $leavenotifications,$leavecancelnotifications;
     public $tasknotifications;
     public $totalnotifications;
@@ -33,6 +35,7 @@ class Notification extends Component
     public function fetchNotifications()
     {
         try {
+
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
             // working groupby messages notifications
 
@@ -44,6 +47,23 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
                 ->get();
                 // ->groupBy('emp_id');
+
+                $this->leaveApproveNotification = DB::table('notifications')
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+                ->where('assignee', $loggedInEmpId)
+                ->where('notification_type', 'leaveApprove')
+                ->where('message_read_at', null)
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->get();
+                // dd($this->leaveApproveNotification);
+
+                $this->leaveRejectNotification = DB::table('notifications')
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+                ->where('assignee', $loggedInEmpId)
+                ->where('notification_type', 'leaveReject')
+                ->where('message_read_at', null)
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->get();
 
             $this->leavenotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
@@ -67,8 +87,6 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
                 ->get();
 
-
-
             $this->tasknotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$loggedInEmpId])
@@ -79,7 +97,7 @@ class Notification extends Component
 
                 // ->groupBy('emp_id');
 
-                $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications);
+                $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge( $this->leaveApproveNotification)->merge($this->leaveRejectNotification);
 
                 $groupedNotifications = $allNotifications->groupBy(function($item) {
                     return $item->emp_id . '-' . $item->notification_type;
@@ -105,7 +123,7 @@ class Notification extends Component
                     ];
                 })->sortByDesc('created_at')->values();
 
-                // dd(  $this->totalnotifications);
+
             $this->totalnotificationscount = $this->totalnotifications->count();
 
 
@@ -115,8 +133,7 @@ class Notification extends Component
             ->distinct('emp_id')
             ->count('emp_id');
 
-
-
+        //    dd( $this->totalnotifications);
         } catch (\Exception $e) {
             throw $e;
         }
