@@ -57,9 +57,24 @@ class EmpPostrequest extends Component
     
             if ($success) {
                 // Set the flash message only if the status was successfully updated
-                session()->flash('message', 'Request approved.');
+                FlashMessageHelper::flashSuccess('Request approved.');
             }
             return redirect()->to('/everyone');
+        }
+    } 
+    public function rejectPost($postId)
+    {
+        $post = Post::find($postId);
+    
+        if ($post && $post->status !== 'b') {
+            $post->status = 'Rejected';
+            $success = $post->save(); // Save and check if successful
+    
+            if ($success) {
+                // Set the flash message only if the status was successfully updated
+                FlashMessageHelper::flashError( 'Request Rejected.');
+            }
+            return redirect()->to('/emp-post-requests');
         }
     } 
     public function downloadImage()
