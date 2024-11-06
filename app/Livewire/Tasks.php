@@ -622,8 +622,9 @@ class Tasks extends Component
             FlashMessageHelper::flashSuccess('Task created successfully!');
             $this->resetFields();
             $this->loadTasks();
-            $this->showDialog= false;
-
+            $this->showDialog = false;
+            $this->filteredPeoples = [];
+            $this->filteredFollowers = [];
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -684,13 +685,12 @@ class Tasks extends Component
         $this->showDialog = false;
         $this->validate_tasks = false;
         $this->assigneeList = false;
-        $this->followersList=false;
+        $this->followersList = false;
         $this->validationFollowerMessage = '';
         $this->selectedPeopleForFollowers = [];
         $this->searchTerm = '';
-        $this->filteredPeoples = []; 
-        $this->filteredFollowers =[]; 
-    
+        $this->filteredPeoples = [];
+        $this->filteredFollowers = [];
     }
 
     public function filter()
@@ -804,8 +804,6 @@ class Tasks extends Component
         $comment->update([
             'comment' => $this->newComment,
         ]);
-
-        // session()->flash('comment_message', 'Comment updated successfully.');
         FlashMessageHelper::flashSuccess('Comment updated successfully.');
         $this->showAlert = true;
 
@@ -829,7 +827,6 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-        // session()->flash('message', 'Comment added successfully.');
         FlashMessageHelper::flashSuccess('Comment added successfully.');
         $this->showAlert = true;
     }
@@ -845,13 +842,10 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            // session()->flash('comment_message', 'Comment deleted successfully.');
             FlashMessageHelper::flashSuccess('Comment deleted successfully.');
             $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
-            // Handle any exceptions that occur during the deletion process
-            // session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
             FlashMessageHelper::flashError('Failed to delete comment: ' . $e->getMessage());
         }
     }
@@ -924,8 +918,6 @@ class Tasks extends Component
         $this->fetchTaskComments($this->taskId);
         // Retrieve the authenticated employee's ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        // $companyId = Auth::user()->company_id;
-        // Fetch the company_ids for the logged-in employee
         $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
 
         // Check if companyIds is an array; decode if it's a JSON string
@@ -972,22 +964,15 @@ class Tasks extends Component
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-        // $this->records = Task::with('emp')
-        //     ->where(function ($query) use ($employeeId, $employeeName) {
-        //         $query->where('emp_id', $employeeId)
-        //             ->orWhere('assignee', 'LIKE', "%$employeeName%");
-        //     })
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
         $this->records = Task::with('emp')
-    ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
-    ->where(function ($query) use ($employeeId, $employeeName) {
-        $query->where('tasks.emp_id', $employeeId)
-            ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
-    })
-    ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
-    ->orderBy('tasks.created_at', 'desc')
-    ->get();
+            ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('tasks.emp_id', $employeeId)
+                    ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
+            })
+            ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
+            ->orderBy('tasks.created_at', 'desc')
+            ->get();
 
         $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [
