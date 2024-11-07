@@ -16,12 +16,14 @@
         "sass": "^1.56.1"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^43.3.0",
         "apexcharts": "^3.44.0",
         "dom-to-pdf": "^0.3.2",
         "font-awesome": "^4.7.0",
         "jquery.emojiarea.js": "^0.1.8-beta",
         "laravel-echo": "^1.16.1",
         "pusher-js": "^8.4.0-rc2",
+        "tinymce": "^7.4.1",
         "vuex": "^4.1.0"
     }
 }

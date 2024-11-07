@@ -24,6 +24,7 @@ class Peoples extends Component
     public $activeTab = 'starred';
     public $peopleFound = true;
     public $employeeDetails;
+
     public function setActiveTab($tab)
     {
         if ($tab === 'starred') {
@@ -138,13 +139,9 @@ class Peoples extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            // Fetch the company_ids for the logged-in employee
             $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
-
-            // Check if companyIds is an array; decode if it's a JSON string
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
             $trimmedSearchTerm = trim($this->search);
-            // Loop through each company ID and find employees
 
 
                 $this->filteredStarredPeoples = StarredPeople::where(function($query) use ($companyIdsArray) {
@@ -167,15 +164,20 @@ class Peoples extends Component
     }
 
     public $employee;
+    
     public function toggleStar($employeeId)
 {
     try {
-        // Log::info("Toggling star for employee ID: {$employeeId}");
         
         $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
         
         if ($this->employee) {
             // Log::info("Employee found: ", ['employee' => $this->employee]);
+            if ($this->employee->employee_status === 'terminated' || $this->employee->employee_status === 'resigned') {
+                // Flash error message and prevent starring
+                FlashMessageHelper::flashError('You cannot star this employee as they have been terminated or resigned.');
+                return; // Exit the function early if the status is terminated or resigned
+            }
 
             $this->starredPerson = StarredPeople::where('people_id', $employeeId)
                 ->where('starred_status', 'starred')

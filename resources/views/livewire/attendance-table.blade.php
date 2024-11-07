@@ -1,4 +1,4 @@
-<div style="height:400px;">
+<div class="attendance-table-height" style="height:400px;">
     <style>
         .date-range-container12-attendance-info {
             margin-right: 62px;

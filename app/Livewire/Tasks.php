@@ -19,6 +19,8 @@ use \Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Helpers\FlashMessageHelper;
+use Illuminate\Support\Facades\Validator;
+
 
 class Tasks extends Component
 {
@@ -222,16 +224,29 @@ class Tasks extends Component
     }
 
     protected $rules = [
-        'newComment' => 'required',
+        'newComment' => 'required|string|word_count:500|max:3000',
     ];
     protected $messages = [
         'newComment.required' => 'Comment is required.',
+        'newComment.word_count' => 'Comment must not exceed 500 words.',
         'image.image' => 'File must be an image.',
         'image.max' => 'Image size must not exceed 2MB.',
         'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
         'file_path.max' => 'Document size must not exceed 2MB.',
 
     ];
+    public function boot()
+    {
+        // Register custom validation rule for word count
+        Validator::extend('word_count', function ($attribute, $value, $parameters, $validator) {
+            // Get the maximum word count from parameters (default to 500)
+            $maxWords = $parameters[0] ?? 500;
+            // Count words in the comment
+            $wordCount = str_word_count($value);
+            return $wordCount <= $maxWords;
+        });
+    }
+
     public function validateField($field)
     {
 
@@ -460,8 +475,6 @@ class Tasks extends Component
 
             // Store the file as binary data
             if ($this->file_path) {
-
-
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
@@ -610,11 +623,12 @@ class Tasks extends Component
             $this->resetFields();
             $this->loadTasks();
             $this->showDialog= false;
-
+            $this->filteredPeoples = [];
+            $this->filteredFollowers = [];
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-
+            // Log::error('Uploaded file error: ' . $e->getMessage(), ['exception' => $e]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
@@ -671,9 +685,12 @@ class Tasks extends Component
         $this->showDialog = false;
         $this->validate_tasks = false;
         $this->assigneeList = false;
-        $this->followersList=false;
+        $this->followersList = false;
         $this->validationFollowerMessage = '';
         $this->selectedPeopleForFollowers = [];
+        $this->searchTerm = '';
+        $this->filteredPeoples = [];
+        $this->filteredFollowers = [];
     }
 
     public function filter()
@@ -780,15 +797,13 @@ class Tasks extends Component
     public function updateComment($commentId)
     {
         $this->validate([
-            'newComment' => 'required|string',
+            'newComment' => 'required|string|word_count:500|max:3000',
         ]);
 
         $comment = TaskComment::findOrFail($commentId);
         $comment->update([
             'comment' => $this->newComment,
         ]);
-
-        // session()->flash('comment_message', 'Comment updated successfully.');
         FlashMessageHelper::flashSuccess('Comment updated successfully.');
         $this->showAlert = true;
 
@@ -800,7 +815,7 @@ class Tasks extends Component
     public function addComment()
     {
         $this->validate([
-            'newComment' => 'required|string',
+            'newComment' => 'required|string|word_count:500|max:3000',
         ]);
         $employeeId = auth()->guard('emp')->user()->emp_id;
         TaskComment::create([
@@ -812,13 +827,13 @@ class Tasks extends Component
         $this->commentAdded = true; // Set the flag to indicate that a comment has been added
         $this->newComment = '';
         $this->showModal = false;
-        // session()->flash('message', 'Comment added successfully.');
         FlashMessageHelper::flashSuccess('Comment added successfully.');
         $this->showAlert = true;
     }
     public function updatedNewComment($value)
     {
         $this->newComment = ucfirst($value); // Capitalize the first letter
+        $this->validateOnly('newComment');
     }
 
     // Delete a comment
@@ -827,13 +842,10 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            // session()->flash('comment_message', 'Comment deleted successfully.');
             FlashMessageHelper::flashSuccess('Comment deleted successfully.');
             $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
-            // Handle any exceptions that occur during the deletion process
-            // session()->flash('error', 'Failed to delete comment: ' . $e->getMessage());
             FlashMessageHelper::flashError('Failed to delete comment: ' . $e->getMessage());
         }
     }
@@ -906,8 +918,6 @@ class Tasks extends Component
         $this->fetchTaskComments($this->taskId);
         // Retrieve the authenticated employee's ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        // $companyId = Auth::user()->company_id;
-        // Fetch the company_ids for the logged-in employee
         $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
 
         // Check if companyIds is an array; decode if it's a JSON string
@@ -954,22 +964,15 @@ class Tasks extends Component
 
         $this->record = Task::all();
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-        // $this->records = Task::with('emp')
-        //     ->where(function ($query) use ($employeeId, $employeeName) {
-        //         $query->where('emp_id', $employeeId)
-        //             ->orWhere('assignee', 'LIKE', "%$employeeName%");
-        //     })
-        //     ->orderBy('created_at', 'desc')
-        //     ->get();
         $this->records = Task::with('emp')
-    ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
-    ->where(function ($query) use ($employeeId, $employeeName) {
-        $query->where('tasks.emp_id', $employeeId)
-            ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
-    })
-    ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
-    ->orderBy('tasks.created_at', 'desc')
-    ->get();
+            ->join('status_types', 'tasks.status', '=', 'status_types.status_code') // Join the status_types table
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('tasks.emp_id', $employeeId)
+                    ->orWhere('tasks.assignee', 'LIKE', "%$employeeName%");
+            })
+            ->select('tasks.*', 'status_types.status_name') // Select all task fields and the status name
+            ->orderBy('tasks.created_at', 'desc')
+            ->get();
 
         $searchData = $this->filterData ?: $this->records;
         return view('livewire.tasks', [

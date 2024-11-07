@@ -25,6 +25,7 @@ class LeaveCancelPage extends Component
     public $showApplyingTo = true;
     public $ccRecipients;
     public $selectedCCEmployees = [];
+    public $hasReachedLimit = false;
     public $searchTerm = '';
     public $filter = '';
     public $applying_to;
@@ -228,6 +229,7 @@ class LeaveCancelPage extends Component
         try {
             if ($empId) {
                 $this->fetchManagerDetails($empId);
+                $this->showApplyingToContainer = false;
             } else {
                 $employeeId = auth()->guard('emp')->user()->emp_id;
                 $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -284,28 +286,32 @@ class LeaveCancelPage extends Component
     {
         try {
             if (isset($this->selectedPeople[$empId])) {
+                // Deselect employee and reset limit flag
                 unset($this->selectedPeople[$empId]);
+                $this->hasReachedLimit = false;
             } else {
+                // Check if the selection limit is reached
                 if (count($this->selectedPeople) < 5) {
+                    // Select employee if within limit
                     $this->selectedPeople[$empId] = true;
                 } else {
-                    FlashMessageHelper::flashError("You can only select up to 5 CC recipients.");
+                    // Show warning only once if limit reached
+                    if (!$this->hasReachedLimit) {
+                        FlashMessageHelper::flashWarning("You reached maximum limit of CC To");
+                        $this->hasReachedLimit = true;
+                    }
                 }
             }
 
-            // Only update recipients list if a valid selection was made
-            if (count($this->selectedPeople) <= 5) {
-                $this->searchCCRecipients();
-                $this->fetchEmployeeDetails();
-            }
+            // Always update recipients list and fetch employee details
+            $this->searchCCRecipients();
+            $this->fetchEmployeeDetails();
         } catch (\Exception $e) {
-            // Optionally, use FlashMessageHelper to notify the user
+            // Notify the user if an error occurs
             FlashMessageHelper::flashError('An error occurred while processing your selection. Please try again.');
+            return false;
         }
     }
-
-
-
 
     public function removeFromCcTo($empId)
     {
@@ -320,7 +326,6 @@ class LeaveCancelPage extends Component
 
             // Toggle selection state in selectedPeople
             unset($this->selectedPeople[$empId]);
-            $this->showCcRecipents = true;
 
             // Fetch updated employee details
             $this->fetchEmployeeDetails();

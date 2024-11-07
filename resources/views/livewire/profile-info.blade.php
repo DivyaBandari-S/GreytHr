@@ -383,41 +383,7 @@
                         <div
                             style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             EDUCATION</div>
-                        {{-- <div style="margin-left: 15px; font-size: 12px">
-                            @if ($qualifications && count($qualifications) > 0)
-                            @foreach ($qualifications as $index => $education)
-                            @if (count($qualifications) > 1)
-                            <div style="margin-bottom: 10px;">
-                                <strong style="font-size: 13px; color: #778899;">Education Details
-                                    {{ $index + 1 }}</strong>
-                            </div>
-                            @endif
-                            <div class="row p-0" style="margin-bottom: 10px;">
-                                <div class="col-4" style="font-size: 11px; color: #778899;">Degree</div>
-                                <div class="col-4" style="font-size: 11px; color: #778899;">Year of
-                                    Passing</div>
-                                <div class="col-4" style="font-size: 11px; color: #778899;">Institution
-                                </div>
-                            </div>
-
-                            <div class="row p-0" style="margin-bottom: 10px;">
-                                <div class="col-4" style="font-size: 12px; color: #000;">
-                                    {{ $education['level'] }}
-                                </div>
-                                <div class="col-4" style="font-size: 12px; color: #000;">
-                                    {{ $education['year_of_passing'] }}
-                                </div>
-                                <div class="col-4" style="font-size: 12px; color: #000;">
-                                    {{ $education['institution'] }}
-                                </div>
-                            </div>
-                            @endforeach
-                            @else
-                            <div style="font-size: 12px; color: #778899; margin-left: 15px">
-                                No Data Found
-                            </div>
-                            @endif
-                        </div> --}}
+                        
                         <div style="margin-left: 15px; font-size: 12px">
                             @if ($qualifications && count($qualifications) > 0)
                                 @php $detailIndex = 1; @endphp  <!-- Initialize the counter for Education Details -->
@@ -462,13 +428,7 @@
                                 </div>
                             @endif
                         </div>
-                        
-                        
-                        {{-- <div class="col" style="margin-left: 15px; font-size: 12px">
-                            <div style="font-size: 12px; color: #778899; margin-left: 15px">
-                                No Data Found
-                            </div>
-                        </div> --}}
+                      
                     </div>
                 </div>
             </div>
@@ -628,7 +588,7 @@
                                 height="100" width="100" src="{{ asset('images/male-default.png') }}"
                                 alt="Default Male Image">
                             @endif
-                            {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->father_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
+                           
                         </div>
                         <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Name</div>
@@ -756,7 +716,7 @@
                                 height="100" width="100" src="{{ asset('images/female-default.jpg') }}"
                                 alt="Default Female Image">
                             @endif
-                            {{-- <img style="border-radius: 5px;" height="150" width="150" src="{{ optional($employeeDetails->empParentDetails)->mother_image ?: 'path/to/default/image.jpg' }}" alt=""> --}}
+                          
                         </div>
                         <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Mother Name</div>
@@ -1238,48 +1198,4 @@
             @endif
 
         </div>
-        <script>
-            // function toggleAccordion(element) {
 
-            //     const accordionBody = element.nextElementSibling;
-
-            //     if (accordionBody.style.display === 'block') {
-
-            //         accordionBody.style.display = 'none';
-
-            //         element.classList.remove('active'); // Remove active class
-
-            //     } else {
-
-            //         accordionBody.style.display = 'block';
-
-            //         element.classList.add('active'); // Add active class
-
-            //     }
-            // }
-
-            // function toggleDetails(sectionId, clickedLink) {
-            //     const tabs = ['personalDetails', 'accountDetails', 'familyDetails', 'employeeJobDetails', 'assetsDetails'];
-
-            //     // Remove active class from all links
-            //     const links = document.querySelectorAll('.custom-nav-link');
-            //     links.forEach(link => link.classList.remove('active'));
-
-            //     // Add active class to the clicked link
-            //     clickedLink.classList.add('active');
-
-            //     // Toggle tab visibility
-            //     tabs.forEach(tab => {
-            //         const tabElement = document.getElementById(tab);
-            //         if (tabElement) {
-            //             tabElement.style.display = (tab === sectionId) ? 'block' : 'none';
-            //         }
-            //     });
-            // }
-
-            // document.getElementById('employeeJobDetails').style.display = 'none';
-            // document.addEventListener('DOMContentLoaded', function() {
-            //     var today = new Date().toISOString().split('T')[0];
-            //     document.getElementById('resignation_date').setAttribute('min', today);
-            // });
-        </script>

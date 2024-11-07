@@ -41,8 +41,9 @@ class Feeds extends Component
    public $currentCardEmojis;
    public $card_id;
    public $file_path;
+   public $description = '';
     public $category;
-    public $description;
+
     public $search;
 
 
@@ -172,6 +173,7 @@ class Feeds extends Component
                 $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
                 $this->loadComments();
@@ -251,12 +253,15 @@ class Feeds extends Component
     {
         logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
 
+
         $this->emp_id = $emp_id;
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
 
         $this->showDialog = true;
+          // Fetch the latest emoji reactions for the specific employee
+
     }
     public function openEmojiDialog($emp_id)
     {
@@ -377,6 +382,7 @@ class Feeds extends Component
 
 
     }
+
     public function getComments($sortType)
     {
         $query = Comment::query();

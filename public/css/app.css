@@ -1265,6 +1265,9 @@ border-bottom:none;
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
+.attendance-table-height{
+    height: 100px;
+}
 .fromDatefield input {
     width: 60%;
 }
@@ -9137,13 +9140,21 @@ peoples module styles started */
     margin-bottom: 10px;
     font-size: 25px;
 }
-
-.desigMainDiv {
+.desigText{
+    font-size: var(--normal-font-size);
+}
+.homeReporting{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+/* .desigMainDiv {
     background-color: #fff;
     border-radius: 6px;
 }
 .desigSecondDiv {
-    /* border-left: 4px solid #02114f; */
     margin: 10px 0px !important;
     display: inline;
 }
@@ -9158,8 +9169,12 @@ peoples module styles started */
     display: inline;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
+} */
+.reportsToHome{
+    background-color: rgb(82 134 195 / 68%);
+    color: var(--main-color);
+    text-align: center;
+    padding: 5px 15px;
+    font-size: var(--sub-headings-font-size);
+    font-weight: 500;
 }
-
-
-
-
