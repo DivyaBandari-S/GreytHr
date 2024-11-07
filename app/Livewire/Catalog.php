@@ -179,15 +179,15 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
-
-    
-        
+        $this->selectedPeople=[];
+        $this->addselectedPeople=[];
+        $this->isNames=false;
     }
     
     public function ItRequest()
     {
         $this->resetDialogs(); // Close other dialogs
-        $this->ItRequestaceessDialog = true; 
+        $this->ItRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category','cc_to']);
         $this->category = 'Request For IT';
