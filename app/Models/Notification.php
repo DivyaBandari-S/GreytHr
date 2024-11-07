@@ -16,7 +16,7 @@ class Notification extends Model
         'task_name',
         'assignee',
         'leave_type',
-        'leave_reason',
+        'is_birthday_read',
         'leave_status',
         'applying_to',
         'cc_to',
