@@ -46,10 +46,7 @@ class ProfileInfo extends Component
     public $isUploading = false;
     public $qualifications = [];
     protected $rules = [
-
-        // 'last_working_day' => 'required|date|after_or_equal:resignation_date',
         'reason' => 'required|string|max:255',
-        // 'comments' => 'nullable|string',
         'signature' => 'nullable|file|mimes:jpg,jpeg,png,pdf|:1024',
     ];
     // Custom validation messages (optional)
@@ -64,11 +61,8 @@ class ProfileInfo extends Component
     public function validateFields($propertyName)
     {
         if ($propertyName == 'signature') {
-            // dd();
             if ($this->signature) {
-                // dd( $this->signature);
                 $this->fileName = $this->signature->getClientOriginalName();
-                // dd( $this->fileName);
             }
         }
         $this->validateOnly($propertyName);
@@ -95,7 +89,6 @@ class ProfileInfo extends Component
     {
         $empId = Auth::guard('emp')->user()->emp_id;
         $resig_requests = EmpResignations::where('emp_id', $empId)->whereIn('status', ['5', '2'])->first();
-        // dd($resig_requests);
         if ($resig_requests) {
             $this->resignId = $resig_requests->id;
             $this->resignation_date = $resig_requests->resignation_date;
@@ -108,7 +101,6 @@ class ProfileInfo extends Component
                 $this->isResigned = 'Approved';
                 $this->last_working_date = EmployeeDetails::where('emp_id', $empId)->value('last_working_date');
                 $this->approvedOn = EmpResignations::where('emp_id', $empId)->where('status','2')->value('approved_date');
-                // dd( $this->last_working_date);
 
             }
             elseif($resig_requests->status == '2') {
@@ -256,9 +248,7 @@ class ProfileInfo extends Component
                     'resignation_date' => $this->resignation_date,
                     'file_name' => $file_name,
                     'mime_type' => $mime_type,
-                    // 'last_working_day' => $this->last_working_day,
                     'reason' => $this->reason,
-                    // 'comments' => $this->comments,
                     'signature' => $fileContent,
                 ]
             );
@@ -268,9 +258,6 @@ class ProfileInfo extends Component
             } else {
                 FlashMessageHelper::flashSuccess('Resignation request have been submitted successfully.');
             }
-
-
-            // $this->resetInputFields();
             $this->showModal = false;
             $this->getResignationDetails();
         } catch (QueryException $e) {

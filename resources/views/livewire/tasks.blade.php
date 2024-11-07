@@ -157,10 +157,7 @@
                                                     data-target="#exampleModalCenter">Comment</button>
                                                 <button wire:click="openForTasks('{{ $record->id }}')"
                                                     class="cancel-btn task-open-close-button">Close</button>
-                                                {{-- <div class="d-flex justify-content-center" style="gap:10px;">
-                                                        <i class="fa-solid fa-comment chat-icon" title="Comment" wire:click.prevent="openAddCommentModal('{{ $record->id }}')" data-toggle="modal"  data-target="#exampleModalCenter"></i>
-                                                    <i class="fa-solid fa-circle-xmark chat-icon"title="Close" wire:click="openForTasks('{{ $record->id }}')"></i>
-                                                    </div> --}}
+                                          
                                             </td>
                                         </tr>
                                         <tr>
@@ -200,14 +197,7 @@
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td class="task-accordion-open-table-5-td">
-                                                                    {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                        <a href="#"
-                                                                            wire:click="showViewFile('{{ $record->id }}')"
-                                                                            style="text-decoration: none; color: #007BFF;">View
-                                                                            File</a>
-                                                                    @else
-                                                                        N/A
-                                                                    @endif --}}
+                                                                 
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
                                                                             <a href="#" class="anchorTagDetails"
@@ -425,14 +415,7 @@
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td class="task-accordion-closed-table-5-td">
-                                                                    {{-- @if (!empty($record->file_path) && $record->file_path !== 'null')
-                                                                        <a href="#"
-                                                                            wire:click="showViewFile('{{ $record->id }}')"
-                                                                            style="text-decoration: none; color: #007BFF;">View
-                                                                            File</a>
-                                                                    @else
-                                                                        N/A
-                                                                    @endif --}}
+                                                                    
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
                                                                             <a href="#" class="anchorTagDetails"
