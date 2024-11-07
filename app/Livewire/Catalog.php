@@ -183,7 +183,7 @@ class Catalog extends Component
         $this->addselectedPeople=[];
         $this->isNames=false;
     }
-    
+
     public function ItRequest()
     {
         $this->resetDialogs(); // Close other dialogs
