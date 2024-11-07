@@ -1265,6 +1265,9 @@ border-bottom:none;
 
 /*Starting of attendance Module(Pranita Priyadarshi)*/
 /*Starting of attendance SubModule:Attendance Info Table(Pranita Priyadarshi)*/
+.attendance-table-height{
+    height: 100px;
+}
 .fromDatefield input {
     width: 60%;
 }
