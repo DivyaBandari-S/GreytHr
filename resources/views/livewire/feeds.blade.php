@@ -1421,89 +1421,106 @@
         $uniqueNames = [];
     @endphp
 
-    @if($emojisCount > 0)
-        <div style="white-space: nowrap;">
-            {{-- Display the last two emojis --}}
-            @foreach($lastTwoEmojis as $emoji)
-                <span style="font-size: 16px; margin-left: -10px;">{{ $emoji->emoji }}</span>
-            @endforeach
+@if($emojisCount > 0)
+    <div style="white-space: nowrap;">
+        {{-- Display the last two emojis --}}
+        @foreach($lastTwoEmojis as $emoji)
+            <span style="font-size: 16px; margin-left: -10px;">{{ $emoji->emoji }}</span>
+        @endforeach
 
-            {{-- Display the names of people who reacted --}}
-            @foreach($lastTwoEmojis as $emoji)
-                @php
-                    $fullName = ucwords(strtolower($emoji->first_name)) . ' ' . ucwords(strtolower($emoji->last_name));
+        {{-- Display the names of people who reacted --}}
+        @php
+            $uniqueNames = [];
+            $nameList = [];
+        @endphp
+        @foreach($lastTwoEmojis as $emoji)
+            @php
+                $fullName = ucwords(strtolower($emoji->first_name)) . ' ' . ucwords(strtolower($emoji->last_name));
+            @endphp
+            @if (!in_array($fullName, $uniqueNames))
+                @if (!$loop->first)
+                    <span>,</span>
+                @endif
+                <span style="font-size: 8px;">{{ $fullName }}</span>
+                @php 
+                    $uniqueNames[] = $fullName;
+                    $nameList[] = $fullName; 
                 @endphp
-                @if (!in_array($fullName, $uniqueNames))
-                    @if (!$loop->first)
-                        <span>,</span>
-                    @endif
-                    <span style="font-size: 8px;">{{ $fullName }}</span>
-                    @php $uniqueNames[] = $fullName; @endphp
-                @endif
-            @endforeach
-
-            @if(count($uniqueNames) > 0)
-                <span style="font-size: 8px;">reacted</span>
             @endif
+        @endforeach
 
-            {{-- Show +more if there are more than 2 emojis --}}
-            @if($emojisCount > 2)
-                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openDialog('{{ $data['employee']->emp_id }}')">+more</span>
-
-                @if($showDialog && $emp_id == $data['employee']->emp_id)
-                <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title"> Reactions</h5>
-                                <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;">
-      
-    </button>
-                            </div>
-                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
-                                {{-- Display all emojis and their reactions --}}
-                                @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;margin-top:10px;">
-                                    <span>
-    @php
-        // Assuming $emoji has an 'emp_id' to fetch the correct employee data
-        $employee = \App\Models\EmployeeDetails::where('emp_id', $emoji->emp_id)->first();
-    @endphp
-
-    @if($employee && $employee->image && $employee->image !== 'null')
-        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{ $employee->image }}">
-    @else
-        @if($employee && $employee->gender == "Male")
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-        @elseif($employee && $employee->gender == "Female")
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-        @else
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+        @if(count($uniqueNames) > 0)
+            <span style="font-size: 8px;">reacted</span>
         @endif
-    @endif
-</span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                    <span 
-    style="font-size: 16px; cursor: pointer; color: inherit;" 
-    wire:click="removeReaction('{{ $emoji->id }}')" 
-    onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
-    onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
-    {{ $emoji->emoji }}
-</span>
-                      </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                    
+        {{-- Show +more if there are more than 2 emojis --}}
+        @if($emojisCount > 1)
+            <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+                +{{ $emojisCount - 1 }} more
+            </span>
+        @endif
+
+        {{-- Show the last name(s) of people who reacted and their count --}}
+        @if(count($uniqueNames) > 1)
+            <span style="font-size: 8px;">
+                @foreach($nameList as $key => $name)
+                    @if ($key > 1) 
+                        @if($key == 1) 
+                            , 
+                        @endif 
+                        {{ ucwords(strtolower(explode(' ', $name)[1])) }} 
+                    @endif
+                @endforeach
+            </span>
+        @endif
+
+        {{-- Show modal with all reactions if clicked on +more --}}
+        @if($showDialog && $emp_id == $data['employee']->emp_id)
+    <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Reactions</h5>
+                    <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;"></button>
                 </div>
-                <div class="modal-backdrop fade show blurred-backdrop"></div>
-                @endif
-            @endif
+                <div class="modal-body" style="overflow-y:auto;max-height:300px">
+                    {{-- Display all emojis and their reactions --}}
+                    @foreach($allEmojis as $emoji)
+                        <div style="display: flex; align-items: center; margin-top:10px;" wire:key="emoji-{{ $emoji->id }}">
+                            <span>
+                                @php
+                                    $employee = \App\Models\EmployeeDetails::where('emp_id', $emoji->emp_id)->first();
+                                @endphp
+
+                                @if($employee && $employee->image && $employee->image !== 'null')
+                                    <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{ $employee->image }}">
+                                @else
+                                    <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset($employee && $employee->gender == "Male" ? 'images/male-default.png' : ($employee && $employee->gender == "Female" ? 'images/female-default.jpg' : 'images/user.jpg')) }}" alt="Default Image">
+                                @endif
+                            </span>
+
+                            <span style="font-size: 12px; margin-left: 10px; width:50%"> 
+                                {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}
+                            </span>
+
+                            <span style="font-size: 16px; cursor: pointer; color: inherit;" 
+                                  wire:click="removeReaction('{{ $emoji->id }}')" 
+                                  onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
+                                  onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
+                                  {{ $emoji->emoji }}
+                            </span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-        
-    @endif
+    </div>
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+@endif
+
+    </div>
+@endif
+
 </div>
 
 
@@ -1874,92 +1891,111 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
             $allEmojis = $currentCardEmojis->reverse();
             $uniqueNames = [];
             @endphp
-            @if($currentCardEmojis && $emojisCount > 0)
-            <div style="white-space: nowrap;">
-                @foreach($lastTwoEmojis as $index => $emoji_reaction)
-                <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
-                @if (!$loop->last)
-                <span>,</span>
-                @endif
-                @endforeach
+           @if($emojisCount > 0)
+    <div style="white-space: nowrap;">
+        {{-- Display the last two emojis --}}
+        @foreach($lastTwoEmojis as $emoji)
+            <span style="font-size: 16px; margin-left: -10px;">{{ $emoji->emoji }}</span>
+        @endforeach
 
-                @foreach($lastTwoEmojis as $index => $emoji)
-                @php
+        {{-- Display the names of people who reacted --}}
+        @php
+            $uniqueNames = [];
+            $nameList = [];
+        @endphp
+        @foreach($lastTwoEmojis as $emoji)
+            @php
                 $fullName = ucwords(strtolower($emoji->first_name)) . ' ' . ucwords(strtolower($emoji->last_name));
-                @endphp
-                @if (!in_array($fullName, $uniqueNames))
+            @endphp
+            @if (!in_array($fullName, $uniqueNames))
                 @if (!$loop->first)
-                <span>,</span>
+                    <span>,</span>
                 @endif
-                <span style="font-size: 8px;"> {{ $fullName }}</span>
-                @php $uniqueNames[] = $fullName; @endphp
-                @endif
-                @endforeach
-                @if (count($uniqueNames) > 0)
-                <span style="font-size:8px">reacted</span>
-                @endif
-                @if($emojisCount > 2)
-                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openDialog('{{ $data['employee']->emp_id }}')">+more</span>
+                <span style="font-size: 8px;">{{ $fullName }}</span>
+                @php 
+                    $uniqueNames[] = $fullName;
+                    $nameList[] = $fullName; 
+                @endphp
+            @endif
+        @endforeach
 
-                @if($showDialog && $emp_id == $data['employee']->emp_id)
-                <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title"> Reactions</h5>
-                                <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;">
-     
-    </button>
-                            </div>
-                            <div class="modal-body" style="overflow-y:auto;max-height:300px">
-                                {{-- Display all emojis and their reactions --}}
-                                @foreach($allEmojis as $emoji)
-                                    <div style="display: flex; align-items: center;margin-top:10px;">
-                                    <span>
-    @php
-        // Assuming $emoji has an 'emp_id' to fetch the correct employee data
-        $employee = \App\Models\EmployeeDetails::where('emp_id', $emoji->emp_id)->first();
-    @endphp
-
-    @if($employee && $employee->image && $employee->image !== 'null')
-        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{ $employee->image }}">
-    @else
-        @if($employee && $employee->gender == "Male")
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-        @elseif($employee && $employee->gender == "Female")
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-        @else
-            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+        @if(count($uniqueNames) > 0)
+            <span style="font-size: 8px;">reacted</span>
         @endif
-    @endif
-</span>
 
-                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                    <span 
-    style="font-size: 16px; cursor: pointer; color: inherit;" 
-    wire:click="removeReaction('{{ $emoji->id }}')" 
-    onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
-    onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
-    {{ $emoji->emoji }}
-</span>
-   
-                                    </div>
-                                @endforeach
-                            </div>
+        {{-- Show +more if there are more than 2 emojis --}}
+        @if($emojisCount > 1)
+            <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+                +{{ $emojisCount - 1 }} more
+            </span>
+        @endif
+
+        {{-- Show the last name(s) of people who reacted and their count --}}
+        @if(count($uniqueNames) > 1)
+            <span style="font-size: 8px;">
+                @foreach($nameList as $key => $name)
+                    @if ($key > 1) 
+                        @if($key == 1) 
+                            , 
+                        @endif 
+                        {{ ucwords(strtolower(explode(' ', $name)[1])) }} 
+                    @endif
+                @endforeach
+            </span>
+        @endif
+
+        {{-- Show modal with all reactions if clicked on +more --}}
+        @if($showDialog && $emp_id == $data['employee']->emp_id)
+            <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"> Reactions</h5>
+                            <button type="button" class="btn-close" wire:click="closeDialog" aria-label="Close" style="margin-left:auto;"></button>
+                        </div>
+                        <div class="modal-body" style="overflow-y:auto;max-height:300px">
+                            {{-- Display all emojis and their reactions --}}
+                            @foreach($allEmojis as $emoji)
+                                <div style="display: flex; align-items: center;margin-top:10px;">
+                                    <span>
+                                        @php
+                                            // Fetch employee data based on emp_id
+                                            $employee = \App\Models\EmployeeDetails::where('emp_id', $emoji->emp_id)->first();
+                                        @endphp
+
+                                        @if($employee && $employee->image && $employee->image !== 'null')
+                                            <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{ $employee->image }}">
+                                        @else
+                                            @if($employee && $employee->gender == "Male")
+                                                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
+                                            @elseif($employee && $employee->gender == "Female")
+                                                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
+                                            @else
+                                                <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{ asset('images/user.jpg') }}" alt="Default Image">
+                                            @endif
+                                        @endif
+                                    </span>
+
+                                    <span style="font-size: 12px; margin-left: 10px;width:50%"> 
+                                        {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}
+                                    </span>
+
+                                    <span style="font-size: 16px; cursor: pointer; color: inherit;" 
+                                          wire:click="removeReaction('{{ $emoji->id }}')" 
+                                          onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Reaction' : $emoji->emoji }}';" 
+                                          onmouseout="this.innerHTML='{{ $emoji->emoji }}';">
+                                          {{ $emoji->emoji }}
+                                    </span>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    
                 </div>
-                <div class="modal-backdrop fade show blurred-backdrop"></div>
-                @endif
-            @endif
-
             </div>
-
-
-
-
-            @endif
+            <div class="modal-backdrop fade show blurred-backdrop"></div>
+        @endif
+    </div>
+@endif
         </div>
         <div class="w-90" style="border-top: 1px solid #E8E5E4; margin: 10px;"></div>
         <div class="row" style="display: flex;">
@@ -2800,6 +2836,12 @@ tinymce.init({
                 });
             }
         });
+    });
+</script>
+<script>
+    window.addEventListener('emoji-removed', event => {
+        // Display the message
+        alert(event.detail.message); // You can replace this with a nicer UI message (e.g., using a modal or toast)
     });
 </script>
 
