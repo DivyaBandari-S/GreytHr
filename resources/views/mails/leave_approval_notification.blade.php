@@ -53,7 +53,7 @@
         </thead>
         <tbody>
             <tr>
-                <td>Category Type</td>
+                <td>Category</td>
                 <td>{{ $leaveRequest->category_type }}</td>
             </tr>
             <tr>

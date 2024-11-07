@@ -1053,15 +1053,14 @@ class LeaveApplyPage extends Component
         $this->from_session = 'Session 1';
         $this->to_session = 'Session 2';
         $this->cc_to = null;
-        $this->applying_to = null;
         $this->showNumberOfDays = false;
         $this->showApplyingToContainer = false;
         $this->show_reporting = false;
-        $this->selectedManagerDetails = null;
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
-        $this->file_paths = [];
+        $this->file_paths = null;
         $this->selectedPeople = [];
+        $this->selectedManager =[];
     }
 
 

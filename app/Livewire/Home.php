@@ -332,6 +332,7 @@ class Home extends Component
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
+            $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
                     $query->where('leave_status', 5)
@@ -340,7 +341,7 @@ class Home extends Component
                                 ->where('cancel_status', 7);
                         });
                 })
-                ->orderBy('created_at', 'desc')
+                ->where('created_at', '>=', $threeWorkingDaysAgo)
                 ->get();
             $matchingLeaveApplications = [];
             foreach ($this->leaveRequests as $leaveRequest) {
@@ -712,6 +713,21 @@ class Home extends Component
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
+    }
+    private function subtractWorkingDays($days)
+    {
+        $date = Carbon::now();
+
+        while ($days > 0) {
+            $date->subDay();
+
+            // Check if it's a weekday (Monday to Friday)
+            if ($date->isWeekday()) {
+                $days--;
+            }
+        }
+
+        return $date;
     }
     public $filterPeriod = 'this_month';
     public function getStartDate()
