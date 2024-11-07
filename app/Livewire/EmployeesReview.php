@@ -187,7 +187,7 @@ class EmployeesReview extends Component
 
             // Ensure $companyIds is an array
             if (!is_array($companyIds)) {
-                $companyIds = [$companyIds]; // Wrap in an array if it's a single value
+                $companyIds = [$companyIds];
             }
 
             // Retrieve team members' emp_ids where the logged-in user is the manager
@@ -199,6 +199,8 @@ class EmployeesReview extends Component
                 ->pluck('emp_id')
                 ->toArray();
 
+            // Calculate the date 3 working days ago, excluding weekends
+            $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
@@ -208,11 +210,12 @@ class EmployeesReview extends Component
                                 ->where('cancel_status', 7);
                         });
                 })
+                ->where('created_at', '>=', $threeWorkingDaysAgo) // Exclude requests older than 3 working days
                 ->orderBy('created_at', 'desc');
 
             // Execute the query
             $this->sendLeaveApplications = $query->get();
-
+            $this->count = count($this->sendLeaveApplications);
             // Decode JSON fields for each leave application
             foreach ($this->sendLeaveApplications as $leaveRequest) {
                 $leaveRequest->applying_to = json_decode($leaveRequest->applying_to, true);
@@ -251,7 +254,7 @@ class EmployeesReview extends Component
                     $query->whereJsonContains('notifications.applying_to', [['manager_id' => $employeeId]]);
                 })
                 ->orWhere('assignee', $employeeId)
-                ->whereIn('notification_type', ['leave', 'leaveCancel','leaveApprove','leaveReject'])
+                ->whereIn('notification_type', ['leave', 'leaveCancel', 'leaveApprove', 'leaveReject'])
                 ->delete();
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
@@ -282,7 +285,6 @@ class EmployeesReview extends Component
 
             // Calculate the date 3 working days ago, excluding weekends
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
-
             // Query leave requests for team members with specified conditions
             $query = LeaveRequest::whereIn('emp_id', $teamMembersIds)
                 ->where(function ($query) {
