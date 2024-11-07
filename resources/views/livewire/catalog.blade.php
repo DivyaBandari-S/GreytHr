@@ -101,11 +101,11 @@
 
                                                                 <!-- Employee details input -->
 
-                                                                <input type="text"
+                                                                <input type="text"  wire:click="NamesSearch"
                                                                     value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                     class="form-control"
                                                                     aria-describedby="basic-addon1"
-                                                                    readonly>
+                                                                   readonly >
 
 
 
@@ -281,7 +281,7 @@
 
                                                                 <!-- Employee details input -->
 
-                                                                <input type="text"
+                                                                <input type="text" wire:click="NamesSearch"
                                                                     value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                     class="form-control"
                                                                     aria-describedby="basic-addon1"
@@ -348,21 +348,30 @@
                                                             @endif
 
                                                         </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="selectedEquipment ">Select Equipment<span style="color:red">*</span></label>
-                                                            <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" class="form-control" style="font-size: 12px;">
-                                                                <option value="">Select Equipment</option>
-                                                                <option value="others">others</option>
-                                                                <option value="keyboard">Keyboard</option>
-                                                                <option value="mouse">Mouse</option>
-                                                                <option value="headset">Headset</option>
-                                                                <option value="monitor">Monitor</option>
-                                                            </select>
+                                                        <div class="form-group mt-2" style="position: relative;">
+    <label for="selectedEquipment">Select Equipment<span style="color:red">*</span></label>
+    <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" 
+            class="form-control" style="font-size: 12px; appearance: none; padding-right: 30px;">
+        <option value="" disabled hidden>Selected Equipment</option>
+        <option value="keyboard">Keyboard</option>
+        <option value="mouse">Mouse</option>
+        <option value="headset">Headset</option>
+        <option value="monitor">Monitor</option>
+        <option value="others">Others</option>
+    </select>
+    
+    <!-- Dropdown Toggler Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
 
-                                                            @error('selected_equipment')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
+    @error('selected_equipment')
+    <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
+
 
 
                                                         <div class="form-group mt-2">
@@ -463,7 +472,7 @@
 
                                                         </div>
                                                         <div class="form-group mt-2">
-                                                            <label for="Name">Requested For:</label>
+                                                            <label for="Name">Provide the Name of Mailbox :</label>
                                                             <div class="input-group mb-3">
                                                                 <!-- Info icon on the left side -->
                                                                 <span class="input-group-text" id="basic-addon">
@@ -472,7 +481,7 @@
 
                                                                 <!-- Employee details input -->
 
-                                                                <input type="text"
+                                                                <input type="text" wire:click="NamesSearch"
                                                                     value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                     class="form-control"
                                                                     aria-describedby="basic-addon1"
@@ -539,11 +548,7 @@
                                                             @endif
 
                                                         </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="distributor_name">Provide the Name of Mailbox<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
-                                                            @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                                        </div>
+
 
 
                                                         <div class="form-group mt-2">
@@ -656,11 +661,11 @@
 
                                                                     <!-- Employee details input -->
 
-                                                                    <input type="text"
+                                                                    <input type="text" wire:click="NamesSearch"
                                                                         value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
-                                                                        readonly>
+                                                                      >
 
 
 
@@ -691,10 +696,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -839,11 +844,11 @@
 
                                                                     <!-- Employee details input -->
 
-                                                                    <input type="text"
+                                                                    <input type="text" wire:click="NamesSearch"
                                                                         value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
-                                                                        readonly>
+                                                                        >
 
 
 
@@ -874,10 +879,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1024,11 +1029,11 @@
 
                                                                     <!-- Employee details input -->
 
-                                                                    <input type="text"
+                                                                    <input type="text" wire:click="NamesSearch"
                                                                         value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
-                                                                        readonly>
+                                                                        >
 
 
 
@@ -1059,10 +1064,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1206,11 +1211,11 @@
 
                                                                     <!-- Employee details input -->
 
-                                                                    <input type="text"
+                                                                    <input type="text" wire:click="NamesSearch"
                                                                         value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
-                                                                        readonly>
+                                                                        >
 
 
 
@@ -1241,10 +1246,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1407,11 +1412,11 @@
 
                                                                     <!-- Employee details input -->
 
-                                                                    <input type="text"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
+                                                                    <input type="text" wire:click="NamesSearch"
+                                                                    wire:model="cc_to" 
                                                                         class="form-control"
                                                                         aria-describedby="basic-addon1"
-                                                                        readonly>
+                                                                        >
 
 
 
@@ -1442,10 +1447,10 @@
                                                                     </div>
                                                                     @else
                                                                     @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
+                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
                                                                         <div class="row align-items-center">
                                                                             <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
+                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
                                                                             </div>
                                                                             <div class="col-auto">
                                                                                 @if (!empty($people->image) && $people->image !== 'null')
@@ -1569,17 +1574,17 @@
                                 <div class="col-md-4 mb-4">
                                     <div
                                         style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                        <p style="font-size: 12px;"><b>Other Request</b></p>
+                                        <p style="font-size: 12px;"><b>SIM Request</b></p>
                                         <div class="row m-0">
                                             <div class="col-12 text-center mb-2">
-                                                <!-- <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium"
+                                                <!-- <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium"
                                                     style="height:4em;"> -->
-                                                <img src="images/it-images/customer-service.png" style="height:4em;" />
+                                                <img src="images/it-images/sim-card.png" style="height:4em;" />
                                             </div>
-                                            <div class="col-12 mb-2" style="font-size:12px">
+                                            <div class="col-12 mb-2">
                                                 <p
-                                                    style="text-decoration:underline;cursor: pointer; text-align: center;">
-                                                    Other Service Request</p>
+                                                    style="text-decoration:underline;cursor: pointer; text-align: center;font-size: 12px;">
+                                                    New SIM Request</p>
                                             </div>
                                         </div>
 
@@ -1653,22 +1658,23 @@
                                 <div class="col-md-4 mb-4">
                                     <div
                                         style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                        <p style="font-size: 12px;"><b>SIM Request</b></p>
+                                        <p style="font-size: 12px;"><b>Other Request</b></p>
                                         <div class="row m-0">
                                             <div class="col-12 text-center mb-2">
-                                                <!-- <img src="https://snow.payg.in/ef99c469871c7510279786a50cbb357f.iix?t=medium"
+                                                <!-- <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium"
                                                     style="height:4em;"> -->
-                                                <img src="images/it-images/sim-card.png" style="height:4em;" />
+                                                <img src="images/it-images/customer-service.png" style="height:4em;" />
                                             </div>
-                                            <div class="col-12 mb-2">
+                                            <div class="col-12 mb-2" style="font-size:12px">
                                                 <p
-                                                    style="text-decoration:underline;cursor: pointer; text-align: center;font-size: 12px;">
-                                                    New SIM Request</p>
+                                                    style="text-decoration:underline;cursor: pointer; text-align: center;">
+                                                    Other Service Request</p>
                                             </div>
                                         </div>
 
                                     </div>
                                 </div>
+                             
                             </div>
                         </div>
                 </section>

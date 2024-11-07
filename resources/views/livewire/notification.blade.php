@@ -1,4 +1,4 @@
-<div class="d-flex align-items-center gap-3 ">
+<div class="d-flex align-items-center gap-3" >
     <div  id="notificationButton" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
         <a href="#" class="nav-link">
             <i class='fas fa-bell icon' ></i>
@@ -17,8 +17,8 @@
             @endif
         </div>
     </div>
-    <div class="offcanvas offcanvas-end notification-detail-container "  tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel" style="width: 320px;">
-        <div class="offcanvas-header d-flex justify-content-between align-items-center">
+    <div class="offcanvas offcanvas-end notification-detail-container "  tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel"   style="width: 320px;"  >
+        <div class="offcanvas-header d-flex justify-content-between align-items-center" >
             <h6 id="offcanvasRightLabel" class="offcanvasRightLabel">Notifications <span class="lableCount" id="notificationCount">
                     ({{$totalnotificationscount}})</span> </h6>
             <button type="button" class="btn-close text-reset notification-close-btn" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -66,6 +66,50 @@
                         <p class="mb-0 notification-text-para"> Sent 10+ leave requests.</p>
                         @else
                         <p class="mb-0 notification-text-para"> Sent a leave request.</p>
+                        <div class="notify-time" >
+                           <p class="notify-time-para" >{{$notification->notify_time}}</p>
+                        </div>
+                     @endif
+                </div>
+            </div>
+            @elseif($notification->notification_type=='leaveApprove')
+            <div>
+                <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
+                    <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head" wire:click.prevent="reduceLeaveRequestCount('{{ $notification->emp_id }}')">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                    </p>
+
+                    @if($notification->details_count>1 && $notification->details_count<=10 )
+                        <p class="mb-0 notification-text-para"> Approved {{$notification->details_count}} leave requests.</p>
+                        @elseif($notification->details_count>10)
+                        <p class="mb-0 notification-text-para"> Approved 10+ leave requests.</p>
+                        @else
+                        <p class="mb-0 notification-text-para"> Approved your leave request.</p>
+                        <div class="notify-time" >
+                           <p class="notify-time-para" >{{$notification->notify_time}}</p>
+                        </div>
+                     @endif
+                </div>
+            </div>
+            @elseif($notification->notification_type=='leaveReject')
+            <div>
+                <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
+                    <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head" wire:click.prevent="reduceLeaveRequestCount('{{ $notification->emp_id }}')">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                    </p>
+
+                    @if($notification->details_count>1 && $notification->details_count<=10 )
+                        <p class="mb-0 notification-text-para"> Rejected {{$notification->details_count}} leave requests.</p>
+                        @elseif($notification->details_count>10)
+                        <p class="mb-0 notification-text-para"> Rejected 10+ leave requests.</p>
+                        @else
+                        <p class="mb-0 notification-text-para"> Rejected your leave request.</p>
                         <div class="notify-time" >
                            <p class="notify-time-para" >{{$notification->notify_time}}</p>
                         </div>

@@ -90,7 +90,7 @@ class ViewRegularisationPendingNew extends Component
     
     $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
     // Prepare the HTML table
-    $this->messageContent = " ".$this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")" ."has neither approved nor rejected the regularization request for the past 3 days for employee ". $item->emp_id . " (" . $employee->first_name . " " . $employee->last_name . ").";
+    $this->messageContent = " ".ucwords(strtolower($this->user->first_name))." ".ucwords(strtolower($this->user->last_name))."(".$this->user->emp_id.")" ."has neither approved nor rejected the regularization request for the past 3 days for employee ". $item->emp_id . " (" . ucwords(strtolower($employee->first_name)) . " " . ucwords(strtolower($employee->last_name)) . ").";
     $details = [
         'message' => $this->messageContent,
         'regularisationRequests'=>$this->regularisationEntries,

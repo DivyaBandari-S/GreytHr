@@ -55,48 +55,25 @@
 
                             </div>
                         </div>
-
-                        <div class="col-md-3 pt-4">
-
-                            <div
-                                style="width:220px; height:200px; margin:5% auto; background: rgb(255,214,94); /* Old browsers */
-                            background: -moz-linear-gradient(top, rgba(255,214,94,1) 0%, rgba(254,191,4,1) 100%); /* FF3.6+ */
-                            background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,214,94,1)), color-stop(100%,rgba(254,191,4,1))); /* Chrome,Safari4+ */
-                            background: -webkit-linear-gradient(top, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* Chrome10+,Safari5.1+ */
-                            background: -o-linear-gradient(top, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* Opera 11.10+ */
-                            background: -ms-linear-gradient(top, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* IE10+ */
-                            background: linear-gradient(to bottom, rgba(255,214,94,1) 0%,rgba(254,191,4,1) 100%); /* W3C */
-                            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffd65e', endColorstr='#febf04',GradientType=0 ); /* IE6-9 */">
-                                <br />
-                                <div class="ribbon-wrapper">
-                                    <div class="glow">&nbsp;</div>
-                                    <div class="ribbon-front" style="font-size: 16px;">
-                                        Reports To..
-                                    </div>
-                                    <div class="ribbon-edge-topleft"></div>
-                                    <div class="ribbon-edge-topright"></div>
-                                    <div class="ribbon-edge-bottomleft"></div>
-                                    <div class="ribbon-edge-bottomright"></div>
-                                </div>
-                                <div class="row mt-3 m-0 text-center">
-                                    <div class="p-0">
-                                        <i class="fa-regular fa-user reportMangerImg"></i>
-                                    </div>
-                                    <h6 class="p-0">Prabodh D</h6>
-                                </div>
+                        <div class="col-md-3 homeReporting pt-4">
+                            @if($loginEmpManagerDetails)
+                            <div class="new_site">
+                            <!-- new_site_ribbon -->
+                                <div class="reportsToHome rounded-pill">Reports To..</div>
                             </div>
-
-                            <!-- <div class="new_site">
-                                <div class="new_site_ribbon">Reports To..</div>
-                            </div> -->
-                            <div class="row m-0 text-center mb-3">
-                                <!-- <div class="p-0">
+                            <div class="row m-0 text-center">
+                                @if($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !=='null')
+                                <div class="p-0 mb-3 mt-2">
+                                    <img class="rounded-circle" width="50" height="50" src="data:image/jpeg;base64,{{ ($loginEmpManagerDetails->image) }} " alt="">
+                                </div>
+                                @else
+                                <div class="p-0">
                                     <i class="fa-regular fa-user reportMangerImg"></i>
                                 </div>
-                                <h6 class="p-0">Prabodh D</h6> -->
-                                <div class="row m-0 p-0 desigMainDiv text-start">
+                                @endif
+                                <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
+                                <div class="row m-0 p-0 desigMainDiv ">
                                     <div class="row p-0 desigSecondDiv">
-                                        <div class="p-0 borderDiv">&nbsp;</div>
                                         <p class="mb-0 desigText" style="color: #02114f !important;">
                                             <i class="fa-regular fa-compass me-2"></i> Sr. Project Manager
                                         </p>
@@ -738,46 +715,49 @@
                             <canvas id="combinedPieChart" width="117" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
-                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}
-                            </p>
-                            <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
+                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class="payslip-small-desc align-items-end d-flex justify-content-end flex-column">
                                 {{ date('t', strtotime('-1 month')) }} <br>
                                 <span class="payslip-small-desc">Paid days</span>
                             </p>
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column mt-3 ">
+                    <div class="d-flex flex-column mt-3">
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="grossPay"></div>
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 50,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 50,000.00' : '₹****' }}
+                            </p>
                         </div>
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="deductionsPay"></div>
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 5,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 5,000.00' : '₹****' }}
+                            </p>
                         </div>
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 45,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 45,000.00' : '₹****' }}
+                            </p>
                         </div>
-                        </divclas>
+                    </div>
 
-                        <div class="show-salary">
-                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                                download>Download PDF</a>
-                            <a class="showHideSalary">
-                                Hide Salary
-                            </a>
-                        </div>
+                    <div class="show-salary">
+                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                            {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
+                        </a>
                     </div>
                 </div>
                 <a href="#">
@@ -947,50 +927,55 @@
                 </div>
             </div>
 
-        </div>
-        @if ($showAlertDialog)
-            <div class="modal d-block" tabindex="-1" role="dialog">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">
-                                <b>Swipes</b>
-                            </h5>
-                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                                aria-label="Close" wire:click="close">
-                            </button>
+    </div>
+    @if ($showAlertDialog)
+    <div class="modal d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b>Swipes</b>
+                    </h5>
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="close">
+                    </button>
+                </div>
+                <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                    <div class="row">
+                        <div class="col normalTextValue">Date :
+                            <span class="normalText">{{ $currentDate }}</span>
                         </div>
-                        <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                            <div class="row">
-                                <div class="col normalTextValue">Date :
-                                    <span class="normalText">{{ $currentDate }}</span>
-                                </div>
-                                <div class="col normalTextValue">Shift
-                                    Time : <span class="normalText">10:00 to 19:00</span></div>
-                            </div>
-                            <table class="swipes-table mt-2 border w-100">
-                                <tr>
-                                    <th>
-                                        Swipe Time</th>
-                                    <th>
-                                        Sign-In / Sign-Out</th>
-                                </tr>
-                                @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
-                                    @foreach ($swipeDetails as $swipe)
-                                        <tr>
-                                            <td>
-                                                {{ $swipe->swipe_time }}
-                                            </td>
-                                            <td>
-                                                {{ $swipe->in_or_out }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @else
-                                    <tr>
-                                        <td class="homeText" colspan="2">No swipe records found for today.</td>
-                                    </tr>
-                                @endif
+                        <div class="col normalTextValue">Shift
+                            Time : <span class="normalText">10:00 to 19:00</span></div>
+                    </div>
+                    <table class="swipes-table mt-2 border w-100">
+                        <tr>
+                            <th>
+                                Swipe Time</th>
+                            <th>
+                                Sign-In / Sign-Out</th>
+                            <th>
+                                Device</th>
+                        </tr>
+                        @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
+                        @foreach ($swipeDetails as $swipe)
+                        <tr>
+                            <td>
+                                {{ $swipe->swipe_time }}
+                            </td>
+                            <td>
+                                {{ $swipe->in_or_out }}
+                            </td>
+                            <td>
+                                {{ $swipe->sign_in_device }}
+                            </td>
+                        </tr>
+                        @endforeach
+                        @else
+                        <tr>
+                            <td class="homeText" colspan="2">No swipe records found for today.</td>
+                        </tr>
+                        @endif
 
                             </table>
                         </div>

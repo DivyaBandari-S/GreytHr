@@ -40,8 +40,9 @@ class Feeds extends Component
    public $currentCardEmojis;
    public $card_id;
    public $file_path;
+   public $description = '';
     public $category;
-    public $description;
+  
     public $search;
 
   
@@ -171,6 +172,7 @@ class Feeds extends Component
                 $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
+                
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
                 $this->loadComments();   
@@ -226,13 +228,14 @@ class Feeds extends Component
     public function openDialog($emp_id)
     {
         logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
-    
+        
         $this->emp_id = $emp_id;
-        $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
     
- 
+           $this->allEmojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
     
         $this->showDialog = true;
+          // Fetch the latest emoji reactions for the specific employee
+      
     }
     public function openEmojiDialog($emp_id)
     {
@@ -353,6 +356,7 @@ class Feeds extends Component
     
       
     }
+
     public function getComments($sortType)
     {
         $query = Comment::query();
@@ -367,6 +371,36 @@ class Feeds extends Component
     
         return view('feeds', compact('currentCardComments', 'sortType'));
     }
+    public $allEmojis;
+    public function removeReaction($emojiId)
+    {
+        try {
+            // Locate the emoji based on ID
+            $emoji = Emoji::find($emojiId);
+            
+            if ($emoji && $emoji->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
+                $emoji->delete();
+    
+                // Remove the deleted emoji from $allEmojis
+                $this->allEmojis = $this->allEmojis->filter(fn($item) => $item->id !== $emojiId);
+    
+                // Dispatch a success message
+                $this->dispatchBrowserEvent('emoji-removed', [
+                    'message' => 'You have removed your reaction.'
+                ]);
+            } else {
+                throw new \Exception('You can only remove your own reactions.');
+            }
+        } catch (\Exception $e) {
+            $this->dispatch('emoji-removed', [
+                'message' => $e->getMessage(),
+                'type' => 'error'
+            ]);
+        }
+    }
+    
+    
+    
     
     public function add_comment($emp_id)
     {

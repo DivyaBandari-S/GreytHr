@@ -14,7 +14,9 @@ namespace App\Livewire;
 use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApprovalNotification;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use App\Models\EmployeeDetails;
+use Google\Service\AnalyticsData\OrderBy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -48,15 +50,17 @@ class ViewPendingDetails extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             // Base query for fetching leave applications
             $query = LeaveRequest::where(function ($query) {
                 $query->where('leave_applications.leave_status', 5)
                       ->orWhere('leave_applications.cancel_status', 7);
             })
             ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Ensure the table is correctly joined
-            ->orderBy('leave_applications.created_at', 'desc');
-        
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+            ->where('leave_applications.created_at', '>=', $threeWorkingDaysAgo)
+            ->OrderBy('leave_applications.created_at','desc');
+
         // Search query conditions
         if ($filter !== null) {
             $query->where(function ($query) use ($filter) {
@@ -132,7 +136,21 @@ class ViewPendingDetails extends Component
         }
     }
 
+    private function subtractWorkingDays($days)
+    {
+        $date = Carbon::now();
 
+        while ($days > 0) {
+            $date->subDay();
+
+            // Check if it's a weekday (Monday to Friday)
+            if ($date->isWeekday()) {
+                $days--;
+            }
+        }
+
+        return $date;
+    }
     // Check if there are pending leave requests
     public function hasPendingLeave()
     {
@@ -254,6 +272,12 @@ class ViewPendingDetails extends Component
                     $leaveRequest->updated_at = now();
                     $leaveRequest->action_by = $employeeId;
                     $leaveRequest->save();
+                    Notification::create([
+                        'emp_id' =>  $employeeId ,
+                        'notification_type' => 'leaveApprove',
+                        'leave_type' => $leaveRequest->leave_type,
+                        'assignee' =>$leaveRequest->emp_id,
+                    ]);
                     FlashMessageHelper::flashSuccess('Leave application approved successfully.');
                     // Sending email to employee and CC emails
                     $applyingToDetails = json_decode($leaveRequest->applying_to, true);
@@ -453,6 +477,12 @@ class ViewPendingDetails extends Component
             $leaveRequest->updated_at = now();
             $leaveRequest->action_by = $employeeId;
             $leaveRequest->save();
+            Notification::create([
+                'emp_id' =>  $employeeId ,
+                'notification_type' => 'leaveReject',
+                "leave_type" => $leaveRequest->leave_type,
+                'assignee' =>$leaveRequest->emp_id,
+            ]);
             FlashMessageHelper::flashSuccess('Leave application rejected successfully.');
             // Sending email to employee and CC emails
             $applyingToDetails = json_decode($leaveRequest->applying_to, true);
