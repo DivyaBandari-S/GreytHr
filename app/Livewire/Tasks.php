@@ -790,9 +790,6 @@ class Tasks extends Component
     }
     public function openEditCommentModal($commentId)
     {
-        // $this->editCommentId = $commentId;
-        // $this->newComment = TaskComment::findOrFail($commentId)->comment;
-        // $this->fetchTaskComments($this->taskId); // Fetch task comments again
         $comment = TaskComment::findOrFail($commentId);
         $this->editCommentId = $commentId;          // Store the comment ID being edited
         $this->editingComment = $comment->comment;  // Set the current comment into editingComment
