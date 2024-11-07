@@ -460,7 +460,7 @@ class LeaveApplyPage extends Component
                 'emp_id' => auth()->guard('emp')->user()->emp_id,
                 'notification_type' => 'leave',
                 'leave_type' => $this->leave_type,
-                'leave_reason' => $this->reason,
+                // 'leave_reason' => $this->reason,
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
