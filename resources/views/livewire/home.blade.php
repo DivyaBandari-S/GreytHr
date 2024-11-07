@@ -46,14 +46,15 @@
 
                             </div>
                         </div>
-                        <div class="col-md-3 pt-4">
+                        <div class="col-md-3 homeReporting pt-4">
                             @if($loginEmpManagerDetails)
                             <div class="new_site">
-                                <div class="new_site_ribbon">Reports To..</div>
+                            <!-- new_site_ribbon -->
+                                <div class="reportsToHome rounded-pill">Reports To..</div>
                             </div>
                             <div class="row m-0 text-center">
                                 @if($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !=='null')
-                                <div class="p-0 mb-2">
+                                <div class="p-0 mb-3 mt-2">
                                     <img class="rounded-circle" width="50" height="50" src="data:image/jpeg;base64,{{ ($loginEmpManagerDetails->image) }} " alt="">
                                 </div>
                                 @else
@@ -62,9 +63,8 @@
                                 </div>
                                 @endif
                                 <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
-                                <div class="row m-0 p-0 desigMainDiv text-start">
+                                <div class="row m-0 p-0 desigMainDiv ">
                                     <div class="row p-0 desigSecondDiv">
-                                        <div class="p-0 borderDiv">&nbsp;</div>
                                         <p class="mb-0 desigText" style="color: #02114f !important;">
                                             @php
                                             $jobTitle = $loginEmpManagerDetails->job_role;
@@ -675,46 +675,49 @@
                             <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
-                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}
-                            </p>
-                            <p class=" payslip-small-desc align-items-end d-flex justify-content-end flex-column">
+                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class="payslip-small-desc align-items-end d-flex justify-content-end flex-column">
                                 {{ date('t', strtotime('-1 month')) }} <br>
                                 <span class="payslip-small-desc">Paid days</span>
                             </p>
                         </div>
                     </div>
 
-                    <div class="d-flex flex-column mt-3 ">
+                    <div class="d-flex flex-column mt-3">
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="grossPay"></div>
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 50,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 50,000.00' : '₹****' }}
+                            </p>
                         </div>
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="deductionsPay"></div>
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 5,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 5,000.00' : '₹****' }}
+                            </p>
                         </div>
                         <div class="net-salary">
                             <div class="d-flex gap-4">
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            <p class="payslip-small-desc">₹ 45,000.00</p>
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ 45,000.00' : '₹****' }}
+                            </p>
                         </div>
-                        </divclas>
+                    </div>
 
-                        <div class="show-salary">
-                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                                download>Download PDF</a>
-                            <a class="showHideSalary">
-                                Hide Salary
-                            </a>
-                        </div>
+                    <div class="show-salary">
+                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                            {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
+                        </a>
                     </div>
                 </div>
                 <a href="#">
@@ -910,7 +913,7 @@
                                 Swipe Time</th>
                             <th>
                                 Sign-In / Sign-Out</th>
-                                <th>
+                            <th>
                                 Device</th>
                         </tr>
                         @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)

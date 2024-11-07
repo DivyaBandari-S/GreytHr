@@ -71,6 +71,7 @@ class EmployeesReview extends Component
     {
         $this->leaveactiveTab = $tab;
         $this->showActiveLeaveContent = ($tab === 'active');
+        $this->searchQuery = '';
     }
     public function getApprovedLeaveRequests()
     {

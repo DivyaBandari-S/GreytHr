@@ -171,7 +171,7 @@ class Catalog extends Component
         $this->AddRequestaceessDialog = false;
         // Close all dialogs
         $this->ItRequestaceessDialog = false;
-    
+
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
         $this->MailRequestaceessDialog = false;
@@ -186,7 +186,7 @@ class Catalog extends Component
 
     public function ItRequest()
     {
-        $this->resetDialogs(); // Close other dialogs
+        $this->resetDialogs();
         $this->ItRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category','cc_to']);

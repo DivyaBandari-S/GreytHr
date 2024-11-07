@@ -38,9 +38,7 @@ class Home extends Component
 {
     public $currentDate;
     public $swipes;
-    public $showSalary = false;
     public $groupedRequests;
- 
     public $whoisinTitle = '';
     public $currentDay;
     public $absent_employees_count;
@@ -117,6 +115,7 @@ class Home extends Component
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
+    public $showSalary = true;
     public  $longitude;
     public function mount()
     {
