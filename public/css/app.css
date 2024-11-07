@@ -24,7 +24,7 @@
 }
 .input-group input:focus {
     outline: none; /* Remove the default blue outline */
-    box-shadow: none; /* Remove any shadow effect */
+    /* box-shadow: none;  */
 }
 .view-file {
     color: var(--main-heading-color);

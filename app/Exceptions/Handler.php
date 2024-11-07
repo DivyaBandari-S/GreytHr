@@ -47,6 +47,13 @@ class Handler extends ExceptionHandler
             Log::error($e->getMessage(), ['exception' => $e]);
             return response()->view('errors.db_error');
         }
+        // Check if the exception is related to maximum execution time
+        if ($e instanceof \Symfony\Component\ErrorHandler\Error\FatalError) {
+            if (str_contains($e->getMessage(), 'Maximum execution time')) {
+                // Return a custom view for the execution timeout error
+                return response()->view('errors.time-out', [], Response::HTTP_REQUEST_TIMEOUT);
+            }
+        }
 
         return parent::render($request, $e);
     }

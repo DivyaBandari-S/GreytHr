@@ -69,28 +69,21 @@
                         <p class="pt-2 px-1 text-danger">{{ str_replace('form.emp id', 'Employee ID', $message) }}</p>
                     @enderror
                 </div>
-                <div class="form-group" style="margin-top: 20px;">
+                <div class="form-group"  style="margin-top: 20px;">
                     <label for="password" style="font-size: 14px;">Password</label>
                     <div class="input-group">
                         <input type="{{ $showPassword ? 'text' : 'password' }}" class="form-control" id="password"
                             placeholder="Enter Password" wire:model.lazy="form.password" wire:input="login"
-                            wire:keydown.debounce.500ms="validateField('form.password')">
-
+                            wire:keydown.debounce.500ms="validateField('form.password')" style="border-right: none;">
                         @if ($showEyeIcon)
-                            <span class="input-group-text pointer" style="cursor: pointer;"
-                                wire:click="togglePasswordVisibility">
-                                <i class="{{ $showPassword ? 'fas fa-eye' : 'fas fa-eye-slash' }}"></i>
-                            </span>
+                            <span style="background-color: #fff" class="input-group-text pointer" wire:click="togglePasswordVisibility"><i class="{{ $showPassword ? 'fas fa-eye' : 'fas fa-eye-slash' }}"></i></span>
                         @endif
-                    </div>
 
+                    </div>
                     @error('form.password')
-                        <p class="pt-2 px-1 text-danger">
-                            {{ str_replace('form.password', 'Password', $message) }}
-                        </p>
+                        <p class="pt-2 px-1 text-danger">{{ str_replace('form.password', 'Password', $message) }}</p>
                     @enderror
                 </div>
-
                 <div style="margin-left: 60%; text-align: center;" wire:click="show">
                     <span><a href="#" wire:click="show" style="color: rgb(2, 17, 79);font-size:12px;">Forgot
                             Password?</a></span>
