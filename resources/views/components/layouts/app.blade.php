@@ -55,10 +55,9 @@ if ($companyIds) {
             }
 
         @endphp
-        <!-- <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}"> -->
-        <link rel="icon" type="image/x-icon" href="{{ asset('images/hr_new_blue_small.png') }}">
+      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
-            {{ $employee->company_name }}
+        HR Xpert
         </title>
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"

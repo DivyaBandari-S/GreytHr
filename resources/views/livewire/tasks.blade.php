@@ -922,7 +922,7 @@
                                         <div class="col p-0 comment-content">
                                             @if ($editCommentId == $comment->id)
                                                 <!-- Input field for editing -->
-                                                <input class="form-control" wire:model.defer="newComment"
+                                                <input class="form-control" wire:model.defer="editingComment"
                                                     type="text">
                                                 <!-- Button to update comment -->
                                                 <button class="update-btn p-1"
