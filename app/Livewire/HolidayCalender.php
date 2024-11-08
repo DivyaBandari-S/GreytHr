@@ -71,11 +71,7 @@ class HolidayCalender extends Component
     
             // Update the calendar data with unique dates
             $this->calendarData = $uniqueDates;
-    
-            // Check if calendar data is empty
-            if ($this->calendarData->isEmpty()) {
-                FlashMessageHelper::flashError( 'Calendar data not found for the selected year.');
-            }
+
         } catch (\Exception $e) {
             FlashMessageHelper::flashError( 'An error occurred while fetching calendar data. Please try again later.');
             $this->calendarData = [];

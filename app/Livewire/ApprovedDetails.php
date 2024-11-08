@@ -45,7 +45,6 @@ class ApprovedDetails extends Component
     public function mount($leaveRequestId)
     {
         try {
-            // Fetch leave request details based on $leaveRequestId with employee details
             $this->selectedWeek = 'this_week';
             $this->setWeekDates();
             $this->leaveRequest = LeaveRequest::with('employee')->find($leaveRequestId);
@@ -301,8 +300,6 @@ class ApprovedDetails extends Component
     public function fetchLeaveApplications()
     {
         try {
-            // Fetch leave applications where status is approved, rejected, or withdrawn
-            // and emp_id matches the logged-in employee's ID, and the leave period overlaps with the selected week
             $this->leaveApplications = LeaveRequest::whereIn('leave_status', [2,3])
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {

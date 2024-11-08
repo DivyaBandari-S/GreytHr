@@ -323,7 +323,7 @@
 
             @if ($showActiveLeaveContent)
             <div class="pending-leavves-container">
-                @if($count > 0 || $sendLeaveApplications)
+                @if($count > 0 && $sendLeaveApplications)
                 <div class="reviewList">
                     @livewire('view-pending-details')
                 </div>

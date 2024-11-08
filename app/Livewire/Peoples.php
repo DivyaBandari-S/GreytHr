@@ -24,6 +24,7 @@ class Peoples extends Component
     public $activeTab = 'starred';
     public $peopleFound = true;
     public $employeeDetails;
+
     public function setActiveTab($tab)
     {
         if ($tab === 'starred') {
@@ -138,13 +139,9 @@ class Peoples extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            // Fetch the company_ids for the logged-in employee
             $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
-
-            // Check if companyIds is an array; decode if it's a JSON string
             $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
             $trimmedSearchTerm = trim($this->search);
-            // Loop through each company ID and find employees
 
 
                 $this->filteredStarredPeoples = StarredPeople::where(function($query) use ($companyIdsArray) {
@@ -167,11 +164,10 @@ class Peoples extends Component
     }
 
     public $employee;
+    
     public function toggleStar($employeeId)
 {
     try {
-
-        // Log::info("Toggling star for employee ID: {$employeeId}");
         
         $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
         
@@ -305,7 +301,7 @@ class Peoples extends Component
             ]);
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
-            return view('livewire.peoples')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
+            return false;
         }
     }
 }

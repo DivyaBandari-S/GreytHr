@@ -82,7 +82,9 @@ class LeaveApplyPage extends Component
     public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
     public $field;
     public $managerDetails, $fullName;
-    public $empManagerDetails, $selectedManagerDetails;
+    public $empManagerDetails;
+    public  $selectedManagerDetails;
+    public $hasReachedLimit = false;
     protected $rules = [
         'leave_type' => 'required',
         'from_date' => 'required|date',
@@ -263,26 +265,32 @@ class LeaveApplyPage extends Component
     {
         try {
             if (isset($this->selectedPeople[$empId])) {
+                // Deselect employee and reset limit flag
                 unset($this->selectedPeople[$empId]);
+                $this->hasReachedLimit = false;
             } else {
+                // Check if the selection limit is reached
                 if (count($this->selectedPeople) < 5) {
+                    // Select employee if within limit
                     $this->selectedPeople[$empId] = true;
                 } else {
-                    FlashMessageHelper::flashError("You reached maximum limit of CC To");
+                    // Show warning only once if limit reached
+                    if (!$this->hasReachedLimit) {
+                        FlashMessageHelper::flashWarning("You reached maximum limit of CC To");
+                        $this->hasReachedLimit = true;
+                    }
                 }
             }
-
-            // Only update recipients list if a valid selection was made
-            if (count($this->selectedPeople) <= 5) {
-                $this->searchCCRecipients();
-                $this->fetchEmployeeDetails();
-            }
+            // Always update recipients list and fetch employee details
+            $this->searchCCRecipients();
+            $this->fetchEmployeeDetails();
         } catch (\Exception $e) {
-            // Optionally, use FlashMessageHelper to notify the user
+            // Notify the user if an error occurs
             FlashMessageHelper::flashError('An error occurred while processing your selection. Please try again.');
             return false;
         }
     }
+
 
     public function fetchEmployeeDetails()
     {
@@ -334,7 +342,6 @@ class LeaveApplyPage extends Component
 
             // Toggle selection state in selectedPeople
             unset($this->selectedPeople[$empId]);
-            $this->showCcRecipents = true;
 
             // Fetch updated employee details
             $this->fetchEmployeeDetails();
@@ -460,7 +467,7 @@ class LeaveApplyPage extends Component
                 'emp_id' => auth()->guard('emp')->user()->emp_id,
                 'notification_type' => 'leave',
                 'leave_type' => $this->leave_type,
-                'leave_reason' => $this->reason,
+                // 'leave_reason' => $this->reason,
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
@@ -715,8 +722,8 @@ class LeaveApplyPage extends Component
     protected function checkForHolidays()
     {
         try {
-            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date]) ->whereNotNull('festivals')
-            ->where('festivals', '!=', '')->exists();
+            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->whereNotNull('festivals')
+                ->where('festivals', '!=', '')->exists();
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking for holidays. Please try again.');
             return false;
@@ -998,6 +1005,7 @@ class LeaveApplyPage extends Component
     {
         if ($empId) {
             $this->fetchManagerDetails($empId);
+            $this->showApplyingToContainer = false;
         } else {
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $applying_to = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1045,15 +1053,14 @@ class LeaveApplyPage extends Component
         $this->from_session = 'Session 1';
         $this->to_session = 'Session 2';
         $this->cc_to = null;
-        $this->applying_to = null;
         $this->showNumberOfDays = false;
         $this->showApplyingToContainer = false;
         $this->show_reporting = false;
-        $this->selectedManagerDetails = null;
         $this->showApplyingTo = true;
         $this->selectedCCEmployees = [];
-        $this->file_paths = [];
+        $this->file_paths = null;
         $this->selectedPeople = [];
+        $this->selectedManager =[];
     }
 
 

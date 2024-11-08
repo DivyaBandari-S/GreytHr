@@ -171,7 +171,7 @@ class Catalog extends Component
         $this->AddRequestaceessDialog = false;
         // Close all dialogs
         $this->ItRequestaceessDialog = false;
-    
+
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
         $this->MailRequestaceessDialog = false;
@@ -179,17 +179,17 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
-       $this->selectedPeople=[];
-       $this->addselectedPeople=[];
-       $this->isNames=false;
-    
-        
+
+        $this->selectedPeople=[];
+        $this->addselectedPeople=[];
+        $this->isNames=false;
+
     }
-    
+
     public function ItRequest()
     {
-        $this->resetDialogs(); // Close other dialogs
-        $this->ItRequestaceessDialog = true; 
+        $this->resetDialogs();
+        $this->ItRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category','cc_to']);
         $this->category = 'Request For IT';
