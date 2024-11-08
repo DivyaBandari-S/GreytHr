@@ -14,6 +14,7 @@ namespace App\Livewire;
 use App\Helpers\FlashMessageHelper;
 use App\Models\Comment;
 use App\Models\EmployeeDetails;
+use App\Models\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -42,10 +43,10 @@ class Feeds extends Component
    public $file_path;
    public $description = '';
     public $category;
-  
+
     public $search;
 
-  
+
     public $showEmojiPicker = false;
     public $employeeId;
     public $showAlert = false;
@@ -55,13 +56,13 @@ class Feeds extends Component
 
     public $employees;
     public $hr;
- 
+
     public $dropdownVisible = false;
     public $monthAndDay;
     public $currentCardEmpId;
 
     public $comments = [];
-   
+
     public $sortType='newest';
     public $newComment = '';
     public $employeeDetails;
@@ -71,7 +72,7 @@ class Feeds extends Component
     public $emp_id;
     public $addcomments;
     public $data;
- 
+
     public $selectedEmoji = null;
 
     public $selectedEmojiReaction;
@@ -85,7 +86,7 @@ class Feeds extends Component
     public $showFeedsDialog = false;
     public $showMessage = true;
     public $empCompanyLogoUrl;
- 
+
     public $combinedData = [];
     public function closeMessage()
     {
@@ -126,9 +127,9 @@ class Feeds extends Component
     ];
     protected $messages = [
         'category.required' => 'Category is required.',
-  
+
         'description.required' => 'Description is required.',
-       
+
     ];
 
 
@@ -147,23 +148,23 @@ class Feeds extends Component
     {
         // Get the authenticated user's company ID
         $authCompanyId = Auth::user()->company_id;
-    
+
         // Fetch the parent company where is_parent is 'yes'
         $company = DB::table('companies')
             ->where('company_id', $authCompanyId)
             ->where('is_parent', 'yes')
             ->first();
-            
-    
+
+
         // Check if a parent company was found
         if ($company) {
             // Debugging: Print the raw company_id from the database (assumed to be a JSON string)
-       
-    
+
+
             // No need to decode company_id as an array; treat it as a string
             $companyId = $company->company_id;
-          
- 
+
+
             // Ensure the company ID is not null or empty
             if (!empty($companyId)) {
                 // Load employees where the company_id JSON field in employee_details matches the parent company_id string
@@ -172,23 +173,46 @@ class Feeds extends Component
                 $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-                
+
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
-                $this->loadComments();   
+                $this->loadComments();
       $employeeId = Auth::guard('emp')->user()->emp_id;
       $this->isManager = DB::table('employee_details')
           ->where('manager_id', $employeeId)
           ->exists();
-            
-              
+
+
             }
         } else {
             // If no parent company is found
-           
+
         }
+        $today=now();
+        $currentDate = $today->toDateString();
+        $birthdayRecord = Notification::where('body', $currentDate)
+        ->where('assignee',$authCompanyId[0])
+        ->where('notification_type', 'birthday')
+        ->first();
+        if ($birthdayRecord) {
+            // Decode the JSON field into a PHP array
+            $isBirthdayRead = json_decode($birthdayRecord->is_birthday_read, true);
+
+            // Check if the employee ID exists in the array and update it
+            if (isset($isBirthdayRead[$employeeId])) {
+                $isBirthdayRead[$employeeId] = 1;  // Mark as read (1)
+            }
+
+            // Encode the updated array back into JSON
+            $birthdayRecord->is_birthday_read = json_encode($isBirthdayRead);
+
+            // Save the updated record back to the database
+            $birthdayRecord->save();
+        }
+
+
     }
-    
+
 
     public $isEmojiListVisible = false;
     public function showEmojiList()
@@ -228,24 +252,26 @@ class Feeds extends Component
     public function openDialog($emp_id)
     {
         logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
-        
+
+
         $this->emp_id = $emp_id;
-    
-           $this->allEmojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-    
+        $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
+
+
+
         $this->showDialog = true;
           // Fetch the latest emoji reactions for the specific employee
-      
+
     }
     public function openEmojiDialog($emp_id)
     {
         logger()->info('openDialog method called with emp_id: ' . $emp_id);  // Log the method call
-    
+
         $this->emp_id = $emp_id;
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
-    
- 
-    
+
+
+
         $this->showDialogEmoji = true;
     }
     public function handleRadioChange($value)
@@ -267,7 +293,7 @@ class Feeds extends Component
     public function closeEmojiDialog()
     {
         $this->showDialogEmoji = false;
-    } 
+    }
     public function closeDialog()
     {
         $this->showDialog = false;
@@ -281,7 +307,7 @@ class Feeds extends Component
         // Validate if needed
         $employeeId = null;
         $hrId = null;
-    
+
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's emp_id
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -290,13 +316,13 @@ class Feeds extends Component
             $hrEmployee = auth()->guard('hr')->user();
             $hrId = $hrEmployee->emp_id;
         }
-    
+
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
             FlashMessageHelper::flashError( 'Employee ID cannot be null.');
             return;
         }
-    
+
         // Create the comment based on the authenticated role
         if ($employeeId) {
         // Create emoji record
@@ -312,7 +338,7 @@ class Feeds extends Component
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-     
+
     }
     public function createemoji($emp_id)
     {
@@ -320,7 +346,7 @@ class Feeds extends Component
         $user = Auth::user();
         $employeeId = null;
         $hrId = null;
-    
+
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's emp_id
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -329,13 +355,13 @@ class Feeds extends Component
             $hrEmployee = auth()->guard('hr')->user();
             $hrId = $hrEmployee->emp_id;
         }
-    
+
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
             FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
-    
+
         // Create the comment based on the authenticated role
         if ($employeeId) {
         // Validate if needed
@@ -353,62 +379,32 @@ class Feeds extends Component
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-    
-      
+
+
     }
 
     public function getComments($sortType)
     {
         $query = Comment::query();
-        
+
         if ($sortType === 'newest') {
             $query->orderBy('created_at', 'desc');
         } elseif ($sortType === 'interacted') {
             $query->orderBy('updated_at', 'desc');
         }
-    
+
         $currentCardComments = $query->get();
-    
+
         return view('feeds', compact('currentCardComments', 'sortType'));
     }
-    public $allEmojis;
-    public function removeReaction($emojiId)
-    {
-        try {
-            // Locate the emoji based on ID
-            $emoji = Emoji::find($emojiId);
-            
-            if ($emoji && $emoji->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
-                $emoji->delete();
-    
-                // Remove the deleted emoji from $allEmojis
-                $this->allEmojis = $this->allEmojis->filter(fn($item) => $item->id !== $emojiId);
-    
-                // Dispatch a success message
-                $this->dispatchBrowserEvent('emoji-removed', [
-                    'message' => 'You have removed your reaction.'
-                ]);
-            } else {
-                throw new \Exception('You can only remove your own reactions.');
-            }
-        } catch (\Exception $e) {
-            $this->dispatch('emoji-removed', [
-                'message' => $e->getMessage(),
-                'type' => 'error'
-            ]);
-        }
-    }
-    
-    
-    
-    
+
     public function add_comment($emp_id)
     {
         $this->validate();
-    
+
         $employeeId = null;
         $hrId = null;
-    
+
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's emp_id
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -417,13 +413,13 @@ class Feeds extends Component
             $hrEmployee = auth()->guard('hr')->user();
             $hrId = $hrEmployee->emp_id;
         }
-    
+
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
             FlashMessageHelper::flashError( 'Employee ID cannot be null.');
             return;
         }
-    
+
         // Create the comment based on the authenticated role
         if ($employeeId) {
             Comment::create([
@@ -440,27 +436,27 @@ class Feeds extends Component
                 'comment' => $this->newComment ?? '',
             ]);
         }
-    
-    
+
+
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
         $this->isSubmitting = false;
-    
+
         $this->comments = Comment::with('employee','hr')
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-      
+
 
     }
     public function createcomment($emp_id)
     {
         $this->validate();
-    
+
         $employeeId = null;
         $hrId = null;
-  
+
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's emp_id
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -469,43 +465,43 @@ class Feeds extends Component
             $hrEmployee = auth()->guard('hr')->user();
             $hrId = $hrEmployee->emp_id;
         }
-  
+
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
             FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
-    
+
         // Create the comment based on the authenticated role
         if ($employeeId) {
            AddComment::create([
                 'card_id' => $emp_id,
                 'emp_id' => $employeeId,
-               
+
                 'addcomment' => $this->newComment ?? '',
             ]);
         } elseif ($hrId) {
             AddComment::create([
                 'card_id' => $emp_id,
                 'emp_id' => $employeeId,
-               
+
                 'addcomment' => $this->newComment ?? '',
             ]);
         }
-    
-    
+
+
         // Clear the input field after adding the comment
         $this->reset(['newComment']);
         $this->isSubmitting = false;
-    
-   
+
+
             $this->addcomments = Addcomment::with('employee')
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-       
-   
- 
+
+
+
     }
     protected $listeners = ['updateSortType'];
     // Toggle dropdown visibility
@@ -518,12 +514,12 @@ class Feeds extends Component
     public function updateSortType($sortType)
     {
         $this->sortType = $sortType;
-   
+
         $this->loadComments();
-       
-       
+
+
     }
-    
+
     public function loadComments()
 {
     // Fetch all comments initially
@@ -553,7 +549,7 @@ class Feeds extends Component
 
     $this->comments = $filteredCommentsQuery->get();
 
-  
+
 }
 public function loadaddComments()
 {
@@ -584,11 +580,11 @@ public function loadaddComments()
 
     $this->addcomments  = $filteredCommentsQuery->get();
 
-  
+
 }
 
 
-    
+
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id');
@@ -601,12 +597,12 @@ public function loadaddComments()
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files with a max size of 2MB
         ]);
-    
+
         try {
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-    
+
             // Process the uploaded image file
             if ($this->file_path) {
                 // Validate file is an image
@@ -614,12 +610,12 @@ public function loadaddComments()
                     session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
                     return;
                 }
-    
+
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
             }
-    
+
             // Check if the file content is valid
             if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
@@ -628,33 +624,33 @@ public function loadaddComments()
                 FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
-    
+
             // Check if the file content is too large (16MB limit for MEDIUMBLOB)
             if (strlen($fileContent) > 16777215) {
                 FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                 return;
             }
-    
+
             // Get the authenticated user
             $user = Auth::user();
-    
+
             // Get the authenticated employee ID and their details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    
+
             // Check if the authenticated employee is a manager
             $isManager = DB::table('employee_details')
                 ->where('manager_id', $employeeId)
                 ->exists();
-    
+
             // If not a manager, set `emp_id` instead of `manager_id`
             $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
             $managerId = $isManager ? $employeeId : null;
             $empId = $isManager ? null : $employeeId;
-    
+
             // Retrieve the HR details if applicable
             $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
-    
+
             // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
@@ -667,12 +663,12 @@ public function loadaddComments()
                 'file_name' => $fileName,
                 'status' => $postStatus,
             ]);
-    
+
             // Reset form fields and display success message
             $this->reset(['category', 'description', 'file_path']);
             FlashMessageHelper::flashSuccess ( 'Post created successfully!');
             $this->showFeedsDialog = false;
-    
+
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -683,10 +679,10 @@ public function loadaddComments()
             FlashMessageHelper::flashError ('An error occurred while creating the request. Please try again.');
         }
     }
-    
-    
-    
-    
+
+
+
+
     public function setCurrentCardEmpId($empId)
     {
         // Set the current card's emp_id
@@ -700,7 +696,7 @@ public function loadaddComments()
         ->where('card_id', $empId)
         ->orderByDesc('created_at')
         ->get();
-      
+
         $this->addcomments = Addcomment::where('card_id', $this->currentCardEmpId)->get();
         $this->storedemojis = Emoji::where('emp_id', $this->currentCardEmpId)->get();
         $this->emojis = EmojiReaction::where('emp_id', $this->currentCardEmpId)->get();
@@ -722,23 +718,23 @@ public function loadaddComments()
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's company ID
             $empCompanyId = auth()->guard('emp')->user()->company_id;
-    
+
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
- 
+
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {
             $empCompanyId = auth()->guard('hr')->user()->company_id;
-    
+
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
             return $company ? $company->company_logo : asset('user.jpg');
         }
-    
 
-        
-      
+
+
+
     }
 
     public function render()
@@ -757,33 +753,33 @@ public function loadaddComments()
       $isManager = DB::table('employee_details')
       ->where('manager_id', $employeeId)  // Assuming $employeeId is the manager's ID
       ->get();
-     
+
         // Check if 'emp' guard is authenticated
         if (auth()->guard('emp')->check()) {
             $this->employeeDetails = EmployeeDetails::with('personalInfo') // Eager load personal info
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->get();
-    
+
             $storedEmojis = Emoji::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             $emojis = EmojiReaction::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-    
+
             // Check if no employee details are found
             if ($this->employeeDetails->isEmpty()) {
                 // Redirect or handle the case where no employee details are found
                 return redirect()->route('Feeds'); // Redirect to a route for no employee details
             }
-        } 
+        }
         // Check if 'hr' guard is authenticated
         elseif (auth()->guard('hr')->check()) {
             $this->employeeDetails = Hr::where('hr_emp_id', auth()->guard('hr')->user()->hr_emp_id)->get();
-            
+
             // Check if no employee details are found
             if ($this->employeeDetails->isEmpty()) {
                 // Redirect or handle the case where no employee details are found
                 return redirect()->route('no-employee-details'); // Redirect to a route for no employee details
             }
         }
-    
+
         // Return the view with the necessary data
         return view('livewire.feeds', [
             'comments' => $this->comments,
@@ -796,7 +792,7 @@ public function loadaddComments()
             'storedEmojis' => $storedEmojis
         ]);
     }
-    
+
 public function showEmployee($id)
 {
     $employee = EmployeeDetails::find($id);
@@ -820,7 +816,7 @@ public function showEmployee($id)
 
     private function combineAndSortData($employees)
     {
-        
+
         $combinedData = [];
         $currentDate = Carbon::now();
 
@@ -829,7 +825,7 @@ public function showEmployee($id)
                 $dateOfBirth = Carbon::parse($employee->personalInfo->date_of_birth);
 
                 // Check if the date of birth is within the current month and up to the current date
-                if ($dateOfBirth->month < $currentDate->month || 
+                if ($dateOfBirth->month < $currentDate->month ||
                     ($dateOfBirth->month === $currentDate->month && $dateOfBirth->day <= $currentDate->day)) {
                     $combinedData[] = [
                         'date' => $dateOfBirth->format('m-d'), // Format date as needed
@@ -843,7 +839,7 @@ public function showEmployee($id)
                 $hireDate = Carbon::parse($employee->hire_date);
 
                 // Check if the hire date is within the current month and up to the current date
-                if ($hireDate->month < $currentDate->month || 
+                if ($hireDate->month < $currentDate->month ||
                     ($hireDate->month === $currentDate->month && $hireDate->day <= $currentDate->day)) {
                     $combinedData[] = [
                         'date' => $hireDate->format('m-d'),
@@ -861,5 +857,5 @@ public function showEmployee($id)
 
         return $combinedData;
     }
-    
+
 }

@@ -2,10 +2,13 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeDetails;
+use App\Models\EmpPersonalInfo;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Message;
+use App\Models\Notification as ModelsNotification;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
@@ -18,14 +21,91 @@ class Notification extends Component
     public $messagenotifications;
     public $leaveApproveNotification;
     public $leaveRejectNotification;
-    public $leavenotifications,$leavecancelnotifications;
+    public $leavenotifications, $leavecancelnotifications;
     public $tasknotifications;
     public $totalnotifications;
     public $totalnotificationscount;
+    public $birthdayRecord;
+    public $manager_id;
+    public $totalBirthdays;
+    public $isYourBirthday = false;
+    public $getRemainingBirthday;
+    public $birthdayTime;
+
 
     public function mount()
     {
         try {
+
+            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+            $CompanyId = Auth::user()->company_id[0];
+
+            $today = now();
+            $currentDate = $today->toDateString();
+            $currentMonth = $today->month;
+            $currentDay = $today->day;
+            $this->birthdayTime = Carbon::parse($today->startOfDay())->diffForHumans();
+
+            $employees = EmployeeDetails::whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->get(['emp_id']); // Only fetch the emp_id field
+
+            // Initialize an empty array to store emp_ids with value 0
+            $empIds = [];
+
+            // Loop through the results and populate the array with emp_id => 0
+            foreach ($employees as $employee) {
+                $empIds[$employee->emp_id] = 0;
+            }
+            // dd(  $empIds);
+
+            // Fetch employees whose birth_date matches today's month and day
+            $birthdayEmployees = EmpPersonalInfo::whereMonth('date_of_birth', $currentMonth)
+                ->whereDay('date_of_birth', $currentDay)
+                ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->select('employee_details.*')
+                ->get();
+
+            $count = count($birthdayEmployees);
+
+            if ($count > 0) {
+
+                $isBirthdayAvailable = ModelsNotification::where('assignee', $CompanyId)
+                    ->where('body', $currentDate)
+                    ->where('notification_type', 'birthday')->get();
+
+                // dd($isBirthdayAvailable);
+                if (count($isBirthdayAvailable) > 0) {
+
+                    if ($count != $isBirthdayAvailable[0]->chatting_id) {
+                        ModelsNotification::where('id', $isBirthdayAvailable[0]->id)  // Ensure to specify the correct `id` to update
+                            ->update([
+                                'emp_id' => $loggedInEmpId,
+                                'chatting_id' => $count,
+                                'notification_type' => 'birthday',
+                                'assignee' => $CompanyId,
+                                'body' => $currentDate,  // Assuming `$today` contains the current date
+                                'is_birthday_read' => json_encode($empIds)
+                            ]);
+                    }
+                } else {
+                    ModelsNotification::create([
+                        'emp_id' => $loggedInEmpId,
+                        'chatting_id' => $count,
+                        'notification_type' => 'birthday',
+                        'assignee' => $CompanyId,
+                        'body' => $currentDate,  // Assuming `$today` contains the current date
+                        'is_birthday_read' => json_encode($empIds)
+                    ]);
+                }
+            } else {
+                DB::table('notifications')
+                    ->Where('body', $currentDate)
+                    ->where('notification_type', 'birthday')
+                    ->where('assignee', $CompanyId)
+                    ->delete();
+            }
+
             $this->fetchNotifications();
         } catch (\Exception $e) {
             throw $e;
@@ -35,6 +115,56 @@ class Notification extends Component
     public function fetchNotifications()
     {
         try {
+            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+            $CompanyId = Auth::user()->company_id[0];
+            $today = now();
+            $currentDate = $today->toDateString();
+            $currentMonth = $today->month;
+            $currentDay = $today->day;
+
+            $this->birthdayRecord = ModelsNotification::where('body', $currentDate)
+                ->where('assignee', $CompanyId)
+                ->where('notification_type', 'birthday')
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(is_birthday_read, '$.\"$loggedInEmpId\"')) = '0'")
+                ->first();
+            if ($this->birthdayRecord) {
+
+                $YourBirthday = EmpPersonalInfo::whereMonth('date_of_birth', $currentMonth)
+                    ->whereDay('date_of_birth', $currentDay)
+                    ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                    ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                    ->where('employee_details.emp_id', $loggedInEmpId)
+                    ->first();
+
+                $this->totalBirthdays = $this->birthdayRecord->chatting_id;
+                // dd( $this->totalBirthdays);
+                if ($YourBirthday) {
+                    $this->isYourBirthday = true;
+                    $this->totalBirthdays = $this->birthdayRecord->chatting_id - 1;
+
+                    if ($this->totalBirthdays == 1) {
+                        $this->getRemainingBirthday = EmpPersonalInfo::whereMonth('date_of_birth', $currentMonth)
+                            ->whereDay('date_of_birth', $currentDay)
+                            ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                            ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                            ->select('employee_details.*')
+                            ->first();
+                        //   dd( $this->getRemainingBirthday->first_name);
+
+                    }
+                } elseif ($this->totalBirthdays == 1) {
+
+                    $this->getRemainingBirthday = EmpPersonalInfo::whereMonth('date_of_birth', $currentMonth)
+                        ->whereDay('date_of_birth', $currentDay)
+                        ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+                        ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                        ->select('employee_details.*')
+                        ->first();
+                }
+                //  dd( $this->totalBirthdays);
+
+            }
+
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
             // working groupby messages notifications
@@ -44,25 +174,25 @@ class Notification extends Component
                 ->where('receiver_id', $loggedInEmpId)
                 ->where('notification_type', 'message')
                 ->where('message_read_at', null)
-                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
-                // ->groupBy('emp_id');
+            // ->groupBy('emp_id');
 
-                $this->leaveApproveNotification = DB::table('notifications')
+            $this->leaveApproveNotification = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->where('assignee', $loggedInEmpId)
                 ->where('notification_type', 'leaveApprove')
                 ->where('message_read_at', null)
-                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
-                // dd($this->leaveApproveNotification);
+            // dd($this->leaveApproveNotification);
 
-                $this->leaveRejectNotification = DB::table('notifications')
+            $this->leaveRejectNotification = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->where('assignee', $loggedInEmpId)
                 ->where('notification_type', 'leaveReject')
                 ->where('message_read_at', null)
-                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
             $this->leavenotifications = DB::table('notifications')
@@ -73,10 +203,10 @@ class Notification extends Component
                 })
                 ->where('notification_type', 'leave')
                 ->where('is_read', 0)
-                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
-                $this->leavecancelnotifications = DB::table('notifications')
+            $this->leavecancelnotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->where(function ($query) use ($loggedInEmpId) {
                     $query->whereJsonContains('notifications.applying_to', [['manager_id' => $loggedInEmpId]])
@@ -84,7 +214,7 @@ class Notification extends Component
                 })
                 ->where('notification_type', 'leaveCancel')
                 ->where('is_read', 0)
-                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
             $this->tasknotifications = DB::table('notifications')
@@ -92,48 +222,53 @@ class Notification extends Component
                 ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$loggedInEmpId])
                 ->where('notification_type', 'task')
                 ->where('is_read', 0)
-                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name as detail', 'notifications.emp_id', 'notifications.notification_type', 'notifications.created_at','notifications.chatting_id','notifications.leave_type')
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name as detail', 'notifications.emp_id', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
-                // ->groupBy('emp_id');
+            // ->groupBy('emp_id');
 
-                $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge( $this->leaveApproveNotification)->merge($this->leaveRejectNotification);
+            $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification);
 
-                $groupedNotifications = $allNotifications->groupBy(function($item) {
-                    return $item->emp_id . '-' . $item->notification_type;
-                });
-                $this->totalnotifications = $groupedNotifications->map(function($items, $key) {
-                    $firstItem = $items->first();
-                    $detailsArray = $items->pluck('detail')->toArray();
-                    $detailsCount = count($detailsArray);
-                    $latestCreatedAt = $items->max('created_at');
-                    $humanReadableCreatedAt = Carbon::parse($latestCreatedAt)->diffForHumans();
+            $groupedNotifications = $allNotifications->groupBy(function ($item) {
+                return $item->emp_id . '-' . $item->notification_type;
+            });
+            $this->totalnotifications = $groupedNotifications->map(function ($items, $key) {
+                $firstItem = $items->first();
+                $detailsArray = $items->pluck('detail')->toArray();
+                $detailsCount = count($detailsArray);
+                $latestCreatedAt = $items->max('created_at');
+                $humanReadableCreatedAt = Carbon::parse($latestCreatedAt)->diffForHumans();
 
-                    return (object)[
-                        'first_name' => $firstItem->first_name,
-                        'last_name' => $firstItem->last_name,
-                        'emp_id' => $firstItem->emp_id,
-                        'chatting_id' =>$firstItem->chatting_id,
-                        'leave_type'=>$firstItem->leave_type,
-                        'notification_type' => $firstItem->notification_type,
-                        'created_at' => $latestCreatedAt,
-                        'details_count' => $detailsCount,
-                        'details' => $detailsArray,
-                        'notify_time'=> $humanReadableCreatedAt,
-                    ];
-                })->sortByDesc('created_at')->values();
+                return (object)[
+                    'first_name' => $firstItem->first_name,
+                    'last_name' => $firstItem->last_name,
+                    'emp_id' => $firstItem->emp_id,
+                    'chatting_id' => $firstItem->chatting_id,
+                    'leave_type' => $firstItem->leave_type,
+                    'notification_type' => $firstItem->notification_type,
+                    'created_at' => $latestCreatedAt,
+                    'details_count' => $detailsCount,
+                    'details' => $detailsArray,
+                    'notify_time' => $humanReadableCreatedAt,
+                ];
+            })->sortByDesc('created_at')->values();
 
 
-            $this->totalnotificationscount = $this->totalnotifications->count();
+            if ($this->totalBirthdays > 0) {
+                $this->totalnotificationscount = $this->totalnotifications->count() + 1;
+            } else {
+                $this->totalnotificationscount = $this->totalnotifications->count();
+            }
+
 
 
             $this->chatNotificationCount = DB::table('notifications')
-            ->where('receiver_id',$loggedInEmpId)
-            ->whereNull('message_read_at')
-            ->distinct('emp_id')
-            ->count('emp_id');
+                ->where('receiver_id', $loggedInEmpId)
+                ->whereNull('message_read_at')
+                ->distinct('emp_id')
+                ->count('emp_id');
 
-        //    dd( $this->totalnotifications);
+            //    dd( $this->totalnotifications);
         } catch (\Exception $e) {
             throw $e;
         }
@@ -183,8 +318,7 @@ class Notification extends Component
             //     ->update(['message_read_at' => Carbon::now()]);
 
             // $this->fetchNotifications();
-            return redirect()->route('chat', ['query' => \Vinkla\Hashids\Facades\Hashids::encode($messageId)]) ;
-
+            return redirect()->route('chat', ['query' => \Vinkla\Hashids\Facades\Hashids::encode($messageId)]);
         } catch (\Exception $e) {
             throw $e;
         }
