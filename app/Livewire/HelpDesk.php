@@ -227,7 +227,7 @@ public $closedSearch = '';
     public function close()
     {
         $this->showDialog = false;
-
+        $this->isRotated = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
         $this->reset(['subject', 'description', 'cc_to', 'category', 'file_path', 'priority', 'image', 'selectedPeopleNames', 'selectedPeople']);
@@ -339,7 +339,7 @@ public $closedSearch = '';
             $this->showViewFileDialog = true;
         } else {
             // Handle case where file is not found or is null
-            $this->dispatchBrowserEvent('file-not-found', ['message' => 'File not found.']);
+            $this->dispatch('file-not-found', ['message' => 'File not found.']);
         }
     }
     public $showImageDialog = false;
@@ -515,17 +515,28 @@ public $closedSearch = '';
         $this->isRotated = false;
     }
 
+    public $warningShown = false;  // Flag to track if the warning has been shown
+
     public function updatedSelectedPeople()
     {
+        // Check if the number of selected people exceeds 5
         if (count($this->selectedPeople) > 5) {
-            // Flash an error message
-            FlashMessageHelper::flashWarning( 'You can only select up to 5 people.');
+            if (!$this->warningShown) {
+                // Flash a warning message only once
+                FlashMessageHelper::flashWarning('You can only select up to 5 people.');
+                
+                // Set the flag to true, so the warning won't be shown again in this iteration
+                $this->warningShown = true;
+            }
             
             // Optionally, reset the selected people array or remove the last selection
             $this->selectedPeople = array_slice($this->selectedPeople, 0, 5);
         } else {
-            // Update cc_to field
+            // If the number of selected people is valid, update the cc_to field
             $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+            
+            // Reset the warning flag when the count is valid
+            $this->warningShown = false;
         }
     }
     

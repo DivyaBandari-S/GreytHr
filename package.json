@@ -23,6 +23,8 @@
         "jquery.emojiarea.js": "^0.1.8-beta",
         "laravel-echo": "^1.16.1",
         "pusher-js": "^8.4.0-rc2",
+        "quill": "^2.0.2",
+        "summernote": "^0.9.1",
         "tinymce": "^7.4.1",
         "vuex": "^4.1.0"
     }

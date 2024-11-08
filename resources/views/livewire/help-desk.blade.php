@@ -1,6 +1,6 @@
 <div>
 <div wire:loading
-        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage">
+        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -87,7 +87,7 @@
                         <div class="input" type="" class="form-control placeholder-small">
                             <div style="position: relative;">
                                 <select wire:model.lazy="category" wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
-                                    <option style="color: #778899; " value="" hidden disabled>Select Category</option>
+                                    <option style="color: #778899; " value="" hidden >Select Category</option>
                                     <optgroup label="HR">
 
                                         <option value="Employee Information">Employee Information</option>
@@ -118,7 +118,7 @@
 
                         <div class="form-group mt-2">
                             <label for="description" class="helpdesk-label" >Description <span style="color: red;">*</span></label>
-                            <textarea wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
+                            <textarea id="description" wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
@@ -144,7 +144,7 @@
                             <div class="input" class="form-control placeholder-small">
                                 <div style="position: relative;">
                                     <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                                        <option style="color: grey;" value="" hidden disabled>Select Priority</option>
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
                                         <option value="High">High</option>
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>
@@ -283,7 +283,7 @@
             </div>
             <div class="col-12 col-md-3 " style="margin-top:-5px">
                 <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                <option value="" class="option-default">Select Request</option>
+                <option value="" class="option-default" hidden>Select Request</option>
     @foreach($requestCategories as $request => $categories)
     <option value="{{ $request }}" class="option-item">{{ $request }}</option>
   
@@ -325,13 +325,13 @@
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request" >
-                            {{ $record->category }}
+                            {{ $record->category ??'-'}}
                         </td>
                         <td class="helpdesk-request" >
-                            {{ $record->subject }}
+                            {{ $record->subject ??'-' }}
                         </td>
                         <td class="helpdesk-request" >
-                            {{ $record->description }}
+                            {{ $record->description ??'-' }}
                         </td>
                         <td class="helpdesk-request" >
 
@@ -407,7 +407,7 @@
                             {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
                         </td>
                         <td class="helpdesk-request" >
-                            {{ $record->priority }}
+                            {{ $record->priority ??'-'}}
                         </td>
                     </tr>
 
@@ -455,7 +455,7 @@
      
             <div class="col-12 col-md-3" style="margin-top:-5px">
                 <select wire:model="closedCategory" wire:change="searchClosedHelpDesk"id="closedCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                    <option value="">Select Request</option>
+                    <option value="" hidden>Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
                     @endforeach
@@ -493,13 +493,13 @@
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request" >
-                            {{ $record->category }}
+                            {{ $record->category ??'-'}}
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->subject }}
+                            {{ $record->subject ??'-'}}
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->description }}
+                            {{ $record->description ??'-'}}
                         </td>
                         <td class="helpdesk-request" >
 
@@ -567,7 +567,7 @@
                             {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->priority }}
+                            {{ $record->priority ??'-' }}
                         </td>
                     </tr>
                     @if (count($ccToArray) > 2)
@@ -609,7 +609,7 @@
             </div>
             <div class="col-12 col-md-3" style="margin-top:-2px" >
                 <select wire:model="pendingCategory" wire:change="searchPendingHelpDesk"  id="pendingCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                    <option value="">Select Request</option>
+                    <option value="" hidden>Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
                     @endforeach
@@ -647,13 +647,13 @@
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->category }}
+                            {{ $record->category ??'-'}}
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->subject }}
+                            {{ $record->subject ??'-'}}
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->description }}
+                            {{ $record->description ??'-'}}
                         </td>
                         <td class="helpdesk-request">
 
@@ -729,7 +729,7 @@
                             {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
                         </td>
                         <td style="padding: 10px; font-size: 12px; text-align: center; text-transform: capitalize;">
-                            {{ $record->priority }}
+                            {{ $record->priority ??'-'}}
                         </td>
                     </tr>
                     @if (count($ccToArray) > 2)

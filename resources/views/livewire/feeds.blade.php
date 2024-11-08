@@ -1,6 +1,6 @@
 <div>
   <div wire:loading
-        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction">
+        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction,removeEmojiReaction,addEmoji,selectEmoji">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -526,14 +526,15 @@
                                     <span style="font-size: 8px;"> {{ $fullName }}</span>
                                     @php $uniqueNames[] = $fullName; @endphp
                                     @endif
+                                    
                                     @endforeach
                                     @if (count($uniqueNames) > 0)
                                     <span style="font-size:8px">reacted</span>
 
                                     @endif
 
-                                    @if($emojisCount > 2)
-                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+more</span>
+                                    @if($emojisCount > 1)
+                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }} more</span>
 
                 @if($showDialogEmoji && $emp_id == $data['employee']->emp_id)
                 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
@@ -569,8 +570,14 @@
 </span>
 
                                     <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                    <div style="display: flex; justify-content: center;">
-    <span style="font-size: 16px;">{{ $emoji->emoji_reaction }}</span>
+ 
+<div style="display: flex; justify-content: center;">
+<span style="font-size: 16px; cursor: pointer; color: inherit;" 
+                                  wire:click="removeEmojiReaction('{{ $emoji->id }}')" 
+                                  onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Emoji Reaction' : $emoji->emoji_reaction }}';" 
+                                  onmouseout="this.innerHTML='{{ $emoji->emoji_reaction }}';">
+                                  {{ $emoji->emoji_reaction }}
+                            </span>
 </div>
 
    
@@ -771,7 +778,7 @@
                                             </div>
                                             <div class="col-md-11" style="position: relative;">
                                             <textarea
-        id="comment-textarea"
+        
         wire:model.lazy="newComment"
         placeholder="Post your comments here.."
         name="comment"
@@ -985,8 +992,8 @@
                             <span style="font-size:8px">reacted</span>
                             @endif
 
-                            @if($emojisCount > 2)
-                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+more</span>
+                            @if($emojisCount > 1)
+                <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }} more</span>
 
                 @if($showDialogEmoji && $emp_id == $data['employee']->emp_id)
                 <div class="modal fade show" tabindex="-1" role="dialog" style="display: block; overflow-y: auto;" wire:key="emojiModal">
@@ -1022,7 +1029,12 @@
 </span>
 
                                     <span style="font-size: 12px; margin-left: 10px;width:50%"> {{ ucwords(strtolower($emoji->first_name)) }} {{ ucwords(strtolower($emoji->last_name)) }}</span>
-                                        <span style="font-size: 16px;">{{ $emoji->emoji_reaction  }}</span>
+                                    <span style="font-size: 16px; cursor: pointer; color: inherit;" 
+                                  wire:click="removeEmojiReaction('{{ $emoji->id }}')" 
+                                  onmouseover="this.innerHTML='{{ $emoji->emp_id === auth()->user()->id ? 'Remove Emoji Reaction' : $emoji->emoji_reaction }}';" 
+                                  onmouseout="this.innerHTML='{{ $emoji->emoji_reaction }}';">
+                                  {{ $emoji->emoji_reaction }}
+                            </span>
    
                                     </div>
                                 @endforeach
