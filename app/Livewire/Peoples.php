@@ -301,7 +301,7 @@ class Peoples extends Component
             ]);
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
-            return view('livewire.peoples')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
+            return false;
         }
     }
 }

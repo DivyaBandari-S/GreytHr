@@ -58,9 +58,9 @@ class SendTaskReminder extends Command
             if ($taskCreatedDate == $taskDueDate) {
                 $taskCreatedTime = Carbon::parse($task->created_at);
                 Log::info("tasks: " . $taskCreatedTime); 
-                $sendReminderTime = $taskCreatedTime->addMinutes(5);
+                $sendReminderTime = $taskCreatedTime->addHours(3);
                 Log::info("tasks: " . $sendReminderTime);
-                
+
                 if ($now->gte($sendReminderTime)) {
                     preg_match('/\#\((.*?)\)/', $task->assignee, $matches);
     

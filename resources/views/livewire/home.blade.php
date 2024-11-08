@@ -690,7 +690,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ 50,000.00' : '₹****' }}
+                                {{ $showSalary ? '₹****' : '₹ 50,000.00' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -699,7 +699,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ 5,000.00' : '₹****' }}
+                                {{ $showSalary ? '₹****' : '₹ 5,000.00' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -708,7 +708,7 @@
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ 45,000.00' : '₹****' }}
+                                {{ $showSalary ? '₹****' : '₹ 45,000.00' }}
                             </p>
                         </div>
                     </div>
@@ -716,7 +716,7 @@
                     <div class="show-salary">
                         <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
                         <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
+                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
                         </a>
                     </div>
                 </div>
