@@ -87,7 +87,7 @@
                         <div class="input" type="" class="form-control placeholder-small">
                             <div style="position: relative;">
                                 <select wire:model.lazy="category" wire:keydown.debounce.500ms="validateField('category')" id="category" style="font-size: 12px;" class="form-control placeholder-small">
-                                    <option style="color: #778899; " value="" hidden disabled>Select Category</option>
+                                    <option style="color: #778899; " value="" hidden >Select Category</option>
                                     <optgroup label="HR">
 
                                         <option value="Employee Information">Employee Information</option>
@@ -144,7 +144,7 @@
                             <div class="input" class="form-control placeholder-small">
                                 <div style="position: relative;">
                                     <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                                        <option style="color: grey;" value="" hidden disabled>Select Priority</option>
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
                                         <option value="High">High</option>
                                         <option value="Low">Low</option>
                                         <option value="Medium">Medium</option>

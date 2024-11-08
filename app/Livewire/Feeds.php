@@ -71,6 +71,7 @@ class Feeds extends Component
     public $isSubmitting = false;
     public $emp_id;
     public $addcomments;
+    public $allEmojis;
     public $data;
 
     public $selectedEmoji = null;
@@ -298,6 +299,29 @@ class Feeds extends Component
     {
         $this->showDialog = false;
     }
+
+    public function removeReaction($emojiId)
+    {
+        try {
+            // Locate the emoji based on ID
+            $emoji = Emoji::find($emojiId);
+            
+            if ($emoji && $emoji->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
+                $emoji->delete();
+    
+                // Dispatch a success message
+                FlashMessageHelper::flashSuccess('You have removed your reaction.');
+    
+                // Remove the deleted emoji from $allEmojis
+                $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+            } else {
+                throw new \Exception('You can only remove your own reactions.');
+            }
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError($e->getMessage());
+        }
+    }
+
     // Method to add emoji
     public function add_emoji($emp_id)
     {
