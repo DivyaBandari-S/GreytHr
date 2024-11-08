@@ -179,7 +179,9 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
-
+       $this->selectedPeople=[];
+       $this->addselectedPeople=[];
+       $this->isNames=false;
     
         
     }

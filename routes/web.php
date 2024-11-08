@@ -354,9 +354,11 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
 
 
+
 Route::get('/itform', function () {
     return view('itform');
 });
+
 //Download routes
 Route::get('/your-download-route', function () {
     return view('download-pdf');

@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     @guest
       <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
     <title>
@@ -11,6 +12,17 @@
     </title>
     @endguest
     @auth('emp')
+   
+  
+  @livewireStyles
+     <!-- include libraries(jQuery, bootstrap) -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <!-- include summernote css/js -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
         @php
             // Get the logged-in employee ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -84,6 +96,7 @@ if ($companyIds) {
             </main>
         </section>
     @endguest
+    
 <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
 <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 

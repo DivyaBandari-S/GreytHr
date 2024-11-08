@@ -118,7 +118,7 @@
 
                         <div class="form-group mt-2">
                             <label for="description" class="helpdesk-label" >Description <span style="color: red;">*</span></label>
-                            <textarea wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
+                            <textarea id="description" wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('description')" id="description" class="form-control" placeholder="Enter description" rows="4" style="font-family: Montserrat, sans-serif;"></textarea>
 
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
