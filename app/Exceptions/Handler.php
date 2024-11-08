@@ -2,13 +2,21 @@
 
 namespace App\Exceptions;
 
+use Eloquent;
+use Illuminate\Database\Connection;
+use Illuminate\Database\Connectors\Connector;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\View\ViewException;
+use Illuminate\Database\Eloquent\Model;
+use Symfony\Component\ErrorHandler\Error\FatalError;
+
 
 class Handler extends ExceptionHandler
 {
@@ -33,26 +41,19 @@ class Handler extends ExceptionHandler
         });
     }
 
-    /**
-     * Render an exception into an HTTP response.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Throwable  $e
-     * @return \Illuminate\Http\Response
-     */
     public function render($request, Throwable $e)
     {
 
-        if ($e instanceof QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException) {
+        Log::error('Data Base error :' . $e->getMessage(), ['exception' => $e]);
+
+        if ($e instanceof QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException || $e instanceof ViewException || $e instanceof Model || $e instanceof Connection || $e instanceof Connector || $e instanceof FatalError) {
+            // dd('hello world');
             Log::error($e->getMessage(), ['exception' => $e]);
             return response()->view('errors.db_error');
         }
-        // Check if the exception is related to maximum execution time
-        if ($e instanceof \Symfony\Component\ErrorHandler\Error\FatalError) {
-            if (str_contains($e->getMessage(), 'Maximum execution time')) {
-                // Return a custom view for the execution timeout error
-                return response()->view('errors.time-out', [], Response::HTTP_REQUEST_TIMEOUT);
-            }
+        // Handle model not found exceptions as 404 errors
+        if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
+            return response()->view('errors.404', [], 404);
         }
 
         return parent::render($request, $e);
