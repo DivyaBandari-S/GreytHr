@@ -1,14 +1,10 @@
 <div class="position-relative">
-    <div class="msg-container">
-        @if ($showAlert)
-            <div id="alert-container" class="d-flex justify-content-center alert-container mb-3" wire:poll.1s="hideAlert">
-                <!-- wire:poll.5s="hideAlert" -->
-                <p class="alert alert-success successContainer" role="alert">
-                    {{ session('success') }} 😀
-                    <span class="closeMsg ml-5" wire:click='hideAlert'>x</span>
-                </p>
+    <div class="position-absolute" wire:loading wire:target="open,toggleSignState">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
             </div>
-        @endif
+        </div>
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
@@ -21,7 +17,7 @@
                             @endif
                             <p class="morning-city">Welcome<br>
                                 {{ ucwords(strtolower($loginEmployee->first_name)) }}
-                                &nbsp;{{ ucwords(strtolower($loginEmployee->last_name)) }}
+                                {{ ucwords(strtolower($loginEmployee->last_name)) }}
                             </p>
                             <div class="locationGlobe row m-0 p-0 pt-5">
                                 <div class="col-1 p-0">
@@ -56,30 +52,66 @@
                             </div>
                         </div>
                         <div class="col-md-3 homeReporting pt-4">
-                            @if($loginEmpManagerDetails)
-                            <div class="new_site">
-                            <!-- new_site_ribbon -->
-                                <div class="reportsToHome rounded-pill">Reports To..</div>
-                            </div>
-                            <div class="row m-0 text-center">
-                                @if($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !=='null')
-                                <div class="p-0 mb-3 mt-2">
-                                    <img class="rounded-circle" width="50" height="50" src="data:image/jpeg;base64,{{ ($loginEmpManagerDetails->image) }} " alt="">
+                            @if ($loginEmpManagerDetails)
+                                <div class="new_site">
+                                    <!-- new_site_ribbon -->
+                                    <div class="reportsToHome rounded-pill">Reports To..</div>
                                 </div>
-                                @else
-                                <div class="p-0">
-                                    <i class="fa-regular fa-user reportMangerImg"></i>
-                                </div>
-                                @endif
-                                <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
-                                <div class="row m-0 p-0 desigMainDiv ">
-                                    <div class="row p-0 desigSecondDiv">
-                                        <p class="mb-0 desigText" style="color: #02114f !important;">
-                                            <i class="fa-regular fa-compass me-2"></i> Sr. Project Manager
-                                        </p>
+                                <div class="row m-0 text-center">
+                                    @if ($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
+                                        <div class="p-0 mb-3 mt-2">
+                                            <img class="rounded-circle" width="50" height="50"
+                                                src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }} "
+                                                alt="">
+                                        </div>
+                                    @else
+                                        <div class="p-0">
+                                            <i class="fa-regular fa-user reportMangerImg"></i>
+                                        </div>
+                                    @endif
+                                    <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
+                                        {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
+                                    <div class="row m-0 p-0 desigMainDiv ">
+                                        <div class="row p-0 desigSecondDiv">
+                                            <p class="mb-0 desigText" style="color: #02114f !important;">
+                                                @php
+                                                    $jobTitle = $loginEmpManagerDetails->job_role;
+
+                                                    // Replace specific titles with desired formats
+                                                    $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
+                                                    $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
+                                                    $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
+                                                    $convertedTitle = preg_replace(
+                                                        '/\bIII\b/i',
+                                                        'III',
+                                                        $convertedTitle,
+                                                    );
+
+                                                    // Capitalize the first letter of each word, while keeping 'II' intact
+                                                    $convertedTitle = preg_replace_callback(
+                                                        '/\b([a-z])([a-z]*)/i',
+                                                        function ($matches) {
+                                                            return strtoupper($matches[1]) . strtolower($matches[2]);
+                                                        },
+                                                        $convertedTitle,
+                                                    );
+
+                                                    // Ensure 'II' and 'HR' stay capitalized after the callback
+                                                    $convertedTitle = str_replace(
+                                                        [' Ii', ' Hr', ' IIi', 'Iii'],
+                                                        [' II', ' HR', ' III'],
+                                                        $convertedTitle,
+                                                    );
+                                                @endphp
+                                                <i class="fa-regular fa-compass me-2"></i>
+                                                {{ $convertedTitle ? $convertedTitle : 'N/A' }}
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @else
+                                <span></span>
+                            @endif
                         </div>
 
                         <div class="col-md-3 p-0">
@@ -177,8 +209,8 @@
                                                         this.time = `${hours} : ${minutes} : ${seconds}`;
                                                     }
                                                 }" x-init="setInterval(() => updateTime(), 1000)">
-                                                <img src="/images/stopwatch.png" class="me-4"
-                                                    alt="Image Description" style="width: 2.7em;">
+                                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
+                                                    style="width: 2.7em;">
                                                 <template x-if="time">
                                                     <p x-text="time" class="showTimer"></p>
                                                 </template>
@@ -190,7 +222,7 @@
                                                 <button id="signButton" class="signInButton"
                                                     wire:click="toggleSignState">
                                                     @if ($swipes)
-                                                        @if ($swipes->in_or_out == 'OUT')
+                                                        @if ($swipes->in_or_out === 'OUT')
                                                             Sign In
                                                         @else
                                                             Sign Out
@@ -210,105 +242,10 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="col-md-6">
-                <img src="images/admin_banner.png" style="width: 100%;">
-            </div> -->
-            <!-- <div class="col-md-6">
-                <div class="globe pt-4">
-                    <div class="section-banner">
-                        <div id="star-1">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                        <div id="star-2">
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-bottomright"></div>
-                                <div id="curved-corner-bottomleft"></div>
-                            </div>
-                            <div class="curved-corner-star">
-                                <div id="curved-corner-topright"></div>
-                                <div id="curved-corner-topleft"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="locationGlobe">
-                        <i class="fa-solid fa-location-dot me-2" id="openMapIcon"
-                            style="color: red;cursor: pointer;"></i>
-                        {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
-                        {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
-                        {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ',' : '' }}
-                        {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
-                        {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
-
-                    </div>
-
-                </div>
-
-            </div> -->
-
         </div>
-
 
         <!-- main content -->
         <div class="row m-0">
-
-
-            <div class="col-md-3 ">
-                <div class="payslip-card mb-4" style="height: 195px;">
-                    <div class="row m-0 avatarImgDiv">
-                        <img src="images/gamer.png" class="firstImg position-absolute" />
-                        <img src="images/agent.png" class="secondImg position-absolute" />
-                        <img src="images/woman.png" class="thirdImg position-absolute" />
-                        <p class="moreImgTxt">+3</p>
-                    </div>
-                    <p class="payslip-card-title">Connect</p>
-                    <p class="payslip-small-desc">
-                        Wanted to connect with you
-                    </p>
-                    <a href="#">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-3  ">
-                <div class="payslip-card mb-4 " style="height: 195px;">
-                    <p class="payslip-card-title">Time Sheet</p>
-                    <p class="payslip-small-desc">
-                        Submit your time sheet for this week.
-                    </p>
-                    <a href="/time-sheet">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-md-3  ">
-                <div class="payslip-card mb-4" style="height: 195px;">
-                    <p class="payslip-card-title">Apply for a Leave</p>
-                    <p class="payslip-small-desc">
-                        Kindly click on the Arrow button to apply a leave.
-                    </p>
-                    <a href="/leave-form-page">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-
             <div class="col-md-3">
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title mb-0">Upcoming Holidays</p>
@@ -352,7 +289,53 @@
                 </a>
             </div>
         </div>
+        <div class="col-md-3 ">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <div class="row m-0 avatarImgDiv">
+                    <img src="images/gamer.png" class="firstImg position-absolute" />
+                    <img src="images/agent.png" class="secondImg position-absolute" />
+                    <img src="images/woman.png" class="thirdImg position-absolute" />
+                    <p class="moreImgTxt">+3</p>
+                </div>
+                <p class="payslip-card-title">Connect</p>
+                <p class="payslip-small-desc">
+                    Wanted to connect with you
+                </p>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
+            </div>
+        </div>
 
+        <div class="col-md-3  ">
+            <div class="payslip-card mb-4 " style="height: 195px;">
+                <p class="payslip-card-title">Time Sheet</p>
+                <p class="payslip-small-desc">
+                    Submit your time sheet for this week.
+                </p>
+                <a href="/time-sheet">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-md-3  ">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title">Apply for a Leave</p>
+                <p class="payslip-small-desc">
+                    Kindly click on the Arrow button to apply a leave.
+                </p>
+                <a href="/leave-form-page">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
+            </div>
+        </div>
     </div>
     <div class="row m-0">
         <div class="col-md-3  ">
@@ -712,10 +695,11 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas id="combinedPieChart" width="117" height="117"></canvas>
+                            <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
-                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}</p>
+                            <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}
+                            </p>
                             <p class="payslip-small-desc align-items-end d-flex justify-content-end flex-column">
                                 {{ date('t', strtotime('-1 month')) }} <br>
                                 <span class="payslip-small-desc">Paid days</span>
@@ -754,7 +738,8 @@
                     </div>
 
                     <div class="show-salary">
-                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download PDF</a>
+                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download
+                            PDF</a>
                         <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
                             {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
                         </a>
@@ -927,55 +912,55 @@
                 </div>
             </div>
 
-    </div>
-    @if ($showAlertDialog)
-    <div class="modal d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <b>Swipes</b>
-                    </h5>
-                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                        aria-label="Close" wire:click="close">
-                    </button>
-                </div>
-                <div class="modal-body" style="max-height:300px;overflow-y:auto">
-                    <div class="row">
-                        <div class="col normalTextValue">Date :
-                            <span class="normalText">{{ $currentDate }}</span>
+        </div>
+        @if ($showAlertDialog)
+            <div class="modal d-block" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <b>Swipes</b>
+                            </h5>
+                            <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                                aria-label="Close" wire:click="close">
+                            </button>
                         </div>
-                        <div class="col normalTextValue">Shift
-                            Time : <span class="normalText">10:00 to 19:00</span></div>
-                    </div>
-                    <table class="swipes-table mt-2 border w-100">
-                        <tr>
-                            <th>
-                                Swipe Time</th>
-                            <th>
-                                Sign-In / Sign-Out</th>
-                            <th>
-                                Device</th>
-                        </tr>
-                        @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
-                        @foreach ($swipeDetails as $swipe)
-                        <tr>
-                            <td>
-                                {{ $swipe->swipe_time }}
-                            </td>
-                            <td>
-                                {{ $swipe->in_or_out }}
-                            </td>
-                            <td>
-                                {{ $swipe->sign_in_device }}
-                            </td>
-                        </tr>
-                        @endforeach
-                        @else
-                        <tr>
-                            <td class="homeText" colspan="2">No swipe records found for today.</td>
-                        </tr>
-                        @endif
+                        <div class="modal-body" style="max-height:300px;overflow-y:auto">
+                            <div class="row">
+                                <div class="col normalTextValue">Date :
+                                    <span class="normalText">{{ $currentDate }}</span>
+                                </div>
+                                <div class="col normalTextValue">Shift
+                                    Time : <span class="normalText">10:00 to 19:00</span></div>
+                            </div>
+                            <table class="swipes-table mt-2 border w-100">
+                                <tr>
+                                    <th>
+                                        Swipe Time</th>
+                                    <th>
+                                        Sign-In / Sign-Out</th>
+                                    <th>
+                                        Device</th>
+                                </tr>
+                                @if (!is_null($swipeDetails) && $swipeDetails->count() > 0)
+                                    @foreach ($swipeDetails as $swipe)
+                                        <tr>
+                                            <td>
+                                                {{ $swipe->swipe_time }}
+                                            </td>
+                                            <td>
+                                                {{ $swipe->in_or_out }}
+                                            </td>
+                                            <td>
+                                                {{ $swipe->sign_in_device }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td class="homeText" colspan="2">No swipe records found for today.</td>
+                                    </tr>
+                                @endif
 
                             </table>
                         </div>
