@@ -1,6 +1,6 @@
 <div>
   <div wire:loading
-        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction,removeEmojiReaction">
+        wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction,removeEmojiReaction,addEmoji,selectEmoji">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -533,7 +533,7 @@
 
                                     @endif
 
-                                    @if($emojisCount > 0)
+                                    @if($emojisCount > 1)
                 <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }} more</span>
 
                 @if($showDialogEmoji && $emp_id == $data['employee']->emp_id)
@@ -992,7 +992,7 @@
                             <span style="font-size:8px">reacted</span>
                             @endif
 
-                            @if($emojisCount > 0)
+                            @if($emojisCount > 1)
                 <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }} more</span>
 
                 @if($showDialogEmoji && $emp_id == $data['employee']->emp_id)
