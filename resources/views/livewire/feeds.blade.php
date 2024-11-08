@@ -249,13 +249,13 @@
                                 <ul class="d-flex flex-column m-0 p-0" >
                                     <a class="menu-item" href="/Feeds">All Feeds</a>
                                
-                                    <a class="menu-item" href="/everyone" >Every One</a>
+                                    <a class="menu-item" href="/events" >Every One</a>
                                    
                                     <a class="menu-item" href="/Feeds" >Events</a>
-                            w
-                                    <a class="menu-item" href="/everyone" >Company News</a>
+                            
+                                    <a class="menu-item" href="/events" >Company News</a>
                                  
-                                    <a class="menu-item" href="/everyone" >Appreciation</a>
+                                    <a class="menu-item" href="/events" >Appreciation</a>
                                 
                                    
                                  
