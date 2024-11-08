@@ -68,6 +68,8 @@ class Tasks extends Component
     public $filterData;
     public $showAlert = false;
     public $openAccordions = [];
+    public $editingComment = '';
+
     public function toggleAccordion($recordId)
     {
         if (in_array($recordId, $this->openAccordions)) {
@@ -788,21 +790,22 @@ class Tasks extends Component
     }
     public function openEditCommentModal($commentId)
     {
-        $this->editCommentId = $commentId;
-        $this->newComment = TaskComment::findOrFail($commentId)->comment;
-        $this->fetchTaskComments($this->taskId); // Fetch task comments again
+        $comment = TaskComment::findOrFail($commentId);
+        $this->editCommentId = $commentId;          // Store the comment ID being edited
+        $this->editingComment = $comment->comment;  // Set the current comment into editingComment
+        $this->newComment = '';
     }
 
 
     public function updateComment($commentId)
     {
         $this->validate([
-            'newComment' => 'required|string|word_count:500|max:3000',
+            'editingComment' => 'required|string|word_count:500|max:3000',
         ]);
 
         $comment = TaskComment::findOrFail($commentId);
         $comment->update([
-            'comment' => $this->newComment,
+            'comment' => $this->editingComment,
         ]);
         FlashMessageHelper::flashSuccess('Comment updated successfully.');
         $this->showAlert = true;
@@ -810,6 +813,7 @@ class Tasks extends Component
 
         // Reset the edit state
         $this->editCommentId = null;
+        $this->editingComment = ''; 
         $this->fetchTaskComments($this->taskId);
     }
     public function addComment()
