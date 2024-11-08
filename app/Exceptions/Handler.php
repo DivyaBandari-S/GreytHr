@@ -2,20 +2,16 @@
 
 namespace App\Exceptions;
 
-use Eloquent;
-use Illuminate\Database\Connection;
-use Illuminate\Database\Connectors\Connector;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
-use Illuminate\Http\Request;
+use BadMethodCallException;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Database\QueryException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 use Illuminate\Support\Facades\Log;
-use Illuminate\View\ViewException;
-use Illuminate\Database\Eloquent\Model;
-use Symfony\Component\ErrorHandler\Error\FatalError;
+use Livewire\Exceptions\MethodNotFoundException;
 
 
 class Handler extends ExceptionHandler
@@ -41,21 +37,37 @@ class Handler extends ExceptionHandler
         });
     }
 
+    /**
+     * Render an exception into an HTTP response.
+     */
     public function render($request, Throwable $e)
     {
+        Log::error('Exception Encountered : ' . $e->getMessage(), ['exception' => $e]);
 
-        Log::error('Data Base error :' . $e->getMessage(), ['exception' => $e]);
-
-        if ($e instanceof QueryException || $e instanceof \PDOException || $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException || $e instanceof \Illuminate\Database\DeadlockException || $e instanceof ViewException || $e instanceof Model || $e instanceof Connection || $e instanceof Connector || $e instanceof FatalError) {
-            // dd('hello world');
-            Log::error($e->getMessage(), ['exception' => $e]);
+        // Handle database and fatal errors
+        if ($this->isDatabaseOrFatalError($e)) {
             return response()->view('errors.db_error');
         }
-        // Handle model not found exceptions as 404 errors
-        if ($e instanceof ModelNotFoundException || $e instanceof NotFoundHttpException) {
+
+        // Handle 404 and HTTP-specific errors
+        if ($e instanceof MethodNotFoundException || $e instanceof BadMethodCallException) {
             return response()->view('errors.404', [], 404);
         }
 
         return parent::render($request, $e);
+    }
+
+    /**
+     * Determine if the exception is a database or fatal error.
+     */
+    protected function isDatabaseOrFatalError(Throwable $e): bool
+    {
+        return $e instanceof QueryException ||
+            $e instanceof \PDOException ||
+            $e instanceof ModelNotFoundException ||
+            $e instanceof \Illuminate\Database\DeadlockException ||
+            $e instanceof \Illuminate\View\ViewException ||
+            $e instanceof \Symfony\Component\ErrorHandler\Error\FatalError ||
+            $e instanceof Model;
     }
 }
