@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('chatting_id')->nullable();
             $table->string('task_name',100)->nullable();
             $table->string('assignee',100)->nullable();
-            $table->string('leave_reason')->nullable();
+            $table->json('is_birthday_read')->nullable();
             $table->string('leave_status',20)->default('Pending');
             $table->string('applying_to')->nullable();
             $table->json('cc_to')->nullable();
