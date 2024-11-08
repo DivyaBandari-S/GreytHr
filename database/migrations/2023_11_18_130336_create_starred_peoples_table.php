@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('emp_id', 10);
             $table->json('company_id');
             $table->string('name', 100)->nullable();
-            $table->string('people_id', 10)->unique();
+            $table->string('people_id', 10);
             $table->binary('profile')->nullable();
             $table->string('contact_details', 20)->nullable();
             $table->string('category', 50)->nullable();
