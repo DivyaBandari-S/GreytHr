@@ -195,6 +195,7 @@ class Peoples extends Component
                     $category = $this->employee->job_role ?? '';
                     $joiningDate = $this->employee->hire_date ? \Carbon\Carbon::parse($this->employee->hire_date)->format('Y-m-d H:i:s') : null;
                     $dateOfBirth = $this->employee->empPersonalInfo ? \Carbon\Carbon::parse($this->employee->empPersonalInfo->date_of_birth)->format('Y-m-d H:i:s') : null;
+
                     
                     $this->starredPerson = StarredPeople::create([
                         'people_id' => $this->employee->emp_id,
@@ -209,6 +210,7 @@ class Peoples extends Component
                         'date_of_birth' => $dateOfBirth,
                         'starred_status' => 'starred'
                     ]);
+                    FlashMessageHelper::flashSuccess('Star Added successfully!');
 
                     // Log::info("Starred person created successfully: ", ['starredPerson' => $this->starredPerson]);
                 } catch (\Exception $e) {
@@ -223,7 +225,7 @@ class Peoples extends Component
         
         // return redirect()->to('/PeoplesList');
     } catch (\Exception $e) {
-        Log::error("An error occurred: " . $e->getMessage());
+        // Log::error("An error occurred: " . $e->getMessage());
         FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
     }
 }
@@ -237,10 +239,16 @@ class Peoples extends Component
 
             if ($starredPerson) {
                 $starredPerson->delete();
-            }
+            
+            $this->selectStarredPeoples = null; // or select a default person
+            FlashMessageHelper::flashSuccess('Star removed successfully!');
+        } else {
+            FlashMessageHelper::flashError('Person not found in your starred list!');
+        }
 
             // return redirect('/PeoplesList');
         } catch (\Exception $e) {
+            // Log::info('error',$e);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
