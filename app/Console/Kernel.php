@@ -24,13 +24,11 @@ class Kernel extends ConsoleKernel
         // $schedule->command('export:data-entries')->everyFifteenMinutes();
         // $schedule->command('export:data-entries')->everyMinute();
         $schedule->command(SendTaskReminder::class)->hourly();
-
     }
 
     /**
      * Register the commands for the application.
      */
-
 
     protected function commands(): void
     {
