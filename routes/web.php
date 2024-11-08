@@ -276,7 +276,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('Feeds');
-    Route::get('/events', Activities::class);
+    Route::get('/events', Everyone::class);
     Route::get('/everyone', Everyone::class);
     Route::get('/emp-post-requests', EmpPostrequest::class);
 

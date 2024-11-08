@@ -299,6 +299,27 @@ class Feeds extends Component
     {
         $this->showDialog = false;
     }
+    public function removeEmojiReaction($emojiId)
+    {
+        try {
+            // Locate the emoji based on ID
+            $emoji_reaction = EmojiReaction::find($emojiId);
+            
+            if ($emoji_reaction && $emoji_reaction->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
+                $emoji_reaction->delete();
+    
+                // Dispatch a success message
+                FlashMessageHelper::flashSuccess('You have removed your reaction.');
+    
+                // Remove the deleted emoji from $allEmojis
+                $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+            } else {
+                throw new \Exception('You can only remove your own reactions.');
+            }
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError($e->getMessage());
+        }
+    }
 
     public function removeReaction($emojiId)
     {
