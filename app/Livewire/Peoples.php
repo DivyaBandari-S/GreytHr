@@ -210,10 +210,11 @@ class Peoples extends Component
                         'date_of_birth' => $dateOfBirth,
                         'starred_status' => 'starred'
                     ]);
+                    FlashMessageHelper::flashSuccess('Star Added successfully!');
 
                     // Log::info("Starred person created successfully: ", ['starredPerson' => $this->starredPerson]);
                 } catch (\Exception $e) {
-                    Log::error("Error while creating starred person: " . $e->getMessage());
+                    // Log::error("Error while creating starred person: " . $e->getMessage());
                     FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
                     $this->addError('duplicate', 'You have already starred this person.');
                 }
@@ -224,7 +225,7 @@ class Peoples extends Component
         
         // return redirect()->to('/PeoplesList');
     } catch (\Exception $e) {
-        Log::error("An error occurred: " . $e->getMessage());
+        // Log::error("An error occurred: " . $e->getMessage());
         FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
     }
 }
