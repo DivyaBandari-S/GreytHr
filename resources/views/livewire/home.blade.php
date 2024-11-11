@@ -815,7 +815,8 @@
                                                     @endphp
                                                     <div class="d-flex align-items-center">
                                                         <div class="thisCircle"
-                                                            style="border: 1px solid {{ $randomColorList }}">
+                                                            style="border: 1px solid {{ $randomColorList }}" data-toggle="tooltip" data-placement="top"
+                                                            title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
                                                             <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
                                                             </span>
                                                         </div>
@@ -850,7 +851,7 @@
                                 </div>
                             @endif
                         </div>
-                        <a href="#">
+                        <a href="/team-on-leave-chart">
                             <div class="payslip-go-corner">
                                 <div class="payslip-go-arrow">→</div>
                             </div>
