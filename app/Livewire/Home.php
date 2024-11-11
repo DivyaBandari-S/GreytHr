@@ -810,6 +810,8 @@ class Home extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
+        try{
+            $employeeId = auth()->guard('emp')->user()->emp_id;
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
 
@@ -870,6 +872,10 @@ class Home extends Component
             ->implode(', ');
 
         $this->taskCount = $taskRecords->count();
+        }catch(\Exception $e){
+            Log::error('Error calculating task data: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured, please try again later.');
+        }
     }
 
 
