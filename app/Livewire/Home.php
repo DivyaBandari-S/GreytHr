@@ -808,8 +808,8 @@ class Home extends Component
     }
     public function calculateTaskData()
     {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
- 
+        try{
+            $employeeId = auth()->guard('emp')->user()->emp_id;
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
  
@@ -820,9 +820,9 @@ class Home extends Component
             ->select('emp_id')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
- 
+
         $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
- 
+
         $totalTasksAssignedTo = Task::with('emp')
             ->where('emp_id', $employeeId)
             ->where(function ($query) use ($employeeId) {
@@ -832,7 +832,7 @@ class Home extends Component
             ->select('emp_id')
             ->whereBetween('created_at', [$startDate, $endDate])
             ->get();
- 
+
         $tasksSummary = Task::with('emp')
             ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
@@ -842,14 +842,14 @@ class Home extends Component
             ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
             ->whereBetween('created_at', [$startDate, $endDate])
             ->first();
- 
+
         $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
         $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
         $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
- 
+
         $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
         $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
- 
+
         $taskRecords = \App\Models\Task::with('emp')
             ->where(function ($query) use ($employeeId) {
                 $query->where('assignee', 'LIKE', "%($employeeId)%");
@@ -858,22 +858,26 @@ class Home extends Component
             ->whereBetween('created_at', [$startDate, $endDate])
             ->select('emp_id')
             ->get();
- 
+
         $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
- 
+
         $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
- 
+
         $this->employeeNames = $employeeDetails
             ->map(function ($employee) {
                 return $employee->first_name . ' ' . $employee->last_name;
             })
             ->implode(', ');
- 
+
         $this->taskCount = $taskRecords->count();
+        }catch(\Exception $e){
+            Log::error('Error calculating task data: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured, please try again later.');
+        }
     }
- 
- 
- 
+
+
+
     // Livewire component method
     public function fetchWeather()
     {
@@ -891,7 +895,7 @@ class Home extends Component
             $apiUrl = env('WEATHER_API_URL', 'https://api.open-meteo.com/v1/forecast');
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
- 
+
             $response = Http::get($requestUrl);
  
             // Log response for debugging
@@ -899,7 +903,7 @@ class Home extends Component
             // Log::info('API Response Status Code:', ['status' => $response->status()]);
             // Log::info('API Response Headers:', ['headers' => $response->headers()]);
             // Log::info('API Response Body:', ['body' => $response->body()]);
- 
+
             // Check if the request was successful
             if ($response->successful()) {
                 // Decode the JSON response
@@ -907,7 +911,7 @@ class Home extends Component
  
                 // Extract weather data from the response
                 $currentWeather = $data['current_weather'] ?? [];
- 
+
                 // $this->weatherCondition = $this->mapWeatherCodeToCondition($currentWeather['weathercode'] ?? 'Unknown');
                 $this->weatherCode = $currentWeather['weathercode'] ?? 'Unknown';
                 $this->temperature = $currentWeather['temperature'] ?? 'Unknown';
