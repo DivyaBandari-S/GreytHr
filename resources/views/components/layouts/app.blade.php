@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     @guest
       <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
     <title>
@@ -11,6 +12,10 @@
     </title>
     @endguest
     @auth('emp')
+   
+  
+  @livewireStyles
+
         @php
             // Get the logged-in employee ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -55,9 +60,9 @@ if ($companyIds) {
             }
 
         @endphp
-        <link rel="icon" type="image/x-icon" href="{{ asset($employee->company_logo) }}">
+      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
-            {{ $employee->company_name }}
+        HR Xpert
         </title>
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -67,8 +72,6 @@ if ($companyIds) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
-    {{-- <link rel="stylesheet" href="{{ asset('css/loader.css?v=' . filemtime(public_path('css/loader.css'))) }}"> --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     @livewireStyles
 </head>
@@ -78,12 +81,13 @@ if ($companyIds) {
         {{ $slot }}
     @else
         <section>
-             @livewire('main-layout')
+            @livewire('main-layout')
             <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
                 {{ $slot }}
             </main>
         </section>
     @endguest
+    
 <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
 <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
@@ -105,7 +109,6 @@ if ($companyIds) {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
-    {{-- <script src="{{ asset('js/loader.js') }}"></script> --}}
     @livewireScripts
 </body>
 

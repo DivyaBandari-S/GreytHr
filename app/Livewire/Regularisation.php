@@ -141,7 +141,7 @@ class Regularisation extends Component
             // Handle the error as needed, such as displaying a message to the user
         }
     }
-   
+
     public function hideMessage()
     {
         $this->showMessage = false;
