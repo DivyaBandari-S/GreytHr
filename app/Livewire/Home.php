@@ -115,54 +115,116 @@ class Home extends Component
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
+    public $showThisMonthLeaveRequest = false;
+    public $showTodayLeaveRequest = false;
+    public $modalLeaveTitle = '';
+    public $showModal = false;
     public $showSalary = true;
     public  $longitude;
     public function mount()
     {
-        $this->fetchWeather();
-        $currentHour = date('G');
- 
-        if ($currentHour >= 4 && $currentHour < 12) {
-            $this->greetingImage = 'morning.jpeg';
-            $this->greetingText = 'Good Morning';
-        } elseif ($currentHour >= 12 && $currentHour < 16) {
-            $this->greetingImage = 'afternoon.jpeg';
-            $this->greetingText = 'Good Afternoon';
-        } elseif ($currentHour >= 16 && $currentHour < 20) {
-            $this->greetingImage = 'evening.jpeg';
-            $this->greetingText = 'Good Evening';
-        } else {
-            $this->greetingImage = 'night.jpeg';
-            $this->greetingText = 'Good Night';
+        try {
+            // Fetch weather data
+            $this->fetchWeather();
+    
+            // Get current hour to determine greeting
+            $currentHour = date('G');
+            if ($currentHour >= 4 && $currentHour < 12) {
+                $this->greetingImage = 'morning.jpeg';
+                $this->greetingText = 'Good Morning';
+            } elseif ($currentHour >= 12 && $currentHour < 16) {
+                $this->greetingImage = 'afternoon.jpeg';
+                $this->greetingText = 'Good Afternoon';
+            } elseif ($currentHour >= 16 && $currentHour < 20) {
+                $this->greetingImage = 'evening.jpeg';
+                $this->greetingText = 'Good Evening';
+            } else {
+                $this->greetingImage = 'night.jpeg';
+                $this->greetingText = 'Good Night';
+            }
+    
+            // Get employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            
+            // Check if employee details exist before attempting to access
+            $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
+                ->select('emp_id', 'first_name', 'last_name', 'manager_id')
+                ->first();
+    
+            if ($this->loginEmployee) {
+                // Get manager details
+                $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
+                    ->where('emp_id', $this->loginEmployee->manager_id)
+                    ->first();
+                
+                // Get employees under the manager
+                $employees = EmployeeDetails::where('manager_id', $employeeId)
+                    ->select('emp_id', 'first_name', 'last_name')
+                    ->get();
+    
+                // Extract employee IDs
+                $empIds = $employees->pluck('emp_id')->toArray();
+    
+                // Get regularisation data
+                $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
+                    ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+                    ->where('status', 5)
+                    ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+                    ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+                    ->with('employee')
+                    ->get();
+    
+                // Count regularisations
+                $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
+                    ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+                    ->where('status', 5)
+                    ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+                    ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+                    ->with('employee')
+                    ->count();
+            } else {
+                // Handle case where employee details could not be found
+                $this->loginEmployee = null;
+                $this->loginEmpManagerDetails = null;
+                $this->regularisations = collect();
+                $this->countofregularisations = 0;
+            }
+        } catch (\Exception $e) {
+            // Handle any exception that occurs
+            Log::error('Error occurred in mount method: ' . $e->getMessage());
+            $this->loginEmployee = null;
+            $this->loginEmpManagerDetails = null;
+            $this->regularisations = collect();
+            $this->countofregularisations = 0;
+            FlashMessageHelper::flashError('An error occurred while fetching data. Please try again later.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name','manager_id')->first();
-        $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')->where('emp_id', $this->loginEmployee->manager_id)->first();
-        $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
-        $empIds = $employees->pluck('emp_id')->toArray();
-        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
-            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 5)
-            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
-            ->with('employee')
-            ->get();
- 
-        $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
-            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 5)
-            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
-            ->with('employee')
-            ->count();
     }
 
-
+    public function getThisMonthLeaves(){
+        $this->showModal = true;
+        $this->modalLeaveTitle = 'This Month';
+        $this->showThisMonthLeaveRequest = !$this->showThisMonthLeaveRequest;
+    }
+    public function closeThisMonthLeaves(){
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showThisMonthLeaveRequest = false;
+    }
+    public function getTodayLeaves(){
+        $this->modalLeaveTitle = 'Today';
+        $this->showModal = true;
+        $this->showTodayLeaveRequest = true;
+    }
+    public function closeTodayLeaves(){
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showTodayLeaveRequest = false;
+    }
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
     }
- 
+
     public function closereviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = false;
@@ -268,13 +330,7 @@ class Home extends Component
             } else {
                 $deviceName = 'Unknown Device';
             }
-            Log::info('Creating SwipeRecord:', [
-                'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
-                'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
-                'sign_in_device' => $deviceName,
-            ]);
-        
+
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
@@ -283,7 +339,7 @@ class Home extends Component
                     : 'IN',
                 'sign_in_device' => $deviceName,
             ]);
-           
+
             $flashMessage = $this->swipes
                 ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                 : 'IN';
@@ -449,30 +505,24 @@ class Home extends Component
                 }
             }
             $this->teamOnLeave = $teamOnLeaveApplications;
- 
+
             // Get the count of  leave applications
             $this->teamCount = count($teamOnLeaveApplications);
- 
+
             $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('leave_status', 2)
-                ->where(function ($query) use ($currentDate) {
-                    $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
-                })
-                ->orderBy('created_at', 'desc')
-                ->get();
-            //Process each leave request to add initials and random color
-            // foreach ($this->upcomingLeaveRequests as $request) {
-            //     $employee = $request->employee;
-            //     if ($employee) {
-            //         $initialsForThisMonth = strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name, 0, 1));
-            //        // $randomLeaveColor = '#' . str_pad(dechex(mt_rand(0xC0C0C0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT); // Generate random color
-            //         // $request->initials = $initialsForThisMonth;
-            //         //$request->randomColor = $randomLeaveColor;
-            //     }
-            // }
+            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id') // Join with employee_details table
+            ->where('leave_applications.leave_status', 2)
+            ->where('category_type','Leave')
+            ->where(function ($query) use ($currentDate) {
+                $query->whereMonth('leave_applications.from_date', Carbon::now()->month); // Filter for the current month
+            })
+            ->where('employee_details.manager_id', auth()->user()->emp_id) // Match login_manager_id with the authenticated user's ID (assuming they are the manager)
+            ->orderBy('leave_applications.created_at', 'desc')
+            ->select('leave_applications.*') // Select all columns from the leave_requests table
+            ->get();
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
- 
+
             //attendance related query
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
@@ -520,7 +570,7 @@ class Home extends Component
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_status', 'active')
                 ->get();
- 
+
             $arrayofabsentemployees = $this->absent_employees->toArray();
  
             $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
@@ -680,7 +730,6 @@ class Home extends Component
             return view('livewire.home', [
                 'calendarData' => $this->calendarData,
                 'holidayCount' => $this->holidayCount,
-                'salaryRevision' => $this->salaryRevision,
                 'showLeaveApplies' => $this->showLeaveApplies,
                 'count' => $this->count,
                 'leaveApplied' => $this->leaveApplied,
