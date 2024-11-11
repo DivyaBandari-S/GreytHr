@@ -12,7 +12,7 @@
 // Models                          : EmployeeDetails,Company,LeaveRequest,SwipeRecord,SwipeData ,SalaryRevision,HolidayCalendar-->
 
 namespace App\Livewire;
- 
+
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\LeaveRequest;
@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
-use App\Models\SalaryRevision;
+use App\Models\EmpSalaryRevision;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +33,7 @@ use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
- 
+
 class Home extends Component
 {
     public $currentDate;
@@ -65,11 +65,11 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
     public $formattedAddress = [];
- 
+
     public $showAllAbsentEmployees = false;
- 
+
     public $showAllLateEmployees = false;
- 
+
     public $employee_details;
     public $showAllEarlyEmployees = false;
     public $grossPay;
@@ -78,11 +78,11 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
- 
+
     public $showReviewLeaveAndAttendance = false;
- 
+
     public $countofregularisations;
- 
+
     public $employeeShiftDetails;
     public $regularisations;
     public $greetingText;
@@ -98,7 +98,7 @@ class Home extends Component
     public $showMessage = true;
     public $showAlert = false;
     public $swipeDataOfEmployee;
- 
+
     public $weatherCondition;
     public $temperature;
     public $minTemperature;
@@ -126,7 +126,7 @@ class Home extends Component
         try {
             // Fetch weather data
             $this->fetchWeather();
-    
+
             // Get current hour to determine greeting
             $currentHour = date('G');
             if ($currentHour >= 4 && $currentHour < 12) {
@@ -142,29 +142,29 @@ class Home extends Component
                 $this->greetingImage = 'night.jpeg';
                 $this->greetingText = 'Good Night';
             }
-    
+
             // Get employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            
+
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
                 ->first();
-    
+
             if ($this->loginEmployee) {
                 // Get manager details
                 $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
                     ->where('emp_id', $this->loginEmployee->manager_id)
                     ->first();
-                
+
                 // Get employees under the manager
                 $employees = EmployeeDetails::where('manager_id', $employeeId)
                     ->select('emp_id', 'first_name', 'last_name')
                     ->get();
-    
+
                 // Extract employee IDs
                 $empIds = $employees->pluck('emp_id')->toArray();
-    
+
                 // Get regularisation data
                 $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
                     ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
@@ -173,7 +173,7 @@ class Home extends Component
                     ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
                     ->with('employee')
                     ->get();
-    
+
                 // Count regularisations
                 $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
                     ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
@@ -239,7 +239,7 @@ class Home extends Component
     {
         $this->showAlert = false;
     }
- 
+
     public function openEarlyEmployees()
     {
         $this->whoisinTitle = 'On Time Employees';
@@ -259,7 +259,7 @@ class Home extends Component
     {
         $this->showAlertDialog = true;
     }
- 
+
     public function close()
     {
         $this->showAlertDialog = false;
@@ -272,7 +272,7 @@ class Home extends Component
     {
         try {
             $agent = new Agent();
- 
+
             if ($agent->isDesktop()) {
                 return 'desktop';
             } else {
@@ -307,10 +307,10 @@ class Home extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $isonleave=$this->isEmployeeLeaveOnDate($todayDate,$employeeId);
             $isholiday=HolidayCalendar::where('date',$todayDate)->exists();
-            
+
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->signIn = !$this->signIn;
-           
+
             if ($isonleave) {
                 FlashMessageHelper::flashError( 'You cannot swipe on this date as you are on leave.');
                 return;
@@ -318,8 +318,8 @@ class Home extends Component
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-        
-            // $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device'; 
+
+            // $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device';
             $agent = new Agent();
 
             // Determine the device type
@@ -357,7 +357,7 @@ class Home extends Component
             // Log or handle the exception as needed
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
-        
+
     }
     public function showEarlyEmployees()
     {
@@ -405,7 +405,7 @@ class Home extends Component
             foreach ($this->leaveRequests as $leaveRequest) {
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
- 
+
                 $ccToJson = trim($leaveRequest->cc_to);
 
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
@@ -464,7 +464,7 @@ class Home extends Component
             foreach ($this->leaveApplied as $request) {
                 $leaveRequest = $request['leaveRequest'];
                 $empId = $leaveRequest->emp_id; // Extract emp_id from LeaveRequest model
- 
+
                 if (!isset($groupedRequests[$empId])) {
                     // Initialize the array for this employee ID
                     $groupedRequests[$empId] = [
@@ -472,7 +472,7 @@ class Home extends Component
                         'leaveRequests' => [] // Store all leave requests for this employee
                     ];
                 }
- 
+
                 // Increment the count and store the leave request
                 $groupedRequests[$empId]['count']++;
                 $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
@@ -495,13 +495,13 @@ class Home extends Component
             foreach ($this->teamOnLeaveRequests as $teamOnLeaveRequest) {
                 $applyingToJson = trim($teamOnLeaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
- 
+
                 $ccToJson = trim($teamOnLeaveRequest->cc_to);
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
- 
+
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
- 
+
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $teamOnLeaveApplications[] = $teamOnLeaveRequest;
                 }
@@ -541,9 +541,9 @@ class Home extends Component
                 })
                 ->get();
             $arrayofabsentemployees = $this->absent_employees->toArray();
- 
-            
- 
+
+
+
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.leave_status', 2)
@@ -555,12 +555,12 @@ class Home extends Component
                     // Calculate the number of days between from_date and to_date
                     $fromDate = Carbon::parse($leaveRequest->from_date);
                     $toDate = Carbon::parse($leaveRequest->to_date);
- 
+
                     $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
- 
+
                     return $leaveRequest;
                 });
-                
+
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -574,7 +574,7 @@ class Home extends Component
                 ->get();
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
- 
+
             $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
             ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
             ->leftJoin('company_shifts', function ($join) {
@@ -598,7 +598,7 @@ class Home extends Component
             ->where('employee_details.employee_status', 'active')
             ->distinct('employee_details.emp_id')
             ->count();
-         
+
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
             $swipes_early = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
@@ -628,10 +628,10 @@ class Home extends Component
                 ->where('employee_details.employee_status', 'active')
                 ->distinct('swipe_records.emp_id')
                 ->get();
- 
- 
+
+
             $swipes_early1 = $swipes_early->count();
- 
+
             $swipes_late = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -649,7 +649,7 @@ class Home extends Component
             ->select(
                 'swipe_records.emp_id',  // Ensure that you are selecting emp_id for distinct comparison
                 'swipe_records.swipe_time',
-                'employee_details.first_name', 
+                'employee_details.first_name',
                 'employee_details.last_name',
                 'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
                 'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
@@ -659,9 +659,9 @@ class Home extends Component
             // Apply distinct on emp_id to avoid duplicates
             ->distinct('swipe_records.emp_id')
             ->get();
-           
+
             $swipes_late1 = $swipes_late->count();
-        
+
             $this->swipeDetails = DB::table('swipe_records')
                 ->whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
@@ -672,22 +672,22 @@ class Home extends Component
                 ->where('emp_id', $employeeId)
                 ->orderBy('created_at', 'desc')
                 ->first();
- 
- 
+
+
             // Assuming $calendarData should contain the data for upcoming holidays
             // Get the current year and date
             $currentYear = Carbon::now()->year;
             $today = Carbon::today();
- 
+
             // Initialize an empty collection to hold valid holidays
             $validHolidays = collect();
- 
+
             // Retrieve holidays starting from today
             $holidays = HolidayCalendar::where('date', '>=', $today)
                 ->whereYear('date', $currentYear)
                 ->orderBy('date')
                 ->get();
- 
+
             foreach ($holidays as $holiday) {
                 // Add the current holiday if it has festivals
                 if (!empty($holiday->festivals)) {
@@ -698,36 +698,36 @@ class Home extends Component
                         ->whereYear('date', $currentYear)
                         ->orderBy('date')
                         ->first();
- 
+
                     if ($nextHoliday && !empty($nextHoliday->festivals) && !$validHolidays->contains('id', $nextHoliday->id)) {
                         $validHolidays->push($nextHoliday);
                     }
                 }
- 
+
                 // Break the loop if we have 3 holidays
                 if ($validHolidays->count() >= 4) {
                     break;
                 }
             }
- 
+
             // Limit to the first 3 unique holidays
             $this->calendarData = $validHolidays->unique('id')->take(3);
             $this->holidayCount = $this->calendarData;
-            $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+             $this->salaryRevision = EmpSalaryRevision::where('emp_id', $employeeId)->get();
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
- 
+
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
- 
+
             $this->showLeaveApplies = $isManager;
- 
- 
+
+
             //##################################### pie chart details #########################
-            $sal = new SalaryRevision();
+            $sal = new EmpSalaryRevision();
             $this->grossPay = $sal->calculateTotalAllowance();
             $this->deductions = $sal->calculateTotalDeductions();
             $this->netPay = $this->grossPay - $this->deductions;
             $this->calculateTaskData();
- 
+
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
                 'calendarData' => $this->calendarData,
@@ -756,7 +756,7 @@ class Home extends Component
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
                 'loginEmpManagerDetails' => $this->loginEmpManagerDetails
- 
+
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('Error in home component: ' . $e->getMessage());
@@ -805,16 +805,18 @@ class Home extends Component
     }
     public function updatedFilterPeriod($value)
     {
- 
+
         $this->calculateTaskData();
     }
     public function calculateTaskData()
     {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
         try{
             $employeeId = auth()->guard('emp')->user()->emp_id;
         $startDate = $this->getStartDate();
         $endDate = $this->getEndDate();
- 
+
         $totalTasksAssignedBy = Task::with('emp')
             ->where(function ($query) use ($employeeId) {
                 $query->where('assignee', 'LIKE', "%($employeeId)%");
@@ -892,14 +894,14 @@ class Home extends Component
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
- 
+
             // Get the base API URL from the .env file
             $apiUrl = env('WEATHER_API_URL', 'https://api.open-meteo.com/v1/forecast');
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
 
             $response = Http::get($requestUrl);
- 
+
             // Log response for debugging
             // Log::info('API Response:', $response->json() ?? []);
             // Log::info('API Response Status Code:', ['status' => $response->status()]);
@@ -910,7 +912,7 @@ class Home extends Component
             if ($response->successful()) {
                 // Decode the JSON response
                 $data = $response->json();
- 
+
                 // Extract weather data from the response
                 $currentWeather = $data['current_weather'] ?? [];
 
@@ -939,7 +941,7 @@ class Home extends Component
             $this->isDay = 'Unknown';
         }
     }
- 
+
     private function mapWeatherCodeToCondition($code)
     {
         // Map weather code to weather condition
@@ -973,24 +975,24 @@ class Home extends Component
             96 => 'Thunderstorm with slight hail',
             99 => 'Thunderstorm with heavy hail',
         ];
- 
+
         return $weatherCodes[$code] ?? '';
     }
- 
- 
+
+
     public function getLocationByIP()
     {
- 
+
         try {
- 
+
             $ip = '';
- 
+
             // $ip = request()->ip();
             $apiUrl = env('FINDIP_API_URL');
- 
+
             // Construct the full API URL
             $url = "{$apiUrl}/{$ip}/json/";
- 
+
             // Make the HTTP request
             $response = Http::get($url);
             // dd($response->json());
@@ -999,7 +1001,7 @@ class Home extends Component
             FlashMessageHelper::flashError('An error occured while getting location.');
         }
     }
- 
+
     // public $latitude;
     // public $longitude;
     // #[Js]
@@ -1011,11 +1013,11 @@ class Home extends Component
     //             navigator.geolocation.getCurrentPosition(function(position) {
     //                 const latitude = position.coords.latitude;
     //                 const longitude = position.coords.longitude;
- 
+
     //                 // Send the latitude and longitude back to Livewire using the correct variable names
     //                 $wire.set('latitude', latitude);
     //                 $wire.set('longitude', longitude);
- 
+
     //                 // Optionally alert the user
     //                 alert('Location fetched: (' + latitude + ', ' + longitude + ')');
     //             }, function(error) {
@@ -1032,18 +1034,18 @@ class Home extends Component
     {
         // dd('called');
     }
- 
+
     protected $listeners = ['sendCoordinates'];
- 
- 
+
+
     public function sendCoordinates($latitude, $longitude)
     {
         // Log the received coordinates
         // Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
- 
+
         // Build the API URL for reverse geocoding
         $apiUrl = "https://nominatim.openstreetmap.org/reverse";
- 
+
         // Call the Nominatim API to get address details
         try {
             $response = Http::get($apiUrl, [
@@ -1076,4 +1078,4 @@ class Home extends Component
         }
     }
 }
- 
+
