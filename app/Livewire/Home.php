@@ -115,6 +115,10 @@ class Home extends Component
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
+    public $showThisMonthLeaveRequest = false;
+    public $showTodayLeaveRequest = false;
+    public $modalLeaveTitle = '';
+    public $showModal = false;
     public $showSalary = true;
     public  $longitude;
     public function mount()
@@ -196,13 +200,31 @@ class Home extends Component
         }
     }
 
-
-
+    public function getThisMonthLeaves(){
+        $this->showModal = true;
+        $this->modalLeaveTitle = 'This Month';
+        $this->showThisMonthLeaveRequest = !$this->showThisMonthLeaveRequest;
+    }
+    public function closeThisMonthLeaves(){
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showThisMonthLeaveRequest = false;
+    }
+    public function getTodayLeaves(){
+        $this->modalLeaveTitle = 'Today';
+        $this->showModal = true;
+        $this->showTodayLeaveRequest = true;
+    }
+    public function closeTodayLeaves(){
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showTodayLeaveRequest = false;
+    }
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
     }
- 
+
     public function closereviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = false;
