@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\ExportDataEntries;
+use App\Console\Commands\ManageSwipeRecordsTables;
 use App\Console\Commands\ScheduledExportDataEntries;
 use App\Console\Commands\SendEmail;
 use Illuminate\Console\Scheduling\Schedule;
@@ -24,17 +25,18 @@ class Kernel extends ConsoleKernel
         // $schedule->command('export:data-entries')->everyFifteenMinutes();
         // $schedule->command('export:data-entries')->everyMinute();
         $schedule->command(SendTaskReminder::class)->hourly();
-
+        // $schedule->command('app:manage-swipe-records-tables')->monthlyOn(1, '00:00');
+        // $schedule->command(ManageSwipeRecordsTables::class)->monthlyOn(1, '00:00');
+        $schedule->command(ManageSwipeRecordsTables::class)->everyMinute();
     }
 
     /**
      * Register the commands for the application.
      */
 
-
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }

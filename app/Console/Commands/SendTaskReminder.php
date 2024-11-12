@@ -57,7 +57,7 @@ class SendTaskReminder extends Command
             // Case 1a: If created_at and due_date are the same, send reminder 3 hours after creation
             if ($taskCreatedDate == $taskDueDate) {
                 $taskCreatedTime = Carbon::parse($task->created_at);
-                Log::info("tasks: " . $taskCreatedTime); 
+                Log::info("tasks: " . $taskCreatedTime);
                 $sendReminderTime = $taskCreatedTime->addHours(3);
                 Log::info("tasks: " . $sendReminderTime);
 

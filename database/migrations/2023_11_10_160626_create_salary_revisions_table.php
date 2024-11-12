@@ -14,13 +14,13 @@ return new class extends Migration
 
         Schema::create('salary_revisions', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-            $table->string('emp_id',10);
-            $table->string('salary');
-            $table->date('salary_month');
-            $table->date('last_revision_period');
-            $table->date('present_revision_period');
-            $table->date('revised_monthly_ctc');
-            $table->date('previous_monthly_ctc');
+            $table->string('emp_id', 10);
+            $table->string('current_ctc')->nullable();
+            $table->string('revised_ctc')->nullable();
+            $table->date('revision_date')->nullable();
+            $table->enum('revision_type', ['increment', 'decrement', 'bonus'])->nullable();
+            $table->string('reason')->nullable();
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
             // Define the foreign key relationship
             $table->foreign('emp_id')->references('emp_id')->on('employee_details');

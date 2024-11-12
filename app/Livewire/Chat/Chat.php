@@ -8,6 +8,7 @@ use App\Models\Notification;
 use Livewire\Component;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Contracts\Encryption\DecryptException;
+// use Hashids\Hashids;
 // use Hashids;
 use Vinkla\Hashids\Facades\Hashids;
 
@@ -43,10 +44,9 @@ class Chat extends Component
                 ->where('receiver_id', auth()->user()->emp_id)
                 ->whereNull('message_read_at')
                 ->update(['message_read_at' => now()]);
-
         } catch (\Exception $e) {
             // Handle other potential errors
-           throw $e;
+            throw $e;
         }
     }
     public function render()
