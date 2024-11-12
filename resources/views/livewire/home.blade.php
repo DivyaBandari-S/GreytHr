@@ -716,7 +716,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }}
+                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }} --}}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -725,7 +725,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }}
+                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }} --}}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -733,11 +733,11 @@
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
+                            {{-- @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
                                 <p style="font-size:11px;">
                                     {{ $showSalary ? '₹ ' . number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}
                                 </p>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
 
