@@ -197,6 +197,8 @@ class Home extends Component
             $this->regularisations = collect();
             $this->countofregularisations = 0;
             FlashMessageHelper::flashError('An error occurred while fetching data. Please try again later.');
+        }catch (\Illuminate\Database\QueryException $e){
+            FlashMessageHelper::flashError('An error occurred while fetching data. Please try again later.');
         }
     }
 
