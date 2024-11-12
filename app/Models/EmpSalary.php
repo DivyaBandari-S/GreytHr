@@ -33,11 +33,14 @@ class EmpSalary extends Model
     {
         if ($this->decodedSalary === null) {
             $decoded = Hashids::decode($this->attributes['salary']);
-            if (count($decoded) === 0) return null;
-
-            $integerValue = $decoded[0];
-            $decimalPlaces = $decoded[1] ?? 0;
-            $this->decodedSalary = $integerValue / pow(10, $decimalPlaces);
+            if (count($decoded) === 0) {
+                // If decoding fails, return 0
+                $this->decodedSalary = 0;
+            } else {
+                $integerValue = $decoded[0];
+                $decimalPlaces = $decoded[1] ?? 0;
+                $this->decodedSalary = $integerValue / pow(10, $decimalPlaces);
+            }
         }
         return $this->decodedSalary;
     }
@@ -55,12 +58,12 @@ class EmpSalary extends Model
      */
     public function getBasicAttribute()
     {
-        return $this->calculatePercentageOfSalary(0.4);
+        return $this->getDecodedSalary() > 0 ? $this->calculatePercentageOfSalary(0.4) : 0;
     }
 
     public function getHraAttribute()
     {
-        return $this->basic * 0.4;
+        return $this->basic > 0 ? $this->basic * 0.4 : 0;
     }
 
     public function getMedicalAttribute()
@@ -76,17 +79,17 @@ class EmpSalary extends Model
     public function getSpecialAttribute()
     {
         $totalDeductions = $this->basic + $this->hra + $this->conveyance + $this->medical + $this->pf;
-        return max($this->getDecodedSalary() - $totalDeductions, 0);
+        return $this->getDecodedSalary() > 0 ? max($this->getDecodedSalary() - $totalDeductions, 0) : 0;
     }
 
     public function getPfAttribute()
     {
-        return $this->calculatePercentageOfBasic(0.12);
+        return $this->basic > 0 ? $this->calculatePercentageOfBasic(0.12) : 0;
     }
 
     public function calculateEsi()
     {
-        return $this->calculatePercentageOfBasic(0.0075);
+        return $this->basic > 0 ? $this->calculatePercentageOfBasic(0.0075) : 0;
     }
 
     public function calculateProfTax()
@@ -109,14 +112,17 @@ class EmpSalary extends Model
      */
     private function calculatePercentageOfSalary($percentage)
     {
-        return $this->getDecodedSalary() * $percentage;
+        return $this->getDecodedSalary() > 0 ? $this->getDecodedSalary() * $percentage : 0;
     }
 
     private function calculatePercentageOfBasic($percentage)
     {
-        return $this->basic * $percentage;
+        return $this->basic > 0 ? $this->basic * $percentage : 0;
     }
 
+    /**
+     * Get employee salary by employee ID.
+     */
     public function getEmployeeByEmpId($emp_id)
     {
         return $this->where('emp_id', $emp_id)->first();
