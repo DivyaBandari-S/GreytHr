@@ -697,7 +697,7 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
+                            <canvas wire:ignore id="combinedPieChart" width="120" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}
@@ -1195,6 +1195,10 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
+        var grossPay = @json($grossPay); // Laravel value for gross pay
+        var deductions = @json($deductions); // Laravel value for deductions
+        var netPay = @json($netPay); // Laravel value for net pay
+
         var ctx = document.getElementById('combinedPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
@@ -1202,7 +1206,7 @@
                 labels: ['Gross Pay', 'Deduction', 'Net Pay'],
                 datasets: [{
                     label: 'Salary Breakdown',
-                    data: [50000, 5000, 45000],
+                    data: [grossPay, deductions, netPay], // Use the dynamic data
                     backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
                     borderColor: '#f2f8f9', // Set border color for the segments
                     borderWidth: 2, // Normal border width
@@ -1218,8 +1222,14 @@
                     },
                     tooltip: {
                         callbacks: {
+                            // Show both the label and the value (with ₹ symbol)
                             label: function(tooltipItem) {
-                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                                var label = tooltipItem
+                                .label; // Get the label (Gross Pay, Deduction, Net Pay)
+                                var value = tooltipItem.raw; // Get the corresponding value
+
+                                // Format value with ₹ symbol and return full string
+                                return label + ': ₹ ' + value.toLocaleString();
                             }
                         }
                     }
