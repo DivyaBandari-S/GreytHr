@@ -229,6 +229,14 @@ class EmployeesReview extends Component
                         }
                     }
                 }
+                // Check if manager applying to contains an entry with emp_id matching loginempid
+                if (isset($leaveRequest->applying_to)) {
+                    foreach ($leaveRequest->applying_to as $cc) {
+                        if (isset($cc['emp_id']) && $cc['emp_id'] === $loggedInEmpId) {
+                            $leaveRequest->isApplyingLoginEmp = true;
+                        }
+                    }
+                }
             }
 
             // Dump the entire collection to inspect
