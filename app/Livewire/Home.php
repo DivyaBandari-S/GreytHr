@@ -40,6 +40,7 @@ class Home extends Component
     public $currentDate;
     public $swipes;
     public $groupedRequests;
+    public $pendingCount;
     public $whoisinTitle = '';
     public $currentDay;
     public $absent_employees_count;
@@ -66,11 +67,8 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
     public $formattedAddress = [];
-
     public $showAllAbsentEmployees = false;
-
     public $showAllLateEmployees = false;
-
     public $employee_details;
     public $showAllEarlyEmployees = false;
     public $grossPay;
@@ -79,11 +77,8 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
-
     public $showReviewLeaveAndAttendance = false;
-
     public $countofregularisations;
-
     public $employeeShiftDetails;
     public $regularisations;
     public $greetingText;
@@ -99,7 +94,6 @@ class Home extends Component
     public $showMessage = true;
     public $showAlert = false;
     public $swipeDataOfEmployee;
-
     public $weatherCondition;
     public $temperature;
     public $minTemperature;
@@ -127,7 +121,6 @@ class Home extends Component
         try {
             // Fetch weather data
             $this->fetchWeather();
-
             // Get current hour to determine greeting
             $currentHour = date('G');
             if ($currentHour >= 4 && $currentHour < 12) {
@@ -387,7 +380,6 @@ class Home extends Component
     {
         try {
             $loggedInEmpId = Session::get('emp_id');
-            // Check if the logged-in user is a manager by comparing emp_id with manager_id in employeedetails
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -404,6 +396,7 @@ class Home extends Component
                         });
                 })
                 ->where('created_at', '>=', $threeWorkingDaysAgo)
+                ->orderBy('created_at', 'desc')
                 ->get();
             $matchingLeaveApplications = [];
             foreach ($this->leaveRequests as $leaveRequest) {
@@ -463,6 +456,7 @@ class Home extends Component
             }
             // Get the count of matching leave applications
             $this->leaveApplied = $matchingLeaveApplications;
+            $this->pendingCount = count($this->leaveApplied);
             $groupedRequests = [];
             // Iterate through each leave request
             foreach ($this->leaveApplied as $request) {
@@ -473,7 +467,7 @@ class Home extends Component
                     // Initialize the array for this employee ID
                     $groupedRequests[$empId] = [
                         'count' => 0,
-                        'leaveRequests' => [] // Store all leave requests for this employee
+                        'leaveRequests' => []
                     ];
                 }
 
@@ -486,6 +480,7 @@ class Home extends Component
             $this->count = count($matchingLeaveApplications);
             //team on leave
             $currentDate = Carbon::today();
+
             $this->teamOnLeaveRequests = LeaveRequest::with('employee')
                 ->where('category_type',  'Leave')
                 ->where('leave_status', 2)
@@ -750,6 +745,7 @@ class Home extends Component
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
                 'calendarData' => $this->calendarData,
+                'pendingCount' => $this->pendingCount,
                 'holidayCount' => $this->holidayCount,
                 'showLeaveApplies' => $this->showLeaveApplies,
                 'count' => $this->count,
