@@ -28,6 +28,7 @@ return new class extends Migration
             $table->binary('file_path')->nullable();
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
+            $table->boolean('reminder_sent')->default(false);
             $table->smallInteger('status')->default(1); // CC to field (nullable)
             $table->timestamps();
             $table->foreign('emp_id')

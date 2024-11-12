@@ -42,9 +42,10 @@ class SendTaskReminder extends Command
         // Case 1: Tasks that are due today
         $tasksDueToday = Task::whereDate('due_date', $today) // Check for today's due tasks
                             ->where('status', '!=', 11) // Ensure task is not completed
+                            ->where('reminder_sent', false) 
                             ->get();
 
-          Log::info("tasks: " . $tasksDueToday); 
+        Log::info("tasks: " . $tasksDueToday); 
         foreach ($tasksDueToday as $task) {
             Log::info("Processing task: " . $task->task_name); // Log task being processed
     
@@ -72,6 +73,8 @@ class SendTaskReminder extends Command
                             try {
                                 Mail::to($assignee->email)->send(new TaskReminderMail($task));
                                 $this->info('Reminder sent to ' . $assignee->email . ' for task: ' . $task->task_name);
+                                $task->reminder_sent = true;
+                                $task->save();
                             } catch (\Exception $e) {
                                 $this->error('Failed to send reminder: ' . $e->getMessage());
                             }
@@ -99,6 +102,8 @@ class SendTaskReminder extends Command
                             try {
                                 Mail::to($assignee->email)->send(new TaskReminderMail($task));
                                 $this->info('Reminder sent to ' . $assignee->email . ' for task: ' . $task->task_name);
+                                $task->reminder_sent = true;
+                                $task->save();
                             } catch (\Exception $e) {
                                 $this->error('Failed to send reminder: ' . $e->getMessage());
                             }
