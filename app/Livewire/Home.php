@@ -65,11 +65,8 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
     public $formattedAddress = [];
-
     public $showAllAbsentEmployees = false;
-
     public $showAllLateEmployees = false;
-
     public $employee_details;
     public $showAllEarlyEmployees = false;
     public $grossPay;
@@ -78,11 +75,8 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
-
     public $showReviewLeaveAndAttendance = false;
-
     public $countofregularisations;
-
     public $employeeShiftDetails;
     public $regularisations;
     public $greetingText;
@@ -98,7 +92,6 @@ class Home extends Component
     public $showMessage = true;
     public $showAlert = false;
     public $swipeDataOfEmployee;
-
     public $weatherCondition;
     public $temperature;
     public $minTemperature;
@@ -126,7 +119,6 @@ class Home extends Component
         try {
             // Fetch weather data
             $this->fetchWeather();
-
             // Get current hour to determine greeting
             $currentHour = date('G');
             if ($currentHour >= 4 && $currentHour < 12) {
