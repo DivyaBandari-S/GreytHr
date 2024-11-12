@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -50,6 +51,7 @@ class AttendanceTable extends Component
     public $totalMinutesWorked;
     public $startDate;
 
+    public $checkdate=0;
     public $employeeIdForTable;
     public $endDate;
     public $legend=true;
@@ -95,6 +97,7 @@ class AttendanceTable extends Component
     public function updatefromDate()
     {
         $this->fromDate=$this->fromDate;
+        $this->checkUpdateDate();
     }
     public function öpenattendanceperiodModal()
     {
@@ -108,6 +111,16 @@ class AttendanceTable extends Component
     public function updatetoDate()
     {
         $this->toDate=$this->toDate;
+        $this->checkUpdateDate();
+    }
+    public function checkUpdateDate()
+    {
+        if($this->fromDate>$this->toDate)
+        {
+            $this->checkdate=1;
+            FlashMessageHelper::flashError('Start Date should be lesser than End Date');
+           
+        }
     }
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {

@@ -481,78 +481,78 @@ class Attendance extends Component
     }
     public  $averageWorkingHours, $percentageOfHoursWorked, $yearA, $monthA;
 
-    public function calculateMetrics()
-    {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
+    // public function calculateMetrics()
+    // {
+    //     $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        // Get the current date
+    //     // Get the current date
 
-        // Specify the current month and year
-        $swipes = SwipeRecord::where('emp_id', $employeeId)
-            ->whereYear('created_at', $this->yearA)
-            ->whereMonth('created_at', $this->monthA)
-            ->orderBy('swipe_time')
-            ->get();
+    //     // Specify the current month and year
+    //     $swipes = SwipeRecord::where('emp_id', $employeeId)
+    //         ->whereYear('created_at', $this->yearA)
+    //         ->whereMonth('created_at', $this->monthA)
+    //         ->orderBy('swipe_time')
+    //         ->get();
 
 
-        // Initialize arrays to store in and out swipes
-        $inSwipes = [];
-        $outSwipes = [];
+    //     // Initialize arrays to store in and out swipes
+    //     $inSwipes = [];
+    //     $outSwipes = [];
 
-        // Process swipe records
-        foreach ($swipes as $swipe) {
-            $date = Carbon::parse($swipe->swipe_time)->toDateString();
-            if ($swipe->in_or_out === 'IN') {
-                if (!isset($inSwipes[$date])) {
-                    $inSwipes[$date] = [];
-                }
-                $inSwipes[$date][] = $swipe;
-            } elseif ($swipe->in_or_out === 'OUT') {
-                if (!isset($outSwipes[$date])) {
-                    $outSwipes[$date] = [];
-                }
-                $outSwipes[$date][] = $swipe;
-            }
-        }
+    //     // Process swipe records
+    //     foreach ($swipes as $swipe) {
+    //         $date = Carbon::parse($swipe->swipe_time)->toDateString();
+    //         if ($swipe->in_or_out === 'IN') {
+    //             if (!isset($inSwipes[$date])) {
+    //                 $inSwipes[$date] = [];
+    //             }
+    //             $inSwipes[$date][] = $swipe;
+    //         } elseif ($swipe->in_or_out === 'OUT') {
+    //             if (!isset($outSwipes[$date])) {
+    //                 $outSwipes[$date] = [];
+    //             }
+    //             $outSwipes[$date][] = $swipe;
+    //         }
+    //     }
 
-        // Calculate total hours worked in the month
-        $totalHoursWorked = 0;
-        foreach ($inSwipes as $date => $inSwipeArray) {
-            if (isset($outSwipes[$date])) {
-                foreach ($inSwipeArray as $index => $inSwipe) {
-                    if (isset($outSwipes[$date][$index])) {
-                        $inTime = Carbon::parse($inSwipe->swipe_time);
-                        $outTime = Carbon::parse($outSwipes[$date][$index]->swipe_time);
-                        $totalHoursWorked += $outTime->diffInHours($inTime);
-                    }
-                }
-            }
-        }
+    //     // Calculate total hours worked in the month
+    //     $totalHoursWorked = 0;
+    //     foreach ($inSwipes as $date => $inSwipeArray) {
+    //         if (isset($outSwipes[$date])) {
+    //             foreach ($inSwipeArray as $index => $inSwipe) {
+    //                 if (isset($outSwipes[$date][$index])) {
+    //                     $inTime = Carbon::parse($inSwipe->swipe_time);
+    //                     $outTime = Carbon::parse($outSwipes[$date][$index]->swipe_time);
+    //                     $totalHoursWorked += $outTime->diffInHours($inTime);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        // Calculate the number of working days in the current month
-        $startDate = Carbon::create($this->yearA, $this->monthA, 1);
-        $endDate = $startDate->copy()->endOfMonth();
-        $workingDaysCount = 0;
+    //     // Calculate the number of working days in the current month
+    //     $startDate = Carbon::create($this->yearA, $this->monthA, 1);
+    //     $endDate = $startDate->copy()->endOfMonth();
+    //     $workingDaysCount = 0;
 
-        while ($startDate->lte($endDate)) {
-            if ($startDate->isWeekday()) {
-                $workingDaysCount++;
-            }
-            $startDate->addDay();
-        }
+    //     while ($startDate->lte($endDate)) {
+    //         if ($startDate->isWeekday()) {
+    //             $workingDaysCount++;
+    //         }
+    //         $startDate->addDay();
+    //     }
 
-        // Define the standard daily hours
-        $standardDailyHours = 9;
+    //     // Define the standard daily hours
+    //     $standardDailyHours = 9;
 
-        // Calculate the standard monthly hours
-        $standardMonthlyHours = $standardDailyHours * $workingDaysCount;
+    //     // Calculate the standard monthly hours
+    //     $standardMonthlyHours = $standardDailyHours * $workingDaysCount;
 
-        // Calculate the average working hours for the month
-        $this->averageWorkingHours = $workingDaysCount > 0 ? $totalHoursWorked / $workingDaysCount : 0;
+    //     // Calculate the average working hours for the month
+    //     $this->averageWorkingHours = $workingDaysCount > 0 ? $totalHoursWorked / $workingDaysCount : 0;
 
-        // Calculate the percentage of hours worked relative to the standard monthly hours
-        $this->percentageOfHoursWorked = $standardMonthlyHours > 0 ? ($totalHoursWorked / $standardMonthlyHours) * 100 : 0;
-    }
+    //     // Calculate the percentage of hours worked relative to the standard monthly hours
+    //     $this->percentageOfHoursWorked = $standardMonthlyHours > 0 ? ($totalHoursWorked / $standardMonthlyHours) * 100 : 0;
+    // }
 
     public function mount()
     {
@@ -786,30 +786,7 @@ class Attendance extends Component
             return false; // Return false to handle the error gracefully
         }
     }
-    private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
-    {
-        $countofleaves = 0;
-        $currentDate = $startDate->copy();
-        $flag=false;
-
-        while ($currentDate->lt($endDate)) {
-            $flag = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_applications.leave_status', 2)
-                    ->where(function ($query) use ($currentDate) {
-                        $query->whereDate('from_date', '<=', $currentDate)
-                            ->whereDate('to_date', '>=', $currentDate);
-                    })
-                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types table
-                    ->exists();
-            if ($flag==true) {
-                $countofleaves++;
-            }
-            $currentDate->addDay();
-            $flag=false;
-        }
-
-        return $countofleaves;
-    }
+    
     //This function will help us to check the leave type of employee
     private function getLeaveType($date, $employeeId)
     {
@@ -1519,30 +1496,8 @@ class Attendance extends Component
 
         $this->toggleButton = !$this->toggleButton;
     }
-    private function countHolidaysBetweenDates($startDate,$endDate)
-    {
-        $holidayCount = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
-
-        
-        return $holidayCount;
-    }
-    private function countWeekendsBetweenDates($startDate, $endDate)
-    {
-                $weekendCount = 0;
-
-                // Iterate through the date range
-                $currentDate = $startDate->copy();
-                while ($currentDate->lte($endDate)) {
-                    // Check if the current day is a Saturday (6) or Sunday (7)
-                    if ($currentDate->isSaturday() || $currentDate->isSunday()) {
-                        $weekendCount++;
-                    }
-                    // Move to the next day
-                    $currentDate->addDay();
-                }
-
-                return $weekendCount;
-    }
+    
+    
     private function calculateTotalWorkingDays($startDate,$endDate)
     {
         $workingDays = 0;
@@ -1618,63 +1573,9 @@ class Attendance extends Component
            
         }
     }
-    private function calculateNumberofWeekends($startDate, $endDate)
-    {
-        $weekendDays = 0;
-        $currentDate = $startDate->copy();
-        while ($currentDate->lt($endDate)) {
-            if ($currentDate->isSaturday() || $currentDate->isSunday()) {
-                $weekendDays++;
-            }
-            $currentDate->addDay();
-        }
-
-        return $weekendDays;
-    }
-    private function calculateWorkingDays($startDate, $endDate, $employeeId)
-    {
-        try {
-
-            $workingDays = 0;
-            $currentDate = $startDate->copy();
-
-            while ($currentDate->lte($endDate)) {
-                if ($currentDate->isWeekday() && !$this->isEmployeeLeaveOnDate($currentDate, $employeeId) && $this->isEmployeePresentOnDate($currentDate)) {
-                    $workingDays++;
-                }
-                $currentDate->addDay();
-            }
-
-            return $workingDays;
-        } catch (\Exception $e) {
-            Log::error('Error in calculateWorkingDays method: ' . $e->getMessage());
-            FlashMessageHelper::flashError('An error occurred while calculating working days. Please try again later.');
-            
-            return 0;
-        }
-    }
-    private function calculateWorkingDaysForModalTitle($startDate, $endDate, $employeeId)
-    {
-        try {
-
-            $workingDays = 0;
-            $currentDate = $startDate->copy();
-
-            while ($currentDate->lt($endDate)) {
-                if ($currentDate->isWeekday() && !$this->isEmployeeLeaveOnDate($currentDate, $employeeId) && $this->isEmployeePresentOnDate($currentDate)) {
-                    $workingDays++;
-                }
-                $currentDate->addDay();
-            }
-
-            return $workingDays;
-        } catch (\Exception $e) {
-            Log::error('Error in calculateWorkingDays method: ' . $e->getMessage());
-            FlashMessageHelper::flashError('An error occurred while calculating working days. Please try again later.');
-        
-            return 0;
-        }
-    }
+    
+    
+    
 
     private function calculateActualHours($swipe_records)
     {
