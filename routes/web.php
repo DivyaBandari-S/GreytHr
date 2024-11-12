@@ -2,6 +2,7 @@
 
 use App\Livewire\AllTeamTimeSheets;
 use App\Livewire\LeaveFormPage;
+use App\Models\EmpSalaryRevision;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
@@ -614,4 +615,21 @@ Route::get('/test-emp-salary/{id}', function ($id) {
         'Total Deductions' => $empSalary->calculateTotalDeductions(),
         'Total Allowances' => $empSalary->calculateTotalAllowance(),
     ];
+});
+
+
+Route::get('/salary/{emp_id}', function ($emp_id) {
+    // Fetch the EmpSalaryRevision record by emp_id if it's not the primary key
+    $salaryRevision = EmpSalaryRevision::where('emp_id', $emp_id)->firstOrFail();
+
+    // Return the record as a JSON response
+    return response()->json([
+        'emp_id' => $salaryRevision->emp_id,
+        'current_ctc' => $salaryRevision->current_ctc,  // This will return the decoded value
+        'revised_ctc' => $salaryRevision->revised_ctc,  // This will return the decoded value
+        'revision_date' => $salaryRevision->revision_date,
+        'revision_type' => $salaryRevision->revision_type,
+        'reason' => $salaryRevision->reason,
+        'status' => $salaryRevision->status,
+    ]);
 });

@@ -344,10 +344,10 @@
             @if ($ismanager || $leaveApplied)
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title">Review</p>
-                    @if ($this->count > 0)
+                    @if ($count > 0)
                         <div class="notify d-flex justify-content-between">
                             <p class="payslip-small-desc">
-                                {{ $count }} <br>
+                                {{ $pendingCount }} <br>
                                 <span class="normalTextValue">Things to review</span>
                             </p>
                             <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg"
@@ -697,7 +697,7 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
+                            <canvas wire:ignore id="combinedPieChart" width="120" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}
@@ -716,7 +716,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }} --}}
+                                {{ $showSalary ? '₹ ' . number_format($grossPay, 2) : '₹**********' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -725,7 +725,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }} --}}
+                                {{ $showSalary ? '₹ ' . number_format($deductions ?? 0, 2) : '₹**********' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -733,11 +733,9 @@
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            {{-- @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
-                                <p style="font-size:11px;">
-                                    {{ $showSalary ? '₹ ' . number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}
-                                </p>
-                            @endif --}}
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ ' . number_format($netPay, 2) : '₹**********' }}
+                            </p>
                         </div>
                     </div>
 
@@ -745,7 +743,7 @@
                         <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download
                             PDF</a>
                         <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
+                            {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
                         </a>
                     </div>
                 </div>
@@ -1197,6 +1195,10 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
+        var grossPay = @json($grossPay); // Laravel value for gross pay
+        var deductions = @json($deductions); // Laravel value for deductions
+        var netPay = @json($netPay); // Laravel value for net pay
+
         var ctx = document.getElementById('combinedPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
@@ -1204,7 +1206,7 @@
                 labels: ['Gross Pay', 'Deduction', 'Net Pay'],
                 datasets: [{
                     label: 'Salary Breakdown',
-                    data: [50000, 5000, 45000],
+                    data: [grossPay, deductions, netPay], // Use the dynamic data
                     backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
                     borderColor: '#f2f8f9', // Set border color for the segments
                     borderWidth: 2, // Normal border width
@@ -1220,8 +1222,14 @@
                     },
                     tooltip: {
                         callbacks: {
+                            // Show both the label and the value (with ₹ symbol)
                             label: function(tooltipItem) {
-                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                                var label = tooltipItem
+                                .label; // Get the label (Gross Pay, Deduction, Net Pay)
+                                var value = tooltipItem.raw; // Get the corresponding value
+
+                                // Format value with ₹ symbol and return full string
+                                return label + ': ₹ ' + value.toLocaleString();
                             }
                         }
                     }

@@ -229,6 +229,14 @@ class EmployeesReview extends Component
                         }
                     }
                 }
+                // Check if manager applying to contains an entry with emp_id matching loginempid
+                if (isset($leaveRequest->applying_to)) {
+                    foreach ($leaveRequest->applying_to as $cc) {
+                        if (isset($cc['emp_id']) && $cc['emp_id'] === $loggedInEmpId) {
+                            $leaveRequest->isApplyingLoginEmp = true;
+                        }
+                    }
+                }
             }
 
             // Dump the entire collection to inspect
@@ -448,6 +456,8 @@ class EmployeesReview extends Component
                     'regularisation_dates.*',
                     'employee_details.first_name',
                     'employee_details.last_name',
+                    'employee_details.gender',
+                    'employee_details.image',
                     'status_types.status_name' // Select status_name from status_types
                 )
                 ->orderByDesc('regularisation_dates.updated_at')
@@ -461,6 +471,8 @@ class EmployeesReview extends Component
                     'regularisation_dates.*',
                     'employee_details.first_name',
                     'employee_details.last_name',
+                    'employee_details.gender',
+                    'employee_details.image',
                     'status_types.status_name' // Select status_name from status_types table
                 )
                 ->orderByDesc('regularisation_dates.updated_at')
