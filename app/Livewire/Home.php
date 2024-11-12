@@ -114,7 +114,7 @@ class Home extends Component
     public $showTodayLeaveRequest = false;
     public $modalLeaveTitle = '';
     public $showModal = false;
-    public $showSalary = true;
+    public $showSalary = false;
     public  $longitude;
     public function mount()
     {
@@ -724,13 +724,14 @@ class Home extends Component
             $empId = auth()->user()->emp_id; // Assuming emp_id is available on the authenticated user
 
             // First, find the salary revision with the specified emp_id and active status
+
             $salaryRevision = EmpSalaryRevision::where('emp_id', $empId)
                 ->where('status', 1)
                 ->first();
-
             if ($salaryRevision) {
                 // Use the found salary revision's sal_id to get the associated EmpSalary record
-                $sal = EmpSalary::where('sal_id', $salaryRevision->sal_id)->first();
+                $sal = EmpSalary::where('sal_id', $salaryRevision->id)->first();
+
 
                 if ($sal) {
                     $this->grossPay = $sal->calculateTotalAllowance();
