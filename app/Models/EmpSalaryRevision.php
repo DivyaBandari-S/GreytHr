@@ -28,7 +28,7 @@ class EmpSalaryRevision extends Model
      */
     public function setCurrentCtcAttribute($value)
     {
-        $this->attributes['current_ctc'] = $this->encodeCTC($value);
+        $this->attributes['current_ctc'] = $value ? $this->encodeCTC($value) : null;
     }
 
     /**
@@ -36,7 +36,7 @@ class EmpSalaryRevision extends Model
      */
     public function getCurrentCtcAttribute($value)
     {
-        return $this->decodeCTC($value);
+        return $value ? $this->decodeCTC($value) : 0;
     }
 
     /**
@@ -44,7 +44,7 @@ class EmpSalaryRevision extends Model
      */
     public function setRevisedCtcAttribute($value)
     {
-        $this->attributes['revised_ctc'] = $this->encodeCTC($value);
+        $this->attributes['revised_ctc'] = $value ? $this->encodeCTC($value) : null;
     }
 
     /**
@@ -52,7 +52,7 @@ class EmpSalaryRevision extends Model
      */
     public function getRevisedCtcAttribute($value)
     {
-        return $this->decodeCTC($value);
+        return $value ? $this->decodeCTC($value) : 0;
     }
 
     /**
@@ -74,10 +74,9 @@ class EmpSalaryRevision extends Model
     {
         Log::info('Decoding CTC: ' . $value);
         $decoded = Hashids::decode($value);
-        dd($decoded);
 
         if (count($decoded) === 0) {
-            return null;
+            return 0;
         }
 
         $integerValue = $decoded[0];
