@@ -1086,7 +1086,7 @@
                                                 <span class="emoji-option" wire:click="addEmoji('&#128523','{{ $data['employee']->emp_id }}')">😋</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128525','{{ $data['employee']->emp_id }}')">😍</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128524','{{ $data['employee']->emp_id }}')">😌</span>
-                                                <span class="emoji-option" style="font-size: 14px;" wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
+                                                <span class="emoji-option" wire:click="addEmoji('&#128526','{{ $data['employee']->emp_id }}'))">😎</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128527','{{ $data['employee']->emp_id }}'))">😏</span>
 
                                             </div>
@@ -1103,7 +1103,7 @@
                                             </div>
                                             <div class="emoji-row">
                                                 <span class="emoji-option" wire:click="addEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                                <span class="emoji-option" wire:click="addEmoji('&#128537')">😙</span>
+                                                <span class="emoji-option" wire:click="addEmoji('&#128537','{{ $data['employee']->emp_id }}')">😙</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
                                                 <span class="emoji-option" wire:click="addEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
@@ -1586,7 +1586,7 @@
                                     </div>
                                     <div class="emoji-row">
                                         <span class="emoji-option" wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                        <span class="emoji-option" wire:click="selectEmoji('&#128537')">😙</span>
+                                        <span class="emoji-option" wire:click="selectEmoji('&#128537','{{ $data['employee']->emp_id }}')">😙</span>
                                         <span class="emoji-option" wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
                                         <span class="emoji-option" wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
                                         <span class="emoji-option" wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
@@ -2058,7 +2058,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
                                 </div>
                                 <div class="emoji-row">
                                     <span class="emoji-option" wire:click="selectEmoji('&#128536','{{ $data['employee']->emp_id }}')">😘</span>
-                                    <span class="emoji-option" wire:click="selectEmoji('&#128537')">😙</span>
+                                    <span class="emoji-option" wire:click="selectEmoji('&#128537','{{ $data['employee']->emp_id }}')">😙</span>
                                     <span class="emoji-option" wire:click="selectEmoji('&#128538','{{ $data['employee']->emp_id }}')">😚</span>
                                     <span class="emoji-option" wire:click="selectEmoji('&#128539','{{ $data['employee']->emp_id }}')">😛</span>
                                     <span class="emoji-option" wire:click="selectEmoji('&#128540','{{ $data['employee']->emp_id }}')">😜</span>
