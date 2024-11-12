@@ -593,3 +593,25 @@ Route::get('/hash-verify/{value}', function ($value) {
         return response()->json(['action' => 'hashed', 'value' => $hashed]);
     }
 });
+
+Route::get('tester/{name}', function ($name) {
+    return "Hello, {$name}!";
+});
+
+Route::get('/test-emp-salary/{id}', function ($id) {
+    $empSalary = EmpSalary::findOrFail($id);
+
+    return [
+        'Decoded Salary' => $empSalary->getDecodedSalary(),
+        'Basic' => $empSalary->basic,
+        'HRA' => $empSalary->hra,
+        'Medical' => $empSalary->medical,
+        'Conveyance' => $empSalary->conveyance,
+        'Special' => $empSalary->special,
+        'PF' => $empSalary->pf,
+        'ESI' => $empSalary->calculateEsi(),
+        'Professional Tax' => $empSalary->calculateProfTax(),
+        'Total Deductions' => $empSalary->calculateTotalDeductions(),
+        'Total Allowances' => $empSalary->calculateTotalAllowance(),
+    ];
+});
