@@ -716,7 +716,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($grossPay, 2) : '**********' }}
+                                {{ $showSalary ? '₹ ' . number_format($grossPay, 2) : '₹**********' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -725,7 +725,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($deductions ?? 0, 2) : '**********' }}
+                                {{ $showSalary ? '₹ ' . number_format($deductions ?? 0, 2) : '₹**********' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -733,8 +733,8 @@
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            <p style="font-size:11px;">
-                                {{ $showSalary ? '₹ ' . number_format($netPay, 2) : '**********' }}
+                            <p class="payslip-small-desc">
+                                {{ $showSalary ? '₹ ' . number_format($netPay, 2) : '₹**********' }}
                             </p>
                         </div>
                     </div>
