@@ -506,7 +506,7 @@
                                 $allEmojis = $currentCardEmojis->reverse();
                                 @endphp
 
-                                @if($currentCardEmojis && $emojisCount > 0)
+                                @if($currentCardEmojis && $emojisCount > 1)
                                 <div style="white-space: nowrap;">
                                     @foreach($lastTwoEmojis as $index => $emoji_reaction)
                                     <span style="font-size: 16px;margin-left:-7px;">{{ $emoji_reaction->emoji_reaction }}</span>
@@ -534,6 +534,7 @@
                                     @endif
 
                                     @if($emojisCount > 1)
+                 
                 <span style="cursor: pointer; color: blue; font-size: 10px;" wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }} more</span>
 
                 @if($showDialogEmoji && $emp_id == $data['employee']->emp_id)
@@ -599,15 +600,7 @@
 
                                 @endif
                                 
-                                @php
-                                $currentCardEmojis = $emojis->where('emp_id', $data['employee']->emp_id);
-                                $emojisCount = $currentCardEmojis->count();
-                                $lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 2, 0))->reverse();
-                                $uniqueNames = [];
-                                @endphp
-                                @if($currentCardEmojis && $emojisCount > 2)
-        <span style="cursor: pointer; color: blue; font-size: 8px;" wire:click="open">+more</span>
-        @endif
+                            
                             </div>
 
                             <div class="w-90" style="border-top: 1px solid #E8E5E4; margin: 10px;"></div>

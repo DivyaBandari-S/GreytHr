@@ -6,61 +6,119 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
+
 class EmpSalary extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['emp_id', 'dept_id', 'salary', 'effective_date'];
+    protected $fillable = ['sal_id', 'salary', 'effective_date', 'remarks'];
+    protected $appends = ['basic', 'hra', 'medical', 'special', 'conveyance', 'pf'];
+
+    private $decodedSalary = null; // Cache decoded salary for repeated calculations
 
     /**
-     * Set the salary attribute and encode it before saving.
-     *
-     * @param  mixed  $value
-     * @return void
+     * Set and encode salary before saving.
      */
     public function setSalaryAttribute($value)
     {
-        // Determine the number of decimal places
         $decimalPlaces = strpos($value, '.') !== false ? strlen(substr(strrchr($value, "."), 1)) : 0;
-
-        // Convert the float to an integer representation
         $factor = pow(10, $decimalPlaces);
-        $integerValue = intval($value * $factor);
-
-        // Encode the integer value and decimal places
-        $this->attributes['salary'] = Hashids::encode($integerValue, $decimalPlaces);
+        $this->attributes['salary'] = Hashids::encode(intval($value * $factor), $decimalPlaces);
     }
 
     /**
-     * Get the salary attribute and decode it when retrieving.
-     *
-     * @param  mixed  $value
-     * @return mixed
+     * Decode salary for calculations and cache the result.
      */
-    /**
-     * Get the salary attribute and decode it when retrieving.
-     *
-     * @param  mixed  $value
-     * @return mixed
-     */
-    public function getSalaryAttribute($value)
+    public function getDecodedSalary()
     {
-        Log::info('Decoding salary: ' . $value);
-        // Decode the hash
-        $decoded = Hashids::decode($value);
+        if ($this->decodedSalary === null) {
+            $decoded = Hashids::decode($this->attributes['salary']);
+            if (count($decoded) === 0) return null;
 
-        // Check if decoding was successful
-        if (count($decoded) === 0) {
-            return null;
+            $integerValue = $decoded[0];
+            $decimalPlaces = $decoded[1] ?? 0;
+            $this->decodedSalary = $integerValue / pow(10, $decimalPlaces);
         }
-
-        // Retrieve the integer value and decimal places
-        $integerValue = $decoded[0];
-        $decimalPlaces = $decoded[1] ?? 0; // Default to 0 if not present
-
-        // Convert back to float
-        return $integerValue / pow(10, $decimalPlaces);
+        return $this->decodedSalary;
     }
 
+    /**
+     * Define relationship with EmpSalaryRevision.
+     */
+    public function salaryRevision()
+    {
+        return $this->belongsTo(EmpSalaryRevision::class, 'sal_id');
+    }
+
+    /**
+     * Salary breakdown attributes.
+     */
+    public function getBasicAttribute()
+    {
+        return $this->calculatePercentageOfSalary(0.4);
+    }
+
+    public function getHraAttribute()
+    {
+        return $this->basic * 0.4;
+    }
+
+    public function getMedicalAttribute()
+    {
+        return 1250;
+    }
+
+    public function getConveyanceAttribute()
+    {
+        return 1600;
+    }
+
+    public function getSpecialAttribute()
+    {
+        $totalDeductions = $this->basic + $this->hra + $this->conveyance + $this->medical + $this->pf;
+        return max($this->getDecodedSalary() - $totalDeductions, 0);
+    }
+
+    public function getPfAttribute()
+    {
+        return $this->calculatePercentageOfBasic(0.12);
+    }
+
+    public function calculateEsi()
+    {
+        return $this->calculatePercentageOfBasic(0.0075);
+    }
+
+    public function calculateProfTax()
+    {
+        return 150;
+    }
+
+    public function calculateTotalDeductions()
+    {
+        return $this->pf + $this->calculateEsi() + $this->calculateProfTax();
+    }
+
+    public function calculateTotalAllowance()
+    {
+        return $this->basic + $this->hra + $this->conveyance + $this->medical + $this->special;
+    }
+
+    /**
+     * Helper methods.
+     */
+    private function calculatePercentageOfSalary($percentage)
+    {
+        return $this->getDecodedSalary() * $percentage;
+    }
+
+    private function calculatePercentageOfBasic($percentage)
+    {
+        return $this->basic * $percentage;
+    }
+
+    public function getEmployeeByEmpId($emp_id)
+    {
+        return $this->where('emp_id', $emp_id)->first();
+    }
 }

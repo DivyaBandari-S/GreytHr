@@ -1,5 +1,6 @@
 <div class="position-relative">
-    <div class="position-absolute" wire:loading wire:target="open,toggleSignState">
+    <div class="position-absolute" wire:loading
+        wire:target="open,toggleSignState,getThisMonthLeaves,getTodayLeaves,closeThisMonthLeaves,closeTodayLeaves">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -70,7 +71,8 @@
                                         </div>
                                     @endif
                                     <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
-                                        {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</h6>
+                                        {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
+                                    </h6>
                                     <div class="row m-0 p-0 desigMainDiv ">
                                         <div class="row p-0 desigSecondDiv">
                                             <p class="mb-0 desigText" style="color: #02114f !important;">
@@ -714,7 +716,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹ 50,000.00' }}
+                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalAllowance(), 2) : '*********' }} --}}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -723,7 +725,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹ 5,000.00' }}
+                                {{-- {{ $showSalary ? '₹ ' . number_format($salaries->calculateTotalDeductions() ?? 0, 2) : '*********' }} --}}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -731,9 +733,11 @@
                                 <div class="netPay"></div>
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
-                            <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹ 45,000.00' }}
-                            </p>
+                            {{-- @if ($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions() > 0)
+                                <p style="font-size:11px;">
+                                    {{ $showSalary ? '₹ ' . number_format(max($salaries->calculateTotalAllowance() - $salaries->calculateTotalDeductions(), 0), 2) : '*********' }}
+                                </p>
+                            @endif --}}
                         </div>
                     </div>
 
@@ -793,11 +797,10 @@
                         ?>
                                         @endfor
                                         @if ($teamCount > 3)
-                                            <div class="remainContent d-flex mt-3 flex-column align-items-center">
-                                                <a href="/team-on-leave-chart">
-                                                    <span>+{{ $teamCount - 3 }}</span>
-                                                    <p class="mb-0" style="margin-top:-5px;">More</p>
-                                                </a>
+                                            <div class="remainContent d-flex mt-1 flex-column align-items-center"
+                                                wire:click="getTodayLeaves">
+                                                <span>+{{ $teamCount - 3 }}</span>
+                                                <p class="mb-0" style="margin-top:-5px;">More</p>
                                             </div>
                                         @endif
                                     </div>
@@ -815,21 +818,21 @@
                                                     @endphp
                                                     <div class="d-flex align-items-center">
                                                         <div class="thisCircle"
-                                                            style="border: 1px solid {{ $randomColorList }}">
+                                                            style="border: 1px solid {{ $randomColorList }}"
+                                                            data-toggle="tooltip" data-placement="top"
+                                                            title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
                                                             <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                                 @if ($upcomingLeaveRequests->count() > 3)
-                                                    <div
-                                                        class="remainContent d-flex flex-column align-items-center">
+                                                    <div class="remainContent d-flex flex-column align-items-center"
+                                                        wire:click="getThisMonthLeaves">
                                                         <!-- Placeholder color -->
-                                                        <a href="/team-on-leave-chart">
-                                                            <span>+{{ $upcomingLeaveRequests->count() - 3 }}
-                                                            </span>
-                                                            <span style="margin-top:-5px;">More</span>
-                                                        </a>
+                                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }}
+                                                        </span>
+                                                        <span style="margin-top:-5px;">More</span>
                                                     </div>
                                                 @endif
                                             </div>
@@ -850,7 +853,7 @@
                                 </div>
                             @endif
                         </div>
-                        <a href="#">
+                        <a href="/team-on-leave-chart">
                             <div class="payslip-go-corner">
                                 <div class="payslip-go-arrow">→</div>
                             </div>
@@ -858,7 +861,79 @@
                     </div>
                 </div>
             @endif
+            <!-- ///team on leave model popup -->
+            @if ($showModal)
+                <div class="modal d-block" tabindex="-1" role="dialog">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <b> {{ $modalLeaveTitle }} </b>
+                                </h5>
+                            </div>
+                            <div class="modal-body">
+                                @if ($showThisMonthLeaveRequest)
+                                    <div class="d-flex flex-row  mb-3 gap-2">
+                                        <div class="d-flex flex-row gap-2">
+                                            @foreach ($upcomingLeaveRequests as $requests)
+                                                @php
+                                                    $randomColorList =
+                                                        '#' .
+                                                        str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
+                                                @endphp
+                                                <div class="d-flex align-items-center">
+                                                    <div class="thisCircle"
+                                                        style="border: 1px solid {{ $randomColorList }}"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
+                                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button type="button" class="cancel-btn"
+                                            wire:click="closeThisMonthLeaves"
+                                            style="border:1px solid rgb(2,17,79);"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                @endif
+                                @if ($showTodayLeaveRequest)
+                                    <div class="d-flex flex-row gap-2 mb-3">
+                                        <div class="d-flex flex-row gap-2">
+                                            @foreach ($teamOnLeaveRequests as $requests)
+                                                @php
+                                                    $randomColorLeaveList =
+                                                        '#' .
+                                                        str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
+                                                @endphp
+                                                <div class="d-flex align-items-center ">
+                                                    <div class="thisCircle"
+                                                        style="border: 1px solid {{ $randomColorLeaveList }}"
+                                                        data-toggle="tooltip" data-placement="top"
+                                                        title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
+                                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                                        <button type="button" class="cancel-btn" wire:click="closeTodayLeaves"
+                                            style="border:1px solid rgb(2,17,79);"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                @endif
 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-backdrop fade show blurred-backdrop"></div>
+            @endif
             <div class="payslip-card mb-4">
                 <div>
                     <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">

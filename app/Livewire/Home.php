@@ -12,9 +12,10 @@
 // Models                          : EmployeeDetails,Company,LeaveRequest,SwipeRecord,SwipeData ,SalaryRevision,HolidayCalendar-->
 
 namespace App\Livewire;
- 
+
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
+use App\Models\EmpSalary;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use App\Models\SwipeData;
@@ -23,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
-use App\Models\SalaryRevision;
+use App\Models\EmpSalaryRevision;
 use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -33,7 +34,7 @@ use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
- 
+
 class Home extends Component
 {
     public $currentDate;
@@ -65,11 +66,8 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
     public $formattedAddress = [];
- 
     public $showAllAbsentEmployees = false;
- 
     public $showAllLateEmployees = false;
- 
     public $employee_details;
     public $showAllEarlyEmployees = false;
     public $grossPay;
@@ -78,11 +76,8 @@ class Home extends Component
     public $leaveRequests;
     public $showLeaveApplies;
     public $greetingImage;
- 
     public $showReviewLeaveAndAttendance = false;
- 
     public $countofregularisations;
- 
     public $employeeShiftDetails;
     public $regularisations;
     public $greetingText;
@@ -98,7 +93,6 @@ class Home extends Component
     public $showMessage = true;
     public $showAlert = false;
     public $swipeDataOfEmployee;
- 
     public $weatherCondition;
     public $temperature;
     public $minTemperature;
@@ -115,54 +109,121 @@ class Home extends Component
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
+    public $showThisMonthLeaveRequest = false;
+    public $showTodayLeaveRequest = false;
+    public $modalLeaveTitle = '';
+    public $showModal = false;
     public $showSalary = true;
     public  $longitude;
     public function mount()
     {
-        $this->fetchWeather();
-        $currentHour = date('G');
- 
-        if ($currentHour >= 4 && $currentHour < 12) {
-            $this->greetingImage = 'morning.jpeg';
-            $this->greetingText = 'Good Morning';
-        } elseif ($currentHour >= 12 && $currentHour < 16) {
-            $this->greetingImage = 'afternoon.jpeg';
-            $this->greetingText = 'Good Afternoon';
-        } elseif ($currentHour >= 16 && $currentHour < 20) {
-            $this->greetingImage = 'evening.jpeg';
-            $this->greetingText = 'Good Evening';
-        } else {
-            $this->greetingImage = 'night.jpeg';
-            $this->greetingText = 'Good Night';
+        try {
+            // Fetch weather data
+            $this->fetchWeather();
+            // Get current hour to determine greeting
+            $currentHour = date('G');
+            if ($currentHour >= 4 && $currentHour < 12) {
+                $this->greetingImage = 'morning.jpeg';
+                $this->greetingText = 'Good Morning';
+            } elseif ($currentHour >= 12 && $currentHour < 16) {
+                $this->greetingImage = 'afternoon.jpeg';
+                $this->greetingText = 'Good Afternoon';
+            } elseif ($currentHour >= 16 && $currentHour < 20) {
+                $this->greetingImage = 'evening.jpeg';
+                $this->greetingText = 'Good Evening';
+            } else {
+                $this->greetingImage = 'night.jpeg';
+                $this->greetingText = 'Good Night';
+            }
+
+            // Get employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            // Check if employee details exist before attempting to access
+            $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
+                ->select('emp_id', 'first_name', 'last_name', 'manager_id')
+                ->first();
+
+            if ($this->loginEmployee) {
+                // Get manager details
+                $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
+                    ->where('emp_id', $this->loginEmployee->manager_id)
+                    ->first();
+
+                // Get employees under the manager
+                $employees = EmployeeDetails::where('manager_id', $employeeId)
+                    ->select('emp_id', 'first_name', 'last_name')
+                    ->get();
+
+                // Extract employee IDs
+                $empIds = $employees->pluck('emp_id')->toArray();
+
+                // Get regularisation data
+                $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
+                    ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+                    ->where('status', 5)
+                    ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+                    ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+                    ->with('employee')
+                    ->get();
+
+                // Count regularisations
+                $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
+                    ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
+                    ->where('status', 5)
+                    ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
+                    ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
+                    ->with('employee')
+                    ->count();
+            } else {
+                // Handle case where employee details could not be found
+                $this->loginEmployee = null;
+                $this->loginEmpManagerDetails = null;
+                $this->regularisations = collect();
+                $this->countofregularisations = 0;
+            }
+        } catch (\Exception $e) {
+            // Handle any exception that occurs
+            Log::error('Error occurred in mount method: ' . $e->getMessage());
+            $this->loginEmployee = null;
+            $this->loginEmpManagerDetails = null;
+            $this->regularisations = collect();
+            $this->countofregularisations = 0;
+            FlashMessageHelper::flashError('An error occurred while fetching data. Please try again later.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            FlashMessageHelper::flashError('An error occurred while fetching data. Please try again later.');
         }
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)->select('emp_id', 'first_name', 'last_name','manager_id')->first();
-        $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')->where('emp_id', $this->loginEmployee->manager_id)->first();
-        $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
-        $empIds = $employees->pluck('emp_id')->toArray();
-        $this->regularisations = RegularisationDates::whereIn('emp_id', $empIds)
-            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 5)
-            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
-            ->with('employee')
-            ->get();
- 
-        $this->countofregularisations = RegularisationDates::whereIn('emp_id', $empIds)
-            ->where('is_withdraw', 0) // Assuming you want records with is_withdraw set to 0
-            ->where('status', 5)
-            ->selectRaw('*, JSON_LENGTH(regularisation_entries) AS regularisation_entries_count')
-            ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
-            ->with('employee')
-            ->count();
     }
 
-
+    public function getThisMonthLeaves()
+    {
+        $this->showModal = true;
+        $this->modalLeaveTitle = 'This Month';
+        $this->showThisMonthLeaveRequest = !$this->showThisMonthLeaveRequest;
+    }
+    public function closeThisMonthLeaves()
+    {
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showThisMonthLeaveRequest = false;
+    }
+    public function getTodayLeaves()
+    {
+        $this->modalLeaveTitle = 'Today';
+        $this->showModal = true;
+        $this->showTodayLeaveRequest = true;
+    }
+    public function closeTodayLeaves()
+    {
+        $this->showModal = false;
+        $this->modalLeaveTitle = '';
+        $this->showTodayLeaveRequest = false;
+    }
     public function reviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = true;
     }
- 
+
     public function closereviewLeaveAndAttendance()
     {
         $this->showReviewLeaveAndAttendance = false;
@@ -175,7 +236,7 @@ class Home extends Component
     {
         $this->showAlert = false;
     }
- 
+
     public function openEarlyEmployees()
     {
         $this->whoisinTitle = 'On Time Employees';
@@ -195,7 +256,7 @@ class Home extends Component
     {
         $this->showAlertDialog = true;
     }
- 
+
     public function close()
     {
         $this->showAlertDialog = false;
@@ -208,7 +269,7 @@ class Home extends Component
     {
         try {
             $agent = new Agent();
- 
+
             if ($agent->isDesktop()) {
                 return 'desktop';
             } else {
@@ -239,23 +300,23 @@ class Home extends Component
     public function toggleSignState()
     {
         try {
-            $todayDate=Carbon::now()->format('Y-m-d');
+            $todayDate = Carbon::now()->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $isonleave=$this->isEmployeeLeaveOnDate($todayDate,$employeeId);
-            $isholiday=HolidayCalendar::where('date',$todayDate)->exists();
-            
+            $isonleave = $this->isEmployeeLeaveOnDate($todayDate, $employeeId);
+            $isholiday = HolidayCalendar::where('date', $todayDate)->exists();
+
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->signIn = !$this->signIn;
-           
+
             if ($isonleave) {
-                FlashMessageHelper::flashError( 'You cannot swipe on this date as you are on leave.');
+                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
                 return;
             } elseif ($isholiday) {
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-        
-            // $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device'; 
+
+            // $deviceName = $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown Device';
             $agent = new Agent();
 
             // Determine the device type
@@ -268,13 +329,7 @@ class Home extends Component
             } else {
                 $deviceName = 'Unknown Device';
             }
-            Log::info('Creating SwipeRecord:', [
-                'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
-                'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
-                'sign_in_device' => $deviceName,
-            ]);
-        
+
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
@@ -283,7 +338,7 @@ class Home extends Component
                     : 'IN',
                 'sign_in_device' => $deviceName,
             ]);
-           
+
             $flashMessage = $this->swipes
                 ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN")
                 : 'IN';
@@ -291,15 +346,14 @@ class Home extends Component
             $message = $flashMessage == "IN"
                 ? "You have successfully signed in."
                 : "You have successfully signed out.";
-                if($message){
-                    FlashMessageHelper::flashSuccess($message);
-                    return false;
-                }
+            if ($message) {
+                FlashMessageHelper::flashSuccess($message);
+                return false;
+            }
         } catch (Throwable $e) {
             // Log or handle the exception as needed
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
-        
     }
     public function showEarlyEmployees()
     {
@@ -347,7 +401,7 @@ class Home extends Component
             foreach ($this->leaveRequests as $leaveRequest) {
                 $applyingToJson = trim($leaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
- 
+
                 $ccToJson = trim($leaveRequest->cc_to);
 
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
@@ -406,7 +460,7 @@ class Home extends Component
             foreach ($this->leaveApplied as $request) {
                 $leaveRequest = $request['leaveRequest'];
                 $empId = $leaveRequest->emp_id; // Extract emp_id from LeaveRequest model
- 
+
                 if (!isset($groupedRequests[$empId])) {
                     // Initialize the array for this employee ID
                     $groupedRequests[$empId] = [
@@ -414,7 +468,7 @@ class Home extends Component
                         'leaveRequests' => [] // Store all leave requests for this employee
                     ];
                 }
- 
+
                 // Increment the count and store the leave request
                 $groupedRequests[$empId]['count']++;
                 $groupedRequests[$empId]['leaveRequests'][] = $leaveRequest;
@@ -437,42 +491,36 @@ class Home extends Component
             foreach ($this->teamOnLeaveRequests as $teamOnLeaveRequest) {
                 $applyingToJson = trim($teamOnLeaveRequest->applying_to);
                 $applyingArray = is_array($applyingToJson) ? $applyingToJson : json_decode($applyingToJson, true);
- 
+
                 $ccToJson = trim($teamOnLeaveRequest->cc_to);
                 $ccArray = is_array($ccToJson) ? $ccToJson : json_decode($ccToJson, true);
- 
+
                 $isManagerInApplyingTo = isset($applyingArray[0]['manager_id']) && $applyingArray[0]['manager_id'] == $employeeId;
                 $isEmpInCcTo = isset($ccArray[0]['emp_id']) && $ccArray[0]['emp_id'] == $employeeId;
- 
+
                 if ($isManagerInApplyingTo || $isEmpInCcTo) {
                     $teamOnLeaveApplications[] = $teamOnLeaveRequest;
                 }
             }
             $this->teamOnLeave = $teamOnLeaveApplications;
- 
+
             // Get the count of  leave applications
             $this->teamCount = count($teamOnLeaveApplications);
- 
+
             $currentDate = Carbon::today();
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
-                ->where('leave_status', 2)
+                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id') // Join with employee_details table
+                ->where('leave_applications.leave_status', 2)
+                ->where('category_type', 'Leave')
                 ->where(function ($query) use ($currentDate) {
-                    $query->whereMonth('from_date', Carbon::now()->month); // Filter for the current month
+                    $query->whereMonth('leave_applications.from_date', Carbon::now()->month); // Filter for the current month
                 })
-                ->orderBy('created_at', 'desc')
+                ->where('employee_details.manager_id', auth()->user()->emp_id) // Match login_manager_id with the authenticated user's ID (assuming they are the manager)
+                ->orderBy('leave_applications.created_at', 'desc')
+                ->select('leave_applications.*') // Select all columns from the leave_requests table
                 ->get();
-            //Process each leave request to add initials and random color
-            // foreach ($this->upcomingLeaveRequests as $request) {
-            //     $employee = $request->employee;
-            //     if ($employee) {
-            //         $initialsForThisMonth = strtoupper(substr($employee->first_name, 0, 1) . substr($employee->last_name, 0, 1));
-            //        // $randomLeaveColor = '#' . str_pad(dechex(mt_rand(0xC0C0C0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT); // Generate random color
-            //         // $request->initials = $initialsForThisMonth;
-            //         //$request->randomColor = $randomLeaveColor;
-            //     }
-            // }
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
- 
+
             //attendance related query
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
@@ -489,9 +537,9 @@ class Home extends Component
                 })
                 ->get();
             $arrayofabsentemployees = $this->absent_employees->toArray();
- 
-            
- 
+
+
+
             $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.leave_status', 2)
@@ -503,12 +551,12 @@ class Home extends Component
                     // Calculate the number of days between from_date and to_date
                     $fromDate = Carbon::parse($leaveRequest->from_date);
                     $toDate = Carbon::parse($leaveRequest->to_date);
- 
+
                     $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; // Add 1 to include both start and end dates
- 
+
                     return $leaveRequest;
                 });
-                
+
             $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
@@ -520,34 +568,34 @@ class Home extends Component
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_status', 'active')
                 ->get();
- 
+
             $arrayofabsentemployees = $this->absent_employees->toArray();
- 
+
             $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
-            ->leftJoin('company_shifts', function ($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
-                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
-            })
-            ->select(
-                'employee_details.*',
-                // Selecting the mobile number from emp_personal_infos
-                'company_shifts.shift_name', // Selecting shift_name from company_shifts
-                'company_shifts.shift_start_time',
-                'company_shifts.shift_end_time'
-            )
-            ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
-                $query->select('emp_id')
-                    ->from('swipe_records')
-                    ->where('manager_id', $loggedInEmpId)
-                    ->whereDate('created_at', $currentDate);
-            })
-            ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
-            ->where('employee_details.employee_status', 'active')
-            ->distinct('employee_details.emp_id')
-            ->count();
-         
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
+                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                        ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
+                })
+                ->select(
+                    'employee_details.*',
+                    // Selecting the mobile number from emp_personal_infos
+                    'company_shifts.shift_name', // Selecting shift_name from company_shifts
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                    $query->select('emp_id')
+                        ->from('swipe_records')
+                        ->where('manager_id', $loggedInEmpId)
+                        ->whereDate('created_at', $currentDate);
+                })
+                ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
+                ->where('employee_details.employee_status', 'active')
+                ->distinct('employee_details.emp_id')
+                ->count();
+
+            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status', 'active')->get();
             $swipes_early = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -576,10 +624,10 @@ class Home extends Component
                 ->where('employee_details.employee_status', 'active')
                 ->distinct('swipe_records.emp_id')
                 ->get();
- 
- 
+
+
             $swipes_early1 = $swipes_early->count();
- 
+
             $swipes_late = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -588,28 +636,28 @@ class Home extends Component
                     ->whereDate('swipe_records.created_at', $currentDate)
                     ->groupBy('swipe_records.emp_id');
             })
-            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-            ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
-            ->leftJoin('company_shifts', function ($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
-                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
-            })
-            ->select(
-                'swipe_records.emp_id',  // Ensure that you are selecting emp_id for distinct comparison
-                'swipe_records.swipe_time',
-                'employee_details.first_name', 
-                'employee_details.last_name',
-                'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
-                'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
-                'employee_details.emergency_contact'  // Include fields from emp_personal_infos
-            )
-            ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
-            // Apply distinct on emp_id to avoid duplicates
-            ->distinct('swipe_records.emp_id')
-            ->get();
-           
+                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
+                ->leftJoin('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
+                        ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
+                })
+                ->select(
+                    'swipe_records.emp_id',  // Ensure that you are selecting emp_id for distinct comparison
+                    'swipe_records.swipe_time',
+                    'employee_details.first_name',
+                    'employee_details.last_name',
+                    'company_shifts.shift_start_time', // Get shift_start_time from company_shifts
+                    'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
+                    'employee_details.emergency_contact'  // Include fields from emp_personal_infos
+                )
+                ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
+                // Apply distinct on emp_id to avoid duplicates
+                ->distinct('swipe_records.emp_id')
+                ->get();
+
             $swipes_late1 = $swipes_late->count();
-        
+
             $this->swipeDetails = DB::table('swipe_records')
                 ->whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
@@ -620,22 +668,22 @@ class Home extends Component
                 ->where('emp_id', $employeeId)
                 ->orderBy('created_at', 'desc')
                 ->first();
- 
- 
+
+
             // Assuming $calendarData should contain the data for upcoming holidays
             // Get the current year and date
             $currentYear = Carbon::now()->year;
             $today = Carbon::today();
- 
+
             // Initialize an empty collection to hold valid holidays
             $validHolidays = collect();
- 
+
             // Retrieve holidays starting from today
             $holidays = HolidayCalendar::where('date', '>=', $today)
                 ->whereYear('date', $currentYear)
                 ->orderBy('date')
                 ->get();
- 
+
             foreach ($holidays as $holiday) {
                 // Add the current holiday if it has festivals
                 if (!empty($holiday->festivals)) {
@@ -646,41 +694,54 @@ class Home extends Component
                         ->whereYear('date', $currentYear)
                         ->orderBy('date')
                         ->first();
- 
+
                     if ($nextHoliday && !empty($nextHoliday->festivals) && !$validHolidays->contains('id', $nextHoliday->id)) {
                         $validHolidays->push($nextHoliday);
                     }
                 }
- 
+
                 // Break the loop if we have 3 holidays
                 if ($validHolidays->count() >= 4) {
                     break;
                 }
             }
- 
+
             // Limit to the first 3 unique holidays
             $this->calendarData = $validHolidays->unique('id')->take(3);
             $this->holidayCount = $this->calendarData;
-            $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+            // $this->salaryRevision = EmpSalaryRevision::where('emp_id', $employeeId)->get();
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
- 
+
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
- 
+
             $this->showLeaveApplies = $isManager;
- 
- 
+
+
             //##################################### pie chart details #########################
-            $sal = new SalaryRevision();
-            $this->grossPay = $sal->calculateTotalAllowance();
-            $this->deductions = $sal->calculateTotalDeductions();
-            $this->netPay = $this->grossPay - $this->deductions;
-            $this->calculateTaskData();
- 
+            $empId = auth()->user()->emp_id; // Assuming emp_id is available on the authenticated user
+
+            // First, find the salary revision with the specified emp_id and active status
+            $salaryRevision = EmpSalaryRevision::where('emp_id', $empId)
+                ->where('status', 1)
+                ->first();
+
+            if ($salaryRevision) {
+                // Use the found salary revision's sal_id to get the associated EmpSalary record
+                $sal = EmpSalary::where('sal_id', $salaryRevision->sal_id)->first();
+
+                if ($sal) {
+                    $this->grossPay = $sal->calculateTotalAllowance();
+                    $this->deductions = $sal->calculateTotalDeductions();
+                    $this->netPay = $this->grossPay - $this->deductions;
+                    $this->calculateTaskData();
+                }
+            }
+
+
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
                 'calendarData' => $this->calendarData,
                 'holidayCount' => $this->holidayCount,
-                'salaryRevision' => $this->salaryRevision,
                 'showLeaveApplies' => $this->showLeaveApplies,
                 'count' => $this->count,
                 'leaveApplied' => $this->leaveApplied,
@@ -705,12 +766,13 @@ class Home extends Component
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
                 'loginEmpManagerDetails' => $this->loginEmpManagerDetails
- 
+
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             Log::error('Error in home component: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while processing your request. Please try again later.');
         } catch (\Exception $e) {
+            Log::error('An unexpected error occurred: ' . $e->getMessage());
             FlashMessageHelper::flashError('An unexpected error occurred. Please try again later.');
         }
     }
@@ -754,77 +816,83 @@ class Home extends Component
     }
     public function updatedFilterPeriod($value)
     {
- 
+
         $this->calculateTaskData();
     }
     public function calculateTaskData()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
- 
-        $startDate = $this->getStartDate();
-        $endDate = $this->getEndDate();
- 
-        $totalTasksAssignedBy = Task::with('emp')
-            ->where(function ($query) use ($employeeId) {
-                $query->where('assignee', 'LIKE', "%($employeeId)%");
-            })
-            ->select('emp_id')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->get();
- 
-        $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
- 
-        $totalTasksAssignedTo = Task::with('emp')
-            ->where('emp_id', $employeeId)
-            ->where(function ($query) use ($employeeId) {
-                $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
-                    ->orWhere('assignee', 'NOT LIKE', "%#($employeeId)%");
-            })
-            ->select('emp_id')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->get();
- 
-        $tasksSummary = Task::with('emp')
-            ->selectRaw("
+
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $startDate = $this->getStartDate();
+            $endDate = $this->getEndDate();
+
+            $totalTasksAssignedBy = Task::with('emp')
+                ->where(function ($query) use ($employeeId) {
+                    $query->where('assignee', 'LIKE', "%($employeeId)%");
+                })
+                ->select('emp_id')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            $totalTasksCountAssignedBy = $totalTasksAssignedBy->count();
+
+            $totalTasksAssignedTo = Task::with('emp')
+                ->where('emp_id', $employeeId)
+                ->where(function ($query) use ($employeeId) {
+                    $query->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) != ?", [$employeeId])
+                        ->orWhere('assignee', 'NOT LIKE', "%#($employeeId)%");
+                })
+                ->select('emp_id')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->get();
+
+            $tasksSummary = Task::with('emp')
+                ->selectRaw("
             COUNT(*) AS total_tasks_assigned_to,
             COALESCE(SUM(CASE WHEN status = 11 THEN 1 ELSE 0 END), 0) AS tasks_completed_count,
             COALESCE(SUM(CASE WHEN status = 10 THEN 1 ELSE 0 END), 0) AS tasks_in_progress_count
         ")
-            ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->first();
- 
-        $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
-        $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
-        $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
- 
-        $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
-        $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
- 
-        $taskRecords = \App\Models\Task::with('emp')
-            ->where(function ($query) use ($employeeId) {
-                $query->where('assignee', 'LIKE', "%($employeeId)%");
-            })
-            ->whereDate('created_at', now()->toDateString())
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->select('emp_id')
-            ->get();
- 
-        $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
- 
-        $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
- 
-        $this->employeeNames = $employeeDetails
-            ->map(function ($employee) {
-                return $employee->first_name . ' ' . $employee->last_name;
-            })
-            ->implode(', ');
- 
-        $this->taskCount = $taskRecords->count();
+                ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(assignee, '#(', -1), ')', 1) = ?", [$employeeId])
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->first();
+
+            $this->TaskAssignedToCount = $tasksSummary->total_tasks_assigned_to;
+            $this->TasksCompletedCount = $tasksSummary->tasks_completed_count;
+            $this->TasksInProgressCount = $tasksSummary->tasks_in_progress_count;
+
+            $totalTasksCountAssignedTo = $totalTasksAssignedTo->count();
+            $this->totalTasksCount = $totalTasksCountAssignedTo + $totalTasksCountAssignedBy;
+
+            $taskRecords = \App\Models\Task::with('emp')
+                ->where(function ($query) use ($employeeId) {
+                    $query->where('assignee', 'LIKE', "%($employeeId)%");
+                })
+                ->whereDate('created_at', now()->toDateString())
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->select('emp_id')
+                ->get();
+
+            $empIds = $taskRecords->pluck('emp_id')->unique()->toArray();
+
+            $employeeDetails = \App\Models\EmployeeDetails::whereIn('emp_id', $empIds)->get();
+
+            $this->employeeNames = $employeeDetails
+                ->map(function ($employee) {
+                    return $employee->first_name . ' ' . $employee->last_name;
+                })
+                ->implode(', ');
+
+            $this->taskCount = $taskRecords->count();
+        } catch (\Exception $e) {
+            Log::error('Error calculating task data: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occured, please try again later.');
+        }
     }
- 
- 
- 
+
+
+
     // Livewire component method
     public function fetchWeather()
     {
@@ -837,28 +905,28 @@ class Home extends Component
             $this->country = $location['country'];
             $this->city = $location['city'];
             $this->postal_code = $location['postal_code'];
- 
+
             // Get the base API URL from the .env file
             $apiUrl = env('WEATHER_API_URL', 'https://api.open-meteo.com/v1/forecast');
             // Prepare the request URL with dynamic latitude and longitude
             $requestUrl = $apiUrl . '?latitude=' . $this->lat . '&longitude=' . $this->lon . '&current_weather=true';
- 
+
             $response = Http::get($requestUrl);
- 
+
             // Log response for debugging
             // Log::info('API Response:', $response->json() ?? []);
             // Log::info('API Response Status Code:', ['status' => $response->status()]);
             // Log::info('API Response Headers:', ['headers' => $response->headers()]);
             // Log::info('API Response Body:', ['body' => $response->body()]);
- 
+
             // Check if the request was successful
             if ($response->successful()) {
                 // Decode the JSON response
                 $data = $response->json();
- 
+
                 // Extract weather data from the response
                 $currentWeather = $data['current_weather'] ?? [];
- 
+
                 // $this->weatherCondition = $this->mapWeatherCodeToCondition($currentWeather['weathercode'] ?? 'Unknown');
                 $this->weatherCode = $currentWeather['weathercode'] ?? 'Unknown';
                 $this->temperature = $currentWeather['temperature'] ?? 'Unknown';
@@ -884,7 +952,7 @@ class Home extends Component
             $this->isDay = 'Unknown';
         }
     }
- 
+
     private function mapWeatherCodeToCondition($code)
     {
         // Map weather code to weather condition
@@ -918,24 +986,24 @@ class Home extends Component
             96 => 'Thunderstorm with slight hail',
             99 => 'Thunderstorm with heavy hail',
         ];
- 
+
         return $weatherCodes[$code] ?? '';
     }
- 
- 
+
+
     public function getLocationByIP()
     {
- 
+
         try {
- 
+
             $ip = '';
- 
+
             // $ip = request()->ip();
             $apiUrl = env('FINDIP_API_URL');
- 
+
             // Construct the full API URL
             $url = "{$apiUrl}/{$ip}/json/";
- 
+
             // Make the HTTP request
             $response = Http::get($url);
             // dd($response->json());
@@ -944,7 +1012,7 @@ class Home extends Component
             FlashMessageHelper::flashError('An error occured while getting location.');
         }
     }
- 
+
     // public $latitude;
     // public $longitude;
     // #[Js]
@@ -956,11 +1024,11 @@ class Home extends Component
     //             navigator.geolocation.getCurrentPosition(function(position) {
     //                 const latitude = position.coords.latitude;
     //                 const longitude = position.coords.longitude;
- 
+
     //                 // Send the latitude and longitude back to Livewire using the correct variable names
     //                 $wire.set('latitude', latitude);
     //                 $wire.set('longitude', longitude);
- 
+
     //                 // Optionally alert the user
     //                 alert('Location fetched: (' + latitude + ', ' + longitude + ')');
     //             }, function(error) {
@@ -971,24 +1039,24 @@ class Home extends Component
     //         }
     //     JS;
     // }
- 
+
     #[On('post-created')]
     public function updatePostList()
     {
         // dd('called');
     }
- 
+
     protected $listeners = ['sendCoordinates'];
- 
- 
+
+
     public function sendCoordinates($latitude, $longitude)
     {
         // Log the received coordinates
         // Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
- 
+
         // Build the API URL for reverse geocoding
         $apiUrl = "https://nominatim.openstreetmap.org/reverse";
- 
+
         // Call the Nominatim API to get address details
         try {
             $response = Http::get($apiUrl, [
@@ -1021,4 +1089,3 @@ class Home extends Component
         }
     }
 }
- 
