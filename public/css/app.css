@@ -6631,12 +6631,7 @@ select .yearSelect {
     border-bottom: 1px solid #bebbbb !important;
 }
 
-
-
-
-
 /* Salary Revision Module styles ends */
-
 .custom-table-wrapper-leave-details {
     position: relative;
     /* max-height: 130px; */
@@ -10221,17 +10216,4 @@ div.fl-main-container[data-position="top-center"] {
         }
     }
 
-div.fl-main-container[data-position="top-center"] {
-    left: 50%;
-    transform: translateX(-50%);
-}
 
-    @media (max-width: 768px) {
-        div.fl-main-container[data-position="top-center"] {
-            left: 0;
-            transform: none;
-            width: 100%;
-            margin: 0;
-            padding: 10px;
-        }
-    }
