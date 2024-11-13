@@ -198,6 +198,7 @@ class ProfileInfo extends Component
         if ($this->resignId == '') {
             $this->validate([
                 'resignation_date' => 'required|date|after_or_equal:today',
+                'reason' => 'required|string|max:255',
             ]);
         }
 
