@@ -91,14 +91,19 @@ class SendTaskReminder extends Command
             
                 if (isset($matches[1])) {
                     $empId = $matches[1];
-                    $assignee = EmployeeDetails::where('emp_id', $empId)->first();
+                    // $assignee = EmployeeDetails::where('emp_id', $empId)->first();
+                    $assignee = EmployeeDetails::where('emp_id', $empId)
+                    ->join('company_shifts', 'company_shifts.shift_name', '=', 'employee_details.shift_type')
+                    ->select('employee_details.*', 'company_shifts.shift_start_time') // Select the relevant columns
+                    ->first();
+                    Log::info("Assignee list: " . $assignee); 
             
                     if ($assignee && $assignee->email) {
                         $shiftStartTime = Carbon::parse($assignee->shift_start_time); // Assignee's shift start time
                         Log::info("Assignee's shift start time: " . $shiftStartTime);  // Log shift start time
                         
                         // Only send an email if the current time is >= shift start time (in the same day)
-                        if ($now->isSameDay($shiftStartTime) && $now->gte($shiftStartTime)) {
+                        if ($now->isSameDay($shiftStartTime) && $now->eq($shiftStartTime)) {
                             try {
                                 Mail::to($assignee->email)->send(new TaskReminderMail($task));
                                 $this->info('Reminder sent to ' . $assignee->email . ' for task: ' . $task->task_name);

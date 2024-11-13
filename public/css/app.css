@@ -2612,6 +2612,7 @@ td {
     .shift-roster-download-and-dropdown-for-attendance-muster {
         margin-left: 10px;
     }
+
 }
 
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -9736,7 +9737,11 @@ peoples module styles started */
         width: 100%;
     }
 }
-
+@media screen and (max-width: 360px) {
+    .fl-main-container[data-position$=-center] {
+        left: 0%;
+    }
+}
 @media screen and (max-width: 760px) {
     .view-details-container {
         display: flex;
@@ -10184,3 +10189,33 @@ peoples module styles started */
     font-size: var(--sub-headings-font-size);
     font-weight: 500;
 }
+
+div.fl-main-container[data-position="top-center"] {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+    @media (max-width: 768px) {
+        div.fl-main-container[data-position="top-center"] {
+            left: 0;
+            transform: none;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+    }
+
+div.fl-main-container[data-position="top-center"] {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+    @media (max-width: 768px) {
+        div.fl-main-container[data-position="top-center"] {
+            left: 0;
+            transform: none;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+    }
