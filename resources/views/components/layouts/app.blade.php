@@ -12,8 +12,8 @@
     </title>
     @endguest
     @auth('emp')
-   
-  
+
+
   @livewireStyles
 
         @php
@@ -87,7 +87,7 @@ if ($companyIds) {
             </main>
         </section>
     @endguest
-    
+
 <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
 <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 

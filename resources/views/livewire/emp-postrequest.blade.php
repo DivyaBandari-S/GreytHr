@@ -13,64 +13,56 @@
 
 <div class="col-md-12  mt-1" style="height:60px;">
 
-    <div class="row bg-white rounded border d-flex" style="height:70px;">
-        <div class="d-flex flex-row">
+<div class="row bg-white rounded border py-1 d-flex align-items-center">
+                <div class="d-flex mt-2 flex-row align-items-center row m-0">
+                    <div class="align-items-center col-md-10 d-flex gap-2 mb-2">
+                        <div class="d-flex align-items-center">
+                            @if(auth('emp')->check() || auth('hr')->check())
+                            @php
+                            // Determine the employee ID based on the authentication guard
+                            $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
 
+                            // Fetch the employee details from EmployeeDetails model
+                            $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
+                            @endphp
 
-        <div class=" mt-1 h-60">
-                        @if(auth('emp')->check() || auth('hr')->check())
-                        @php
-                        // Determine the employee ID based on the authentication guard
-                        $empEmployeeId = auth('emp')->check() ? auth('emp')->user()->emp_id : auth('hr')->user()->hr_emp_id;
-
-                        // Fetch the employee details from EmployeeDetails model
-                        $employeeDetails = \App\Models\EmployeeDetails::where('emp_id', $empEmployeeId)->first();
-                        @endphp
-
-                        @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
-                        <img style="border-radius: 50%; " height="50" width="50" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}">
-                        @else
-                        @if($employeeDetails && $employeeDetails->gender == "Male")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
-                        @elseif($employeeDetails && $employeeDetails->gender == "Female")
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
-                        @else
-                        <img style="border-radius: 50%; " height="50" width="50" src="{{asset("images/user.jpg")}}" alt="Default Image">
-                        @endif
-                        @endif
-                        @else
-                        <p>User is not authenticated.</p>
-                        @endif
+                            @if(($employeeDetails->image) && $employeeDetails->image !== 'null')
+                            <img class="navProfileImgFeeds rounded-circle" src="data:image/jpeg;base64,{{ ($employeeDetails->image) }}">
+                            @else
+                            @if($employeeDetails && $employeeDetails->gender == "Male")
+                            <img class="navProfileImgFeeds rounded-circle" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
+                            @elseif($employeeDetails && $employeeDetails->gender == "Female")
+                            <img class="navProfileImgFeeds rounded-circle" src="{{asset("images/female-default.jpg")}}" alt="Default Female Image">
+                            @else
+                            <img class="navProfileImgFeeds rounded-circle" src="{{asset("images/user.jpg")}}" alt="Default Image">
+                            @endif
+                            @endif
+                            @else
+                            <p>User is not authenticated.</p>
+                            @endif
+                        </div>
+                        <div class="drive-in  justify-content-center align-items-start">
+                            <span class="text-feed ">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
+                            <p class="text-xs mb-0">Ready to dive in?</p>
+                        </div>
                     </div>
-            <div class="drive-in  justify-content-center mt-2">
-
-                <span class="text-feed mt-1">Hey {{ ucwords(strtolower(auth()->guard('emp')->user()->first_name)) }} {{ ucwords(strtolower(auth()->guard('emp')->user()->last_name)) }}</span>
-
-
-
-                <p class="text-xs">Ready to dive in?</p>
-            </div>
-            <div class="d-flex align-items-center ms-auto createpost">
-                <button wire:click="addFeeds" class="btn-post flex flex-col justify-between items-start group w-20  p-1 rounded-md border border-purple-200">
-                    <div class="w-6 h-6 rounded bg-purple-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
-                            <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                            <polyline points="13 2 13 9 20 9"></polyline>
-                        </svg>
+                    <div class="align-items-center col-md-2 createpost d-flex ms-auto">
+                        <button wire:click="addFeeds" class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
+                            <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+                                    <polyline points="13 2 13 9 20 9"></polyline>
+                                </svg>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="text-left text-xs ms-1 text-center" wire:click="addFeeds">Create Posts</div>
+                            </div>
+                        </button>
                     </div>
-                    <div class="row mt-1">
-                        <div class="text-left text-xs ms-1" wire:click="addFeeds">Create Posts</div>
-                    </div>
-
-                </button>
-            </div>
-        </div>
-        <div class=" mt-2 bg-white d-flex align-items-center ">
-
-            <div class="d-flex ms-auto">
-
-
-                @if($showFeedsDialog)
+                </div>
+                <div class=" mt-2 bg-white d-flex align-items-center ">
+                    <div class="d-flex ms-auto">
+                    @if($showFeedsDialog)
                 <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
@@ -111,7 +103,15 @@
                                     <!-- Description Input -->
                                     <div class="form-group mt-3">
                                         <label for="content">Write something here:</label>
-                                        <textarea wire:model.lazy="description" class="form-control" id="content" rows="2" style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-left: -250px; margin-top: 5px" placeholder="Enter your description here..."></textarea>
+
+                                        <textarea 
+       id="myTextarea"
+        wire:model.lazy="description" 
+        class="form-control" 
+        rows="2" 
+        style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-top: 5px;" 
+        placeholder="Enter your description here...">
+    </textarea>
                                         @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                     </div>
                                     <!-- File Input -->
@@ -155,9 +155,9 @@
 
                 <div class="modal-backdrop fade show"></div>
                 @endif
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
 
     <!-- Additional row -->
     <div class="row mt-2 d-flex">
@@ -403,99 +403,83 @@
                    
                     @foreach($posts->where('status', 'Pending') as $post)
 
-                    <div class="col-md-12 bg-white" style="border-radius:5px;border:1px solid #ccc;height:auto;margin-top:10px">
-                         <div class="row m-2">
-                            <p class="text-feed">Post Requests :</p>
-                            <div class="col-md-4" style="font-size:12px;">
-                               EmpID : {{ $post->emp_id }}
-                               
-                            </div>
-                            <div class="col-md-7" style="font-size:12px">
-                            @if($post->employeeDetails)
-  Employee Name: {{ $post->employeeDetails->first_name }} {{ $post->employeeDetails->last_name }}
-@else
- No employee details found for this post.
-@endif
-                               
-                            </div>
-                     
-                            </div>
-                            <div class="row m-2">
-                            <div class="col-md-12 " style="font-size:12px">
-                               Category : {{ $post->category }}
-                               
-                            </div>
-                            </div>
-                            <div class="row m-2">
-                            <div class="col " style="font-size:12px">
-                               Description : {{ $post->description }}
-                               
-                            </div>
-                            </div>
-                            <div class="row" style="display:flex">
-                            <div class="col-md-5 m-2" style="font-size:12px">
-                               @if ($post->getImageUrlAttribute())
-                                <a href="#" wire:click.prevent="showImage('{{ $post->getImageUrlAttribute() }}')"
-                                    style="text-decoration: none; color: #007BFF;margin-left:10px">
-                                    View Image
-                                </a>
-                                @endif
-                            </div>
-                          
-                                @if ($showImageDialog)
-                            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                    <div class="col-12 bg-white" style="border-radius:5px; border:1px solid #ccc; height:auto; margin-top:10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <div class="row m-2">
+        <p class="text-feed">Post Requests :</p>
+        <div class="col-12 col-md-4" style="font-size:12px;">
+            Employee ID: {{ $post->emp_id }}
+        </div>
+        <div class="col-12 col-md-8" style="font-size:12px;">
+            @if($post->employeeDetails)
+                Employee Name: {{ $post->employeeDetails->first_name }} {{ $post->employeeDetails->last_name }}
+            @else
+                No employee details found for this post.
+            @endif
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="col-12" style="font-size:12px;">
+            Category: {{ $post->category }}
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="col-12" style="font-size:12px;">
+            Description: {{ $post->description }}
+        </div>
+    </div>
+    <div class="row m-2 align-items-center">
+        <div class="col-12 col-md-5" style="font-size:12px;">
+            @if ($post->getImageUrlAttribute())
+                <a href="#" wire:click.prevent="showImage('{{ $post->getImageUrlAttribute() }}')"
+                   style="text-decoration: none; color: #007BFF;">
+                    View Image
+                </a>
+            @endif
+        </div>
+        <div class="col-6 col-md-7 d-flex align-items-center" style="font-size:12px;">
+            <div>
+                @if($post->status !== 'Rejected')
+                    <button class="cancel-btn" wire:click="rejectPost('{{ $post->id }}')">
+                        Reject
+                    </button>
+                @endif
+            </div>
+            <div>
+                @if($post->status !== 'Closed')
+                    <button class="post-button" wire:click="closePost('{{ $post->id }}')">
+                        Approve
+                    </button>
+                @else
+                    <button disabled>Closed</button>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing image -->
+    @if ($showImageDialog)
+        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title viewfile">View File</h5>
                     </div>
                     <div class="modal-body text-center">
-                    @if ($imageUrl)
-                    <img src="{{ $imageUrl }}"  alt="File" class="img-fluid" style="max-width: 100%;" />
-                    @endif
+                        @if ($imageUrl)
+                            <img src="{{ $imageUrl }}" alt="File" class="img-fluid" style="max-width: 100%;" />
+                        @endif
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="submit-btn"
-                            wire:click.prevent="downloadImage">Download</button>
+                        <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
                         <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="modal-backdrop fade show blurred-backdrop"></div>
-    
-@endif
-                               
-<div class="col-md-2 ml-2" style="font-size:12px">
-<div class="row" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-    <div class="col-md-1">
-    @if($post->status !== 'Rejected')
-        <button class="cancel-btn"
-            wire:click="rejectPost('{{ $post->id }}')" >
-            Reject
-        </button>
-  
     @endif
-    </div>
-    <div class="col-md-1 " style="margin-left:-150px">
-    @if($post->status !== 'Closed')
-        <button class="post-button"
-            wire:click="closePost('{{ $post->id }}')" >
-            Approve
-        </button>
-    @else
-        <button 
-            disabled >
-            Closed
-        </button>
-    @endif
-        </div>
- 
 </div>
 
-            </div>  
-                         </div>
-                    </div>
                     </div>
                     
 @endforeach
