@@ -11,7 +11,7 @@ class FlashMessageHelper
             type: 'error',
             options: [
                 'position' => 'top-center',
-                // 'timeout' => 3000, // Uncomment if needed
+                'timeout' => 3000, // Uncomment if needed
             ]
         );
     }
@@ -34,6 +34,7 @@ class FlashMessageHelper
             type: 'success',
             options: [
                 'position' => 'top-center',
+                'timeout' => 30000,
             ]
         );
     }
