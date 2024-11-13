@@ -19,154 +19,273 @@
             <ul class="nav custom-nav-tabs border">
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $activeTab === 'personalDetails' ? 'active' : '' }}"
-                 wire:click="setActiveTab('personalDetails')">Personal</div>
+                        wire:click="setActiveTab('personalDetails')">Personal</div>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'accountDetails' ? 'active' : '' }}"
-                 wire:click="setActiveTab('accountDetails')">Accounts & Statements</a>
+                        wire:click="setActiveTab('accountDetails')">Accounts & Statements</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'familyDetails' ? 'active' : '' }}"
-                 wire:click="setActiveTab('familyDetails')">Family</a>
+                        wire:click="setActiveTab('familyDetails')">Family</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1"
                     style="border-left:1px solid #ccc;border-right:1px solid #ccc;">
                     <a href="#" style="border-radius:none;" class="custom-nav-link {{ $activeTab === 'employeeJobDetails' ? 'active' : '' }}"
-                 wire:click="setActiveTab('employeeJobDetails')">Employment & Job</a>
+                        wire:click="setActiveTab('employeeJobDetails')">Employment & Job</a>
                 </li>
                 <li class="custom-item m-0 p-0 flex-grow-1">
                     <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;"
                         class="custom-nav-link {{ $activeTab === 'assetsDetails' ? 'active' : '' }}"
-                 wire:click="setActiveTab('assetsDetails')">Assets</a>
+                        wire:click="setActiveTab('assetsDetails')">Assets</a>
                 </li>
             </ul>
         </div>
         <div>
             @if ($employeeDetails)
+            {{-- Personal Tab --}}
+            <div class="row p-0 gx-0" id="personalDetails" style=" margin:20px 0px;{{ $activeTab === 'personalDetails' ? 'display: block;' : 'display: none;' }}">
+                <div class="col ">
+                    <div class=" px-4  gx-0 bg-white border rounded mb-3">
+                        <div class="prof-container mb-3 d-flex flex-column">
+                            <div class="normalTextMainProf mb-3 mt-4">
+                                PROFILE
+                            </div>
+                            <div class="align-prof-dev">
+                                <div class="col p-2 profile-columns position-relative">
+                                    @if (session()->has('error'))
+                                    <div class="alert alert-danger position-absolute" wire:poll.3s="hideAlert"
+                                        style="top:-25%;">
+                                        {{ session('error') }}
+                                    </div>
+                                    @endif
 
-                {{-- Personal Tab --}}
-                <div class="row p-0 gx-0" id="personalDetails" style=" margin:20px 0px;{{ $activeTab === 'personalDetails' ? 'display: block;' : 'display: none;' }}">
-                    <div class="col">
-                        <div class="row p-3 gx-0"
-                            style="border-radius: 5px; width: 100%; background-color: white; margin-bottom: 20px;">
-                            <div
-                                style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px;margin-bottom: 20px;">
-                                PROFILE</div>
-
-                        <div class="col-12 col-md-4 position-relative">
-                            @if (session()->has('error'))
-                            <div class="alert alert-danger position-absolute" wire:poll.3s="hideAlert"
-                                style="top:-25%;">
-                                {{ session('error') }}
-                            </div>
-                            @endif
-
-                            @if (
-                            $employeeDetails->image !== null &&
-                            $employeeDetails->image != 'null' &&
-                            $employeeDetails->image != 'Null' &&
-                            $employeeDetails->image != '')
-                            <!-- Check if the image is in base64 format -->
-                            @if (strpos($employeeDetails->image, 'data:image/') === 0)
-                            <!-- It's base64 -->
-                            <img src="{{ $employeeDetails->image }}" alt="binary"
-                                style='height:80px;width:80px; margin:0px 0px 5px 15px'
-                                class="img-thumbnail" />
-                            @else
-                            <!-- It's binary, convert to base64 -->
-                            <img src="data:image/jpeg;base64,{{ $employeeDetails->image }}" alt="base"
-                                style='height:80px;width:80px;margin:0px 0px 5px 15px'
-                                class="img-thumbnail" />
-                            @endif
-                            @else
-                            <!-- Default images based on gender -->
-                            @if ($employeeDetails->gender == 'Male')
-                            <div class="employee-profile-image-container mb-2">
-                                <img src="{{ asset('images/male-default.png') }}"
-                                    class="employee-profile-image-placeholder"
-                                    style='height:80px;width:80px;margin:0px 0px 5px 15px'
-                                    alt="Default Image">
-                            </div>
-                            @elseif($employeeDetails->gender == 'Female')
-                            <div class="employee-profile-image-container mb-2">
-                                <img src="{{ asset('images/female-default.jpg') }}"
-                                    class="employee-profile-image-placeholder"
-                                    style='height:80px;width:80px;margin:0px 0px 5px 15px'
-                                    alt="Default Image">
-                            </div>
-                            @else
-                            <div class="employee-profile-image-container mb-2">
-                                <img src="{{ asset('images/user.jpg') }}"
-                                    class="employee-profile-image-placeholder"
-                                    style='height:80px;width:80px;margin:0px 0px 5px 15px'
-                                    alt="Default Image">
-                            </div>
-                            @endif
-                            @endif
-                            <div style="font-size: 12px; margin-top: 10px; color: #778899; margin-left: 15px">
-                                Location
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->job_location)
-                                {{ $employeeDetails->job_location }}
-                                @else
-                                <span style="padding-left: 25px;">-</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div style="font-size: 11px; color: #778899; margin-left: 15px;">
-                                Name
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->first_name && $employeeDetails->last_name)
-                                {{ ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name)) }}
-                                @else
-                                <span style="padding-left: 50px;">-</span>
-                                @endif
-                            </div>
-                            <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
-                                Employee ID
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->emp_id)
-                                {{ $employeeDetails->emp_id }}
-                                @else
-                                <span style="padding-left: 50px;">-</span>
-                                @endif
-                            </div>
-                            <div style="font-size: 11px; margin-top: 30px; color: #778899; margin-left: 15px;">
-                                Primary Contact No.
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;">
-                                @if ($employeeDetails->emergency_contact)
-                                {{ $employeeDetails->emergency_contact }}
-                                @else
-                                <span style="padding-left: 37px;">-</span>
-                                @endif
-                            </div>
-                        </div>
-                        <div class="col-6 col-md-4">
-                            <div style="font-size: 11px;  color: #778899; margin-left: 15px">
-                                Company E-mail
-                            </div>
-                            <div style="margin-left: 15px; font-size: 12px;color:#000;word-wrap: break-word;">
-                                @if ($employeeDetails->email)
-                                {{ $employeeDetails->email }}
-                                @else
-                                <span style="padding-left: 50px;">-</span>
-                                @endif
+                                    @if (
+                                    $employeeDetails->image !== null &&
+                                    $employeeDetails->image != 'null' &&
+                                    $employeeDetails->image != 'Null' &&
+                                    $employeeDetails->image != '')
+                                    <!-- Check if the image is in base64 format -->
+                                    @if (strpos($employeeDetails->image, 'data:image/') === 0)
+                                    <!-- It's base64 -->
+                                    <img src="{{ $employeeDetails->image }}" alt="binary"
+                                        class="img-thumbnail" />
+                                    @else
+                                    <!-- It's binary, convert to base64 -->
+                                    <img src="data:image/jpeg;base64,{{ $employeeDetails->image }}" alt="base"
+                                        class="img-thumbnail" />
+                                    @endif
+                                    @else
+                                    <!-- Default images based on gender -->
+                                    @if ($employeeDetails->gender == 'Male')
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/male-default.png') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @elseif($employeeDetails->gender == 'Female')
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/female-default.jpg') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @else
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/user.jpg') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @endif
+                                    @endif
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">Location</span>
+                                        <div class="prof-sub-heading-value ">
+                                            @if ($employeeDetails->job_location)
+                                            <span class="prof-sub-heading-value">{{ $employeeDetails->job_location }}</span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col p-2 profile-columns">
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">Name</span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->first_name && $employeeDetails->last_name)
+                                            <span class="prof-sub-heading-value">
+                                                {{ ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name)) }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading"> Employee ID</span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->emp_id)
+                                            <span class="prof-sub-heading-value">
+                                                {{ $employeeDetails->emp_id }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">
+                                            Primary Contact No.
+                                        </span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->emergency_contact)
+                                            <span class="prof-sub-heading-value"> {{ $employeeDetails->emergency_contact }}</span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col p-2  profile-columns">
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">
+                                            Company E-mail
+                                        </span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->email)
+                                            <span class="prof-sub-heading-value">
+                                                {{ $employeeDetails->email }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row p-3 gx-0"
-                        style="border-radius: 5px;  width: 100%; background-color: white;margin-bottom: 20px;">
-                        <div
-                            style="margin-top: 2%;margin-left:15px;margin-bottom:20px;color:#778899;font-weight:500;font-size:13px;">
-                            PERSONAL</div>
+                    <div class="px-4 gx-0 bg-white border rounded mb-3">
+                        <div class="prof-container mb-3 d-flex flex-column">
+                            <div class="normalTextMainProf mb-3 mt-4">
+                                PERSONAL
+                            </div>
+                            <div class="align-prof-dev">
+                            <div class="col p-2 profile-columns position-relative">
+                                    @if (session()->has('error'))
+                                    <div class="alert alert-danger position-absolute" wire:poll.3s="hideAlert"
+                                        style="top:-25%;">
+                                        {{ session('error') }}
+                                    </div>
+                                    @endif
+
+                                    @if (
+                                    $employeeDetails->image !== null &&
+                                    $employeeDetails->image != 'null' &&
+                                    $employeeDetails->image != 'Null' &&
+                                    $employeeDetails->image != '')
+                                    <!-- Check if the image is in base64 format -->
+                                    @if (strpos($employeeDetails->image, 'data:image/') === 0)
+                                    <!-- It's base64 -->
+                                    <img src="{{ $employeeDetails->image }}" alt="binary"
+                                        class="img-thumbnail" />
+                                    @else
+                                    <!-- It's binary, convert to base64 -->
+                                    <img src="data:image/jpeg;base64,{{ $employeeDetails->image }}" alt="base"
+                                        class="img-thumbnail" />
+                                    @endif
+                                    @else
+                                    <!-- Default images based on gender -->
+                                    @if ($employeeDetails->gender == 'Male')
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/male-default.png') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @elseif($employeeDetails->gender == 'Female')
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/female-default.jpg') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @else
+                                    <div class="employee-profile-image-container mb-2">
+                                        <img src="{{ asset('images/user.jpg') }}"
+                                            class="employee-profile-image-placeholder"
+                                            alt="Default Image">
+                                    </div>
+                                    @endif
+                                    @endif
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">Location</span>
+                                        <div class="prof-sub-heading-value ">
+                                            @if ($employeeDetails->job_location)
+                                            <span class="prof-sub-heading-value">{{ $employeeDetails->job_location }}</span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col p-2 profile-columns">
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">Blood Group</span>
+                                        <div class="prof-sub-heading">
+                                        @if ($employeeDetails->empPersonalInfo && $employeeDetails->empPersonalInfo->blood_group)
+                                            <span class="prof-sub-heading-value">
+                                            {{ $employeeDetails->empPersonalInfo->blood_group }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading"> Employee ID</span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->emp_id)
+                                            <span class="prof-sub-heading-value">
+                                                {{ $employeeDetails->emp_id }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">
+                                            Primary Contact No.
+                                        </span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->emergency_contact)
+                                            <span class="prof-sub-heading-value"> {{ $employeeDetails->emergency_contact }}</span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col p-2  profile-columns">
+                                    <div class="d-flex flex-column align-items-start">
+                                        <span class="prof-sub-heading">
+                                            Company E-mail
+                                        </span>
+                                        <div class="prof-sub-heading">
+                                            @if ($employeeDetails->email)
+                                            <span class="prof-sub-heading-value">
+                                                {{ $employeeDetails->email }}
+                                            </span>
+                                            @else
+                                            <span class="prof-sub-heading-value">-</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-6 col-md-4">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px;">
                                 Blood Group
@@ -383,59 +502,58 @@
                         <div
                             style="margin-top: 2%;margin-left:15px;color:#778899;font-weight:500;font-size:13px; margin-bottom: 10px;">
                             EDUCATION</div>
-                        
+
                         <div style="margin-left: 15px; font-size: 12px">
                             @if ($qualifications && count($qualifications) > 0)
-                                @php $detailIndex = 1; @endphp  <!-- Initialize the counter for Education Details -->
-                                
-                                @foreach ($qualifications as $index => $education)
-                                    @if (is_array($education) && count($education) > 0)
-                                        <!-- Show "Education Details" without a number for the first qualification -->
-                                        @if (count($qualifications) === 1)
-                                            <div style="margin-bottom: 10px;">
-                                                <strong style="font-size: 13px; color: #778899;">Education Details</strong>
-                                            </div>
-                                        @elseif (count($qualifications) > 1)
-                                            <div style="margin-bottom: 10px;">
-                                                <strong style="font-size: 13px; color: #778899;">Education Details {{ $detailIndex }}</strong>
-                                            </div>
-                                        @endif
-                                        
-                                        <div class="row p-0" style="margin-bottom: 10px;">
-                                            <div class="col-4" style="font-size: 11px; color: #778899;">Degree</div>
-                                            <div class="col-4" style="font-size: 11px; color: #778899;">Year of Passing</div>
-                                            <div class="col-4" style="font-size: 11px; color: #778899;">Institution</div>
-                                        </div>
-                        
-                                        <div class="row p-0" style="margin-bottom: 10px;">
-                                            <div class="col-4" style="font-size: 12px; color: #000;">
-                                                {{ $education['level'] ?? 'N/A' }}
-                                            </div>
-                                            <div class="col-4" style="font-size: 12px; color: #000;">
-                                                {{ $education['year_of_passing'] ?? 'N/A' }}
-                                            </div>
-                                            <div class="col-4" style="font-size: 12px; color: #000;">
-                                                {{ $education['institution'] ?? 'N/A' }}
-                                            </div>
-                                        </div>
-                        
-                                        @php $detailIndex++; @endphp  <!-- Increment the counter for the next qualification -->
-                                    @endif
-                                @endforeach
-                            @else
-                                <div style="font-size: 12px; color: #778899; margin-left: 15px">
-                                    No Data Found
+                            @php $detailIndex = 1; @endphp <!-- Initialize the counter for Education Details -->
+
+                            @foreach ($qualifications as $index => $education)
+                            @if (is_array($education) && count($education) > 0)
+                            <!-- Show "Education Details" without a number for the first qualification -->
+                            @if (count($qualifications) === 1)
+                            <div style="margin-bottom: 10px;">
+                                <strong style="font-size: 13px; color: #778899;">Education Details</strong>
+                            </div>
+                            @elseif (count($qualifications) > 1)
+                            <div style="margin-bottom: 10px;">
+                                <strong style="font-size: 13px; color: #778899;">Education Details {{ $detailIndex }}</strong>
+                            </div>
+                            @endif
+
+                            <div class="row p-0" style="margin-bottom: 10px;">
+                                <div class="col-4" style="font-size: 11px; color: #778899;">Degree</div>
+                                <div class="col-4" style="font-size: 11px; color: #778899;">Year of Passing</div>
+                                <div class="col-4" style="font-size: 11px; color: #778899;">Institution</div>
+                            </div>
+
+                            <div class="row p-0" style="margin-bottom: 10px;">
+                                <div class="col-4" style="font-size: 12px; color: #000;">
+                                    {{ $education['level'] ?? 'N/A' }}
                                 </div>
+                                <div class="col-4" style="font-size: 12px; color: #000;">
+                                    {{ $education['year_of_passing'] ?? 'N/A' }}
+                                </div>
+                                <div class="col-4" style="font-size: 12px; color: #000;">
+                                    {{ $education['institution'] ?? 'N/A' }}
+                                </div>
+                            </div>
+
+                            @php $detailIndex++; @endphp <!-- Increment the counter for the next qualification -->
+                            @endif
+                            @endforeach
+                            @else
+                            <div style="font-size: 12px; color: #778899; margin-left: 15px">
+                                No Data Found
+                            </div>
                             @endif
                         </div>
-                      
+
                     </div>
                 </div>
             </div>
 
             {{-- Accounts & Statements --}}
-
-            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'accountDetails' ? 'display: block;' : 'display: none;' }}"
+            <div class="row p-0 gx-0" style="margin:20px auto; {{ $activeTab === 'accountDetails' ? 'display: block;' : 'display: none;' }}"
                 id="accountDetails">
                 <div class="col">
                     <div class="row p-3 gx-0"
@@ -559,36 +677,35 @@
 
 
 
-                <div style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'familyDetails' ? 'display: block;' : 'display: none;' }}" id="familyDetails">
-                    <div class="row p-0 gx-0"
-                        style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
-                        <!-- Header -->
-                        <div
-                            style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">
-                            FATHER
-                            DETAILS</div>
-                        <div class="row p-3 gx-0">
-                            <div class="col-12 col-md-3">
+            <div style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'familyDetails' ? 'display: block;' : 'display: none;' }}" id="familyDetails">
+                <div class="row p-0 gx-0"
+                    style="border-radius: 5px;  width: 100%; background-color: white; margin-bottom: 20px;">
+                    <!-- Header -->
+                    <div
+                        style="margin-top: 2%; margin-left: 17px; font-size: 12px; font-weight: 500;color:#778899;">
+                        FATHER
+                        DETAILS</div>
+                    <div class="row p-3 gx-0">
+                        <div class="col-12 col-md-3">
 
-                                @if ($employeeDetails->empParentDetails &&
-                                !empty(optional($employeeDetails->empParentDetails)->father_image) &&
-                                optional($employeeDetails->empParentDetails)->father_image !== null && $employeeDetails->empParentDetails &&
+                            @if ($employeeDetails->empParentDetails &&
+                            !empty(optional($employeeDetails->empParentDetails)->father_image) &&
+                            optional($employeeDetails->empParentDetails)->father_image !== null && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->father_image) &&
                             optional($employeeDetails->empParentDetails)->father_image != 'null' && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->father_image) &&
                             optional($employeeDetails->empParentDetails)->father_image != 'Null' && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->father_image) &&
                             optional($employeeDetails->empParentDetails)->father_image != '')
-                                                <!-- It's binary, convert to base64 -->
-                                                <img  style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
-                                                height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->father_image) }}" alt="base"
-                                                     /> 
+                            <!-- It's binary, convert to base64 -->
+                            <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
+                                height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->father_image) }}" alt="base" />
                             @else
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
                                 height="100" width="100" src="{{ asset('images/male-default.png') }}"
                                 alt="Default Male Image">
                             @endif
-                           
+
                         </div>
                         <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Father Name</div>
@@ -699,24 +816,23 @@
                         <div class="col-12 col-md-3">
                             @if ( $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
-                            optional($employeeDetails->empParentDetails)->mother_image !== null &&  $employeeDetails->empParentDetails &&
+                            optional($employeeDetails->empParentDetails)->mother_image !== null && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
-                            optional($employeeDetails->empParentDetails)->mother_image != 'null' &&  $employeeDetails->empParentDetails &&
+                            optional($employeeDetails->empParentDetails)->mother_image != 'null' && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
-                            optional($employeeDetails->empParentDetails)->mother_image != 'Null' &&  $employeeDetails->empParentDetails &&
+                            optional($employeeDetails->empParentDetails)->mother_image != 'Null' && $employeeDetails->empParentDetails &&
                             !empty(optional($employeeDetails->empParentDetails)->mother_image) &&
                             optional($employeeDetails->empParentDetails)->mother_image != '')
                             <!-- It's binary, convert to base64 -->
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
-                            height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->mother_image) }}" alt="base"
-                               />
-                           
+                                height="100" width="100" src="data:image/jpeg;base64,{{ (optional($employeeDetails->empParentDetails)->mother_image) }}" alt="base" />
+
                             @else
                             <img style="border-radius: 5px; margin-left: 43px; margin-top: 10px;"
                                 height="100" width="100" src="{{ asset('images/female-default.jpg') }}"
                                 alt="Default Female Image">
                             @endif
-                          
+
                         </div>
                         <div class="col-6 col-md-3">
                             <div style="font-size: 12px; margin-top: 20px; color: #778899;">Mother Name</div>
@@ -820,44 +936,44 @@
             </div>
 
 
-                {{-- Employment & Job --}}
-                <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'employeeJobDetails' ? 'display: block;' : 'display: none;' }}"
-                    id="employeeJobDetails">
-                    <div class="col">
-                        <div class="row p-3 gx-0"
-                            style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
-                            <div class="row mt-2 p-0 gx-0">
-                                <div class="col-6 col-md-6">
-                                    <div
-                                        style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
-                                        CURRENT POSITION </div>
-                                </div>
-                                <div class="col-6 col-md-6">
-                                    @if ($isResigned == '')
-                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                            wire:click="showPopupModal">
-                                            Resign
-                                        </div>
-                                    @elseif($isResigned == 'Pending')
-                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                            wire:click="showPopupModal">
-                                            Edit Resignation
-                                        </div>
-                                    @else
-                                        <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
-                                            wire:click="showPopupModal">
-                                            View Resignation
-                                        </div>
-                                    @endif
-                                </div>
+            {{-- Employment & Job --}}
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'employeeJobDetails' ? 'display: block;' : 'display: none;' }}"
+                id="employeeJobDetails">
+                <div class="col">
+                    <div class="row p-3 gx-0"
+                        style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div class="row mt-2 p-0 gx-0">
+                            <div class="col-6 col-md-6">
+                                <div
+                                    style="margin-top: 2%;margin-left:15px;font-size:12px;font-weight:500;color:#778899; margin-bottom: 10px;">
+                                    CURRENT POSITION </div>
                             </div>
-                            @php
-                                // Fetch the manager details directly in Blade
-                                $manager = \App\Models\EmployeeDetails::where(
-                                    'emp_id',
-                                    $employeeDetails->manager_id,
-                                )->first();
-                            @endphp
+                            <div class="col-6 col-md-6">
+                                @if ($isResigned == '')
+                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                    wire:click="showPopupModal">
+                                    Resign
+                                </div>
+                                @elseif($isResigned == 'Pending')
+                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                    wire:click="showPopupModal">
+                                    Edit Resignation
+                                </div>
+                                @else
+                                <div class="anchorTagDetails" style="margin-top: 2%; margin-left: 25px"
+                                    wire:click="showPopupModal">
+                                    View Resignation
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+                        @php
+                        // Fetch the manager details directly in Blade
+                        $manager = \App\Models\EmployeeDetails::where(
+                        'emp_id',
+                        $employeeDetails->manager_id,
+                        )->first();
+                        @endphp
 
                         <div class="col-6 col-md-3">
                             <div style="font-size: 11px; color: #778899; margin-left: 15px">
@@ -1087,7 +1203,7 @@
                                         Resignation Date:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
-                                    {{ \Carbon\Carbon::parse($resignation_date)->format('d-M-Y') }}
+                                        {{ \Carbon\Carbon::parse($resignation_date)->format('d-M-Y') }}
 
                                     </div>
                                 </div>
@@ -1096,12 +1212,12 @@
                                         Last Working Date:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
-                                    {{ \Carbon\Carbon::parse($last_working_date)->format('d-M-Y') }}
+                                        {{ \Carbon\Carbon::parse($last_working_date)->format('d-M-Y') }}
                                     </div>
                                 </div>
                                 <div class="col-md-5  form-group mt-2" style="display: flex;flex-direction:column;justify-content:center">
                                     <div class="d-flex justify-content-center" style="font-size: 11px; color: #778899; ">
-                                    Resignation Status:
+                                        Resignation Status:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
                                         {{$isResigned}}
@@ -1109,15 +1225,15 @@
                                 </div>
                                 <div class="col-md-5  form-group mt-2" style="display: flex;flex-direction:column;justify-content:center">
                                     <div class="d-flex justify-content-center" style="font-size: 11px; color: #778899; ">
-                                    Approved On:
+                                        Approved On:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
-                                    {{ \Carbon\Carbon::parse($approvedOn)->format('d-M-Y') }}
+                                        {{ \Carbon\Carbon::parse($approvedOn)->format('d-M-Y') }}
                                     </div>
                                 </div>
                                 <div class="col-md-5  form-group mt-2" style="display: flex;flex-direction:column;justify-content:center">
                                     <div class="d-flex justify-content-center" style="font-size: 11px; color: #778899; ">
-                                   Reason:
+                                        Reason:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
                                         {{$reason}}
@@ -1133,24 +1249,24 @@
             @endif
             {{-- Assets --}}
 
-                <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'assetsDetails' ? 'display: block;' : 'display: none;' }}"
-                    id="assetsDetails">
-                    <div class="col">
-                        <div class="row p-3 gx-0"
-                            style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
-                            <div
-                                style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
-                                ACESS CARD DETAILS</div>
-                            <div class="col-6">
-                                <div style="font-size: 11px; color: #778899; margin-left: 15px">
-                                    Card No
-                                </div>
-                                <div style="margin-left: 15px; font-size: 12px">
-                                    @if (optional($employeeDetails->empPersonalInfo)->adhar_no)
-                                        {{ optional($employeeDetails->empPersonalInfo)->adhar_no }}
-                                    @else
-                                        <span style="padding-left: 20px;">-</span>
-                                    @endif
+            <div class="row p-0 gx-0" style="margin:20px auto;border-radius: 5px; {{ $activeTab === 'assetsDetails' ? 'display: block;' : 'display: none;' }}"
+                id="assetsDetails">
+                <div class="col">
+                    <div class="row p-3 gx-0"
+                        style="border-radius: 5px;width: 100%; background-color: white; margin-bottom: 20px;">
+                        <div
+                            style="margin-top: 2%;margin-left:15px;font-size:13px;font-weight:500;color:#778899;margin-bottom: 10px;">
+                            ACESS CARD DETAILS</div>
+                        <div class="col-6">
+                            <div style="font-size: 11px; color: #778899; margin-left: 15px">
+                                Card No
+                            </div>
+                            <div style="margin-left: 15px; font-size: 12px">
+                                @if (optional($employeeDetails->empPersonalInfo)->adhar_no)
+                                {{ optional($employeeDetails->empPersonalInfo)->adhar_no }}
+                                @else
+                                <span style="padding-left: 20px;">-</span>
+                                @endif
 
                             </div>
                             <div style="margin-top: 20px; font-size: 11px; color: #778899; margin-left: 15px">
@@ -1199,3 +1315,20 @@
 
         </div>
 
+
+        <script>
+            function toggleAccordion(element) {
+                const accordionBody = element.nextElementSibling;
+                const arrowIcon = element.querySelector('.fa'); // Select the arrow icon
+
+                if (accordionBody.style.display === 'block') {
+                    accordionBody.style.display = 'none';
+                    element.classList.remove('active'); // Remove active class
+                    arrowIcon.classList.remove('rotate'); // Remove rotation class
+                } else {
+                    accordionBody.style.display = 'block';
+                    element.classList.add('active'); // Add active class
+                    arrowIcon.classList.add('rotate'); // Add rotation class
+                }
+            }
+        </script>
