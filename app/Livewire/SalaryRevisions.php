@@ -11,6 +11,7 @@
 // Models                          : EmployeeDetails,Hr,Finance,Admin,IT
 namespace App\Livewire;
 
+use App\Models\EmpSalaryRevision;
 use Livewire\Component;
 use App\Models\User;
 use App\Models\SalaryRevision;
@@ -28,7 +29,7 @@ class SalaryRevisions extends Component
     public function render()
     {
         try {
-            $this->salaryRevisions = SalaryRevision::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+            $this->salaryRevisions = EmpSalaryRevision::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             $this->salaryRevisions->each(function ($revision) {
                 $previousCtc = $revision->previous_monthly_ctc;
                 $latestCtc = $revision->revised_monthly_ctc;

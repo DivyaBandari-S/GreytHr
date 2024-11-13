@@ -16,7 +16,7 @@
         "sass": "^1.56.1"
     },
     "dependencies": {
-        "@ckeditor/ckeditor5-build-classic": "^43.3.0",
+        "@ckeditor/ckeditor5-build-classic": "^43.3.1",
         "apexcharts": "^3.44.0",
         "dom-to-pdf": "^0.3.2",
         "font-awesome": "^4.7.0",

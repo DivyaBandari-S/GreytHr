@@ -206,6 +206,21 @@
                         <div class="accordion-title p-2 rounded">
 
                             <!-- Display leave details here based on $leaveRequest -->
+                            <div class="col accordion-content">
+
+
+                            @if(isset($arrl->image) && $arrl->image !== 'null' && $arrl->image != "Null" && $arrl->image != "")
+                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($arrl->image) }}" style="border-radius: 50%;">
+                                    @else
+                                    @if($arrl->gender === 'FEMALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @elseif($arrl->gender === 'MALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @endif
+                                    @endif
+                            </div>
 
                             <div class="col accordion-content">
 
@@ -323,7 +338,7 @@
 
             @if ($showActiveLeaveContent)
             <div class="pending-leavves-container">
-                @if($count > 0 && $sendLeaveApplications)
+                @if($count > 0 || $sendLeaveApplications)
                 <div class="reviewList">
                     @livewire('view-pending-details')
                 </div>

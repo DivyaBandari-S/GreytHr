@@ -1177,7 +1177,7 @@
                                 </p>
                             </div>
                             <div class="col-5 pb-1 pt-1">
-                                <p class="shift-time-for-regularisation text-overflow mb-1">
+                                <p class="shift-time-for-regularisation text-overflow mb-1 disabled">
                                     10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
 
                             </div>

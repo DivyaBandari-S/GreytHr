@@ -1619,8 +1619,9 @@ color: #fff;
                     }
                     
                     @endphp
-                   
+                  
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave ? 'rgb(252, 242, 255)':($isPresent || $swipeRecordExists ? ((isset($totalWorkedMinutes) && $totalWorkedMinutes < 240) ? '#fcf0f0' :'#edfaed') : '#fcf0f0')))) : 'white'}};">
+                        @if($checkdate==0)
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1; background-color: 
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'pink':'none'
@@ -1926,11 +1927,13 @@ color: #fff;
                                 @php
                                 $holidayNote=false;
                                 @endphp
-
+                    @else
+                       <td colspan="100">No data to display!!</td>
+                    @endif
                     </tr>
                     @endfor
                     
-                    
+                    @if($checkdate==0)
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
                         <td></td>
@@ -1992,6 +1995,7 @@ color: #fff;
                         <td></td>
                         @endif
                     </tr>
+                    
             </table>
         </div>
         @if ($showAlertDialog)
