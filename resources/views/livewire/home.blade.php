@@ -697,7 +697,7 @@
                     <p class="payslip-card-title">Payslip</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
                         <div class="canvasBorder">
-                            <canvas wire:ignore id="combinedPieChart" width="120" height="117"></canvas>
+                            <canvas  id="combinedPieChart" width="120" height="117"></canvas>
                         </div>
                         <div class="c d-flex justify-content-end flex-column">
                             <p class="payslip-small-desc font-weight-500">{{ date('M Y', strtotime('-1 month')) }}

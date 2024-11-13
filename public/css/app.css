@@ -9185,7 +9185,17 @@ peoples module styles started */
     font-weight: 500;
 }
 
-
-.fl-main-container[data-position$=-center] {
-    left: 0%;
+div.fl-main-container[data-position="top-center"] {
+    left: 50%;
+    transform: translateX(-50%);
 }
+
+    @media (max-width: 768px) {
+        div.fl-main-container[data-position="top-center"] {
+            left: 0;
+            transform: none;
+            width: 100%;
+            margin: 0;
+            padding: 10px;
+        }
+    }
