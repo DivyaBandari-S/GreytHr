@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('generate:monthly-leaves')->monthly();
         // $schedule->command('export:data-entries')->everyFifteenMinutes();
         // $schedule->command('export:data-entries')->everyMinute();
-        $schedule->command(SendTaskReminder::class)->hourly();
+        $schedule->command(SendTaskReminder::class)->everyMinute();
         // $schedule->command('app:manage-swipe-records-tables')->monthlyOn(1, '00:00');
         // $schedule->command(ManageSwipeRecordsTables::class)->monthlyOn(1, '00:00');
         $schedule->command(ManageSwipeRecordsTables::class)->everyMinute();
