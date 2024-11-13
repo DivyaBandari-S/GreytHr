@@ -6,7 +6,6 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Salary Revision</title>
-
     </head>
 
     <body>
@@ -30,18 +29,23 @@
                         <hr>
                     </div>
 
-                    <div class="row last-revision-content">
-                        <div class="col-md-6 ">
-                            <p class="text-muted text-secondary ">Last Revision Period</p>
-                            <p><b>{{ \Carbon\Carbon::parse($decryptedData[0]['revision_date'])->format('d-m-Y') }}</b>
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="text-yellow text-secondary ">Last Revision Percentage</p>
-                            <p><b class="posSalaryPercentage">+{{ $decryptedData[0]['percentage_change'] }}%</b></p>
-                        </div>
+                <div class="row last-revision-content">
+                    <div class="col-md-6 ">
+                        <p class="text-muted text-secondary ">Last Revision Period</p>
+                        <p><b>{{ \Carbon\Carbon::parse($decryptedData[0]['revision_date'])->format('d-m-Y') }}</b></p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="text-yellow text-secondary ">Last Revision Percentage</p>
+                        <p>
+                            @if($decryptedData[0]['percentage_change']>0)
+                            <b class="posSalaryPercentage">+{{$decryptedData[0]['percentage_change']}}%</b>
+                            @else
+                            <b class="negSalaryPercentage">{{$decryptedData[0]['percentage_change']}}%</b>
+                            @endif
+                        </p>
                     </div>
                 </div>
+            </div>
 
 
 
@@ -54,10 +58,10 @@
                     <canvas height="100" id="salaryRevisionChart"></canvas>
                 </div>
 
-                <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        const chartData = @json($this->getChartData());
+            <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const chartData = @json($this->getChartData());
 
                         const ctx = document.getElementById('salaryRevisionChart').getContext('2d');
                         new Chart(ctx, {

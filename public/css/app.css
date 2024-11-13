@@ -204,6 +204,19 @@
     font-weight: 500;
 }
 
+.prof-sub-heading{
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+}
+.prof-sub-heading-value{
+    color: #2a2828;
+    font-size: var(--sub-headings-font-size);
+}
+.normalTextMainProf{
+    color: var(--label-color);
+    font-weight: 600;
+    font-size: var(--sub-headings-font-size);
+}
 .normalText {
     color: var(--main-heading-color);
     font-weight: 500;
@@ -713,7 +726,15 @@ body {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
-
+div.align-prof-dev{
+    display: flex;
+    flex-direction: row;
+}
+div.profile-columns{
+display: flex;
+justify-content: space-between;
+flex-direction: column;
+}
 /* Icons */
 
 /*
@@ -3693,7 +3714,6 @@ input[type="radio"] {
 
 .accordion-body {
     border-radius: 10px;
-    display: none;
     background-color: #fff;
 }
 
@@ -6611,12 +6631,7 @@ select .yearSelect {
     border-bottom: 1px solid #bebbbb !important;
 }
 
-
-
-
-
 /* Salary Revision Module styles ends */
-
 .custom-table-wrapper-leave-details {
     position: relative;
     /* max-height: 130px; */
@@ -9737,11 +9752,6 @@ peoples module styles started */
         width: 100%;
     }
 }
-@media screen and (max-width: 360px) {
-    .fl-main-container[data-position$=-center] {
-        left: 0%;
-    }
-}
 @media screen and (max-width: 760px) {
     .view-details-container {
         display: flex;
@@ -9969,6 +9979,7 @@ peoples module styles started */
         /* flex-direction: column; */
         width: 100%;
     }
+
 }
 
 @media (max-width: 992px) {
@@ -10205,17 +10216,4 @@ div.fl-main-container[data-position="top-center"] {
         }
     }
 
-div.fl-main-container[data-position="top-center"] {
-    left: 50%;
-    transform: translateX(-50%);
-}
 
-    @media (max-width: 768px) {
-        div.fl-main-container[data-position="top-center"] {
-            left: 0;
-            transform: none;
-            width: 100%;
-            margin: 0;
-            padding: 10px;
-        }
-    }
