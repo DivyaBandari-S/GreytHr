@@ -471,13 +471,13 @@
             <table class="help-desk-table-main">
             <thead>
                     <tr class="help-desk-table-row" >
-                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
-                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
+                        <th class="help-desk-table-column" >Request Raised By</th>
+                        <th class="help-desk-table-column" >Category</th>
+                        <th class="help-desk-table-column">Subject</th>
+                        <th class="help-desk-table-column" >Description</th>
+                        <th class="help-desk-table-column" >Attach Files</th>
+                        <th class="help-desk-table-column" >CC To</th>
+                        <th class="help-desk-table-column" >Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -625,13 +625,13 @@
             <table class="help-desk-table-main">
             <thead>
                     <tr class="help-desk-table-row" >
-                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
-                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
+                        <th class="help-desk-table-column" >Request Raised By</th>
+                        <th class="help-desk-table-column" >Category</th>
+                        <th class="help-desk-table-column" >Subject</th>
+                        <th class="help-desk-table-column" >Description</th>
+                        <th class="help-desk-table-column" >Attach Files</th>
+                        <th class="help-desk-table-column" >CC To</th>
+                        <th class="help-desk-table-column" >Priority</th>
                     </tr>
                 </thead>
                 <tbody>
