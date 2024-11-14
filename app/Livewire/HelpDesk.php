@@ -447,9 +447,7 @@ public $closedSearch = '';
     
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $latestRequest = HelpDesks::latest('id')->first();
-            $nextRequestId = $latestRequest ? intval(substr($latestRequest->request_id, 3)) + 1 : 1000;
-            $requestId = 'REQ-' . str_pad($nextRequestId, 7, '0', STR_PAD_LEFT);
+          
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
@@ -463,7 +461,7 @@ public $closedSearch = '';
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
-                'request_id' => $requestId,
+           
             ]);
     
             FlashMessageHelper::flashSuccess( 'Request created successfully.');
