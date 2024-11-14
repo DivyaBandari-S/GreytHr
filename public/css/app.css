@@ -735,6 +735,16 @@ display: flex;
 justify-content: space-between;
 flex-direction: column;
 }
+.img-thumbnail {
+    padding: .25rem;
+    background-color: var(--bs-body-bg);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    max-width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    width: 90px;
+}
 /* Icons */
 
 /*
@@ -2633,7 +2643,15 @@ td {
     .shift-roster-download-and-dropdown-for-attendance-muster {
         margin-left: 10px;
     }
-
+    div.align-prof-dev{
+        display: flex;
+        flex-direction: column;
+    }
+    div.profile-columns{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -9647,11 +9665,6 @@ peoples module styles started */
         margin-top: 20px;
     }
 
-    .col {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
 }
 
 @media screen and (max-height: 320px) {
@@ -9776,9 +9789,6 @@ peoples module styles started */
         justify-content: start;
         align-items: center;
         margin-top: 20px;
-    }
-    .input-group {
-        width: 100%; /* Ensure input takes full width */
     }
 
     .search-btn-leave {
@@ -9993,7 +10003,14 @@ peoples module styles started */
     .custom-nav-tabs .custom-item {
         border: 1px solid #ccc !important;
     }
-
+    .mbl-dev-closed{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
