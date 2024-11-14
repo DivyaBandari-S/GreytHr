@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
+use App\Mail\LeaveApprovalNotification;
 use App\Models\LeaveRequest;
 use App\Models\StatusType;
 use Carbon\Carbon;
@@ -295,7 +296,7 @@ class LeaveFormPage extends Component
             // Send notification email if the email exists
             if ($applyingToEmail) {
                 Mail::to($applyingToEmail)
-                    ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
+                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
             }
 
             $this->hasPendingLeave();
@@ -352,7 +353,7 @@ class LeaveFormPage extends Component
             // Send notification email if the email exists
             if ($applyingToEmail) {
                 Mail::to($applyingToEmail)
-                    ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
+                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
             }
             $this->hasPendingLeave();
             // Flash success message

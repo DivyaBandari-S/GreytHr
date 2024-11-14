@@ -165,7 +165,7 @@ class Delegates extends Component
 
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $peopleData = $peopleData->sortBy(function ($person) {

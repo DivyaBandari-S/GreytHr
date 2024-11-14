@@ -12,11 +12,11 @@
     <div class="container task-first-container">
         <div class="nav-buttons d-flex justify-content-center task-tab-button-container">
             <ul class="nav custom-nav-tabs border">
-                <li class="custom-item m-0 p-0 flex-grow-1">
+                <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                     <div class="task-open-tab-container custom-nav-link {{ $activeTab === 'open' ? 'active' : '' }}"
                         wire:click.prevent="setActiveTab('open')">Open</div>
                 </li>
-                <li class="custom-item m-0 p-0 flex-grow-1">
+                <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                     <a href="#"
                         class="task-closed-tab-container custom-nav-link {{ $activeTab === 'completed' ? 'active' : '' }}"
                         wire:click.prevent="setActiveTab('completed')">Closed</a>
