@@ -495,7 +495,7 @@ class LeaveApplyPage extends Component
         }
     }
     public $errorMessageValidation;
-    public $propertyName;c
+    public $propertyName;
     public function handleFieldUpdate($field)
     {
         try {
