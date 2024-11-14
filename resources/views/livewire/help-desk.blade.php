@@ -1,4 +1,4 @@
-<div>
+<div class="position-relative">
 <div wire:loading
         wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,">
         <div class="loader-overlay">
@@ -15,7 +15,7 @@
                 <div class="nav-buttons d-flex justify-content-center">
                     <ul class="nav custom-nav-tabs border rounded">
                         
-                        <li class="custom-item m-0 p-0 flex-grow-1">
+                        <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                             <div href="#"
                                 wire:click="$set('activeTab', 'active')"
                                 class="reviewActiveButtons custom-nav-link  {{ $activeTab === 'active' ? 'active left-radius' : '' }}">
@@ -32,7 +32,7 @@
                             </a>
                         </li>
 
-                        <li class="custom-item m-0 p-0 flex-grow-1">
+                        <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                             <a href="#"
                                 wire:click="$set('activeTab', 'closed')"
                                 class="reviewClosedButtons custom-nav-link {{ $activeTab === 'closed' ? 'active' : '' }}">

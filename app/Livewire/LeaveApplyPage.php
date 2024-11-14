@@ -495,7 +495,7 @@ class LeaveApplyPage extends Component
         }
     }
     public $errorMessageValidation;
-    public $propertyName;
+    public $propertyName;c
     public function handleFieldUpdate($field)
     {
         try {
@@ -529,7 +529,7 @@ class LeaveApplyPage extends Component
             // If to_date is empty or null but from_date is set, throw error for to_date
             if ((empty($this->to_date) || $this->to_date === null || $this->to_date === '')) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('To date is required.');
-                return false; 
+                return false;
             }
 
             // Additional validation if necessary (e.g., compare dates, etc.)
@@ -561,7 +561,7 @@ class LeaveApplyPage extends Component
             // 1. Check if the selected dates are on weekends
             if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
-                return false; 
+                return false;
             }
 
             // 3. Validate leave balance
@@ -571,14 +571,14 @@ class LeaveApplyPage extends Component
                 if ($totalNumberOfDays > $leaveBalance) {
                     Log::debug('Total number of leave days exceed balance', ['totalNumberOfDays' => $totalNumberOfDays, 'leaveBalance' => $leaveBalance]);
                     $this->errorMessageValidation = FlashMessageHelper::flashError('It looks like you have already used all your leave balance.');
-                    return false; 
+                    return false;
                 }
             }
 
             // 4. Check for holidays
             if ($this->checkForHolidays()) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with existing holidays. Please pick different dates.');
-                return false; 
+                return false;
             }
 
             // 5. Validate from date for joining date
@@ -643,7 +643,6 @@ class LeaveApplyPage extends Component
             return false;
         }
     }
-
 
     //checkfilesize
     protected function checkFileSize()

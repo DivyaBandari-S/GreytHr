@@ -327,10 +327,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}"  wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
                     </li>
                 </ul>
