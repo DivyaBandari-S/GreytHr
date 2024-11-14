@@ -9777,6 +9777,13 @@ peoples module styles started */
         align-items: center;
         margin-top: 20px;
     }
+    .input-group {
+        width: 100%; /* Ensure input takes full width */
+    }
+
+    .search-btn-leave {
+        margin-left: 10px; /* Space between input and button */
+    }
 }
 
 @media screen and (max-width: 460px) {
