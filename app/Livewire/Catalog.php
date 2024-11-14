@@ -184,7 +184,7 @@ class Catalog extends Component
         $this->selectedPeople=[];
         $this->addselectedPeople=[];
         $this->isNames=false;
-        $this->filer();
+    $this->searchTerm = '';
 
     }
  
