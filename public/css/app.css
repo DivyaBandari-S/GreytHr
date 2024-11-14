@@ -9870,10 +9870,6 @@ peoples module styles started */
     .dropdown {
         width: 30%;
     }
-
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
 }
 
 @media screen and (max-height: 460px) {
@@ -9984,14 +9980,16 @@ peoples module styles started */
 }
 
 @media (max-width: 346px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
-
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
-
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
     .custom-nav-tabs {
         /* flex-direction: column; */
         width: 100%;
@@ -10000,9 +9998,6 @@ peoples module styles started */
 }
 
 @media (max-width: 992px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
     .mbl-dev-closed{
         border-top-right-radius: 5px;
         border-bottom-right-radius: 5px;

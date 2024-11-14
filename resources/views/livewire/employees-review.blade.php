@@ -139,10 +139,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
                     </li>
                 </ul>
