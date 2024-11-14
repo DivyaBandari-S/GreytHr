@@ -300,13 +300,14 @@
             <table class="help-desk-table-main" >
                 <thead class="help">
                     <tr class="help-desk-table-row" >
-                        <th class="help-desk-table-column" style=" width: 20%;">Request Raised By</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Category</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">Subject</th>
-                        <th class="help-desk-table-column" style="width: 10%;">Description</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Attach Files</th>
-                        <th class="help-desk-table-column" style=" width: 20%;">CC To</th>
-                        <th class="help-desk-table-column" style=" width: 10%;">Priority</th>
+                        <th class="help-desk-table-column" >Request Raised By</th>
+                        <th class="help-desk-table-column" >Request ID</th>
+                        <th class="help-desk-table-column" >Category</th>
+                        <th class="help-desk-table-column" >Subject</th>
+                        <th class="help-desk-table-column" >Description</th>
+                        <th class="help-desk-table-column" >Attach Files</th>
+                        <th class="help-desk-table-column" >CC To</th>
+                        <th class="help-desk-table-column" >Priority</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -323,6 +324,9 @@
                         <td class="helpdesk-request" >
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+                        </td>
+                        <td class="helpdesk-request" >
+                            {{ $record->request_id ??'-'}}
                         </td>
                         <td class="helpdesk-request" >
                             {{ $record->category ??'-'}}

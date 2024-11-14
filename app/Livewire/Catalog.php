@@ -62,6 +62,7 @@ class Catalog extends Component
     public $cc_to;
     public $peoples;
     public $category;
+    public $requestId;
     public $emergency_contact = '';
     public $filteredPeoples;
     public $selectedPeopleNames = [];
@@ -183,6 +184,7 @@ class Catalog extends Component
         $this->selectedPeople=[];
         $this->addselectedPeople=[];
         $this->isNames=false;
+        $this->filter();
 
     }
 
@@ -619,9 +621,12 @@ class Catalog extends Component
 
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+        $latestRequest = HelpDesks::latest('id')->first();
+        $nextRequestId = $latestRequest ? intval(substr($latestRequest->request_id, 3)) + 1 : 1000;
+        $requestId = 'REQ-' . str_pad($nextRequestId, 7, '0', STR_PAD_LEFT);
         HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
+            'request_id' => $requestId,
             'distributor_name' => $this->distributor_name,
             'subject' => $this->subject,
             'description' => $this->description,
@@ -706,7 +711,9 @@ class Catalog extends Component
         
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-
+        $latestRequest = HelpDesks::latest('id')->first();
+        $nextRequestId = $latestRequest ? intval(substr($latestRequest->request_id, 3)) + 1 : 1000;
+        $requestId = 'REQ-' . str_pad($nextRequestId, 7, '0', STR_PAD_LEFT);
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'distributor_name' => $this->distributor_name??'-',
@@ -719,6 +726,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mail' => $this->mail,
                 'mobile' => $this->mobile,
+                'request_id' => $requestId,
                 
             ]);
 
@@ -786,7 +794,9 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+        $latestRequest = HelpDesks::latest('id')->first();
+        $nextRequestId = $latestRequest ? intval(substr($latestRequest->request_id, 3)) + 1 : 1000;
+        $requestId = 'REQ-' . str_pad($nextRequestId, 7, '0', STR_PAD_LEFT);
 
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
@@ -800,7 +810,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mobile' => 'N/A',
                 'mail' => $this->mail??'-',
-                
+                'request_id' => $requestId,
                 'distributor_name' => 'N/A',
             ]);
 
@@ -825,7 +835,7 @@ class Catalog extends Component
     {
         try {
             $messages=[
-                'subject' =>'Business Justification is required',
+                'subject' =>'Subject is required',
                 'description'=>'Specific Information is required',
                   'selected_equipment'=>'Selected equipment is required'
              ];
@@ -867,7 +877,9 @@ class Catalog extends Component
         
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-
+        $latestRequest = HelpDesks::latest('id')->first();
+        $nextRequestId = $latestRequest ? intval(substr($latestRequest->request_id, 3)) + 1 : 1000;
+        $requestId = 'REQ-' . str_pad($nextRequestId, 7, '0', STR_PAD_LEFT);
 
         HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
@@ -881,7 +893,7 @@ class Catalog extends Component
             'category' => $this->category ?? '-',
             'mail' => 'N/A',
             'mobile' => 'N/A',
-        
+            'request_id' => $requestId,
             'distributor_name' => 'N/A',
         ]);
    
