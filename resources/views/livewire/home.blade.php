@@ -1,6 +1,5 @@
 <div class="position-relative">
-    <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,getThisMonthLeaves,getTodayLeaves,closeThisMonthLeaves,closeTodayLeaves,toggleSalary">
+    <div class="position-absolute" wire:loading wire:target="open,toggleSignState">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -52,30 +51,24 @@
 
                             </div>
                         </div>
-                        <div class="col-md-3 homeReporting pt-4">
+                        <div class="col-md-6 homeReporting pt-4">
                             @if ($loginEmpManagerDetails)
-                                <div class="new_site">
-                                    <!-- new_site_ribbon -->
-                                    <div class="reportsToHome rounded-pill">Reports To..</div>
-                                </div>
-                                <div class="row m-0 text-center">
-                                    @if ($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
-                                        <div class="p-0 mb-3 mt-2">
-                                            <img class="rounded-circle" width="50" height="50"
-                                                src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }} "
-                                                alt="">
-                                        </div>
-                                    @else
-                                        <div class="p-0">
-                                            <i class="fa-regular fa-user reportMangerImg"></i>
-                                        </div>
-                                    @endif
-                                    <h6 class="p-0">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
-                                        {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
-                                    </h6>
-                                    <div class="row m-0 p-0 desigMainDiv ">
-                                        <div class="row p-0 desigSecondDiv">
-                                            <p class="mb-0 desigText" style="color: #02114f !important;">
+                                <div class="card-reporting">
+                                    <button class="mail">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                                    </button>
+                                    <div class="profile-pic">
+                                        @if ($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
+                                            <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
+                                        @else
+                                            <img src="assets/images/agent.png" alt="">
+                                        @endif
+                                    </div>
+                                    <div class="bottom">
+                                        <div class="content">
+                                            <span class="name">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
+                                            {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</span>
+                                            <span class="about-me">
                                                 @php
                                                     $jobTitle = $loginEmpManagerDetails->job_role;
 
@@ -105,10 +98,16 @@
                                                         $convertedTitle,
                                                     );
                                                 @endphp
-                                                <i class="fa-regular fa-compass me-2"></i>
                                                 {{ $convertedTitle ? $convertedTitle : 'N/A' }}
-                                            </p>
+                                            </span>
                                         </div>
+                                    <div class="bottom-bottom">
+                                        <div class="social-links-container">
+                                            <img src="images/teams.png" style="width: 1.5em; height: fit-content;" />
+                                            <img src="images/outlook.png" style="width: 1.5em; height: fit-content;" />
+                                        </div>
+                                        <button class="button">Reports To</button>
+                                    </div>
                                     </div>
                                 </div>
                             @else
@@ -116,128 +115,80 @@
                             @endif
                         </div>
 
-                        <div class="col-md-3 p-0">
-                            <div class="morning-cardContainer w-100">
-                                <div class="morning-card w-100">
-
-                                    <div class="morning-weather-image">
-                                        @if ($weatherCode == 0)
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Clear sky" />
-                                        @elseif(in_array($weatherCode, [1, 2]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Partly Cloudy" />
-                                        @elseif($weatherCode == 3)
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Overcast" />
-                                        @elseif(in_array($weatherCode, [51, 53, 55, 61, 63, 65, 80, 81, 82]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Rainy" />
-                                        @elseif(in_array($weatherCode, [95, 96, 99]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Thunderstorm" />
-                                        @elseif(in_array($weatherCode, [71, 73, 75, 77, 85, 86]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Snow" />
-                                        @elseif(in_array($weatherCode, [45, 48]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Fog" />
-                                        @elseif(in_array($weatherCode, [56, 57, 66, 67]))
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Freezing Rain" />
-                                        @else
-                                            <img src="{{ asset('images/cloudy.gif') }}" class="skyMornImg"
-                                                alt="Weather" />
-                                        @endif
-                                    </div>
-
-                                    <p class="morning-temp">{{ $temperature }}°C</p>
-                                    <div class="morning-minmaxContainer">
-                                        <div class="morning-min">
-                                            <p class="morning-minTemp">Wind Speed</p>
-                                            <p class="morning-minHeading">{{ $windspeed }} km/h</p>
-
-                                        </div>
-                                        <div class="morning-max">
-
-                                            <p class="morning-maxTemp">Wind Direction</p>
-                                            <p class="morning-maxHeading">{{ $winddirection }} °</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <!-- <div class="col-md-3 p-0">
+                            
+                        </div> -->
 
                         <div class="col-md-3">
-                            <div class="mb-4 mt-4">
-                                <div style="position: relative">
+                            <div>
+                                <img src="images/admin_banner.png" style="width: 100%" />
+                            </div>
+                            <div class="mb-4 homeBaneerCard row m-0" style="margin-top: -30px !important;">
+                               
+                                <div class="col-6">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
-                                    <div class="homeBaneerCard">
-
-                                        <div class="p-3">
-                                            <p class="payslip-card-title">{{ $currentDate }}</p>
-                                            <p class="normalText mt-2">
-                                                @php
-                                                    // Fetch shift times
-                                                    $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
-                                                    $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
-
-                                                    // Default times
-                                                    $defaultStartShiftTime = '10:00 am';
-                                                    $defaultEndShiftTime = '7:00 pm';
-
-                                                    // Format the times if they are not null
-                                                    $formattedStartShiftTime = $EmployeeStartshiftTime
-                                                        ? (new DateTime($EmployeeStartshiftTime))->format('h:i a')
-                                                        : $defaultStartShiftTime;
-                                                    $formattedEndShiftTime = $EmployeeEndshiftTime
-                                                        ? (new DateTime($EmployeeEndshiftTime))->format('h:i a')
-                                                        : $defaultEndShiftTime;
-
-                                                @endphp
-                                                {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
-                                                {{ $formattedEndShiftTime }}
-                                            </p>
-                                            <div class="d-flex" style="font-size: 14px; margin-top: 2em;"
-                                                x-data="{
-                                                    time: '',
-                                                    updateTime() {
-                                                        const now = new Date();
-                                                        const hours = String(now.getHours()).padStart(2, '0');
-                                                        const minutes = String(now.getMinutes()).padStart(2, '0');
-                                                        const seconds = String(now.getSeconds()).padStart(2, '0');
-                                                        this.time = `${hours} : ${minutes} : ${seconds}`;
-                                                    }
-                                                }" x-init="setInterval(() => updateTime(), 1000)">
-                                                <img src="/images/stopwatch.png" class="me-4" alt="Image Description"
-                                                    style="width: 2.7em;">
-                                                <template x-if="time">
-                                                    <p x-text="time" class="showTimer"></p>
-                                                </template>
-                                            </div>
-
-                                            <div class="A d-flex justify-content-between align-items-center flex-row"
-                                                style="margin-top: 2em">
-                                                <a class="viewSwipesList" wire:click="open">View Swipes</a>
-                                                <button id="signButton" class="signInButton"
-                                                    wire:click="toggleSignState">
-                                                    @if ($swipes)
-                                                        @if ($swipes->in_or_out === 'OUT')
-                                                            Sign In
-                                                        @else
-                                                            Sign Out
-                                                        @endif
-                                                    @else
-                                                        Sign In
-                                                    @endif
-                                                </button>
-                                            </div>
-                                        </div>
+                                    <div class="d-flex" style="font-size: 14px;
+                                        margin-top: 3em;
+                                        position: relative;
+                                        font-weight: 600; margin-left: 5px;"
+                                        x-data="{
+                                            time: '',
+                                            updateTime() {
+                                                const now = new Date();
+                                                const hours = String(now.getHours()).padStart(2, '0');
+                                                const minutes = String(now.getMinutes()).padStart(2, '0');
+                                                const seconds = String(now.getSeconds()).padStart(2, '0');
+                                                this.time = `${hours} : ${minutes} : ${seconds}`;
+                                            }
+                                        }" x-init="setInterval(() => updateTime(), 1000)">
+                                        <template x-if="time">
+                                            <p x-text="time"></p>
+                                        </template>
                                     </div>
                                 </div>
+                                <div class="col-6 pt-2 text-end">
+                                    <p class="normalText mt-2">
+                                        @php
+                                            // Fetch shift times
+                                            $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
+                                            $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
 
+                                            // Default times
+                                            $defaultStartShiftTime = '10:00 am';
+                                            $defaultEndShiftTime = '7:00 pm';
+
+                                            // Format the times if they are not null
+                                            $formattedStartShiftTime = $EmployeeStartshiftTime
+                                                ? (new DateTime($EmployeeStartshiftTime))->format('h:i a')
+                                                : $defaultStartShiftTime;
+                                            $formattedEndShiftTime = $EmployeeEndshiftTime
+                                                ? (new DateTime($EmployeeEndshiftTime))->format('h:i a')
+                                                : $defaultEndShiftTime;
+
+                                        @endphp
+                                        {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
+                                        {{ $formattedEndShiftTime }}
+                                    </p>
+                                    <p class="payslip-card-title">{{ $currentDate }}</p>
+                                </div>
+                                <div class="A d-flex justify-content-between align-items-center flex-row mb-3"
+                                    style="margin-top: 2em">
+                                    <a class="viewSwipesList" wire:click="open">View Swipes</a>
+                                    <button id="signButton" class="signInButton"
+                                        wire:click="toggleSignState">
+                                        @if ($swipes)
+                                            @if ($swipes->in_or_out === 'OUT')
+                                                Sign In
+                                            @else
+                                                Sign Out
+                                            @endif
+                                        @else
+                                            Sign In
+                                        @endif
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -344,10 +295,10 @@
             @if ($ismanager || $leaveApplied)
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title">Review</p>
-                    @if ($count > 0)
+                    @if ($this->count > 0)
                         <div class="notify d-flex justify-content-between">
                             <p class="payslip-small-desc">
-                                {{ $pendingCount }} <br>
+                                {{ $count }} <br>
                                 <span class="normalTextValue">Things to review</span>
                             </p>
                             <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg"
@@ -716,7 +667,7 @@
                                 <p class="payslip-small-desc">Gross Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($grossPay, 2) : '₹**********' }}
+                                {{ $showSalary ? '₹****' : '₹ 50,000.00' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -725,7 +676,7 @@
                                 <p class="payslip-small-desc">Deduction</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($deductions ?? 0, 2) : '₹**********' }}
+                                {{ $showSalary ? '₹****' : '₹ 5,000.00' }}
                             </p>
                         </div>
                         <div class="net-salary">
@@ -734,7 +685,7 @@
                                 <p class="payslip-small-desc">Net Pay</p>
                             </div>
                             <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹ ' . number_format($netPay, 2) : '₹**********' }}
+                                {{ $showSalary ? '₹****' : '₹ 45,000.00' }}
                             </p>
                         </div>
                     </div>
@@ -743,7 +694,7 @@
                         <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download
                             PDF</a>
                         <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Hide Salary' : 'Show Salary' }}
+                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
                         </a>
                     </div>
                 </div>
@@ -795,10 +746,11 @@
                         ?>
                                         @endfor
                                         @if ($teamCount > 3)
-                                            <div class="remainContent d-flex mt-1 flex-column align-items-center"
-                                                wire:click="getTodayLeaves">
-                                                <span>+{{ $teamCount - 3 }}</span>
-                                                <p class="mb-0" style="margin-top:-5px;">More</p>
+                                            <div class="remainContent d-flex mt-3 flex-column align-items-center">
+                                                <a href="/team-on-leave-chart">
+                                                    <span>+{{ $teamCount - 3 }}</span>
+                                                    <p class="mb-0" style="margin-top:-5px;">More</p>
+                                                </a>
                                             </div>
                                         @endif
                                     </div>
@@ -816,21 +768,21 @@
                                                     @endphp
                                                     <div class="d-flex align-items-center">
                                                         <div class="thisCircle"
-                                                            style="border: 1px solid {{ $randomColorList }}"
-                                                            data-toggle="tooltip" data-placement="top"
-                                                            title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
+                                                            style="border: 1px solid {{ $randomColorList }}">
                                                             <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
                                                             </span>
                                                         </div>
                                                     </div>
                                                 @endforeach
                                                 @if ($upcomingLeaveRequests->count() > 3)
-                                                    <div class="remainContent d-flex flex-column align-items-center"
-                                                        wire:click="getThisMonthLeaves">
+                                                    <div
+                                                        class="remainContent d-flex flex-column align-items-center">
                                                         <!-- Placeholder color -->
-                                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }}
-                                                        </span>
-                                                        <span style="margin-top:-5px;">More</span>
+                                                        <a href="/team-on-leave-chart">
+                                                            <span>+{{ $upcomingLeaveRequests->count() - 3 }}
+                                                            </span>
+                                                            <span style="margin-top:-5px;">More</span>
+                                                        </a>
                                                     </div>
                                                 @endif
                                             </div>
@@ -851,7 +803,7 @@
                                 </div>
                             @endif
                         </div>
-                        <a href="/team-on-leave-chart">
+                        <a href="#">
                             <div class="payslip-go-corner">
                                 <div class="payslip-go-arrow">→</div>
                             </div>
@@ -859,79 +811,7 @@
                     </div>
                 </div>
             @endif
-            <!-- ///team on leave model popup -->
-            @if ($showModal)
-                <div class="modal d-block" tabindex="-1" role="dialog">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">
-                                    <b> {{ $modalLeaveTitle }} </b>
-                                </h5>
-                            </div>
-                            <div class="modal-body">
-                                @if ($showThisMonthLeaveRequest)
-                                    <div class="d-flex flex-row  mb-3 gap-2">
-                                        <div class="d-flex flex-row gap-2">
-                                            @foreach ($upcomingLeaveRequests as $requests)
-                                                @php
-                                                    $randomColorList =
-                                                        '#' .
-                                                        str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
-                                                @endphp
-                                                <div class="d-flex align-items-center">
-                                                    <div class="thisCircle"
-                                                        style="border: 1px solid {{ $randomColorList }}"
-                                                        data-toggle="tooltip" data-placement="top"
-                                                        title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
-                                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer d-flex align-items-center justify-content-center">
-                                        <button type="button" class="cancel-btn"
-                                            wire:click="closeThisMonthLeaves"
-                                            style="border:1px solid rgb(2,17,79);"
-                                            data-dismiss="modal">Close</button>
-                                    </div>
-                                @endif
-                                @if ($showTodayLeaveRequest)
-                                    <div class="d-flex flex-row gap-2 mb-3">
-                                        <div class="d-flex flex-row gap-2">
-                                            @foreach ($teamOnLeaveRequests as $requests)
-                                                @php
-                                                    $randomColorLeaveList =
-                                                        '#' .
-                                                        str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
-                                                @endphp
-                                                <div class="d-flex align-items-center ">
-                                                    <div class="thisCircle"
-                                                        style="border: 1px solid {{ $randomColorLeaveList }}"
-                                                        data-toggle="tooltip" data-placement="top"
-                                                        title="{{ ucwords(strtolower($requests->employee->first_name)) }} {{ ucwords(strtolower($requests->employee->last_name)) }}">
-                                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer d-flex align-items-center justify-content-center">
-                                        <button type="button" class="cancel-btn" wire:click="closeTodayLeaves"
-                                            style="border:1px solid rgb(2,17,79);"
-                                            data-dismiss="modal">Close</button>
-                                    </div>
-                                @endif
 
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-backdrop fade show blurred-backdrop"></div>
-            @endif
             <div class="payslip-card mb-4">
                 <div>
                     <div class="d-flex justify-content-between align-items-center" style="margin-bottom: 30px;">
