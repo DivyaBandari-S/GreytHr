@@ -1073,33 +1073,62 @@
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
-    // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
+        var grossPay = @json($grossPay); // Laravel value for gross pay
+        var deductions = @json($deductions); // Laravel value for deductions
+        var netPay = @json($netPay); // Laravel value for net pay
+
+        var totalPay = grossPay; // Set total pay as Gross Pay to represent 100%
+
+        // Calculate the percentages for deductions and net pay
+        var deductionsPercentage = (deductions / grossPay) * 100;
+        var netPayPercentage = (netPay / grossPay) * 100;
+        var grossPayPercentage = 100; // Gross pay is 100% by definition
+
         var ctx = document.getElementById('combinedPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Gross Pay', 'Deduction', 'Net Pay'],
+                labels: ['Gross Pay', 'Net Pay', 'Deductions'], // Labels for each section
                 datasets: [{
-                    label: 'Salary Breakdown',
-                    data: [50000, 5000, 45000],
-                    backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
-                    borderColor: '#f2f8f9', // Set border color for the segments
-                    borderWidth: 2, // Normal border width
-                    hoverBorderWidth: 3 // Border width on hover
+                    label: 'Gross Pay', // Outer ring for Gross Pay
+                    data: [grossPayPercentage, 0, 0], // Only show Gross Pay in the outer ring
+                    backgroundColor: ['#000000', 'transparent',
+                    'transparent'], // Color for outer ring
+                    borderColor: ['#f2f8f9', 'transparent',
+                    'transparent'], // Border color for outer ring
+                    borderWidth: 2, // Thickness of the outer ring
+                    hoverBorderWidth: 3 // Border width on hover for outer ring
+                }, {
+                    label: 'Net and Deductions Breakdown', // Inner ring for Net Pay & Deductions
+                    data: [0, netPayPercentage,
+                    deductionsPercentage], // Data for the inner ring
+                    backgroundColor: ['transparent', '#1C9372',
+                    '#B9E3C6'], // Color for inner ring
+                    borderColor: ['transparent', '#f2f8f9',
+                    '#f2f8f9'], // Border color for inner segments
+                    borderWidth: 2, // Thickness of the inner ring
+                    hoverBorderWidth: 3 // Border width on hover for inner ring
                 }]
             },
             options: {
                 responsive: true,
-                cutout: '60%', // Adjust this to increase thickness (lower cutout value for thicker ring)
+                cutout: '45%', // Outer ring thickness (cutout controls the thickness of both rings)
                 plugins: {
                     legend: {
-                        display: false // Hide labels
+                        display: false // Hide the legend
                     },
                     tooltip: {
                         callbacks: {
                             label: function(tooltipItem) {
-                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
+                                var label = tooltipItem
+                                .label; // Get the label (Gross Pay, Net Pay, Deductions)
+                                var value = tooltipItem.raw; // Get the corresponding value
+
+                                // Format the value as a percentage with ' %'
+                                var percentage = value.toFixed(2) + '%';
+
+                                return label + ': ' + percentage; // Show the label and percentage
                             }
                         }
                     }

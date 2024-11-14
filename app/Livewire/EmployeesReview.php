@@ -456,6 +456,8 @@ class EmployeesReview extends Component
                     'regularisation_dates.*',
                     'employee_details.first_name',
                     'employee_details.last_name',
+                    'employee_details.gender',
+                    'employee_details.image',
                     'status_types.status_name' // Select status_name from status_types
                 )
                 ->orderByDesc('regularisation_dates.updated_at')
@@ -469,6 +471,8 @@ class EmployeesReview extends Component
                     'regularisation_dates.*',
                     'employee_details.first_name',
                     'employee_details.last_name',
+                    'employee_details.gender',
+                    'employee_details.image',
                     'status_types.status_name' // Select status_name from status_types table
                 )
                 ->orderByDesc('regularisation_dates.updated_at')

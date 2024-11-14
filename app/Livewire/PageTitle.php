@@ -47,6 +47,9 @@ class PageTitle extends Component
         $routeTitleMap = [
             'home' => 'Home',
             'Feeds' => 'Feeds',
+            'everyone'=>'Feeds',
+            'events'=>'Feeds',
+            'emp-post-requests'=>'Feeds',
             'people' => 'People',
             'profile.info' => 'Employee Information',
             'itdeclaration' => 'It Declaration',

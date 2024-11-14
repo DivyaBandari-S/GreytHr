@@ -65,6 +65,7 @@ class EmpLogin extends Component
     public $showAlert = false;
     public $alertMessage = '';
     public $showEyeIcon = false;
+    public $isSubmitting = false;
     protected $rules = [
         'form.emp_id' => 'required',
         'form.password' => 'required',
@@ -140,8 +141,10 @@ class EmpLogin extends Component
     {
         $this->validate($this->rules);
 
+        // Set submitting state to true only if validation passed
+
         try {
-            // $this->showLoader = true;
+            $this->isSubmitting = true;
             $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])
                 ->orWhere('email', $this->form['emp_id'])
                 ->first();
@@ -230,6 +233,7 @@ class EmpLogin extends Component
         $this->verified = false;
         $this->verify_error = '';
         $this->form = ['emp_id' => '', 'password' => '']; // Resetting the form
+        $this->isSubmitting = false;
         $this->resetValidation();
     }
 

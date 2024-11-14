@@ -139,10 +139,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
                     </li>
                 </ul>
@@ -206,6 +206,21 @@
                         <div class="accordion-title p-2 rounded">
 
                             <!-- Display leave details here based on $leaveRequest -->
+                            <div class="col accordion-content">
+
+
+                            @if(isset($arrl->image) && $arrl->image !== 'null' && $arrl->image != "Null" && $arrl->image != "")
+                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($arrl->image) }}" style="border-radius: 50%;">
+                                    @else
+                                    @if($arrl->gender === 'FEMALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @elseif($arrl->gender === 'MALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @endif
+                                    @endif
+                            </div>
 
                             <div class="col accordion-content">
 
@@ -312,10 +327,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}"  wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
                     </li>
                 </ul>

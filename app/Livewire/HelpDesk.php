@@ -18,7 +18,9 @@ use App\Models\PeopleList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+
 use App\Models\HelpDesks;
+use App\Mail\HelpDeskotification;
 use App\Models\Request;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
@@ -39,6 +41,7 @@ public $closedCategory = null; // Category for Closed tab
     public $showModal = false;
     public $search = '';
     public $isRotated = false;
+    public $requestId;
 
     public $requestCategories = '';
     public $selectedPerson = null;
@@ -444,7 +447,7 @@ public $closedSearch = '';
     
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    
+          
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
@@ -458,6 +461,7 @@ public $closedSearch = '';
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
+           
             ]);
     
             FlashMessageHelper::flashSuccess( 'Request created successfully.');

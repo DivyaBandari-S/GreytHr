@@ -70,9 +70,23 @@
             <div class="accordion-title p-2 rounded">
 
                 <!-- Display leave details here based on $leaveRequest -->
-                
-
                 <div class="accordion-content col">
+
+                @if(isset($r->employee->image) && $r->employee->image !== 'null' && $r->employee->image != "Null" && $r->employee->image != "")
+                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($r->employee->image) }}" style="border-radius: 50%;margin-right:180px;">
+                                    @else
+                                    @if($r->employee->gender === 'FEMALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @elseif($r->employee->gender === 'MALE')
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @else
+                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                    @endif
+                                    @endif
+
+                </div>
+
+                <div class="accordion-content col"style="margin-right:100px;">
 
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($r->employee->first_name))}}&nbsp;{{ucwords(strtolower($r->employee->last_name))}}</span>
 

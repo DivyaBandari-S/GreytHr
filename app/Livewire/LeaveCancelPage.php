@@ -435,7 +435,7 @@ class LeaveCancelPage extends Component
                 // Send the email if we have at least one recipient
                 Mail::to($managerEmail)
                     ->cc($ccEmails)
-                    ->send(new LeaveApprovalNotification($this->createdCancelLeaveRequest, $applyingToDetails, $ccToDetails));
+                    ->send(new LeaveApplicationNotification($this->createdCancelLeaveRequest, $applyingToDetails, $ccToDetails));
             }
             $this->cancel();
             FlashMessageHelper::flashSuccess("Leave cancel request submitted successfully.");
@@ -698,7 +698,7 @@ class LeaveCancelPage extends Component
             ->where('leave_status', 2)
             ->where('from_date', '>=', now()->subMonths(2))
             ->where('category_type', 'Leave')
-            ->whereIn('cancel_status',  [5,3])
+            ->where('cancel_status',  '!=',6)
             ->with('employee')
             ->get();
 
