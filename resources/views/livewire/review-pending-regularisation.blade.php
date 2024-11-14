@@ -130,7 +130,7 @@
         .table-container
         {
             width: auto;
-            height:200px;
+            height:auto;
             background-color: #fff;
             margin-left:10px;
             border-radius: 5px;
@@ -365,14 +365,20 @@
                            
                                <td >
                                   <div style="display: flex; align-items: center;">
-                                       <i class="fa-regular fa-circle-check"style="color:lightgreen;margin-right: 5px;height:20px;width:20px;"></i>
-                                       <i class="fa-regular fa-circle-xmark"style="color:#ccc;height:20px;width:20px;"></i>
+                                    @if($r1['status']==3)
+                                         <p>Rejected</p>
+                                    @else
+                                       <i class="fa-regular fa-circle-check"style="color:lightgreen;margin-right: 5px;height:20px;width:20px;cursor:pointer;"wire:click="approve('{{$r1['date']}}')"></i>
+                                       <i class="fa-regular fa-circle-xmark"style="color:#ccc;height:20px;width:20px;cursor:pointer;"wire:click="reject('{{$r1['date']}}')"></i>
+                                    @endif   
                                   </div>
                                </td>
                           
                          
                                <td style="border-right: 1px solid #dcdcdc;">
-                                       <input type="text" placeholder="Write Remarks"style="border: 1px solid #ccc;border-radius:5px; color: #666;">
+                                        <input type="text" placeholder="Write Remarks" 
+                                            style="border: 1px solid #ccc; border-radius:5px; color: #666;"
+                                            wire:model.defer="remarks.{{ $r1['date'] }}">
                                </td>
 
                      
@@ -429,5 +435,15 @@
         </tbody>
         @endforeach
     </table>
+   
   </div>
+  <footer class="regularisation-footer" style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+                <div style="display:flex; justify-content: right;">
+                    
+                    <a href="/Attendance" style="color:rgb(2,17,79); margin-right: 20px; padding: 10px 20px;">Cancel</a>
+                    <button type="button" wire:click="storearraydates" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Reject All</button>
+                    <button type="button" wire:click="storearraydates" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Submit</button>
+                </div>
+  </footer>
+
 </div>
