@@ -352,12 +352,12 @@
     <label for="selectedEquipment">Select Equipment<span style="color:red">*</span></label>
     <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" 
             class="form-control" style="font-size: 12px; appearance: none; padding-right: 30px;">
-        <option value="" hidden >Selected Equipment</option>
+        <option value="" hidden disabled>Selected Equipment</option>
         <option value="keyboard">Keyboard</option>
         <option value="mouse">Mouse</option>
         <option value="headset">Headset</option>
         <option value="monitor">Monitor</option>
-        <option value="others">Others</option>
+
     </select>
     
     <!-- Dropdown Toggler Icon -->
