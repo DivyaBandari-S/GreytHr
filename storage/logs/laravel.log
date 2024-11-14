@@ -1,0 +1,40 @@
+[2024-11-14 14:59:01] local.INFO: Stored session ID: o0eJaupJNs0dG8H4kx4G8qQ0fXu1M9pdIlPpqgLo  
+[2024-11-14 14:59:01] local.INFO: Existing session ID: None  
+[2024-11-14 14:59:01] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"o0eJaupJNs0dG8H4kx4G8qQ0fXu1M9pdIlPpqgLo","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-14 14:59:01] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /catalog HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlRKd3FpbGJCS3FnRGRRcDYrb0pKWWc9PSIsInZhbHVlIjoiVHpYMmpCdHcwb3pXUm5yNVZ5MkVaQjZwZlBGQVZYRTFXeVd2R3ozYTRNMjZDZVJXbkhXcHovT0Z6SUp2UE92Zkl2VFhxRG9SaU55U3VFbENlSS8vaHVKLy9zVUNPN0oxQi9ONGU1MzJpSXpLVElXR1R2QmdxbGMxaEdYWDBBZDYiLCJtYWMiOiI1MzczNmVjMzE2MGMyZWE5NjI0YjU1YWRlNTNkNmE5OTQ0YWU2ZTJhMDA3ZWUxZTU0N2I3NWE4MDAyMzliOTI3IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InFmUG5UN0pJUUtnbjFia1pxeDA1aWc9PSIsInZhbHVlIjoiZkdUempQQ1o3aHJUSE53TGRaeUZRWTFIbHFVRHJmS2EvMGFQNzI4RjVMOE9taFpKMUNDYTJodGd4SXNnMUpTWkR4S0RvVWZ3OVkrWS9XMVl1OExUVDVYMmFGYlFMcXB5c3VmRHpVU1Q4WjdaTGpjREp1RlFDM3BDclhLbEsvL1ciLCJtYWMiOiJjODgwMzY0MTZhMWI2MWU3MjkxMGI0M2ExZGExOTJjNDdmNzRmMjg5NmYzZWZhYWQ3Mzc4MTUwYmUxMDg4NjhhIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/HelpDesk
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Google Chrome\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=7PldjFQQZpLoWFMw2LO8iZlZpwVrUhGBg9jUBsPW; laravel_session=o0eJaupJNs0dG8H4kx4G8qQ0fXu1M9pdIlPpqgLo
+
+
+
+"}} 
