@@ -386,12 +386,12 @@ class LeaveFormPage extends Component
             // Send notification email if the email exists
             if ($applyingToEmail) {
                 $mail = Mail::to($applyingToEmail); // Send to the applying-to email first
-    
+
                 // Add CC email if available
                 if (!empty($ccToEmail)) {
                     $mail->cc($ccToEmail); // Add CC email
                 }
-    
+
                 // Send the leave cancel notification email
                 $mail->send(new LeaveApprovalNotification(
                     $leaveRequest,        // Leave request object
