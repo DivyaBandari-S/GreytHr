@@ -362,7 +362,7 @@
     
     <!-- Dropdown Toggler Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
         <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
     </svg>
 

@@ -1,9 +1,9 @@
 <?php
-
+ 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+ 
 return new class extends Migration
 {
     /**
@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('help_desks', function (Blueprint $table) {
             $table->id();
+            $table->string('request_id')->unique();
             $table->string('emp_id');
             $table->string('category');
             $table->string('mail');
@@ -32,7 +33,7 @@ return new class extends Migration
             $table->enum('selected_equipment',['keyboard', 'mouse', 'monitor','headset','others']);
             $table->enum('priority', ['High', 'Medium', 'Low']); // Priority field with enum values
             $table->timestamps();
-
+ 
             $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
@@ -40,7 +41,7 @@ return new class extends Migration
                 ->onUpdate('cascade');
         });
     }
-
+ 
     /**
      * Reverse the migrations.
      */

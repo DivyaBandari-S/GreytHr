@@ -48,6 +48,7 @@ class PageTitle extends Component
             'home' => 'Home',
             'Feeds' => 'Feeds',
             'everyone'=>'Feeds',
+            'events'=>'Feeds',
             'emp-post-requests'=>'Feeds',
             'people' => 'People',
             'profile.info' => 'Employee Information',
