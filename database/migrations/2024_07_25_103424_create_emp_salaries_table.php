@@ -15,6 +15,7 @@ return new class extends Migration
             $table->smallInteger('id')->autoIncrement();
             $table->smallInteger('sal_id');
             $table->string('salary'); // Use string for encrypted salary
+            $table->date('month_of_sal');
             $table->date('effective_date');
             $table->string('remarks')->nullable();
             $table->timestamps();

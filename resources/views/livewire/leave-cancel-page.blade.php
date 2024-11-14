@@ -107,9 +107,8 @@
                     @if($showApplyingToContainer)
                     <div class="searchContainer">
                         <!-- Content for the search container -->
-                        <div class="row mb-2 py-0 ">
-                            <div class="row d-flex align-items-center justify-content-between">
-                                <div class="col-md-10 m-0 py-0 px-2">
+                            <div class="aaCont-search d-flex align-items-center justify-content-between">
+                                <div class=" m-0 py-0 px-2">
                                     <div class="input-group">
                                         <input
                                             wire:model="searchQuery"
@@ -130,14 +129,13 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-2 m-0 p-0">
+                                <div class="aaCont-search m-0 p-0">
                                     <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close">
                                         <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
                                         </span>
                                     </button>
                                 </div>
                             </div>
-                        </div>
 
                         <!-- Your Blade file -->
                         <div class="scrollApplyingTO">
@@ -249,8 +247,8 @@
 
                     @if($showCcRecipents)
                     <div class="ccContainer " x-data="{ open: @entangle('showCcRecipents') }" x-cloak @click.away="open = false">
-                        <div class="row  d-flex align-items-center justify-content-between">
-                            <div class="col-md-10 m-0 py-0 px-2">
+                        <div class="  d-flex align-items-center justify-content-between">
+                            <div class="aaCont-search m-0 py-0 px-2">
                                 <div class="input-group">
                                     <input wire:model.debounce.500ms="searchTerm" wire:input="searchCCRecipients" id="searchInput" type="text" class="form-control placeholder-small" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1" wire:keydown.enter.prevent="handleEnterKey">
                                     <div class="input-group-append searchBtnBg d-flex align-items-center">
@@ -261,7 +259,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-2 m-0 p-0">
+                            <div class="aaCont-search m-0 p-0">
                                 <button wire:click="closeCcRecipientsContainer" type="button" class="close rounded px-1 py-0" aria-label="Close">
                                     <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i></span>
                                 </button>
