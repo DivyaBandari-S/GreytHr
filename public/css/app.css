@@ -204,6 +204,19 @@
     font-weight: 500;
 }
 
+.prof-sub-heading{
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+}
+.prof-sub-heading-value{
+    color: #2a2828;
+    font-size: var(--sub-headings-font-size);
+}
+.normalTextMainProf{
+    color: var(--label-color);
+    font-weight: 600;
+    font-size: var(--sub-headings-font-size);
+}
 .normalText {
     color: var(--main-heading-color);
     font-weight: 500;
@@ -713,7 +726,25 @@ body {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
-
+div.align-prof-dev{
+    display: flex;
+    flex-direction: row;
+}
+div.profile-columns{
+display: flex;
+justify-content: space-between;
+flex-direction: column;
+}
+.img-thumbnail {
+    padding: .25rem;
+    background-color: var(--bs-body-bg);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    max-width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+    width: 90px;
+}
 /* Icons */
 
 /*
@@ -2612,7 +2643,15 @@ td {
     .shift-roster-download-and-dropdown-for-attendance-muster {
         margin-left: 10px;
     }
-
+    div.align-prof-dev{
+        display: flex;
+        flex-direction: column;
+    }
+    div.profile-columns{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
 }
 
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -3693,7 +3732,6 @@ input[type="radio"] {
 
 .accordion-body {
     border-radius: 10px;
-    display: none;
     background-color: #fff;
 }
 
@@ -6611,12 +6649,7 @@ select .yearSelect {
     border-bottom: 1px solid #bebbbb !important;
 }
 
-
-
-
-
 /* Salary Revision Module styles ends */
-
 .custom-table-wrapper-leave-details {
     position: relative;
     /* max-height: 130px; */
@@ -9632,11 +9665,6 @@ peoples module styles started */
         margin-top: 20px;
     }
 
-    .col {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
 }
 
 @media screen and (max-height: 320px) {
@@ -9737,11 +9765,6 @@ peoples module styles started */
         width: 100%;
     }
 }
-@media screen and (max-width: 360px) {
-    .fl-main-container[data-position$=-center] {
-        left: 0%;
-    }
-}
 @media screen and (max-width: 760px) {
     .view-details-container {
         display: flex;
@@ -9766,6 +9789,10 @@ peoples module styles started */
         justify-content: start;
         align-items: center;
         margin-top: 20px;
+    }
+
+    .search-btn-leave {
+        margin-left: 10px; /* Space between input and button */
     }
 }
 
@@ -9842,10 +9869,6 @@ peoples module styles started */
 
     .dropdown {
         width: 30%;
-    }
-
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
     }
 }
 
@@ -9957,25 +9980,32 @@ peoples module styles started */
 }
 
 @media (max-width: 346px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
-
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
-
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
     .custom-nav-tabs {
         /* flex-direction: column; */
         width: 100%;
     }
+
 }
 
 @media (max-width: 992px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
+    .mbl-dev-closed{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
-
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
@@ -10205,17 +10235,4 @@ div.fl-main-container[data-position="top-center"] {
         }
     }
 
-div.fl-main-container[data-position="top-center"] {
-    left: 50%;
-    transform: translateX(-50%);
-}
 
-    @media (max-width: 768px) {
-        div.fl-main-container[data-position="top-center"] {
-            left: 0;
-            transform: none;
-            width: 100%;
-            margin: 0;
-            padding: 10px;
-        }
-    }
