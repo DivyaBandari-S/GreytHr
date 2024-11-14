@@ -1,6 +1,6 @@
 <div class="leavePageContent position-relative">
    <div class="position-absolute" wire:loading
-      wire:target="toggleSection,toggleSideSection,navigateToPendingDetails,navigateToHistoryDetails">
+      wire:target="toggleSection,toggleSideSection,navigateToPendingDetails,navigateToHistoryDetails,cancelLeaveCancel,cancelLeave">
       <div class="loader-overlay">
          <div class="loader">
             <div></div>

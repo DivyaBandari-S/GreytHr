@@ -8,43 +8,43 @@
 
 <body>
     @if($forMainRecipient)
-    <p>Hi, {{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}],</p>
-    @if($leaveRequest->category_type === 'Leave')
-    @if($leaveRequest->leave_status === 2)
-    <p>Your leave application has been accepted.</p>
+        <p>Hi, {{ ucwords(strtolower($employeeDetails->first_name)) }} {{ ucwords(strtolower($employeeDetails->last_name)) }} [{{ $employeeDetails->emp_id }}],</p>
+        
+        @if($leaveRequest->category_type === 'Leave')
+            @if($leaveRequest->leave_status === 2)
+                <p>Your leave application has been accepted.</p>
+            @else
+                <p>Your leave application has been rejected.</p>
+            @endif
+        @elseif($leaveRequest->category_type === 'Leave Cancel')
+            @if($leaveRequest->cancel_status === 2)
+                <p>Your leave cancel application has been accepted.</p>
+            @else
+                <p>Your leave cancel application has been rejected.</p>
+            @endif
+        @endif
     @else
-    <p>Your leave application has been rejected.</p>
+        <p>Hi,</p>
+        <br>
+        @if($leaveRequest->category_type === 'Leave')
+            @php
+                $statusMap = [
+                    2 => 'Approved',
+                    3 => 'Rejected',
+                    4 => 'Withdrawn',
+                    5 => 'Pending',
+                    6 => 'Re-applied',
+                    7 => 'Pending'
+                ];
+                $leaveStatusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
+            @endphp
+            <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave application has been {{$leaveStatusText }}.</p>
+        @else
+            <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave cancel application has been {{ $statusMap[$leaveRequest->cancel_status] ?? 'Unknown' }}.</p>
+        @endif
     @endif
-    @elseif($leaveRequest->category_type === 'Leave Cancel')
-    @if($leaveRequest->cancel_status === 2)
-    <p>Your leave cancel application has been accepted.</p>
-    @else
-    <p>Your leave cancel application has been rejected.</p>
-    @endif
-    @endif
-    @else
-    <p>Hi,</p>
 
-    @if($leaveRequest->category_type === 'Leave')
-    @php
-    $statusMap = [
-    2 => 'Approved',
-    3 => 'Rejected',
-    4 => 'Withdrawn',
-    5 => 'Pending',
-    6 => 'Re-applied',
-    7 => 'Pending Leave Cancel'
-    ];
-
-    $leaveStatusText = $statusMap[$leaveRequest->leave_status] ?? 'Unknown';
-    $cancelStatusText = $statusMap[$leaveRequest->cancel_status] ?? 'Unknown';
-    @endphp
-    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave application has been {{$leaveStatusText }}.</p>
-    @else
-    <p>{{ ucwords(strtolower($employeeDetails->first_name)) }} [{{ $employeeDetails->emp_id }}] leave cancel application has been {{ $cancelStatusText }}.</p>
-    @endif
-    @endif
-
+    <!-- Leave Details Table -->
     <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
         <thead>
             <tr>
@@ -84,9 +84,9 @@
                 <td class="fw-500">Reason</td>
                 <td>
                     @if($leaveRequest->category_type === 'Leave')
-                    {{ $leaveRequest->reason }}
+                        {{ $leaveRequest->reason }}
                     @else
-                    {{ $leaveRequest->leave_cancel_reason }}
+                        {{ $leaveRequest->leave_cancel_reason }}
                     @endif
                 </td>
             </tr>
@@ -94,10 +94,9 @@
     </table>
 
     <p>Regards</p>
-
     <p>Note: This is an auto-generated mail. Please do not reply.</p>
-
     <p>PS: "This e-mail is generated from info@s6.payg-india.com"</p>
 </body>
+
 
 </html>
