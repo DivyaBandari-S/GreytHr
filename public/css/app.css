@@ -2418,9 +2418,9 @@ td {
     cursor: pointer;
 }
 
-.hidden {
+/* .hidden {
     opacity: 0;
-}
+} */
 
 .emoji {
     text-align: center;
@@ -3196,33 +3196,37 @@ input[type="radio"] {
     height: 80px;
     width: 80px;
     border-radius: 50%;
-    background-color: orange;
+    background-color: #fde5c1;
+    /* background-color: orange; */
     position: absolute;
     z-index: 0;
-    top: 5px;
-    left: 5px;
+    top: 15px;
+    left: 10px;
+    border: 1px solid #f2b040;
 }
 .smallCircle {
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    background-color: orangered;
+    /* background-color: orangered; */
+    background-color: #f2b040;
     position: absolute;
     right: 7px;
     top: 5px;
 }
 .homeBaneerCard {
     position: relative;
-    min-height: 195px;
+    /* min-height: 195px; */
     backdrop-filter: blur(5px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     /* background-color: rgba(255, 255, 255, 0.75); */
-    background-color: #00000059;
+    /* background-color: #00000059; */
+    background-color: #ffffff40;
     border-radius: 10px;
 }
 .homeBaneerCard p,
 .homeBaneerCard .viewSwipesList {
-    color: #fff !important;
+    color: #02114f !important;
 }
 .homeBaneerCard .showTimer {
     color: #02114f !important;
