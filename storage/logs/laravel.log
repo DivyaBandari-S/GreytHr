@@ -1,0 +1,444 @@
+[2024-11-15 16:04:55] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' (Connection: mysql, SQL: select * from `tasks` where date(`due_date`) = 2024-11-15 and `status` != 11 and `reminder_sent` = 0) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' (Connection: mysql, SQL: select * from `tasks` where date(`due_date`) = 2024-11-15 and `status` != 11 and `reminder_sent` = 0) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\app\\Console\\Commands\\SendTaskReminder.php(46): Illuminate\\Database\\Eloquent\\Builder->get()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Console\\Commands\\SendTaskReminder->handle()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SendTaskReminder), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#21 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:423)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(423): PDO->prepare('select * from `...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\app\\Console\\Commands\\SendTaskReminder.php(46): Illuminate\\Database\\Eloquent\\Builder->get()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Console\\Commands\\SendTaskReminder->handle()
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SendTaskReminder), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 {main}
+"} 
+[2024-11-15 16:11:44] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' (Connection: mysql, SQL: select * from `tasks` where date(`due_date`) = 2024-11-15 and `status` != 11 and `reminder_sent` = 0) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' (Connection: mysql, SQL: select * from `tasks` where date(`due_date`) = 2024-11-15 and `status` != 11 and `reminder_sent` = 0) at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#8 C:\\xampp\\htdocs\\GreytHr\\app\\Console\\Commands\\SendTaskReminder.php(46): Illuminate\\Database\\Eloquent\\Builder->get()
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Console\\Commands\\SendTaskReminder->handle()
+#10 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SendTaskReminder), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#21 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 {main}
+
+[previous exception] [object] (PDOException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reminder_sent' in 'where clause' at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:423)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(423): PDO->prepare('select * from `...')
+#1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(816): Illuminate\\Database\\Connection->Illuminate\\Database\\{closure}('select * from `...', Array)
+#2 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
+#3 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(414): Illuminate\\Database\\Connection->run('select * from `...', Array, Object(Closure))
+#4 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2913): Illuminate\\Database\\Connection->select('select * from `...', Array, true)
+#5 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2902): Illuminate\\Database\\Query\\Builder->runSelect()
+#6 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(3456): Illuminate\\Database\\Query\\Builder->Illuminate\\Database\\Query\\{closure}()
+#7 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Query\\Builder.php(2901): Illuminate\\Database\\Query\\Builder->onceWithColumns(Array, Object(Closure))
+#8 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(739): Illuminate\\Database\\Query\\Builder->get(Array)
+#9 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php(723): Illuminate\\Database\\Eloquent\\Builder->getModels(Array)
+#10 C:\\xampp\\htdocs\\GreytHr\\app\\Console\\Commands\\SendTaskReminder.php(46): Illuminate\\Database\\Eloquent\\Builder->get()
+#11 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(36): App\\Console\\Commands\\SendTaskReminder->handle()
+#12 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Util.php(41): Illuminate\\Container\\BoundMethod::Illuminate\\Container\\{closure}()
+#13 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(93): Illuminate\\Container\\Util::unwrapIfClosure(Object(Closure))
+#14 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\BoundMethod.php(35): Illuminate\\Container\\BoundMethod::callBoundMethod(Object(Illuminate\\Foundation\\Application), Array, Object(Closure))
+#15 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Container\\Container.php(662): Illuminate\\Container\\BoundMethod::call(Object(Illuminate\\Foundation\\Application), Array, Array, NULL)
+#16 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(211): Illuminate\\Container\\Container->call(Array)
+#17 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Command\\Command.php(326): Illuminate\\Console\\Command->execute(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#18 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Console\\Command.php(180): Symfony\\Component\\Console\\Command\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Illuminate\\Console\\OutputStyle))
+#19 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(1096): Illuminate\\Console\\Command->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#20 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(324): Symfony\\Component\\Console\\Application->doRunCommand(Object(App\\Console\\Commands\\SendTaskReminder), Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#21 C:\\xampp\\htdocs\\GreytHr\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#22 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#23 C:\\xampp\\htdocs\\GreytHr\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#24 {main}
+"} 
+[2024-11-15 16:28:17] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:28:17] local.INFO: Existing session ID: None  
+[2024-11-15 16:28:17] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:28:17] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IlFJY2h6QUhpRlRDaVZKeVVPSXN5N2c9PSIsInZhbHVlIjoieDlVc0lxeU9oT3BYRDZqV2JCcWhkSXQxdkMyUE9KMVBFZDhMTHpYaW9ZUmpjK2NseTVDeEMwVzE0NDltckI1dlJrWWFvZXlHeDhSV2Z5THFWVWw5VW9halYvYlpRQW1TbVdPbUJ0dndKUzFjUXl3RUJsZU85b0hFckFPZTBpRjYiLCJtYWMiOiI1MWMzYTM2NzIwZjYxZGU1YjBkNTc4ODY5Mzk5MDc5YmY1MmQ3YWRkMjYyY2NmNTFjZjMxN2Q3MmM2MTNiNmI2IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImZXc2JlczA0c0Ewaisxamp0ekQ5blE9PSIsInZhbHVlIjoiRkFsYnVFaG1SdHk0NFREVm5vbjlva3M1M0xWMjBuOHdNMWNNV1BvdjN1aXFkcEQ2c1hwT3RLRk5HVjk0YjhwaW4zV0tvNHNFc2lLbGRXY3NXUUVXdkpndXRrL042QnB6QlNOd3I1V2tDSG9walVVa0V1SmZMK1FqNFB1dWVFamEiLCJtYWMiOiJiOGFmMjBkNWEwZWE1OTgzZDE3MmJhOTg2MDliMTA2NzMxMWVhMDZmYzZlODYzNDVkZWM5NDJjZDYxYjZhZTYyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:29:18] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:29:18] local.INFO: Existing session ID: None  
+[2024-11-15 16:29:18] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:29:18] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ing2NnBXVk8rV2ZDbVFrU1JpMTdnVWc9PSIsInZhbHVlIjoiNGh5YVM5VWc3N3RUQ2s3UzZabDJ2WmZDS21ONHNWQlJ6aGNGdGFCWDZJWG15NzZjSVZSaStsMDBSbWFDM3ZuMGxXOE9ycVVhQmhlcUtEOGRYZFNpWjVLem9Tc3pNWXBxUHdvU2I0SXYwbXJ0emlQREhlS3BPNWxQbVR0TWt0TjkiLCJtYWMiOiJhYTljNGVhMzIzMzdhMWMxZWFmMWFjZDNjMTQ2YWQ4YTcyNzhjMzU5YmU3ZDRjNGIxZDZjZDUzNDcxOGM4ZWI0IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InlVcXMrcE5kalNmUDRaVElGL1RqUmc9PSIsInZhbHVlIjoiNEZ0R2txdEMzdWpqTzVMZUR6d0dudldqdmN2ODYyeFdZdkI2R281eVdXOFduY0JaMHRoWUhzcEFPNXM4U3JxcGl1UmVKYlNXZ3lvZWI0R2ozNHBVZ1Z2c1ZnaEJ1S3VtWGFvRG5ZRHpJSi9YTjhCMXkwZ3NFSDRSZ2hGOWpyamoiLCJtYWMiOiI4MWZiMTY5YTVlNzk0MGM0YWNjNDA0YTBkYjUwNjIwM2MyN2RlZWEyNzNhZTJhM2Y2ODU3OGQ5N2M5YmRlMmQ4IiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/Feeds
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:34:55] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:34:55] local.INFO: Existing session ID: None  
+[2024-11-15 16:34:55] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:34:55] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6Ik1STmtsT2RyditHdHhsMU0xOXpCT3c9PSIsInZhbHVlIjoiMzFKb1BOZmJzVWYzZkZDb3hNRlYzZkFETjdkK1FVckpzSFBLSGErMG5DR1JYT3NqbVlMUlZ5ajVubENQYm0vcjd4Vk5iTFVGdElDTmFuZ3pSdkxscndMWE93T2FsT1Nma05JQ0JTUm5xbG9GM1YwRFhnWSt0dnh5UFdCS1BQOTMiLCJtYWMiOiJiMjllZjM2NTQ2ZDg5ZmM5OTNlNjM4OTljYjRmMDI0M2E4YWIyZmUxYTg4MjJmMjZlOTcwNDA4NWNkYzIyMDY1IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ik84K2xjOHBNK0hBUXJWenVocXd3aVE9PSIsInZhbHVlIjoiSHRqbVlGTXZDNU1qeVFpM0FTakFrNzd6SU9SdzV0d2hITDM1dkMxTmlNaWFpK1dGNldwa3lFa00yS2VzQVEvYkEvVmltUHhyMEZINmJ2UG9nc1cvdXM2QVVKRWRzR0pvc3AxUCtjTlJGS0lOWGpRSy9yN0tOS3MzN24yK0k4WVgiLCJtYWMiOiI2Mzk5ODY3N2FjNTY3MjlhOTM2ZThhODgyOTdmNDczNDE0NWU4N2JkZWRjYzY3YzM1ZGU1Njk2MWJhYTU4YmIyIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:35:43] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:35:43] local.INFO: Existing session ID: None  
+[2024-11-15 16:35:43] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:35:43] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6InNqOVhEY0FSM0xaQXRoN2owM3RJVHc9PSIsInZhbHVlIjoiampaVHpUeTNZY3E5cVpjY0doZTVLQ2d1SEFkUksyM3plVHVOVWgxR2RvOWViUnlCU090YjRQZUZqam5TcHFwWkZZSmpTNU1iRm10eDdqYkUrSER2WkoybEJmU2JVOHgwWWdLSEovVjFxb3JwbEJWVFBvZGdqdnVCNzVVazNYbmQiLCJtYWMiOiJiZGM0YjE4NzRhZGU0ZmVhZmU1M2IxODRiNTZhZDVjZjc2ZjExYjBlMWU0YjM3NWVkYjZmYTY5NTRkNGFhMjNlIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6InI3VmFBbndrenFPQVRHcWt2Z2x1YVE9PSIsInZhbHVlIjoiSENhdmNybTZIZ3BKUkJRanRydmpwQkJUMDk0dFZvMjlIS0NMbVR0ZHdrYUJYcDlJdGNTUjdqVklmaVlENlVRelpFL2xWQjNUWTFTVnZOWk9PcXM4WENycWhaT2FZY3NEMFZrNEIzVTFKRXBGZG5NVitRSGI4RTBhSlV1SnFXOEYiLCJtYWMiOiI3M2Y0ZGIwNzY4N2NmNjAwNWE2M2YyYzI0MjE3OTA0MjdkYWQwMmMwYTI1MTU5ZjliYTQ1Mzc4MTBhZTQ3OWMzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:37:08] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:37:08] local.INFO: Existing session ID: None  
+[2024-11-15 16:37:08] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:37:08] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImxIdS94REljWjlxZWRweUtWNm9pVXc9PSIsInZhbHVlIjoiYXVlYzArUmtlSWF2b05IMU44QytMTDNiUUlsUnUyNXVOUXg1TVorRlE2WnVxNytmenVxRVlSMy9tbWROQVV3cnpjVmM4bFZSbjZSaCsvQUlzbVhXZUJRN0RhblRFbnpmNFlrbEtndHdvdXNaZVRJN21sWHA4SFI4dG5RZDVxNWUiLCJtYWMiOiI5NWZmZjA4OGE5MWE3YTg0Zjk3ODdlYTk0ODcwOWQwZTg0YzNmZTg4Y2JlMTZlMmE0NjYxNDg2YTdlMjMxNmQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlWeHRoUWN6dzMwdGJvTmQ0dnB1OHc9PSIsInZhbHVlIjoiZ0k0b05uQVU1Y0wxaHNRRTB1djhYd2ZhTHV0NHo0OE1iandpMWRyZENRZ0ZRUVVpOUJ0OTloeDUxZ0svVk1uQng3cFVQK2xQOHF4Smk0RmNBRG1zcE1ETUdjWUlOU0R4SlhZYUVweTY1MS9yL2h5dFRIdHZoYzNWTXBSRkxNWnoiLCJtYWMiOiJjMmE0YzJiMGY4YjAyMTE2YjEyOGQxODJkZjNiMzE2N2IxZWNiY2VlMjIyOWU4ZjQ3ZmU4NTIzZTJjNTNiMDQzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:37:20] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:37:20] local.INFO: Existing session ID: None  
+[2024-11-15 16:37:20] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:37:20] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImxIdS94REljWjlxZWRweUtWNm9pVXc9PSIsInZhbHVlIjoiYXVlYzArUmtlSWF2b05IMU44QytMTDNiUUlsUnUyNXVOUXg1TVorRlE2WnVxNytmenVxRVlSMy9tbWROQVV3cnpjVmM4bFZSbjZSaCsvQUlzbVhXZUJRN0RhblRFbnpmNFlrbEtndHdvdXNaZVRJN21sWHA4SFI4dG5RZDVxNWUiLCJtYWMiOiI5NWZmZjA4OGE5MWE3YTg0Zjk3ODdlYTk0ODcwOWQwZTg0YzNmZTg4Y2JlMTZlMmE0NjYxNDg2YTdlMjMxNmQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlWeHRoUWN6dzMwdGJvTmQ0dnB1OHc9PSIsInZhbHVlIjoiZ0k0b05uQVU1Y0wxaHNRRTB1djhYd2ZhTHV0NHo0OE1iandpMWRyZENRZ0ZRUVVpOUJ0OTloeDUxZ0svVk1uQng3cFVQK2xQOHF4Smk0RmNBRG1zcE1ETUdjWUlOU0R4SlhZYUVweTY1MS9yL2h5dFRIdHZoYzNWTXBSRkxNWnoiLCJtYWMiOiJjMmE0YzJiMGY4YjAyMTE2YjEyOGQxODJkZjNiMzE2N2IxZWNiY2VlMjIyOWU4ZjQ3ZmU4NTIzZTJjNTNiMDQzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:37:39] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:37:39] local.INFO: Existing session ID: None  
+[2024-11-15 16:37:39] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:37:39] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImxIdS94REljWjlxZWRweUtWNm9pVXc9PSIsInZhbHVlIjoiYXVlYzArUmtlSWF2b05IMU44QytMTDNiUUlsUnUyNXVOUXg1TVorRlE2WnVxNytmenVxRVlSMy9tbWROQVV3cnpjVmM4bFZSbjZSaCsvQUlzbVhXZUJRN0RhblRFbnpmNFlrbEtndHdvdXNaZVRJN21sWHA4SFI4dG5RZDVxNWUiLCJtYWMiOiI5NWZmZjA4OGE5MWE3YTg0Zjk3ODdlYTk0ODcwOWQwZTg0YzNmZTg4Y2JlMTZlMmE0NjYxNDg2YTdlMjMxNmQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlWeHRoUWN6dzMwdGJvTmQ0dnB1OHc9PSIsInZhbHVlIjoiZ0k0b05uQVU1Y0wxaHNRRTB1djhYd2ZhTHV0NHo0OE1iandpMWRyZENRZ0ZRUVVpOUJ0OTloeDUxZ0svVk1uQng3cFVQK2xQOHF4Smk0RmNBRG1zcE1ETUdjWUlOU0R4SlhZYUVweTY1MS9yL2h5dFRIdHZoYzNWTXBSRkxNWnoiLCJtYWMiOiJjMmE0YzJiMGY4YjAyMTE2YjEyOGQxODJkZjNiMzE2N2IxZWNiY2VlMjIyOWU4ZjQ3ZmU4NTIzZTJjNTNiMDQzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
+[2024-11-15 16:38:01] local.INFO: Stored session ID: 4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z  
+[2024-11-15 16:38:01] local.INFO: Existing session ID: None  
+[2024-11-15 16:38:01] local.INFO: Session updated {"user_id":"XSS-0481","session_id":"4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z","device_type":"Desktop","location":"New Haven, United States"} 
+[2024-11-15 16:38:01] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /tasks HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6ImxIdS94REljWjlxZWRweUtWNm9pVXc9PSIsInZhbHVlIjoiYXVlYzArUmtlSWF2b05IMU44QytMTDNiUUlsUnUyNXVOUXg1TVorRlE2WnVxNytmenVxRVlSMy9tbWROQVV3cnpjVmM4bFZSbjZSaCsvQUlzbVhXZUJRN0RhblRFbnpmNFlrbEtndHdvdXNaZVRJN21sWHA4SFI4dG5RZDVxNWUiLCJtYWMiOiI5NWZmZjA4OGE5MWE3YTg0Zjk3ODdlYTk0ODcwOWQwZTg0YzNmZTg4Y2JlMTZlMmE0NjYxNDg2YTdlMjMxNmQ4IiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6ImlWeHRoUWN6dzMwdGJvTmQ0dnB1OHc9PSIsInZhbHVlIjoiZ0k0b05uQVU1Y0wxaHNRRTB1djhYd2ZhTHV0NHo0OE1iandpMWRyZENRZ0ZRUVVpOUJ0OTloeDUxZ0svVk1uQng3cFVQK2xQOHF4Smk0RmNBRG1zcE1ETUdjWUlOU0R4SlhZYUVweTY1MS9yL2h5dFRIdHZoYzNWTXBSRkxNWnoiLCJtYWMiOiJjMmE0YzJiMGY4YjAyMTE2YjEyOGQxODJkZjNiMzE2N2IxZWNiY2VlMjIyOWU4ZjQ3ZmU4NTIzZTJjNTNiMDQzIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Sec-Ch-Ua:                 \"Chromium\";v=\"130\", \"Microsoft Edge\";v=\"130\", \"Not?A_Brand\";v=\"99\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            none
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0
+
+Cookie: XSRF-TOKEN=n4uE7yPnnVjk2JOqbqfvwSzJQ8U402ZDUPUtbIDf; laravel_session=4pVwKktsMd6SlLcWWQaUooBWfuseOfSfXevRpy3z
+
+
+
+"}} 
