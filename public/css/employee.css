@@ -1047,7 +1047,7 @@ main .btn-send:hover {
 		flex: 1;
 		padding: 10px;
 		overflow: auto;
-	  height: calc(100vh - 207px);
+	  height: calc(100vh - 212px);
 	}
 	
 	.chat-footer {
@@ -1399,3 +1399,119 @@ main .btn-send:hover {
         margin-bottom: 0px !important;
     }
 }
+
+.msgCount {
+	line-height: normal !important;
+    font-size: 9px;
+    font-weight: 500;
+    position: absolute !important;
+    left: 12px;
+}
+.msgCountSq {
+	line-height: normal !important;
+    font-size: 9px;
+    font-weight: 500;
+}
+.contSearch {
+	border-left: none;
+    border-color: #dee2e6;
+}
+.contSearch:focus {
+	border-color: #dee2e6;
+}
+
+.chat-body {
+    padding: 16px;
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+}
+
+.message {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 12px;
+    max-width: 60%;
+}
+
+.message.received {
+    justify-content: flex-start;
+}
+
+.message.sent {
+    justify-content: flex-end;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message .avatar-chart {
+    width: 32px;
+    height: 32px;
+	margin-right: 8px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #02114f;
+    text-align: center;
+}
+
+.message .avatar-chart i {
+    width: 100%;
+    height: auto;
+	vertical-align: middle;
+	color: #fff;
+	margin-top: 4px;
+}
+
+.message-content {
+    position: relative;
+    padding: 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.message.received .message-content {
+    background-color: #ffffff;
+    color: #333333;
+    border-top-left-radius: 0;
+}
+
+.message.sent .message-content {
+    background-color: #d1f1ff;
+    color: #333333;
+    border-top-right-radius: 0;
+}
+
+.timestamp {
+    display: block;
+    font-size: 12px;
+    color: #999999;
+    margin-top: 4px;
+    text-align: right;
+}
+
+/* Chat Footer */
+.chat-footer {
+    padding: 10px 16px;
+    background-color: #ffffff;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+}
+
+.input-group .form-control {
+    /* border-radius: 20px; */
+    padding: 8px 16px;
+    font-size: 14px;
+}
+
+.input-group .btn {
+    background-color: transparent;
+    border: none;
+    color: #333333;
+}
+
+.input-group .btn i {
+    font-size: 18px;
+}
+
