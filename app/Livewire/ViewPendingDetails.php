@@ -297,10 +297,20 @@ class ViewPendingDetails extends Component
 
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
-                            foreach ($ccEmails as $ccEmail) {
-                                Mail::to($ccEmail)
-                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
                             }
+
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
                         }
                     }
                 }
@@ -375,10 +385,20 @@ class ViewPendingDetails extends Component
 
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
-                            foreach ($ccEmails as $ccEmail) {
-                                Mail::to($ccEmail)
-                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
                             }
+
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
                         }
                         $this->fetchPendingLeaveApplications();
                     }
@@ -449,10 +469,20 @@ class ViewPendingDetails extends Component
 
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
-                            foreach ($ccEmails as $ccEmail) {
-                                Mail::to($ccEmail)
-                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
                             }
+
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
                         }
                         $this->fetchPendingLeaveApplications();
                     }
@@ -502,10 +532,20 @@ class ViewPendingDetails extends Component
 
                 // Send emails to CC recipients with different content
                 if (!empty($ccEmails)) {
-                    foreach ($ccEmails as $ccEmail) {
-                        Mail::to($ccEmail)
-                            ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                    $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                    // Add CC email if available
+                    if (!empty($ccToEmail)) {
+                        $mail->cc($ccToEmail); // Add CC email
                     }
+
+                    // Send the leave cancel notification email
+                    $mail->send(new LeaveApprovalNotification(
+                        $leaveRequest,        // Leave request object
+                        $applyingToDetails,  // First applying-to recipient's details
+                        $ccToDetails,    // CC details
+                        false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                    ));
                 }
             }
             $this->fetchPendingLeaveApplications();

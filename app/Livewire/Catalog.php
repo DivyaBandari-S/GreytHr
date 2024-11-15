@@ -62,6 +62,7 @@ class Catalog extends Component
     public $cc_to;
     public $peoples;
     public $category;
+    public $requestId;
     public $emergency_contact = '';
     public $filteredPeoples;
     public $selectedPeopleNames = [];
@@ -183,7 +184,8 @@ class Catalog extends Component
         $this->selectedPeople=[];
         $this->addselectedPeople=[];
         $this->isNames=false;
- 
+    $this->searchTerm = '';
+
     }
  
     public function ItRequest()
@@ -619,9 +621,10 @@ class Catalog extends Component
  
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
- 
+
         HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
+       
             'distributor_name' => $this->distributor_name,
             'subject' => $this->subject,
             'description' => $this->description,
@@ -705,10 +708,11 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
- 
- 
+       
+
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
+             
                 'distributor_name' => $this->distributor_name??'-',
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -719,7 +723,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mail' => $this->mail,
                 'mobile' => $this->mobile,
-               
+                
             ]);
  
             FlashMessageHelper::flashSuccess ( 'Request created successfully.');
@@ -786,11 +790,11 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
- 
- 
+
+      
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-             
+               
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_path' =>  $fileContent ,
@@ -800,7 +804,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mobile' => 'N/A',
                 'mail' => $this->mail??'-',
-               
+                
                 'distributor_name' => 'N/A',
             ]);
  
@@ -825,7 +829,7 @@ class Catalog extends Component
     {
         try {
             $messages=[
-                'subject' =>'Business Justification is required',
+                'subject' =>'Subject is required',
                 'description'=>'Specific Information is required',
                   'selected_equipment'=>'Selected equipment is required'
              ];
@@ -866,11 +870,11 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
- 
- 
- 
+
+       
         HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
+          
             'subject' => $this->subject,
             'description' => $this->description,
             'selected_equipment' => $this->selected_equipment, // Ensure this is correctly referenced
@@ -881,7 +885,7 @@ class Catalog extends Component
             'category' => $this->category ?? '-',
             'mail' => 'N/A',
             'mobile' => 'N/A',
-       
+        
             'distributor_name' => 'N/A',
         ]);
    

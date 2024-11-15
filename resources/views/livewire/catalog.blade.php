@@ -357,12 +357,12 @@
         <option value="mouse">Mouse</option>
         <option value="headset">Headset</option>
         <option value="monitor">Monitor</option>
-        <option value="others">Others</option>
+
     </select>
     
     <!-- Dropdown Toggler Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 70%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
         <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
     </svg>
 
@@ -732,12 +732,12 @@
 
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
 
@@ -915,12 +915,12 @@
 
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
 
@@ -1282,12 +1282,12 @@
 
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
 
@@ -1483,12 +1483,12 @@
 
                                                                 <div class="form-group col-md-6 mt-2">
                                                                     <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
                                                                     @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
                                                                 <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
                                                                     <label for="contactDetails">Email <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" readonly>
+                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
                                                                     @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
                                                                 </div>
 
