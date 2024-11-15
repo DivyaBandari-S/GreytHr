@@ -25,11 +25,17 @@ use App\Models\HelpDesks;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HelpDeskNotification;
+use App\Models\IT;
+
 class Catalog extends Component
 {
  
     use WithFileUploads;
     public $searchTerm = '';
+    public $superAdmins;
+
     public $mobile;
     public $showModal = true;
 
@@ -128,7 +134,7 @@ class Catalog extends Component
     $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
     ->whereNotIn('employee_status', ['rejected', 'terminated'])
     ->get();
- 
+    $this->superAdmins = IT::where('role', 'super_admin')->get();
     if ($this->employeeDetails) {
         // Combine first and last names
         $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
@@ -185,6 +191,8 @@ class Catalog extends Component
         $this->addselectedPeople=[];
         $this->isNames=false;
     $this->searchTerm = '';
+    $this->filteredPeoples='';
+    $this->peopleData = false;
 
     }
  
@@ -622,7 +630,7 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-        HelpDesks::create([
+        $helpDesk = HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
        
             'distributor_name' => $this->distributor_name,
@@ -637,7 +645,18 @@ class Catalog extends Component
             'mail' => 'N/A',
             'mobile' => 'N/A',
         ]);
-       
+        $superAdmins = IT::where('role', 'super_admin')->get();
+
+        foreach ($superAdmins as $admin) {
+            // Retrieve the first and last names
+            $firstName = $admin->first_name;
+            $lastName = $admin->last_name;
+        
+            // Send Email with first and last names included
+            Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+        }
+        
+   
         FlashMessageHelper::flashSuccess ('Request created successfully.');
         $this->reset();
         return redirect()->to('/HelpDesk');
@@ -710,7 +729,7 @@ class Catalog extends Component
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
        
 
-            HelpDesks::create([
+        $helpDesk = HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
              
                 'distributor_name' => $this->distributor_name??'-',
@@ -725,7 +744,17 @@ class Catalog extends Component
                 'mobile' => $this->mobile,
                 
             ]);
- 
+            $superAdmins = IT::where('role', 'super_admin')->get();
+
+            foreach ($superAdmins as $admin) {
+                // Retrieve the first and last names
+                $firstName = $admin->first_name;
+                $lastName = $admin->last_name;
+            
+                // Send Email with first and last names included
+                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+            }
+            
             FlashMessageHelper::flashSuccess ( 'Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -790,9 +819,19 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $superAdmins = IT::where('role', 'super_admin')->get();
 
+        foreach ($superAdmins as $admin) {
+            // Retrieve the first and last names
+            $firstName = $admin->first_name;
+            $lastName = $admin->last_name;
+        
+            // Send Email with first and last names included
+            Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+        }
+        
       
-            HelpDesks::create([
+        $helpdesk=    HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                
                 'subject' => $this->subject,
@@ -807,7 +846,17 @@ class Catalog extends Component
                 
                 'distributor_name' => 'N/A',
             ]);
- 
+            $superAdmins = IT::where('role', 'super_admin')->get();
+
+            foreach ($superAdmins as $admin) {
+                // Retrieve the first and last names
+                $firstName = $admin->first_name;
+                $lastName = $admin->last_name;
+            
+                // Send Email with first and last names included
+                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+            }
+            
             FlashMessageHelper::flashSuccess  ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -872,7 +921,7 @@ class Catalog extends Component
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
        
-        HelpDesks::create([
+        $helpdesk=HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
           
             'subject' => $this->subject,
@@ -889,7 +938,17 @@ class Catalog extends Component
             'distributor_name' => 'N/A',
         ]);
    
- 
+        $superAdmins = IT::where('role', 'super_admin')->get();
+
+        foreach ($superAdmins as $admin) {
+            // Retrieve the first and last names
+            $firstName = $admin->first_name;
+            $lastName = $admin->last_name;
+        
+            // Send Email with first and last names included
+            Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+        }
+        
         FlashMessageHelper::flashSuccess ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -948,7 +1007,7 @@ class Catalog extends Component
         $employee = auth()->guard('emp')->user();
         $employeeId = $employee->emp_id;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
- 
+        $superAdmins = IT::where('role', 'super_admin')->get();
  
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
@@ -959,7 +1018,7 @@ class Catalog extends Component
             ->get();
         $records = HelpDesks::all();
         return view('livewire.catalog', [
-            'peopleData' => $peopleData, 'records' => $records
+            'peopleData' => $peopleData, 'records' => $records,    'superAdmins' => $superAdmins,
         ]);
     }
 }

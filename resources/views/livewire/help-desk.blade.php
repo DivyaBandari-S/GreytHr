@@ -311,122 +311,89 @@
                     </tr>
                 </thead>
                 <tbody>
-                @if($searchData && $searchData->where('status', 'Recent')->isEmpty())
-    <tr>
-        <td colspan="7" style="text-align: center;border:none">
-            <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
-        </td>
-    </tr>
-    @else
-                    @foreach ($searchData->sortByDesc('created_at') as $index => $record)
-                    @if($record->status == "Recent")
-                    <tr class="helpdesk-main" style="background-color: white;border-bottom:none">
-                        <td class="helpdesk-request" >
-                            {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
-                            <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
-                        </td>
-                        <td class="helpdesk-request" >
-                            {{ $record->request_id ??'-'}}
-                        </td>
-                        <td class="helpdesk-request" >
-                            {{ $record->category ??'-'}}
-                        </td>
-                        <td class="helpdesk-request" >
-                            {{ $record->subject ??'-' }}
-                        </td>
-                        <td class="helpdesk-request" >
-                            {{ $record->description ??'-' }}
-                        </td>
-                        <td class="helpdesk-request" >
+                @if($searchData && $searchData->whereIn('status', ['Open', 'Recent'])->isEmpty())
+<tr>
+    <td colspan="7" style="text-align: center;border:none">
+        <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
+    </td>
+</tr>
+@else
+    @foreach ($searchData->whereIn('status', ['Open', 'Recent'])->sortByDesc('created_at') as $index => $record)
+        <tr class="helpdesk-main" style="background-color: white;border-bottom:none">
+            <td class="helpdesk-request">
+                {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
+                <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->request_id ??'-'}}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->category ??'-'}}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->subject ??'-' }}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->description ??'-' }}
+            </td>
+            <td class="helpdesk-request">
+                @if ($record->file_path)
+                    @if(strpos($record->mime_type, 'image') !== false)
+                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
+                            View Image
+                        </a>
+                    @else
+                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                            Download file
+                        </a>
+                    @endif
+                @else
+                    <p style="color: gray;">-</p>
+                @endif
 
-
-
-                            @if ($record->file_path)
-                            @if(strpos($record->mime_type, 'image') !== false)
-                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
-                                View Image
-                            </a>
-                            @else
-                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
-                                Download file
-                            </a>
-
-                            @endif
-                            @else
-                            {{-- Show this message if no file is attached --}}
-                            <p style="color: gray;">-</p>
-                            @endif
-
-                            @if ($showImageDialog)
-                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" src="data:image/jpeg;base64,{{ ($imageUrl) }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
-                                    </div>
+                @if ($showImageDialog)
+                    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">View File</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+                                    <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                                 </div>
                             </div>
-                            <div class="modal-backdrop fade show"></div>
-                            @endif
+                        </div>
+                    </div>
+                    <div class="modal-backdrop fade show"></div>
+                @endif
+            </td>
+            <td class="helpdesk-request">
+                @php
+                    $ccToArray = explode(',', $record->cc_to ?? '-');
+                @endphp
+                {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->priority ??'-'}}
+            </td>
+        </tr>
 
+        @if (count($ccToArray) > 2)
+        <tr class="border" style="border: none !important;">
+            <td class="boder" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
+                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
+                    CC TO: {{ implode(', ', $ccToArray) }}
+                </div>
+            </td>
+        </tr>
+        @endif
+    @endforeach
+@endif
 
-
-
-
-
-
-
-
-
-
-
-                            {{-- Generic download link for other file types --}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                        </td>
-                        <td class="helpdesk-request" >
-                            @php
-                            $ccToArray = explode(',', $record->cc_to ?? '-');
-                            @endphp
-                            {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
-                        </td>
-                        <td class="helpdesk-request" >
-                            {{ $record->priority ??'-'}}
-                        </td>
-                    </tr>
-
-                    @if (count($ccToArray) > 2)
-                    <tr class="border" style="border: none !important;">
-                        <td class="boder" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
-                            <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
-                                CC TO: {{ implode(', ', $ccToArray) }}
-                            </div>
-                        </td>
-                    </tr>
-                    @endif
-                    @endif
-                    @endforeach
-                    @endif
                 </tbody>
             </table>
         </div>
