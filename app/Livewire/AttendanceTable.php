@@ -65,6 +65,7 @@ class AttendanceTable extends Component
     public $toDate;
     public $city='-';
 
+    public $employee_shift_type;
     public $öpenattendanceperiod = false;
     public $postal_code='-';
     protected $listeners = [
@@ -92,6 +93,7 @@ class AttendanceTable extends Component
         $this->country = $location['country'];
         $this->city = $location['city'];
         $this->postal_code = $location['postal_code'];
+        $this->employee_shift_type=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->value('shift_type');
     }
   
     public function updatefromDate()
