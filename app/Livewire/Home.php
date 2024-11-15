@@ -326,7 +326,12 @@ class Home extends Component
             } elseif ($agent->isTablet()) {
                 $deviceName = 'Tablet';
             } elseif ($agent->isDesktop()) {
-                $deviceName = 'Desktop/Laptop';
+                $screenWidth = $_SERVER['HTTP_UA_PIXELS'] ?? null; // Example, actual detection may vary
+                if ($screenWidth && $screenWidth < 1440) { // Example threshold for laptops
+                    $deviceName = 'Laptop';
+                } else {
+                    $deviceName = 'Desktop';
+                }
             } else {
                 $deviceName = 'Unknown Device';
             }

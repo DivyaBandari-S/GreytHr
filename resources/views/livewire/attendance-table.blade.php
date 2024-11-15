@@ -1650,7 +1650,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($isDate)
+                            @if($isDate&&!$isWeekend&&!$isOnLeave&&!$holidayNote)
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
                             00:00
@@ -1660,7 +1660,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($isDate||!$isWeekend)
+                            @if($isDate&&!$isWeekend&&!$isOnLeave&&!$holidayNote)
                             @if(empty($record['last_out_time']))
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
@@ -1674,7 +1674,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($isDate == false||!$isWeekend)
+                            @if($isDate == false||$isWeekend||$isOnLeave||$holidayNote)
                             00:00
                             @elseif(empty($record['last_out_time']))
                             00:00
@@ -1686,7 +1686,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($isDate == false||!$isWeekend)
+                            @if($isDate == false||$isWeekend||$isOnLeave||$holidayNote)
                             00:00
                             @elseif(empty($record['last_out_time']))
                             00:00

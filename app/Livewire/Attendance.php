@@ -1974,6 +1974,7 @@ class Attendance extends Component
             $this->regularised_reason = null;
         }
     }
+    
     public function render()
     {
         try {
@@ -2000,9 +2001,18 @@ class Attendance extends Component
 
             if ($this->changeDate == 1) {
                 $this->currentDate2 = $this->dateclicked;
-                
-                $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->first();
-                $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->orderBy('updated_at', 'desc')->first();
+                if($this->isEmployeeRegularisedOnDate($this->currentDate2)==true)
+                {
+
+                    $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->where('is_regularized',1)->first();
+                    $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->where('is_regularized',1)->first();
+                }
+                else
+                {
+                    $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->first();
+                    $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->orderBy('updated_at', 'desc')->first();
+                }
+               
                 if ( isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
                     $this->last_out_time = substr($this->currentDate2recordout->swipe_time, 0, 5);
