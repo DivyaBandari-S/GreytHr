@@ -313,6 +313,7 @@ $("#back").click(function(e){
 function openMsgDiv() {
     $("#chatScreen").show();
     $('.bio-div').hide();
+    $("#chatScreen input.form-control").focus();
 }
 
 // Hide chat screen when close button is clicked
