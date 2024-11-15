@@ -662,6 +662,7 @@ public $closedSearch = '';
             'searchData' => $this->filterData ?: $this->records,
             'requestCategories' => $this->requestCategories,
             'peopleData' => $this->peopleData,
+            
         ]);
     }
 }
