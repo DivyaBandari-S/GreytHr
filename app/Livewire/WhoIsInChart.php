@@ -97,7 +97,7 @@ class WhoIsInChart extends Component
     // You can handle the selected value here
     if ($value === 'GS') {
         $this->selectedShift='GS';
-        $this->formattedSelectedShift='Genaral Shift';
+        $this->formattedSelectedShift='General Shift';
 
     } elseif ($value === 'AS') {
         // Handle afternoon shift (AS)
