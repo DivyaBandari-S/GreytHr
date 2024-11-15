@@ -8,10 +8,10 @@
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-md-12 mb-3">
+            <div class="col-md-9 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content row p-0 m-0">
-                        <div class="col-md-3 p-0 ps-3 pt-4">
+                        <div class="col-md-6 p-0 ps-3 pt-4">
                             @if ($greetingText)
                                 <p class="morning-city">{{ $greetingText }}</p>
                             @endif
@@ -51,75 +51,13 @@
 
                             </div>
                         </div>
-                        <div class="col-md-6 homeReporting pt-4">
-                            @if ($loginEmpManagerDetails)
-                                <div class="card-reporting">
-                                    <button class="mail">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                                    </button>
-                                    <div class="profile-pic">
-                                        @if ($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
-                                            <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
-                                        @else
-                                            <img src="assets/images/agent.png" alt="">
-                                        @endif
-                                    </div>
-                                    <div class="bottom">
-                                        <div class="content">
-                                            <span class="name">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
-                                            {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</span>
-                                            <span class="about-me">
-                                                @php
-                                                    $jobTitle = $loginEmpManagerDetails->job_role;
-
-                                                    // Replace specific titles with desired formats
-                                                    $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
-                                                    $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
-                                                    $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
-                                                    $convertedTitle = preg_replace(
-                                                        '/\bIII\b/i',
-                                                        'III',
-                                                        $convertedTitle,
-                                                    );
-
-                                                    // Capitalize the first letter of each word, while keeping 'II' intact
-                                                    $convertedTitle = preg_replace_callback(
-                                                        '/\b([a-z])([a-z]*)/i',
-                                                        function ($matches) {
-                                                            return strtoupper($matches[1]) . strtolower($matches[2]);
-                                                        },
-                                                        $convertedTitle,
-                                                    );
-
-                                                    // Ensure 'II' and 'HR' stay capitalized after the callback
-                                                    $convertedTitle = str_replace(
-                                                        [' Ii', ' Hr', ' IIi', 'Iii'],
-                                                        [' II', ' HR', ' III'],
-                                                        $convertedTitle,
-                                                    );
-                                                @endphp
-                                                {{ $convertedTitle ? $convertedTitle : 'N/A' }}
-                                            </span>
-                                        </div>
-                                    <div class="bottom-bottom">
-                                        <div class="social-links-container">
-                                            <img src="images/teams.png" style="width: 1.5em; height: fit-content;" />
-                                            <img src="images/outlook.png" style="width: 1.5em; height: fit-content;" />
-                                        </div>
-                                        <button class="button">Reports To</button>
-                                    </div>
-                                    </div>
-                                </div>
-                            @else
-                                <span></span>
-                            @endif
-                        </div>
+                        
 
                         <!-- <div class="col-md-3 p-0">
                             
                         </div> -->
 
-                        <div class="col-md-3">
+                        <div class="col-md-6">
                             <div>
                                 <img src="images/admin_banner.png" style="width: 100%" />
                             </div>
@@ -194,6 +132,69 @@
 
                     </div>
                 </div>
+            </div>
+            <div class="col-md-3 homeReporting pt-4">
+                @if ($loginEmpManagerDetails)
+                    <div class="card-reporting">
+                        <button class="mail">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mail"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                        </button>
+                        <div class="profile-pic">
+                            @if ($loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
+                                <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
+                            @else
+                                <img src="assets/images/agent.png" alt="">
+                            @endif
+                        </div>
+                        <div class="bottom">
+                            <div class="content">
+                                <span class="name">{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
+                                {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}</span>
+                                <span class="about-me">
+                                    @php
+                                        $jobTitle = $loginEmpManagerDetails->job_role;
+
+                                        // Replace specific titles with desired formats
+                                        $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
+                                        $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
+                                        $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
+                                        $convertedTitle = preg_replace(
+                                            '/\bIII\b/i',
+                                            'III',
+                                            $convertedTitle,
+                                        );
+
+                                        // Capitalize the first letter of each word, while keeping 'II' intact
+                                        $convertedTitle = preg_replace_callback(
+                                            '/\b([a-z])([a-z]*)/i',
+                                            function ($matches) {
+                                                return strtoupper($matches[1]) . strtolower($matches[2]);
+                                            },
+                                            $convertedTitle,
+                                        );
+
+                                        // Ensure 'II' and 'HR' stay capitalized after the callback
+                                        $convertedTitle = str_replace(
+                                            [' Ii', ' Hr', ' IIi', 'Iii'],
+                                            [' II', ' HR', ' III'],
+                                            $convertedTitle,
+                                        );
+                                    @endphp
+                                    {{ $convertedTitle ? $convertedTitle : 'N/A' }}
+                                </span>
+                            </div>
+                        <div class="bottom-bottom">
+                            <div class="social-links-container">
+                                <img src="images/teams.png" style="width: 1.5em; height: fit-content;" />
+                                <img src="images/outlook.png" style="width: 1.5em; height: fit-content;" />
+                            </div>
+                            <button class="button">Reports To</button>
+                        </div>
+                        </div>
+                    </div>
+                @else
+                    <span></span>
+                @endif
             </div>
         </div>
 
@@ -1073,62 +1074,33 @@
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
+    // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = @json($grossPay); // Laravel value for gross pay
-        var deductions = @json($deductions); // Laravel value for deductions
-        var netPay = @json($netPay); // Laravel value for net pay
-
-        var totalPay = grossPay; // Set total pay as Gross Pay to represent 100%
-
-        // Calculate the percentages for deductions and net pay
-        var deductionsPercentage = (deductions / grossPay) * 100;
-        var netPayPercentage = (netPay / grossPay) * 100;
-        var grossPayPercentage = 100; // Gross pay is 100% by definition
-
         var ctx = document.getElementById('combinedPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
             data: {
-                labels: ['Gross Pay', 'Net Pay', 'Deductions'], // Labels for each section
+                labels: ['Gross Pay', 'Deduction', 'Net Pay'],
                 datasets: [{
-                    label: 'Gross Pay', // Outer ring for Gross Pay
-                    data: [grossPayPercentage, 0, 0], // Only show Gross Pay in the outer ring
-                    backgroundColor: ['#000000', 'transparent',
-                    'transparent'], // Color for outer ring
-                    borderColor: ['#f2f8f9', 'transparent',
-                    'transparent'], // Border color for outer ring
-                    borderWidth: 2, // Thickness of the outer ring
-                    hoverBorderWidth: 3 // Border width on hover for outer ring
-                }, {
-                    label: 'Net and Deductions Breakdown', // Inner ring for Net Pay & Deductions
-                    data: [0, netPayPercentage,
-                    deductionsPercentage], // Data for the inner ring
-                    backgroundColor: ['transparent', '#1C9372',
-                    '#B9E3C6'], // Color for inner ring
-                    borderColor: ['transparent', '#f2f8f9',
-                    '#f2f8f9'], // Border color for inner segments
-                    borderWidth: 2, // Thickness of the inner ring
-                    hoverBorderWidth: 3 // Border width on hover for inner ring
+                    label: 'Salary Breakdown',
+                    data: [50000, 5000, 45000],
+                    backgroundColor: ['#000000', '#B9E3C6', '#1C9372'],
+                    borderColor: '#f2f8f9', // Set border color for the segments
+                    borderWidth: 2, // Normal border width
+                    hoverBorderWidth: 3 // Border width on hover
                 }]
             },
             options: {
                 responsive: true,
-                cutout: '45%', // Outer ring thickness (cutout controls the thickness of both rings)
+                cutout: '60%', // Adjust this to increase thickness (lower cutout value for thicker ring)
                 plugins: {
                     legend: {
-                        display: false // Hide the legend
+                        display: false // Hide labels
                     },
                     tooltip: {
                         callbacks: {
                             label: function(tooltipItem) {
-                                var label = tooltipItem
-                                .label; // Get the label (Gross Pay, Net Pay, Deductions)
-                                var value = tooltipItem.raw; // Get the corresponding value
-
-                                // Format the value as a percentage with ' %'
-                                var percentage = value.toFixed(2) + '%';
-
-                                return label + ': ' + percentage; // Show the label and percentage
+                                return tooltipItem.label + ': ₹ ' + tooltipItem.raw;
                             }
                         }
                     }
