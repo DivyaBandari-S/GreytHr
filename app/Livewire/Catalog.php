@@ -25,6 +25,10 @@ use App\Models\HelpDesks;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HelpDeskNotification;
+use App\Models\IT;
+
 class Catalog extends Component
 {
  
@@ -622,7 +626,7 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
-        HelpDesks::create([
+        $helpDesk = HelpDesks::create([
             'emp_id' => $this->employeeDetails->emp_id,
        
             'distributor_name' => $this->distributor_name,
@@ -637,7 +641,18 @@ class Catalog extends Component
             'mail' => 'N/A',
             'mobile' => 'N/A',
         ]);
-       
+        $superAdmins = IT::where('role', 'super_admin')->get();
+
+        foreach ($superAdmins as $admin) {
+            // Retrieve the first and last names
+            $firstName = $admin->first_name;
+            $lastName = $admin->last_name;
+        
+            // Send Email with first and last names included
+            Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+        }
+        
+   
         FlashMessageHelper::flashSuccess ('Request created successfully.');
         $this->reset();
         return redirect()->to('/HelpDesk');

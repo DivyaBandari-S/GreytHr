@@ -70,7 +70,7 @@ public $closedCategory = null; // Category for Closed tab
     public $filterData;
     public $activeTab = 'active';
     public $selectedPeople = [];
-    public $activeSearch = '';
+    public $activeSearch = [];
 public $pendingSearch = '';
 public $closedSearch = '';
     protected $rules = [
@@ -124,7 +124,8 @@ public $closedSearch = '';
             })
             ->orderBy('created_at', 'desc')
             ->get();
-        // dd( $this->records);
+         
+     
         $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -181,8 +182,12 @@ public $closedSearch = '';
         // Start the base query based on status and employee ID or cc_to
         $query = HelpDesks::where(function ($query) use ($employeeId) {
             $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
-        })
-        ->where('status', $status); // Apply status filter dynamically
+        });
+        if (is_array($status)) {
+            $query->whereIn('status', $status);  // Multiple statuses (array)
+        } else {
+            $query->where('status', $status);    // Single status (string)
+        }// Apply status filter dynamically
     
         // If a category is selected, apply category filtering
         if ($selectedCategory) {
@@ -205,8 +210,7 @@ public $closedSearch = '';
     
         // Get results
         $results = $query->orderBy('created_at', 'desc')->get();
-        logger('Filtered Results for status ' . $status . ': ', $results->toArray());
-    
+     
         $this->filterData = $results;
         $this->peopleFound = count($this->filterData) > 0;
     }
@@ -214,7 +218,7 @@ public $closedSearch = '';
     
     public function searchActiveHelpDesk()
     {
-        $this->searchHelpDesk('Recent', $this->activeSearch,$this->activeCategory);
+        $this->searchHelpDesk(['Open', 'Recent'], $this->activeSearch,$this->activeCategory);
     }
     
     public function searchPendingHelpDesk()
@@ -463,6 +467,7 @@ public $closedSearch = '';
                 'distributor_name' => 'N/A',
            
             ]);
+            
     
             FlashMessageHelper::flashSuccess( 'Request created successfully.');
             return redirect()->to('/HelpDesk');
