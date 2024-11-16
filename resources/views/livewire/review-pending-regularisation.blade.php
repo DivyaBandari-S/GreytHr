@@ -130,7 +130,7 @@
         .table-container
         {
             width: auto;
-            height:200px;
+            height:auto;
             background-color: #fff;
             margin-left:10px;
             border-radius: 5px;
@@ -254,10 +254,10 @@
                      <div>
                         <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
                       
-                                @if($regularisationrequest->status=='rejected')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
-                                @elseif($regularisationrequest->status=='approved')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
+                                @if($regularisationrequest->status==3)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
+                                @elseif($regularisationrequest->status==2)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
                                 @endif    
                         </span>
                    </div>
@@ -365,14 +365,18 @@
                            
                                <td >
                                   <div style="display: flex; align-items: center;">
-                                       <i class="fa-regular fa-circle-check"style="color:lightgreen;margin-right: 5px;height:20px;width:20px;"></i>
-                                       <i class="fa-regular fa-circle-xmark"style="color:#ccc;height:20px;width:20px;"></i>
+                                    
+                                       <i class="fa-regular fa-circle-check"style="color:lightgreen;margin-right: 5px;height:20px;width:20px;cursor:pointer;"wire:click="approve('{{$r1['date']}}')"></i>
+                                       <i class="fa-regular fa-circle-xmark"style="color:#ccc;height:20px;width:20px;cursor:pointer;"wire:click="reject('{{$r1['date']}}')"></i>
+                                     
                                   </div>
                                </td>
                           
                          
                                <td style="border-right: 1px solid #dcdcdc;">
-                                       <input type="text" placeholder="Write Remarks"style="border: 1px solid #ccc;border-radius:5px; color: #666;">
+                                        <input type="text" placeholder="Write Remarks" 
+                                            style="border: 1px solid #ccc; border-radius:5px; color: #666;"
+                                            wire:model.defer="remarks.{{ $r1['date'] }}">
                                </td>
 
                      
@@ -429,5 +433,15 @@
         </tbody>
         @endforeach
     </table>
+   
   </div>
+  
+                <div style="display:flex; justify-content: right;">
+                    
+                    <a href="/Attendance" style="color:rgb(2,17,79); margin-right: 20px; padding: 10px 20px;">Cancel</a>
+                    <button type="button"style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Reject All</button>
+                    <button type="button" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;"wire:click="submitRegularisation">Submit</button>
+                </div>
+  
+
 </div>

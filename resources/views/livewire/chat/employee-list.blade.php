@@ -91,7 +91,7 @@
                     </div> -->
                 </div>
                 <div class="body">
-                    <div class="search">
+                    <!-- <div class="search">
                         <div class="label-text">Search for a contact</div>
                         <div class="input-search">
                             <input type="text" class="form-control" placeholder="Name, email or phone number">
@@ -101,6 +101,10 @@
                                 </span>
                             </button>
                         </div>
+                    </div> -->
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white pe-0" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" class="contSearch form-control" placeholder="Search for a name, email or phone number" aria-label="Username" aria-describedby="basic-addon1">
                     </div>
                     <div class="list-users">
                         <div class="item active">
@@ -114,8 +118,9 @@
                             </div>
                             <div class="actions">
                                 <button class="btn" onclick="openMsgDiv()">
-                                    <span class="material-icons">
+                                    <span class="material-icons position-relative">
                                         question_answer
+                                        <span class="msgCount badge rounded-pill text-bg-danger">9</span>
                                     </span>
 
                                 </button>
@@ -273,12 +278,12 @@
                                 </span>
                             </a>
                         </div> -->
-                        <div class="item">
+                        <!-- <div class="item">
                             <div class="avatar-chart">
                                 <img src="images/images/avatarr-default.jpeg" alt="">
                                 <span class="dot -online"></span>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="body">
@@ -291,44 +296,34 @@
                             </a>
                         </div>
                         <div class="chat-body">
-                            <!-- Chat messages go here -->
-                            <div class="message">
+                            <!-- Received message -->
+                            <div class="message received">
+                                <div class="avatar-chart"><i class="fa-regular fa-user"></i></div>
                                 <div class="message-content">
                                     <p>Hello, how can I help you today?</p>
+                                    <span class="timestamp">11:24 AM</span>
                                 </div>
                             </div>
-                            <!-- Example of another message -->
-                            <div class="message">
+                            
+                            <!-- Sent message -->
+                            <div class="message sent">
                                 <div class="message-content">
                                     <p>Hi! I have a question about the project...</p>
+                                    <span class="timestamp">11:25 AM</span>
                                 </div>
                             </div>
                         </div>
                         <div class="chat-footer">
-                            <!-- <button class="send-btn me-2">
-                                <span class="material-icons">mic</span>
-                            </button>
-                            <button class="send-btn me-2">
-                                <span class="material-icons">mood</span>
-                            </button>
-                            <button class="send-btn me-2">
-                                <span class="material-icons">attach_file</span>
-                            </button>
-                            <input type="text" placeholder="Type a message..." class="chat-input">
-                            <button class="send-btn">
-                                <span class="material-icons">send</span>
-                            </button> -->
-
-                            <div class="input-group mb-3 textArea">
-                                <!-- <button class="btn btn-outline-secondary" type="button" id="button-addon1 me-2">Button</button> -->
-                                <input type="text" class="form-control" placeholder="Enter Message..." aria-label="Example text with button addon" aria-describedby="button-addon1">
+                            <div class="input-group textArea">
+                                <input type="text" class="form-control" placeholder="Enter Message..." aria-label="Example text with button addon" aria-describedby="button-addon1" autofocus>
                                 <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2"><i class="fa-solid fa-microphone"></i></button>
                                 <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2"><i class="fa-solid fa-face-smile"></i></button>
                                 <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2"><i class="fa-solid fa-paperclip"></i></button>
                                 <button class="btn btn-outline-secondary" type="button" id="button-addon1 ms-2"><i class="fa-solid fa-paper-plane"></i></button>
-                              </div>
+                            </div>
                         </div>
                     </div>
+
 
                     <div class="bio-div">
 
@@ -351,6 +346,7 @@
                                             </span>
 
                                             Message
+                                            <span class="badge text-bg-danger msgCountSq">4</span>
                                         </button>
                                         
                                         <button class="btn">

@@ -443,7 +443,7 @@ class EmployeesReview extends Component
 
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-                ->whereIn('regularisation_dates.status', [2, 3])
+                ->whereIn('regularisation_dates.status', [2, 3,13])
                 ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
                 ->where(function ($query) {
@@ -464,7 +464,7 @@ class EmployeesReview extends Component
                 ->get();
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-                ->whereIn('regularisation_dates.status', [2, 3])
+                ->whereIn('regularisation_dates.status', [2, 3,13])
                 ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
                 ->select(

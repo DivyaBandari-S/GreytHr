@@ -246,6 +246,8 @@
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status_name}}</span>
                                 @elseif($arrl->status==3)
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status_name}}</span>
+                                @elseif($arrl->status==13)
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:orange;text-transform:uppercase;">{{$arrl->status_name}}</span>
 
 
                                 @endif

@@ -54,24 +54,24 @@ class ViewPendingDetails extends Component
             // Base query for fetching leave applications
             $query = LeaveRequest::where(function ($query) {
                 $query->where('leave_applications.leave_status', 5)
-                    ->orWhere('leave_applications.cancel_status', 7);
+                      ->orWhere('leave_applications.cancel_status', 7);
             })
-                ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-                ->where('leave_applications.created_at', '>=', $threeWorkingDaysAgo)
-                ->OrderBy('leave_applications.created_at', 'desc');
+            ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+            ->where('leave_applications.created_at', '>=', $threeWorkingDaysAgo)
+            ->OrderBy('leave_applications.created_at','desc');
 
-            // Search query conditions
-            if ($filter !== null) {
-                $query->where(function ($query) use ($filter) {
-                    $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
-                        ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
-                        ->orWheree('leave_applications.category_type', 'like', '%' . $filter . '%')
-                        ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
-                        ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%')
-                        ->orWhere('status_types.status_name', 'like', '%' . $filter . '%');
-                });
-            }
+        // Search query conditions
+        if ($filter !== null) {
+            $query->where(function ($query) use ($filter) {
+                $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
+                      ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
+                      ->orWheree('leave_applications.category_type', 'like', '%' . $filter . '%')
+                      ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
+                      ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%')
+                      ->orWhere('status_types.status_name', 'like', '%' . $filter . '%');
+            });
+        }
 
             // Applying conditions for employee's role in the leave application
             $query->where(function ($query) use ($employeeId) {
@@ -128,11 +128,11 @@ class ViewPendingDetails extends Component
             $this->leaveApplications = $matchingLeaveApplications;
             $this->count = count($matchingLeaveApplications);
         } catch (\Illuminate\Database\QueryException $e) {
-            FlashMessageHelper::flashError('Error while getting the data. Please try again.');
+           FlashMessageHelper::flashError('Error while getting the data. Please try again.');
         } catch (PDOException $e) {
-            FlashMessageHelper::flashError('Connection error . Please try again.');
+           FlashMessageHelper::flashError('Connection error . Please try again.');
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Connection error . Please try again.');
+           FlashMessageHelper::flashError('Connection error . Please try again.');
         }
     }
 
@@ -158,7 +158,7 @@ class ViewPendingDetails extends Component
             // Check if there are pending leave requests
             return $this->leaveRequests->where('leave_status', 5)->isNotEmpty();
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Error while getting leave request. Please try again.');
+           FlashMessageHelper::flashError('Error while getting leave request. Please try again.');
         }
     }
 
@@ -254,96 +254,73 @@ class ViewPendingDetails extends Component
 
 
     //This method used to approve leave application by manager
-    public function cancelLeaveCancel($leaveRequestId)
+    public function approveLeave($index)
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            // Find the leave request by ID
-            $leaveRequest = LeaveRequest::find($leaveRequestId);
+            $leaveRequest = $this->leaveApplications[$index]['leaveRequest'];
+            // Get employee email
+            $sendEmailToEmp = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->pluck('email')->first();
+            $createdDate = Carbon::parse($leaveRequest->created_at);
+            $daysSinceCreation = $createdDate->diffInDays(Carbon::now());
 
-            // Check if leave request exists
-            if (!$leaveRequest) {
-                throw new \Exception("Leave request not found.");
-            }
+            if ($leaveRequest->leave_status === 2) {
+                FlashMessageHelper::flashWarning('Leave application is already approved.');
+            } else {
+                if ($daysSinceCreation > 3 || $leaveRequest->leave_status !== 2) {
+                    $leaveRequest->leave_status = 2;
+                    $leaveRequest->updated_at = now();
+                    $leaveRequest->action_by = $employeeId;
+                    $leaveRequest->save();
+                    Notification::create([
+                        'emp_id' =>  $employeeId ,
+                        'notification_type' => 'leaveApprove',
+                        'leave_type' => $leaveRequest->leave_type,
+                        'assignee' =>$leaveRequest->emp_id,
+                    ]);
+                    FlashMessageHelper::flashSuccess('Leave application approved successfully.');
+                    // Sending email to employee and CC emails
+                    $applyingToDetails = json_decode($leaveRequest->applying_to, true);
+                    $ccToDetails = json_decode($leaveRequest->cc_to, true);
 
-            // Find any other leave request matching from_date, from_session, to_date, to_session
-            $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
-                ->where('from_date', $leaveRequest->from_date)
-                ->where('from_session', $leaveRequest->from_session)
-                ->where('to_date', $leaveRequest->to_date)
-                ->where('to_session', $leaveRequest->to_session)
-                ->where('leave_status', '!=', 6)
-                ->first();
+                    // Extract CC emails
+                    $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
+                    $ccEmails = array_slice($ccEmails, 0, 5); // Limit to 5
 
-            if ($matchingLeaveRequest) {
-                // Update the matching request status to 'withdrawn'
-                $matchingLeaveRequest->cancel_status = 4; // Mark as withdrawn
-                $matchingLeaveRequest->updated_at = now();
-                $matchingLeaveRequest->action_by = $employeeId;
-                $matchingLeaveRequest->save();
-            }
+                    // Only send email if employee or CC emails are not empty
+                    if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
+                        // Send email to the main recipient (the employee)
+                        if (!empty($sendEmailToEmp)) {
+                            Mail::to($sendEmailToEmp)
+                                ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));
+                        }
 
-            // Update the current leave request status to 'withdrawn' (cancelled)
-            $leaveRequest->cancel_status = 4;  // Withdrawn
-            $leaveRequest->leave_status = 3;   // Rejected
-            $leaveRequest->updated_at = now();
-            $leaveRequest->action_by = $employeeId;
-            $leaveRequest->save();
+                        // Send emails to CC recipients with different content
+                        if (!empty($ccEmails)) {
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
 
-            // Decode the JSON data from applying_to to get the email
-            $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
-            $applyingToEmail = null;
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
+                            }
 
-            // Check if the array is not empty and access the email from the first element
-            if (!empty($applyingToDetailsArray) && isset($applyingToDetailsArray[0]['email'])) {
-                $applyingToEmail = $applyingToDetailsArray[0]['email']; // Access the email
-            }
-
-            // Decode CC recipients
-            $ccToDetailsArray = json_decode($leaveRequest->cc_to, true); // Decode CC recipients
-            $ccToEmails = [];
-
-            // Extract CC emails if available
-            foreach ($ccToDetailsArray as $cc) {
-                if (isset($cc['email'])) {
-                    $ccToEmails[] = $cc['email'];
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
+                        }
+                    }
                 }
             }
 
-            // Send notification email if the email exists
-            if ($applyingToEmail) {
-                // Create the mail instance to the main recipient (the employee)
-                $mail = Mail::to($applyingToEmail); // Send to the applying-to email first
-
-                // Send the leave cancel notification email to the main recipient
-                $mail->send(new LeaveApprovalNotification(
-                    $leaveRequest, // Leave request object
-                    $applyingToDetailsArray[0], // First applying-to recipient's details
-                    $ccToDetailsArray, // CC details
-                    true // For main recipient
-                ));
-
-                // Send emails to CC recipients with different content
-                foreach ($ccToEmails as $ccEmail) {
-                    Mail::to($ccEmail) // Send email to each CC recipient
-                        ->send(new LeaveApprovalNotification(
-                            $leaveRequest, // Leave request object
-                            $applyingToDetailsArray[0], // Main recipient details (employee)
-                            $ccToDetailsArray, // CC details
-                            false // For CC recipients
-                        ));
-                }
-            }
-
-            $this->hasPendingLeave();
-            // Flash success message
-            FlashMessageHelper::flashSuccess('Leave application Cancelled and Withdrawn.');
+            $this->fetchPendingLeaveApplications();
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occurred while canceling leave request. Please try again later.');
-            return false;
+            FlashMessageHelper::flashError('Failed to approve leave application. Please try again.');
         }
     }
-
 
     //This method used to approve leave cancel application by manager
     public function approveLeaveCancel($index)
@@ -408,10 +385,20 @@ class ViewPendingDetails extends Component
 
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
-                            foreach ($ccEmails as $ccEmail) {
-                                Mail::to($ccEmail)
-                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
                             }
+
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
                         }
                         $this->fetchPendingLeaveApplications();
                     }
@@ -482,10 +469,20 @@ class ViewPendingDetails extends Component
 
                         // Send emails to CC recipients with different content
                         if (!empty($ccEmails)) {
-                            foreach ($ccEmails as $ccEmail) {
-                                Mail::to($ccEmail)
-                                    ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                            $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                            // Add CC email if available
+                            if (!empty($ccToEmail)) {
+                                $mail->cc($ccToEmail); // Add CC email
                             }
+
+                            // Send the leave cancel notification email
+                            $mail->send(new LeaveApprovalNotification(
+                                $leaveRequest,        // Leave request object
+                                $applyingToDetails,  // First applying-to recipient's details
+                                $ccToDetails,    // CC details
+                                false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                            ));
                         }
                         $this->fetchPendingLeaveApplications();
                     }
@@ -511,10 +508,10 @@ class ViewPendingDetails extends Component
             $leaveRequest->action_by = $employeeId;
             $leaveRequest->save();
             Notification::create([
-                'emp_id' =>  $employeeId,
+                'emp_id' =>  $employeeId ,
                 'notification_type' => 'leaveReject',
                 "leave_type" => $leaveRequest->leave_type,
-                'assignee' => $leaveRequest->emp_id,
+                'assignee' =>$leaveRequest->emp_id,
             ]);
             FlashMessageHelper::flashSuccess('Leave application rejected successfully.');
             // Sending email to employee and CC emails
@@ -535,10 +532,20 @@ class ViewPendingDetails extends Component
 
                 // Send emails to CC recipients with different content
                 if (!empty($ccEmails)) {
-                    foreach ($ccEmails as $ccEmail) {
-                        Mail::to($ccEmail)
-                            ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, false));
+                    $mail = Mail::to($ccEmails); // Send to the applying-to email first
+
+                    // Add CC email if available
+                    if (!empty($ccToEmail)) {
+                        $mail->cc($ccToEmail); // Add CC email
                     }
+
+                    // Send the leave cancel notification email
+                    $mail->send(new LeaveApprovalNotification(
+                        $leaveRequest,        // Leave request object
+                        $applyingToDetails,  // First applying-to recipient's details
+                        $ccToDetails,    // CC details
+                        false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                    ));
                 }
             }
             $this->fetchPendingLeaveApplications();
