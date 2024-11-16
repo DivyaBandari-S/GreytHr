@@ -11,12 +11,13 @@ use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use App\Models\Chating;
 use App\Notifications\ResetPasswordLink;
+use App\Traits\ChatHelpers;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 
 class EmployeeDetails extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens,ChatHelpers;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
     protected $table = 'employee_details';
@@ -116,12 +117,6 @@ class EmployeeDetails extends Authenticatable
     {
         return $this->hasMany(StarredPeople::class, 'emp_id', 'emp_id');
     }
-
-    public function conversations()
-    {
-
-        return $this->hasMany(Chating::class, 'sender_id')->orWhere('receiver_id', $this->emp_id)->whereNotDeleted();
-    }
     public function personalInfo()
     {
         return $this->hasOne(EmpPersonalInfo::class, 'emp_id', 'emp_id');
@@ -150,4 +145,28 @@ class EmployeeDetails extends Authenticatable
     //     // Your own implementation.
     //     $this->notify(new ResetPasswordLink($token));
     // }
+
+
+    // Messages sent by the employee
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    // Messages received by the employee
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
+    }
+
+    // Conversations the employee is part of
+    public function conversations()
+    {
+        return $this->belongsToMany(
+            Conversation::class,
+            'group_conversations', // Pivot table
+            'emp_id',              // Foreign key on pivot table
+            'conversation_id'      // Related key on pivot table
+        );
+    }
 }

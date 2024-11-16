@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "433bd13ad9daf55f1d708e7a6785802e",
+    "content-hash": "ce9569755b6df0955d98371ceb153e3c",
     "packages": [
         {
             "name": "anhskohbo/no-captcha",
@@ -2356,16 +2356,16 @@
         },
         {
             "name": "laravel/reverb",
-            "version": "v1.4.2",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/reverb.git",
-                "reference": "6c83f674f13b3a7709b9534aacaca08c481273be"
+                "reference": "3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/reverb/zipball/6c83f674f13b3a7709b9534aacaca08c481273be",
-                "reference": "6c83f674f13b3a7709b9534aacaca08c481273be",
+                "url": "https://api.github.com/repos/laravel/reverb/zipball/3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe",
+                "reference": "3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe",
                 "shasum": ""
             },
             "require": {
@@ -2432,9 +2432,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/reverb/issues",
-                "source": "https://github.com/laravel/reverb/tree/v1.4.2"
+                "source": "https://github.com/laravel/reverb/tree/v1.4.3"
             },
-            "time": "2024-10-24T15:01:06+00:00"
+            "time": "2024-10-31T17:06:44+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -11984,14 +11984,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "laravel/reverb": 10
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

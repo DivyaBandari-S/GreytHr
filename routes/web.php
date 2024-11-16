@@ -275,7 +275,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
     Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
-    
+
 
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('Feeds');
@@ -347,8 +347,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
     Route::get('/users', EmployeeList::class)->name('employee');
     //*******************************************  End Of Chat Module Routes *************************/
 });
