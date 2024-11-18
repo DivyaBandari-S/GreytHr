@@ -415,7 +415,7 @@
      
             <div class="col-12 col-md-3" style="margin-top:-5px">
                 <select wire:model="closedCategory" wire:change="searchClosedHelpDesk"id="closedCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                    <option value="" hidden>Select Request</option>
+                    <option value="" >Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
                     @endforeach
@@ -579,7 +579,7 @@
             </div>
             <div class="col-12 col-md-3" style="margin-top:-2px" >
                 <select wire:model="pendingCategory" wire:change="searchPendingHelpDesk"  id="pendingCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-                    <option value="" hidden>Select Request</option>
+                    <option value="" >Select Request</option>
                     @foreach($requestCategories as $request => $categories)
                     <option value="{{ $request }}">{{ $request }}</option>
                     @endforeach
