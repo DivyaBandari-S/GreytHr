@@ -254,10 +254,10 @@
                      <div>
                         <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">
                       
-                                @if($regularisationrequest->status=='rejected')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
-                                @elseif($regularisationrequest->status=='approved')
-                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status}}</span>
+                                @if($regularisationrequest->status==3)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#f66;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
+                                @elseif($regularisationrequest->status==2)
+                                    <span style="margin-top:0.625rem; font-size: 12px; font-weight: 500; color:#32CD32;text-transform:uppercase;">{{$regularisationrequest->status_name}}</span>
                                 @endif    
                         </span>
                    </div>
@@ -365,12 +365,10 @@
                            
                                <td >
                                   <div style="display: flex; align-items: center;">
-                                    @if($r1['status']==3)
-                                         <p>Rejected</p>
-                                    @else
+                                    
                                        <i class="fa-regular fa-circle-check"style="color:lightgreen;margin-right: 5px;height:20px;width:20px;cursor:pointer;"wire:click="approve('{{$r1['date']}}')"></i>
                                        <i class="fa-regular fa-circle-xmark"style="color:#ccc;height:20px;width:20px;cursor:pointer;"wire:click="reject('{{$r1['date']}}')"></i>
-                                    @endif   
+                                     
                                   </div>
                                </td>
                           
@@ -437,13 +435,13 @@
     </table>
    
   </div>
-  <footer class="regularisation-footer" style="position: fixed; bottom: 0; width: 100%;left:-20px; background-color: #fff; padding: 5px 0; text-align: center; box-shadow: 0 -2px 5px rgba(0,0,0,0.1);">
+  
                 <div style="display:flex; justify-content: right;">
                     
                     <a href="/Attendance" style="color:rgb(2,17,79); margin-right: 20px; padding: 10px 20px;">Cancel</a>
-                    <button type="button" wire:click="storearraydates" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Reject All</button>
-                    <button type="button" wire:click="storearraydates" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Submit</button>
+                    <button type="button"style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;">Reject All</button>
+                    <button type="button" style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;"wire:click="submitRegularisation">Submit</button>
                 </div>
-  </footer>
+  
 
 </div>

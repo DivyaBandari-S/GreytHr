@@ -412,9 +412,17 @@
             <td style="width: 20%; text-transform: uppercase; color: #f66; font-size: 12px;padding:8px;">{{$regularisationrequest->status_name}}</td>
             @elseif($regularisationrequest->status == 2)
             <td style="width: 20%; text-transform: uppercase; color: #32CD32; font-size: 12px;padding:8px;">{{$regularisationrequest->status_name}}</td>
-            @endif
+            @elseif($regularisationrequest->status == 13)
+                    <td style="width: 20%; text-transform: uppercase; color: #32CD32; font-size: 12px; padding:8px;">
+                        {{ isset($r1['status']) ? $r1['status'] : 'Status Not Available' }}
+                    </td>
+             @endif
             @if(empty($regularisationrequest->approver_remarks))
-            <td style="width: 50%; border-right: 1px solid #dcdcdc; font-size: 12px;padding:8px;">-</td>
+              @if(isset($r1['remark']))
+                <td style="width: 50%; border-right: 1px solid #dcdcdc; font-size: 12px;padding:8px;">{{$r1['remark']}}</td>
+              @else  
+               <td style="width: 50%; border-right: 1px solid #dcdcdc; font-size: 12px;padding:8px;">-</td>
+              @endif
             @else
             <td style="width: 50%; border-right: 1px solid #dcdcdc; font-size: 12px;padding:8px;">{{ucfirst($regularisationrequest->approver_remarks)}}</td>
             @endif

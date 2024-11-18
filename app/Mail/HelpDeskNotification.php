@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\HelpDesks;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -15,39 +16,39 @@ class HelpDeskNotification extends Mailable
 
     /**
      * Create a new message instance.
+     */use Queueable, SerializesModels;
+
+    public $helpDesk;
+
+    /**
+     * Create a new message instance.
+     *
+     * @param HelpDesks $helpDesk
      */
-    public function __construct()
+    public function __construct(HelpDesks $helpDesk)
     {
-        //
+        $this->helpDesk = $helpDesk;
+   
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
+     *
+     * @return $this
      */
-    public function envelope(): Envelope
+    public function build()
     {
-        return new Envelope(
-            subject: 'Help Desk Notification',
-        );
+        return $this->subject('New Request Created')
+                    ->view('emails.helpdesk-notification');
     }
-
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'view.helpdesk_notification',
+            view: 'emails.helpdesk-notification',
         );
     }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
-    }
+ 
 }
+
+ 
+
