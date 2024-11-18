@@ -228,9 +228,22 @@ public $closedSearch = '';
     
     public function searchClosedHelpDesk()
     {
-        $this->searchHelpDesk('Completed', $this->closedSearch,$this->closedCategory);
+        $this->searchHelpDesk(['completed', 'Reject'], $this->closedSearch,$this->closedCategory);
     }
     
+    public $isOpen = false;
+    public $rejectionReason = '';
+
+
+    /**
+     * Open the modal with the rejection reason.
+     */
+    public function showRejectionReason()
+    {
+       
+
+        $this->isOpen = true;
+    }
     public function close()
     {
         $this->showDialog = false;
