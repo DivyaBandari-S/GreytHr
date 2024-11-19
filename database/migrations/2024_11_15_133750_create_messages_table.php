@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('conversation_id');
             $table->string('sender_id', 10);
             $table->string('receiver_id', 10)->nullable(); // Add receiver_id for each message
-            $table->text('body');
+            $table->text('body')->nullable();
             $table->boolean('read')->default(0); // Read status
-            $table->string('type')->nullable(); // For different message types (e.g., text, image)
+            $table->string('type')->nullable(); // Message type: text, image, video, etc.
+            $table->string('media_path')->nullable(); // Path to uploaded file
             $table->timestamp('last_time_message')->nullable();
             $table->timestamps();
             // Foreign key constraints

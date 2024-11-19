@@ -60,7 +60,7 @@
                 @foreach ($employees as $employee)
                 <tr>
                     <td class="whitespace-nowrap">{{ $counter++ }}</td>
-                    <td > 
+                    <td >
                     @if($employee->image=="")
                     @if($employee->gender=="Male")
                     <img src="https://th.bing.com/th/id/OIP.vwP9cMIiXIK1N3mPuqvxSgHaHa?w=1024&h=1024&rs=1&pid=ImgDetMain" width="50" heigth="50" class="img-thumbnail" />
@@ -74,7 +74,7 @@
                     @endif
                     </td>
                     <td class="whitespace-nowrapp">{{ $employee->emp_id }}</td>
-                  
+
                     <td class="whitespace-nowrap">{{ $employee->first_name }} {{ $employee->last_name }}</td>
                     <td class="aaa">{{ $employee->email }}</td>
                     <td class="whitespace-nowrap">{{ $employee->gender }}</td>

@@ -2,14 +2,17 @@
 
 namespace App\Traits;
 
+use App\Models\EmployeeDetails;
+use App\Models\Message;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 trait ChatHelpers
 {
     /**
-     * Get the last message for a conversation.
+     * Get the last message for the conversation.
      *
-     * @return mixed
+     * @return \App\Models\Message|null
      */
     public function getLastMessage()
     {
@@ -17,28 +20,31 @@ trait ChatHelpers
             return $this->messages()->latest('last_time_message')->first();
         }
 
-        throw new \Exception("Method 'messages' not found in " . get_class($this));
+        // Return null or handle the case where 'messages' method does not exist
+        return null;
     }
 
     /**
-     * Check if a conversation or message is unread.
+     * Check if the message or conversation is unread.
      *
      * @return bool
      */
     public function isUnread()
     {
+        // Check if the 'read' property exists
         if (property_exists($this, 'read')) {
             return !$this->read;
         }
 
-        throw new \Exception("Property 'read' not found in " . get_class($this));
+        // Return false or handle the case where 'read' property does not exist
+        return false;
     }
 
     /**
-     * Add a member to a conversation.
+     * Add a member to a conversation (e.g., for group chats).
      *
-     * @param \Illuminate\Database\Eloquent\Model $user
-     * @return mixed
+     * @param  \App\Models\User  $user
+     * @return bool
      */
     public function addMember($user)
     {
@@ -46,14 +52,15 @@ trait ChatHelpers
             return $this->members()->attach($user->id);
         }
 
-        throw new \Exception("Method 'members' not found in " . get_class($this));
+        // Return false or log an error if 'members' method does not exist
+        return false;
     }
 
     /**
-     * Remove a member from a conversation.
+     * Remove a member from a conversation (e.g., for group chats).
      *
-     * @param \Illuminate\Database\Eloquent\Model $user
-     * @return mixed
+     * @param  \App\Models\User  $user
+     * @return bool
      */
     public function removeMember($user)
     {
@@ -61,11 +68,12 @@ trait ChatHelpers
             return $this->members()->detach($user->id);
         }
 
-        throw new \Exception("Method 'members' not found in " . get_class($this));
+        // Return false or log an error if 'members' method does not exist
+        return false;
     }
 
     /**
-     * Mark a message or all messages in a conversation as read.
+     * Mark all messages in the conversation as read.
      *
      * @return void
      */
@@ -73,15 +81,19 @@ trait ChatHelpers
     {
         if (method_exists($this, 'messages')) {
             $this->messages()->update(['read' => true]);
-        } elseif (property_exists($this, 'read')) {
-            $this->update(['read' => true]);
-        } else {
-            throw new \Exception("Method 'messages' or property 'read' not found in " . get_class($this));
+            return;
         }
+
+        if (property_exists($this, 'read')) {
+            $this->update(['read' => true]);
+            return;
+        }
+
+        // Optionally, handle the case where neither 'messages' nor 'read' property exists
     }
 
     /**
-     * Get all unread messages in a conversation.
+     * Get all unread messages in the conversation.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -91,27 +103,89 @@ trait ChatHelpers
             return $this->messages()->where('read', false)->get();
         }
 
-        throw new \Exception("Method 'messages' not found in " . get_class($this));
+        // Return an empty collection or handle the case where 'messages' method does not exist
+        return collect();
     }
 
     /**
-     * Check if the user is online.
-     *
-     * This could be based on the last activity time or a session-based flag.
+     * Check if the user is online based on their last activity timestamp.
      *
      * @return bool
      */
     public function isOnline()
     {
         if (property_exists($this, 'last_activity')) {
-            // Consider user online if they were active in the last 5 minutes
             return Carbon::parse($this->last_activity)->greaterThan(Carbon::now()->subMinutes(5));
         }
 
-        // Or, if you're using a session variable to track online status:
-        // return session('user_is_online') === true;
-
-        // If no property or session-based tracking, return false
         return false;
+    }
+
+    /**
+     * Get the user's avatar URL, or use a default avatar if none exists.
+     *
+     * @return string
+     */
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? asset('storage/' . $this->avatar) : asset('images/images/avatarr-default.jpeg');
+    }
+
+    /**
+     * Get whether the user is online based on the 'last_seen' timestamp.
+     *
+     * @return bool
+     */
+    public function getIsOnlineAttribute()
+    {
+        return $this->last_seen && Carbon::parse($this->last_seen)->diffInMinutes(now()) <= 5;
+    }
+
+    /**
+     * Get the count of unread messages for the current conversation.
+     *
+     * @return int
+     */
+    public function getUnreadMessagesCountAttribute()
+    {
+        // return $this->messages()
+        //     ->where('read', false)
+        //     ->where(function ($query) {
+        //         $query->where('sender_id', $this->emp_id)
+        //             ->orWhere('receiver_id', $this->emp_id);
+        //     })
+        //     ->count();
+        return $this->messages()
+            ->where('read', false)
+            ->count();
+    }
+
+
+    /**
+     * Define the 'messages' relationship, assuming it's a one-to-many relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id', 'emp_id');
+    }
+
+    // public function messages()
+    // {
+    //     return $this->hasMany(Message::class, 'sender_id')
+    //         ->orWhere(function ($query) {
+    //             $query->where('receiver_id', $this->emp_id);
+    //         });
+    // }
+
+    /**
+     * Define the 'members' relationship, assuming it's a many-to-many relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function members()
+    {
+        return $this->belongsToMany(EmployeeDetails::class, 'group_conversations', 'conversation_id', 'emp_id');
     }
 }

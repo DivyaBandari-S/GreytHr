@@ -270,7 +270,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
     Route::get('/ProfileCard', ProfileCard::class)->name('profile');
     Route::get('/Settings', Settings::class)->name('settings');
-    Route::get('/view-regularisation-pending-new',ViewRegularisationPendingNew::class)->name('view-regularisation-pending-new');
+    Route::get('/view-regularisation-pending-new', ViewRegularisationPendingNew::class)->name('view-regularisation-pending-new');
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
@@ -347,7 +347,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/users', EmployeeList::class)->name('users');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

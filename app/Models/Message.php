@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Message extends Model
 {
-    use HasFactory,ChatHelpers;
+    use HasFactory, ChatHelpers;
     protected $fillable = [
         'sender_id',
         'receiver_id',
@@ -17,21 +17,39 @@ class Message extends Model
         'read',
         'body',
         'type',
+        'media_path'
     ];
+    /**
+     * Sender of the message.
+     */
     public function sender()
     {
         return $this->belongsTo(EmployeeDetails::class, 'sender_id');
     }
 
-
+    /**
+     * Receiver of the message.
+     */
     public function receiver()
     {
         return $this->belongsTo(EmployeeDetails::class, 'receiver_id');
     }
 
+    /**
+     * The conversation this message belongs to.
+     */
     public function conversation()
     {
-        return $this->belongsTo(Conversation::class);
-        # code...
+        return $this->belongsTo(Conversation::class, 'conversation_id');
+    }
+
+    public function isMedia()
+    {
+        return in_array($this->type, ['image', 'video']);
+    }
+
+    public function getMediaUrlAttribute()
+    {
+        return $this->media_path ? asset('storage/' . $this->media_path) : null;
     }
 }

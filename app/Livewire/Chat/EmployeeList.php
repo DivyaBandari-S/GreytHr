@@ -1,158 +1,90 @@
 <?php
- 
+
 namespace App\Livewire\Chat;
- 
+
+use App\Models\EmpDepartment;
+use App\Models\EmpSubDepartments;
 use Livewire\Component;
-use App\Models\Chating;
 use App\Models\EmployeeDetails;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Crypt;
-// use Hashids;
-// use Hashids\Hashids;
-use Vinkla\Hashids\Facades\Hashids;
+use App\Models\EmpDept;
+use App\Models\EmpSubDept;
+
 class EmployeeList extends Component
 {
- 
- 
- 
-    public $employees;
-    public $peopleData;
- 
-    public $companyId;
- 
-    public $employeeId;
- 
-    public $conversations;
- 
- 
- 
-    public $search = '';
- 
+    public $selectedDepartment = '';
+    public $selectedSubDepartment = '';
     public $searchTerm = '';
- 
-    public $isRotated = false;
-    public $selectedPerson = null;
-    public $peoples;
-    public $filteredPeoples;
-    public $peopleFound = true;
-    public $category;
-    public $subject;
-    public $description;
-    public $file_path;
-    public $cc_to;
-    public $priority;
-    public $records;
-    public $image;
-    public $selectedPeopleNames = [];
-    public $employeeDetails;
-    public $showDialog = false;
-    public $record;
-    public $selectedDepartment;
- 
-    public function message($employeeId)
-    {
-        // $hashids = new Hashids('default-salt', 50);
-        $authenticatedUserId = auth()->id();
-        // $conversation= Chating::find(decrypt($id));
- 
-        // Check if conversation already exists
-        $existingConversation = Chating::where(function ($query) use ($authenticatedUserId, $employeeId) {
-            $query->where('sender_id', $authenticatedUserId)
-                ->where('receiver_id', $employeeId);
-        })->orWhere(function ($query) use ($authenticatedUserId, $employeeId) {
-            $query->where('sender_id', $employeeId)
-                ->where('receiver_id', $authenticatedUserId);
-        })->first();
- 
-        if ($existingConversation) {
-            // Conversation already exists, redirect to existing conversation
-            //$ExistingConversationEncryptedId = Crypt::encryptString($existingConversation->id);
-            $ExistingConversationEncryptedId = Hashids::encode($existingConversation->id);
-            return redirect()->route('chat', ['query' => $ExistingConversationEncryptedId]);
-        }
- 
-        // Create new conversation
-        $createdConversation = Chating::create([
-            'sender_id' => $authenticatedUserId,
-            'receiver_id' => $employeeId,
-        ]);
-        // $encryptedId = Crypt::encryptString($createdConversation->id);
-          $encryptedId = Hashids::encode($createdConversation->id);
-        // Redirect to the chat component with the newly created conversation's ID
-        return redirect()->route('chat', ['query' => $encryptedId]);
-    }
+    public $employeeDetails = [];
+
     public function filter()
     {
-        $companyId = Auth::user()->company_id;
-        $trimmedSearchTerm = trim($this->searchTerm);
-        $query = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
-        ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
-        ->where('employee_details.company_id', $companyId);
- 
-    // Filter by selected department if one is selected
-    if ($this->selectedDepartment) {
-        $query->where('department', $this->selectedDepartment);
+        // Fetch employees based on the selected department, sub-department, and search term
+        $query = EmployeeDetails::query();
+
+        // Filter by status, ensuring only employees with status 1 are included
+        $query->where('status', 1)->orderBy('first_name');
+
+        // Filter by department if selected
+        if (!empty($this->selectedDepartment)) {
+            $query->where('dept_id', $this->selectedDepartment);
+        }
+
+        // Filter by sub-department if selected
+        if (!empty($this->selectedSubDepartment)) {
+            $query->where('sub_dept_id', $this->selectedSubDepartment);
+        }
+
+        // Search employees by name, department or sub-department
+        if (!empty($this->searchTerm)) {
+            // Check if the search term matches a department or sub-department
+            $department = EmpDepartment::where('department', 'like', '%' . $this->searchTerm . '%')->first();
+            $subDepartment = EmpSubDepartments::where('sub_department', 'like', '%' . $this->searchTerm . '%')->first();
+
+            // If a department is found, filter by dept_id
+            if ($department) {
+                $query->where('dept_id', $department->id);
+            }
+
+            // If a sub-department is found, filter by sub_dept_id
+            if ($subDepartment) {
+                $query->where('sub_dept_id', $subDepartment->id);
+            }
+
+            // Also search by employee's name or job role or emp_id
+            $query->where(function ($subQuery) {
+                $subQuery->where('first_name', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('job_role', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
+            });
+        }
+
+        // Get the filtered employee details
+        $this->employeeDetails = $query->get();
     }
- 
-    $this->employeeDetails = $query->where(function ($query) use ($trimmedSearchTerm) {
-            $query->where('first_name', 'like', '%' . $trimmedSearchTerm . '%')
-                ->orWhere('last_name', 'like', '%' . $trimmedSearchTerm . '%')
-                ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-        })
-        ->orderBy('first_name', 'asc')->get();
-      
-        $this->peopleFound = $this->employeeDetails->isNotEmpty();
+
+
+
+    public function message($empId)
+    {
+       
     }
- 
- 
- 
+
     public function render()
     {
-        $loggedInCompanyId = auth()->user()->company_id;
- 
-        // Fetching all employee details for the company
-        $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
-        ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
-        ->where('employee_details.company_id', $loggedInCompanyId)
-        ->orderBy('employee_details.first_name', 'asc')
-        ->get();
- 
-    // Ensure every employee has department_name even if the department is missing
-    $this->employeeDetails->each(function ($employee) {
-        if (!$employee->department) {
-            $employee->department = 'No Department';
-        }
-    });
-        $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
-        ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
-        ->where('employee_details.company_id', $loggedInCompanyId)
-        ->orderBy('employee_details.first_name', 'asc')
-        ->get();
+        // Fetch all departments and sub-departments for the dropdowns
+        $departments = EmpDepartment::all();
+        $subDepartments = EmpSubDepartments::when($this->selectedDepartment, function ($query) {
+            // Fetch sub-departments based on selected department
+            return $query->where('dept_id', $this->selectedDepartment);
+        })->get();
 
-    // Ensure every employee has department_name even if the department is missing
-    $this->employeeDetails->each(function ($employee) {
-        if (!$employee->department) {
-            $employee->department = 'No Department';
-        }
-    });
-        // Filter out the logged-in user
-        $this->employeeDetails = $this->employeeDetails->reject(function ($employee) {
-            return $employee->id == auth()->id() // Exclude by ID
-                || $employee->emp_id == auth()->user()->emp_id // Exclude by emp_id
-                || ($employee->first_name == auth()->user()->first_name && $employee->last_name == auth()->user()->last_name); // Exclude by first_name and last_name
-        });
- 
-        // Search functionality
-        if ($this->searchTerm || $this->selectedDepartment) {
-            $this->filter();
-        }
- 
+        // Apply the filter to fetch employees
+        $this->filter();
+
         return view('livewire.chat.employee-list', [
-            'employeeDetails' => $this->employeeDetails, // Change 'employees' to 'employeeDetails'
-            'peopleData' => $this->filteredPeoples ? $this->filteredPeoples : $this->peoples,
+            'departments' => $departments,
+            'subDepartments' => $subDepartments,
         ]);
+    }
 }
- 
-}
- 

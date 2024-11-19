@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Conversation extends Model
 {
-    use HasFactory,ChatHelpers;
+    use HasFactory, ChatHelpers;
 
     protected $fillable = [
         'sender_id',
@@ -18,12 +18,17 @@ class Conversation extends Model
         'group_name',
     ];
 
-    // Relationships
+    /**
+     * Messages related to the conversation.
+     */
     public function messages()
     {
-        return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class, 'conversation_id');
     }
 
+    /**
+     * Members of the conversation (many-to-many relationship with EmployeeDetails).
+     */
     public function members()
     {
         return $this->belongsToMany(
@@ -33,5 +38,4 @@ class Conversation extends Model
             'emp_id'               // Related key on pivot table
         );
     }
-
 }

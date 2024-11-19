@@ -17,7 +17,7 @@ use Illuminate\Auth\Notifications\ResetPassword;
 
 class EmployeeDetails extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens,ChatHelpers;
+    use HasFactory, Notifiable, HasApiTokens, ChatHelpers;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
     protected $table = 'employee_details';
@@ -146,7 +146,6 @@ class EmployeeDetails extends Authenticatable
     //     $this->notify(new ResetPasswordLink($token));
     // }
 
-
     // Messages sent by the employee
     public function sentMessages()
     {
@@ -159,6 +158,15 @@ class EmployeeDetails extends Authenticatable
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
+    // public function messages()
+    // {
+    //     return $this->hasMany(Message::class, 'sender_id')
+    //         ->orWhere(function ($query) {
+    //             $query->where('receiver_id', $this->emp_id);
+    //         });
+    // }
+
+
     // Conversations the employee is part of
     public function conversations()
     {
@@ -168,5 +176,17 @@ class EmployeeDetails extends Authenticatable
             'emp_id',              // Foreign key on pivot table
             'conversation_id'      // Related key on pivot table
         );
+    }
+
+    // Define the relationship with the Department model
+    public function department()
+    {
+        return $this->belongsTo(EmpDepartment::class, 'dept_id');
+    }
+
+    // Define the relationship with the SubDepartment model
+    public function subDepartment()
+    {
+        return $this->belongsTo(EmpSubDepartments::class, 'sub_dept_id');
     }
 }
