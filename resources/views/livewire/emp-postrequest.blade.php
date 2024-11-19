@@ -88,7 +88,7 @@
                                     <div class="form-group mb-15" >
                                         <label for="category">You are posting in:</label>
                                         <select wire:model.lazy="category" class="form-select" id="category">
-                                            <option value="">Select Category</option>
+                                            <option value="" hidden>Select Category</option>
                                             <option value="Appreciations">Appreciations</option>
                                          
                                             <option value="Companynews">Company News</option>

@@ -13,26 +13,33 @@
 // Models                          : HelpDesk,EmployeeDetails
  
 namespace App\Livewire;
- 
+
 use Livewire\Component;
 use App\Models\EmployeeDetails;
 use App\Models\PeopleList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
- 
+
  
 use App\Models\HelpDesks;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HelpDeskNotification;
+use App\Models\IT;
+ 
 class Catalog extends Component
 {
  
     use WithFileUploads;
     public $searchTerm = '';
+    public $superAdmins;
+  
+
     public $mobile;
     public $showModal = true;
-
+ 
     public $ItRequestaceessDialog = false;
     public $MailRequestaceessDialog = false;
     public $closeMailRequestaccess = false;
@@ -56,7 +63,7 @@ class Catalog extends Component
     public $image;
     public $employeeDetails;
     public $employees;
- 
+
     public $selectedPerson = null;
     public $addselectedPerson = null;
     public $cc_to;
@@ -74,7 +81,7 @@ class Catalog extends Component
  
     public $file_path;
     public $DevopsRequestaceessDialog = false;
- 
+
     public $closeMmsRequestaccess = false;
     public $openMmsRequestaccess = false;
     public $DistributionRequestaceessDialog = false;
@@ -83,7 +90,7 @@ class Catalog extends Component
     public $closeAddRequestaccess = false;
     public $openAddRequestaccess = false;
     public $DesktopRequestaceessDialog = false;
- 
+
     public $closeDesktopRequestaccess = false;
     public $openDesktopRequestaccess = false;
     public $IdRequestaceessDialog = false;
@@ -98,9 +105,9 @@ class Catalog extends Component
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
         'mail' => 'required|email',
-     
-     'distributor_name'=>'required|string|max:15',
-     'selected_equipment'=>'required',
+        'priority' => 'required|in:High,Medium,Low',
+        'distributor_name' => 'required|string|max:15',
+        'selected_equipment' => 'required',
         'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
     ];
  
@@ -110,6 +117,8 @@ class Catalog extends Component
    'selected_equipment'=>'Select Equipment is required ',
         'subject.required' => 'Subject  is required.',
         'mail.required' => ' Email  is required.',
+        'priority.required' => 'Priority is required.',
+        'priority.in' => 'Priority must be one of: High, Medium, Low.',
         'mail.email' => ' Email must be a valid email address.',
         'mobile.required' => ' Mobile number is required.',
         'mobile.max' => ' Mobile number must not exceed 15 characters.',
@@ -128,7 +137,7 @@ class Catalog extends Component
     $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
     ->whereNotIn('employee_status', ['rejected', 'terminated'])
     ->get();
- 
+    $this->superAdmins = IT::where('role', 'super_admin')->get();
     if ($this->employeeDetails) {
         // Combine first and last names
         $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
@@ -185,7 +194,9 @@ class Catalog extends Component
         $this->addselectedPeople=[];
         $this->isNames=false;
     $this->searchTerm = '';
-
+    $this->filteredPeoples='';
+ 
+ 
     }
  
     public function ItRequest()
@@ -580,169 +591,191 @@ class Catalog extends Component
  
  
     }
-  public function DistributorRequest()
-{
-    $messages = [
-        'subject.required' => 'Business Justification is required',
-        'distributor_name.required' => 'Distributor name is required',
-        'description.required' => 'Specific Information is required',
-    ];
- 
-    $this->validate([
-        'distributor_name' => 'required|string',
-        'subject' => 'required|string|max:255',
-        'description' => 'required|string',
-        'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
-    ], $messages);
- 
-    try {
-        $fileContent = null;
-        $mimeType = null;
-        $fileName = null;
-   
-        if ($this->file_path) {
-            $fileContent = file_get_contents($this->file_path->getRealPath());
-            if ($fileContent === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                return;
-            }
- 
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                return;
-            }
- 
-            $mimeType = $this->file_path->getMimeType();
-            $fileName = $this->file_path->getClientOriginalName();
-        }
- 
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+    public function DistributorRequest()
+    {
+        $messages = [
+            'subject.required' => 'Business Justification is required',
+            'distributor_name.required' => 'Distributor name is required',
+            'description.required' => 'Specific Information is required',
+            'priority.required' => 'Priority is required.',
+        ];
 
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-       
-            'distributor_name' => $this->distributor_name,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path' => $fileContent,
-            'file_name' => $fileName,
-            'mime_type' => $mimeType,
-            'cc_to' => $this->cc_to ?? '-',
-            'category' => $this->category,
-     
-            'mail' => 'N/A',
-            'mobile' => 'N/A',
-        ]);
-       
-        FlashMessageHelper::flashSuccess ('Request created successfully.');
-        $this->reset();
-        return redirect()->to('/HelpDesk');
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        // Do not reset here, just set the error bag
-        $this->setErrorBag($e->validator->getMessageBag());
-    } catch (\Exception $e) {
-        Log::error('Error creating request: ' . $e->getMessage(), [
-            'employee_id' => $this->employeeDetails->emp_id,
-            'category' => $this->category,
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
-        ]);
-        FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
+        $this->validate([
+            'distributor_name' => 'required|string',
+            'subject' => 'required|string|max:255',
+            'priority' => 'required|in:High,Medium,Low',
+            'description' => 'required|string',
+            'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+        ], $messages);
+
+        try {
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+
+            if ($this->file_path) {
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+            $helpDesk = HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+
+                'distributor_name' => $this->distributor_name,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path' => $fileContent,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category,
+                'priority' => $this->priority,
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+            ]);
+            $superAdmins = IT::where('role', 'super_admin')->get();
+
+            foreach ($superAdmins as $admin) {
+                // Retrieve the first and last names
+                $firstName = $admin->first_name;
+                $lastName = $admin->last_name;
+
+                // Send Email with first and last names included
+                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+            }
+
+
+            FlashMessageHelper::flashSuccess('Request created successfully.');
+            $this->reset();
+            return redirect()->to('/HelpDesk');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Do not reset here, just set the error bag
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $this->employeeDetails->emp_id,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
+            ]);
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+        }
     }
-}
- 
-   
+
+
     public function Devops()
     {
         $messages = [
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name is required',
-            'description' => 'Specific Information is required',
-            'mail.required' => ' Email  is required.',
-            'mail.email' => ' Email must be a valid email address.',
-              'mobile.required' => 'Mobile number is required'
+            'description.required' => 'Specific Information is required',
+            'mail.required' => 'Email is required.',
+            'mail.email' => 'Email must be a valid email address.',
+            'mobile.required' => 'Mobile number is required',
+            'priority.required' => 'Priority is required.',
         ];
+    
         $this->validate([
             'subject' => 'required|string|max:255',
-            'mail' => 'required|email',
-            'mobile' => 'required|string|max:15',
+            'priority' => 'required|in:High,Medium,Low',
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
-        ],$messages);
+        ], $messages);
+    
         try {
-     
-    // Store the file as binary data
- 
- 
- 
-    $fileContent=null;
-    $mimeType = null;
-    $fileName = null;
-    if ($this->file_path) {
-   
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
-            ]);
-            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
-            return;
-        }
- 
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            FlashMessageHelper::flashWarning( 'File size exceeds the allowed limit.');
-            return;
-        }
- 
- 
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
-    }
-   
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-       
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-       
-
-            HelpDesks::create([
+            // Get the logged-in employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+    
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->firstOrFail();
+    
+            // Assign mobile and mail based on the logged-in employee
+            $this->mobile = $this->employeeDetails->mobile;
+            $this->mail = $this->employeeDetails->mail;
+    
+            // Process file upload
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            if ($this->file_path) {
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+    
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+    
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+    
+            // Create the help desk entry
+            $helpDesk = HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-             
-                'distributor_name' => $this->distributor_name??'-',
+                'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent ,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
+                'priority' => $this->priority,
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => $this->mail,
                 'mobile' => $this->mobile,
-                
             ]);
- 
-            FlashMessageHelper::flashSuccess ( 'Request created successfully.');
+    
+            // Notify super admins
+            $superAdmins = IT::where('role', 'super_admin')->get();
+            foreach ($superAdmins as $admin) {
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
+            }
+    
+            FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id'=> $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'employee_id' => $this->employeeDetails->emp_id ?? null,
+                'category' => $this->category ?? null,
+                'subject' => $this->subject ?? null,
+                'description' => $this->description ?? null,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
         }
     }
- 
+    
+
     public function Request()
     {
         try {
@@ -750,11 +783,13 @@ class Catalog extends Component
                 'subject.required' => 'Business Justification is required',
               'cc_to.required' =>'Add members is required',
                 'description' => 'Specific Information is required',
-               
+                'priority.required' => 'Priority is required.',
+
             ];
             $this->validate([
                 'subject' => 'required|string|max:255',
-               'cc_to'=>'required',
+                'cc_to' => 'required',
+                'priority' => 'required|in:High,Medium,Low',
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
              
@@ -790,9 +825,10 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-      
-            HelpDesks::create([
+       
+       
+     
+    HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                
                 'subject' => $this->subject,
@@ -803,11 +839,22 @@ class Catalog extends Component
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mobile' => 'N/A',
-                'mail' => $this->mail??'-',
-                
+                'mail' => $this->mail ?? '-',
+                'priority' => $this->priority,
+
                 'distributor_name' => 'N/A',
             ]);
+            $superAdmins = IT::where('role', 'super_admin')->get();
  
+            foreach ($superAdmins as $admin) {
+                // Retrieve the first and last names
+                $firstName = $admin->first_name;
+                $lastName = $admin->last_name;
+           
+                // Send Email with first and last names included
+                Mail::to($admin->email)->send(new HelpDeskNotification($request, $firstName, $lastName));
+            }
+           
             FlashMessageHelper::flashSuccess  ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -828,69 +875,81 @@ class Catalog extends Component
     public function submit()
     {
         try {
-            $messages=[
-                'subject' =>'Subject is required',
-                'description'=>'Specific Information is required',
-                  'selected_equipment'=>'Selected equipment is required'
-             ];
-             $this->validate([
-                 'subject' => 'required|string',
-                 'description' => 'required|string',
-                 'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
-                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
-             ],$messages);
-     
-           
-             $fileContent=null;
-             $mimeType = null;
-             $fileName = null;
-    // Store the file as binary data
-    if ($this->file_path) {
-   
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
-            ]);
-            FlashMessageHelper::flashError('Failed to read the uploaded file.');
-            return;
-        }
- 
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-            return;
-        }
- 
- 
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
-    }
-   
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-       
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $messages = [
+                'subject' => 'Subject is required',
+                'description' => 'Specific Information is required',
+                'selected_equipment' => 'Selected equipment is required',
+                'priority.required' => 'Priority is required.',
+            ];
+            $this->validate([
+                'subject' => 'required|string',
+                'description' => 'required|string',
+                'priority' => 'required|in:High,Medium,Low',
+                'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+            ], $messages);
 
-       
-        HelpDesks::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-          
-            'subject' => $this->subject,
-            'description' => $this->description,
-            'selected_equipment' => $this->selected_equipment, // Ensure this is correctly referenced
-            'file_path' => $fileContent,
-            'file_name' => $fileName ,
-            'mime_type' => $mimeType,
-            'cc_to' => $this->cc_to ?? '-',
-            'category' => $this->category ?? '-',
-            'mail' => 'N/A',
-            'mobile' => 'N/A',
-        
-            'distributor_name' => 'N/A',
-        ]);
-   
- 
-        FlashMessageHelper::flashSuccess ('Request created successfully.');
+
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            // Store the file as binary data
+            if ($this->file_path) {
+
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+            $helpdesk = HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'selected_equipment' => $this->selected_equipment, // Ensure this is correctly referenced
+                'file_path' => $fileContent,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category ?? '-',
+                'mail' => 'N/A',
+                'mobile' => 'N/A',
+                'priority' => $this->priority,
+                'distributor_name' => 'N/A',
+            ]);
+
+            $superAdmins = IT::where('role', 'super_admin')->get();
+
+            foreach ($superAdmins as $admin) {
+                // Retrieve the first and last names
+                $firstName = $admin->first_name;
+                $lastName = $admin->last_name;
+
+                // Send Email with first and last names included
+                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+            }
+
+            FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -948,7 +1007,7 @@ class Catalog extends Component
         $employee = auth()->guard('emp')->user();
         $employeeId = $employee->emp_id;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
- 
+        $superAdmins = IT::where('role', 'super_admin')->get();
  
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
@@ -959,7 +1018,8 @@ class Catalog extends Component
             ->get();
         $records = HelpDesks::all();
         return view('livewire.catalog', [
-            'peopleData' => $peopleData, 'records' => $records
+            'peopleData' => $peopleData, 'records' => $records,    'superAdmins' => $superAdmins,
         ]);
     }
 }
+ 

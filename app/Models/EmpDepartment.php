@@ -16,6 +16,11 @@ class EmpDepartment extends Model
         'updated_at'
     ];
 
+    public function employees()
+    {
+        return $this->hasMany(EmployeeDetails::class, 'dept_id');
+    }
+
 
     //  protected static function boot()
     // {
@@ -42,4 +47,3 @@ class EmpDepartment extends Model
     //     return sprintf('%s-%05d', $prefix, $lastId + 1);
     // }
 }
-
