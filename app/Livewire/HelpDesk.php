@@ -30,6 +30,8 @@ use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
+    public $isOpen = false;
+    public $rejection_reason;
     public $selectedCategory = [];
     public $activeCategory = null; // Category for Active tab
 public $pendingCategory = null; // Category for Pending tab
@@ -231,18 +233,21 @@ public $closedSearch = '';
         $this->searchHelpDesk(['completed', 'Reject'], $this->closedSearch,$this->closedCategory);
     }
     
-    public $isOpen = false;
-    public $rejectionReason = '';
-
-
-    /**
-     * Open the modal with the rejection reason.
-     */
-    public function showRejectionReason()
+    public function showRejectionReason($id)
     {
-       
+        $record = HelpDesks::findOrFail($id);
 
-        $this->isOpen = true;
+        if ($record && $record->status == 'Reject') {
+            $this->rejection_reason = $record->rejection_reason ?? 'Reason not provided.';
+            $this->isOpen = true;
+        } else {
+            $this->dispatchBrowserEvent('notification', ['message' => 'Reason not available.']);
+        }
+    }
+    public function closeModal()
+    {
+        $this->isOpen = false;
+        $this->rejection_reason = null;
     }
     public function close()
     {
