@@ -2,56 +2,54 @@
 
 namespace App\Models;
 
+use App\Traits\ChatHelpers;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
+
 class Message extends Model
 {
-    use HasFactory;
-    use HasFactory;
-
-    protected $fillable=[
-        'body',
-        'file_path',
-        'file_name',
-        'mime_type',
+    use HasFactory, ChatHelpers;
+    protected $fillable = [
         'sender_id',
         'receiver_id',
-        'chating_id',
-        'read_at',
-        'receiver_deleted_at',
-        'sender_deleted_at',
+        'last_time_message',
+        'conversation_id',
+        'read',
+        'body',
+        'type',
+        'media_path'
     ];
+    /**
+     * Sender of the message.
+     */
+    public function sender()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'sender_id');
+    }
 
+    /**
+     * Receiver of the message.
+     */
+    public function receiver()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'receiver_id');
+    }
 
-    protected $dates=['read_at','receiver_deleted_at','sender_deleted_at'];
-
-
-    /* relationship */
-
+    /**
+     * The conversation this message belongs to.
+     */
     public function conversation()
     {
-        return $this->belongsTo(Chating::class);
+        return $this->belongsTo(Conversation::class, 'conversation_id');
     }
 
-
-    public function isRead():bool
+    public function isMedia()
     {
-
-         return $this->read_at != null;
+        return in_array($this->type, ['image', 'video']);
     }
-    public function isImage()
+
+    public function getMediaUrlAttribute()
     {
-        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
+        return $this->media_path ? asset('storage/' . $this->media_path) : null;
     }
-
-    public function getImageUrlAttribute()
-    {
-        return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
-    }
-    public function employeeDetails()
-{
-    return $this->hasOne(EmployeeDetails::class, 'emp_id', 'emp_id'); // Adjust the foreign key as necessary
-}
-
 }

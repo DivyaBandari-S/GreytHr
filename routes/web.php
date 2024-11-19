@@ -270,12 +270,12 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
     Route::get('/ProfileCard', ProfileCard::class)->name('profile');
     Route::get('/Settings', Settings::class)->name('settings');
-    Route::get('/view-regularisation-pending-new',ViewRegularisationPendingNew::class)->name('view-regularisation-pending-new');
+    Route::get('/view-regularisation-pending-new', ViewRegularisationPendingNew::class)->name('view-regularisation-pending-new');
     Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
     Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
-    
+
 
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('Feeds');
@@ -347,9 +347,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
-    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/users', EmployeeList::class)->name('users');
+    Route::get('/chat', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

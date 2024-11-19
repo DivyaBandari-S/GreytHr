@@ -491,9 +491,9 @@
     @if($record->status == 'Reject')
         {{ ucfirst($record->status ?? '-') }}<br>
         <!-- View Reason Link for Rejected Status -->
-        <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')">
+        <div class="anchorTagDetails" wire:click="showRejectionReason('{{ $record->id }}')">
             View Reason
-        </a>
+        </div>
     @elseif($record->status == 'Completed')
         {{ ucfirst($record->status ?? '-') }}
     @endif
@@ -508,15 +508,15 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Rejection Reason</h5>
-                        <button type="button" class="close" wire:click="closeModal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button type="button" class="btn-close btn-primary" aria-label="Close"
+                                        wire:click="closeModal">
+                                    </button>
                     </div>
                     <div class="modal-body">
                         {{ $rejection_reason }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeModal">Close</button>
+                        <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
                     </div>
                 </div>
             </div>
