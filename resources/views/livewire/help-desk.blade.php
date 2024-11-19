@@ -305,7 +305,6 @@
             <th class="help-desk-table-column">Subject</th>
             <th class="help-desk-table-column">Description</th>
             <th class="help-desk-table-column">Attach Files</th>
-            <th class="help-desk-table-column">CC To</th>
             <th class="help-desk-table-column">Priority</th>
             <th class="help-desk-table-column">Status</th>
         </tr>
@@ -313,7 +312,7 @@
     <tbody>
         @if ($searchData && $searchData->whereIn('status', ['Open', 'Recent'])->isEmpty())
         <tr>
-            <td colspan="9" style="text-align: center; border: none;">
+            <td colspan="8" style="text-align: center; border: none;">
                 <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
             </td>
         </tr>
@@ -352,12 +351,6 @@
                 @endif
             </td>
             <td class="helpdesk-request">
-                @php
-                    $ccToArray = explode(',', $record->cc_to ?? '-');
-                @endphp
-                {{ count($ccToArray) <= 2 ? implode(', ', $ccToArray) : '-' }}
-            </td>
-            <td class="helpdesk-request">
                 {{ $record->priority ?? '-' }}
             </td>
             <td class="helpdesk-request">
@@ -370,16 +363,14 @@
                 @endif
             </td>
         </tr>
-
-        @if (count($ccToArray) > 0)
-        <tr class="border" style="border: none !important;">
-            <td class="border" colspan="9" style="padding: 10px; font-size: 12px; text-transform: capitalize; border-top: none !important;">
-                <div style="margin-left: 10px; font-size: 12px; text-transform: capitalize;">
-                    CC TO: {{ implode(', ', $ccToArray) }}
-                </div>
-            </td>
-        </tr>
-        @endif
+        <tr>
+                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; background-color: #f9f9f9;">
+                    @php
+                    $ccToArray = explode(',', $record->cc_to ?? '-');
+                    @endphp
+                    <strong>CC To:</strong> {{ count($ccToArray) > 0 ? implode(', ', $ccToArray) : '-' }}
+                </td>
+            </tr>
         @endforeach
         @endif
     </tbody>
@@ -498,16 +489,16 @@
                         </td>
                         <td class="helpdesk-request @if($record->status == 'Reject') rejectColor @elseif($record->status == 'Completed') approvedColor @endif">
     @if($record->status == 'Reject')
-    {{ ucfirst($record->status ?? '-') }}<br>
+        {{ ucfirst($record->status ?? '-') }}<br>
         <!-- View Reason Link for Rejected Status -->
-        <a href="#" wire:click="showRejectionReason">
+        <div class="anchorTagDetails" wire:click="showRejectionReason('{{ $record->id }}')">
             View Reason
-        </a>
-
+        </div>
     @elseif($record->status == 'Completed')
-        {{ ucfirst($record->status ?? '-') }} <!-- Show status text for 'Completed' -->
+        {{ ucfirst($record->status ?? '-') }}
     @endif
 </td>
+
 
 
 <div>
@@ -516,17 +507,16 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Rejection Reason </h5>
-                        <button type="button" class="close" wire:click="closeModal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <h5 class="modal-title">Rejection Reason</h5>
+                        <button type="button" class="btn-close btn-primary" aria-label="Close"
+                                        wire:click="closeModal">
+                                    </button>
                     </div>
                     <div class="modal-body">
-                        <!-- Display the rejection reason here -->
                         {{ $rejection_reason }}
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeModal">Close</button>
+                        <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
                     </div>
                 </div>
             </div>
@@ -537,20 +527,17 @@
 
 
 
+
                     </tr>
 
+                    <tr>
+                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; background-color: #f9f9f9;">
                     @php
-                        $ccToArray = explode(',', $record->cc_to ?? '-');
+                    $ccToArray = explode(',', $record->cc_to ?? '-');
                     @endphp
-                    @if(count($ccToArray) > 0)
-                        <tr class="no-border-top" style="border-top:none">
-                            <td class="no-border-top" colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize;">
-                                <div class="no-border-top" style="margin-left: 10px; font-size: 12px;">
-                                    CC TO: {{ implode(', ', $ccToArray) }}
-                                </div>
-                            </td>
-                        </tr>
-                    @endif
+                    <strong>CC To:</strong> {{ count($ccToArray) > 0 ? implode(', ', $ccToArray) : '-' }}
+                </td>
+            </tr>
                 @endif
             @endforeach
         @endif
