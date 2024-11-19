@@ -46,17 +46,21 @@ class WhoIsInChart extends Component
     public $notFound3;
     public $isdatepickerclicked = 0;
 
+    public $openAccordionForLateComers=[];
     public $employeesOnLeaveCount;
     public $absentEmployeesCount;
     public $toggleButton=false;
     public $isToggled = false;
 
+    public $openAccordionsForEmployeesOnLeave=[];
     public $openshiftselectorforcheck = false;
     public $from_date;
 
+    public $openAccordionsForAbsentees=[];
     public $selectedShift=null;
     public $employees4;
 
+    public $openAccordionForEarlyComers=[];
     public $formattedSelectedShift;
     public $openAccordionForAbsent=null;
 
@@ -120,39 +124,46 @@ public function checkShiftForEmployees()
     
   
    
-    public function toggleAccordionForAbsent($index)
-    {
-        // Toggle the open state for the clicked accordion
-        if ($this->openAccordionForAbsent === $index) {
-            $this->openAccordionForAbsent = null; // Close the accordion if it's already open
-        } else {
-            $this->openAccordionForAbsent = $index; // Open the clicked accordion
-        }
+public function toggleAccordionForAbsent($index)
+{
+    if (in_array($index, $this->openAccordionsForAbsentees)) {
+        // Remove from open accordions if already open
+        $this->openAccordionsForAbsentees = array_diff($this->openAccordionsForAbsentees, [$index]);
+    } else {
+        // Add to open accordions if not open
+        $this->openAccordionsForAbsentees[] = $index;
     }
-    public function toggleAccordionForLate($index)
-    {
-        // Toggle the open state for the clicked accordion
-        if ($this->openAccordionForLate === $index) {
-            $this->openAccordionForLate = null; // Close the accordion if it's already open
-        } else {
-            $this->openAccordionForLate = $index; // Open the clicked accordion
-        }
+   
+}
+public function toggleAccordionForLate($index)
+{
+    // Toggle the open state for the clicked accordion
+    if (in_array($index, $this->openAccordionForLateComers)) {
+        // Remove from open accordions if already open
+        $this->openAccordionForLateComers = array_diff($this->openAccordionForLateComers, [$index]);
+    } else {
+        // Add to open accordions if not open
+        $this->openAccordionForLateComers[] = $index;
     }
+}
     public function toggleAccordionForEarly($index)
     {
-        // Toggle the open state for the clicked accordion
-        if ($this->openAccordionForEarly === $index) {
-            $this->openAccordionForEarly = null; // Close the accordion if it's already open
+        if (in_array($index, $this->openAccordionForEarlyComers)) {
+            // Remove from open accordions if already open
+            $this->openAccordionForEarlyComers = array_diff($this->openAccordionForEarlyComers, [$index]);
         } else {
-            $this->openAccordionForEarly = $index; // Open the clicked accordion
+            // Add to open accordions if not open
+            $this->openAccordionForEarlyComers[] = $index;
         }
     }
     public function toggleAccordionForLeave($index)
     {
-        if ($this->openAccordionForLeave === $index) {
-            $this->openAccordionForLeave = null; // Close the accordion if it's already open
+        if (in_array($index, $this->openAccordionsForEmployeesOnLeave)) {
+            // Remove from open accordions if already open
+            $this->openAccordionsForEmployeesOnLeave = array_diff($this->openAccordionsForEmployeesOnLeave, [$index]);
         } else {
-            $this->openAccordionForLeave = $index; // Open the clicked accordion
+            // Add to open accordions if not open
+            $this->openAccordionsForEmployeesOnLeave[] = $index;
         }
 
     }
@@ -476,6 +487,8 @@ public function checkShiftForEmployees()
             $this->isdatepickerclicked = 1;
             $this->selectedShift=null;
             $this->currentDate = $this->from_date;
+            
+
         } catch (\Exception $e) {
             Log::error('Error updating date: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while updating the date. Please try again.');
@@ -525,39 +538,40 @@ public function checkShiftForEmployees()
      if(empty($this->selectedShift))
      {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
-                ->where('leave_applications.leave_status', 2)
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->whereDate('from_date', '<=', $currentDate)
-                ->whereDate('to_date', '>=', $currentDate)
-                ->where('employee_details.employee_status', 'active')
-                ->get([
-                    'leave_applications.*', // To get leave date and leave type
-                    'employee_details.*',
-                ])
-                ->map(function ($leaveRequest) {
-                    // Calculating the number of leave days excluding weekends
-                    $fromDate = Carbon::parse($leaveRequest->from_date);
-                    $toDate = Carbon::parse($leaveRequest->to_date);
+    ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')
+    ->leftJoin('company_shifts', function ($join) {
+        // Use JSON_CONTAINS to match company_id from employee_details JSON format with company_shifts.company_id
+        $join->on(DB::raw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))'), '=', DB::raw('1'))
+             ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
+    })
+    ->where('leave_applications.leave_status', 2)
+    ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+    ->whereDate('from_date', '<=', $currentDate)
+    ->whereDate('to_date', '>=', $currentDate)
+    ->where('employee_details.employee_status', 'active')
+    ->get([
+        'leave_applications.*',
+        'employee_details.*',
+        'company_shifts.*', // Selecting fields from company_shifts
+    ])
+    ->map(function ($leaveRequest) {
+        $fromDate = Carbon::parse($leaveRequest->from_date);
+        $toDate = Carbon::parse($leaveRequest->to_date);
 
-                    // Generate all dates between from_date and to_date, excluding weekends
-                    $leave_dates = [];
-                    for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
-                        // Exclude weekends (Saturday=6, Sunday=7)
-                        if (!$date->isWeekend()) {
-                            $leave_dates[] = $date->format('Y-m-d');
-                        }
-                    }
+        // Generate all dates between from_date and to_date, excluding weekends
+        $leave_dates = [];
+        for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
+            if (!$date->isWeekend()) {
+                $leave_dates[] = $date->format('Y-m-d');
+            }
+        }
 
-                    // Set the leave_dates attribute using setAttribute
-                    $leaveRequest->setAttribute('leave_dates', $leave_dates);
+        // Set the leave_dates attribute and number_of_days
+        $leaveRequest->setAttribute('leave_dates', $leave_dates);
+        $leaveRequest->number_of_days = count($leave_dates);
 
-                    // Calculate the number of leave days excluding weekends
-                    $leaveRequest->number_of_days = count($leave_dates);
-
-                    return $leaveRequest;
-                });
-
+        return $leaveRequest;
+    });
     
      }
      else
