@@ -19,37 +19,6 @@
                                 {{ ucwords(strtolower($loginEmployee->first_name)) }}
                                 {{ ucwords(strtolower($loginEmployee->last_name)) }}
                             </p>
-                            <div class="locationGlobe row m-0 p-0 pt-5">
-                                <div class="col-1 p-0">
-                                    <i class="fa-solid fa-location-dot" id="openMapIcon"
-                                        style="color: red;cursor: pointer; font-size: 14px;"></i>
-                                </div>
-                                <div class="col-11 p-0">
-                                    @if (
-                                        !empty($formattedAddress['village']) ||
-                                            !empty($formattedAddress['county']) ||
-                                            !empty($formattedAddress['city']) ||
-                                            !empty($formattedAddress['country']) ||
-                                            !empty($formattedAddress['postcode']))
-                                        {{-- Display the formatted address if any of the fields are not empty --}}
-                                        <p>
-                                            {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
-                                            {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
-                                            {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
-                                            {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
-                                            {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
-                                        </p>
-                                    @elseif(!empty($country) || !empty($city))
-                                        {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
-                                        <p>{{ $city }} , {{ $country }}</p>
-                                    @else
-                                        {{-- Display a default message if everything is empty --}}
-                                        <p>Address not available</p>
-                                    @endif
-
-                                </div>
-
-                            </div>
                         </div>
                         
 
@@ -61,9 +30,9 @@
                             <div>
                                 <img src="images/admin_banner.png" style="width: 100%" />
                             </div>
-                            <div class="mb-4 homeBaneerCard row m-0" style="margin-top: -30px !important;">
+                            <div class="mb-4 homeBaneerCard row m-0" style="margin-top: -40px !important;">
                                
-                                <div class="col-6">
+                                <div class="col-md-6">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
@@ -82,11 +51,12 @@
                                             }
                                         }" x-init="setInterval(() => updateTime(), 1000)">
                                         <template x-if="time">
-                                            <p x-text="time"></p>
+                                            <p x-text="time" class="showTimer"></p>
                                         </template>
+                                        <img src="images/stopwatch.png" style="width: 2.5em; height: fit-content" />
                                     </div>
                                 </div>
-                                <div class="col-6 pt-2 text-end">
+                                <div class="col-md-6 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
                                             // Fetch shift times
@@ -107,12 +77,42 @@
 
                                         @endphp
                                         {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
-                                        {{ $formattedEndShiftTime }}
+                                        {{ $formattedEndShiftTime }} Shift
                                     </p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
                                 </div>
-                                <div class="A d-flex justify-content-between align-items-center flex-row mb-3"
-                                    style="margin-top: 2em">
+                                <div class="locationGlobe row m-0">
+                                    <div class="col-1 p-0">
+                                        <i class="fa-solid fa-location-dot" id="openMapIcon"
+                                            style="color: red;cursor: pointer; font-size: 14px;"></i>
+                                    </div>
+                                    <div class="col-11 p-0">
+                                        @if (
+                                            !empty($formattedAddress['village']) ||
+                                                !empty($formattedAddress['county']) ||
+                                                !empty($formattedAddress['city']) ||
+                                                !empty($formattedAddress['country']) ||
+                                                !empty($formattedAddress['postcode']))
+                                            {{-- Display the formatted address if any of the fields are not empty --}}
+                                            <p class="mb-1">
+                                                {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
+                                                {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
+                                            </p>
+                                        @elseif(!empty($country) || !empty($city))
+                                            {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
+                                            <p class="mb-1">{{ $city }} , {{ $country }}</p>
+                                        @else
+                                            {{-- Display a default message if everything is empty --}}
+                                            <p class="mb-1">Address not available</p>
+                                        @endif
+
+                                    </div>
+
+                                </div>
+                                <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                     <button id="signButton" class="signInButton"
                                         wire:click="toggleSignState">
