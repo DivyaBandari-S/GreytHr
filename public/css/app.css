@@ -152,7 +152,7 @@
     padding: 5px 10px;
     border: 1px solid rgb(2, 17, 79);
     border-radius: 5px;
-    background: #fff;
+    background: #fde5c1;
     color: var(--main-heading-color);
     margin-bottom: 0;
     display: flex;
@@ -924,14 +924,6 @@ border-bottom:none;
 /* Default option styling */
 .option-default {
     color:var(--main-color) ;
-}
-.view-reason-link {
-    color: #007bff;
-    text-decoration: none;
-}
-
-.view-reason-link:hover {
-    text-decoration: underline;
 }
 
 
@@ -3176,7 +3168,7 @@ input[type="radio"] {
     transition: transform 0.3s ease-in-out;
 } */
 .welcomeContainer p {
-    color: #fff !important;
+    color: #02114f !important;
     transition: color 0.5s ease;
 }
 /* .welcomeContainer::before {
@@ -3200,13 +3192,15 @@ input[type="radio"] {
     /* background-color: #b0d8df; */
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
-    background-image: radial-gradient(circle at center right, rgb(43, 36, 140) 0%, rgb(43, 36, 140) 64%,rgb(51, 30, 166) 64%, rgb(51, 30, 166) 80%,rgb(59, 23, 191) 80%, rgb(59, 23, 191) 86%,rgb(67, 17, 217) 86%, rgb(67, 17, 217) 92%,rgb(75, 10, 242) 92%, rgb(75, 10, 242) 100%);
+    background-image: linear-gradient(90deg, rgb(193, 193, 193), rgb(107, 107, 107)), linear-gradient(157.5deg, rgb(0, 165, 230) 0%, rgb(0, 165, 230) 39%, rgb(17, 149, 218) 39%, rgb(17, 149, 218) 56%, rgb(35, 132, 206) 56%, rgb(35, 132, 206) 60%, rgb(52, 116, 195) 60%, rgb(52, 116, 195) 68%, rgb(70, 99, 183) 68%, rgb(70, 99, 183) 86%, rgb(87, 83, 171) 86%, rgb(87, 83, 171) 100%), linear-gradient(135deg, rgb(0, 165, 230) 0%, rgb(0, 165, 230) 39%, rgb(17, 149, 218) 39%, rgb(17, 149, 218) 56%, rgb(35, 132, 206) 56%, rgb(35, 132, 206) 60%, rgb(52, 116, 195) 60%, rgb(52, 116, 195) 68%, rgb(70, 99, 183) 68%, rgb(70, 99, 183) 86%, rgb(87, 83, 171) 86%, rgb(87, 83, 171) 100%);
+    background-blend-mode: overlay, overlay, normal;
+    /* background-image: radial-gradient(circle at center right, rgb(43, 36, 140) 0%, rgb(43, 36, 140) 64%,rgb(51, 30, 166) 64%, rgb(51, 30, 166) 80%,rgb(59, 23, 191) 80%, rgb(59, 23, 191) 86%,rgb(67, 17, 217) 86%, rgb(67, 17, 217) 92%,rgb(75, 10, 242) 92%, rgb(75, 10, 242) 100%); */
     /* background-image: radial-gradient(circle at 40% 91%, rgba(251, 251, 251,0.04) 0%, rgba(251, 251, 251,0.04) 50%,rgba(229, 229, 229,0.04) 50%, rgba(229, 229, 229,0.04) 100%),radial-gradient(circle at 66% 97%, rgba(36, 36, 36,0.04) 0%, rgba(36, 36, 36,0.04) 50%,rgba(46, 46, 46,0.04) 50%, rgba(46, 46, 46,0.04) 100%),radial-gradient(circle at 86% 7%, rgba(40, 40, 40,0.04) 0%, rgba(40, 40, 40,0.04) 50%,rgba(200, 200, 200,0.04) 50%, rgba(200, 200, 200,0.04) 100%),radial-gradient(circle at 15% 16%, rgba(99, 99, 99,0.04) 0%, rgba(99, 99, 99,0.04) 50%,rgba(45, 45, 45,0.04) 50%, rgba(45, 45, 45,0.04) 100%),radial-gradient(circle at 75% 99%, rgba(243, 243, 243,0.04) 0%, rgba(243, 243, 243,0.04) 50%,rgba(37, 37, 37,0.04) 50%, rgba(37, 37, 37,0.04) 100%),linear-gradient(90deg, rgb(34, 222, 237),rgb(135, 89, 215)); */
 }
 
 .bigCircle {
-    height: 80px;
-    width: 80px;
+    height: 71px;
+    width: 71px;
     border-radius: 50%;
     background-color: #fde5c1;
     /* background-color: orange; */
@@ -6874,7 +6868,7 @@ select .yearSelect {
 
 .morning-city {
     font-weight: 700;
-    font-size: 0.9em;
+    font-size: 1.2em;
     letter-spacing: 1.2px;
     color: white;
 }
@@ -9163,7 +9157,7 @@ peoples module styles started */
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 8px;
+    /* margin-top: 8px; */
     margin-bottom: 15px;
 }
 /* .desigMainDiv {

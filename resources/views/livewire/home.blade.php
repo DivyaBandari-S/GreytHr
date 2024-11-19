@@ -15,7 +15,7 @@
                             @if ($greetingText)
                                 <p class="morning-city">{{ $greetingText }}</p>
                             @endif
-                            <p class="morning-city">Welcome<br>
+                            <p class="morning-city" style="padding-top: 2.5em;">Welcome<br>
                                 {{ ucwords(strtolower($loginEmployee->first_name)) }}
                                 {{ ucwords(strtolower($loginEmployee->last_name)) }}
                             </p>
@@ -32,7 +32,7 @@
                             </div>
                             <div class="mb-4 homeBaneerCard row m-0" style="margin-top: -40px !important;">
                                
-                                <div class="col-md-6">
+                                <div class="col-md-6 pe-0">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
@@ -56,7 +56,7 @@
                                         <img src="images/stopwatch.png" style="width: 2.5em; height: fit-content" />
                                     </div>
                                 </div>
-                                <div class="col-md-6 pt-2 text-end">
+                                <div class="col-md-6 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
                                             // Fetch shift times
@@ -133,7 +133,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3 homeReporting pt-4">
+            <div class="col-md-3 homeReporting">
                 @if ($loginEmpManagerDetails)
                     <div class="card-reporting">
                         <button class="mail">
