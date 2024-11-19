@@ -925,6 +925,14 @@ border-bottom:none;
 .option-default {
     color:var(--main-color) ;
 }
+.view-reason-link {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.view-reason-link:hover {
+    text-decoration: underline;
+}
 
 
 /* Ending help desk module */
