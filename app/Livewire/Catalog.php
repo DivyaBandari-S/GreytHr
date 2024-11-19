@@ -35,6 +35,7 @@ class Catalog extends Component
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
+  
 
     public $mobile;
     public $showModal = true;
@@ -104,7 +105,7 @@ class Catalog extends Component
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
         'mail' => 'required|email',
-
+        'priority' => 'required|in:High,Medium,Low',
         'distributor_name' => 'required|string|max:15',
         'selected_equipment' => 'required',
         'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
@@ -116,6 +117,8 @@ class Catalog extends Component
         'selected_equipment' => 'Select Equipment is required ',
         'subject.required' => 'Subject  is required.',
         'mail.required' => ' Email  is required.',
+        'priority.required' => 'Priority is required.',
+        'priority.in' => 'Priority must be one of: High, Medium, Low.',
         'mail.email' => ' Email must be a valid email address.',
         'mobile.required' => ' Mobile number is required.',
         'mobile.max' => ' Mobile number must not exceed 15 characters.',
@@ -589,11 +592,13 @@ class Catalog extends Component
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name is required',
             'description.required' => 'Specific Information is required',
+            'priority.required' => 'Priority is required.',
         ];
 
         $this->validate([
             'distributor_name' => 'required|string',
             'subject' => 'required|string|max:255',
+            'priority' => 'required|in:High,Medium,Low',
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
         ], $messages);
@@ -636,7 +641,7 @@ class Catalog extends Component
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
-
+                'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
             ]);
@@ -676,29 +681,35 @@ class Catalog extends Component
         $messages = [
             'subject.required' => 'Business Justification is required',
             'distributor_name.required' => 'Distributor name is required',
-            'description' => 'Specific Information is required',
-            'mail.required' => ' Email  is required.',
-            'mail.email' => ' Email must be a valid email address.',
-            'mobile.required' => 'Mobile number is required'
+            'description.required' => 'Specific Information is required',
+            'mail.required' => 'Email is required.',
+            'mail.email' => 'Email must be a valid email address.',
+            'mobile.required' => 'Mobile number is required',
+            'priority.required' => 'Priority is required.',
         ];
+    
         $this->validate([
             'subject' => 'required|string|max:255',
-            'mail' => 'required|email',
-            'mobile' => 'required|string|max:15',
+            'priority' => 'required|in:High,Medium,Low',
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
         ], $messages);
+    
         try {
-
-            // Store the file as binary data
-
-
-
+            // Get the logged-in employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+    
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->firstOrFail();
+    
+            // Assign mobile and mail based on the logged-in employee
+            $this->mobile = $this->employeeDetails->mobile;
+            $this->mail = $this->employeeDetails->mail;
+    
+            // Process file upload
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
             if ($this->file_path) {
-
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
                     Log::error('Failed to read the uploaded file.', [
@@ -707,49 +718,41 @@ class Catalog extends Component
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
-
+    
                 // Check if the file content is too large
                 if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                     FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                     return;
                 }
-
-
+    
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
             }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-
+    
+            // Create the help desk entry
             $helpDesk = HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-
                 'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
+                'priority' => $this->priority,
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => $this->mail,
                 'mobile' => $this->mobile,
-
             ]);
+    
+            // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
-
             foreach ($superAdmins as $admin) {
-                // Retrieve the first and last names
-                $firstName = $admin->first_name;
-                $lastName = $admin->last_name;
-
-                // Send Email with first and last names included
-                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
             }
-
+    
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -757,15 +760,16 @@ class Catalog extends Component
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'employee_id' => $this->employeeDetails->emp_id ?? null,
+                'category' => $this->category ?? null,
+                'subject' => $this->subject ?? null,
+                'description' => $this->description ?? null,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    
 
     public function Request()
     {
@@ -774,11 +778,13 @@ class Catalog extends Component
                 'subject.required' => 'Business Justification is required',
                 'cc_to.required' => 'Add members is required',
                 'description' => 'Specific Information is required',
+                'priority.required' => 'Priority is required.',
 
             ];
             $this->validate([
                 'subject' => 'required|string|max:255',
                 'cc_to' => 'required',
+                'priority' => 'required|in:High,Medium,Low',
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
 
@@ -838,6 +844,7 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mobile' => 'N/A',
                 'mail' => $this->mail ?? '-',
+                'priority' => $this->priority,
 
                 'distributor_name' => 'N/A',
             ]);
@@ -875,11 +882,13 @@ class Catalog extends Component
             $messages = [
                 'subject' => 'Subject is required',
                 'description' => 'Specific Information is required',
-                'selected_equipment' => 'Selected equipment is required'
+                'selected_equipment' => 'Selected equipment is required',
+                'priority.required' => 'Priority is required.',
             ];
             $this->validate([
                 'subject' => 'required|string',
                 'description' => 'required|string',
+                'priority' => 'required|in:High,Medium,Low',
                 'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
             ], $messages);
@@ -929,7 +938,7 @@ class Catalog extends Component
                 'category' => $this->category ?? '-',
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
-
+                'priority' => $this->priority,
                 'distributor_name' => 'N/A',
             ]);
 
