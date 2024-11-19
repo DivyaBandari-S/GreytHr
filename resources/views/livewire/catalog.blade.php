@@ -91,83 +91,7 @@
                                                             </div>
 
                                                         </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="Name">Requested For:</label>
-                                                            <div class="input-group mb-3">
-                                                                <!-- Info icon on the left side -->
-                                                                <span class="input-group-text" id="basic-addon">
-                                                                    <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                </span>
-
-                                                                <!-- Employee details input -->
-
-                                                                <input type="text"  wire:click="NamesSearch"
-                                                                    value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                    class="form-control"
-                                                                    aria-describedby="basic-addon1"
-                                                                   readonly >
-
-
-
-                                                                <!-- Dropdown toggle icon on the right side -->
-                                                                <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                </button>
-
-                                                            </div>
-
-                                                            @if($isNames)
-                                                            <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                    <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                    <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                        <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                            <i style="text-align: center;" class="fa fa-search"></i>
-                                                                        </button>
-
-                                                                        <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-
-                                                                @if ($peopleData->isEmpty())
-                                                                <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                    No People Found
-                                                                </div>
-                                                                @else
-                                                                @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="addselectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
-                                                                        </div>
-                                                                        <div class="col-auto">
-                                                                            @if (!empty($people->image) && $people->image !== 'null')
-                                                                            <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                            @else
-                                                                            @php $gender = $people->gender ?? null; @endphp
-                                                                            @if ($gender === 'Male')
-                                                                            <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                            @elseif($gender === 'Female')
-                                                                            <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                            @else
-                                                                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                            @endif
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </label>
-                                                                @endforeach
-
-                                                                @endif
-                                                            </div>
-                                                            @endif
-
-                                                        </div>
+                                                     
 
                                                         <div class="form-group mt-2">
                                                             <label for="distributor_name">Provide the Name of Distribution List<span style="color:red">*</span></label>
@@ -187,7 +111,24 @@
                                                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                                                         </div>
 
-
+                                                        <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
                                                         <div class="row mt-2">
                                                             <div class="col">
@@ -221,208 +162,7 @@
 
                             </div>
                         </div>
-                        <div class="col-md-4 mb-4">
-                            <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                <p style="font-size: 12px;"><b>Request for IT Accessories</b></p>
-                                <div class="row m-0">
-                                    <div class="col-12 text-center mb-2">
-                                        <img src="images/it-images/headphone.png" style="height:4em;" />
-                                    </div>
-                                    <div class="col-12 mb-2" style="font-size:12px">
-                                        <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="ItRequest">Request for IT Accessories</p>
-                                    </div>
-                                    @if($ItRequestaceessDialog)
-                                    <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
-                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Request for IT Accessories</h1>
-
-                                                </div>
-
-                                                <div class="modal-body">
-                                                    <div class="row m-0">
-                                                        <div class="col-4 m-auto">
-                                                            <img src="images/it-images/headphone.png" style="height:4em;" />
-                                                        </div>
-                                                        <div class="col-8 m-auto">
-                                                            <p style="font-size:14px;">
-                                                                Please use this catalogue item to raise new request for IT accessories
-                                                                like Headset, Mouse, Keyboard, Monitor etc.</p>
-                                                        </div>
-                                                    </div>
-                                                    <hr style="border: 1px solid #ccc;margin: 10px 0;">
-                                                    <form wire:submit.prevent="submit" style="width:80%">
-
-                                                        <div class="form-group  mt-2">
-                                                            <label for="Name">Requested By:</label>
-
-
-                                                            <div class="input-group mb-3">
-
-
-
-                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
-                                                                @if($employeeDetails)
-                                                                <input wire:model.lazy="full_name" type="text" class="form-control" aria-describedby="basic-addon1" readonly>
-                                                                @else
-                                                                <p>No employee details found.</p>
-                                                                @endif
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="Name">Requested For:</label>
-                                                            <div class="input-group mb-3">
-                                                                <!-- Info icon on the left side -->
-                                                                <span class="input-group-text" id="basic-addon">
-                                                                    <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                </span>
-
-                                                                <!-- Employee details input -->
-
-                                                                <input type="text" wire:click="NamesSearch"
-                                                                    value="{{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                    class="form-control"
-                                                                    aria-describedby="basic-addon1"
-                                                                    readonly>
-
-
-
-                                                                <!-- Dropdown toggle icon on the right side -->
-                                                                <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                </button>
-
-                                                            </div>
-
-                                                            @if($isNames)
-                                                            <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                    <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                    <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                        <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                            <i style="text-align: center;" class="fa fa-search"></i>
-                                                                        </button>
-
-                                                                        <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-
-                                                                @if ($peopleData->isEmpty())
-                                                                <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                    No People Found
-                                                                </div>
-                                                                @else
-                                                                @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                <label wire:click="addselectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                    <div class="row align-items-center">
-                                                                        <div class="col-auto">
-                                                                            <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="addselectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $addselectedPeople) ? 'checked' : '' }}>
-                                                                        </div>
-                                                                        <div class="col-auto">
-                                                                            @if (!empty($people->image) && $people->image !== 'null')
-                                                                            <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                            @else
-                                                                            @php $gender = $people->gender ?? null; @endphp
-                                                                            @if ($gender === 'Male')
-                                                                            <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                            @elseif($gender === 'Female')
-                                                                            <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                            @else
-                                                                            <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                            @endif
-                                                                            @endif
-                                                                        </div>
-                                                                        <div class="col">
-                                                                            <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                            <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </label>
-                                                                @endforeach
-
-                                                                @endif
-                                                            </div>
-                                                            @endif
-
-                                                        </div>
-                                                        <div class="form-group mt-2" style="position: relative;">
-    <label for="selectedEquipment">Select Equipment<span style="color:red">*</span></label>
-    <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" 
-            class="form-control" style="font-size: 12px; appearance: none; padding-right: 30px;">
-        <option value="" hidden >Selected Equipment</option>
-        <option value="keyboard">Keyboard</option>
-        <option value="mouse">Mouse</option>
-        <option value="headset">Headset</option>
-        <option value="monitor">Monitor</option>
-
-    </select>
-    
-    <!-- Dropdown Toggler Icon -->
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
-         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
-        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
-    </svg>
-
-    @error('selected_equipment')
-    <span class="text-danger">{{ $message }}</span>
-    @enderror
-</div>
-
-
-
-
-                                                        <div class="form-group mt-2">
-                                                            <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                            <input wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
-                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-                                                        <div class="form-group mt-2">
-                                                            <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                            <textarea wire:model="description" wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
-                                                            @error('description') <span class="text-danger">{{ $message }}</span>
-                                                            @enderror
-                                                        </div>
-
-                                                        <div class="row mt-2">
-                                                            <div class="col">
-                                                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-                                                                    <i class="fa fa-paperclip"></i> Attach Image
-                                                                </label>
-                                                            </div>
-                                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-                                                        </div>
-
-                                                        <div>
-                                                            <input type="file" wire:model="file_path" id="file_path" class="form-control">
-
-                                                        </div>
-
-                                                    </form>
-                                                </div>
-                                                <div class="modal-footer justify-content-center">
-                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                        <button type="button" wire:click="submit" class="submit-btn">Submit</button>
-                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
-
-
-                                                    </div>
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
-                                    @endif
-
-                                </div>
-
-                            </div>
-                        </div>
+                   
                         <div class="col-md-4 mb-4">
                             <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
                                 <p style="font-size: 12px;"><b>Add Members to Mailbox</b></p>
@@ -548,7 +288,24 @@
                                                             @endif
 
                                                         </div>
-
+                                                        <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
 
 
                                                         <div class="form-group mt-2">
@@ -598,7 +355,134 @@
 
                             </div>
                         </div>
+                        <div class="col-md-4 mb-4">
+                                <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
+                                    <p style="font-size: 12px;"><b>Devops Access Request</b></p>
+                                    <div class="row m-0">
+                                        <div class="col-12 text-center mb-2" style="font-size:12px">
+                                            <img src="images/it-images/web-development.png" style="height:4em;" />
+                                        </div>
+                                        <div class="col-12 mb-2" style="font-size:12px">
+                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="DevopsRequest">Devops Access Request</p>
+                                        </div>
+                                        @if($DevopsRequestaceessDialog)
+                                        <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
+                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Devops Access Request</h1>
 
+                                                    </div>
+
+                                                    <div class="modal-body">
+                                                        <div class="row m-0">
+                                                            <div class="col-4 m-auto">
+                                                                <img src="images/it-images/web-development.png" style="height:4em;" />
+                                                            </div>
+                                                            <div class="col-8 m-auto">
+                                                                <p style="font-size:15px;"> Devops Access Request</p>
+                                                            </div>
+                                                        </div>
+                                                        <hr style="border: 1px solid #ccc;margin: 10px 0;">
+                                                        <form wire:submit.prevent="Devops">
+
+
+                                                            <div class="form-group  mt-2">
+                                                                <label for="Name">Requested By:</label>
+
+
+                                                                <div class="input-group mb-3">
+
+
+
+                                                                    <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                                                                    @if($employeeDetails)
+                                                                    <input wire:model.lazy="full_name" type="text" class="form-control" aria-describedby="basic-addon1" readonly>
+                                                                    @else
+                                                                    <p>No employee details found.</p>
+                                                                    @endif
+                                                                </div>
+
+                                                            </div>
+                                                        
+                                                            <div style="display:flex">
+
+                                                                <div class="form-group col-md-6 mt-2">
+                                                                    <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
+                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
+                                                                </div>
+                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
+                                                                    <label for="contactDetails">Email <span style="color:red">*</span></label>
+                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
+                                                                    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
+                                                                <input wire:model.lazy="subject" type="text" class="form-control">
+                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+                                                            <div class="form-group mt-2">
+                                                                <label for="reason">Specific Information<span style="color:red">*</span></label>
+                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
+                                                                @error('description') <span class="text-danger">{{ $message }}</span>
+                                                                @enderror
+                                                            </div>
+
+                                                            <div class="row mt-2">
+                                                                <div class="col">
+                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                        <i class="fa fa-paperclip"></i> Attach Image
+                                                                    </label>
+                                                                </div>
+                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                            </div>
+
+                                                            <div>
+                                                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
+
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer justify-content-center">
+                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+
+
+                                                        <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
+                                        @endif
+                                    </div>
+
+                                </div>
+                            </div>
+</div>
                         <div class="row m-0">
                             <div class="col-md-4 mb-4">
                                 <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
@@ -651,83 +535,7 @@
                                                                 </div>
 
                                                             </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="Name">Requested For:</label>
-                                                                <div class="input-group mb-3">
-                                                                    <!-- Info icon on the left side -->
-                                                                    <span class="input-group-text" id="basic-addon">
-                                                                        <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                    </span>
-
-                                                                    <!-- Employee details input -->
-
-                                                                    <input type="text" wire:click="NamesSearch"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                        class="form-control"
-                                                                        aria-describedby="basic-addon1"
-                                                                      >
-
-
-
-                                                                    <!-- Dropdown toggle icon on the right side -->
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                    </button>
-
-                                                                </div>
-
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-
-                                                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                                @else
-                                                                                @php $gender = $people->gender ?? null; @endphp
-                                                                                @if ($gender === 'Male')
-                                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                                @elseif($gender === 'Female')
-                                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                                @else
-                                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                                @endif
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                    @endforeach
-
-                                                                    @endif
-                                                                </div>
-                                                                @endif
-
-                                                            </div>
+                                                       
                                                             <div style="display:flex">
 
                                                                 <div class="form-group col-md-6 mt-2">
@@ -743,6 +551,24 @@
 
                                                             </div>
                                                             <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+                                                            <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
                                                                 <input wire:model="subject" wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
                                                                 @error('subject') <span class="text-danger">{{ $message }}</span>
@@ -754,6 +580,7 @@
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
+                              
 
                                                             <div class="row mt-2">
                                                                 <div class="col">
@@ -834,83 +661,7 @@
                                                                 </div>
 
                                                             </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="Name">Requested For:</label>
-                                                                <div class="input-group mb-3">
-                                                                    <!-- Info icon on the left side -->
-                                                                    <span class="input-group-text" id="basic-addon">
-                                                                        <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                    </span>
-
-                                                                    <!-- Employee details input -->
-
-                                                                    <input type="text" wire:click="NamesSearch"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                        class="form-control"
-                                                                        aria-describedby="basic-addon1"
-                                                                        >
-
-
-
-                                                                    <!-- Dropdown toggle icon on the right side -->
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                    </button>
-
-                                                                </div>
-
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-
-                                                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                                @else
-                                                                                @php $gender = $people->gender ?? null; @endphp
-                                                                                @if ($gender === 'Male')
-                                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                                @elseif($gender === 'Female')
-                                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                                @else
-                                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                                @endif
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                    @endforeach
-
-                                                                    @endif
-                                                                </div>
-                                                                @endif
-
-                                                            </div>
+                                                           
                                                             <div style="display:flex">
 
                                                                 <div class="form-group col-md-6 mt-2">
@@ -925,6 +676,24 @@
                                                                 </div>
 
                                                             </div>
+                                                                                               <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
                                                                 <input wire:model="subject" wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
@@ -1019,83 +788,7 @@
                                                                 </div>
 
                                                             </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="Name">Requested For:</label>
-                                                                <div class="input-group mb-3">
-                                                                    <!-- Info icon on the left side -->
-                                                                    <span class="input-group-text" id="basic-addon">
-                                                                        <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                    </span>
-
-                                                                    <!-- Employee details input -->
-
-                                                                    <input type="text" wire:click="NamesSearch"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                        class="form-control"
-                                                                        aria-describedby="basic-addon1"
-                                                                        >
-
-
-
-                                                                    <!-- Dropdown toggle icon on the right side -->
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                    </button>
-
-                                                                </div>
-
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-
-                                                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                                @else
-                                                                                @php $gender = $people->gender ?? null; @endphp
-                                                                                @if ($gender === 'Male')
-                                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                                @elseif($gender === 'Female')
-                                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                                @else
-                                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                                @endif
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                    @endforeach
-
-                                                                    @endif
-                                                                </div>
-                                                                @endif
-
-                                                            </div>
+                                                           
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
                                                                 <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('distributor_name')" type="text" class="form-control">
@@ -1117,7 +810,24 @@
                                                                 @error('description') <span class="text-danger">{{ $message }}</span>
                                                                 @enderror
                                                             </div>
-
+                                                            <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                                                             <div class="row mt-2">
                                                                 <div class="col">
                                                                     <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
@@ -1201,83 +911,7 @@
                                                                 </div>
 
                                                             </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="Name">Requested For:</label>
-                                                                <div class="input-group mb-3">
-                                                                    <!-- Info icon on the left side -->
-                                                                    <span class="input-group-text" id="basic-addon">
-                                                                        <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                    </span>
-
-                                                                    <!-- Employee details input -->
-
-                                                                    <input type="text" wire:click="NamesSearch"
-                                                                        value=" {{ implode(', ', array_unique($selectedPeopleNames)) }}"
-                                                                        class="form-control"
-                                                                        aria-describedby="basic-addon1"
-                                                                        >
-
-
-
-                                                                    <!-- Dropdown toggle icon on the right side -->
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                    </button>
-
-                                                                </div>
-
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-
-                                                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                                @else
-                                                                                @php $gender = $people->gender ?? null; @endphp
-                                                                                @if ($gender === 'Male')
-                                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                                @elseif($gender === 'Female')
-                                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                                @else
-                                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                                @endif
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                    @endforeach
-
-                                                                    @endif
-                                                                </div>
-                                                                @endif
-
-                                                            </div>
+                                                          
                                                             <div style="display:flex">
 
                                                                 <div class="form-group col-md-6 mt-2">
@@ -1292,6 +926,24 @@
                                                                 </div>
 
                                                             </div>
+                                                            <div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
                                                             <div class="form-group mt-2">
                                                                 <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
                                                                 <input wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
@@ -1354,190 +1006,148 @@
                                 </div>
                             </div>
                             <div class="col-md-4 mb-4">
-                                <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                                    <p style="font-size: 12px;"><b>Devops Access Request</b></p>
-                                    <div class="row m-0">
-                                        <div class="col-12 text-center mb-2" style="font-size:12px">
-                                            <img src="images/it-images/web-development.png" style="height:4em;" />
-                                        </div>
-                                        <div class="col-12 mb-2" style="font-size:12px">
-                                            <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="DevopsRequest">Devops Access Request</p>
-                                        </div>
-                                        @if($DevopsRequestaceessDialog)
-                                        <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">Devops Access Request</h1>
+                            <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
+                                <p style="font-size: 12px;"><b>Request for IT Accessories</b></p>
+                                <div class="row m-0">
+                                    <div class="col-12 text-center mb-2">
+                                        <img src="images/it-images/headphone.png" style="height:4em;" />
+                                    </div>
+                                    <div class="col-12 mb-2" style="font-size:12px">
+                                        <p style="text-decoration:underline;cursor: pointer; text-align: center;" wire:click="ItRequest">Request for IT Accessories</p>
+                                    </div>
+                                    @if($ItRequestaceessDialog)
+                                    <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">
+                                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Request for IT Accessories</h1>
 
-                                                    </div>
+                                                </div>
 
-                                                    <div class="modal-body">
-                                                        <div class="row m-0">
-                                                            <div class="col-4 m-auto">
-                                                                <img src="images/it-images/web-development.png" style="height:4em;" />
-                                                            </div>
-                                                            <div class="col-8 m-auto">
-                                                                <p style="font-size:15px;"> Devops Access Request</p>
-                                                            </div>
+                                                <div class="modal-body">
+                                                    <div class="row m-0">
+                                                        <div class="col-4 m-auto">
+                                                            <img src="images/it-images/headphone.png" style="height:4em;" />
                                                         </div>
-                                                        <hr style="border: 1px solid #ccc;margin: 10px 0;">
-                                                        <form wire:submit.prevent="Devops">
-
-
-                                                            <div class="form-group  mt-2">
-                                                                <label for="Name">Requested By:</label>
-
-
-                                                                <div class="input-group mb-3">
-
-
-
-                                                                    <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
-                                                                    @if($employeeDetails)
-                                                                    <input wire:model.lazy="full_name" type="text" class="form-control" aria-describedby="basic-addon1" readonly>
-                                                                    @else
-                                                                    <p>No employee details found.</p>
-                                                                    @endif
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="Name">Requested For:</label>
-                                                                <div class="input-group mb-3">
-                                                                    <!-- Info icon on the left side -->
-                                                                    <span class="input-group-text" id="basic-addon">
-                                                                        <i class="fa fa-info-circle" style="color:blue"></i>
-                                                                    </span>
-
-                                                                    <!-- Employee details input -->
-
-                                                                    <input type="text" wire:click="NamesSearch"
-                                                                    wire:model="cc_to" 
-                                                                        class="form-control"
-                                                                        aria-describedby="basic-addon1"
-                                                                        >
-
-
-
-                                                                    <!-- Dropdown toggle icon on the right side -->
-                                                                    <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
-                                                                    </button>
-
-                                                                </div>
-
-                                                                @if($isNames)
-                                                                <div style="border-radius:5px; background-color:grey; padding:8px; width:330px; margin-top:10px; height:200px; overflow-y:auto;">
-                                                                    <div class="input-group4" style="display: flex; align-items: center; width: 100%;">
-                                                                        <input wire:model="searchTerm" style="font-size: 10px; cursor: pointer; border-radius: 5px 0 0 5px; width: 250px; height: 30px; padding: 5px;" type="text" class="form-control" placeholder="Search for Emp.Name or ID" aria-label="Search" aria-describedby="basic-addon1">
-                                                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                                                            <button wire:click="filter" style="height: 30px; border-radius: 0 5px 5px 0; background-color: rgb(2, 17, 79); color: #fff; border: none; padding: 0 10px;" class="btn" type="button">
-                                                                                <i style="text-align: center;" class="fa fa-search"></i>
-                                                                            </button>
-
-                                                                            <button wire:click="closePeoples" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
-                                                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                                                            </button>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    @if ($peopleData->isEmpty())
-                                                                    <div class="container" style="text-align: center; color: white; font-size:12px">
-                                                                        No People Found
-                                                                    </div>
-                                                                    @else
-                                                                    @foreach($peopleData->sortBy(function($people) { return strtolower($people->first_name) . ' ' . strtolower($people->last_name); }) as $people)
-                                                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-top: 10px; width: 300px; border-radius: 5px;">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <input type="checkbox" id="person-{{ $people->emp_id }}" class="form-check-input custom-checkbox-helpdesk" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ in_array($people->emp_id, $selectedPeople) ? 'checked' : '' }}>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                                                @else
-                                                                                @php $gender = $people->gender ?? null; @endphp
-                                                                                @if ($gender === 'Male')
-                                                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                                                @elseif($gender === 'Female')
-                                                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                                                @else
-                                                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                                                @endif
-                                                                                @endif
-                                                                            </div>
-                                                                            <div class="col">
-                                                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                                                            </div>
-                                                                        </div>
-                                                                    </label>
-                                                                    @endforeach
-
-                                                                    @endif
-                                                                </div>
-                                                                @endif
-
-                                                            </div>
-                                                            <div style="display:flex">
-
-                                                                <div class="form-group col-md-6 mt-2">
-                                                                    <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control" >
-                                                                    @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
-                                                                </div>
-                                                                <div class="form-group col-md-6 mt-2 ml-3" style="margin-left:10px">
-                                                                    <label for="contactDetails">Email <span style="color:red">*</span></label>
-                                                                    <input wire:model.lazy="mail" wire:keydown.debounce.500ms="validateField('mail')" type="text" class="form-control" >
-                                                                    @error('mail') <span class="text-danger">{{ $message }}</span> @enderror
-                                                                </div>
-
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
-                                                                <input wire:model.lazy="subject" type="text" class="form-control">
-                                                                @error('subject') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group mt-2">
-                                                                <label for="reason">Specific Information<span style="color:red">*</span></label>
-                                                                <textarea wire:model.lazy="description" class="form-control"></textarea>
-                                                                @error('description') <span class="text-danger">{{ $message }}</span>
-                                                                @enderror
-                                                            </div>
-
-                                                            <div class="row mt-2">
-                                                                <div class="col">
-                                                                    <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-                                                                        <i class="fa fa-paperclip"></i> Attach Image
-                                                                    </label>
-                                                                </div>
-                                                                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-                                                            </div>
-
-                                                            <div>
-                                                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
-
-                                                            </div>
-                                                        </form>
+                                                        <div class="col-8 m-auto">
+                                                            <p style="font-size:14px;">
+                                                                Please use this catalogue item to raise new request for IT accessories
+                                                                like Headset, Mouse, Keyboard, Monitor etc.</p>
+                                                        </div>
                                                     </div>
-                                                    <div class="modal-footer justify-content-center">
-                                                        <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
+                                                    <hr style="border: 1px solid #ccc;margin: 10px 0;">
+                                                    <form wire:submit.prevent="submit" style="width:80%">
+
+                                                        <div class="form-group  mt-2">
+                                                            <label for="Name">Requested By:</label>
 
 
+                                                            <div class="input-group mb-3">
+
+
+
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fa fa-info-circle" style="color:blue"></i></span> <!-- Change label as needed -->
+                                                                @if($employeeDetails)
+                                                                <input wire:model.lazy="full_name" type="text" class="form-control" aria-describedby="basic-addon1" readonly>
+                                                                @else
+                                                                <p>No employee details found.</p>
+                                                                @endif
+                                                            </div>
+
+                                                        </div>
+                                                    
+                                                        <div class="form-group mt-2" style="position: relative;">
+    <label for="selectedEquipment">Select Equipment<span style="color:red">*</span></label>
+    <select wire:model.lazy="selected_equipment" wire:keydown.debounce.500ms="validateField('selected_equipment')" 
+            class="form-control" style="font-size: 12px; appearance: none; padding-right: 30px;">
+        <option value="" hidden >Selected Equipment</option>
+        <option value="keyboard">Keyboard</option>
+        <option value="mouse">Mouse</option>
+        <option value="headset">Headset</option>
+        <option value="monitor">Monitor</option>
+
+    </select>
+    
+    <!-- Dropdown Toggler Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 75%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+
+    @error('selected_equipment')
+    <span class="text-danger">{{ $message }}</span>
+    @enderror
+</div>
+
+
+<div class="form-group mt-2">
+                            <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
+                            <div class="input" class="form-control placeholder-small">
+                                <div style="position: relative;">
+                                    <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                        <option style="color: grey;" value="" hidden >Select Priority</option>
+                                        <option value="High">High</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                    </select>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+         class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
+        <path d="M3.204 5h9.592L8 10.481 3.204 5z"/>
+    </svg>
+                                </div>
+                            </div>
+                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                        </div>
+
+                                                        <div class="form-group mt-2">
+                                                            <label for="contactDetails">Business Justification<span style="color:red">*</span></label>
+                                                            <input wire:model.lazy="subject" wire:keydown.debounce.500ms="validateField('subject')" type="text" class="form-control">
+                                                            @error('subject') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+                                                        <div class="form-group mt-2">
+                                                            <label for="reason">Specific Information<span style="color:red">*</span></label>
+                                                            <textarea wire:model="description" wire:keydown.debounce.500ms="validateField('description')" class="form-control"></textarea>
+                                                            @error('description') <span class="text-danger">{{ $message }}</span>
+                                                            @enderror
+                                                        </div>
+
+                                                        <div class="row mt-2">
+                                                            <div class="col">
+                                                                <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                                    <i class="fa fa-paperclip"></i> Attach Image
+                                                                </label>
+                                                            </div>
+                                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        </div>
+
+                                                        <div>
+                                                            <input type="file" wire:model="file_path" id="file_path" class="form-control">
+
+                                                        </div>
+
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer justify-content-center">
+                                                    <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
+                                                        <button type="button" wire:click="submit" class="submit-btn">Submit</button>
                                                         <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
 
 
                                                     </div>
+
+
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
-                                        @endif
                                     </div>
+                                    <div class="modal-backdrop fade show blurred-backdrop" style="{{ $showModal ? '' : 'display: none;' }}"></div>
+                                    @endif
 
                                 </div>
+
                             </div>
+                        </div>
                         </div>
 
 
