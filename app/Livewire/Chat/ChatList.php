@@ -25,45 +25,6 @@ class ChatList extends Component
         $this->selectedConversation = null;
         # code...
     }
-
-
-
-    public function chatUserSelected($senderId, $receiverId)
-    {
-        // Debugging senderId and receiverId
-        // dd($senderId, $receiverId);
-
-        // Check if a conversation already exists
-        $conversation = Conversation::where(function ($query) use ($senderId, $receiverId) {
-            $query->where('sender_id', $senderId)
-                ->where('receiver_id', $receiverId);
-        })
-            ->orWhere(function ($query) use ($senderId, $receiverId) {
-                $query->where('sender_id', $receiverId)
-                    ->where('receiver_id', $senderId);
-            })
-            ->first();
-
-        // dd($conversation); // If null, no match was found
-
-        // If a conversation exists, open it, otherwise create a new one
-        if ($conversation) {
-            $this->selectedConversation = $conversation;
-        } else {
-            // Handle new conversation creation
-            $this->selectedConversation = Conversation::create([
-                'sender_id' => $senderId,
-                'receiver_id' => $receiverId,
-                'last_time_message' => now(),
-                'last_message' => '',
-            ]);
-        }
-
-        // Dispatch event to open chat box
-        $this->dispatch('loadConversation', ['conversationId' => $this->selectedConversation->id]);
-    }
-
-
     // Fetch employees based on search query
 
     public function render()
@@ -87,24 +48,8 @@ class ChatList extends Component
             ->orderBy('first_name', 'asc') // Optional sorting
             ->get();
 
-        // Fetch employees not in $userConversations
-        $noConversationsList = EmployeeDetails::whereNotIn('emp_id', $userConversations)
-            ->where('status', 1) // Ensure they're active
-            ->where(function ($query) {
-                $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%')
-                    ->orWhere('job_role', 'like', '%' . $this->search . '%');
-            })
-            ->orderBy('first_name', 'asc') // Optional sorting
-            ->get();
-
-        // Debug to verify results
-        // dd($conversationsList, $noConversationsList);
-        // Return the filtered and search-processed lists to the view
         return view('livewire.chat.chat-list', [
             'conversations' => $conversationsList,
-            'noConversations' => $noConversationsList
         ]);
     }
 }
