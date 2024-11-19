@@ -17,7 +17,8 @@
                     <select class="form-control mb-4" wire:model="selectedSubDepartment" wire:change="filter">
                         <option value="">Select Sub-Department</option>
                         @foreach ($subDepartments as $subDepartment)
-                            <option value="{{ $subDepartment->sub_dept_id }}">{{ $subDepartment->sub_department }}</option>
+                            <option value="{{ $subDepartment->sub_dept_id }}">{{ $subDepartment->sub_department }}
+                            </option>
                         @endforeach
                     </select>
                 @endif
@@ -42,7 +43,7 @@
             <div class="row m-0 p-0 justify-content-center" style="overflow-y: auto; height: 100vh;">
                 @forelse ($employeeDetails as $key => $employee)
                     <div class="col-md-4 mb-3"> <!-- Increase width to col-lg-4 -->
-                        <div class="card">
+                        <div class="card" wire:key="employee-{{ $employee->emp_id }}">
                             <div class="col d-flex align-items-center justify-content-center mt-4">
                                 @if (!empty($employee->image) && $employee->image !== 'null')
                                     <img height="50" width="50" style="border-radius:50%;"

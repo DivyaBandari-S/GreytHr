@@ -10,7 +10,7 @@ class Chat extends Component
 
     public function userSelected($empId)
     {
-        dd($empId);
+        dd('hello world');
     }
 
     public function render()
