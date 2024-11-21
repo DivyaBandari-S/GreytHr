@@ -742,10 +742,10 @@ class Home extends Component
                     $this->grossPay = $sal->calculateTotalAllowance();
                     $this->deductions = $sal->calculateTotalDeductions();
                     $this->netPay = $this->grossPay - $this->deductions;
-                    $this->calculateTaskData();
                 }
             }
 
+            $this->calculateTaskData();
 
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
