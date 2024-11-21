@@ -936,7 +936,7 @@ public $NewMailRequestaceessDialog=false;
        
        
      
-    HelpDesks::create([
+        $helpDesk=HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
