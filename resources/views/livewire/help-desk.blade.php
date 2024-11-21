@@ -542,6 +542,25 @@
                         @else
                         <p style="color: gray;">-</p>
                         @endif
+                        @if ($showImageDialog)
+                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">View File</h5>
+                                        </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-backdrop fade show"></div>
+                            @endif
                     </td>
                     <td class="helpdesk-request">
                         {{ $record->priority ?? '-' }}
