@@ -15,4 +15,10 @@ class EmpSubDepartments extends Model
         'created_at',
         'updated_at'
     ];
+
+    // EmpSubDepartment Model
+    public function employees()
+    {
+        return $this->hasMany(EmployeeDetails::class, 'sub_dept_id');
+    }
 }

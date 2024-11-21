@@ -397,7 +397,7 @@
         <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')"
         >
             View Reason
-        </a>
+        </div>
     @elseif($record->status == 'Completed')
         {{ ucfirst($record->status ?? '-') }}
     @endif

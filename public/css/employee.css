@@ -1205,9 +1205,9 @@ main .btn-send:hover {
 
 /* From Uiverse.io by Smit-Prajapati */ 
 .card-reporting {
-	width: 240px;
-	height: 240px;
-	background: white;
+	width: 255px;
+	height: 310px;
+	background: #b2d9e0;
 	border-radius: 25px;
 	padding: 3px;
 	position: relative;
@@ -1271,11 +1271,11 @@ main .btn-send:hover {
 	bottom: 3px;
 	left: 3px;
 	right: 3px;
-	background: #02114f;
+	background: #fff;
 	top: 80%;
 	border-radius: 25px;
 	z-index: 2;
-	box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px inset;
+	/* box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px inset; */
 	overflow: hidden;
 	transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
   }
@@ -1285,20 +1285,20 @@ main .btn-send:hover {
 	bottom: 0;
 	left: 1.5rem;
 	right: 1.5rem;
-	height: 115px;
+	height: 175px;
   }
   
   .card-reporting .bottom .content .name {
 	display: block;
 	font-size: 1rem;
-	color: white;
+	color: #02114f;
 	font-weight: bold;
   }
   
   .card-reporting .bottom .content .about-me {
 	display: block;
 	font-size: 0.9rem;
-	color: white;
+	color: #02114f;
 	margin-top: 1rem;
   }
   
@@ -1329,7 +1329,7 @@ main .btn-send:hover {
   }
   
   .card-reporting .bottom .bottom-bottom .button {
-	background: white;
+	background: #b2d9e0;
 	color: #02114f;
 	border: none;
 	border-radius: 20px;
@@ -1349,7 +1349,7 @@ main .btn-send:hover {
   
   .card-reporting .bottom {
 	top: 20%;
-	border-radius: 80px 29px 29px 29px;
+	border-radius: 80px 29px 23px 23px;
 	transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
   }
   
@@ -1361,7 +1361,7 @@ main .btn-send:hover {
 	left: 10px;
 	border-radius: 50%;
 	z-index: 3;
-	border: 7px solid #02114f;
+	border: 7px solid #b2d3d9;
 	box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px;
 	transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
   }

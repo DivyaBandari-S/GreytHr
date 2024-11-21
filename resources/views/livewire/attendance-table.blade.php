@@ -1639,11 +1639,11 @@ color: #fff;
                         <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap; background-color: 
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
-           ;}}">10:(GS)</td>
+           ;}}">10:({{$employeeShiftDetails->shift_name}})</td>
                         <td style="font-weight:normal;font-size:12px;padding-top:16px;white-space:nowrap; background-color: 
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
-           ;}}">10:00 Am to 07:00Pm</td>
+           ;}}">{{\Carbon\Carbon::createFromFormat('H:i:s', $employeeShiftDetails->shift_start_time)->format('H:i A') }} to {{\Carbon\Carbon::createFromFormat('H:i:s', $employeeShiftDetails->shift_end_time)->format('h:i A') }} </td>
 
                         @if($distinctDates->has($dateKeyForLookup))
                         <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 

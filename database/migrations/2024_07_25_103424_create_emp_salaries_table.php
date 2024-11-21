@@ -14,12 +14,14 @@ return new class extends Migration
         Schema::create('emp_salaries', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
             $table->smallInteger('sal_id');
+            $table->smallInteger('bank_id');
             $table->string('salary'); // Use string for encrypted salary
             $table->date('month_of_sal');
             $table->date('effective_date');
             $table->string('remarks')->nullable();
             $table->timestamps();
             $table->foreign('sal_id')->references('id')->on('salary_revisions')->onDelete('cascade');
+            $table->foreign('bank_id')->references('id')->on('emp_bank_details')->onDelete('cascade');
         });
     }
 
