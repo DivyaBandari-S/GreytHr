@@ -1124,28 +1124,32 @@ class Attendance extends Component
         // Add a log entry for the start and end date
         Log::info('Calculating total number of absents between: ' . $startDate->format('Y-m-d') . ' and ' . $endDate->format('Y-m-d'));
 
-        // Loop through each date between start and end date
-        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-
-            // Log the current date being checked
-            Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
-            if (!$date->isWeekend()) {
-                $holiday = HolidayCalendar::where('date', $date)->exists();
-                if (!$holiday) {
-                    $isOnLeave = $this->isEmployeeLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id);
-                    if (!$isOnLeave) {
-                        $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
-                        Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
-                        if ($isAbsent) {
-                            $absentDays++;
-                            // Log the increment of absent days
-                            Log::info('Absent days count incremented to: ' . $absentDays);
-                        }
+    // Loop through each date between start and end date
+    for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+        
+        // Log the current date being checked
+        Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
+        if(!$date->isWeekend())
+        {
+            $holiday=HolidayCalendar::where('date',$date)->exists();
+            if(!$holiday)
+            {
+                $isOnLeave=$this->isEmployeeLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id);
+                if(!$isOnLeave)
+                {
+                    $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
+                    Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
+                    if ($isAbsent) {
+                        $absentDays++;
+                        // Log the increment of absent days
+                        Log::info('Absent days count incremented to: ' . $absentDays);
                     }
                 }
             }
-            // Check if the employee is absent on the current date
-
+            
+        }
+        // Check if the employee is absent on the current date
+        
 
             // Log the result of the absence check
 
@@ -1208,6 +1212,7 @@ class Attendance extends Component
             $toDatetemp = Carbon::parse($this->to_date);
             $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
+            
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
 
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
@@ -1548,9 +1553,9 @@ class Attendance extends Component
 
         Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
 
-        // Iterate through the date range
-        while ($startDate->lte($endDate)) {
-            $tempStartDate = $startDate->toDateString();
+    // Iterate through the date range
+    while ($startDate->lte($endDate)) {
+        $tempStartDate = $startDate->toDateString();
 
             // Check if the current date is a holiday
             $isHoliday = HolidayCalendar::where('date', $tempStartDate)->exists();
