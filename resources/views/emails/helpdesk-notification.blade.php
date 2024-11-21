@@ -25,7 +25,7 @@
 <body>
     <div class="content">
     
-            <p>Hi <strong>   
+            <p>Hi Admin<strong>   
     
  </strong>,
 </p>
