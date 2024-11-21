@@ -863,7 +863,7 @@ class Catalog extends Component
        
        
      
-         HelpDesks::create([
+        $helpDesk= HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                
                 'subject' => $this->subject,
@@ -880,8 +880,13 @@ class Catalog extends Component
 
          
             ]);
+   
             $superAdmins = IT::where('role', 'super_admin')->get();
- 
+            foreach ($superAdmins as $admin) {
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
+            }
        
             FlashMessageHelper::flashSuccess  ('Request created successfully.');
             $this->reset();
@@ -949,7 +954,7 @@ class Catalog extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
 
-            $helpdesk = HelpDesks::create([
+            $helpDesk=  HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
@@ -967,15 +972,14 @@ class Catalog extends Component
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-
+            $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
-                // Retrieve the first and last names
-                $firstName = $admin->first_name;
-                $lastName = $admin->last_name;
-
-                // Send Email with first and last names included
-                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
             }
+       
+        
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
