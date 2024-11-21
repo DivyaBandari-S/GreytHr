@@ -4597,6 +4597,7 @@ input[type="radio"] {
     color: rgb(2, 17, 79);
     font-weight: 500;
     cursor: pointer;
+    text-decoration: underline;
 }
 
 .center {
