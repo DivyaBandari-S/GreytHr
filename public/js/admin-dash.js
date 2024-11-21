@@ -310,11 +310,11 @@ var options = {
 //     $("#content-chart").removeClass("active");
 // });
 
-// function openMsgDiv() {
-//     $("#chatScreen").show();
-//     $('.bio-div').hide();
-//     $("#chatScreen input.form-control").focus();
-// }
+function openMsgDiv() {
+    $("#chatScreen").show();
+    $('.bio-div').hide();
+    $("#chatScreen input.form-control").focus();
+}
 
 // // Hide chat screen when close button is clicked
 // $("#closeChat").click(function(e){
@@ -339,7 +339,38 @@ var options = {
 // }
 
 document.addEventListener("DOMContentLoaded", function () {
-    if (window.location.pathname === "/users") {
+    if (window.location.pathname === "/chat" || window.location.pathname === "/users") {
         document.body.id = "userPage";
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const emojiPicker = document.getElementById('emojiPicker');
+    const emojiButton = document.getElementById('emojiButton');
+    const messageInput = document.getElementById('messageInput');
+
+    // Toggle emoji picker visibility
+    emojiButton.addEventListener('click', () => {
+        if (emojiPicker.style.display === 'none' || !emojiPicker.style.display) {
+            emojiPicker.style.display = 'block';
+        } else {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    // Add emoji to input when selected
+    emojiPicker.addEventListener('emoji-click', (event) => {
+        messageInput.value += event.detail.unicode;
+        emojiPicker.style.display = 'none';
+    });
+
+    // Handle file attachment
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            console.log('Attached file:', file.name);
+            // Add your file upload logic here
+        }
+    });
+});
+
