@@ -11,7 +11,7 @@
 // Programming Language            : PHP (8.1 Version)
 // Database                        : MySQL
 // Models                          : HelpDesk,EmployeeDetails
- 
+
 namespace App\Livewire;
 
 use Livewire\Component;
@@ -20,28 +20,29 @@ use App\Models\PeopleList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
- 
+
 use App\Models\HelpDesks;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\HelpDeskNotification;
+use App\Models\IncidentRequest;
 use App\Models\IT;
- 
+
 class Catalog extends Component
 {
- 
+
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
-    public $ServiceRequestaceessDialog=false;
-  
+    public $ServiceRequestaceessDialog = false;
+
 
     public $mobile;
     public $showModal = true;
     public $selectedDeptId;
- 
+
     public $ItRequestaceessDialog = false;
     public $MailRequestaceessDialog = false;
     public $closeMailRequestaccess = false;
@@ -50,17 +51,17 @@ class Catalog extends Component
     public $openItRequestaccess = false;
     public $closeDevopsRequestaccess = false;
     public $openDevopsRequestaccess = false;
- 
+
     public $isNames = false;
     public $record;
-    public $peopleData='';
+    public $peopleData = '';
     public $mail;
     public $subject;
     public $distributor_name;
     public $description;
     public $selected_equipment;
- 
-    public $priority;
+
+    public $priority = 'Low';
     public $activeTab = 'active';
     public $image;
     public $employeeDetails;
@@ -76,11 +77,11 @@ class Catalog extends Component
     public $filteredPeoples;
     public $selectedPeopleNames = [];
     public $selectedPeople = [];
-    public $addselectedPeople=[];
+    public $addselectedPeople = [];
     public $records;
     public $peopleFound = true;
     public $attachment;
- 
+
     public $file_path;
     public $DevopsRequestaceessDialog = false;
 
@@ -99,11 +100,15 @@ class Catalog extends Component
     public $MmsRequestaceessDialog = false;
     public $LapRequestaceessDialog = false;
     public $AddRequestaceessDialog = false;
+    public $incidentRequestaceessDialog = false;
     public $justification;
     public $information;
+    public $short_description;
+    public $assigned_dept;
+    public $file;
     protected $rules = [
         'subject' => 'required|string|max:255',
-     
+        'short_description' => 'required|string|max:255',
         'mobile' => 'required|string|max:15',
         'description' => 'required|string',
         'mail' => 'required|email',
@@ -112,11 +117,11 @@ class Catalog extends Component
         'selected_equipment' => 'required',
         'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
     ];
- 
- 
+
+
     protected $messages = [
-   'distributor_name' =>'Distributor name is required',
-   'selected_equipment'=>'Select Equipment is required ',
+        'distributor_name' => 'Distributor name is required',
+        'selected_equipment' => 'Select Equipment is required ',
         'subject.required' => 'Subject  is required.',
         'mail.required' => ' Email  is required.',
         'priority.required' => 'Priority is required.',
@@ -125,68 +130,68 @@ class Catalog extends Component
         'mobile.required' => ' Mobile number is required.',
         'mobile.max' => ' Mobile number must not exceed 15 characters.',
         'description.required' => ' Description  is required.',
-       
- 
+        'short_description.required' => 'Short description required',
     ];
     public $first_name;
     public $last_name;
     public $full_name;
     public function mount()
-{
-    $employeeId = auth()->guard('emp')->user()->emp_id;
-    $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    $companyId = auth()->guard('emp')->user()->company_id;
-    $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-    ->whereNotIn('employee_status', ['rejected', 'terminated'])
-    ->get();
-    $this->superAdmins = IT::where('role', 'super_admin')->get();
-    if ($this->employeeDetails) {
-        // Combine first and last names
-        $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
-        $this->mobile = $this->employeeDetails->mobile?? '-';
-        $this->mail = $this->employeeDetails->mail?? '-';
-        $this->selectedDeptId =  $this->employeeDetails->dept_id; 
-    }
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $companyId = auth()->guard('emp')->user()->company_id;
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->get();
+        $this->superAdmins = IT::where('role', 'super_admin')->get();
+        if ($this->employeeDetails) {
+            // Combine first and last names
+            $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
+            $this->mobile = $this->employeeDetails->mobile ?? '-';
+            $this->mail = $this->employeeDetails->mail ?? '-';
+            $this->selectedDeptId =  $this->employeeDetails->dept_id;
+        }
 
-   
-    $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-    $this->selectedPeople = [];
-    $this->addselectedPeople = [];
-    $this->selectedPeopleNames = [];
-    $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-    $this->records = HelpDesks::with('emp')
-        ->where(function ($query) use ($employeeId, $employeeName) {
-            $query->where('emp_id', $employeeId)
-                ->orWhere('cc_to', 'LIKE', "%$employeeName%");
-        })
-        ->orderBy('created_at', 'desc')
-        ->get();
-    // dd( $this->records);
-   $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-    ->whereNotIn('employee_status', ['rejected', 'terminated'])
-->orderBy('first_name')
+
+        $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
+        $this->selectedPeople = [];
+        $this->addselectedPeople = [];
+        $this->selectedPeopleNames = [];
+        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        $this->records = HelpDesks::with('emp')
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('emp_id', $employeeId)
+                    ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+        // dd( $this->records);
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
- 
- 
-    $this->selected_equipment = '';  // Initialize with a default value if needed
-}
- 
+
+
+        $this->selected_equipment = '';  // Initialize with a default value if needed
+    }
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
     public function validateField($field)
     {
-        if (in_array($field, ['mail', 'description', 'subject','category','selected_equipment','distributor_name','mobile'])) {
+        if (in_array($field, ['mail', 'description', 'subject', 'category', 'selected_equipment', 'distributor_name', 'mobile'])) {
             $this->validateOnly($field, $this->rules);
         }
     }
-    public function resetDialogs() {
+    public function resetDialogs()
+    {
         $this->AddRequestaceessDialog = false;
         // Close all dialogs
         $this->ItRequestaceessDialog = false;
- 
+
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
         $this->MailRequestaceessDialog = false;
@@ -194,96 +199,182 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
- 
-        $this->selectedPeople=[];
-        $this->addselectedPeople=[];
-        $this->isNames=false;
-    $this->searchTerm = '';
-    $this->filteredPeoples='';
-    
-    $this->filter();
- 
- 
+
+        $this->selectedPeople = [];
+        $this->addselectedPeople = [];
+        $this->isNames = false;
+        $this->searchTerm = '';
+        $this->filteredPeoples = '';
+
+        $this->filter();
     }
- 
+
     public function ItRequest()
     {
         $this->resetDialogs();
         $this->ItRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','cc_to','priority']);
+        $this->reset(['category', 'cc_to', 'priority']);
         $this->category = 'Request For IT';
     }
-    public function ServiceRequest(){
+    public function ServiceRequest()
+    {
         $this->resetDialogs();
         $this->ServiceRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'Distribution List Request';
     }
- 
-    public function AddRequest(){
+
+    public function incidentRequest()
+    {
+        $this->resetIncidentFields();
+        $this->incidentRequestaceessDialog = true;
+        $this->showModal = true;
+    }
+    public function createIncidentRequest()
+    {
+        $this->validate([
+            'short_description' => 'required|string|max:255',
+            'description' => 'required|string',
+            'priority' => 'required|in:Low,Medium,High',
+        ]);
+        // Get the logged-in employee ID
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
+
+        // Handle file upload if there is a file
+        $filePath = null;
+        $fileName = null;
+        $mimeType = null;
+    
+        if ($this->file) {
+            Log::debug('File uploaded, storing the file...');
+    
+            // Store the file in the public disk under 'incident_files'
+            try {
+                $filePath = $this->file->store('incident_files', 'public');
+                $fileName = $this->file->getClientOriginalName();
+                $mimeType = $this->file->getMimeType();
+    
+                Log::debug('File stored successfully at path: ' . $filePath);
+            } catch (\Exception $e) {
+                Log::error('Error uploading file: ' . $e->getMessage());
+                // Optionally, you can handle file upload failure here
+                FlashMessageHelper::flashError('Error uploading file.');
+                return;
+            }
+        } else {
+            Log::debug('No file uploaded.');
+        }
+    
+        // Create the new IncidentRequest
+        try {
+            $incidentRequest = IncidentRequest::create([
+                'emp_id' => $employeeId,
+                'short_description' => $this->short_description,
+                'description' => $this->description,
+                'priority' => $this->priority,
+                'assigned_dept' => 'IT',
+                'file_path' => $filePath,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'status_code' => 10, // Set default status
+            ]);
+    
+            Log::debug('Incident Request created successfully: ', $incidentRequest->toArray());
+        } catch (\Exception $e) {
+            Log::error('Error creating Incident Request: ' . $e->getMessage());
+            FlashMessageHelper::flashError('Error creating Incident Request.');
+            return;
+        }
+        $this->resetIncidentFields();
+
+        // Close the modal after successful creation
+        $this->showModal = false;
+        // Flash success message
+        FlashMessageHelper::flashSuccess('Incident request created successfully.');
+        Log::info('Incident request created and modal closed for employee ID: ' . $employeeId);
+    }
+
+    public function resetIncidentFields()
+    {
+        $this->short_description = null;
+        $this->priority = null;
+        $this->description =null;
+        $this->resetErrorBag();
+        $this->resetValidation();
+    }
+
+    public function AddRequest()
+    {
         $this->resetDialogs();
         $this->AddRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'Distribution List Request';
     }
- 
+
     public function LapRequest()
     {
         $this->resetDialogs();
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'Laptop Request';
     }
- 
-    public function DistributionRequest(){
+
+    public function DistributionRequest()
+    {
         $this->resetDialogs();
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'New Distribution Request';
     }
- 
-    public function MailRequest(){
+
+    public function MailRequest()
+    {
         $this->resetDialogs();
         $this->MailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'New Mailbox Request';
     }
- 
-    public function DevopsRequest(){
+
+    public function DevopsRequest()
+    {
         $this->resetDialogs();
         $this->DevopsRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'Devops Access Request';
     }
- 
-    public function IdRequest(){
+
+    public function IdRequest()
+    {
         $this->resetDialogs();
         $this->IdRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category', 'priorty']);
         $this->category = 'New ID Card';
     }
- 
-    public function MmsRequest(){
+
+    public function MmsRequest()
+    {
         $this->resetDialogs();
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category', 'priorty']);
         $this->category = 'MMS Request';
     }
- 
-    public function DesktopRequest(){
+
+    public function DesktopRequest()
+    {
         $this->resetDialogs();
         $this->DesktopRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category', 'priorty']);
         $this->category = 'Desktop Request';
     }
     public function openItRequestaccess()
@@ -298,8 +389,8 @@ class Catalog extends Component
     {
         $this->LapRequestaceessDialog = true; // Open the Sec 80C modal
     }
- 
- 
+
+
     public function openDevopsRequestaccess()
     {
         $this->DevopsRequestaceessDialog = true; // Open the Sec 80C modal
@@ -324,90 +415,89 @@ class Catalog extends Component
     {
         $this->DistributionRequestaceessDialog = true;
     }
- 
+
     public function closeItRequestaccess()
     {
-       
-       
+
+
         $this->ItRequestaceessDialog = false;
- 
+
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation();
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
-       
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'selectedPeople', 'selectedPeopleNames']);
     }
- 
+
     public function closeAddRequestaccess()
     {
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'selectedPeople', 'selectedPeopleNames']);
         $this->AddRequestaceessDialog = false;
     }
-   
+
     public function closeDesktopRequestaccess()
     {
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'selectedPeople', 'selectedPeopleNames']);
         $this->DesktopRequestaceessDialog = false;
     }
-   
+
     public function closeDistributionRequestaccess()
     {
- 
+
         $this->DistributionRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
-   
+
     public function closeDevopsRequestaccess()
     {
-       
+
         $this->DevopsRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
-   
+
     public function closeLapRequestaccess()
     {
         $this->reset();
         $this->LapRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
     public function redirectToHelpDesk()
-{
-    return redirect('/HelpDesk');
-}
- 
+    {
+        return redirect('/HelpDesk');
+    }
+
     public function closeIdRequestaccess()
     {
-     
+
         $this->IdRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
-   
+
     public function closeMailRequestaccess()
     {
-     
+
         $this->MailRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
-   
+
     public function closeMMSRequestaccess()
     {
- 
+
         $this->MmsRequestaceessDialog = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeople','selectedPeopleNames']);
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'distributor_name', 'selectedPeople', 'selectedPeopleNames']);
     }
-   
-   
+
+
     public function closePeoples()
     {
         $this->isNames = false;
@@ -419,40 +509,37 @@ class Catalog extends Component
         $this->file_path = '';
         $this->cc_to = '';
     }
- 
- 
+
+
     public function selectPerson($personId)
     {
         try {
             // Retrieve the selected person's details
             $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-   
+
             if ($selectedPerson) {
                 // Create the formatted name with the emp_id
                 $nameWithId = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-   
+
                 if (in_array($personId, $this->selectedPeople)) {
                     // Add the formatted name if not already in the list
                     if (!in_array($nameWithId, $this->selectedPeopleNames)) {
                         // Remove any instances of the plain name
                         $plainName = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name));
                         $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$plainName]);
-   
-                   
                     }
-                 
                 } else {
                     // Remove the person's name from selectedPeopleNames if they are unselected
                     $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$nameWithId]);
                 }
                 // Update cc_to field
- 
-               
+
+
                 // Update email and mobile if there are any selected people left
                 if (!empty($this->selectedPeople)) {
                     $lastSelectedId = end($this->selectedPeople);
                     $lastSelectedPerson = EmployeeDetails::where('emp_id', $lastSelectedId)->first();
-   
+
                     if ($lastSelectedPerson) {
                         $this->mail = $lastSelectedPerson->email;
                         $this->mobile = $lastSelectedPerson->emergency_contact;
@@ -462,27 +549,25 @@ class Catalog extends Component
                     $this->mail = null;
                     $this->mobile = null;
                 }
-   
+
                 // Update cc_to field with unique selected names
                 $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
-         
             }
-         
         } catch (\Exception $e) {
             Log::error('Error selecting person: ' . $e->getMessage());
             $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
-   
-   
- 
+
+
+
     public function addselectPerson($personId)
     {
         try {
             // Limit to a maximum of 5 selected people
-         
+
             $addselectedPerson = $this->peoples->where('emp_id', $personId)->first();
-   
+
             if ($addselectedPerson) {
                 // Add or remove the person's name based on current selection
                 if (in_array($personId, $this->addselectedPeople)) {
@@ -494,7 +579,7 @@ class Catalog extends Component
                     // Remove the person's name from selectedPeopleNames if they are unselected
                     $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($addselectedPerson->first_name)) . ' ' . ucwords(strtolower($addselectedPerson->last_name)) . ' #(' . $addselectedPerson->emp_id . ')']);
                 }
-   
+
                 // Update cc_to field
                 $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
             }
@@ -503,40 +588,40 @@ class Catalog extends Component
             $this->dispatch('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
- 
- 
+
+
     public function filter()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = Auth::user()->company_id;
-   
+
         // Fetch people data based on company ID and search term
         $this->peopleData =  EmployeeDetails::whereJsonContains('company_id', $companyId)
-    ->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->where(function ($query) {
                 $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
+                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%')
+                    ->orWhere('emp_id', 'like', '%' . $this->searchTerm . '%');
             })
             ->get();
- 
-           
- 
+
+
+
         // Apply isChecked only for selected people, uncheck the rest
         $this->peoples->transform(function ($person) {
             // Ensure the comparison is between the same types (convert emp_id to string)
             $person->isChecked = in_array((string)$person->emp_id, $this->selectedPeople);
             return $person;
         });
-           
+
         // Reset filteredPeoples if search term is present
         $this->filteredPeoples = $this->searchTerm ? $this->peopleData : null;
-   
+
         // Filter records based on category and search term
         $this->records = HelpDesks::with('emp')
             ->whereHas('emp', function ($query) {
                 $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
+                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
             })
             ->orderBy('created_at', 'desc')
             ->get();
@@ -547,63 +632,58 @@ class Catalog extends Component
         if (!is_array($this->addselectedPeople)) {
             $this->addselectedPeople = [];
         }
-   
+
         // Limit the selection in addselectedPeople to a maximum of 5
         if (count($this->addselectedPeople) > 5) {
             FlashMessageHelper::flashWarning('You can only select up to 5 people.');
             $this->addselectedPeople = array_slice($this->addselectedPeople, 0, 5); // Trim the array
         }
-   
+
         // Update cc_to field
         $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
     }
     public function updatedSelectedPeople()
-{
-    // Ensure $this->selectedPeople is an array
-    if (!is_array($this->selectedPeople)) {
-        $this->selectedPeople = [];
-    }
- 
-    // Limit selection to only one person
-   
-        if (count($this->selectedPeople) > 1)  {
+    {
+        // Ensure $this->selectedPeople is an array
+        if (!is_array($this->selectedPeople)) {
+            $this->selectedPeople = [];
+        }
+
+        // Limit selection to only one person
+
+        if (count($this->selectedPeople) > 1) {
             FlashMessageHelper::flashWarning('You can only select up to 1 people.');
             $this->addselectedPeople = array_slice($this->addselectedPeople, 0, 1);
             $this->selectedPeople = array_slice($this->selectedPeople, 0, 1);
+        } else {
+            $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
         }
- 
-    else {
-        $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
-    }
- 
-    // Update the name display if a person is selected
-    $this->selectedPeopleNames = [];
-    foreach ($this->selectedPeople as $empId) {
-        $person = EmployeeDetails::where('emp_id', $empId)->first();
-        if ($person) {
-            $this->selectedPeopleNames[] = $person->first_name . ' ' . $person->last_name. ' #(' . $person->emp_id . ')';
+
+        // Update the name display if a person is selected
+        $this->selectedPeopleNames = [];
+        foreach ($this->selectedPeople as $empId) {
+            $person = EmployeeDetails::where('emp_id', $empId)->first();
+            if ($person) {
+                $this->selectedPeopleNames[] = $person->first_name . ' ' . $person->last_name . ' #(' . $person->emp_id . ')';
+            }
+        }
+
+        // Update the email and mobile if only one person is selected
+        if (!empty($this->selectedPeople)) {
+            $selectedPerson = EmployeeDetails::where('emp_id', $this->selectedPeople[0])->first();
+            $this->mail = $selectedPerson->email ?? null;
+            $this->mobile = $selectedPerson->emergency_contact ?? null;
+        } else {
+            $this->mail = null;
+            $this->mobile = null;
         }
     }
- 
-    // Update the email and mobile if only one person is selected
-    if (!empty($this->selectedPeople)) {
-        $selectedPerson = EmployeeDetails::where('emp_id', $this->selectedPeople[0])->first();
-        $this->mail = $selectedPerson->email ?? null;
-        $this->mobile = $selectedPerson->emergency_contact ?? null;
-    } else {
-        $this->mail = null;
-        $this->mobile = null;
-    }
-}
- 
- 
-   
+
+
+
     public function NamesSearch()
     {
         $this->isNames = !$this->isNames;
- 
- 
- 
     }
     public function DistributorRequest()
     {
@@ -705,7 +785,7 @@ class Catalog extends Component
             'file_path.mimes' => 'The file must be of type: xls, csv, xlsx, pdf, jpeg, png, jpg, gif.',
             'file_path.max' => 'The file may not be greater than 40MB.',
         ];
-    
+
         // Validate input fields
         $this->validate([
             'subject' => 'required|string|max:255',
@@ -713,40 +793,40 @@ class Catalog extends Component
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
         ], $messages);
-    
+
         try {
             // Fetch logged-in employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::select('mobile as emergency_contact', 'mail as email', 'emp_id')
                 ->where('emp_id', $employeeId)
                 ->firstOrFail();
-    
+
             // Directly fetch email and assign mobile as emergencyContact
             $this->email = $employeeDetails->email ?? '-';
             $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
-    
+
             // Process file upload
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-    
+
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
-    
+
                 // Check file size limit for BLOB storage
                 if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                     FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                     return;
                 }
-    
+
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
             }
-    
+
             // Create the help desk entry
             $helpDesk = HelpDesks::create([
                 'emp_id' => $employeeDetails->emp_id,
@@ -762,7 +842,7 @@ class Catalog extends Component
                 'mail' => $employeeDetails->email, // Directly fetch email
                 'mobile' => $employeeDetails->emergency_contact, // Using mobile as emergencyContact
             ]);
-    
+
             // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
@@ -770,7 +850,7 @@ class Catalog extends Component
                     new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
                 );
             }
-    
+
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -787,15 +867,15 @@ class Catalog extends Component
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
-    
-    
+
+
 
     public function Request()
     {
         try {
-            $messages=[
+            $messages = [
                 'subject.required' => 'Business Justification is required',
-              'cc_to.required' =>'Add members is required',
+                'cc_to.required' => 'Add members is required',
                 'description' => 'Specific Information is required',
                 'priority.required' => 'Priority is required.',
 
@@ -806,48 +886,48 @@ class Catalog extends Component
                 'priority' => 'required|in:High,Medium,Low',
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
-             
-            ],$messages);
-         
-    // Store the file as binary data
-    $fileContent=null;
-    $mimeType = null;
-    $fileName = null;
-    if ($this->file_path) {
-   
-   
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
-            ]);
-            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
-            return;
-        }
- 
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-            return;
-        }
- 
- 
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
-    }
-   
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-       
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-       
-       
-     
-    HelpDesks::create([
+
+            ], $messages);
+
+            // Store the file as binary data
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            if ($this->file_path) {
+
+
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+
+            HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-               
+
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent ,
+                'file_path' =>  $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
@@ -857,20 +937,20 @@ class Catalog extends Component
                 'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
 
-         
+
             ]);
             $superAdmins = IT::where('role', 'super_admin')->get();
- 
+
             foreach ($superAdmins as $admin) {
                 // Retrieve the first and last names
                 $firstName = $admin->first_name;
                 $lastName = $admin->last_name;
-           
+
                 // Send Email with first and last names included
                 Mail::to($admin->email)->send(new HelpDeskNotification($request, $firstName, $lastName));
             }
-           
-            FlashMessageHelper::flashSuccess  ('Request created successfully.');
+
+            FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -886,7 +966,7 @@ class Catalog extends Component
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
- 
+
     public function submit()
     {
         try {
@@ -977,53 +1057,60 @@ class Catalog extends Component
                 'description' => $this->description,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
             ]);
-            FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
- 
-   
-   
- 
+
+
+
+
     protected $listeners = ['closeModal'];
- 
+
     public function closeModal()
     {
         // Handle modal closing logic here
         $this->showModal = false;
     }
-   
+
     public function closecatalog()
     {
         $this->showModal = false;
         $this->resetErrorBag(); // Reset validation errors if any
         $this->resetValidation(); // Reset validation state
-        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','distributor_name','selectedPeopleNames','image','selectedPeople',
-        'selectedPeople' ,]);
-     
-   
- 
- 
-     
-       
+        $this->reset([
+            'subject',
+            'mail',
+            'mobile',
+            'description',
+            'selected_equipment',
+            'cc_to',
+            'category',
+            'file_path',
+            'distributor_name',
+            'selectedPeopleNames',
+            'image',
+            'selectedPeople',
+            'selectedPeople',
+        ]);
     }
-   
- 
- 
+
+
+
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
-           $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
-        ->whereNotIn('employee_status', ['rejected', 'terminated'])
-        ->get();
-   
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->get();
+
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
         $employee = auth()->guard('emp')->user();
         $employeeId = $employee->emp_id;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
         $superAdmins = IT::where('role', 'super_admin')->get();
- 
+
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
                 $query->where('emp_id', $employeeId)
@@ -1033,8 +1120,9 @@ class Catalog extends Component
             ->get();
         $records = HelpDesks::all();
         return view('livewire.catalog', [
-            'peopleData' => $peopleData, 'records' => $records,    'superAdmins' => $superAdmins,
+            'peopleData' => $peopleData,
+            'records' => $records,
+            'superAdmins' => $superAdmins,
         ]);
     }
 }
- 

@@ -331,7 +331,7 @@ class Attendance extends Component
         // Retrieve swipe records within the given date range
         $records = SwipeRecord::where('emp_id', $employeeId)
             ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<', $endDate)
+            ->whereDate('created_at', '<=', $endDate)
             ->orderBy('created_at')
             ->get();
        
@@ -1135,7 +1135,7 @@ class Attendance extends Component
     Log::info('Calculating total number of absents between: ' . $startDate->format('Y-m-d') . ' and ' . $endDate->format('Y-m-d'));
 
     // Loop through each date between start and end date
-    for ($date = $startDate->copy(); $date->lt($endDate); $date->addDay()) {
+    for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
         
         // Log the current date being checked
         Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
@@ -1318,7 +1318,7 @@ class Attendance extends Component
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
     
         // Iterate through the date range
-        while ($startDate->lt($endDate)) {
+        while ($startDate->lte($endDate)) {
             $tempStartDate = $startDate->toDateString();
             
             // Check if the date is a holiday, weekend, or employee is on leave
@@ -1400,7 +1400,7 @@ class Attendance extends Component
         Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
    
         // Iterate through the date range
-        while ($startDate->lt($endDate)) {
+        while ($startDate->lte($endDate)) {
             $tempStartDate = $startDate->toDateString();
            
             // Check if the date is a holiday, weekend, or employee is on leave
@@ -1546,9 +1546,9 @@ class Attendance extends Component
     private function calculateTotalWorkingDays($startDate,$endDate)
     {
         $workingDays = 0;
-     
+
         // Iterate through the date range
-        while ($startDate->lt($endDate)) {
+        while ($startDate->lte($endDate)) {
             // Check if the day is not Saturday (6) or Sunday (7)
             if (!$startDate->isWeekend()) {
                 $workingDays++;
@@ -1566,7 +1566,7 @@ class Attendance extends Component
     Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
 
     // Iterate through the date range
-    while ($startDate->lt($endDate)) {
+    while ($startDate->lte($endDate)) {
         $tempStartDate = $startDate->toDateString();
 
         // Check if the current date is a holiday
