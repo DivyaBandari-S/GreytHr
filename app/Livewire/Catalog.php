@@ -35,10 +35,12 @@ class Catalog extends Component
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
+    public $ServiceRequestaceessDialog=false;
   
 
     public $mobile;
     public $showModal = true;
+    public $selectedDeptId;
  
     public $ItRequestaceessDialog = false;
     public $MailRequestaceessDialog = false;
@@ -141,8 +143,11 @@ class Catalog extends Component
     if ($this->employeeDetails) {
         // Combine first and last names
         $this->full_name = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name;
+        $this->mobile = $this->employeeDetails->mobile?? '-';
+        $this->mail = $this->employeeDetails->mail?? '-';
+        $this->selectedDeptId =  $this->employeeDetails->dept_id; 
     }
- 
+
    
     $this->peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
     $this->selectedPeople = [];
@@ -195,6 +200,8 @@ class Catalog extends Component
         $this->isNames=false;
     $this->searchTerm = '';
     $this->filteredPeoples='';
+    
+    $this->filter();
  
  
     }
@@ -204,15 +211,22 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->ItRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','cc_to']);
+        $this->reset(['category','cc_to','priority']);
         $this->category = 'Request For IT';
+    }
+    public function ServiceRequest(){
+        $this->resetDialogs();
+        $this->ServiceRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category','priority']);
+        $this->category = 'Distribution List Request';
     }
  
     public function AddRequest(){
         $this->resetDialogs();
         $this->AddRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priority']);
         $this->category = 'Distribution List Request';
     }
  
@@ -221,7 +235,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->LapRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priority']);
         $this->category = 'Laptop Request';
     }
  
@@ -229,7 +243,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priority']);
         $this->category = 'New Distribution Request';
     }
  
@@ -237,7 +251,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->MailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priority']);
         $this->category = 'New Mailbox Request';
     }
  
@@ -245,7 +259,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->DevopsRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priority']);
         $this->category = 'Devops Access Request';
     }
  
@@ -253,7 +267,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->IdRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priorty']);
         $this->category = 'New ID Card';
     }
  
@@ -261,7 +275,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priorty']);
         $this->category = 'MMS Request';
     }
  
@@ -269,7 +283,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->DesktopRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category']);
+        $this->reset(['category','priorty']);
         $this->category = 'Desktop Request';
     }
     public function openItRequestaccess()
@@ -685,46 +699,45 @@ class Catalog extends Component
     {
         $messages = [
             'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name is required',
-            'description.required' => 'Specific Information is required',
-            'mail.required' => 'Email is required.',
-            'mail.email' => 'Email must be a valid email address.',
-            'mobile.required' => 'Mobile number is required',
             'priority.required' => 'Priority is required.',
+            'description.required' => 'Specific Information is required',
+            'file_path.file' => 'The uploaded file must be a valid file.',
+            'file_path.mimes' => 'The file must be of type: xls, csv, xlsx, pdf, jpeg, png, jpg, gif.',
+            'file_path.max' => 'The file may not be greater than 40MB.',
         ];
     
+        // Validate input fields
         $this->validate([
             'subject' => 'required|string|max:255',
             'priority' => 'required|in:High,Medium,Low',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
+            'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
         ], $messages);
     
         try {
-            // Get the logged-in employee details
+            // Fetch logged-in employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $employeeDetails = EmployeeDetails::select('mobile as emergency_contact', 'mail as email', 'emp_id')
+                ->where('emp_id', $employeeId)
+                ->firstOrFail();
     
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->firstOrFail();
-    
-            // Assign mobile and mail based on the logged-in employee
-            $this->mobile = $this->employeeDetails->mobile;
-            $this->mail = $this->employeeDetails->mail;
+            // Directly fetch email and assign mobile as emergencyContact
+            $this->email = $employeeDetails->email ?? '-';
+            $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
     
             // Process file upload
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
+    
             if ($this->file_path) {
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
                     FlashMessageHelper::flashError('Failed to read the uploaded file.');
                     return;
                 }
     
-                // Check if the file content is too large
+                // Check file size limit for BLOB storage
                 if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
                     FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                     return;
@@ -736,7 +749,7 @@ class Catalog extends Component
     
             // Create the help desk entry
             $helpDesk = HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
+                'emp_id' => $employeeDetails->emp_id,
                 'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -746,8 +759,8 @@ class Catalog extends Component
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
-                'mail' => $this->mail,
-                'mobile' => $this->mobile,
+                'mail' => $employeeDetails->email, // Directly fetch email
+                'mobile' => $employeeDetails->emergency_contact, // Using mobile as emergencyContact
             ]);
     
             // Notify super admins
@@ -765,15 +778,16 @@ class Catalog extends Component
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
             Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $this->employeeDetails->emp_id ?? null,
+                'employee_id' => $employeeId,
                 'category' => $this->category ?? null,
                 'subject' => $this->subject ?? null,
                 'description' => $this->description ?? null,
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            FlashMessageHelper::flashError( 'An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    
     
 
     public function Request()
@@ -840,9 +854,10 @@ class Catalog extends Component
                 'category' => $this->category,
                 'mobile' => 'N/A',
                 'mail' => $this->mail ?? '-',
+                'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
 
-                'distributor_name' => 'N/A',
+         
             ]);
             $superAdmins = IT::where('role', 'super_admin')->get();
  
