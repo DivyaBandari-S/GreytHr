@@ -76,6 +76,11 @@ class ReviewPendingRegularisation extends Component
         $this->regularisationrequest->regularisation_entries = json_encode($this->regularisationEntries);
         $this->regularisationrequest->save();
     }
+
+    public function rejectAll($id)
+    {
+            
+    }
     public function reject($date)
     {
         // dd('reject'.$date);
@@ -107,7 +112,7 @@ class ReviewPendingRegularisation extends Component
     
             // Update the status field
             $this->regularisationrequest->status = 13;
-            
+            $this->regularisationrequest->regularisation_date =  Carbon::now();
             // Save the changes to the database
             $this->regularisationrequest->save();
             Log::info('Regularisation status updated and saved.', ['status' => $this->regularisationrequest->status]);
