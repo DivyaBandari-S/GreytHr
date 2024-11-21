@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\RegularisationRejectionMail;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
 use App\Models\RegularisationNew1;
@@ -10,6 +11,7 @@ use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
 class ReviewPendingRegularisation extends Component
@@ -26,18 +28,20 @@ class ReviewPendingRegularisation extends Component
 
     public $remarks = [];
 
+    public $employeeEmailForRejection;
    
     public $empid;
     public $empName;
 
+    public $countofregularisations;
     public $employeeDetails;
     public $regularisationdescrip;
-    public function mount($id)
+    public function mount($id,$count)
     {
        
 
         // Loop through each request and reject it
-        
+       
         $this->empid = Auth::guard('emp')->user()->emp_id;
         $this->empName = EmployeeDetails::where('emp_id', $this->empid)->first();
         $this->regularisationrequest = RegularisationDates::with('employee')->find($id);
@@ -47,7 +51,7 @@ class ReviewPendingRegularisation extends Component
         
         $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
-      
+        $this->countofregularisations=$count;
         $this->totalEntries = count($this->regularisationEntries);
     }
    
@@ -79,7 +83,52 @@ class ReviewPendingRegularisation extends Component
 
     public function rejectAll($id)
     {
-            
+        $currentDateTime = Carbon::now();
+        $item = RegularisationDates::find($id);
+        if(empty($this->remarks))
+        {
+
+        }
+        else
+        {
+            $item->approver_remarks=$this->remarks;
+        }
+        $item->status=3;
+        $item->rejected_date = $currentDateTime; 
+        $item->rejected_by=$this->ManagerName->first_name . ' ' . $this->ManagerName->last_name;
+        $item->save();
+
+        $this->countofregularisations--;
+      
+       
+      
+       
+        $this->sendRejectionMail($id);
+        FlashMessageHelper::flashSuccess('Regularisation Request rejected successfully');
+   
+    }
+    public function sendRejectionMail($id)
+    {
+        $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
+ 
+        $regularisationEntriesforRejection = json_decode($item->regularisation_entries, true); // Decode the JSON entries
+   
+    $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
+    // Prepare the HTML table
+    
+    $this->employeeEmailForRejection=$employee->email;
+    $details = [
+     
+        'regularisationRequests'=>$regularisationEntriesforRejection,
+        'sender_id'=>$employee->emp_id,
+        'sender_remarks'=>$item->employee_remarks,
+        'receiver_remarks'=>$item->approver_remarks,
+       
+    ];
+ 
+ 
+    // Send email to manager
+      Mail::to($this->employeeEmailForRejection)->send(new RegularisationRejectionMail($details));
     }
     public function reject($date)
     {
