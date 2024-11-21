@@ -140,7 +140,7 @@
                         @endif
                         @endif
                     </div>
-                    <ul class="profile-link">
+                    <ul class="profile-link mt-3">
                         <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                         <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
                     </ul>
