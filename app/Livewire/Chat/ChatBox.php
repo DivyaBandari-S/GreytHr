@@ -4,6 +4,7 @@ namespace App\Livewire\Chat;
 
 use App\Events\MessageSent as EventsMessageSent;
 use App\Models\Conversation;
+use App\Models\EmployeeDetails;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -21,17 +22,17 @@ class ChatBox extends Component
     public $newMessage;
     public $media;
     public $receiverId;
+    public $selectedConversation;
 
     protected $listeners = ['loadConversation'];
 
-    public function loadConversation($conversationId)
+    public function loadConversation(Conversation $conversation, EmployeeDetails $receiver)
     {
-        dd('hello.... how are you');
-
-        $this->conversationId = $conversationId;
+        $this->selectedConversation =  $conversation;
+        $this->conversationId =  $this->selectedConversation->id;
 
         // Load messages for the selected conversation
-        $this->messages = Message::where('conversation_id', $conversationId)
+        $this->messages = Message::where('conversation_id',  $this->conversationId)
             ->orderBy('created_at', 'asc')
             ->get();
     }

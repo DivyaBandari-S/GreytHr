@@ -8,6 +8,7 @@ use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Torann\GeoIP\Facades\GeoIP;
@@ -68,6 +69,8 @@ class AttendanceTable extends Component
     public $employee_shift_type;
     public $öpenattendanceperiod = false;
     public $postal_code='-';
+
+    public $employeeShiftDetails;
     protected $listeners = [
         'update',
     ];
@@ -93,7 +96,14 @@ class AttendanceTable extends Component
         $this->country = $location['country'];
         $this->city = $location['city'];
         $this->postal_code = $location['postal_code'];
-        $this->employee_shift_type=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->value('shift_type');
+        $this->employeeShiftDetails = DB::table('employee_details')
+    ->join('company_shifts', function($join) {
+        $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+             ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+    })
+    ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+    ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
+    ->first();
     }
   
     public function updatefromDate()

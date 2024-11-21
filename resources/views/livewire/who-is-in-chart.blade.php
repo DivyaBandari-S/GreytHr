@@ -204,13 +204,13 @@
               <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
               
               <td style="text-align:right;">
-                     <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForAbsent({{ $index }})">
-                          <i class="fa fa-angle-{{ $openAccordionForAbsent === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForAbsent === $index ? '#3a9efd' : '#778899' }}"></i>
+                     <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ in_array($index, $openAccordionsForAbsentees) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionsForAbsentees) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForAbsent({{ $index }})">
+                          <i class="fa fa-angle-{{ in_array($index, $openAccordionsForAbsentees) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionsForAbsentees) ? '#3a9efd' : '#778899' }}"></i>
                     </button>
                 </td>
 
             </tr>
-            @if($openAccordionForAbsent === $index)
+            @if(in_array($index, $openAccordionsForAbsentees))
             <tr>
                 <td colspan="4">
                     <div style="padding: 10px;">
@@ -296,13 +296,13 @@
               </td>
               <td style="font-weight:700;font-size:10px;padding-left:12px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
               <td style="text-align:right;">
-              <button class="arrow-btn" style="background-color:#fff;cursor:pointer;color:{{ $openAccordionForLate === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForLate === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForLate({{ $index }})">
-                          <i class="fa fa-angle-{{ $openAccordionForLate === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForLate === $index ? '#3a9efd' : '#778899' }}"></i>
+              <button class="arrow-btn" style="background-color:#fff;cursor:pointer;color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForLate({{ $index }})">
+                          <i class="fa fa-angle-{{ in_array($index, $openAccordionForLateComers) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}"></i>
                     </button>
                 </td>
             </tr>
             @endif
-            @if($openAccordionForLate === $index)
+            @if(in_array($index, $openAccordionForLateComers))
             <tr>
                 <td colspan="4">
                     <div>
@@ -385,14 +385,14 @@
               data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
               <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
               <td style="text-align:right;">
-              <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForEarly({{ $index }})">
-                          <i class="fa fa-angle-{{ $openAccordionForEarly === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForEarly === $index ? '#3a9efd' : '#778899' }}"></i>
+              <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForEarly({{ $index }})">
+                          <i class="fa fa-angle-{{ in_array($index, $openAccordionForEarlyComers) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }}"></i>
                     </button>
                 </td>
             </tr>
 
               @endif
-              @if($openAccordionForEarly === $index)
+              @if(in_array($index, $openAccordionForEarlyComers))
             <tr>
                 <td colspan="4">
                     <div>
@@ -493,12 +493,12 @@
                 </div>
               </td>
               <td style="text-align:right;">
-                    <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899'}}" wire:click="toggleAccordionForLeave({{ $index }})">
-                          <i class="fa fa-angle-{{ $openAccordionForLeave === $index ? 'down' : 'up' }}"style="color:{{ $openAccordionForLeave === $index ? '#3a9efd' : '#778899' }}"></i>
+                    <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ in_array($index, $openAccordionsForEmployeesOnLeave) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionsForEmployeesOnLeave) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForLeave({{ $index }})">
+                          <i class="fa fa-angle-{{ in_array($index, $openAccordionsForEmployeesOnLeave) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionsForEmployeesOnLeave) ? '#3a9efd' : '#778899' }}"></i>
                     </button>
                 </td>
             </tr>
-            @if($openAccordionForLeave === $index)
+            @if(in_array($index, $openAccordionsForEmployeesOnLeave))
             <tr>
                 <td colspan="4">
                     <div>
