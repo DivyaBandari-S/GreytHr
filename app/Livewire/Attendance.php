@@ -1924,32 +1924,34 @@ class Attendance extends Component
         try {
             $this->showRegularisationDialog = true;
             $employeeId = auth()->guard('emp')->user()->emp_id;
+
             $regularisationRecords = RegularisationDates::where('emp_id', $employeeId)
-    ->where('regularisation_dates.status', 2) // Filter for approved status
-    ->join('status_types', 'status_types.status_code', '=', 'regularisation_dates.status') // Join with status_types table
-    ->select('regularisation_dates.*', 'status_types.status_name') // Select all fields from regularisation_dates and status_name from status_types
-    ->get();
-   
+            ->whereIn('regularisation_dates.status', [2,13]) // Include both approved (2) and status (13)
+            ->join('status_types', 'status_types.status_code', '=', 'regularisation_dates.status') // Join with status_types table
+            ->select('regularisation_dates.*', 'status_types.status_name') // Select fields from both tables
+            ->get();
+           
             $dateFound = false;
             $result = null;
+           
+                    foreach ($regularisationRecords as $record) {
+                        $entries = json_decode($record->regularisation_entries, true);
 
-            foreach ($regularisationRecords as $record) {
-                $entries = json_decode($record->regularisation_entries, true);
-
-                foreach ($entries as $entry) {
-                    if (isset($entry['date']) && $entry['date'] === $d) {
-                        $dateFound = true;
-                        $result = [
-                            'date' => $entry['date'],
-                            'reason' => $entry['reason'],
-                            'approved_date' => $record['approved_date'],
-                            'approved_by' => $record['approved_by']
-                        ];
-                        break 2; // Exit both loops
+                        foreach ($entries as $entry) {
+                            if (isset($entry['date']) && $entry['date'] === $d) {
+                                $dateFound = true;
+                                $result = [
+                                    'date' => $entry['date'],
+                                    'reason' => $entry['reason'],
+                                    'approved_date' => $record['approved_date'],
+                                    'approved_by' => $record['approved_by']
+                                ];
+                                break 2; // Exit both loops
+                            }
+                        }
                     }
-                }
-            }
-
+            
+          
             if ($result) {
                 $this->regularised_date_to_check = $result['date'];
                 $this->regularised_by = $result['approved_by'];
