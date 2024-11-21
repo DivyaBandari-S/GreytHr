@@ -211,12 +211,13 @@
 
             </tr>
             @if(in_array($index, $openAccordionsForAbsentees))
-            <tr>
+            <tr class="row-for-absent-employee">
                 <td colspan="4">
-                    <div style="padding: 10px;">
-                    <div style="height: 50px; background-color: #f0f0f0; padding: 5px; width: 100%;">
+                    <div>
+                        <!-- Add more details here -->
+                        <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
                             <div style="font-size: 10px;">
-                              <span style="font-size: 10px;">{{ \Carbon\Carbon::parse($e1->shift_start_time)->format('h:i A') }} to 
+                              <span>{{ \Carbon\Carbon::parse($e1->shift_start_time)->format('h:i A') }} to 
                               {{ \Carbon\Carbon::parse($e1->shift_end_time)->format('h:i A') }}</span>
                             </div>  
                               <div style="font-size: 8px; margin-top: 5px;">
@@ -225,10 +226,9 @@
                                         <span style="display: inline-block;">{{ \Carbon\Carbon::parse($e1->shift_end_time)->format('H:i') }}</span>
                               </div>
                         </div>
-                        <!-- Add more details here -->
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->emergency_contact}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->job_role}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->job_location}}</span></p>
@@ -320,7 +320,7 @@
                         </div>
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->emergency_contact}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_role}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_location}}</span></p>
@@ -410,7 +410,7 @@
                         <!-- Add more details here -->
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->emergency_contact}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_role}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Location:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->job_location}}</span></p>
@@ -522,7 +522,7 @@
                         </div>
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:<span style="margin-left:5px;font-weight:500;">{{$alr->email}}</span></p>
-                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="margin-left:5px;font-weight:500;">{{$alr->mobile_number}}</span></p>
+                        <p style="font-size:10px;font-weight:600;">Phone Number:<span style="margin-left:5px;font-weight:500;">{{$alr->emergency_contact}}</span></p>
                         <p style="font-size:12px;font-weight:700;">Categories Details</p>
                         <p style="font-size:10px;font-weight:600;">Designation:<span style="margin-left:5px;font-weight:500;">{{$alr->job_role}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Location:<span style="margin-left:5px;font-weight:500;">{{$alr->job_location}}</span></p>
