@@ -158,101 +158,7 @@
                             @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div class="row" style="margin-top: 10px;">
-                            <div class="col">
-                                <div class="row m-0 p-0">
-                                    <div class="row m-0 p-0">
-                                        <div style="margin: 0px; padding: 0;">
-                                            <div>
-
-                                                <div class="select-ccto">
-                                                    Select CC To: {{ implode(', ', array_unique($selectedPeopleNames)) }}
-                                                </div>
-                                                @if (session()->has('selecterror'))
-    <div class="alert alert-danger">
-        {{ session('selecterror') }}
-    </div>
-@endif
-                                            </div>
-                                            <button type="button"  class="add-button" wire:click="toggleRotation">
-                                                <div class="icon-container">
-                                                    <i class="fas fa-plus" style="color: #778899;"></i>
-                                                </div>
-                                            </button>
-                                            <span style="color: #778899; font-size: 12px;">Add</span>
-                                        </div>
-                                        @error('cc_to') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
-                                </div>
-   
-
-                                @if($isRotated)
-                                <div class="helpdesk-rotate" >
-                                    <div class="input-group3 helpdesk-container" >
-                                        <input
-                                            wire:model="searchTerm"
-                                    
-                                            type="text"
-                                            class="form-control helpdesk-search-term"
-                                            placeholder="Search for Emp.Name or ID"
-                                            aria-label="Search"
-                                            aria-describedby="basic-addon1"  >
-                                        <div class="input-group-append" style="display: flex; align-items: center;">
-                                            <button wire:click="filter" class="helpdesk-search-btn" type="button">
-                                                <i style="text-align: center;color:white;margin-left:10px" class="fa fa-search"></i>
-                                            </button>
-                                            <button
-                                                wire:click="closePeoples"
-                                                type="button"
-                                                class="close hepldesk-close-people rounded px-1 py-0"
-                                                aria-label="Close"
-                                              >
-                                                <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    @if ($peopleData && $peopleData->isEmpty())
-                                    <div class="container" style="text-align: center; color: white; font-size: 12px; margin-top: 5px">
-                                        No People Found
-                                    </div>
-                                    @else
-                                    @foreach($peopleData->sortBy(function($person) {
-                                    return $person->first_name . ' ' . $person->last_name;
-                                    }) as $people)
-                                    <label wire:click="selectPerson('{{ $people->emp_id }}')" class="container" style="cursor: pointer; background-color: darkgrey; padding: 5px; margin-bottom: 8px; width: 300px; border-radius: 5px; margin-top: 5px">
-                                        <div class="row align-items-center">
-                                            <div class="col-auto">
-
-                                                <input type="checkbox" id="person-{{ $people->emp_id }}" wire:model="selectedPeople" value="{{ $people->emp_id }}" {{ $people->isChecked ? 'checked' : '' }}   class="form-check-input custom-checkbox-helpdesk">
-                                            </div>
-
-                                            <div class="col-auto">
-                                                @if (!empty($people->image) && $people->image !== 'null')
-                                                <img class="profile-image" src="data:image/jpeg;base64,{{($people->image) }}">
-                                                @else
-                                                @if ($people->gender === 'Male')
-                                                <img class="profile-image" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                                @elseif($people->gender === 'Female')
-                                                <img class="profile-image" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                                @else
-                                                <img class="profile-image" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                                @endif
-                                                @endif
-                                            </div>
-                                            <div class="col">
-                                                <h6 class="username" style="font-size: 12px; color: white;">{{ ucwords(strtolower($people->first_name)) }} {{ ucwords(strtolower($people->last_name)) }}</h6>
-                                                <p class="mb-0" style="font-size: 12px; color: white;">(#{{ $people->emp_id }})</p>
-                                            </div>
-                                        </div>
-                                    </label>
-                                    @endforeach
-                                    @endif
-                                </div>
-                                @endif
-
-                            </div>
-                        </div>
+                      
 
 
                         <div class="ml-0 p-0 mt-3 d-flex gap-3 justify-content-center">
@@ -363,14 +269,7 @@
                 @endif
             </td>
         </tr>
-        <tr>
-                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; background-color: #f9f9f9;">
-                    @php
-                    $ccToArray = explode(',', $record->cc_to ?? '-');
-                    @endphp
-                    <strong>CC To:</strong> {{ count($ccToArray) > 0 ? implode(', ', $ccToArray) : '-' }}
-                </td>
-            </tr>
+     
         @endforeach
         @endif
     </tbody>
@@ -530,14 +429,7 @@
 
                     </tr>
 
-                    <tr>
-                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; background-color: #f9f9f9;">
-                    @php
-                    $ccToArray = explode(',', $record->cc_to ?? '-');
-                    @endphp
-                    <strong>CC To:</strong> {{ count($ccToArray) > 0 ? implode(', ', $ccToArray) : '-' }}
-                </td>
-            </tr>
+            
                 @endif
             @endforeach
         @endif
@@ -639,14 +531,7 @@
                     @endif
                 </td>
             </tr>
-            <tr>
-                <td colspan="7" style="padding: 10px; font-size: 12px; text-transform: capitalize; background-color: #f9f9f9;">
-                    @php
-                    $ccToArray = explode(',', $record->cc_to ?? '-');
-                    @endphp
-                    <strong>CC To:</strong> {{ count($ccToArray) > 0 ? implode(', ', $ccToArray) : '-' }}
-                </td>
-            </tr>
+         
         @endforeach
         @endif
     </tbody>
