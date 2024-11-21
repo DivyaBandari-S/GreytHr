@@ -394,7 +394,7 @@
     @if($record->status == 'Reject')
         {{ ucfirst($record->status ?? '-') }}<br>
         <!-- View Reason Link for Rejected Status -->
-        <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')"
+        <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" style="text-decoration: underline;"
         >
             View Reason
         </div>
