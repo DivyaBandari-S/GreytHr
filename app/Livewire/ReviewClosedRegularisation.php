@@ -18,6 +18,7 @@ class ReviewClosedRegularisation extends Component
     public $ManagerName;
     public $id;
 
+    public $regularisationemployeename;
     public $totalEntries;
 
 

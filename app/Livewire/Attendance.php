@@ -2009,8 +2009,10 @@ class Attendance extends Component
                 }
                 else
                 {
+                  
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','IN')->first();
                     $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out','OUT')->orderBy('updated_at', 'desc')->first();
+                    
                 }
                
                 if ( isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
