@@ -29,6 +29,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\HelpDeskNotification;
 use App\Models\IncidentRequest;
 use App\Models\IT;
+use App\Models\ServiceRequest;
 
 class Catalog extends Component
 {
@@ -60,7 +61,7 @@ class Catalog extends Component
     public $distributor_name;
     public $description;
     public $selected_equipment;
-public $NewMailRequestaceessDialog=false;
+    public $NewMailRequestaceessDialog = false;
     public $priority = 'Low';
     public $activeTab = 'active';
     public $image;
@@ -106,6 +107,7 @@ public $NewMailRequestaceessDialog=false;
     public $short_description;
     public $assigned_dept;
     public $file;
+    public $issue;
     protected $rules = [
         'subject' => 'required|string|max:255',
         'short_description' => 'required|string|max:255',
@@ -116,6 +118,7 @@ public $NewMailRequestaceessDialog=false;
         'distributor_name' => 'required|string|max:15',
         'selected_equipment' => 'required',
         'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+        'issue' => 'required|string|max:255'
     ];
 
 
@@ -129,7 +132,7 @@ public $NewMailRequestaceessDialog=false;
         'mail.email' => ' Email must be a valid email address.',
         'mobile.required' => ' Mobile number is required.',
         'mobile.max' => ' Mobile number must not exceed 15 characters.',
-        'description.required' => ' Description  is required.',
+        'description.required' => ' Description is required.',
         'short_description.required' => 'Short description required',
     ];
     public $first_name;
@@ -220,25 +223,28 @@ public $NewMailRequestaceessDialog=false;
     public function ServiceRequest()
     {
         $this->resetDialogs();
+        $this->resetDialogs();
         $this->ServiceRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
-        $this->category = 'Distribution List Request';
     }
 
     public function incidentRequest()
     {
+        $this->resetDialogs();
         $this->resetIncidentFields();
         $this->incidentRequestaceessDialog = true;
         $this->showModal = true;
     }
+
     public function createIncidentRequest()
     {
         $this->validate([
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
+            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
         ]);
+
         // Get the logged-in employee ID
         $employeeId = auth()->guard('emp')->user()->emp_id;
         Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
@@ -247,20 +253,19 @@ public $NewMailRequestaceessDialog=false;
         $filePath = null;
         $fileName = null;
         $mimeType = null;
-    
-        if ($this->file) {
+
+        if ($this->file_path) {
             Log::debug('File uploaded, storing the file...');
-    
+
             // Store the file in the public disk under 'incident_files'
             try {
-                $filePath = $this->file->store('incident_files', 'public');
-                $fileName = $this->file->getClientOriginalName();
-                $mimeType = $this->file->getMimeType();
-    
+                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
+                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
+                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
+
                 Log::debug('File stored successfully at path: ' . $filePath);
             } catch (\Exception $e) {
                 Log::error('Error uploading file: ' . $e->getMessage());
-                // Optionally, you can handle file upload failure here
                 FlashMessageHelper::flashError('Error uploading file.');
                 return;
             }
@@ -281,27 +286,85 @@ public $NewMailRequestaceessDialog=false;
                 'mime_type' => $mimeType,
                 'status_code' => 10, // Set default status
             ]);
-    
+
             Log::debug('Incident Request created successfully: ', $incidentRequest->toArray());
         } catch (\Exception $e) {
             Log::error('Error creating Incident Request: ' . $e->getMessage());
             FlashMessageHelper::flashError('Error creating Incident Request.');
             return;
         }
-        $this->resetIncidentFields();
 
-        // Close the modal after successful creation
+        // Reset the fields and close the modal
+        $this->resetIncidentFields();
         $this->showModal = false;
+
         // Flash success message
         FlashMessageHelper::flashSuccess('Incident request created successfully.');
         Log::info('Incident request created and modal closed for employee ID: ' . $employeeId);
     }
 
+    public function createServiceRequest()
+    {
+        $this->validate([
+            'short_description' => 'required|string|max:255',
+            'description' => 'required|string',
+            'priority' => 'required|in:Low,Medium,High',
+            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
+        ]);
+
+        // Get the logged-in employee ID
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Handle file upload if there is a file
+        $filePath = null;
+        $fileName = null;
+        $mimeType = null;
+
+        if ($this->file_path) {
+
+            // Store the file in the public disk under 'incident_files'
+            try {
+                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
+                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
+                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
+
+            } catch (\Exception $e) {
+                FlashMessageHelper::flashError('Error uploading file.');
+                return;
+            }
+        }
+
+        // Create the new IncidentRequest
+        try {
+            $incidentRequest = ServiceRequest::create([
+                'emp_id' => $employeeId,
+                'short_description' => $this->short_description,
+                'description' => $this->description,
+                'priority' => $this->priority,
+                'assigned_dept' => 'IT',
+                'file_path' => $filePath,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'status_code' => 10, // Set default status
+            ]);
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('Error creating Incident Request.');
+            return;
+        }
+
+        // Reset the fields and close the modal
+        $this->resetIncidentFields();
+        $this->showModal = false;
+        if ($incidentRequest) {
+            FlashMessageHelper::flashSuccess('Incident request created successfully.');
+        }
+    }
     public function resetIncidentFields()
     {
+        $this->resetDialogs();
         $this->short_description = null;
         $this->priority = null;
-        $this->description =null;
+        $this->description = null;
         $this->resetErrorBag();
         $this->resetValidation();
     }
@@ -377,11 +440,12 @@ public $NewMailRequestaceessDialog=false;
         $this->reset(['category', 'priority']);
         $this->category = 'Desktop Request';
     }
-    public function NewMailRequest(){
+    public function NewMailRequest()
+    {
         $this->resetDialogs();
         $this->NewMailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priority']);
+        $this->reset(['category', 'priority']);
         $this->category = 'New Mailbox Request';
     }
     public function openItRequestaccess()
@@ -804,12 +868,12 @@ public $NewMailRequestaceessDialog=false;
         try {
             // Fetch logged-in employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
-    
+
             if (!$employeeId) {
                 FlashMessageHelper::flashError('Employee ID is missing.');
                 return;
             }
-    
+
             // Retrieve employee details using the emp_id
             $employeeDetails = EmployeeDetails::select('emergency_contact', 'email')
                 ->where('emp_id', $employeeId)
@@ -818,7 +882,7 @@ public $NewMailRequestaceessDialog=false;
             // Directly fetch email and assign mobile as emergencyContact
             $this->email = $employeeDetails->email ?? '-';
             $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
-    
+
             // Process file upload
             $fileContent = null;
             $mimeType = null;
@@ -901,42 +965,42 @@ public $NewMailRequestaceessDialog=false;
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
 
-            ],$messages);
-         
-    // Store the file as binary data
-    $fileContent=null;
-    $mimeType = null;
-    $fileName = null;
-    if ($this->file_path) {
-   
-   
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
-            ]);
-            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
-            return;
-        }
- 
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-            return;
-        }
- 
- 
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
-    }
-   
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-       
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-       
-       
-     
-    HelpDesks::create([
+            ], $messages);
+
+            // Store the file as binary data
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            if ($this->file_path) {
+
+
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+
+            HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
@@ -953,7 +1017,7 @@ public $NewMailRequestaceessDialog=false;
 
 
             ]);
-  
+
             $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
                 Mail::to($admin->email)->send(
@@ -961,7 +1025,7 @@ public $NewMailRequestaceessDialog=false;
                 );
             }
 
-            FlashMessageHelper::flashSuccess  ('Request created successfully.');
+            FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -1027,7 +1091,7 @@ public $NewMailRequestaceessDialog=false;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
 
-            $helpDesk=  HelpDesks::create([
+            $helpDesk =  HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
@@ -1051,8 +1115,8 @@ public $NewMailRequestaceessDialog=false;
                     new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
                 );
             }
-       
-        
+
+
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
@@ -1117,8 +1181,8 @@ public $NewMailRequestaceessDialog=false;
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
         $employeeDetails = EmployeeDetails::select('emergency_contact', 'email')
-        ->where('emp_id', $employeeId)
-        ->firstOrFail();
+            ->where('emp_id', $employeeId)
+            ->firstOrFail();
         $this->mail = $employeeDetails->email;
         $this->mobile = $employeeDetails->emergency_contact;
         $employee = auth()->guard('emp')->user();

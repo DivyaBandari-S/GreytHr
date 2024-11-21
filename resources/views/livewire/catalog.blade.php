@@ -34,7 +34,7 @@
                     </div>
                     <div class="modal-body">
 
-                        <form wire:submit.prevent="DistributorRequest" style="width:80%">
+                        <form wire:submit.prevent="createServiceRequest" style="width:80%">
 
                             <div class="form-group  mt-2">
                                 <label for="Name">Requested By:</label>
@@ -55,58 +55,47 @@
                             </div>
 
 
-                                                    <div class="form-group mt-2">
-                                                        <label for="distributor_name">Short description<span style="color:red">*</span></label>
-                                                        <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
-                                                        @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    </div>
-                                                    <div class="form-group mt-2">
-                                                        <label for="priority" class="helpdesk-label">Urgency<span style="color:red">*</span></label>
-                                                        <div class="input" class="form-control placeholder-small">
-                                                            <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
-                                                                    <option style="color: grey;" value="" hidden>Select Priority</option>
-                                                                    <option value="Low">Low</option>
-                                                                    <option value="Medium">Medium</option>
-                                                                    <option value="High">High</option>
-                                                                   
-                                                                  
-                                                                </select>
-                                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                                                    class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
-                                                                    <path d="M3.204 5h9.592L8 10.481 3.204 5z" />
-                                                                </svg>
-                                                            </div>
-                                                        </div>
-                                                        @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    </div>
- 
-                                                    <div class="form-group mt-2">
-                                                        <label for="description">Description<span style="color:red">*</span></label>
-                                                        <textarea wire:model.lazy="description" wire:keydown.debounce.500ms="validateField('form.description')" class="form-control" id="description"></textarea>
-                                                        @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    </div>
+                            <!-- Short Description -->
+                            <div class="form-group mt-2">
+                                <label for="short_description">Short Description <span style="color:red">*</span></label>
+                                <input wire:model.lazy="short_description" type="text" class="form-control" id="short_description">
+                                @error('short_description') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
 
+                            <!-- Priority -->
+                            <div class="form-group mt-2">
+                                <label for="priority">Urgency <span style="color:red">*</span></label>
+                                <select wire:model.lazy="priority" class="form-control" id="priority">
+                                    <option value="" hidden>Select Priority</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
 
+                            <!-- Description -->
+                            <div class="form-group mt-2">
+                                <label for="description">Please describe your issue below <span style="color:red">*</span></label>
+                                <textarea wire:model.lazy="description" class="form-control" id="description"></textarea>
+                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
+                            </div>
 
-                            <div class="row mt-2">
-                                <div class="col">
-                                    <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
-                                        <i class="fa fa-paperclip"></i> Attach Image
-                                    </label>
-                                </div>
+                            <!-- File Upload -->
+                            <div class="form-group mt-2">
+                                <label for="file_path" style="color:#778899; font-weight:500; font-size:12px;">
+                                    <i class="fa fa-paperclip"></i> Attach File
+                                </label>
+                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
                                 @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
 
-                            <div>
-                                <input type="file" wire:model="file_path" id="file_path" class="form-control">
-                            </div>
                         </form>
                     </div>
                     <div class="modal-footer justify-content-center">
                         <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                            <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
-                            <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
+                            <button type="button" wire:click="createServiceRequest" class="submit-btn">Submit</button>
+                            <button wire:click="resetIncidentFields" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
                         </div>
                     </div>
                 </div>
@@ -166,7 +155,7 @@
 
                             <!-- Description -->
                             <div class="form-group mt-2">
-                                <label for="description">Description <span style="color:red">*</span></label>
+                                <label for="description">Please describe your issue below <span style="color:red">*</span></label>
                                 <textarea wire:model.lazy="description" class="form-control" id="description"></textarea>
                                 @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -179,6 +168,7 @@
                                 <input type="file" wire:model="file_path" id="file_path" class="form-control">
                                 @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
+
                         </form>
                     </div>
                     <div class="modal-footer justify-content-center">
@@ -366,13 +356,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -550,13 +540,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -683,13 +673,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -801,7 +791,7 @@
                                                     <div style="display:flex">
 
                                                         <div class="form-group col-md-6 mt-2">
-                                                       
+
                                                             <label for="mobile">Mobile Number <span style="color:red">*</span></label>
                                                             <input wire:model="mobile" wire:keydown.debounce.500ms="validateField('mobile')" type="text" class="form-control">
                                                             @error('mobile') <span class="text-danger">{{ $message }}</span> @enderror
@@ -817,13 +807,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -945,13 +935,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -1158,13 +1148,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -1261,24 +1251,24 @@
                                                     <div style="display:flex">
 
 
-            <!-- Mobile Number -->
-            <div class="form-group col-md-5 mt-2">
-                <label for="mobile">Mobile Number <span style="color:red">*</span></label>
-                <input type="text" id="mobile" class="form-control" wire:model="=mobile" >
-            </div>
+                                                        <!-- Mobile Number -->
+                                                        <div class="form-group col-md-5 mt-2">
+                                                            <label for="mobile">Mobile Number <span style="color:red">*</span></label>
+                                                            <input type="text" id="mobile" class="form-control" wire:model="=mobile">
+                                                        </div>
 
-</div>
+                                                    </div>
                                                     <div class="form-group mt-2">
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -1337,7 +1327,7 @@
                     </div>
                     <div class="col-md-4 mb-4">
                         <div style="background:white; border:1px solid #d3d3d3; border-radius:5px; padding: 10px 15px;">
-                            <p style="font-size: 12px;" ><b>New Mailbox Request</b></p>
+                            <p style="font-size: 12px;"><b>New Mailbox Request</b></p>
                             <div class="row m-0">
                                 <div class="col-12 text-center mb-2" style="font-size:12px">
                                     <img src="images/it-images/mail.png" style="height:4em;" />
@@ -1389,7 +1379,7 @@
                                                         <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
                                                         @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
                                                     </div>
- <div class="form-group mt-2">
+                                                    <div class="form-group mt-2">
                                                         <label for="Name">Members to be Added to New Mailbox</label>
                                                         <div class="input-group mb-3">
                                                             <!-- Info icon on the left side -->
@@ -1487,8 +1477,8 @@
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
@@ -1607,13 +1597,13 @@
                                                         <label for="priority" class="helpdesk-label">Priority<span style="color:red">*</span></label>
                                                         <div class="input" class="form-control placeholder-small">
                                                             <div style="position: relative;">
-                                                            <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
+                                                                <select name="priority" id="priority" wire:keydown.debounce.500ms="validateField('priority')" wire:model.lazy="priority" style="font-size: 12px; " class="form-control placeholder-small">
                                                                     <option style="color: grey;" value="" hidden>Select Priority</option>
                                                                     <option value="Low">Low</option>
                                                                     <option value="Medium">Medium</option>
                                                                     <option value="High">High</option>
-                                                                   
-                                                                  
+
+
                                                                 </select>
                                                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                                     class="bi bi-caret-down" viewBox="0 0 16 16" style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none;align-items :center">
