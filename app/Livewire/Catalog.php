@@ -362,7 +362,7 @@ class Catalog extends Component
     public function resetIncidentFields()
     {
         $this->incidentRequestaceessDialog = false;
-        $this->ServiceRequestaceessDialog =false;l
+        $this->ServiceRequestaceessDialog =false;
         $this->resetDialogs();
         $this->short_description = null;
         $this->priority = null;
