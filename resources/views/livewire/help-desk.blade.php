@@ -318,6 +318,7 @@
     <thead>
         <tr class="help-desk-table-row">
             <th class="help-desk-table-column">Request Raised By</th>
+            <th class="help-desk-table-column">Request ID</th>
             <th class="help-desk-table-column">Category</th>
             <th class="help-desk-table-column">Subject</th>
             <th class="help-desk-table-column">Description</th>
@@ -343,6 +344,9 @@
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
+                        <td class="helpdesk-request">
+                {{ $record->request_id ?? '-' }}
+            </td>
                         <td class="helpdesk-request">
                             {{ $record->category ?? '-' }}
                         </td>
@@ -390,7 +394,8 @@
     @if($record->status == 'Reject')
         {{ ucfirst($record->status ?? '-') }}<br>
         <!-- View Reason Link for Rejected Status -->
-        <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')">
+        <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')"
+        >
             View Reason
         </a>
     @elseif($record->status == 'Completed')
@@ -407,14 +412,16 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Rejection Reason</h5>
-                        <button type="button" class="close" wire:click="closeModal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                        <button wire:click="closeModal" type="button" class="close rounded px-1 py-0" aria-label="Close" style="background-color: rgb(2,17,79); height: 30px; width: 30px; margin-left: 5px; display: flex; align-items: center; justify-content: center;">
+                                                                            <span aria-hidden="true" style="color: white; font-size: 24px; line-height: 0;">×</span>
+                                                                        </button>
+                      
                     </div>
                     <div class="modal-body">
                         {{ $rejection_reason }}
                     </div>
                     <div class="modal-footer">
+
                         <button type="button" class="btn btn-secondary" wire:click="closeModal">Close</button>
                     </div>
                 </div>
@@ -470,6 +477,7 @@
     <thead>
         <tr class="help-desk-table-row">
             <th class="help-desk-table-column">Request Raised By</th>
+            <th class="help-desk-table-column">Request ID</th>
             <th class="help-desk-table-column">Category</th>
             <th class="help-desk-table-column">Subject</th>
             <th class="help-desk-table-column">Description</th>
@@ -492,6 +500,9 @@
                     {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                     <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                 </td>
+                <td class="helpdesk-request">
+                {{ $record->request_id ?? '-' }}
+            </td>
                 <td class="helpdesk-request">
                     {{ $record->category ?? '-' }}
                 </td>

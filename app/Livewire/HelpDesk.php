@@ -235,15 +235,18 @@ public $closedSearch = '';
     
     public function showRejectionReason($id)
     {
+     
         $record = HelpDesks::findOrFail($id);
-
-        if ($record && $record->status == 'Reject') {
-            $this->rejection_reason = $record->rejection_reason ?? 'Reason not provided.';
+    
+        if ($record && $record->status === 'Reject') {
+            $this->rejection_reason = $record->rejection_reason;
+        
             $this->isOpen = true;
         } else {
             $this->dispatchBrowserEvent('notification', ['message' => 'Reason not available.']);
         }
     }
+    
     public function closeModal()
     {
         $this->isOpen = false;
