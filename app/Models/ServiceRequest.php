@@ -12,7 +12,7 @@ class ServiceRequest extends Model
         'service_id',
         'emp_id',
         'short_description',
-        'issue',
+        'description',
         'priority',
         'assigned_dept',
         'file_path',

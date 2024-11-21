@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('service_id', 10)->nullable()->unique(); // Auto-generated Service ID
             $table->string('emp_id',10);
             $table->string('short_description')->nullable();
-            $table->text('issue')->nullable();
+            $table->text('description')->nullable();
             $table->enum('priority', ['low', 'medium', 'high'])->default('low');
             $table->string('assigned_dept')->nullable();
             $table->string('file_path')->nullable();
