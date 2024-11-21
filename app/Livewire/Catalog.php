@@ -59,7 +59,7 @@ class Catalog extends Component
     public $distributor_name;
     public $description;
     public $selected_equipment;
- 
+ public $NewMailRequestaceessDialog=false;
     public $priority;
     public $activeTab = 'active';
     public $image;
@@ -267,7 +267,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->IdRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category','priority']);
         $this->category = 'New ID Card';
     }
  
@@ -275,7 +275,7 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->MmsRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category','priority']);
         $this->category = 'MMS Request';
     }
  
@@ -283,8 +283,15 @@ class Catalog extends Component
         $this->resetDialogs();
         $this->DesktopRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category','priorty']);
+        $this->reset(['category','priority']);
         $this->category = 'Desktop Request';
+    }
+    public function NewMailRequest(){
+        $this->resetDialogs();
+        $this->NewMailRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category','priority']);
+        $this->category = 'New Mailbox Request';
     }
     public function openItRequestaccess()
     {
@@ -336,7 +343,11 @@ class Catalog extends Component
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
        
     }
- 
+    public function closeNewRequestaccess()
+    {
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
+        $this->NewMailRequestaceessDialog = false;
+    }
     public function closeAddRequestaccess()
     {
         $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment','cc_to','category','file_path','selectedPeople','selectedPeopleNames']);
@@ -717,13 +728,20 @@ class Catalog extends Component
         try {
             // Fetch logged-in employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $employeeDetails = EmployeeDetails::select('mobile as emergency_contact', 'mail as email', 'emp_id')
+    
+            if (!$employeeId) {
+                FlashMessageHelper::flashError('Employee ID is missing.');
+                return;
+            }
+    
+            // Retrieve employee details using the emp_id
+            $employeeDetails = EmployeeDetails::select('emergency_contact', 'email')
                 ->where('emp_id', $employeeId)
                 ->firstOrFail();
     
-            // Directly fetch email and assign mobile as emergencyContact
-            $this->email = $employeeDetails->email ?? '-';
-            $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
+            // Assign the email and emergency contact to properties
+            $this->mail = $employeeDetails->email;
+            $this->mobile = $employeeDetails->emergency_contact;
     
             // Process file upload
             $fileContent = null;
@@ -749,7 +767,7 @@ class Catalog extends Component
     
             // Create the help desk entry
             $helpDesk = HelpDesks::create([
-                'emp_id' => $employeeDetails->emp_id,
+                'emp_id' => $employeeId, // Pass the employee ID directly
                 'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
                 'description' => $this->description,
@@ -759,8 +777,8 @@ class Catalog extends Component
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
-                'mail' => $employeeDetails->email, // Directly fetch email
-                'mobile' => $employeeDetails->emergency_contact, // Using mobile as emergencyContact
+                'mail' => $this->mail, // Directly fetched email
+                'mobile' => $this->mobile, // Using mobile as emergencyContact
             ]);
     
             // Notify super admins
@@ -787,6 +805,9 @@ class Catalog extends Component
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    
+    
+    
     
     
 
@@ -842,7 +863,7 @@ class Catalog extends Component
        
        
      
-    HelpDesks::create([
+        $helpDesk= HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                
                 'subject' => $this->subject,
@@ -859,17 +880,14 @@ class Catalog extends Component
 
          
             ]);
+   
             $superAdmins = IT::where('role', 'super_admin')->get();
- 
             foreach ($superAdmins as $admin) {
-                // Retrieve the first and last names
-                $firstName = $admin->first_name;
-                $lastName = $admin->last_name;
-           
-                // Send Email with first and last names included
-                Mail::to($admin->email)->send(new HelpDeskNotification($request, $firstName, $lastName));
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
             }
-           
+       
             FlashMessageHelper::flashSuccess  ('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
@@ -936,7 +954,7 @@ class Catalog extends Component
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
 
-            $helpdesk = HelpDesks::create([
+            $helpDesk=  HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
@@ -954,15 +972,14 @@ class Catalog extends Component
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-
+            $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
-                // Retrieve the first and last names
-                $firstName = $admin->first_name;
-                $lastName = $admin->last_name;
-
-                // Send Email with first and last names included
-                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                );
             }
+       
+        
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
@@ -1019,6 +1036,11 @@ class Catalog extends Component
    
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
         $this->record = HelpDesks::all();
+        $employeeDetails = EmployeeDetails::select('emergency_contact', 'email')
+        ->where('emp_id', $employeeId)
+        ->firstOrFail();
+        $this->mail = $employeeDetails->email;
+        $this->mobile = $employeeDetails->emergency_contact;
         $employee = auth()->guard('emp')->user();
         $employeeId = $employee->emp_id;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
