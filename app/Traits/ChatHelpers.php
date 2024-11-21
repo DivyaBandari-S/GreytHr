@@ -166,18 +166,18 @@ trait ChatHelpers
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function messages()
-    {
-        return $this->hasMany(Message::class, 'receiver_id', 'emp_id');
-    }
-
     // public function messages()
     // {
-    //     return $this->hasMany(Message::class, 'sender_id')
-    //         ->orWhere(function ($query) {
-    //             $query->where('receiver_id', $this->emp_id);
-    //         });
+    //     return $this->hasMany(Message::class, 'receiver_id', 'emp_id');
     // }
+
+    public function messages()
+    {
+        return $this->hasMany(Message::class, 'sender_id')
+            ->orWhere(function ($query) {
+                $query->where('receiver_id', $this->emp_id);
+            });
+    }
 
     /**
      * Define the 'members' relationship, assuming it's a many-to-many relationship.

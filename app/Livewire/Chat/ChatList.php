@@ -34,31 +34,11 @@ class ChatList extends Component
         })->first();
         $receiverInstance = EmployeeDetails::find($receiverId);
         $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance);
-        // $this->emitTo('chat.send-message', 'updateSendMessage', $this->selectedConversation, $receiverInstance);
+        $this->dispatch('chat.send-message', 'updateSendMessage', $this->selectedConversation, $receiverInstance);
 
         # code...
     }
 
-    // public function getChatUserInstance(Conversation $conversation, $request)
-    // {
-    //     # code...
-    //     dd('hello');
-    //     $this->auth_id = auth()->id();
-    //     //get selected conversation
-
-    //     if ($conversation->sender_id == $this->auth_id) {
-    //         $this->receiverInstance = EmployeeDetails::firstWhere('id', $conversation->receiver_id);
-    //         # code...
-    //     } else {
-    //         $this->receiverInstance = EmployeeDetails::firstWhere('id', $conversation->sender_id);
-    //     }
-
-    //     if (isset($request)) {
-
-    //         return $this->receiverInstance->$request;
-    //         # code...
-    //     }
-    // }
     // public function mount()
     // {
 
