@@ -53,7 +53,14 @@
             @endif
             @if(!empty($details['regularisationRequests']) && is_array($details['regularisationRequests']))
             
-                    <p style="text-align:start;font-weight:bold;">Approver Remarks:<span class="text-center"style="font-weight:400;">{{ $details['receiver_remarks']}}</span></p>
+                    <p style="text-align:start;font-weight:bold;">Approver Remarks:
+                        <span class="text-center"style="font-weight:400;">
+                            @if(empty($details['receiver_remarks']))
+                                NA
+                            @else    
+                              {{ $details['receiver_remarks']}}
+                            @endif 
+                        </span></p>
                     
                
             @endif

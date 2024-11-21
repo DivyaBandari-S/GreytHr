@@ -284,6 +284,7 @@ class ViewRegularisationPendingNew extends Component
     }
     public function reject($id)
     {
+        
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         if(empty($this->remarks))
