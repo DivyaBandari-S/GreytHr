@@ -309,7 +309,7 @@ class Catalog extends Component
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
-            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
+            'file_path' => 'nullable|file|max:10240',
         ]);
 
         // Get the logged-in employee ID
@@ -356,11 +356,13 @@ class Catalog extends Component
         $this->resetIncidentFields();
         $this->showModal = false;
         if ($incidentRequest) {
-            FlashMessageHelper::flashSuccess('Incident request created successfully.');
+            FlashMessageHelper::flashSuccess('Service request created successfully.');
         }
     }
     public function resetIncidentFields()
     {
+        $this->incidentRequestaceessDialog = false;
+        $this->ServiceRequestaceessDialog =false;l
         $this->resetDialogs();
         $this->short_description = null;
         $this->priority = null;
