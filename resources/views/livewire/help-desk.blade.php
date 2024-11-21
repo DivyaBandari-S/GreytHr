@@ -413,40 +413,44 @@
                             {{ $record->priority ?? '-' }}
                         </td>
                         <td class="helpdesk-request @if($record->status == 'Reject') rejectColor @elseif($record->status == 'Completed') approvedColor @endif">
-                            @if($record->status == 'Reject')
-                            {{ ucfirst($record->status ?? '-') }}<br>
-                            <!-- View Reason Link for Rejected Status -->
-                            <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
-                                View Reason
-        </div>
-        @elseif($record->status == 'Completed')
-        {{ ucfirst($record->status ?? '-') }}
+    @if($record->status == 'Reject')
+        {{ ucfirst($record->status ?? '-') }}<br>
+        @if($record->rejection_reason)
+            <!-- If rejection_reason is not null, show the View Reason link -->
+            <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
+                View Reason
+            </a>
+        @else
+            <!-- If rejection_reason is null, show "No Reason" -->
+           <p class="helpdesk-request">No Reason</p> 
         @endif
-        </td>
+    @elseif($record->status == 'Completed')
+        {{ ucfirst($record->status ?? '-') }}
+    @endif
+</td>
 
-
-
-        <div>
-            @if($isOpen)
-            <div class="modal" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Rejection Reason</h5>
-                        </div>
-                        <div class="modal-body">
-                            {{ $rejection_reason }}
-                        </div>
-                        <div class="modal-footer d-flex align-items-center justify-content-center">
-                            <div class="d-flex align-items-center justify-content-center">
-                                <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
-                            </div>
+<!-- Modal for Rejection Reason -->
+<div>
+    @if($isOpen)
+        <div class="modal" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Rejection Reason</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ $rejection_reason ?? 'No Reason' }}  <!-- Show "No Reason" if rejection_reason is null -->
+                    </div>
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
         </div>
+    @endif
+</div>
 
 
 
