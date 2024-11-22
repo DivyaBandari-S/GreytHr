@@ -37,6 +37,7 @@ class Catalog extends Component
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
+    public $email;
     public $ServiceRequestaceessDialog = false;
 
 
@@ -814,6 +815,7 @@ class Catalog extends Component
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
+                'status_code' => 8,
             ]);
             $superAdmins = IT::where('role', 'super_admin')->get();
 
@@ -880,8 +882,8 @@ class Catalog extends Component
                 ->firstOrFail();
 
             // Directly fetch email and assign mobile as emergencyContact
-            $this->email = $employeeDetails->email ?? '-';
-            $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
+            $this->mail = $employeeDetails->email ?? '-';
+            $this->mobile = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
 
             // Process file upload
             $fileContent = null;
@@ -918,7 +920,8 @@ class Catalog extends Component
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => $this->mail, // Directly fetched email
-                'mobile' => $this->mobile, // Using mobile as emergencyContact
+                'mobile' => $this->mobile, 
+                'status_code' => 8,
             ]);
 
             // Notify super admins
@@ -1014,6 +1017,7 @@ class Catalog extends Component
                 'mail' => $this->mail ?? '-',
                 'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
+                'status_code' => 8,
 
 
             ]);
@@ -1106,6 +1110,7 @@ class Catalog extends Component
                 'mobile' => 'N/A',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
+                'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
