@@ -1257,7 +1257,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
 
-            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
+            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';
             // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
             //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
 
@@ -1424,7 +1424,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
             $isweekend = $startDate->isWeekend();
             $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')->whereDate('created_at', $tempStartDate)->first();
+            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'OUT')->whereDate('created_at', $tempStartDate)->orderByDesc('created_at')->first();
 
             if (empty($isPresent)) {
                 $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')->whereDate('created_at', $tempStartDate)->first();

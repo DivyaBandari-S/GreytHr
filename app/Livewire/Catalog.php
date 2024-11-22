@@ -27,6 +27,8 @@ use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\HelpDeskNotification;
+use App\Mail\IncidentRequestMail;
+use App\Mail\ServiceRequestMail;
 use App\Models\IncidentRequest;
 use App\Models\IT;
 use App\Models\ServiceRequest;
@@ -39,7 +41,7 @@ class Catalog extends Component
     public $superAdmins;
     public $ServiceRequestaceessDialog = false;
 
-
+    public $recipient;
     public $mobile;
     public $showModal = true;
     public $selectedDeptId;
@@ -249,28 +251,28 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
         Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
 
-        // Handle file upload if there is a file
-        $filePath = null;
-        $fileName = null;
+        $fileContent = null;
         $mimeType = null;
+        $fileName = null;
 
+        // Store the file as binary data
         if ($this->file_path) {
-            Log::debug('File uploaded, storing the file...');
-
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
-
-                Log::debug('File stored successfully at path: ' . $filePath);
-            } catch (\Exception $e) {
-                Log::error('Error uploading file: ' . $e->getMessage());
-                FlashMessageHelper::flashError('Error uploading file.');
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
-        } else {
-            Log::debug('No file uploaded.');
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                // session()->flash('error', 'File size exceeds the allowed limit.');
+                FlashMessageHelper::flashError('File size exceeds the allowed limit.');
+                return;
+            }
+
+
+            $mimeType = $this->file_path->getMimeType();
+            $fileName = $this->file_path->getClientOriginalName();
         }
 
         // Create the new IncidentRequest
@@ -281,16 +283,37 @@ class Catalog extends Component
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $filePath,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
-                'status_code' => 10, // Set default status
+                'status_code' => 10,
             ]);
+            $incidentRequest->refresh();
+            $this->recipient = IT::with('empIt')->where('role', '=', 'admin')->get();
+            // Loop through each admin
+            foreach ($this->recipient as $admin) {
+                // Check if the empIt relation exists (to avoid errors if the relation is null)
+                $firstName = $admin->empIt ? $admin->empIt->first_name : 'N/A';
+                $lastName = $admin->empIt ? $admin->empIt->last_name : 'N/A';
+                // Retrieve the admin's email (assuming it's stored in the empIt relation)
+                $email = $admin->email;
 
-            Log::debug('Incident Request created successfully: ', $incidentRequest->toArray());
+                // Ensure the email is not null
+                if ($email) {
+                    // Send the email to the admin
+                    Mail::to($email)->send(new IncidentRequestMail($incidentRequest, $firstName, $lastName));
+                }
+            }
         } catch (\Exception $e) {
-            Log::error('Error creating Incident Request: ' . $e->getMessage());
             FlashMessageHelper::flashError('Error creating Incident Request.');
+            Log::error('Error creating Incident Request: ' . $e->getMessage());
+
+            // Log additional details if needed (e.g., the stack trace)
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            // Optionally, you can log the specific request data causing the issue
+            Log::error('Request Data: ' . json_encode($this->all()));
+
             return;
         }
 
@@ -316,53 +339,82 @@ class Catalog extends Component
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
         // Handle file upload if there is a file
-        $filePath = null;
+        $fileContent = null;
         $fileName = null;
         $mimeType = null;
 
         if ($this->file_path) {
-
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
-
-            } catch (\Exception $e) {
-                FlashMessageHelper::flashError('Error uploading file.');
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                // session()->flash('error', 'File size exceeds the allowed limit.');
+                FlashMessageHelper::flashError('File size exceeds the allowed limit.');
+                return;
+            }
+            $mimeType = $this->file_path->getMimeType();
+            $fileName = $this->file_path->getClientOriginalName();
         }
 
         // Create the new IncidentRequest
         try {
-            $incidentRequest = ServiceRequest::create([
+            $serviceRequest = ServiceRequest::create([
                 'emp_id' => $employeeId,
                 'short_description' => $this->short_description,
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $filePath,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'status_code' => 10, // Set default status
             ]);
+            $serviceRequest->refresh();
+            $this->recipient = IT::with('empIt')->where('role', '=', 'admin')->get();
+            // Loop through each admin
+            foreach ($this->recipient as $admin) {
+                // Check if the empIt relation exists (to avoid errors if the relation is null)
+                $firstName = $admin->empIt ? $admin->empIt->first_name : 'N/A';
+                $lastName = $admin->empIt ? $admin->empIt->last_name : 'N/A';
+
+                // Retrieve the admin's email (assuming it's stored in the empIt relation)
+                $email = $admin->email;
+
+                // Ensure the email is not null
+                if ($email) {
+                    // Send the email to the admin
+                    Mail::to($email)->send(new ServiceRequestMail($serviceRequest, $firstName, $lastName));
+                }
+            }
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Error creating Incident Request.');
+
+            FlashMessageHelper::flashError('Error Service Incident Request.');
+            Log::error('Error creating Incident Request: ' . $e->getMessage());
+
+            // Log additional details if needed (e.g., the stack trace)
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+
+            // Optionally, you can log the specific request data causing the issue
+            Log::error('Request Data: ' . json_encode($this->all()));
+
             return;
         }
 
         // Reset the fields and close the modal
         $this->resetIncidentFields();
         $this->showModal = false;
-        if ($incidentRequest) {
+        if ($serviceRequest) {
             FlashMessageHelper::flashSuccess('Service request created successfully.');
         }
     }
     public function resetIncidentFields()
     {
         $this->incidentRequestaceessDialog = false;
-        $this->ServiceRequestaceessDialog =false;
+        $this->ServiceRequestaceessDialog = false;
         $this->resetDialogs();
         $this->short_description = null;
         $this->priority = null;
