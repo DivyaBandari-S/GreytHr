@@ -14,16 +14,6 @@
                 Back
             </button>
         </div>
-        <div class="col-md-8 mb-2">
-            <div class="newReq">
-                <button class="submit-btn" wire:click="ServiceRequest">
-                    Service Request
-                </button>
-                <button class="submit-btn" wire:click="incidentRequest">
-                    Incident Request
-                </button>
-            </div>
-        </div>
         <!-- modals for service requst -->
         @if($ServiceRequestaceessDialog)
         <div class="modal" tabindex="-1" role="dialog" style="{{ $showModal ? 'display: block;' : 'display: none;' }}">

@@ -20,7 +20,7 @@
 <body>
     <p>Hi, {{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}</p>
 
-    <p>You got a new incident request <strong>{{ $serviceRequest->incident_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }}) </p>
+    <p>You got a new incident request <strong>{{ $incidentRequest->incident_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }}) </p>
 
     <p class="headings">Short Description: <span class="value">{{ $short_description }}</span></p>
     <p class="headings">Description: <span class="value">{{ $description }}</span> </p>
