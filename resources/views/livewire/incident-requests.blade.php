@@ -343,75 +343,7 @@
         </tr>
      
         @endforeach
-        @foreach ($servicerecords as $index => $record)
-        <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
-            <td class="helpdesk-request">
-                {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
-                <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->service_id ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->category ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->short_description ?? '-' }}
-            </td>
-          
-            <td class="helpdesk-request">
-                {{ $record->description ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-            @if ($record->file_path)
-                        @if(strpos($record->mime_type, 'image') !== false)
-                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
-                            View Image
-                        </a>
-                        @else
-                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
-                            Download file
-                        </a>
-                        @endif
-                    @else
-                        <p style="color: gray;">-</p>
-                    @endif
-                    @if ($showImageDialog)
-                                <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">View File</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                                <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-backdrop fade show"></div>
-                            @endif
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->priority ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-    @if ($record->status_code == 10)
-        <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
-    @elseif ($record->status_code == 8)
-        <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
-    @else
-        {{$record->status->status_name->status_name ?? '-' }}
-    @endif
-</td>
-
-        </tr>
-     
-        @endforeach
+    
    
         @endif
     </tbody>
@@ -582,83 +514,7 @@
 
         @endif
         @endforeach
-        @foreach ($servicerecords as $index => $record)
-        <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
-            <td class="helpdesk-request">
-                {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
-                <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->service_id ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->category ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->short_description ?? '-' }}
-            </td>
-          
-            <td class="helpdesk-request">
-                {{ $record->description ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-            @if ($record->file_path)
-                        @if(strpos($record->mime_type, 'image') !== false)
-                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
-                            View Image
-                        </a>
-                        @else
-                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
-                            Download file
-                        </a>
-                        @endif
-                    @else
-                        <p style="color: gray;">-</p>
-                    @endif
-                    @if ($showImageDialog)
-                                <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">View File</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                                <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-backdrop fade show"></div>
-                            @endif
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->priority ?? '-' }}
-            </td>
-            <td class="helpdesk-request @if($record->status_code == 3) rejectColor @elseif($record->status_code == 11) approvedColor @endif">
-    @if($record->status_code == 3)
-        {{ ucfirst($record->status->status_name ?? '-') }}<br>
-        @if($record->rejection_reason)
-            <!-- If rejection_reason is not null, show the View Reason link -->
-            <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
-                View Reason
-            </a>
-        @else
-            <!-- If rejection_reason is null, show "No Reason" -->
-           <p class="helpdesk-request">No Reason</p> 
-        @endif
-    @elseif($record->status_code == 11)
-        {{ ucfirst($record->status->status_name?? '-') }}
-    @endif
-</td>
-
-
-        </tr>
      
-        @endforeach
         @endif
         </tbody>
         </table>
@@ -713,7 +569,7 @@
                     </td>
                 </tr>
                 @else
-                @foreach ($searchData->sortByDesc('created_at') as $index => $record)
+                @foreach ($searchData->whereIn('status_code', 5)->sortByDesc('created_at') as $index => $record)
                 <tr style="background-color: white;">
                         <td class="helpdesk-request">
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>

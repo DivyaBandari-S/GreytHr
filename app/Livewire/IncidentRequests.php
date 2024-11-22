@@ -202,18 +202,15 @@ protected $rules = [
     
         // Base query for employee-specific requests
         // IncidentRequest query
-        $this->records = IncidentRequest::where('emp_id', $employeeId)
-            ->where(function ($query) {
-                $query->where('category', 'Incident Request')
-                      ->orWhere('category', 'Service Request');
+     
+            $this->records= IncidentRequest::where(function ($query) use ($employeeId) {
+                $query->where('emp_id', $employeeId);
             });
-    
+            $this->servicerecords= ServiceRequest::where(function ($query) use ($employeeId) {
+                $query->where('emp_id', $employeeId);
+            });
         // ServiceRequest query
-        $this->servicerecords = ServiceRequest::where('emp_id', $employeeId)
-            ->where(function ($query) {
-                $query->where('category', 'Incident Request')
-                      ->orWhere('category', 'Service Request');
-            });
+
     
         // Combine both queries using union
         $query = $this->records->union($this->servicerecords)
