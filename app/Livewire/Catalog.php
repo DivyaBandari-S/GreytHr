@@ -27,6 +27,8 @@ use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\HelpDeskNotification;
+use App\Mail\IncidentRequestMail;
+use App\Mail\ServiceRequestMail;
 use App\Models\IncidentRequest;
 use App\Models\IT;
 use App\Models\ServiceRequest;
@@ -40,7 +42,7 @@ class Catalog extends Component
     public $email;
     public $ServiceRequestaceessDialog = false;
 
-
+    public $recipient;
     public $mobile;
     public $showModal = true;
     public $selectedDeptId;
@@ -221,156 +223,7 @@ class Catalog extends Component
         $this->reset(['category', 'cc_to', 'priority']);
         $this->category = 'Request For IT';
     }
-    public function ServiceRequest()
-    {
-        $this->resetDialogs();
-        $this->resetDialogs();
-        $this->ServiceRequestaceessDialog = true;
-        $this->showModal = true;
-    }
 
-    public function incidentRequest()
-    {
-        $this->resetDialogs();
-        $this->resetIncidentFields();
-        $this->incidentRequestaceessDialog = true;
-        $this->showModal = true;
-    }
-
-    public function createIncidentRequest()
-    {
-        $this->validate([
-            'short_description' => 'required|string|max:255',
-            'description' => 'required|string',
-            'priority' => 'required|in:Low,Medium,High',
-            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
-        ]);
-
-        // Get the logged-in employee ID
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
-
-        // Handle file upload if there is a file
-        $filePath = null;
-        $fileName = null;
-        $mimeType = null;
-
-        if ($this->file_path) {
-            Log::debug('File uploaded, storing the file...');
-
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
-
-                Log::debug('File stored successfully at path: ' . $filePath);
-            } catch (\Exception $e) {
-                Log::error('Error uploading file: ' . $e->getMessage());
-                FlashMessageHelper::flashError('Error uploading file.');
-                return;
-            }
-        } else {
-            Log::debug('No file uploaded.');
-        }
-
-        // Create the new IncidentRequest
-        try {
-            $incidentRequest = IncidentRequest::create([
-                'emp_id' => $employeeId,
-                'short_description' => $this->short_description,
-                'description' => $this->description,
-                'priority' => $this->priority,
-                'assigned_dept' => 'IT',
-                'file_path' => $filePath,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
-                'status_code' => 10, // Set default status
-            ]);
-
-            Log::debug('Incident Request created successfully: ', $incidentRequest->toArray());
-        } catch (\Exception $e) {
-            Log::error('Error creating Incident Request: ' . $e->getMessage());
-            FlashMessageHelper::flashError('Error creating Incident Request.');
-            return;
-        }
-
-        // Reset the fields and close the modal
-        $this->resetIncidentFields();
-        $this->showModal = false;
-
-        // Flash success message
-        FlashMessageHelper::flashSuccess('Incident request created successfully.');
-        Log::info('Incident request created and modal closed for employee ID: ' . $employeeId);
-    }
-
-    public function createServiceRequest()
-    {
-        $this->validate([
-            'short_description' => 'required|string|max:255',
-            'description' => 'required|string',
-            'priority' => 'required|in:Low,Medium,High',
-            'file_path' => 'nullable|file|max:10240',
-        ]);
-
-        // Get the logged-in employee ID
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-
-        // Handle file upload if there is a file
-        $filePath = null;
-        $fileName = null;
-        $mimeType = null;
-
-        if ($this->file_path) {
-
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
-
-            } catch (\Exception $e) {
-                FlashMessageHelper::flashError('Error uploading file.');
-                return;
-            }
-        }
-
-        // Create the new IncidentRequest
-        try {
-            $incidentRequest = ServiceRequest::create([
-                'emp_id' => $employeeId,
-                'short_description' => $this->short_description,
-                'description' => $this->description,
-                'priority' => $this->priority,
-                'assigned_dept' => 'IT',
-                'file_path' => $filePath,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
-                'status_code' => 10, // Set default status
-            ]);
-        } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Error creating Incident Request.');
-            return;
-        }
-
-        // Reset the fields and close the modal
-        $this->resetIncidentFields();
-        $this->showModal = false;
-        if ($incidentRequest) {
-            FlashMessageHelper::flashSuccess('Service request created successfully.');
-        }
-    }
-    public function resetIncidentFields()
-    {
-        $this->incidentRequestaceessDialog = false;
-        $this->ServiceRequestaceessDialog =false;
-        $this->resetDialogs();
-        $this->short_description = null;
-        $this->priority = null;
-        $this->description = null;
-        $this->resetErrorBag();
-        $this->resetValidation();
-    }
 
     public function AddRequest()
     {

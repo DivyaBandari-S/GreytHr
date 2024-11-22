@@ -301,7 +301,7 @@
                             </div>
 
                             <div class="content px-4">
-                                <a href="{{ route('review-closed-regularation', ['id' => $arrl->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
+                                <a href="{{ route('review-closed-regularation', ['id' => $arrl->id]) }}" class="anchorTagDetails">View Details</a>
 
                             </div>
 
