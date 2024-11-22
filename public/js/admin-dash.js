@@ -299,16 +299,16 @@ var options = {
 // chart.render();
 
 // chat screen js
-// $("#contacts .item").click(function(){
-//     $(this).parents("#contacts").addClass("hidden");
-//     $("#content-chart").addClass("active");
-// });
+$("#contacts .item").click(function(){
+    $(this).parents("#contacts").addClass("hidden");
+    $("#content-chart").addClass("active");
+});
 
-// $("#back").click(function(e){
-//     e.preventDefault();
-//     $("#contacts").removeClass("hidden");
-//     $("#content-chart").removeClass("active");
-// });
+$("#back").click(function(e){
+    e.preventDefault();
+    $("#contacts").removeClass("hidden");
+    $("#content-chart").removeClass("active");
+});
 
 function openMsgDiv() {
     $("#chatScreen").show();
@@ -317,11 +317,11 @@ function openMsgDiv() {
 }
 
 // // Hide chat screen when close button is clicked
-// $("#closeChat").click(function(e){
-//     e.preventDefault();
-//     $("#chatScreen").hide();
-//     $('.bio-div').show();
-// });
+$("#closeChat").click(function(e){
+    e.preventDefault();
+    $("#chatScreen").hide();
+    $('.bio-div').show();
+});
 
 // function openSetting() {
 //     $("#settings").show();
@@ -330,13 +330,13 @@ function openMsgDiv() {
 //     $('#people-link').removeClass('active');
 //     $('#settings-link').addClass('active');
 // }
-// function openPeopleList() {
-//     $("#settings").hide();
-//     $('#contacts').show();
-//     $('#content-chart').show();
-//     $('#settings-link').removeClass('active');
-//     $('#people-link').addClass('active');
-// }
+function openPeopleList() {
+    $("#settings").hide();
+    $('#contacts').show();
+    $('#content-chart').show();
+    $('#settings-link').removeClass('active');
+    $('#people-link').addClass('active');
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     if (window.location.pathname === "/chat" || window.location.pathname === "/users") {

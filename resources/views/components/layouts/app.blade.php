@@ -69,16 +69,8 @@ if ($companyIds) {
     <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/emoji-picker-element@1.24.0/picker.min.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        #emojiPicker {
-            position: absolute;
-            bottom: 60px;
-            right: 20px;
-            z-index: 1000;
-        }
-    </style>
 
     @livewireStyles
 </head>
