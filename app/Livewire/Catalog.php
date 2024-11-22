@@ -39,6 +39,7 @@ class Catalog extends Component
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
+    public $email;
     public $ServiceRequestaceessDialog = false;
 
     public $recipient;
@@ -868,6 +869,7 @@ class Catalog extends Component
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
+                'status_code' => 8,
             ]);
             $superAdmins = IT::where('role', 'super_admin')->get();
 
@@ -934,8 +936,8 @@ class Catalog extends Component
                 ->firstOrFail();
 
             // Directly fetch email and assign mobile as emergencyContact
-            $this->email = $employeeDetails->email ?? '-';
-            $this->emergencyContact = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
+            $this->mail = $employeeDetails->email ?? '-';
+            $this->mobile = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
 
             // Process file upload
             $fileContent = null;
@@ -972,7 +974,8 @@ class Catalog extends Component
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => $this->mail, // Directly fetched email
-                'mobile' => $this->mobile, // Using mobile as emergencyContact
+                'mobile' => $this->mobile, 
+                'status_code' => 8,
             ]);
 
             // Notify super admins
@@ -1019,42 +1022,42 @@ class Catalog extends Component
                 'description' => 'required|string',
                 'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
 
-            ], $messages);
-
-            // Store the file as binary data
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
-            if ($this->file_path) {
-
-
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-
-
-            HelpDesks::create([
+            ],$messages);
+         
+    // Store the file as binary data
+    $fileContent=null;
+    $mimeType = null;
+    $fileName = null;
+    if ($this->file_path) {
+   
+   
+        $fileContent = file_get_contents($this->file_path->getRealPath());
+        if ($fileContent === false) {
+            Log::error('Failed to read the uploaded file.', [
+                'file_path' => $this->file_path->getRealPath(),
+            ]);
+            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
+            return;
+        }
+ 
+        // Check if the file content is too large
+        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+            return;
+        }
+ 
+ 
+        $mimeType = $this->file_path->getMimeType();
+        $fileName = $this->file_path->getClientOriginalName();
+    }
+   
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+       
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+       
+       
+     
+    $helpDesk=HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
 
                 'subject' => $this->subject,
@@ -1068,6 +1071,7 @@ class Catalog extends Component
                 'mail' => $this->mail ?? '-',
                 'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
+                'status_code' => 8,
 
 
             ]);
@@ -1160,6 +1164,7 @@ class Catalog extends Component
                 'mobile' => 'N/A',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
+                'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
