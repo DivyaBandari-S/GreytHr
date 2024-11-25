@@ -219,14 +219,14 @@
         </tr>
     </thead>
     <tbody>
-        @if ($searchData && $searchData->whereIn('status', ['Open', 'Recent'])->isEmpty())
+        @if ($searchData && $searchData->whereIn('status_code', [8,10])->isEmpty())
         <tr>
             <td colspan="8" style="text-align: center; border: none;">
                 <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
             </td>
         </tr>
         @else
-        @foreach ($searchData->whereIn('status', ['Open', 'Recent'])->sortByDesc('created_at') as $index => $record)
+        @foreach ($searchData->whereIn('status_code', [8,10])->sortByDesc('created_at') as $index => $record)
         <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
             <td class="helpdesk-request">
                 {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
@@ -282,19 +282,25 @@
                 {{ $record->priority ?? '-' }}
             </td>
             <td class="helpdesk-request">
-                @if ($record->status == 'Open')
-                    <span style="color: green;">{{ $record->status }}</span>
-                @elseif ($record->status == 'Recent')
-                    <span style="color: orange;">{{ $record->status }}</span>
-                @else
-                    {{ $record->status ?? '-' }}
-                @endif
-            </td>
+    @if ($record->status_code == 10)
+        <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
+    @elseif ($record->status_code == 8)
+        <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
+    @else
+        {{$record->status->status->status_name ?? '-' }}
+    @endif
+</td>
+
         </tr>
      
         @endforeach
+   
         @endif
     </tbody>
+    <tbody>
+
+    </tbody>
+    
 </table>
 
         </div>
@@ -350,7 +356,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($searchData && $searchData->whereIn('status', ['Completed', 'Reject'])->isEmpty())
+                    @if($searchData && $searchData->whereIn('status_code', [12,4])->isEmpty())
                     <tr class="search-data">
                         <td colspan="7" style="text-align: center; border:none;">
                             <img style="width: 10em; margin: 20px;"
@@ -360,7 +366,7 @@
                     </tr>
                     @else
                     @foreach ($searchData->sortByDesc('created_at') as $index => $record)
-                    @if($record->status == "Completed" || $record->status == "Reject")
+                    @if($record->status_code == 12 || $record->status_code == 4)
                     <tr style="background-color: white;">
                         <td class="helpdesk-request">
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
@@ -412,41 +418,45 @@
                         <td class="helpdesk-request">
                             {{ $record->priority ?? '-' }}
                         </td>
-                        <td class="helpdesk-request @if($record->status == 'Reject') rejectColor @elseif($record->status == 'Completed') approvedColor @endif">
-                            @if($record->status == 'Reject')
-                            {{ ucfirst($record->status ?? '-') }}<br>
-                            <!-- View Reason Link for Rejected Status -->
-                            <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
-                                View Reason
-        </div>
-        @elseif($record->status == 'Completed')
-        {{ ucfirst($record->status ?? '-') }}
+                        <td class="helpdesk-request @if($record->status_code == 4) rejectColor @elseif($record->status_code == 12) approvedColor @endif">
+    @if($record->status_code == 4)
+        {{ ucfirst($record->status->status_name  ?? '-') }}<br>
+        @if($record->rejection_reason)
+            <!-- If rejection_reason is not null, show the View Reason link -->
+            <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
+                View Reason
+            </a>
+        @else
+            <!-- If rejection_reason is null, show "No Reason" -->
+           <p class="helpdesk-request">No Reason</p> 
         @endif
-        </td>
+    @elseif($record->status_code == 12)
+        {{ ucfirst($record->status->status_name ?? '-') }}
+    @endif
+</td>
 
-
-
-        <div>
-            @if($isOpen)
-            <div class="modal" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Rejection Reason</h5>
-                        </div>
-                        <div class="modal-body">
-                            {{ $rejection_reason }}
-                        </div>
-                        <div class="modal-footer d-flex align-items-center justify-content-center">
-                            <div class="d-flex align-items-center justify-content-center">
-                                <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
-                            </div>
+<!-- Modal for Rejection Reason -->
+<div>
+    @if($isOpen)
+        <div class="modal" style="display: block; background-color: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Rejection Reason</h5>
+                    </div>
+                    <div class="modal-body">
+                        {{ $rejection_reason ?? 'No Reason' }}  <!-- Show "No Reason" if rejection_reason is null -->
+                    </div>
+                    <div class="modal-footer d-flex align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <button type="button" class="cancel-btn" wire:click="closeModal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-            @endif
         </div>
+    @endif
+</div>
 
 
 
@@ -505,7 +515,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if($searchData->where('status', 'Pending')->isEmpty())
+                @if($searchData->where('status_code', 6)->isEmpty())
                 <tr class="search-data">
                     <td colspan="7" style="text-align: center; border:none">
                         <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
@@ -568,14 +578,14 @@
                         {{ $record->priority ?? '-' }}
                     </td>
                     <td class="helpdesk-request">
-                        @if ($record->status == 'Pending')
-                        <span style="color: orange;">{{ $record->status }}</span>
-                        @elseif ($record->status == 'Completed')
-                        <span style="color: green;">{{ $record->status }}</span>
-                        @elseif ($record->status == 'Rejected')
-                        <span style="color: red;">{{ $record->status }}</span>
+                        @if ($record->status_code == 6)
+                        <span style="color: orange;">{{ $record->status->status_name ??'-' }}</span>
+                        @elseif ($record->status_code == 12)
+                        <span style="color: green;">{{$record->status->status_name  }}</span>
+                        @elseif ($record->status_code == 4)
+                        <span style="color: red;">{{ $record->status->status_name  }}</span>
                         @else
-                        <span>{{ $record->status ?? '-' }}</span>
+                        <span>{{ $record->status->status_name  ?? '-' }}</span>
                         @endif
                     </td>
                 </tr>

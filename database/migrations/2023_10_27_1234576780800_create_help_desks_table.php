@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
             $table->string('cc_to')->nullable();
-            $table->string('status')->default('Recent');
+            $table->tinyInteger('status_code')->default(8);
             $table->string('selected_equipment')->nullable();
             $table->enum('priority', ['High', 'Medium', 'Low']);
             $table->timestamps();

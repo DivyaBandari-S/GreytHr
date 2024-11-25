@@ -1257,7 +1257,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
 
-            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';    
+            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';
             // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
             //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
 
