@@ -276,7 +276,7 @@
 @else
     {{-- Filter records based on the activeSearch --}}
     @foreach ($records->whereIn('status_code', [10])
-                ->merge($servicerecords->whereIn('status_code', [8, 10]))
+                ->merge($servicerecords->whereIn('status_code', [ 10]))
                 ->sortByDesc('created_at')
                  as $index => $record) 
         <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
@@ -406,7 +406,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($searchData && $searchData->whereIn('status_code', [11,3])->isEmpty())
+                     @if($records->merge($servicerecords)->filter(function ($record) {
+                return $record->status_code == 5;
+            })->isEmpty())
                     <tr class="search-data">
                         <td colspan="7" style="text-align: center; border:none;">
                             <img style="width: 10em; margin: 20px;"
@@ -415,60 +417,67 @@
                         </td>
                     </tr>
                     @else
-                    @foreach ($searchData->sortByDesc('created_at') as $index => $record)
-                    @if($record->status_code == 11 || $record->status_code == 3)
-                    <tr style="background-color: white;">
-                        <td class="helpdesk-request">
-                            {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
-                            <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
-                        </td>
-                        <td class="helpdesk-request">
-                            {{ $record->incident_id ?? '-' }}
-                        </td>
-                        <td class="helpdesk-request">
-                            {{ $record->short_description ?? '-' }}
-                        </td>
-                    
-                        <td class="helpdesk-request">
-                            {{ $record->description ?? '-' }}
-                        </td>
-                        <td class="helpdesk-request">
-                            @if ($record->file_path)
-                            @if(strpos($record->mime_type, 'image') !== false)
-                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">View Image</a>
-                            @else
-                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">Download file</a>
-                            @endif
-                            @else
-                            <p style="color: gray;">-</p>
-                            @endif
-
-                            @if ($showImageDialog)
-                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
-                                    </div>
+                    @foreach ($records->whereIn('status_code', [11,3])
+                ->merge($servicerecords->whereIn('status_code', [ 11,3]))
+                ->sortByDesc('created_at')
+                 as $index => $record) 
+        <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
+            <td class="helpdesk-request">
+                {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
+                <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->service_id ?? $record->incident_id }}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->category ?? '-' }}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->short_description ?? '-' }}
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->description ?? '-' }}
+            </td>
+            <td class="helpdesk-request">
+                @if ($record->file_path)
+                    @if(strpos($record->mime_type, 'image') !== false)
+                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
+                            View Image
+                        </a>
+                    @else
+                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                            Download file
+                        </a>
+                    @endif
+                @else
+                    <p style="color: gray;">-</p>
+                @endif
+                @if ($showImageDialog)
+                    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">View File</h5>
+                                </div>
+                                <div class="modal-body text-center">
+                                    <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
+                                    <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
                                 </div>
                             </div>
-                            <div class="modal-backdrop fade show"></div>
-                            @endif
-                        </td>
-                        <td class="helpdesk-request">
-                            {{ $record->priority ?? '-' }}
-                        </td>
-                        <td class="helpdesk-request @if($record->status_code == 3) rejectColor @elseif($record->status_code == 11) approvedColor @endif">
-    @if($record->status_code == 3)
-        {{ ucfirst($record->status->status_name ?? '-') }}<br>
+                        </div>
+                    </div>
+                    <div class="modal-backdrop fade show"></div>
+                @endif
+            </td>
+            <td class="helpdesk-request">
+                {{ $record->priority ?? '-' }}
+            </td>
+            <td class="helpdesk-request @if($record->status_code == 4) rejectColor @elseif($record->status_code == 12) approvedColor @endif">
+    @if($record->status_code == 4)
+        {{ ucfirst($record->status->status_name  ?? '-') }}<br>
         @if($record->rejection_reason)
             <!-- If rejection_reason is not null, show the View Reason link -->
             <a href="#" wire:click.prevent="showRejectionReason('{{ $record->id }}')" class="anchorTagDetails">
@@ -478,8 +487,8 @@
             <!-- If rejection_reason is null, show "No Reason" -->
            <p class="helpdesk-request">No Reason</p> 
         @endif
-    @elseif($record->status_code == 11)
-        {{ ucfirst($record->status->status_name?? '-') }}
+    @elseif($record->status_code == 12)
+        {{ ucfirst($record->status->status_name ?? '-') }}
     @endif
 </td>
 
@@ -505,16 +514,8 @@
         </div>
     @endif
 </div>
-
-
-
-
-
         </tr>
-
-
-        @endif
-        @endforeach
+    @endforeach
       
         @endif
         </tbody>
@@ -527,94 +528,83 @@
 
 
     @if ($activeTab == "pending")
-    <div class="row align-items-center" style="margin-top:50px">
-        <div class="col-12 col-md-3 ">
-            <div class="input-group task-input-group-container">
-                <input wire:input="searchPendingHelpDesk" wire:model="pendingSearch" type="text"
-                    class="form-control task-search-input" placeholder="Search..." aria-label="Search"
-                    aria-describedby="basic-addon1">
-                <div class="input-group-append">
-                    <button wire:click="searchPendingHelpDesk" class="task-search-btn" type="button">
-                        <i class="fa fa-search task-search-icon"></i>
-                    </button>
-                </div>
+<div class="row align-items-center" style="margin-top:50px">
+    <div class="col-12 col-md-3">
+        <div class="input-group task-input-group-container">
+            <input wire:input="searchPendingHelpDesk" wire:model="pendingSearch" type="text" class="form-control task-search-input" placeholder="Search..." aria-label="Search" aria-describedby="basic-addon1">
+            <div class="input-group-append">
+                <button wire:click="searchPendingHelpDesk" class="task-search-btn" type="button">
+                    <i class="fa fa-search task-search-icon"></i>
+                </button>
             </div>
         </div>
-        <div class="col-12 col-md-3" style="margin-top:-2px">
-        <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
-    <option value="" class="option-default">Select Request</option>
-    <option value="Service Request" class="option-item">Service Request</option>
-    <option value="Incident Request" class="option-item">Incident Request</option>
-</select>
-        </div>
     </div>
-    <div class="help-desk-table">
-        <table class="help-desk-table-main">
+    <div class="col-12 col-md-3" style="margin-top:-2px">
+        <select wire:model="activeCategory" wire:change="searchActiveHelpDesk" id="activeCategory" class="form-select" style="height:33px; font-size:0.8rem;">
+            <option value="" class="option-default">Select Request</option>
+            <option value="Service Request" class="option-item">Service Request</option>
+            <option value="Incident Request" class="option-item">Incident Request</option>
+        </select>
+    </div>
+</div>
+
+<div class="help-desk-table">
+    <table class="help-desk-table-main">
         <thead>
-                    <tr class="help-desk-table-row">
-                        <th class="help-desk-table-column">Request Raised By</th>
-                        <th class="help-desk-table-column">Request ID</th>
-                        <th class="help-desk-table-column">Short Description</th>
-                      
-                        <th class="help-desk-table-column">Description</th>
-                        <th class="help-desk-table-column">Attach Files</th>
-                        <th class="help-desk-table-column">Priority</th>
-                        <th class="help-desk-table-column">Status</th> <!-- Added Status Column -->
-                    </tr>
-                </thead>
-            <tbody>
-                @if($searchData->where('status_code', 5)->isEmpty())
+            <tr class="help-desk-table-row">
+                <th class="help-desk-table-column">Request Raised By</th>
+                <th class="help-desk-table-column">Request ID</th>
+                <th class="help-desk-table-column">Category</th>
+                <th class="help-desk-table-column">Short Description</th>
+                <th class="help-desk-table-column">Description</th>
+                <th class="help-desk-table-column">Attach Files</th>
+                <th class="help-desk-table-column">Priority</th>
+                <th class="help-desk-table-column">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if($records->merge($servicerecords)->filter(function ($record) {
+                return $record->status_code == 5;
+            })->isEmpty())
                 <tr class="search-data">
                     <td colspan="7" style="text-align: center; border:none">
                         <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
                     </td>
                 </tr>
-                @else
-                @foreach ($searchData->sortByDesc('created_at') as $index => $record)
-                <tr style="background-color: white;">
+            @else
+                @foreach ($records->merge($servicerecords)->filter(function ($record) {
+                    return $record->status_code == 5;
+                })->sortByDesc('created_at') as $record)
+                    <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
                         <td class="helpdesk-request">
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->incident_id ?? '-' }}
+                            {{ $record->service_id ?? $record->incident_id }}
+                        </td>
+                        <td class="helpdesk-request">
+                            {{ $record->category ?? '-' }}
                         </td>
                         <td class="helpdesk-request">
                             {{ $record->short_description ?? '-' }}
                         </td>
-                    
                         <td class="helpdesk-request">
                             {{ $record->description ?? '-' }}
                         </td>
                         <td class="helpdesk-request">
                             @if ($record->file_path)
-                            @if(strpos($record->mime_type, 'image') !== false)
-                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">View Image</a>
+                                @if(strpos($record->mime_type, 'image') !== false)
+                                    <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
+                                        View Image
+                                    </a>
+                                @else
+                                    <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
+                                        Download file
+                                    </a>
+                                @endif
                             @else
-                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">Download file</a>
-                            @endif
-                            @else
-                            <p style="color: gray;">-</p>
-                            @endif
-
-                            @if ($showImageDialog)
-                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-backdrop fade show"></div>
+                                <p style="color: gray;">-</p>
                             @endif
                         </td>
                         <td class="helpdesk-request">
@@ -623,28 +613,21 @@
                         <td class="helpdesk-request">
                         @if ($record->status_code == 5)
                         <span style="color: orange;">{{ $record->status->status_name ??'-' }}</span>
-
+                        @elseif ($record->status_code == 12)
+                        <span style="color: green;">{{$record->status->status_name  }}</span>
+                        @elseif ($record->status_code == 4)
+                        <span style="color: red;">{{ $record->status->status_name  }}</span>
+                        @else
+                        <span>{{ $record->status->status_name  ?? '-' }}</span>
                         @endif
                     </td>
-
-<!-- Modal for Rejection Reason -->
-
-
-
-
-
-
-        </tr>
-
-
+                    </tr>
                 @endforeach
-                
-                @endif
-            </tbody>
-        </table>
+            @endif
+        </tbody>
+    </table>
+</div>
+@endif
 
-
-    </div>
-    @endif
 </div>
 </div>
