@@ -96,7 +96,7 @@
             <li>
                 <a href="#"><i class='fas fa-headset icon'></i> Helpdesk <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="/HelpDesk">Catalog Requests</a></li>
+                    <li><a href="/HelpDesk">Catalog & HR Requests</a></li>
                     <li><a href="/incident">Incident & Service <br> Requests</a></li>
                     <li><a href="/users">Connect</a></li>
                 </ul>
