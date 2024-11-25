@@ -1,5 +1,5 @@
 <div class="position-relative">
-    <div class="position-absolute" wire:loading wire:target="open,toggleSignState">
+    <div class="position-absolute" wire:loading wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
