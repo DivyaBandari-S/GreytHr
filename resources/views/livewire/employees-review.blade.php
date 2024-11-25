@@ -154,18 +154,26 @@
             </div>
             @else
 
-            <div class="row p-0 mt-3 d-flex justify-content-end">
-                <div class="row m-0 p-0 mt-3">
-                    <div class="search-container d-flex align-items-end justify-content-end p-1">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchApprovedLeave" id="searchButtonReports">
-                            <i class="fas fa-search" style="width:7px;height:7px;"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="row p-0 mt-3">
+    <div class="row m-0 p-0 mt-3 w-100">
+        <div 
+            class="search-container d-flex align-items-end ms-auto p-2" 
+            style="position: relative; width: 220px;">
+            <input 
+                type="text" 
+                wire:model.debounce.500ms="searchQuery" 
+                id="searchInput" 
+                placeholder="Search..." 
+                class="form-control placeholder-small border outline-none rounded" 
+                style="padding-right: 40px;"
+            >
+            <button wire:click="searchApprovedLeave" id="searchButtonReports">
+                <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
-
-            </div>
 
 
             @if(count($approvedRegularisationRequestList))
