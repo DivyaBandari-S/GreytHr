@@ -681,7 +681,7 @@ public function nextMonth()
     public function storearraydates()
 {
     try {
-      
+       
         $validatedData = $this->validate([
             'shift_times.*.from' => 'required|date_format:H:i',
             'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
@@ -714,7 +714,7 @@ public function nextMonth()
             'regularisation_entries' => $regularisationEntriesJson,
             'is_withdraw' => 0,
             'status'=>5,
-            'regularisation_date' => '2024-03-26',
+            'regularisation_date' => null,
         ]);
         FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
         sleep(1);

@@ -253,14 +253,17 @@
                                 @endif
                             </div>
 
-                            <div class="arrow-btn">
-                                <i class="fa fa-angle-down"></i>
+                            <div class="arrow-btn"wire:click="toggleActiveAccordion({{ $arrl->id }})" style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};
+                                border:1px solid {{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};">
+                                <i class="fa fa-angle-{{ in_array($arrl->id, $openAccordionsForClosed) ? 'up' : 'down' }}"
+                                style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }}"></i>
                             </div>
 
                         </div>
 
                     </div>
-                    <div class="accordion-body m-0 p-0">
+                    @if(in_array($arrl->id, $openAccordionsForClosed))
+                    <div class=" m-0 p-0">
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
@@ -307,6 +310,7 @@
 
                         </div>
                     </div>
+                    @endif
                 </div>
 
                 @endforeach
