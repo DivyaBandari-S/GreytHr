@@ -72,7 +72,7 @@ class IncidentRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Incident ' . $this->incidentRequest->snow_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
+            subject: 'Incident ' . $this->incidentRequest->snow_id . ' Created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
         );
     }
 

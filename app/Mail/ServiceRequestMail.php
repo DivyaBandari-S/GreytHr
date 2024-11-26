@@ -75,7 +75,7 @@ class ServiceRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Service ' . $this->serviceRequest->snow_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
+            subject: 'Service ' . $this->serviceRequest->snow_id . ' Created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
         );
     }
 
