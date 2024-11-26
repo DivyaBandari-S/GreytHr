@@ -78,7 +78,6 @@ return new class extends Migration
     {
         // Drop the trigger
         DB::unprepared('DROP TRIGGER IF EXISTS generate_snow_id');
-
         // Drop the table
         Schema::dropIfExists('incident_requests');
     }
