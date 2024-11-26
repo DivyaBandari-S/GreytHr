@@ -9,7 +9,7 @@ class IncidentRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'incident_id',
+        'request_id',
         'category',
         'emp_id',
         'short_description',
@@ -25,6 +25,7 @@ class IncidentRequest extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
+
     public function request()
     {
         return $this->belongsTo(Request::class, 'emp_id');// Update the foreign key as necessary
