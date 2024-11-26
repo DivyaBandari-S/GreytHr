@@ -25,14 +25,15 @@
 <body>
     <div class="content">
     
-            <p>Hi Admin<strong>   
+            <p>Hi Admin <strong>   
     
- </strong>,
+ </strong>,{{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}
 </p>
-            <p>A New Request Created</strong>. You can follow up on their progress.</p>
+            <p>A New Request Created<strong>{{ $helpDesk->request_id }}</strong>. You can follow up on their progress.from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }})</p>
  
         
         <p>Below are the New Request details:</p>
+        <b>{{ $helpDesk->category }}</b>
         
         <ul>
 
@@ -49,7 +50,7 @@
            
     
     </div>
-
+<p>Thank You</p>
     <div class="footer">
         <p>Note: This is an auto-generated email. Please do not reply.</p>
         <p>PS: "This e-mail is generated from info@s6.payg-india.com"</p>

@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('incident_requests', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
-             $table->string('request_id')->nullable()->unique(); // Auto-generated Incident/Service Request ID
+            $table->string('snow_id')->nullable()->unique(); // Auto-generated Incident/Service Request ID
             $table->string('emp_id', 10);
             $table->string('category'); // 'Incident Request' or 'Service Request'
             $table->string('short_description')->nullable();
@@ -39,30 +39,27 @@ return new class extends Migration
                 ->onUpdate('cascade');
         });
 
-        // Drop the trigger if it already exists
-        DB::unprepared('DROP TRIGGER IF EXISTS generate_request_id');
-
-        // Create the trigger for auto-generating request_id
+        // Create the trigger for auto-generating snow_id
         $triggerSQL = <<<SQL
-        CREATE TRIGGER generate_request_id BEFORE INSERT ON incident_requests FOR EACH ROW
+        CREATE TRIGGER generate_snow_id BEFORE INSERT ON incident_requests FOR EACH ROW
         BEGIN
-            IF NEW.request_id IS NULL THEN
+            IF NEW.snow_id IS NULL THEN
                 IF NEW.category = 'Incident Request' THEN
                     SET @max_id := IFNULL(
-                        (SELECT MAX(CAST(SUBSTRING(request_id, 5) AS UNSIGNED)) 
-                         FROM incident_requests WHERE request_id LIKE 'INC-%'),
+                        (SELECT MAX(CAST(SUBSTRING(snow_id, 5) AS UNSIGNED)) 
+                         FROM incident_requests WHERE snow_id LIKE 'INC-%'),
                         0
                     ) + 1;
 
-                    SET NEW.request_id = CONCAT('INC-', LPAD(@max_id, 4, '0'));
+                    SET NEW.snow_id = CONCAT('INC-', LPAD(@max_id, 4, '0'));
                 ELSEIF NEW.category = 'Service Request' THEN
                     SET @max_id := IFNULL(
-                        (SELECT MAX(CAST(SUBSTRING(request_id, 4) AS UNSIGNED)) 
-                         FROM incident_requests WHERE request_id LIKE 'SR-%'),
+                        (SELECT MAX(CAST(SUBSTRING(snow_id, 4) AS UNSIGNED)) 
+                         FROM incident_requests WHERE snow_id LIKE 'SR-%'),
                         0
                     ) + 1;
 
-                    SET NEW.request_id = CONCAT('SER-', LPAD(@max_id, 4, '0'));
+                    SET NEW.snow_id = CONCAT('SER-', LPAD(@max_id, 4, '0'));
                 END IF;
             END IF;
         END;

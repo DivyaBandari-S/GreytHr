@@ -240,7 +240,7 @@ protected $rules = [
         if (!empty($searchTerm)) {
             $query->where(function ($query) use ($searchTerm) {
                 $query->where('emp_id', 'like', '%' . $searchTerm . '%') // Employee ID
-                      ->orWhere('request_id', 'like', '%' . $searchTerm . '%') // Request ID
+                      ->orWhere('snow_id', 'like', '%' . $searchTerm . '%') // Request ID
                       ->orWhere('priority', 'like', '%' . $searchTerm . '%') // Priority
                       ->orWhereHas('emp', function ($query) use ($searchTerm) { // Related employee name
                           $query->where('first_name', 'like', '%' . $searchTerm . '%')

@@ -115,7 +115,7 @@ c
 
 
                                                             <!-- Dropdown toggle icon on the right side -->
-                                                            <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
+                                                            <button class="btn btn-outline-secondary dropdown-toggle" style="border:1px solid silver" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
                                                             </button>
 
                                                         </div>
@@ -311,7 +311,7 @@ c
 
 
                                                             <!-- Dropdown toggle icon on the right side -->
-                                                            <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
+                                                            <button class="btn btn-outline-secondary dropdown-toggle" style="border:1px solid silver" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
                                                             </button>
 
                                                         </div>
@@ -906,7 +906,7 @@ c
 
 
                                                             <!-- Dropdown toggle icon on the right side -->
-                                                            <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
+                                                            <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" style="border: 1px solid silver;" data-bs-toggle="dropdown">
                                                             </button>
 
                                                         </div>
@@ -1231,7 +1231,7 @@ c
 
 
                                                             <!-- Dropdown toggle icon on the right side -->
-                                                            <button class="btn btn-outline-secondary dropdown-toggle" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
+                                                            <button class="btn btn-outline-secondary dropdown-toggle" style="border:1px solid silver" wire:click="NamesSearch" type="button" data-bs-toggle="dropdown">
                                                             </button>
 
                                                         </div>
