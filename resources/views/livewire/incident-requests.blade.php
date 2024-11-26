@@ -281,7 +281,7 @@
                 <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
             </td>
             <td class="helpdesk-request">
-                {{ $record->request_id ?? '-' }}
+                {{ $record->snow_id ?? '-' }}
             </td>
             <td class="helpdesk-request">
                 {{ $record->category ?? '-' }}
@@ -422,7 +422,7 @@
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->request_id ?? '-' }}
+                            {{ $record->snow_id ?? '-' }}
                         </td>
                         <td class="helpdesk-request">
                             {{ $record->short_description ?? '-' }}
@@ -576,7 +576,7 @@
                             <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
                         </td>
                         <td class="helpdesk-request">
-                            {{ $record->request_id ?? '-' }}
+                            {{ $record->snow_id ?? '-' }}
                         </td>
                         <td class="helpdesk-request">
                             {{ $record->short_description ?? '-' }}
