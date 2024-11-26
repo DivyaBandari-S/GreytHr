@@ -9,7 +9,7 @@ class IncidentRequest extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'request_id',
+        'snow_id',
         'category',
         'emp_id',
         'short_description',
