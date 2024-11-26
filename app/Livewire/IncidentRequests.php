@@ -92,6 +92,12 @@ class IncidentRequests extends Component
         'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
 
     ];
+    protected $messages = [
+        'priority.required' => 'Priority is required.',
+        'description.required' => ' Description is required.',
+        'short_description.required' => 'Short description required',
+    ];
+
     public function validateField($field)
     {
         if (in_array($field, ['description', 'category', 'priority', 'short_description'])) {
@@ -718,7 +724,7 @@ class IncidentRequests extends Component
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $companyId = auth()->guard('emp')->user()->company_id;
+        $companyId = auth()->guard('emp')->user()->companyc_id;
         $this->peoples = EmployeeDetails::where('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])->get();
 
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
