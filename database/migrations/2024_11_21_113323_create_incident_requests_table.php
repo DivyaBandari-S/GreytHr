@@ -55,7 +55,7 @@ return new class extends Migration
                 ELSEIF NEW.category = 'Service Request' THEN
                     SET @max_id := IFNULL(
                         (SELECT MAX(CAST(SUBSTRING(snow_id, 4) AS UNSIGNED)) 
-                         FROM incident_requests WHERE snow_id LIKE 'SR-%'),
+                         FROM incident_requests WHERE snow_id LIKE 'SER-%'),
                         0
                     ) + 1;
 
@@ -74,8 +74,7 @@ return new class extends Migration
     public function down(): void
     {
         // Drop the trigger
-        DB::unprepared('DROP TRIGGER IF EXISTS generate_request_id');
-
+        DB::unprepared('DROP TRIGGER IF EXISTS generate_snow_id');
         // Drop the table
         Schema::dropIfExists('incident_requests');
     }
