@@ -133,11 +133,16 @@ class EmployeeDetails extends Authenticatable
     {
         return $this->belongsTo(Company::class, 'company_id', 'company_id');
     }
-
+  
     public function employee()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
+    public function emp()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
+
 
     // public function sendPasswordResetNotification($token)
     // {

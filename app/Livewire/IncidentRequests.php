@@ -29,10 +29,9 @@ class IncidentRequests extends Component
     public $rejection_reason;
     public $full_name;
     public $selectedCategory = [];
-    public $activeCategory = null; // Category for Active tab
-public $pendingCategory = null; // Category for Pending tab
-public $closedCategory = null; // Category for Closed tab
-
+    public $activeCategory = ''; 
+public $pendingCategory = ''; 
+public $closedCategory = ''; 
     public $searchTerm = '';
     public $showViewFileDialog = false;
     public $showModal = false;
@@ -72,6 +71,7 @@ public $closedCategory = null; // Category for Closed tab
     public $activeSearch = [];
 public $pendingSearch = '';
 public $closedSearch = '';
+
 
 protected $rules = [
 
@@ -178,6 +178,12 @@ protected $rules = [
 
     public function loadHelpDeskData()
     {
+        $this->activeCategory = '';
+        $this->pendingCategory = '';
+        $this->closedCategory = '';
+    $this->activeSearch = '';
+    $this->pendingSearch = '';
+    $this->closedSearch = '';
         if ($this->activeTab === 'active') {
           
             $this->searchActiveHelpDesk();
@@ -199,31 +205,49 @@ protected $rules = [
     public function searchHelpDesk($status, $searchTerm, $selectedCategory)
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $this->records = IncidentRequest::with('emp')
-        ->whereHas('emp', function ($query) {
-            $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                  ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-        })
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-            $this->servicerecords = ServiceRequest::with('emp')
-            ->whereHas('emp', function ($query) {
-                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-            })
-            ->orderBy('created_at', 'desc')
-           
-              
-                ->get();
-
-           
     
-        // Merge both records and sort them by created_at
-       
+        // Base query for employee-specific requests
+        // IncidentRequest query
+     
+            $this->records= IncidentRequest::where(function ($query) use ($employeeId) {
+                $query->where('emp_id', $employeeId);
+            });
+     
+        // ServiceRequest query
+
     
-        // Return the combined records
-        
+        // Combine both queries using union
+        $query = $this->records
+            ->orderBy('created_at', 'desc');
+    
+        // Apply status filtering for 10 and 8
+        if (is_array($status)) {
+            $query->whereIn('status_code', $status); // Example: 8 and 10 status codes
+        } else {
+            $query->where('status_code', $status);
+        }
+    
+        // Apply active category filter if selected
+        if (!empty($selectedCategory)) {
+            $query->where(function ($query) use ($selectedCategory) {
+                $query->where('category', $selectedCategory);
+            });
+        }
+    
+        // Apply search term filtering (if provided)
+        if ($searchTerm) {
+            $query->where(function ($query) use ($searchTerm) {
+                $query->where('emp_id', 'like', '%' . $searchTerm . '%')
+                      ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                          $query->where('first_name', 'like', '%' . $searchTerm . '%')
+                                ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
+                      });
+            });
+        }
+    
+        // Fetch and assign the results
+        $this->filterData = $query->orderBy('created_at', 'desc')->get();
+        $this->peopleFound = count($this->filterData) > 0;
     }
     
 
@@ -231,10 +255,8 @@ protected $rules = [
     
     public function searchActiveHelpDesk()
     {
-        
     
-       $this->searchHelpDesk([10], $this->activeSearch,$this->activeCategory);
-      
+        $this->searchHelpDesk([8,10], $this->activeSearch,$this->activeCategory);
     }
     
     public function searchPendingHelpDesk()
@@ -510,28 +532,31 @@ protected $rules = [
         Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
 
         // Handle file upload if there is a file
-        $filePath = null;
-        $fileName = null;
-        $mimeType = null;
+        $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            // Store the file as binary data
+            if ($this->file_path) {
 
-        if ($this->file_path) {
-            Log::debug('File uploaded, storing the file...');
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
 
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
 
-                Log::debug('File stored successfully at path: ' . $filePath);
-            } catch (\Exception $e) {
-                Log::error('Error uploading file: ' . $e->getMessage());
-                FlashMessageHelper::flashError('Error uploading file.');
-                return;
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
             }
-        } else {
-            Log::debug('No file uploaded.');
-        }
 
         // Create the new IncidentRequest
         try {
@@ -542,7 +567,7 @@ protected $rules = [
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $filePath,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'status_code' => 10, // Set default status
@@ -580,34 +605,43 @@ protected $rules = [
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
         // Handle file upload if there is a file
-        $filePath = null;
-        $fileName = null;
+        $fileContent = null;
         $mimeType = null;
-
+        $fileName = null;
+        // Store the file as binary data
         if ($this->file_path) {
 
-            // Store the file in the public disk under 'incident_files'
-            try {
-                $filePath = $this->file_path->store('incident_files', 'public');  // Store the file correctly
-                $fileName = $this->file_path->getClientOriginalName();  // Get the original file name
-                $mimeType = $this->file_path->getMimeType();  // Get the file's mime type
-
-            } catch (\Exception $e) {
-                FlashMessageHelper::flashError('Error uploading file.');
+            $fileContent = file_get_contents($this->file_path->getRealPath());
+            if ($fileContent === false) {
+                Log::error('Failed to read the uploaded file.', [
+                    'file_path' => $this->file_path->getRealPath(),
+                ]);
+                FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
+
+            // Check if the file content is too large
+            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                return;
+            }
+
+
+            $mimeType = $this->file_path->getMimeType();
+            $fileName = $this->file_path->getClientOriginalName();
         }
+
 
         // Create the new IncidentRequest
         try {
-            $incidentRequest = ServiceRequest::create([
+            $incidentRequest = IncidentRequest::create([
                 'emp_id' => $employeeId,
                 'category' => $this->category,
                 'short_description' => $this->short_description,
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $filePath,
+                'file_path' => $fileContent,
                 'file_name' => $fileName,
                 'mime_type' => $mimeType,
                 'status_code' => 10, // Set default status
@@ -618,8 +652,8 @@ protected $rules = [
     
             return redirect()->to('/incident');
             } catch (\Exception $e) {
-                Log::error('Error creating Incident Request: ' . $e->getMessage());
-                FlashMessageHelper::flashError('Error creating Incident Request.');
+                Log::error('Error creating Service Request: ' . $e->getMessage());
+                FlashMessageHelper::flashError('Error creating Service Request.');
                 return;
             }
     
@@ -655,22 +689,11 @@ protected $rules = [
             ->orderBy('created_at', 'desc')
             ->get();
 
-            $this->servicerecords = ServiceRequest::with('emp')
-            ->whereHas('emp', function ($query) {
-                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                      ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-            })
-            ->orderBy('created_at', 'desc')
-           
-              
-                ->get();
-
              
 
         $query = IncidentRequest::with('emp')
             ->where('emp_id', $employeeId);
-            $query = ServiceRequest::with('emp')
-            ->where('emp_id', $employeeId);
+        
 
         // Apply filtering based on the selected category
 
