@@ -24,7 +24,7 @@
 <body>
     <p>Hi, <span class="reciverName"> {{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}</span> </p>
 
-    <p>You got a new incident request <strong>{{ $serviceRequest->request_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }} </b>({{ $employeeId }})  </p>
+    <p>You got a new incident request <strong>{{ $serviceRequest->snow_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }} </b>({{ $employeeId }})  </p>
 
     <p class="headings">Short Description: <span class="value">{{ $short_description }}</span></p>
     <p class="headings">Description: <span class="value">{{ $description }}</span> </p>

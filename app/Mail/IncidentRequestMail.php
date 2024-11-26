@@ -30,7 +30,7 @@ class IncidentRequestMail extends Mailable
         $this->incidentRequest = $incidentRequest;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->incidentID = $this->incidentRequest->request_id ;
+        $this->incidentID = $this->incidentRequest->snow_id ;
         // Retrieve the first employee details based on emp_id
         $this->requestCreatedBy = EmployeeDetails::where('emp_id', '=', $this->incidentRequest->emp_id)->first();
         if ($this->requestCreatedBy) {
@@ -72,7 +72,7 @@ class IncidentRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Incident ' . $this->incidentRequest->request_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
+            subject: 'Incident ' . $this->incidentRequest->snow_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
         );
     }
 
