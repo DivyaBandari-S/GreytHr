@@ -33,7 +33,7 @@ class ServiceRequestMail extends Mailable
         $this->serviceRequest = $serviceRequest;
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->serviceID = $this->serviceRequest->service_id ;
+        $this->serviceID = $this->serviceRequest->request_id ;
         $this->requestCreatedBy = EmployeeDetails::where('emp_id', '=', $this->serviceRequest->emp_id)->first();
         // Retrieve the first employee details based on emp_id
         if ($this->requestCreatedBy) {
@@ -75,7 +75,7 @@ class ServiceRequestMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Service ' . $this->serviceRequest->service_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
+            subject: 'Service ' . $this->serviceRequest->request_id . ' created by ' . $this->createdbyFirstName . ' ' . $this->createdbyLastName
         );
     }
 
