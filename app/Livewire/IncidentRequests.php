@@ -29,6 +29,7 @@ class IncidentRequests extends Component
     public $rejection_reason;
     public $full_name;
     public $selectedCategory = [];
+ 
     public $activeCategory = ''; 
 public $pendingCategory = ''; 
 public $closedCategory = ''; 
@@ -71,6 +72,7 @@ public $closedCategory = '';
     public $activeSearch = [];
 public $pendingSearch = '';
 public $closedSearch = '';
+
 
 
 protected $rules = [
@@ -202,7 +204,7 @@ protected $rules = [
  
 
     
-    public function searchHelpDesk($status, $searchTerm, $selectedCategory)
+    public function searchHelpDesk($status, $searchTerm, $selectedCategory, $requestId = null, $priority = null)
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
     
@@ -235,16 +237,17 @@ protected $rules = [
         }
     
         // Apply search term filtering (if provided)
-        if ($searchTerm) {
+        if (!empty($searchTerm)) {
             $query->where(function ($query) use ($searchTerm) {
-                $query->where('emp_id', 'like', '%' . $searchTerm . '%')
-                      ->orWhereHas('emp', function ($query) use ($searchTerm) {
+                $query->where('emp_id', 'like', '%' . $searchTerm . '%') // Employee ID
+                      ->orWhere('request_id', 'like', '%' . $searchTerm . '%') // Request ID
+                      ->orWhere('priority', 'like', '%' . $searchTerm . '%') // Priority
+                      ->orWhereHas('emp', function ($query) use ($searchTerm) { // Related employee name
                           $query->where('first_name', 'like', '%' . $searchTerm . '%')
                                 ->orWhere('last_name', 'like', '%' . $searchTerm . '%');
                       });
             });
         }
-    
         // Fetch and assign the results
         $this->filterData = $query->orderBy('created_at', 'desc')->get();
         $this->peopleFound = count($this->filterData) > 0;
@@ -256,17 +259,20 @@ protected $rules = [
     public function searchActiveHelpDesk()
     {
     
-        $this->searchHelpDesk([8,10], $this->activeSearch,$this->activeCategory);
+        $this->searchHelpDesk([8,10], $this->activeSearch,$this->activeCategory,      // Request ID
+);
     }
     
     public function searchPendingHelpDesk()
     {
-        $this->searchHelpDesk(5, $this->pendingSearch,$this->pendingCategory);
+        $this->searchHelpDesk(5, $this->pendingSearch,$this->pendingCategory   ,          // Request ID
+              );
     }
     
     public function searchClosedHelpDesk()
     {
-        $this->searchHelpDesk([11,3], $this->closedSearch,$this->closedCategory);
+        $this->searchHelpDesk([11,3], $this->closedSearch,$this->closedCategory,       // Request ID
+         );
     }
     
     public function showRejectionReason($id)
