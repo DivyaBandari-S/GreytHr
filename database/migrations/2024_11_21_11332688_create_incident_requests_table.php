@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incident_requests', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement();
+            $table->smallIncrements('id'); // Auto increment id as primary key
             $table->string('snow_id')->nullable()->unique(); // Auto-generated Incident/Service Request ID
             $table->string('emp_id', 10);
             $table->string('category'); // 'Incident Request' or 'Service Request'
@@ -43,8 +43,10 @@ return new class extends Migration
         $triggerSQL = <<<SQL
         CREATE TRIGGER generate_snow_id BEFORE INSERT ON incident_requests FOR EACH ROW
         BEGIN
+            -- Ensure snow_id is generated only if not provided
             IF NEW.snow_id IS NULL THEN
                 IF NEW.category = 'Incident Request' THEN
+                    -- Get the max increment value for 'Incident Request'
                     SET @max_id := IFNULL(
                         (SELECT MAX(CAST(SUBSTRING(snow_id, 5) AS UNSIGNED)) 
                          FROM incident_requests WHERE snow_id LIKE 'INC-%'),
@@ -53,8 +55,9 @@ return new class extends Migration
 
                     SET NEW.snow_id = CONCAT('INC-', LPAD(@max_id, 4, '0'));
                 ELSEIF NEW.category = 'Service Request' THEN
+                    -- Get the max increment value for 'Service Request'
                     SET @max_id := IFNULL(
-                        (SELECT MAX(CAST(SUBSTRING(snow_id, 4) AS UNSIGNED)) 
+                        (SELECT MAX(CAST(SUBSTRING(snow_id, 5) AS UNSIGNED)) 
                          FROM incident_requests WHERE snow_id LIKE 'SER-%'),
                         0
                     ) + 1;

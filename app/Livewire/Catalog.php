@@ -103,6 +103,8 @@ class Catalog extends Component
     public $IdRequestaceessDialog = false;
     public $MmsRequestaceessDialog = false;
     public $LapRequestaceessDialog = false;
+    public    $InternetRequestaceessDialog = false;
+      
     public $AddRequestaceessDialog = false;
     public $incidentRequestaceessDialog = false;
     public $justification;
@@ -305,6 +307,14 @@ class Catalog extends Component
         $this->reset(['category', 'priority']);
         $this->category = 'New Mailbox Request';
     }
+    public function IntenetRequest()
+    {
+        $this->resetDialogs();
+        $this->InternetRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Internet Access Request';
+    }
     public function openItRequestaccess()
     {
         $this->ItRequestaceessDialog = true; // Open the Sec 80C modal
@@ -343,7 +353,11 @@ class Catalog extends Component
     {
         $this->DistributionRequestaceessDialog = true;
     }
-
+    public function closeInternetRequestaccess()
+    {
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'selectedPeople', 'selectedPeopleNames']);
+        $this->InternetRequestaceessDialog = false;
+    }
     public function closeItRequestaccess()
     {
 
