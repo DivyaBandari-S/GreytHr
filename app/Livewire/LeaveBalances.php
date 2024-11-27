@@ -221,7 +221,6 @@ class LeaveBalances extends Component
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
             if ($this->casualLeavePerYear > 0) {
                 $this->percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
             }

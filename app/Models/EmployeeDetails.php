@@ -163,15 +163,6 @@ class EmployeeDetails extends Authenticatable
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
-    // public function messages()
-    // {
-    //     return $this->hasMany(Message::class, 'sender_id')
-    //         ->orWhere(function ($query) {
-    //             $query->where('receiver_id', $this->emp_id);
-    //         });
-    // }
-
-
     // Conversations the employee is part of
     public function conversations()
     {

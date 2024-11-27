@@ -15,12 +15,16 @@
             color: #000;
             font-weight: normal;
         }
+        .reciverName{
+            font-size: 14px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
-    <p>Hi, {{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}</p>
+    <p>Hi, <span class="reciverName"> {{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}</span></p>
 
-    <p>You got a new incident request <strong>{{ $incidentRequest->incident_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }}) </p>
+    <p>You got a new incident request <strong>{{ $incidentRequest->snow_id }}</strong> from <b>{{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }}) </p>
 
     <p class="headings">Short Description: <span class="value">{{ $short_description }}</span></p>
     <p class="headings">Description: <span class="value">{{ $description }}</span> </p>

@@ -28,7 +28,7 @@
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper mb-2" style="width: 65%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" name="leave_type" wire:change="handleFieldUpdate('leave_type')">
-                                <option value="default">Select Type</option>
+                                <option value="" disabled selected>Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
                                 @else
