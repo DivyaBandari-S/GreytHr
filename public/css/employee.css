@@ -1523,6 +1523,7 @@ main .btn-send:hover {
     align-items: flex-end;
     margin-bottom: 12px;
     max-width: 90%;
+    max-width: 90%;
 }
 
 .message.received {
