@@ -27,21 +27,14 @@ class SalarySlips extends Component
 
     public function changeMonth()
     {
-        // dd($this->selectedMonth);
+    
         $this->getSalaryDetails();
     }
+    public function toggleDetails()
+    {
+        $this->showDetails = !$this->showDetails; // Toggle the value
+    }
 
-    public function toggleHide()
-    {
-        // dd($this->hideInfobutton);
-        $this->hideInfobutton = 'Info';
-        $this->showDetails = false;
-    }
-    public function toggleInfo()
-    {
-        $this->hideInfobutton = 'Hide';
-        $this->showDetails = true;
-    }
     private function calculateNetPay()
     {
         $totalGrossPay = 0;
@@ -60,12 +53,12 @@ class SalarySlips extends Component
 
 
         // Generate PDF using the fetched data
-        $pdf = Pdf::loadView('download-pdf',[
+        $pdf = Pdf::loadView('download-pdf', [
             'employees' =>  $this->employeeDetails,
             'salaryRevision' =>  $this->salaryDivisions,
             'empBankDetails' => $this->empBankDetails,
-            'rupeesInText'=>$this->convertNumberToWords($this->salaryDivisions['net_pay']),
-            'salMonth'=>Carbon::parse($this->selectedMonth)->format('F Y')
+            'rupeesInText' => $this->convertNumberToWords($this->salaryDivisions['net_pay']),
+            'salMonth' => Carbon::parse($this->selectedMonth)->format('F Y')
         ]);
 
         return response()->streamDownload(function () use ($pdf) {
@@ -225,7 +218,7 @@ class SalarySlips extends Component
         $currentYear = date('Y');
 
 
-        $lastMonth = date('n') ;
+        $lastMonth = date('n');
 
         // Generate options for months from January of the previous year to the current month of the current year
         $options = [];
