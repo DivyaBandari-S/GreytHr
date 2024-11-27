@@ -7,6 +7,7 @@ use App\Models\Salaryslip;
 use App\Models\EmployeeDetails;
 use App\Models\EmpSalaryRevision;
 use App\Models\EmpBankDetail;
+use App\Models\EmpPersonalInfo;
 use App\Models\EmpSalary;
 use DateTime;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,6 +17,7 @@ use Carbon\Carbon;
 class SalarySlips extends Component
 {
     public $employeeDetails;
+    public $employeePersonalDetails;
     public $salaryRevision;
     public $empSalaryDetails;
     public $empBankDetails;
@@ -27,7 +29,7 @@ class SalarySlips extends Component
 
     public function changeMonth()
     {
-    
+
         $this->getSalaryDetails();
     }
     public function toggleDetails()
@@ -168,12 +170,16 @@ class SalarySlips extends Component
 
         $this->employeeDetails = EmployeeDetails::select('employee_details.*', 'emp_departments.department')
             ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
+            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
             ->where('employee_details.emp_id', $employeeId)
             ->first();
+
+        $this->employeePersonalDetails=EmpPersonalInfo::where('emp_id',$employeeId)->first();
 
 
         $this->salaryRevision = EmpSalaryRevision::where('emp_id', $employeeId)->get();
         $this->empSalaryDetails = EmpSalary::join('salary_revisions', 'emp_salaries.sal_id', '=', 'salary_revisions.id')
+        ->where('salary_revisions.emp_id',$employeeId)
             ->where('month_of_sal', 'like', $this->selectedMonth . '%')
             ->first();
         // dd($this->empSalaryDetails);
@@ -187,7 +193,6 @@ class SalarySlips extends Component
             // Handle the null case (e.g., log an error or set a default value)
             $this->salaryDivisions = [];
         }
-
         //    dd( $this->salaryDivisions);
         //    $this->basic=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
         //    $this->hra=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
