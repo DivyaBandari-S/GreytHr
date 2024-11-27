@@ -15,7 +15,8 @@
                                             <source src="{{ asset('storage/' . $message->media_path) }}" type="video/mp4">
                                         </video>
                                     @else
-                                        <img src="{{ asset('storage/' . $message->media_path) }}" alt="Media" width="100">
+                                        <img src="{{ asset('storage/' . $message->media_path) }}" alt="Media"
+                                            width="100">
                                     @endif
                                 </div>
                             @endif
@@ -41,10 +42,12 @@
                                 <div class="media-preview">
                                     @if ($message->type == 'video')
                                         <video width="100" controls>
-                                            <source src="{{ asset('storage/' . $message->media_path) }}" type="video/mp4">
+                                            <source src="{{ asset('storage/' . $message->media_path) }}"
+                                                type="video/mp4">
                                         </video>
                                     @else
-                                        <img src="{{ asset('storage/' . $message->media_path) }}" alt="Media" width="100">
+                                        <img src="{{ asset('storage/' . $message->media_path) }}" alt="Media"
+                                            width="100">
                                     @endif
                                 </div>
                             @endif
@@ -63,36 +66,11 @@
                 @endif
             @endforeach
         </div>
-
-        <div class="chat-footer">
-            <div class="input-group textArea">
-                <!-- Text input field for entering a message -->
-                <input type="text" class="form-control" wire:model="newMessage" placeholder="Enter Message..."
-                    aria-label="Example text with button addon" aria-describedby="button-addon1" autofocus>
-
-                <!-- Microphone button (can be implemented later) -->
-                <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2">
-                    <i class="fa-solid fa-microphone"></i>
-                </button>
-
-                <!-- Emoji button (can be implemented later) -->
-                <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2">
-                    <i class="fa-solid fa-face-smile"></i>
-                </button>
-
-                <!-- Attachment button (for file attachments) -->
-                <button class="btn btn-outline-secondary pe-1" type="button" id="button-addon1 ms-2">
-                    <i class="fa-solid fa-paperclip"></i>
-                </button>
-
-                <!-- Send message button -->
-                <button class="btn btn-outline-secondary" wire:click="sendMessage" type="button" id="button-addon1 ms-2">
-                    <i class="fa-solid fa-paper-plane"></i>
-                </button>
-            </div>
-        </div>
     @else
         <!-- Message prompting to select a conversation -->
-        <div>Please select a conversation and start chatting</div>
+        <div class="row m-0 text-center">
+            <img src="images/conversation-start.png" class="m-auto" style="width: 20em" />
+            <p>Please select a conversation and start chatting</p>
+        </div>
     @endif
 </div>
