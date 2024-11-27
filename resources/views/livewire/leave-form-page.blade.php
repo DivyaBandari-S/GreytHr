@@ -1,6 +1,6 @@
 <div class="leavePageContent position-relative">
    <div class="position-absolute" wire:loading
-      wire:target="toggleSection,toggleSideSection,navigateToPendingDetails,navigateToHistoryDetails">
+      wire:target="toggleSection,toggleSideSection,navigateToPendingDetails,navigateToHistoryDetails,cancelLeaveCancel,cancelLeave">
       <div class="loader-overlay">
          <div class="loader">
             <div></div>
@@ -11,13 +11,13 @@
       <!-- Navigation Buttons -->
       <div class="nav-buttons mt-2 d-flex justify-content-center">
          <ul class="nav custom-nav-tabs border">
-            <li class="custom-item m-0 p-0 flex-grow-1">
+            <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                <div class="reviewActiveButtons custom-nav-link {{ $activeSection === 'applyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('applyButton')">Apply</div>
             </li>
             <li class="pendingCustomStyles custom-item m-0 p-0 flex-grow-1">
                <a href="#" class="custom-nav-link {{ $activeSection === 'pendingButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('pendingButton')">Pending</a>
             </li>
-            <li class="custom-item m-0 p-0 flex-grow-1">
+            <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                <a href="#" class="reviewClosedButtons custom-nav-link {{ $activeSection === 'historyButton' ? 'active' : '' }}" wire:click.prevent="toggleSection('historyButton')">History</a>
             </li>
          </ul>

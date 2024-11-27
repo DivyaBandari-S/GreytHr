@@ -97,8 +97,34 @@ if (sidebar) {
     }
 }
 
+// if (toggleSidebar) {
+//     toggleSidebar.addEventListener("click", function () {
+//         sidebar.classList.toggle("hide");
+//         const mainContent = document.getElementById("maincontent");
+
+//         if (sidebar.classList.contains("hide")) {
+//             mainContent.classList.add("active");
+//             allSideDivider.forEach((item) => {
+//                 item.textContent = "-";
+//             });
+
+//             allDropdown.forEach((item) => {
+//                 const a = item.parentElement.querySelector("a:first-child");
+//                 a.classList.remove("active");
+//                 item.classList.remove("show");
+//             });
+//         } else {
+//             mainContent.classList.remove("active");
+//             allSideDivider.forEach((item) => {
+//                 item.textContent = item.dataset.text;
+//             });
+//         }
+//     });
+// }
+
 if (toggleSidebar) {
-    toggleSidebar.addEventListener("click", function () {
+    // Function to handle the sidebar toggle logic
+    function toggleSidebarHandler() {
         sidebar.classList.toggle("hide");
         const mainContent = document.getElementById("maincontent");
 
@@ -119,8 +145,26 @@ if (toggleSidebar) {
                 item.textContent = item.dataset.text;
             });
         }
+    }
+
+    // Add event listener to the toggle button
+    toggleSidebar.addEventListener("click", toggleSidebarHandler);
+
+    // Check if the screen is a mobile size and trigger the sidebar toggle
+    if (window.innerWidth <= 768) { // Adjust the width as needed for mobile screens
+        toggleSidebarHandler();
+    }
+
+    // Optional: Listen for window resize events to toggle based on resizing to/from mobile size
+    window.addEventListener("resize", function () {
+        if (window.innerWidth <= 768 && !sidebar.classList.contains("hide")) {
+            toggleSidebarHandler();
+        } else if (window.innerWidth > 768 && sidebar.classList.contains("hide")) {
+            toggleSidebarHandler();
+        }
     });
 }
+
 
 if (sidebar) {
     sidebar.addEventListener("mouseleave", function () {
@@ -253,3 +297,80 @@ var options = {
 
 // var chart = new ApexCharts(document.querySelector("#chart"), options);
 // chart.render();
+
+// chat screen js
+$("#contacts .item").click(function(){
+    $(this).parents("#contacts").addClass("hidden");
+    $("#content-chart").addClass("active");
+});
+
+$("#back").click(function(e){
+    e.preventDefault();
+    $("#contacts").removeClass("hidden");
+    $("#content-chart").removeClass("active");
+});
+
+function openMsgDiv() {
+    $("#chatScreen").show();
+    $('.bio-div').hide();
+    $("#chatScreen input.form-control").focus();
+}
+
+// // Hide chat screen when close button is clicked
+$("#closeChat").click(function(e){
+    e.preventDefault();
+    $("#chatScreen").hide();
+    $('.bio-div').show();
+});
+
+// function openSetting() {
+//     $("#settings").show();
+//     $('#contacts').hide();
+//     $('#content-chart').hide();
+//     $('#people-link').removeClass('active');
+//     $('#settings-link').addClass('active');
+// }
+function openPeopleList() {
+    $("#settings").hide();
+    $('#contacts').show();
+    $('#content-chart').show();
+    $('#settings-link').removeClass('active');
+    $('#people-link').addClass('active');
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.pathname === "/chat" || window.location.pathname === "/users") {
+        document.body.id = "userPage";
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const emojiPicker = document.getElementById('emojiPicker');
+    const emojiButton = document.getElementById('emojiButton');
+    const messageInput = document.getElementById('messageInput');
+
+    // Toggle emoji picker visibility
+    emojiButton.addEventListener('click', () => {
+        if (emojiPicker.style.display === 'none' || !emojiPicker.style.display) {
+            emojiPicker.style.display = 'block';
+        } else {
+            emojiPicker.style.display = 'none';
+        }
+    });
+
+    // Add emoji to input when selected
+    emojiPicker.addEventListener('emoji-click', (event) => {
+        messageInput.value += event.detail.unicode;
+        emojiPicker.style.display = 'none';
+    });
+
+    // Handle file attachment
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            console.log('Attached file:', file.name);
+            // Add your file upload logic here
+        }
+    });
+});
+

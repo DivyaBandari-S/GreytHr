@@ -4,18 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     @guest
-      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-    <title>
-        HR Xpert
-    </title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+        <title>
+            HR Xpert
+        </title>
     @endguest
     @auth('emp')
-
-
-  @livewireStyles
-
         @php
             // Get the logged-in employee ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -60,19 +55,23 @@ if ($companyIds) {
             }
 
         @endphp
-      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
-        HR Xpert
+            HR Xpert
         </title>
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
     <!-- Date range picker links -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/employee.css?v=' . filemtime(public_path('css/employee.css'))) }}">
     <link rel="stylesheet" href="{{ asset('css/app.css?v=' . filemtime(public_path('css/app.css'))) }}">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     @livewireStyles
 </head>
 
@@ -87,9 +86,9 @@ if ($companyIds) {
             </main>
         </section>
     @endguest
-
-<script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
-<script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
 
     <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -107,8 +106,12 @@ if ($companyIds) {
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" crossorigin="anonymous"></script> -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
     @livewireScripts
 </body>
 

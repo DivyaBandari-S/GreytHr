@@ -11,7 +11,7 @@ class EmpSalary extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['sal_id', 'salary', 'effective_date', 'remarks'];
+    protected $fillable = ['sal_id', 'bank_id', 'salary', 'effective_date', 'remarks', 'month_of_sal'];
     protected $appends = ['basic', 'hra', 'medical', 'special', 'conveyance', 'pf'];
 
     private $decodedSalary = null; // Cache decoded salary for repeated calculations

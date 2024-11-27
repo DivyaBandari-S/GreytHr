@@ -73,7 +73,7 @@
                 <div class="accordion-content col">
 
                 @if(isset($r->employee->image) && $r->employee->image !== 'null' && $r->employee->image != "Null" && $r->employee->image != "")
-                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($r->employee->image) }}" style="border-radius: 50%;">
+                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($r->employee->image) }}" style="border-radius: 50%;margin-right:180px;">
                                     @else
                                     @if($r->employee->gender === 'FEMALE')
                                     <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
@@ -86,7 +86,7 @@
 
                 </div>
 
-                <div class="accordion-content col">
+                <div class="accordion-content col"style="margin-right:100px;">
 
                     <span style="color: #778899; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($r->employee->first_name))}}&nbsp;{{ucwords(strtolower($r->employee->last_name))}}</span>
 
@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="content mb-2 px-4 d-flex gap-2">
-                    <a href="{{ route('review-pending-regularation', ['id' => $r->id]) }}" style="color:rgb(2,17,79);font-size:12px;margin-top:3px;">View Details</a>
+                    <a href="{{ route('review-pending-regularation', ['id' => $r->id, 'count' => $countofregularisations]) }}" class="anchorTagDetails">View Details</a>
                     <button class="rejectBtn"wire:click="openRejectModal">Reject</button>
                     <button class="approveBtn"wire:click="openApproveModal">Approve</button>
                 </div>

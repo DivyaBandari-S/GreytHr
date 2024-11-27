@@ -46,8 +46,13 @@ class LeaveApprovalNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-        // Different subject for main recipient and CC recipients
 
+        // Determine the subject based on whether it's the main recipient or a CC/applying-to recipient
+        if ($this->forMainRecipient) {
+            $subject = $this->getMainRecipientSubject();
+        } else {
+            $subject = $this->getCCOrApplyingToSubject();
+        }
 
         return $this->subject('Leave')
             ->view('mails.leave_approval_notification') // Create a view for the email
@@ -61,6 +66,49 @@ class LeaveApprovalNotification extends Mailable
                 'forMainRecipient' => $this->forMainRecipient,
             ]);
     }
+    private function getMainRecipientSubject()
+    {
+        // Subject for the main recipient
+        $statusMap = [
+            2 => 'Approved',
+            3 => 'Rejected',
+            4 => 'Withdrawn',
+            5 => 'Pending',
+            6 => 'Re-applied',
+            7 => 'Pending'
+        ];
+
+        $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
+
+        if ($this->leaveRequest->category_type === 'Leave') {
+            return 'Your leave application has been ' . ucfirst($leaveStatusText);
+        } else {
+            $leaveCancelStatusText = $statusMap[$this->leaveRequest->cancel_status] ?? 'Unknown';
+            return 'Your leave cancel application has been ' . ucfirst($leaveCancelStatusText);
+        }
+    }
+
+    private function getCCOrApplyingToSubject()
+    {
+        // Subject for CC or Applying To recipients
+        $statusMap = [
+            2 => 'Approved',
+            3 => 'Rejected',
+            4 => 'Withdrawn',
+            5 => 'Pending',
+            6 => 'Re-applied',
+            7 => 'Pending'
+        ];
+
+        if ($this->leaveRequest->category_type === 'Leave') {
+            $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
+            return $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveStatusText);
+        } else {
+            $leaveCancelStatusText = $statusMap[$this->leaveRequest->cancel_status] ?? 'Unknown';
+            return $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave cancel application has been ' . ucfirst($leaveCancelStatusText);
+        }
+    }
+
     public function envelope(): Envelope
     {
         // Define the status mapping
@@ -70,24 +118,34 @@ class LeaveApprovalNotification extends Mailable
             4 => 'Withdrawn',
             5 => 'Pending',
             6 => 'Re-applied',
-            7 => 'Pending Leave Cancel'
+            7 => 'Pending'
         ];
-
         // Get the leave status text using the mapping
-        if ($this->leaveRequest->category_type === 'Leave'){
+        if ($this->leaveRequest->category_type === 'Leave') {
             $leaveStatusText = $statusMap[$this->leaveRequest->leave_status] ?? 'Unknown';
-             // Determine the subject based on the recipient type
-             $subject = $this->forMainRecipient
-             ? 'Your leave application has been ' . ucfirst($leaveStatusText)
-             : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveStatusText);
 
-        }else{
+            // Determine the subject based on the recipient type
+            if ($this->forMainRecipient) {
+                $subject = 'Your leave application has been ' . ucfirst($leaveStatusText);
+            } else {
+                // For CC recipient, check if the leave has been withdrawn
+                $subject = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' .
+                    ($this->leaveRequest->leave_status === 4 ? 'Withdrawn' : ucfirst($leaveStatusText));
+            }
+        } else {
             $leaveCancelStatusText = $statusMap[$this->leaveRequest->cancel_status] ?? 'Unknown';
-             // Determine the subject based on the recipient type
-             $subject = $this->forMainRecipient
-             ? 'Your leave application has been ' . ucfirst($leaveCancelStatusText)
-             : $this->employeeDetails->first_name . ' [' . $this->employeeDetails->emp_id . '] leave application has been ' . ucfirst($leaveCancelStatusText);
+
+            // Determine the subject based on the recipient type
+            if ($this->forMainRecipient) {
+                $subject = 'Your leave cancel application has been ' . ucfirst($leaveCancelStatusText);
+            } else {
+                // For CC recipient, check if the leave cancel application has been withdrawn
+                $subject = $this->employeeDetails->first_name . ' ' . $this->employeeDetails->last_name . ' [' . $this->employeeDetails->emp_id . '] leave cancel application has been ' .
+                    ($this->leaveRequest->cancel_status === 4 ? 'Withdrawn' : ucfirst($leaveCancelStatusText));
+            }
         }
+
+
 
         return new Envelope(
             subject: $subject,

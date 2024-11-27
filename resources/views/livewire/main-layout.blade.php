@@ -96,7 +96,8 @@
             <li>
                 <a href="#"><i class='fas fa-headset icon'></i> Helpdesk <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="/HelpDesk">New Requests</a></li>
+                    <li><a href="/HelpDesk">Catalog & HR Requests</a></li>
+                    <li><a href="/incident">Incident & Service <br> Requests</a></li>
                     <li><a href="/users">Connect</a></li>
                 </ul>
             </li>
@@ -140,7 +141,7 @@
                         @endif
                         @endif
                     </div>
-                    <ul class="profile-link">
+                    <ul class="profile-link mt-3">
                         <li><a href="/ProfileInfo"><i class='fas fa-user-circle icon'></i> Profile</a></li>
                         <li><a href="/Settings"><i class='fas fa-cog'></i> Settings</a></li>
                     </ul>

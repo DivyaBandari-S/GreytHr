@@ -204,6 +204,23 @@
     font-weight: 500;
 }
 
+.prof-sub-heading{
+    color: var(--label-color);
+    font-size: var(--normal-font-size);
+}
+.prof-sub-heading-value{
+    color: #2a2828;
+    word-wrap: break-word; /* Ensure long text breaks and wraps */
+    overflow-wrap: break-word; /* Ensure long text breaks and wraps */
+    word-break: break-word;
+    max-width: 100%;
+    font-size: var(--sub-headings-font-size);
+}
+.normalTextMainProf{
+    color: var(--label-color);
+    font-weight: 600;
+    font-size: var(--sub-headings-font-size);
+}
 .normalText {
     color: var(--main-heading-color);
     font-weight: 500;
@@ -707,14 +724,32 @@ body {
 /* Profile Information */
 .profile-info {
     display: none;
-    /* Initially hidden */
     margin-top: 20px;
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
+div.align-prof-dev{
+    display: flex;
+    flex-direction: row;
+    padding: 0 20px;
+}
+.profile-columns{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
 
+.img-thumbnail {
+    padding: .25rem;
+    background-color: var(--bs-body-bg);
+    border: var(--bs-border-width) solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius);
+    max-width: 100%;
+    height: 100px;
+    width: 90px;
+}
 /* Icons */
 
 /*
@@ -835,7 +870,13 @@ button.close-button {
     margin-top: 30px;
     border-radius: 5px;
 }
-
+.newReq{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: end;
+    gap: 10px;
+}
 .people-search-btn {
     color: #fff;
 }
@@ -2613,7 +2654,6 @@ td {
     .shift-roster-download-and-dropdown-for-attendance-muster {
         margin-left: 10px;
     }
-
 }
 
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
@@ -2645,9 +2685,9 @@ td {
     cursor: pointer;
 }
 
-.hidden {
+/* .hidden {
     opacity: 0;
-}
+} */
 
 .emoji {
     text-align: center;
@@ -3479,18 +3519,21 @@ input[type="radio"] {
     height: 80px;
     width: 80px;
     border-radius: 50%;
-    background-color: orange;
+    background-color: #fde5c1;
+    /* background-color: orange; */
     position: absolute;
     z-index: 0;
-    top: 5px;
-    left: 5px;
+    top: 15px;
+    left: 10px;
+    border: 1px solid #f2b040;
 }
 
 .smallCircle {
     height: 40px;
     width: 40px;
     border-radius: 50%;
-    background-color: orangered;
+    /* background-color: orangered; */
+    background-color: #f2b040;
     position: absolute;
     right: 7px;
     top: 5px;
@@ -3498,17 +3541,18 @@ input[type="radio"] {
 
 .homeBaneerCard {
     position: relative;
-    min-height: 195px;
+    /* min-height: 195px; */
     backdrop-filter: blur(5px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
     /* background-color: rgba(255, 255, 255, 0.75); */
-    background-color: #00000059;
+    /* background-color: #00000059; */
+    background-color: #ffffff40;
     border-radius: 10px;
 }
 
 .homeBaneerCard p,
 .homeBaneerCard .viewSwipesList {
-    color: #fff !important;
+    color: #02114f !important;
 }
 
 .homeBaneerCard .showTimer {
@@ -3694,7 +3738,6 @@ input[type="radio"] {
 
 .accordion-body {
     border-radius: 10px;
-    display: none;
     background-color: #fff;
 }
 
@@ -6612,12 +6655,7 @@ select .yearSelect {
     border-bottom: 1px solid #bebbbb !important;
 }
 
-
-
-
-
 /* Salary Revision Module styles ends */
-
 .custom-table-wrapper-leave-details {
     position: relative;
     /* max-height: 130px; */
@@ -9666,11 +9704,6 @@ peoples module styles started */
         margin-top: 20px;
     }
 
-    .col {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-    }
 }
 
 @media screen and (max-height: 320px) {
@@ -9772,17 +9805,15 @@ peoples module styles started */
     }
 }
 
-@media screen and (max-width: 360px) {
-    .fl-main-container[data-position$=-center] {
-        left: 0%;
-    }
-}
 
 @media screen and (max-width: 760px) {
     .view-details-container {
         display: flex;
         width: 100%;
         flex-direction: column;
+    }
+    .md-width-prof{
+        border: 1px solid #ccc;
     }
 
     .approved-leave {
@@ -9802,6 +9833,10 @@ peoples module styles started */
         justify-content: start;
         align-items: center;
         margin-top: 20px;
+    }
+
+    .search-btn-leave {
+        margin-left: 10px; /* Space between input and button */
     }
 }
 
@@ -9878,10 +9913,6 @@ peoples module styles started */
 
     .dropdown {
         width: 30%;
-    }
-
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
     }
 }
 
@@ -9993,25 +10024,32 @@ peoples module styles started */
 }
 
 @media (max-width: 346px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
-    }
-
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
-
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
+    .custom-nav-link.active {
+        border-radius: 0 !important;
+    }
     .custom-nav-tabs {
         /* flex-direction: column; */
         width: 100%;
     }
+
 }
 
 @media (max-width: 992px) {
-    .custom-nav-tabs .custom-item {
-        border: 1px solid #ccc !important;
+    .mbl-dev-closed{
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
     }
-
+    .mbl-dev-active{
+        border-top-left-radius: 5px;
+        border-bottom-left-radius: 5px;
+    }
     .custom-nav-link.active {
         border-radius: 0 !important;
     }
@@ -10225,7 +10263,13 @@ peoples module styles started */
     font-size: var(--sub-headings-font-size);
     font-weight: 500;
 }
-
+.home-reportTo{
+    background:  linear-gradient(135deg, #6293c8, #384c6c);
+    font-size: 14px;
+    padding: 5px 15px;
+    font-weight: 500;
+    color: white;
+}
 div.fl-main-container[data-position="top-center"] {
     left: 50%;
     transform: translateX(-50%);
@@ -10241,17 +10285,8 @@ div.fl-main-container[data-position="top-center"] {
     }
 }
 
-div.fl-main-container[data-position="top-center"] {
-    left: 50%;
-    transform: translateX(-50%);
-}
 
-@media (max-width: 768px) {
-    div.fl-main-container[data-position="top-center"] {
-        left: 0;
-        transform: none;
-        width: 100%;
-        margin: 0;
-        padding: 10px;
-    }
+input[type="date"] {
+    background-image: none;   /* Ensure no custom background image is overriding the icon */
+    -webkit-appearance: textfield; /* Make sure it's not using a textfield style */
 }

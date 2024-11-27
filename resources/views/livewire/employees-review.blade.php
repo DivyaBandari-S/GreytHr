@@ -139,10 +139,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div style="border-top-left-radius:5px;border-bottom-left-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <a href="#" style="border-top-right-radius:5px;border-bottom-right-radius:5px;" class="custom-nav-link {{ $attendenceActiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="$set('attendenceActiveTab', 'closed')">Closed</a>
                     </li>
                 </ul>
@@ -154,18 +154,26 @@
             </div>
             @else
 
-            <div class="row p-0 mt-3 d-flex justify-content-end">
-                <div class="row m-0 p-0 mt-3">
-                    <div class="search-container d-flex align-items-end justify-content-end p-1">
-                        <input type="text" wire:model.debounce.500ms="searchQuery" id="searchInput" placeholder="Enter employee name" class="border outline-none rounded">
-                        <button wire:click="searchApprovedLeave" id="searchButtonReports">
-                            <i class="fas fa-search" style="width:7px;height:7px;"></i>
-                        </button>
-                    </div>
-                </div>
+            <div class="row p-0 mt-3">
+    <div class="row m-0 p-0 mt-3 w-100">
+        <div 
+            class="search-container d-flex align-items-end ms-auto p-2" 
+            style="position: relative; width: 220px;">
+            <input 
+                type="text" 
+                wire:model.debounce.500ms="searchQuery" 
+                id="searchInput" 
+                placeholder="Search..." 
+                class="form-control placeholder-small border outline-none rounded" 
+                style="padding-right: 40px;"
+            >
+            <button wire:click="searchApprovedLeave" id="searchButtonReports">
+                <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
-
-            </div>
 
 
             @if(count($approvedRegularisationRequestList))
@@ -246,19 +254,24 @@
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:green;text-transform:uppercase;">{{$arrl->status_name}}</span>
                                 @elseif($arrl->status==3)
                                 <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:#f66;text-transform:uppercase;">{{$arrl->status_name}}</span>
+                                @elseif($arrl->status==13)
+                                <span style="margin-top:0.625rem; font-size: 12px; font-weight: 400; color:orange;text-transform:uppercase;">{{$arrl->status_name}}</span>
 
 
                                 @endif
                             </div>
 
-                            <div class="arrow-btn">
-                                <i class="fa fa-angle-down"></i>
+                            <div class="arrow-btn"wire:click="toggleActiveAccordion({{ $arrl->id }})" style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};
+                                border:1px solid {{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};">
+                                <i class="fa fa-angle-{{ in_array($arrl->id, $openAccordionsForClosed) ? 'up' : 'down' }}"
+                                style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }}"></i>
                             </div>
 
                         </div>
 
                     </div>
-                    <div class="accordion-body m-0 p-0">
+                    @if(in_array($arrl->id, $openAccordionsForClosed))
+                    <div class=" m-0 p-0">
 
                         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
@@ -299,12 +312,13 @@
                             </div>
 
                             <div class="content px-4">
-                                <a href="{{ route('review-closed-regularation', ['id' => $arrl->id]) }}" style="color:#007BFF;font-size:11px;">View Details</a>
+                                <a href="{{ route('review-closed-regularation', ['id' => $arrl->id]) }}" class="anchorTagDetails">View Details</a>
 
                             </div>
 
                         </div>
                     </div>
+                    @endif
                 </div>
 
                 @endforeach
@@ -327,10 +341,10 @@
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
                         <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('active')">Active</div>
                     </li>
-                    <li class="custom-item m-0 p-0 flex-grow-1">
+                    <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
                         <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}"  wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
                     </li>
                 </ul>

@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
 use App\Mail\LeaveApplicationNotification;
+use App\Mail\LeaveApprovalNotification;
 use App\Models\LeaveRequest;
 use App\Models\StatusType;
 use Carbon\Carbon;
@@ -147,13 +148,13 @@ class LeaveFormPage extends Component
                 ->where(function ($query) {
                     // Include records if status is in the given list, excluding those with 'Pending Leave Cancel' cancel_status when status is 'approved'
                     $query->where(function ($q) {
-                        $q->whereIn('leave_status',[2,3,4])
+                        $q->whereIn('leave_status', [2, 3, 4])
                             ->where(function ($q) {
                                 $q->where('leave_status', '!=', 2)
                                     ->orWhere('cancel_status', '!=', 7);
                             });
                     })->orWhere(function ($q) {
-                        $q->whereIn('cancel_status', [2,3,4])
+                        $q->whereIn('cancel_status', [2, 3, 4])
                             ->where('cancel_status', '!=', 7);
                     });
                 })
@@ -285,17 +286,37 @@ class LeaveFormPage extends Component
 
             // Decode the JSON data from applying_to to get the email
             $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
+            $ccToDetailsArray = json_decode($leaveRequest->cc_to, true); // Decode cc_to
             $applyingToEmail = null;
+            $ccToEmail = null;
 
-            // Check if the array is not empty and access the email from the first element
+            // Extract the applying-to email if available
             if (!empty($applyingToDetailsArray) && isset($applyingToDetailsArray[0]['email'])) {
                 $applyingToEmail = $applyingToDetailsArray[0]['email']; // Access the email
             }
 
+            // Extract the CC email if available
+            if (!empty($ccToDetailsArray) && isset($ccToDetailsArray[0]['email'])) {
+                $ccToEmail = $ccToDetailsArray[0]['email']; // Access the email
+            }
+
             // Send notification email if the email exists
-            if ($applyingToEmail) {
-                Mail::to($applyingToEmail)
-                    ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
+            if (!empty($applyingToEmail) || !empty($ccToEmail)) {
+                // Initialize the mail
+                $mail = Mail::to($applyingToEmail); // Send to the applying to email first
+
+                // Add the cc email if available
+                if (!empty($ccToEmail)) {
+                    $mail->cc($ccToEmail); // Add CC email
+                }
+
+                // Send the leave withdrawal notification email
+                $mail->send(new LeaveApprovalNotification(
+                    $leaveRequest,        // Leave request object
+                    $applyingToDetailsArray[0],  // First applying-to recipient's details
+                    $ccToDetailsArray,    // CC details
+                    false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                ));
             }
 
             $this->hasPendingLeave();
@@ -305,6 +326,7 @@ class LeaveFormPage extends Component
             return false;
         }
     }
+
 
 
     public function cancelLeaveCancel($leaveRequestId)
@@ -318,6 +340,7 @@ class LeaveFormPage extends Component
             if (!$leaveRequest) {
                 throw new \Exception("Leave request not found.");
             }
+
             // Find any other leave request matching from_date, from_session, to_date, to_session
             $matchingLeaveRequest = LeaveRequest::where('emp_id', $leaveRequest->emp_id)
                 ->where('from_date', $leaveRequest->from_date)
@@ -326,17 +349,18 @@ class LeaveFormPage extends Component
                 ->where('to_session', $leaveRequest->to_session)
                 ->where('leave_status', '!=', 6)
                 ->first();
+
             if ($matchingLeaveRequest) {
                 // Update the matching request status to 'rejected'
-                $matchingLeaveRequest->cancel_status = 4;
+                $matchingLeaveRequest->cancel_status = 4; // Mark as withdrawn
                 $matchingLeaveRequest->updated_at = now();
                 $matchingLeaveRequest->action_by = $employeeId;
                 $matchingLeaveRequest->save();
             }
 
-            // Update the current leave request status to 'approved'
-            $leaveRequest->cancel_status = 4;
-            $leaveRequest->leave_status = 3;
+            // Update the current leave request status to 'withdrawn'
+            $leaveRequest->cancel_status = 4;  // Withdrawn
+            $leaveRequest->leave_status = 3;   // Rejected
             $leaveRequest->updated_at = now();
             $leaveRequest->action_by = $employeeId;
             $leaveRequest->save();
@@ -344,24 +368,48 @@ class LeaveFormPage extends Component
             // Decode the JSON data from applying_to to get the email
             $applyingToDetailsArray = json_decode($leaveRequest->applying_to, true); // Decode as an associative array
             $applyingToEmail = null;
+
             // Check if the array is not empty and access the email from the first element
             if (!empty($applyingToDetailsArray) && isset($applyingToDetailsArray[0]['email'])) {
                 $applyingToEmail = $applyingToDetailsArray[0]['email']; // Access the email
             }
 
+            // Decode CC recipients
+            $ccToDetailsArray = json_decode($leaveRequest->cc_to, true); // Decode CC recipients
+            $ccToEmail = null;
+
+            // Extract CC email if available
+            if (!empty($ccToDetailsArray) && isset($ccToDetailsArray[0]['email'])) {
+                $ccToEmail = $ccToDetailsArray[0]['email'];
+            }
+
             // Send notification email if the email exists
             if ($applyingToEmail) {
-                Mail::to($applyingToEmail)
-                    ->send(new LeaveApplicationNotification($leaveRequest, $applyingToDetailsArray[0], $this->ccToDetails));
+                $mail = Mail::to($applyingToEmail); // Send to the applying-to email first
+
+                // Add CC email if available
+                if (!empty($ccToEmail)) {
+                    $mail->cc($ccToEmail); // Add CC email
+                }
+
+                // Send the leave cancel notification email
+                $mail->send(new LeaveApprovalNotification(
+                    $leaveRequest,        // Leave request object
+                    $applyingToDetailsArray[0],  // First applying-to recipient's details
+                    $ccToDetailsArray,    // CC details
+                    false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                ));
             }
+
             $this->hasPendingLeave();
             // Flash success message
-            FlashMessageHelper::flashSuccess('Leave application Withdrawn.');
+            FlashMessageHelper::flashSuccess('Leave application Cancelled and Withdrawn.');
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while canceling leave request. Please try again later.');
             return false;
         }
     }
+
     public function render()
     {
         return view('livewire.leave-form-page', [

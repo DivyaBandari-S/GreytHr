@@ -5,8 +5,10 @@ namespace App\Livewire;
 use App\Helpers\FlashMessageHelper;
 use App\Mail\ManagerNotificationMail;
 use App\Mail\RegularisationApprovalMail;
+use App\Mail\RegularisationCombinedMail;
 use App\Mail\RegularisationRejectionMail;
 use App\Models\EmployeeDetails;
+use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
@@ -21,7 +23,7 @@ class ViewRegularisationPendingNew extends Component
 
     public $showAlert=false;
     public $openAccordionForActive;
-     public $managerEmail = 'manikanta.asapu@paygdigitals.com'; // Example manager email
+     public $managerEmail = 'pranita.priyadarshi@paygdigitals.com'; // Example manager email
 
     public $employeeEmailForRejection;
 
@@ -37,7 +39,7 @@ class ViewRegularisationPendingNew extends Component
     public $regularised_date;
     public $user;
 
-
+    public $validDates = [];
 
     public $auto_approve=false;
     public $remarks;
@@ -65,9 +67,27 @@ class ViewRegularisationPendingNew extends Component
 
         foreach ($this->regularisations as $regularisation) {
             $this->regularised_date = Carbon::parse($regularisation->created_at)->toDateString();
+            $startDate = Carbon::parse($this->regularised_date);
+            $endDate = Carbon::now();
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
+                        ->pluck
+                        ('date')
+                        ->map(function ($date) {
+                            return Carbon::parse($date)->format('Y-m-d');
+                        })
+                        ->toArray();
+            $daysDifference = 0;
+            while ($startDate->lessThanOrEqualTo($endDate)) {
+                // Check if the day is a weekend or a holiday
 
-            $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
-
+                if (!$startDate->isWeekend() && !in_array($startDate->format('Y-m-d'), $holidays)) {
+                    $this->validDates[] = $startDate->copy();
+                    $daysDifference++;
+                }
+                $startDate->addDay();
+            }
+            // $daysDifference = Carbon::parse($this->regularised_date)->diffInDays(Carbon::now());
+ 
             if($daysDifference>3&&empty($regularisation->mail_sent))
             {
                 $this->sendMail($regularisation->id);
@@ -86,11 +106,14 @@ class ViewRegularisationPendingNew extends Component
     
     $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
 
+    $validDatesString = implode(', ', array_map(function($date) {
+        return $date->format('Y-m-d'); // Format each date as 'Y-m-d'
+    }, $this->validDates));
     $this->regularisationEntries = json_decode($item->regularisation_entries, true); // Decode the JSON entries
     
     $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
     // Prepare the HTML table
-    $this->messageContent = " ".ucwords(strtolower($this->user->first_name))." ".ucwords(strtolower($this->user->last_name))."(".$this->user->emp_id.")" ."has neither approved nor rejected the regularization request for the past 3 days for employee ". $item->emp_id . " (" . ucwords(strtolower($employee->first_name)) . " " . ucwords(strtolower($employee->last_name)) . ").";
+    $this->messageContent = " ".ucwords(strtolower($this->user->first_name))." ".ucwords(strtolower($this->user->last_name))."(".$this->user->emp_id.")" ." has neither approved nor rejected the regularization request for the past 3 days .' (Dates: " . $validDatesString . ") '.for employee ". $item->emp_id . " (" . ucwords(strtolower($employee->first_name)) . " " . ucwords(strtolower($employee->last_name)) . ").";
     $details = [
         'message' => $this->messageContent,
         'regularisationRequests'=>$this->regularisationEntries,
@@ -126,6 +149,7 @@ class ViewRegularisationPendingNew extends Component
     public function closeRejectModal()
     {
         $this->openRejectPopupModal=false;
+        $this->remarks='';
     }
     public function openApproveModal()
     {
@@ -134,6 +158,7 @@ class ViewRegularisationPendingNew extends Component
     public function closeApproveModal()
     {
         $this->openApprovePopupModal=false;
+        $this->remarks='';
     }
     public function approve($id)
     {
@@ -251,7 +276,7 @@ class ViewRegularisationPendingNew extends Component
  
  
     // Send email to manager
-      Mail::to($this->employeeEmailForApproval)->send(new RegularisationApprovalMail($details));
+      Mail::to($this->employeeEmailForApproval)->send(new RegularisationCombinedMail($details));
     }
     public function searchRegularisation()
     {
@@ -260,6 +285,7 @@ class ViewRegularisationPendingNew extends Component
     }
     public function reject($id)
     {
+        
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         if(empty($this->remarks))

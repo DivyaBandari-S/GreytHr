@@ -18,6 +18,7 @@ class ReviewClosedRegularisation extends Component
     public $ManagerName;
     public $id;
 
+    public $regularisationemployeename;
     public $totalEntries;
 
 
@@ -35,12 +36,14 @@ class ReviewClosedRegularisation extends Component
             ->where('regularisation_dates.id', $id)  // Find the specific record by id
             ->select('regularisation_dates.*', 'status_types.status_name')  // Select fields from both tables
             ->first();
-
+          
+   
         $subordinateEmpId=$this->regularisationrequest->emp_id;
         $this->employeeDetails = Employeedetails::where('emp_id', $subordinateEmpId)->first();
         $this->ManagerId=$this->regularisationrequest->employee->manager_id;
         $this->ManagerName=EmployeeDetails::select('first_name','last_name')->where('emp_id',$this->ManagerId)->first();
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
+
         $this->totalEntries = count($this->regularisationEntries);
     }
 

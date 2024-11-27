@@ -99,6 +99,7 @@ use App\Livewire\EmpPostrequest;
 use App\Livewire\EmpTimeSheet;
 use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
+use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\OrganisationChart;
@@ -108,6 +109,7 @@ use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;
 use App\Livewire\Test;
+use App\Livewire\ViewRegularisationPendingNew;
 use App\Livewire\Ytdreport;
 use App\Models\Message;
 use App\Models\SalaryRevision;
@@ -269,7 +271,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/ProfileInfo', ProfileInfo::class)->name('profile.info');
     Route::get('/ProfileCard', ProfileCard::class)->name('profile');
     Route::get('/Settings', Settings::class)->name('settings');
-    Route::get('/review-pending-regularation/{id}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
+    Route::get('/view-regularisation-pending-new', ViewRegularisationPendingNew::class)->name('view-regularisation-pending-new');
+    Route::get('/review-pending-regularation/{id}/{count}', ReviewPendingRegularisation::class)->name('review-pending-regularation');
     Route::get('/review-closed-regularation/{id}', ReviewClosedRegularisation::class)->name('review-closed-regularation');
     Route::get('/time-sheet', EmpTimeSheet::class)->name('time-sheet');
     Route::get('/team-time-sheets', AllTeamTimeSheets::class)->name('team-time-sheets');
@@ -277,7 +280,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //Feeds Module
     Route::get('/Feeds', Feeds::class)->name('Feeds');
-    Route::get('/events', Everyone::class)->name('everyone');
+    Route::get('/events', Everyone::class)->name('events');
     Route::get('/everyone', Everyone::class)->name('everyone');
     Route::get('/emp-post-requests', EmpPostrequest::class)->name('emp-post-requests');
 
@@ -290,6 +293,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/HelpDesk', HelpDesk::class)->name('helpdesk');
 
     Route::get('/catalog', Catalog::class)->name('catalog');
+    Route::get('/incident', IncidentRequests::class)->name('incident');
 
     // Related salary module and ITdeclaration Document center
     Route::get('/payslip', Payroll::class);
@@ -345,9 +349,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/review-regularizations', ReviewRegularizations::class)->name('regularizations');
 
     // ####################################### Chat Module Routes #########################endregion
-    // Route::get('/chat',Index::class)->name('chat.index');
-    Route::get('/chat/{query}', Chat::class)->name('chat');
-    Route::get('/users', EmployeeList::class)->name('employee');
+    Route::get('/users', EmployeeList::class)->name('users');
+    Route::get('/chat', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

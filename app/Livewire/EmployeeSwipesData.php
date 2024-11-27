@@ -81,35 +81,35 @@ class EmployeeSwipesData extends Component
             $authUser = Auth::user();
             $userId = $authUser->emp_id;
 
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->where('employee_status', 'active')
-                ->get();
+            // $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+            //     ->where('employee_status', 'active')
+            //     ->get();
 
             $swipeData = [];
 
-            foreach ($managedEmployees as $employee) {
-                $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+            // foreach ($managedEmployees as $employee) {
+                // $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
 
                 // Fetch the first swipe log for each employee for today
-                $employeeSwipeLog = DB::connection('sqlsrv')
-                    ->table('DeviceLogs_' . now()->month . '_' . now()->year)
-                    ->select('UserId', 'logDate', 'Direction')
-                    ->where('UserId', $normalizedEmployeeId)
-                    ->whereDate('logDate', $today)
-                    ->orderBy('logDate')
-                    ->first();
+                // $employeeSwipeLog = DB::connection('sqlsrv')
+                //     ->table('DeviceLogs_' . now()->month . '_' . now()->year)
+                //     ->select('UserId', 'logDate', 'Direction')
+                //     ->where('UserId', $normalizedEmployeeId)
+                //     ->whereDate('logDate', $today)
+                //     ->orderBy('logDate')
+                //     ->first();
 
                 // Add the employee and their swipe log (if any) to the results
-                if ($employeeSwipeLog) {
-                    $swipeData[] = [
-                        'Employee ID' => $employee->emp_id,
-                        'Employee Name' => ucfirst(strtolower($employee->first_name)) . ' ' . ucfirst(strtolower($employee->last_name)),
-                        'Swipe Date' => Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y'),
-                        'Swipe Time' => Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
-                        'Direction' => $employeeSwipeLog->Direction,
-                    ];
-                }
-            }
+                // if ($employeeSwipeLog) {
+                //     $swipeData[] = [
+                //         'Employee ID' => $employee->emp_id,
+                //         'Employee Name' => ucfirst(strtolower($employee->first_name)) . ' ' . ucfirst(strtolower($employee->last_name)),
+                //         'Swipe Date' => Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y'),
+                //         'Swipe Time' => Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
+                //         'Direction' => $employeeSwipeLog->Direction,
+                //     ];
+                // }
+            // }
 
             $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
             $filePath = storage_path('app/todays_present_employees.xlsx');
@@ -144,7 +144,7 @@ class EmployeeSwipesData extends Component
         return str_replace('-', '', $id);
     });
 
-    // Fetch swipe logs for all managed employees in one query
+    
     $externalSwipeLogs = DB::connection('sqlsrv')
         ->table('DeviceLogs_' . now()->month . '_' . now()->year)
         ->select('UserId', 'logDate', 'Direction')
@@ -174,27 +174,7 @@ class EmployeeSwipesData extends Component
     return $swipeData;
     }
 
-    private function fetchExternalSwipeLog($normalizedEmployeeId, $startDate, $endDate, $today)
-    {
-        try {
-            $query = DB::connection('sqlsrv')
-                ->table('DeviceLogs_' . now()->month . '_' . now()->year)
-                ->select('UserId', 'logDate', 'Direction')
-                ->where('UserId', $normalizedEmployeeId);
-
-            if ($startDate && $endDate) {
-                $query->whereBetween('logDate', [$startDate, $endDate]);
-            } else {
-                $query->whereDate('logDate', $today);
-            }
-
-            return $query->first();
-        } catch (\Exception $e) {
-            Log::error('Error fetching swipe log from SQL Server:', ['message' => $e->getMessage()]);
-            return null;
-        }
-    }
-
+    
     public function render()
     {
         $today = now()->toDateString();
@@ -204,7 +184,7 @@ class EmployeeSwipesData extends Component
         // Retrieve active employees managed by the user
         $managedEmployees = EmployeeDetails::where('manager_id', $userId)
             ->where('employee_status', 'active')
-            ->paginate(10); // Adjust the pagination number as needed
+            ->get(); // Adjust the pagination number as needed
     
         $this->employees = $this->processSwipeLogs($managedEmployees, $today); // Process and fetch employees' swipe logs
         return view('livewire.employee-swipes-data', [

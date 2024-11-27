@@ -48,6 +48,7 @@ class PageTitle extends Component
             'home' => 'Home',
             'Feeds' => 'Feeds',
             'everyone'=>'Feeds',
+            'events'=>'Feeds',
             'emp-post-requests'=>'Feeds',
             'people' => 'People',
             'profile.info' => 'Employee Information',
@@ -62,6 +63,7 @@ class PageTitle extends Component
             'attendance-muster-data' => 'Attendance Muster',
             'shift-roaster-data' => 'Shift Roaster',
             'employee' => 'Connect',
+            'incident' => 'Service & Incident Requests'
             
         ];
         // Use the mapped title or fallback to the original route name

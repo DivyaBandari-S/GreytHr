@@ -18,7 +18,9 @@ use App\Models\PeopleList;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+
 use App\Models\HelpDesks;
+use App\Mail\HelpDeskotification;
 use App\Models\Request;
 use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
@@ -28,6 +30,8 @@ use Illuminate\Support\Facades\Response;
 class HelpDesk extends Component
 {
     use WithFileUploads;
+    public $isOpen = false;
+    public $rejection_reason;
     public $selectedCategory = [];
     public $activeCategory = null; // Category for Active tab
 public $pendingCategory = null; // Category for Pending tab
@@ -39,6 +43,7 @@ public $closedCategory = null; // Category for Closed tab
     public $showModal = false;
     public $search = '';
     public $isRotated = false;
+    public $requestId;
 
     public $requestCategories = '';
     public $selectedPerson = null;
@@ -67,7 +72,7 @@ public $closedCategory = null; // Category for Closed tab
     public $filterData;
     public $activeTab = 'active';
     public $selectedPeople = [];
-    public $activeSearch = '';
+    public $activeSearch = [];
 public $pendingSearch = '';
 public $closedSearch = '';
     protected $rules = [
@@ -121,7 +126,10 @@ public $closedSearch = '';
             })
             ->orderBy('created_at', 'desc')
             ->get();
-        // dd( $this->records);
+         
+         
+         
+     
         $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->orderBy('first_name')
             ->orderBy('last_name')
@@ -171,15 +179,19 @@ public $closedSearch = '';
     }
     
   
-    public function searchHelpDesk($status, $searchTerm,$selectedCategory)
+    public function searchHelpDesk($status_code, $searchTerm,$selectedCategory)
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
     
         // Start the base query based on status and employee ID or cc_to
         $query = HelpDesks::where(function ($query) use ($employeeId) {
             $query->where('emp_id', $employeeId)->orWhere('cc_to', 'like', "%$employeeId%");
-        })
-        ->where('status', $status); // Apply status filter dynamically
+        });
+        if (is_array($status_code)) {
+            $query->whereIn('status_code', $status_code);  // Multiple statuses (array)
+        } else {
+            $query->where('status_code', $status_code);    // Single status (string)
+        }// Apply status filter dynamically
     
         // If a category is selected, apply category filtering
         if ($selectedCategory) {
@@ -202,8 +214,7 @@ public $closedSearch = '';
     
         // Get results
         $results = $query->orderBy('created_at', 'desc')->get();
-        logger('Filtered Results for status ' . $status . ': ', $results->toArray());
-    
+     
         $this->filterData = $results;
         $this->peopleFound = count($this->filterData) > 0;
     }
@@ -211,19 +222,38 @@ public $closedSearch = '';
     
     public function searchActiveHelpDesk()
     {
-        $this->searchHelpDesk('Recent', $this->activeSearch,$this->activeCategory);
+        $this->searchHelpDesk([8,10], $this->activeSearch,$this->activeCategory);
     }
     
     public function searchPendingHelpDesk()
     {
-        $this->searchHelpDesk('Pending', $this->pendingSearch,$this->pendingCategory);
+        $this->searchHelpDesk(6, $this->pendingSearch,$this->pendingCategory);
     }
     
     public function searchClosedHelpDesk()
     {
-        $this->searchHelpDesk('Completed', $this->closedSearch,$this->closedCategory);
+        $this->searchHelpDesk([12,4], $this->closedSearch,$this->closedCategory);
     }
     
+    public function showRejectionReason($id)
+    {
+     
+        $record = HelpDesks::findOrFail($id);
+    
+        if ($record && $record->status === 'Reject') {
+            $this->rejection_reason = $record->rejection_reason;
+        
+            $this->isOpen = true;
+        } else {
+            $this->dispatchBrowserEvent('notification', ['message' => 'Reason not available.']);
+        }
+    }
+    
+    public function closeModal()
+    {
+        $this->isOpen = false;
+        $this->rejection_reason = null;
+    }
     public function close()
     {
         $this->showDialog = false;
@@ -444,7 +474,7 @@ public $closedSearch = '';
     
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-    
+          
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
@@ -458,7 +488,10 @@ public $closedSearch = '';
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
+               
+           
             ]);
+            
     
             FlashMessageHelper::flashSuccess( 'Request created successfully.');
             return redirect()->to('/HelpDesk');
@@ -653,6 +686,7 @@ public $closedSearch = '';
             'searchData' => $this->filterData ?: $this->records,
             'requestCategories' => $this->requestCategories,
             'peopleData' => $this->peopleData,
+            
         ]);
     }
 }
