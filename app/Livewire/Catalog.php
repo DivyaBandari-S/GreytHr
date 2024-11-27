@@ -103,6 +103,8 @@ class Catalog extends Component
     public $IdRequestaceessDialog = false;
     public $MmsRequestaceessDialog = false;
     public $LapRequestaceessDialog = false;
+    public    $InternetRequestaceessDialog = false;
+      
     public $AddRequestaceessDialog = false;
     public $incidentRequestaceessDialog = false;
     public $justification;
@@ -205,6 +207,7 @@ class Catalog extends Component
         $this->IdRequestaceessDialog = false;
         $this->MmsRequestaceessDialog = false;
         $this->DesktopRequestaceessDialog = false;
+        $this->NewMailRequestaceessDialog=false;
 
         $this->selectedPeople = [];
         $this->addselectedPeople = [];
@@ -304,6 +307,14 @@ class Catalog extends Component
         $this->reset(['category', 'priority']);
         $this->category = 'New Mailbox Request';
     }
+    public function IntenetRequest()
+    {
+        $this->resetDialogs();
+        $this->InternetRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Internet Access Request';
+    }
     public function openItRequestaccess()
     {
         $this->ItRequestaceessDialog = true; // Open the Sec 80C modal
@@ -342,7 +353,11 @@ class Catalog extends Component
     {
         $this->DistributionRequestaceessDialog = true;
     }
-
+    public function closeInternetRequestaccess()
+    {
+        $this->reset(['subject', 'mail', 'mobile', 'description', 'selected_equipment', 'cc_to', 'category', 'file_path', 'selectedPeople', 'selectedPeopleNames']);
+        $this->InternetRequestaceessDialog = false;
+    }
     public function closeItRequestaccess()
     {
 
@@ -672,17 +687,21 @@ class Catalog extends Component
                 'mobile' => 'N/A',
                 'status_code' => 8,
             ]);
+            $helpDesk->refresh();
+            
+            // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
-
+            
             foreach ($superAdmins as $admin) {
-                // Retrieve the first and last names
-                $firstName = $admin->first_name;
-                $lastName = $admin->last_name;
-
-                // Send Email with first and last names included
-                Mail::to($admin->email)->send(new HelpDeskNotification($helpDesk, $firstName, $lastName));
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
+                );
             }
-
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
@@ -762,11 +781,11 @@ class Catalog extends Component
                 $fileName = $this->file_path->getClientOriginalName();
             }
 
-            // Create the help desk entry
             $helpDesk = HelpDesks::create([
                 'emp_id' => $employeeId, // Pass the employee ID directly
                 'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
+               
                 'description' => $this->description,
                 'file_path' => $fileContent,
                 'file_name' => $fileName,
@@ -778,14 +797,25 @@ class Catalog extends Component
                 'mobile' => $this->mobile, 
                 'status_code' => 8,
             ]);
-
+            
+            // Ensure `request_id` is fetched
+            $helpDesk->refresh();
+            
             // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
+            
+            
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
@@ -877,13 +907,21 @@ class Catalog extends Component
 
             ]);
 
+            $helpDesk->refresh();
+            
+            // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
-
             FlashMessageHelper::flashSuccess('Request created successfully.');
             $this->reset();
             return redirect()->to('/HelpDesk');
