@@ -46,7 +46,7 @@ return new class extends Migration
             IF NEW.snow_id IS NULL THEN
                 IF NEW.category = 'Incident Request' THEN
                     SET @max_id := IFNULL(
-                        (SELECT MAX(CAST(SUBSTRING(snow_id, 5) AS UNSIGNED)) 
+                        (SELECT MAX(CAST(SUBSTRING(snow_id, 5) AS UNSIGNED))
                          FROM incident_requests WHERE snow_id LIKE 'INC-%'),
                         0
                     ) + 1;
@@ -54,7 +54,7 @@ return new class extends Migration
                     SET NEW.snow_id = CONCAT('INC-', LPAD(@max_id, 4, '0'));
                 ELSEIF NEW.category = 'Service Request' THEN
                     SET @max_id := IFNULL(
-                        (SELECT MAX(CAST(SUBSTRING(snow_id, 4) AS UNSIGNED)) 
+                        (SELECT MAX(CAST(SUBSTRING(snow_id, 4) AS UNSIGNED))
                          FROM incident_requests WHERE snow_id LIKE 'SER-%'),
                         0
                     ) + 1;
