@@ -159,7 +159,16 @@
     background-color: rgb(2, 17, 79);
     color: white;
 }
-
+.active-bg1223
+{
+    background-color: rgb(2, 17, 79) !important;
+    color: white !important; /* Ensure text is readable */
+    border-left: 4px solid blue;
+}
+.icon-active
+{
+    color:white !important;
+}
 /* Ending of letter request module (Kumar Asapu)*/
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/

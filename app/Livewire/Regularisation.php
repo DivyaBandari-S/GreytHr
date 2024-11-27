@@ -85,9 +85,9 @@ class Regularisation extends Component
     public $currentMonth;
 
     public $reportingmanagerinloop;
-    public $openAccordionForPending = null;
+    public $openAccordionForPending = [];
 
-    public $openAccordionForHistory = null;
+    public $openAccordionForHistory = [];
     public $reportingmanager;
     public $showApplyingToContainer = false;
 
@@ -169,11 +169,12 @@ class Regularisation extends Component
     }
     public function togglePendingAccordion($id)
     {
-        
-        if ($this->openAccordionForPending === $id) {
-            $this->openAccordionForPending = null; // Close if already open
+        if (in_array($id, $this->openAccordionForPending)) {
+            // Remove from open accordions if already open
+            $this->openAccordionForPending = array_diff($this->openAccordionForPending, [$id]);
         } else {
-            $this->openAccordionForPending = $id; // Set to open
+            // Add to open accordions if not open
+            $this->openAccordionForPending[] = $id;
         }
       
     }
@@ -185,12 +186,14 @@ class Regularisation extends Component
     }
     public function toggleHistoryAccordion($id)
     {
-        
-        if ($this->openAccordionForHistory === $id) {
-            $this->openAccordionForHistory = null; // Close if already open
+        if (in_array($id, $this->openAccordionForHistory)) {
+            // Remove from open accordions if already open
+            $this->openAccordionForHistory = array_diff($this->openAccordionForHistory, [$id]);
         } else {
-            $this->openAccordionForHistory = $id; // Set to open
+            // Add to open accordions if not open
+            $this->openAccordionForHistory[] = $id;
         }
+
     }
     public function applyingTo()
     {
