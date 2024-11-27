@@ -629,6 +629,7 @@
 .emp-details-p {
     color: var(--label-color);
     font-size: var(--normal-font-size);
+    margin-bottom:0px;
 }
 
 .emp-details-span {
@@ -7500,6 +7501,39 @@ select .yearSelect {
     color: #ffffff;
 }
 
+.earning-details .column:hover {
+    background-color: #dbf0f9;
+
+}
+
+.earning-details .column span {
+    align-content: center;
+
+}
+
+.earning-details .column {
+    display: flex;
+    justify-content: space-between;
+}
+
+.earnings-tab .total-sal {
+    display: flex;
+    color: black;
+    font-weight: 500;
+    font-size: 13px;
+    text-align: center;
+    justify-content: space-between;
+    background: #e8f0f8;
+    align-items: center;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+}
+
+.earnings-tab .total-sal:hover {
+    background-color: #dbf0f9;
+}
+
 /* From Uiverse.io by Lakshay-art */
 .section-banner {
     height: 181px;
@@ -9770,6 +9804,8 @@ peoples module styles started */
         width: 100%;
     }
 }
+
+
 @media screen and (max-width: 760px) {
     .view-details-container {
         display: flex;
@@ -10239,15 +10275,15 @@ div.fl-main-container[data-position="top-center"] {
     transform: translateX(-50%);
 }
 
-    @media (max-width: 768px) {
-        div.fl-main-container[data-position="top-center"] {
-            left: 0;
-            transform: none;
-            width: 100%;
-            margin: 0;
-            padding: 10px;
-        }
+@media (max-width: 768px) {
+    div.fl-main-container[data-position="top-center"] {
+        left: 0;
+        transform: none;
+        width: 100%;
+        margin: 0;
+        padding: 10px;
     }
+}
 
 
 input[type="date"] {
