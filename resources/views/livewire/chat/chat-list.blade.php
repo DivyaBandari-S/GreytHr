@@ -28,7 +28,7 @@
                             : $conversation->sender;
                     $lastMessage = $conversation->messages()->latest()->first();
                 @endphp
-                <div class="item @if ($otherUser->isOnline()) active @endif">
+                <div class="item {{ $selectedUserId === $otherUser->emp_id ? 'selected' : '' }}">
                     <div class="avatar-chart">
                         <img src="{{ $otherUser->image
                             ? 'data:image/jpeg;base64,' . $otherUser->image
