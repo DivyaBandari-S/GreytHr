@@ -233,6 +233,8 @@ class ReviewPendingRegularisation extends Component
             'employee_remarks'=>$employee_remarks,
             'regularisationRequests'=>$regularisationEntriesforCombined,
             'sender_id'=>$employee->emp_id,
+            'sender_first_name'=>$employee->first_name,
+            'sender_last_name'=>$employee->last_name,
           
            
            
