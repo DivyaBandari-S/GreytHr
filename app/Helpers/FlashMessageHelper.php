@@ -34,7 +34,7 @@ class FlashMessageHelper
             type: 'success',
             options: [
                 'position' => 'top-center',
-                'timeout' => 1000,
+                'timeout' => 2000,
             ]
         );
     }

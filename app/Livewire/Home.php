@@ -307,14 +307,13 @@ class Home extends Component
         $lastExecutionTime = session('last_execution_time');
 
         // If there is a last execution time, check if it was less than 30 seconds ago
-        if ($lastExecutionTime && $currentTime->diffInSeconds($lastExecutionTime) < 1) {
-            return; // Prevent the method from executing if it was called less than 30 seconds ago
+        if ($lastExecutionTime && $currentTime->diffInSeconds($lastExecutionTime) < 2) {
+            return;
         }
 
         try {
             // Update the session with the current time as the last execution time
             session(['last_execution_time' => $currentTime]);
-
             $todayDate = Carbon::now()->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $isonleave = $this->isEmployeeLeaveOnDate($todayDate, $employeeId);
