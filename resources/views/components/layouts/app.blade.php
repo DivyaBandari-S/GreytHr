@@ -5,54 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @guest
-    <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-    <title>
-        HR Xpert
-    </title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+        <title>
+            HR Xpert
+        </title>
     @endguest
     @auth('emp')
-    @php
-    // Get the logged-in employee ID
-    $employeeId = auth()->guard('emp')->user()->emp_id;
+        @php
+            // Get the logged-in employee ID
+            $employeeId = auth()->guard('emp')->user()->emp_id;
 
-    // Retrieve the employee details including the company_id
-    $employeeDetails = DB::table('employee_details')
-    ->where('emp_id', $employeeId)
-    ->select('company_id') // Select only the company_id
-    ->first();
-    // Decode the company_id from employee_details
-    $companyIds = json_decode($employeeDetails->company_id);
+            // Retrieve the employee details including the company_id
+            $employeeDetails = DB::table('employee_details')
+                ->where('emp_id', $employeeId)
+                ->select('company_id') // Select only the company_id
+                ->first();
+            // Decode the company_id from employee_details
+            $companyIds = json_decode($employeeDetails->company_id);
 
-    $needsFlattening = false;
-    foreach ($companyIds as $item) {
-    if (is_array($item)) {
-    $needsFlattening = true;
-    break;
-    }
-    }
+            $needsFlattening = false;
+            foreach ($companyIds as $item) {
+                if (is_array($item)) {
+                    $needsFlattening = true;
+                    break;
+                }
+            }
 
-    if ($needsFlattening) {
-    // If there's nesting, flatten the array
+            if ($needsFlattening) {
+                // If there's nesting, flatten the array
     $flattenedArray = array_merge(...$companyIds);
-    } else {
+} else {
     // Otherwise, use the array as-is
     $flattenedArray = $companyIds;
-    }
-    if ($companyIds) {
+}
+if ($companyIds) {
     // Now perform the join with companies table
     if (count($flattenedArray) <= 1) {
-        $employee=DB::table('companies')
-        ->whereIn('company_id', $companyIds)
-        ->select('companies.company_logo', 'companies.company_name')
-        ->first();
-        } else {
         $employee = DB::table('companies')
-        ->whereIn('company_id', $companyIds)
-        ->where('is_parent', 'yes')
-        ->select('companies.company_logo', 'companies.company_name')
-        ->first();
-        }
-        }
+            ->whereIn('company_id', $companyIds)
+            ->select('companies.company_logo', 'companies.company_name')
+            ->first();
+    } else {
+        $employee = DB::table('companies')
+            ->whereIn('company_id', $companyIds)
+            ->where('is_parent', 'yes')
+            ->select('companies.company_logo', 'companies.company_name')
+                        ->first();
+                }
+            }
 
         @endphp
         <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
@@ -71,7 +71,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     @livewireStyles
@@ -79,22 +78,24 @@
 
 <body>
     @guest
-    {{ $slot }}
+        {{ $slot }}
     @else
-    <section>
-        @livewire('main-layout')
-        <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
-            {{ $slot }}
-            <footer>
-                <div class="text-center mt-2 pb-2">
-                    <small>
-                        <a href="/Privacy&Policy" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
-                        <a href="/Terms&Services"  class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
-                    </small>
-                </div>
-            </footer>
-        </main>
-    </section>
+        <section>
+            @livewire('main-layout')
+            <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
+                {{ $slot }}
+                <footer>
+                    <div class="text-center mt-2 pb-2">
+                        <small>
+                            <a href="/Privacy&Policy" class="privacyPolicy" target="_blank"
+                                style="color: rgb(2, 17, 79);">Privacy Policy</a> |
+                            <a href="/Terms&Services" class="privacyPolicy" target="_blank"
+                                style="color: rgb(2, 17, 79);">Terms of Service</a>
+                        </small>
+                    </div>
+                </footer>
+            </main>
+        </section>
     @endguest
     <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
     <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js"
@@ -122,8 +123,6 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @livewireScripts

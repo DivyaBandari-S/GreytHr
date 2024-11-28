@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Add emoji to input when selected
-    emojiPicker.addEventListener("emoji-click", function(event) {
+    emojiPicker.addEventListener("emoji-click", function (event) {
         console.log("Selected Emoji:", event.detail.unicode);
         const emoji = event.detail.unicode; // Get the selected emoji
 
@@ -375,7 +375,8 @@ document.addEventListener("DOMContentLoaded", () => {
         messageInput.value = textBefore + emoji + textAfter;
 
         // Move the cursor to the end of the text after inserting the emoji
-        messageInput.selectionStart = messageInput.selectionEnd = cursorPos + emoji.length;
+        messageInput.selectionStart = messageInput.selectionEnd =
+            cursorPos + emoji.length;
 
         emojiPicker.style.display = "none"; // Hide emoji picker after selection
     });
@@ -393,6 +394,8 @@ document.addEventListener("DOMContentLoaded", () => {
 // Function to toggle emoji picker visibility
 function emojiPickerOpen() {
     const emojiPicker = document.getElementById("emojiPicker");
-    emojiPicker.style.display = (emojiPicker.style.display === "none" || !emojiPicker.style.display) ? "block" : "none";
+    emojiPicker.style.display =
+        emojiPicker.style.display === "none" || !emojiPicker.style.display
+            ? "block"
+            : "none";
 }
-
