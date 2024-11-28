@@ -85,9 +85,9 @@ class Regularisation extends Component
     public $currentMonth;
 
     public $reportingmanagerinloop;
-    public $openAccordionForPending = [];
+    public $openAccordionForPending = null;
 
-    public $openAccordionForHistory = [];
+    public $openAccordionForHistory = null;
     public $reportingmanager;
     public $showApplyingToContainer = false;
 
@@ -169,12 +169,11 @@ class Regularisation extends Component
     }
     public function togglePendingAccordion($id)
     {
-        if (in_array($id, $this->openAccordionForPending)) {
-            // Remove from open accordions if already open
-            $this->openAccordionForPending = array_diff($this->openAccordionForPending, [$id]);
+        
+        if ($this->openAccordionForPending === $id) {
+            $this->openAccordionForPending = null; // Close if already open
         } else {
-            // Add to open accordions if not open
-            $this->openAccordionForPending[] = $id;
+            $this->openAccordionForPending = $id; // Set to open
         }
       
     }
@@ -186,14 +185,12 @@ class Regularisation extends Component
     }
     public function toggleHistoryAccordion($id)
     {
-        if (in_array($id, $this->openAccordionForHistory)) {
-            // Remove from open accordions if already open
-            $this->openAccordionForHistory = array_diff($this->openAccordionForHistory, [$id]);
+        
+        if ($this->openAccordionForHistory === $id) {
+            $this->openAccordionForHistory = null; // Close if already open
         } else {
-            // Add to open accordions if not open
-            $this->openAccordionForHistory[] = $id;
+            $this->openAccordionForHistory = $id; // Set to open
         }
-
     }
     public function applyingTo()
     {
@@ -731,6 +728,7 @@ public function nextMonth()
            
             'regularisationRequests'=>$regularisationEntriesArray,
             'employee_id'=>$this->employeeId,
+            'employee_name'=>$employeeDetails->first_name.' '.$employeeDetails->last_name,
            
         ];
         Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));

@@ -2459,7 +2459,7 @@
                                     <div class="col-12 text-center mb-2">
                                         <!-- <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium"
                                                     style="height:4em;"> -->
-                                        <img src="images/it-images/internet_access.jpeg" style="height:4em;" />
+                                        <img src="images/it-images/internet.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p
@@ -2478,7 +2478,7 @@
                                             <div class="modal-body">
                                                 <div class="row m-0">
                                                     <div class="col-4 m-auto">
-                                                        <img src="images/it-images/laptop.png" style="height:4em;" />
+                                                        <img src="images/it-images/internet.png" style="height:4em;" />
                                                     </div>
                                                     <div class="col-8 m-auto">
                                                         <p style="font-size:15px;"> Internet Access Request</p>
@@ -2599,7 +2599,7 @@
                                     <div class="col-12 text-center mb-2">
                                         <!-- <img src="https://snow.payg.in/a9fa00e9871c7510279786a50cbb3525.iix?t=medium"
                                                     style="height:4em;"> -->
-                                        <img src="images/it-images/share-point.jpg" style="height:4em;" />
+                                        <img src="images/it-images/service.png" style="height:4em;" />
                                     </div>
                                     <div class="col-12 mb-2" style="font-size:12px">
                                         <p
@@ -2618,7 +2618,7 @@
                                             <div class="modal-body">
                                                 <div class="row m-0">
                                                     <div class="col-4 m-auto">
-                                                        <img src="images/it-images/share-point.jpg" style="height:4em;" />
+                                                        <img src="images/it-images/service.png" style="height:4em;" />
                                                     </div>
                                                     <div class="col-8 m-auto">
                                                         <p style="font-size:15px;"> Share Point Request</p>
