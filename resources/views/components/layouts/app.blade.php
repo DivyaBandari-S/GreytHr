@@ -84,7 +84,7 @@
         <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
             {{ $slot }}
             <footer>
-                <div class="text-center pb-2">
+                <div class="text-center mt-2 pb-2">
                     <small>
                         <a href="/Privacy&Policy" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">Privacy Policy</a> |
                         <a href="/Terms&Services"  class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">Terms of Service</a>
