@@ -18,7 +18,7 @@ return new class extends Migration
             $table->tinyInteger('is_withdraw');
             $table->string('employee_remarks')->nullable();
             $table->string('approver_remarks')->nullable();
-            $table->date('regularisation_date')->nullable();
+            $table->dateTime('regularisation_date')->nullable();
             $table->dateTime('approved_date')->nullable();
             $table->dateTime('rejected_date')->nullable();
             $table->dateTime('withdraw_date')->nullable();

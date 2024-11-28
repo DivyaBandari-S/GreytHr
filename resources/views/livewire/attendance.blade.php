@@ -1392,7 +1392,7 @@ color: #fff;
 
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
-                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info" id="myButton">My Regularisations</a>
+                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton">My Regularisations</a>
             </div>
         </div>
 

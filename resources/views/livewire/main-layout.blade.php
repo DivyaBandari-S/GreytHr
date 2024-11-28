@@ -65,8 +65,9 @@
                 </ul>
             </li>
             <li>
-                <a href="#"><i class='fas fa-clock icon'></i> Attendance <i class='fa fa-chevron-right icon-right'></i></a>
+                <a href="#"class="{{ request()->is('regularisation') ? 'active-bg1223' : '' }}"><i class='fas fa-clock icon {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i> Attendance <i class='fa fa-chevron-right icon-right {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i></a>
                 <ul class="side-dropdown">
+                    
                     <li><a href="/Attendance">Attendance Info</a></li>
                     @if ($managerId)
                     <li>
