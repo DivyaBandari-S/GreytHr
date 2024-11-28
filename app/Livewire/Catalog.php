@@ -752,8 +752,8 @@ public $RemoveRequestaceessDialog=false;
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'status_code' => 8,
             ]);
             $helpDesk->refresh();
@@ -967,7 +967,7 @@ public $RemoveRequestaceessDialog=false;
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
-                'mobile' => 'N/A',
+                'mobile' => $this->mobile??'-',
                 'mail' => $this->mail ?? '-',
                 'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
@@ -1068,21 +1068,26 @@ public $RemoveRequestaceessDialog=false;
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
-
+            
 
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
@@ -1162,20 +1167,26 @@ public $RemoveRequestaceessDialog=false;
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
+            
 
 
 
@@ -1256,21 +1267,26 @@ public $RemoveRequestaceessDialog=false;
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
-
+            
 
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
