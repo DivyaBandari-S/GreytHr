@@ -1076,13 +1076,18 @@ public $RemoveRequestaceessDialog=false;
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
-
+            
 
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
@@ -1170,12 +1175,18 @@ public $RemoveRequestaceessDialog=false;
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
+            
 
 
 
@@ -1264,13 +1275,18 @@ public $RemoveRequestaceessDialog=false;
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
-
+            
 
 
             FlashMessageHelper::flashSuccess('Request created successfully.');
