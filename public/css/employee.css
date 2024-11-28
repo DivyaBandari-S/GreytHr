@@ -1214,15 +1214,15 @@ main .btn-send:hover {
 
 /* From Uiverse.io by Smit-Prajapati */
 .card-reporting {
-	width: 255px;
-	height: 325px;
-	background: #b2d9e0;
-	border-radius: 25px;
-	padding: 3px;
-	position: relative;
-	box-shadow: #604b4a30 0px 70px 30px -50px;
-	transition: all 0.5s ease-in-out;
-  }
+    width: 255px;
+    height: 310px;
+    background: #b2d9e0;
+    border-radius: 25px;
+    padding: 3px;
+    position: relative;
+    box-shadow: #604b4a30 0px 70px 30px -50px;
+    transition: all 0.5s ease-in-out;
+}
 
   .card-reporting .mail {
 	position: absolute;
