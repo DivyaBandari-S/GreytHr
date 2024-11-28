@@ -7,12 +7,14 @@ use App\Models\Conversation;
 use App\Models\EmployeeDetails;
 use App\Models\Message;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class ChatSendMessage extends Component
 {
+    use WithFileUploads;
     public $selectedConversation;
     public $receiverInstance;
-    public $body='';
+    public $body;
     public $media;
     public $createdMessage;
     protected $listeners = ['updateSendMessage', 'dispatchMessageSent', 'resetComponent'];
@@ -39,6 +41,7 @@ class ChatSendMessage extends Component
     {
         // Prevent sending empty messages
         if (!$this->body && !$this->media) {
+            session()->flash('error', 'Message cannot be empty. Please enter text or attach a file.');
             return;
         }
 
@@ -47,6 +50,10 @@ class ChatSendMessage extends Component
 
         // Handle media upload
         if ($this->media) {
+            // Validate file size (1MB) and allowed types (image, file, zip)
+            $this->validate([
+                'media' => 'file|max:1024|mimes:jpg,jpeg,png,gif,webp,pdf,zip,docx,xlsx', // Adjust allowed types here
+            ]);
             $mediaPath = $this->media->store('uploads/messages', 'public');
             $mimeType = $this->media->getMimeType();
 
@@ -54,17 +61,17 @@ class ChatSendMessage extends Component
                 $mediaType = 'image';
             } elseif (str_contains($mimeType, 'video')) {
                 $mediaType = 'video';
+            } elseif (str_contains($mimeType, 'zip')) {
+                $mediaType = 'zip';
             } else {
                 $mediaType = 'file'; // For other types of files
             }
 
-            // If only media is sent, set the body to indicate the type of media
             if (!$this->body) {
                 $this->body = ucfirst($mediaType) . ' sent';
             }
         }
 
-        // Create the message
         $this->createdMessage = Message::create([
             'conversation_id' => $this->selectedConversation->id,
             'sender_id' => auth()->id(),
@@ -74,22 +81,24 @@ class ChatSendMessage extends Component
             'type' => $mediaType,
         ]);
 
-        // If sender and receiver are the same, mark the message as read
         if (auth()->id() === $this->receiverInstance->emp_id) {
             $this->createdMessage->read = 1;
             $this->createdMessage->save();
         }
 
-        // Update the conversation's last message timestamp
         $this->selectedConversation->last_time_message = $this->createdMessage->created_at;
         $this->selectedConversation->save();
 
         // Dispatch events and reset input fields
         $this->dispatch('pushMessage', $this->createdMessage->id);
-        $this->dispatch('refresh');
-        $this->reset('body');
+
         $this->dispatch('dispatchMessageSent');
+        // $this->dispatch('sendMessage', $this->body);
+        $this->dispatch('show-toast', ['message' => $this->body]);
+        $this->reset(['body', 'media']);
+        $this->dispatch('refresh');
     }
+
 
     public function dispatchMessageSent()
     {

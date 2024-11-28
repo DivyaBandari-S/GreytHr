@@ -21,6 +21,8 @@ class ChatList extends Component
         $this->selectedConversation = null;
     }
 
+    public $selectedUserId;
+
     public function chatUserSelected($senderId, $receiverId)
     {
         // dd($senderId, $receiverId);
@@ -35,6 +37,7 @@ class ChatList extends Component
         $receiverInstance = EmployeeDetails::find($receiverId);
         $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance);
         $this->dispatch('updateSendMessage', $this->selectedConversation, $receiverInstance);
+        $this->selectedUserId = $receiverId;
 
         # code...
     }
