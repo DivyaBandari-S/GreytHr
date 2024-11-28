@@ -1343,8 +1343,8 @@ $lastItem = end($regularisationEntries); // Get the last item
 
         </div>
 
-        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})" style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}">
-            <i class="fa fa-angle-{{ $openAccordionForPending === $pr->id ? 'up' : 'down' }}" style="color:{{ $openAccordionForPending === $pr->id ? '#3a9efd' : '#778899' }}"></i>
+        <div class="arrow-btn" wire:click="togglePendingAccordion({{ $pr->id }})" style="color:{{ in_array($pr->id, $openAccordionForPending) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($pr->id, $openAccordionForPending) ? '#3a9efd' : '#778899' }}">
+            <i class="fa fa-angle-{{ in_array($pr->id, $openAccordionForPending) ? 'up' : 'down' }}" style="color:{{ in_array($pr->id, $openAccordionForPending) ? '#3a9efd' : '#778899' }}"></i>
         </div>
 
     </div>
@@ -1352,7 +1352,7 @@ $lastItem = end($regularisationEntries); // Get the last item
 </div>
 
 
-<div class="accordion-body m-0 p-0" style="display: {{ $openAccordionForPending === $pr->id ? 'block' : 'none' }}">
+<div class="accordion-body m-0 p-0" style="display: {{ in_array($pr->id, $openAccordionForPending) ? 'block' : 'none' }}">
 
     <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
@@ -1536,15 +1536,15 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
                     @endif
                 </div>
 
-                <div class="arrow-btn" wire:click="toggleHistoryAccordion({{ $hr->id }})" style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }};border:1px solid {{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}">
-                    <i class="fa fa-angle-{{ $openAccordionForHistory === $hr->id ? 'up' : 'down' }}" style="color:{{ $openAccordionForHistory === $hr->id ? '#3a9efd' : '#778899' }}"></i>
+                <div class="arrow-btn" wire:click="toggleHistoryAccordion({{ $hr->id }})" style="color:{{ in_array($hr->id, $openAccordionForHistory) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($hr->id, $openAccordionForHistory) ? '#3a9efd' : '#778899' }}">
+                    <i class="fa fa-angle-{{ in_array($hr->id, $openAccordionForHistory) ? 'up' : 'down' }}" style="color:{{ in_array($hr->id, $openAccordionForHistory) ? '#3a9efd' : '#778899' }}"></i>
                 </div>
 
             </div>
 
         </div>
     </div>
-    <div class="accordion-body m-0 p-0" style="display: {{ $openAccordionForHistory === $hr->id ? 'block' : 'none' }}">
+    <div class="accordion-body m-0 p-0" style="display: {{ in_array($hr->id, $openAccordionForHistory) ? 'block' : 'none' }}">
 
         <div style="width:100%; height:1px; border-bottom:1px solid #ccc; margin-bottom:10px;"></div>
 
