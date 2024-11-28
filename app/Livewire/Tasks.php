@@ -665,6 +665,7 @@ class Tasks extends Component
     public function show()
     {
         $this->showDialog = true;
+        $this->selectedPeopleForFollowers = [];
     }
     public $recordId;
     public $viewrecord;
@@ -693,6 +694,7 @@ class Tasks extends Component
         $this->searchTerm = '';
         $this->filteredPeoples = [];
         $this->filteredFollowers = [];
+       
     }
 
     public function filter()
