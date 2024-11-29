@@ -42,7 +42,8 @@
                         wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()->emp_id }}', receiverId: '{{ $otherUser->emp_id }}' })">
                         <div class="name">{{ $otherUser->first_name }} {{ $otherUser->last_name }}</div>
                         <div class="last-message">
-                            {{ $lastMessage ? $lastMessage->body : 'No messages yet.' }}
+                            {{ $lastMessage ? \Illuminate\Support\Str::limit($lastMessage->body, 20, '.....') : 'No messages yet.' }}
+
                         </div>
                     </div>
 
