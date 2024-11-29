@@ -20,6 +20,7 @@ class MessageRead implements ShouldBroadcast
     public function __construct($conversation_id,$receiver_id)
     {
 
+        // dd($conversation_id,$receiver_id);
         $this->conversation_id= $conversation_id;
         $this->receiver_id= $receiver_id;
 

@@ -12,8 +12,6 @@ class EmpDepartment extends Model
         'dept_id',
         'department',
         'company_id',
-        'created_at',
-        'updated_at'
     ];
 
     public function employees()

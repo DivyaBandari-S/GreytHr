@@ -399,3 +399,5 @@ function emojiPickerOpen() {
             ? "block"
             : "none";
 }
+
+
