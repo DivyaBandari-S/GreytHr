@@ -24,7 +24,6 @@ class ChatSendMessage extends Component
         $this->selectedConversation = null;
         $this->receiverInstance = null;
 
-        # code...
     }
 
     function updateSendMessage(Conversation $conversation, EmployeeDetails $receiver)
@@ -90,13 +89,13 @@ class ChatSendMessage extends Component
         $this->selectedConversation->save();
 
         // Dispatch events and reset input fields
-        $this->dispatch('pushMessage', $this->createdMessage->id);
+        $this->dispatch('pushMessage', $this->createdMessage->id)->to(ChatBox::class);
 
-        $this->dispatch('dispatchMessageSent');
-        // $this->dispatch('sendMessage', $this->body);
         $this->dispatch('show-toast', ['message' => $this->body]);
+
+        $this->dispatch('refresh')->to(ChatList::class);
         $this->reset(['body', 'media']);
-        $this->dispatch('refresh');
+        $this->dispatch('dispatchMessageSent')->self();
     }
 
 
