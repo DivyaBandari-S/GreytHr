@@ -51,7 +51,6 @@ class LeaveBalances extends Component
     public $consumedProbationLeaveBalance;
     public $sortBy = 'newest_first';
     public $selectedYear;
-
     public $totalCasualDays;
     public $totalSickDays;
     public $totalLossOfPayDays;
@@ -102,7 +101,7 @@ class LeaveBalances extends Component
             }
         } catch (\Exception $e) {
             // Set an error message in the session
-           FlashMessageHelper::flashError( 'An error occurred while loading the component. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while loading the component. Please try again later.');
         }
     }
     public function updatedSelectedYear($value)
@@ -149,13 +148,12 @@ class LeaveBalances extends Component
                 $this->casualLeaveBalance = $this->casualLeavePerYear - $this->totalCasualDays;
                 $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->totalCasualLeaveProbationDays;
                 $this->lossOfPayBalance = $this->totalLossOfPayDays;
-
                 $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
                 $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
                 $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
             }
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError( 'An error occurred while loading the component. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while loading the component. Please try again later.');
         }
     }
 
@@ -282,7 +280,7 @@ class LeaveBalances extends Component
 
             // Get the logged-in employee's approved leave days for all leave types
             $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
-         
+
             // Calculate leave balances
             $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
             $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
@@ -411,7 +409,7 @@ class LeaveBalances extends Component
             } else {
             }
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError( 'An error occurred. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred. Please try again later.');
         }
     }
     public function isTrue($year)
