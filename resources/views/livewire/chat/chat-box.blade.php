@@ -8,18 +8,24 @@
                     <div class="message sent">
                         <div class="message-content">
                             <p>{{ $message->body }}</p>
-                            @if ($message->media_path)
-                                <div class="media-preview">
-                                    @if ($message->type == 'video')
-                                        <video width="100" controls>
-                                            <source src="{{ asset('storage/' . $message->media_path) }}" type="video/mp4">
-                                        </video>
-                                    @else
-                                        <img src="{{ asset('storage/' . $message->media_path) }}" alt="Media"
-                                            width="100">
-                                    @endif
-                                </div>
+                            @if ($message->type == 'image')
+                                <img src="{{ asset('storage/' . $message->media_path) }}" alt="image"
+                                    style="max-width: 100%; height: auto;">
+                            @elseif ($message->type == 'video')
+                                <video controls style="max-width: 100%; height: auto;">
+                                    <source src="{{ asset('storage/' . $message->media_path) }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            @elseif ($message->type == 'audio')
+                                <audio controls>
+                                    <source src="{{ asset('storage/' . $message->media_path) }}" type="audio/webm">
+                                    Your browser does not support the audio element.
+                                </audio>
+                            @else
+                                <a href="{{ asset('storage/' . $message->media_path) }}"
+                                    target="_blank">{{ $message->media_path }}</a>
                             @endif
+
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
 
                             <!-- Message read status -->

@@ -21,10 +21,10 @@ class ChatList extends Component
         $this->selectedConversation = null;
     }
 
+    public $selectedUserId;
+
     public function chatUserSelected($senderId, $receiverId)
     {
-        // dd($senderId, $receiverId);
-        // Fetch the conversation between the two users
         $this->selectedConversation = Conversation::where(function ($query) use ($senderId, $receiverId) {
             $query->where('sender_id', $senderId)
                 ->where('receiver_id', $receiverId);
@@ -33,21 +33,11 @@ class ChatList extends Component
                 ->where('receiver_id', $senderId);
         })->first();
         $receiverInstance = EmployeeDetails::find($receiverId);
-        $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance);
-        $this->dispatch('updateSendMessage', $this->selectedConversation, $receiverInstance);
-
+        $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance)->to(ChatBox::class);
+        $this->dispatch('updateSendMessage', $this->selectedConversation, $receiverInstance)->to(ChatSendMessage::class);
+        $this->selectedUserId = $receiverId;
         # code...
     }
-
-    // public function mount()
-    // {
-
-    //     $this->auth_id = auth()->id();
-    //     $this->conversations = Conversation::where('sender_id', $this->auth_id)
-    //         ->orWhere('receiver_id', $this->auth_id)->orderBy('last_time_message', 'DESC')->get();
-
-    //     # code...
-    // }
     public function render()
     {
         // Get the authenticated user's ID

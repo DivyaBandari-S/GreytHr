@@ -245,7 +245,7 @@
                                             : '-' }}</label>
                                 </div>
                                 <div class="row">
-                                    <label class="col-7 people-label">Date Of Birth</label>
+                                    <label class="col-7 mt-2 people-label">Date Of Birth</label>
                                     <label
                                         class="col-5 people-value">{{ optional($selectStarredPeoples)->date_of_birth &&
                                         strtolower(optional($selectStarredPeoples)->date_of_birth) !== 'unknown'
@@ -352,7 +352,7 @@
                                     : '-' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-7 mt-2 people-label">Date Of Birth</label>
                             <label
                                 class="col-5 people-value">{{ optional($firstStarredPerson)->date_of_birth &&
                                 strtolower(optional($firstStarredPerson)->date_of_birth) !== 'unknown'
@@ -561,7 +561,7 @@
                                 class="col-5 people-value">{{ optional($selectedPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedPerson)->hire_date)) : '-' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-7 mt-2 people-label">Date Of Birth</label>
                             <label
                                 class="col-5 people-value">{{ optional($selectedPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedPerson)->date_of_birth)) : '-' }}</label>
                         </div>
@@ -663,7 +663,7 @@
                                 class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-7 mt-2 people-label">Date Of Birth</label>
                             <label
                                 class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                         </div>
@@ -871,7 +871,7 @@
                                 class="col-5 people-value">{{ optional($selectedMyTeamPerson)->hire_date ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->hire_date)) : '-' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-7 mt-2 people-label">Date Of Birth</label>
                             <label
                                 class="col-5 people-value">{{ optional($selectedMyTeamPerson)->date_of_birth ? date('d M, Y', strtotime(optional($selectedMyTeamPerson)->date_of_birth)) : '-' }}</label>
                         </div>
@@ -973,7 +973,7 @@
                                 class="col-5 people-value">{{ optional($firstPerson)->hire_date ? date('d M, Y', strtotime(optional($firstPerson)->hire_date)) : '-' }}</label>
                         </div>
                         <div class="row">
-                            <label class="col-7 people-label">Date Of Birth</label>
+                            <label class="col-7 mt-2 people-label">Date Of Birth</label>
                             <label
                                 class="col-5 people-value">{{ optional($firstPerson)->date_of_birth ? date('d M, Y', strtotime(optional($firstPerson)->date_of_birth)) : '-' }}</label>
                         </div>

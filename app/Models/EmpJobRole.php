@@ -5,18 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EmpSubDepartments extends Model
+class EmpJobRole extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'job_id',
+        'job_title',
         'sub_dept_id',
-        'sub_department',
         'dept_id',
     ];
-
-    // EmpSubDepartment Model
-    public function employees()
-    {
-        return $this->hasMany(EmployeeDetails::class, 'sub_dept_id');
-    }
 }

@@ -13,6 +13,7 @@
             <thead>
                 <tr>
                     <th style="width:10%; padding:5px; text-align:center;">Employee ID</th>
+                    <th style="width:20%; padding:5px; text-align:center;">Employee Name</th>
                     <th style="width:15%; padding:5px; text-align:center;">Date</th>
                     <th style="width:10%; padding:5px; text-align:center;">From</th>
                     <th style="width:10%; padding:5px; text-align:center;">To</th>
@@ -25,6 +26,7 @@
                     @foreach($details['regularisationRequests'] as $entry)
                         <tr>
                             <td style="text-align:center; padding:5px;">{{ $details['sender_id'] }}</td>
+                            <td style="text-align:center; padding:5px;">{{ ucwords(strtolower($details['sender_first_name'])) }} {{ ucwords(strtolower($details['sender_last_name'])) }} </td>
                             <td style="text-align:center; padding:5px;">{{ \Carbon\Carbon::parse($entry['date'])->format('jS M, Y') }}</td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['from']) }}</td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['to']) }}</td>

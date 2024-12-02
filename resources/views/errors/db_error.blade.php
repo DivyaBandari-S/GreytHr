@@ -18,6 +18,17 @@
         body {
             font-family: 'Montserrat', sans-serif;
         }
+
+        .approve-btn {
+            background-color: rgb(2, 17, 79);
+            color: #fff !important;
+            border: 1px solid rgb(2, 17, 79);
+            font-weight: 500;
+            border-radius: 5px;
+            padding: 7px 12px;
+            font-size: var(--normal-font-size);
+            border: none;
+        }
     </style>
 </head>
 
