@@ -136,7 +136,6 @@ class EmpSalary extends Model
     {
         $gross = $value ? $this->decodeCTC($value) : 0;
         // $gross=20853;
-
         // Calculate each component
         $basic =round($gross * 0.4200,2); // 41.96%
         $hra =round($gross * 0.168,2);// 16.8%
