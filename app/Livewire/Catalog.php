@@ -211,6 +211,7 @@ public $RemoveRequestaceessDialog=false;
         $this->InternetRequestaceessDialog=false;
         $this->RemoveMailRequestaceessDialog=false;
         $this->NewSimRequestaceessDialog=false;
+        $this->O365DesktopRequestaceessDialog=false;
 
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
@@ -1174,18 +1175,20 @@ public $RemoveRequestaceessDialog=false;
                 'status_code' => 8,
             ]);
 
-            $superAdmins = IT::where('role', 'super_admin')->get();
+       // Notify super admins
+       $superAdmins = IT::where('role', 'super_admin')->get();
             
-            foreach ($superAdmins as $admin) {
-                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-            
-                $firstName = $employeeDetails->first_name ?? 'N/A';
-                $lastName = $employeeDetails->last_name ?? 'N/A';
-            
-                Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
-                );
-            }
+       foreach ($superAdmins as $admin) {
+           $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+       
+           $firstName = $employeeDetails->first_name ?? 'N/A';
+           $lastName = $employeeDetails->last_name ?? 'N/A';
+       
+           Mail::to($admin->email)->send(
+               new HelpDeskNotification($helpDesk, $firstName, $lastName)
+           );
+       }
+
             
 
 
@@ -1274,6 +1277,7 @@ public $RemoveRequestaceessDialog=false;
                 'status_code' => 8,
             ]);
 
+            // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
             
             foreach ($superAdmins as $admin) {
@@ -1286,6 +1290,7 @@ public $RemoveRequestaceessDialog=false;
                     new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
+
             
 
 
