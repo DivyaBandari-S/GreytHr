@@ -1551,7 +1551,7 @@
                                                 </div>
                                                 <hr style="border: 1px solid #ccc; margin: 10px 0;">
 
-                                                <form wire:submit.prevent="DistributorRequest" style="width:80%">
+                                                <form wire:submit.prevent="Devops" style="width:80%">
 
                                                     <div class="form-group  mt-2">
                                                         <label for="Name">Requested By:</label>
@@ -1622,7 +1622,7 @@
                                             </div>
                                             <div class="modal-footer justify-content-center">
                                                 <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
-                                                    <button type="button" wire:click="DistributorRequest" class="submit-btn">Submit</button>
+                                                    <button type="button" wire:click="Devops" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
                                                 </div>
                                             </div>
