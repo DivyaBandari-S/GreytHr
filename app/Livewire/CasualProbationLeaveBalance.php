@@ -15,7 +15,7 @@ class CasualProbationLeaveBalance extends Component
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $totalSickDays = 0;
-    public $Availablebalance, $employeeDetails,$availedLeavesCount;
+    public $Availablebalance, $employeeDetails, $availedLeavesCount;
 
 
     ///calculate number of days
@@ -117,15 +117,13 @@ class CasualProbationLeaveBalance extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
+                ->where('period', 'like', "%$this->year%")
                 ->get();
 
 
             $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave Probation\"')) AS casual_leave_probation")
+                ->where('period', 'like', "%$this->year%")
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_probation")
                 ->pluck('casual_leave_probation')
                 ->first();
 
@@ -152,7 +150,7 @@ class CasualProbationLeaveBalance extends Component
                     $leaveRequest->to_session
                 );
 
-                if( $leaveRequest->leave_status=='2' &&$leaveRequest->cancel_status!='2' &&  $leaveRequest->category_type=='Leave'){
+                if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2' &&  $leaveRequest->category_type == 'Leave') {
                     $this->totalSickDays += $days;
                 }
 
@@ -170,18 +168,17 @@ class CasualProbationLeaveBalance extends Component
 
 
             $currentMonth = date('n');
-            $lastmonth="12";
+            $lastmonth = "12";
             $currentYear = date('Y');
             $startingMonth = 1; // January
 
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-            ->whereYear('to_date', '>=', $this->year)
-            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Casual Leave Probation\"')) AS casual_leave_prob")
-            ->pluck('casual_leave_prob')
-            ->first();
+                ->where('period', 'like', "%$this->year%")
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_prob")
+                ->pluck('casual_leave_prob')
+                ->first();
 
             for ($month = $startingMonth; $month <= $lastmonth; $month++) {
                 // Reset availed leaves count for this month
@@ -191,12 +188,12 @@ class CasualProbationLeaveBalance extends Component
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Casual Leave Probation')
                     ->where('leave_status', '2')
-                    ->where('cancel_status','!=','2')
+                    ->where('cancel_status', '!=', '2')
                     ->whereYear('from_date', $currentYear)
                     ->where(function ($query) use ($month) {
                         $query->whereMonth('from_date', $month)
                             ->orWhereMonth('to_date', $month);
-                    })->where('category_type','Leave')
+                    })->where('category_type', 'Leave')
                     ->get();
 
                 foreach ($availedLeavesRequests as $availedleaveRequest) {

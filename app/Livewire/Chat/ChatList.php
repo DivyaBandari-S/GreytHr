@@ -16,34 +16,20 @@ class ChatList extends Component
     public $name;
     protected $listeners = ['chatUserSelected', 'refresh' => '$refresh', 'resetComponent'];
 
-    public function resetComponent()
-    {
-        $this->selectedConversation = null;
-    }
-
     public $selectedUserId;
 
-    public function chatUserSelected($senderId, $receiverId)
+    public function mount()
     {
-        $this->selectedConversation = Conversation::where(function ($query) use ($senderId, $receiverId) {
-            $query->where('sender_id', $senderId)
-                ->where('receiver_id', $receiverId);
-        })->orWhere(function ($query) use ($senderId, $receiverId) {
-            $query->where('sender_id', $receiverId)
-                ->where('receiver_id', $senderId);
-        })->first();
-        $receiverInstance = EmployeeDetails::find($receiverId);
-        $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance)->to(ChatBox::class);
-        $this->dispatch('updateSendMessage', $this->selectedConversation, $receiverInstance)->to(ChatSendMessage::class);
-        $this->selectedUserId = $receiverId;
-        # code...
-    }
-    public function render()
-    {
-        // Get the authenticated user's ID
         $this->auth_id = auth()->id();
+    }
 
-        // Fetch conversations with related employee details
+    public function updatedSearch()
+    {
+        $this->fetchConversations(); // Refetch conversations when search query updates
+    }
+
+    public function fetchConversations()
+    {
         $this->conversations = Conversation::with(['sender', 'receiver'])
             ->where(function ($query) {
                 $query->where('sender_id', $this->auth_id)
@@ -62,16 +48,34 @@ class ChatList extends Component
                         ->orWhere('job_role', 'like', '%' . $this->search . '%');
                 });
             })
-            ->orderBy('last_time_message', 'DESC') // Assuming conversations have a field to track the last message time
+            ->orderBy('last_time_message', 'DESC')
             ->get();
+    }
 
-        // Filter conversations to only include those with employees matching the search
-        $this->conversations = $this->conversations->filter(function ($conversation) {
-            return $conversation->sender->first_name || $conversation->receiver->last_name; // Filtering logic.
-        });
+    public function resetComponent()
+    {
+        $this->selectedConversation = null;
+    }
 
-        return view('livewire.chat.chat-list', [
-            'conversations' => $this->conversations,
-        ]);
+    public function chatUserSelected($senderId, $receiverId)
+    {
+        $this->selectedConversation = Conversation::where(function ($query) use ($senderId, $receiverId) {
+            $query->where('sender_id', $senderId)
+                ->where('receiver_id', $receiverId);
+        })->orWhere(function ($query) use ($senderId, $receiverId) {
+            $query->where('sender_id', $receiverId)
+                ->where('receiver_id', $senderId);
+        })->first();
+
+        $receiverInstance = EmployeeDetails::find($receiverId);
+        $this->dispatch('loadConversation', $this->selectedConversation, $receiverInstance)->to(ChatBox::class);
+        $this->dispatch('updateSendMessage', $this->selectedConversation, $receiverInstance)->to(ChatSendMessage::class);
+        $this->selectedUserId = $receiverId;
+    }
+
+    public function render()
+    {
+        $this->fetchConversations();
+        return view('livewire.chat.chat-list');
     }
 }

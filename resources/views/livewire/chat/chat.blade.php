@@ -3,7 +3,7 @@
         {{-- chat side bar --}}
         <livewire:chat.chat-side-bar />
         {{-- chat list --}}
-        <livewire:chat.chat-list />
+        <livewire:chat.chat-list/>
         <div class="box-info-content" id="content-chart">
             <div class="top">
                 <a href="#" id="back" class="btn back">

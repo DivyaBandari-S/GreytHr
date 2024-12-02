@@ -197,7 +197,6 @@ class CasualLeaveBalance extends Component
         $grantedLeavesByMonth = [];
         $availedLeavesByMonth = [];
 
-        $leaveType = 'Casual Leave'; // Or any other leave type you want to check
         $grantedLeavesCount =  EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave")
