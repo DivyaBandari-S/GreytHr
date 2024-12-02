@@ -4,8 +4,9 @@ namespace App\Livewire;
 
 use App\Models\EmpBankDetail;
 use App\Models\EmployeeDetails;
+use App\Models\EmpSalary;
 use App\Models\ITStatement;
-use App\Models\SalaryRevision;
+use App\Models\EmpSalaryRevision;
 
 use DateTime;
 use Livewire\Component;
@@ -25,7 +26,7 @@ class Ytdreport extends Component
     public $itStatements;
     public $monthlyIncomeType ;
 
- 
+
     public $filteredData;
    public $activePreview;
     public function mount()
@@ -34,7 +35,7 @@ class Ytdreport extends Component
        // $this->filteredData = ITStatement::all('monthly_income_type', $this->monthlyIncomeType);
 
     }
- 
+
 
     public function generatePDF()
     {
@@ -59,61 +60,78 @@ class Ytdreport extends Component
         // Get the current year and month
         $currentYear = date('Y');
         $currentMonth = date('n');
-    
+
         // Generate options for months from January of the previous year to the current month of the current year
         $options = [];
         for ($year = $currentYear - 1; $year <= $currentYear; $year++) {
             $startMonth = ($year == $currentYear - 1) ? 1 : 13; // Start from January of the previous year or current month
             $endMonth = ($year == $currentYear) ? $currentMonth : 12; // End at the current month
-    
+
             for ($month = $startMonth; $month <= $endMonth; $month++) {
                 // Format the month and year to display
                 $dateObj = DateTime::createFromFormat('!m', $month);
                 $monthName = $dateObj->format('F');
                 $displayYear = ($month == 13) ? $year + 1 : $year; // Display next year for January of the next year
-    
+
                 $options["$year-$month"] = "$monthName $displayYear";
             }
         }
-    
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
-    
+
         try {
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
         } catch (\Exception $e) {
             $this->employeeDetails = collect();
         }
-    
+
         try {
-            $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+
+            $this->salaryRevision = EmpSalary::join('salary_revisions', 'emp_salaries.sal_id', '=', 'salary_revisions.id')
+            ->where('salary_revisions.emp_id',$employeeId)
+            ->orderBy('month_of_sal', 'ASC')
+                ->get();
+
+
+                $salaryData = [];
+                foreach ($this->salaryRevision as $salaryRevision) {
+
+                    $components =$salaryRevision->calculateSalaryComponents($salaryRevision->salary);
+
+                    // Store the result directly from the method into the salaryData array
+                    $salaryData[$salaryRevision->month_of_sal] = $components;
+                }
+                
+
+
         } catch (\Exception $e) {
             $this->salaryRevision = collect();
         }
-    
+
         try {
             $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
         } catch (\Exception $e) {
             $this->empBankDetails = collect();
         }
-    
+
         $totalGrossPay = 0;
         $totalDeductions = 0;
-    
+
         if ($this->salaryRevision->isNotEmpty()) {
             foreach ($this->salaryRevision as $revision) {
                 $totalGrossPay += $revision->calculateTotalAllowance();
                 $totalDeductions += $revision->calculateTotalDeductions();
             }
         }
-    
+
         $this->netPay = $totalGrossPay - $totalDeductions;
-    
+
         try {
-            $this->itStatements = ITStatement::all();
+            // $this->itStatements = ITStatement::all();
         } catch (\Exception $e) {
             $this->itStatements = collect();
         }
-    
+
         return view('livewire.ytdreport', [
             'employees' => $this->employeeDetails,
             'salaryRevision' => $this->salaryRevision,
@@ -122,4 +140,4 @@ class Ytdreport extends Component
             'netPay' => $this->netPay,
         ]);
     }
-}    
+}
