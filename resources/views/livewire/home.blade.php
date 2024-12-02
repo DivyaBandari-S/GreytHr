@@ -652,66 +652,75 @@
             <div class="payslip-card">
                 <div class="px-3 py-2">
                     <p class="payslip-card-title">Payslip</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <div class="canvasBorder">
-                            <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
-                        </div>
-                        <div class="c d-flex justify-content-end flex-column">
-                            <p class="payslip-small-desc font-weight-500">
-                                {{ $monthOfSal }}
-                            </p>
-                            <p class="payslip-small-desc align-items-end d-flex justify-content-end flex-column">
-                                {{ $paidDays }} / {{ $totalDaysInMonth }} <br>
-                                <span class="payslip-small-desc">Paid days</span>
-                            </p>
+
+                    @if ($sal)
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <div class="canvasBorder">
+                                <canvas wire:ignore id="combinedPieChart" width="117" height="117"></canvas>
+                            </div>
+                            <div class="c d-flex justify-content-end flex-column">
+                                <p class="payslip-small-desc font-weight-500">
+                                    {{ $monthOfSal }}
+                                </p>
+                                <p
+                                    class="payslip-small-desc align-items-end d-flex justify-content-end flex-column">
+                                    {{ $totalDaysInMonth }} <br>
+                                    <span class="payslip-small-desc">Paid days</span>
+                                </p>
+                            </div>
                         </div>
 
-                    </div>
+                        <div class="d-flex flex-column mt-3">
+                            <div class="net-salary">
+                                <div class="d-flex gap-4">
+                                    <div class="grossPay"></div>
+                                    <p class="payslip-small-desc">Gross Pay</p>
+                                </div>
+                                <p class="payslip-small-desc">
+                                    {{ $showSalary ? '₹****' : '₹' . number_format($grossPay, 2) }}
+                                </p>
+                            </div>
+                            <div class="net-salary">
+                                <div class="d-flex gap-4">
+                                    <div class="deductionsPay"></div>
+                                    <p class="payslip-small-desc">Deduction</p>
+                                </div>
+                                <p class="payslip-small-desc">
+                                    {{ $showSalary ? '₹****' : '₹' . number_format($deductions, 2) }}
+                                </p>
+                            </div>
+                            <div class="net-salary">
+                                <div class="d-flex gap-4">
+                                    <div class="netPay"></div>
+                                    <p class="payslip-small-desc">Net Pay</p>
+                                </div>
+                                <p class="payslip-small-desc">
+                                    {{ $showSalary ? '₹****' : '₹' . number_format($netPay, 2) }}
+                                </p>
+                            </div>
+                        </div>
 
-                    <div class="d-flex flex-column mt-3">
-                        <div class="net-salary">
-                            <div class="d-flex gap-4">
-                                <div class="grossPay"></div>
-                                <p class="payslip-small-desc">Gross Pay</p>
-                            </div>
-                            <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹' . number_format($grossPay, 2) }}
-                            </p>
+                        <div class="show-salary">
+                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
+                                download>Download PDF</a>
+                            <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                                {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
+                            </a>
                         </div>
-                        <div class="net-salary">
-                            <div class="d-flex gap-4">
-                                <div class="deductionsPay"></div>
-                                <p class="payslip-small-desc">Deduction</p>
-                            </div>
-                            <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹' . number_format($deductions, 2) }}
-                            </p>
+                    @else
+                        <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
+                            <p class="text-muted">No salary details are available.</p>
                         </div>
-                        <div class="net-salary">
-                            <div class="d-flex gap-4">
-                                <div class="netPay"></div>
-                                <p class="payslip-small-desc">Net Pay</p>
-                            </div>
-                            <p class="payslip-small-desc">
-                                {{ $showSalary ? '₹****' : '₹' . number_format($netPay, 2) }}
-                            </p>
-                        </div>
-                    </div>
+                    @endif
 
-                    <div class="show-salary">
-                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download" download>Download
-                            PDF</a>
-                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
-                        </a>
-                    </div>
+                    <a href="#">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
                 </div>
-                <a href="#">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
             </div>
+
         </div>
         <!-- TEAM ON LEAVE -->
         <div class="col-md-4  mb-4 ">
