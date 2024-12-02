@@ -728,6 +728,7 @@ public function nextMonth()
            
             'regularisationRequests'=>$regularisationEntriesArray,
             'employee_id'=>$this->employeeId,
+            'employee_name'=>$employeeDetails->first_name.' '.$employeeDetails->last_name,
            
         ];
         Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));

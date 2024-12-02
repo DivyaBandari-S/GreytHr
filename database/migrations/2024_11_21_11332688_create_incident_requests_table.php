@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('incident_requests', function (Blueprint $table) {
-            $table->smallIncrements('id'); // Auto increment id as primary key
+            $table->smallInteger('id')->autoIncrement();
             $table->string('snow_id')->nullable()->unique(); // Auto-generated Incident/Service Request ID
             $table->string('emp_id', 10);
             $table->string('category'); // 'Incident Request' or 'Service Request'
@@ -24,6 +24,12 @@ return new class extends Migration
             $table->string('file_path')->nullable();
             $table->string('file_name')->nullable();
             $table->string('mime_type')->nullable();
+            $table->text('active_inc_comment')->nullable();
+            $table->text('inc_pending_remarks')->nullable();
+            $table->text('inc_inprogress_remarks')->nullable();
+            $table->string('inc_assign_to')->nullable();
+            $table->timestamp('in_progress_since')->nullable();
+            $table->integer('total_in_progress_time')->default(0);
             $table->tinyInteger('status_code')->default(11); // Default to a "Pending" status
             $table->timestamps();
 

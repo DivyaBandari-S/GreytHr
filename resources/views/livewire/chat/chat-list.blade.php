@@ -28,7 +28,7 @@
                             : $conversation->sender;
                     $lastMessage = $conversation->messages()->latest()->first();
                 @endphp
-                <div class="item @if ($otherUser->isOnline()) active @endif">
+                <div class="item {{ $selectedUserId === $otherUser->emp_id ? 'selected' : '' }}">
                     <div class="avatar-chart">
                         <img src="{{ $otherUser->image
                             ? 'data:image/jpeg;base64,' . $otherUser->image
@@ -42,7 +42,8 @@
                         wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()->emp_id }}', receiverId: '{{ $otherUser->emp_id }}' })">
                         <div class="name">{{ $otherUser->first_name }} {{ $otherUser->last_name }}</div>
                         <div class="last-message">
-                            {{ $lastMessage ? $lastMessage->body : 'No messages yet.' }}
+                            {{ $lastMessage ? \Illuminate\Support\Str::limit($lastMessage->body, 20, '.....') : 'No messages yet.' }}
+
                         </div>
                     </div>
 

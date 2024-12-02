@@ -139,18 +139,16 @@ class ViewPendingDetails extends Component
     private function subtractWorkingDays($days)
     {
         $date = Carbon::now();
-
         while ($days > 0) {
             $date->subDay();
-
-            // Check if it's a weekday (Monday to Friday)
-            if ($date->isWeekday()) {
+            // Skip weekends (Saturday and Sunday)
+            if (!$date->isWeekend()) {
                 $days--;
             }
         }
-
-        return $date;
+        return $date->toDateString(); // Return the date in 'Y-m-d' format
     }
+
     // Check if there are pending leave requests
     public function hasPendingLeave()
     {

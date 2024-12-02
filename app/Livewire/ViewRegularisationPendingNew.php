@@ -118,6 +118,7 @@ class ViewRegularisationPendingNew extends Component
         'message' => $this->messageContent,
         'regularisationRequests'=>$this->regularisationEntries,
         'sender_id'=>$employee->emp_id,
+        'employee_name'=>$employee->first_name."  ".$employee->last_name,
         'sender_name' => $this->user->first_name." ".$this->user->last_name."(".$this->user->emp_id.")"
     ];
 
@@ -269,6 +270,8 @@ class ViewRegularisationPendingNew extends Component
      
         'regularisationRequests'=>$regularisationEntriesforApproval,
         'sender_id'=>$employee->emp_id,
+        'sender_first_name'=>$employee->first_name,
+        'sender_last_name'=>$employee->last_name,
         'sender_remarks'=>$item->employee_remarks,
         'receiver_remarks'=>$item->approver_remarks,
        
@@ -276,7 +279,7 @@ class ViewRegularisationPendingNew extends Component
  
  
     // Send email to manager
-      Mail::to($this->employeeEmailForApproval)->send(new RegularisationCombinedMail($details));
+      Mail::to($this->employeeEmailForApproval)->send(new RegularisationApprovalMail($details));
     }
     public function searchRegularisation()
     {
@@ -322,6 +325,8 @@ class ViewRegularisationPendingNew extends Component
      
         'regularisationRequests'=>$regularisationEntriesforRejection,
         'sender_id'=>$employee->emp_id,
+        'sender_first_name'=>$employee->first_name,
+        'sender_last_name'=>$employee->last_name,
         'sender_remarks'=>$item->employee_remarks,
         'receiver_remarks'=>$item->approver_remarks,
        

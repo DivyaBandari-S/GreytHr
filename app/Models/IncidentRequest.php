@@ -32,8 +32,6 @@ class IncidentRequest extends Model
     }
  // HelpDesks Model
 
- // In HelpDesks model (HelpDesks.php)
-// In HelpDesks model (HelpDesks.php)
 public function status()
 {
     return $this->belongsTo(StatusType::class, 'status_code', 'status_code');

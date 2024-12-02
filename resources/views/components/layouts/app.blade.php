@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     @guest
         <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
@@ -71,7 +72,8 @@ if ($companyIds) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
     @livewireStyles
 </head>
 
@@ -83,6 +85,16 @@ if ($companyIds) {
             @livewire('main-layout')
             <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
                 {{ $slot }}
+                <footer>
+                    <div class="text-center mt-2 pb-2">
+                        <small>
+                            <a href="/Privacy&Policy" class="privacyPolicy" target="_blank"
+                                style="color: rgb(2, 17, 79);">Privacy Policy</a> |
+                            <a href="/Terms&Services" class="privacyPolicy" target="_blank"
+                                style="color: rgb(2, 17, 79);">Terms of Service</a>
+                        </small>
+                    </div>
+                </footer>
             </main>
         </section>
     @endguest
@@ -112,6 +124,8 @@ if ($companyIds) {
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
     <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @livewireScripts
 </body>
 
