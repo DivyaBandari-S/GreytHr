@@ -174,7 +174,7 @@ class SalarySlips extends Component
             ->where('employee_details.emp_id', $employeeId)
             ->first();
 
-        $this->employeePersonalDetails=EmpPersonalInfo::where('emp_id',$employeeId)->first();
+
 
 
         $this->salaryRevision = EmpSalaryRevision::where('emp_id', $employeeId)->get();
@@ -188,7 +188,9 @@ class SalarySlips extends Component
             $this->salaryDivisions = $this->empSalaryDetails->calculateSalaryComponents($this->empSalaryDetails->salary);
             $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)
                 ->where('id', $this->empSalaryDetails->bank_id)->first();
-            // dd( $this->salaryDivisions);
+            $this->employeePersonalDetails=EmpPersonalInfo::where('emp_id',$employeeId)->first();
+
+            // dd( $this->employeePersonalDetails);
         } else {
             // Handle the null case (e.g., log an error or set a default value)
             $this->salaryDivisions = [];
