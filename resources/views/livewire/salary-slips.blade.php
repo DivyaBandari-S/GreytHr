@@ -116,12 +116,12 @@
                     </p>
                 </div>
                 @if ($showDetails)
-                <div class="row d-flex justify-content-between py-2">
-                    <div class="details-column">
-                        <div class="detail" style="height:50px">
+                <div class=" d-flex justify-content-between py-2">
+                    <div class="row details-column">
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">Name <br>
                                 <span class="emp-details-span">
-                                    @if($employeeDetails->first_name && $employeeDetails->last_name)
+                                    @if($employeeDetails && $employeeDetails->first_name && $employeeDetails->last_name)
                                     {{ ucwords(strtolower($employeeDetails->first_name)) . ' ' . ucwords(strtolower($employeeDetails->last_name)) }}
                                     @else
                                     -
@@ -129,67 +129,10 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="detail">
-                            <p class="emp-details-p">Joining Date <br>
-                                <span class="emp-details-span">
-                                    @if($employeeDetails->hire_date)
-                                    {{ \Carbon\Carbon::parse($employeeDetails->hire_date)->format('d M, Y') }}
-                                    @else
-                                    -
-                                    @endif
-                                </span>
-                            </p>
-                        </div>
-
-                        <div class="detail">
-                            <p class="emp-details-p">Designation <br>
-                                <span class="emp-details-span">
-                                    @if($employeeDetails->job_role)
-                                    {{ $employeeDetails->job_role }}
-                                    @else
-                                    -
-                                    @endif
-                                </span>
-                            </p>
-                        </div>
-                        <div class="detail">
-                            <p class="emp-details-p">Department <br>
-                                <span class="emp-details-span">
-                                @if($employeeDetails->department)
-                                    {{ $employeeDetails->department }}
-                                    @else
-                                    -
-                                    @endif
-                                </span>
-                            </p>
-                        </div>
-                        <div class="detail">
-                            <p class="emp-details-p">Location <br>
-                                <span class="emp-details-span">
-                                    @if($employeeDetails->job_location)
-                                    {{ $employeeDetails->job_location }}
-                                    @else
-                                    -
-                                    @endif
-                                </span>
-                            </p>
-                        </div>
-                        <div class="detail">
-                            <p class="emp-details-p">Effective Work Days <br>
-                                <span class="emp-details-span">-</span>
-                            </p>
-                        </div>
-                        <div class="detail mt-2">
-                            <p class="emp-details-p">LOP <br>
-                                <span class="emp-details-span">-</span>
-                            </p>
-                        </div>
-                    </div>
-                    <div class="details-column">
-                        <div class="detail" style="height:50px">
+                        <div class="col-md-6 detail" >
                             <p class="emp-details-p">Employee No <br>
                                 <span class="emp-details-span">
-                                    @if($employeeDetails->emp_id)
+                                    @if($employeeDetails && $employeeDetails->emp_id)
                                     {{ $employeeDetails->emp_id }}
                                     @else
                                     -
@@ -197,8 +140,18 @@
                                 </span>
                             </p>
                         </div>
-
-                        <div class="detail">
+                        <div class=" col-md-6 detail">
+                            <p class="col-md-6 emp-details-p">Joining Date <br>
+                                <span class="emp-details-span">
+                                    @if( $employeeDetails && $employeeDetails->hire_date)
+                                    {{ \Carbon\Carbon::parse($employeeDetails->hire_date)->format('d M, Y') }}
+                                    @else
+                                    -
+                                    @endif
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">Bank Name <br>
                                 <span class="emp-details-span">
                                     @if(!empty($empBankDetails['bank_name']))
@@ -209,7 +162,18 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="detail">
+                        <div class="col-md-6 detail">
+                            <p class="emp-details-p">Designation <br>
+                                <span class="emp-details-span">
+                                    @if($employeeDetails && $employeeDetails->job_role)
+                                    {{ $employeeDetails->job_role }}
+                                    @else
+                                    -
+                                    @endif
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">Bank Account No <br>
                                 <span class="emp-details-span">
                                     @if(!empty($empBankDetails['account_number']))
@@ -220,11 +184,21 @@
                                 </span>
                             </p>
                         </div>
-
-                        <div class="detail">
+                        <div class="col-md-6 detail">
+                            <p class="emp-details-p">Department <br>
+                                <span class="emp-details-span">
+                                @if( $employeeDetails && $employeeDetails->department)
+                                    {{ $employeeDetails->department }}
+                                    @else
+                                    -
+                                    @endif
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">PAN Number <br>
                                 <span class="emp-details-span">
-                                    @if($employeePersonalDetails->pan_no)
+                                    @if($employeePersonalDetails &&  $employeePersonalDetails->pan_no )
                                     {{ $employeePersonalDetails->pan_no }}
                                     @else
                                     -
@@ -232,10 +206,26 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="detail">
+                        <div class="col-md-6 detail">
+                            <p class="emp-details-p">Location <br>
+                                <span class="emp-details-span">
+                                    @if($employeeDetails && $employeeDetails->job_location)
+                                    {{ $employeeDetails->job_location }}
+                                    @else
+                                    -
+                                    @endif
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
+                            <p class="emp-details-p">Effective Work Days <br>
+                                <span class="emp-details-span">-</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">PF No <br>
                                 <span class="emp-details-span">
-                                    @if($employeePersonalDetails->pf_no)
+                                    @if($employeePersonalDetails &&  $employeePersonalDetails->pf_no )
                                     {{ $employeePersonalDetails->pf_no }}
                                     @else
                                     -
@@ -243,7 +233,12 @@
                                 </span>
                             </p>
                         </div>
-                        <div class="detail">
+                        <div class="col-md-6 detail mt-2">
+                            <p class="emp-details-p">LOP <br>
+                                <span class="emp-details-span">-</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6 detail">
                             <p class="emp-details-p">PF UAN <br>
                                 <span class="emp-details-span">
                                     -
@@ -251,6 +246,7 @@
                             </p>
                         </div>
                     </div>
+
                 </div>
 
                 @endif
