@@ -630,11 +630,14 @@
     color: var(--label-color);
     font-size: var(--normal-font-size);
     margin-bottom:0px;
+    text-align: left;
+
 }
 
 .emp-details-span {
     color: #000;
     font-size: 13px;
+    text-align: left;
 }
 
 /* end of home blade */
