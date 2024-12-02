@@ -356,7 +356,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if($searchData && $searchData->whereIn('status_code', [12,4])->isEmpty())
+                    @if($searchData && $searchData->whereIn('status_code', [11,3])->isEmpty())
                     <tr class="search-data">
                         <td colspan="7" style="text-align: center; border:none;">
                             <img style="width: 10em; margin: 20px;"
@@ -366,7 +366,7 @@
                     </tr>
                     @else
                     @foreach ($searchData->sortByDesc('created_at') as $index => $record)
-                    @if($record->status_code == 12 || $record->status_code == 4)
+                    @if($record->status_code == 11 || $record->status_code == 3)
                     <tr style="background-color: white;">
                         <td class="helpdesk-request">
                             {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
@@ -578,7 +578,7 @@
                         {{ $record->priority ?? '-' }}
                     </td>
                     <td class="helpdesk-request">
-                        @if ($record->status_code == 6)
+                        @if ($record->status_code == 5)
                         <span style="color: orange;">{{ $record->status->status_name ??'-' }}</span>
                         @elseif ($record->status_code == 12)
                         <span style="color: green;">{{$record->status->status_name  }}</span>
