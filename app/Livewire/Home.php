@@ -34,6 +34,7 @@ use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
+use App\Models\EmpBankDetail;
 
 class Home extends Component
 {
@@ -114,8 +115,11 @@ class Home extends Component
     public $showTodayLeaveRequest = false;
     public $modalLeaveTitle = '';
     public $showModal = false;
-    public $showSalary = false;
-    public  $longitude;
+    public $showSalary = true;
+    public $longitude;
+    public $monthOfSal;
+    public $totalDaysInMonth;
+    public $paidDays;
     public function mount()
     {
         try {
@@ -736,24 +740,47 @@ class Home extends Component
 
 
             //##################################### pie chart details #########################
-            $empId = auth()->user()->emp_id; // Assuming emp_id is available on the authenticated user
+            $empId = auth()->user()->emp_id;
 
-            // First, find the salary revision with the specified emp_id and active status
-
+            // Find the most recent active salary revision for the employee
             $salaryRevision = EmpSalaryRevision::where('emp_id', $empId)
                 ->where('status', 1)
+                ->orderBy('created_at', 'desc')
                 ->first();
-            if ($salaryRevision) {
-                // Use the found salary revision's sal_id to get the associated EmpSalary record
-                $sal = EmpSalary::where('sal_id', $salaryRevision->id)->first();
 
+            if ($salaryRevision) {
+                $sal = EmpSalary::where('sal_id', $salaryRevision->id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
 
                 if ($sal) {
-                    $this->grossPay = $sal->calculateTotalAllowance();
-                    $this->deductions = $sal->calculateTotalDeductions();
-                    $this->netPay = $this->grossPay - $this->deductions;
+                    // Get the month and year from 'month_of_sal'
+                    $monthOfSal = date('M Y', strtotime($sal->month_of_sal));
+
+                    // Calculate the total days in the month
+                    $totalDaysInMonth = date('t', strtotime($sal->month_of_sal));
+                    // Calculate the paid days based on the effective date
+                    $effectiveDate = strtotime($sal->effective_date);
+                    $startOfMonth = strtotime(date('Y-m-01', strtotime($sal->month_of_sal)));
+
+                    // Determine the number of paid days
+                    $paidDays = $effectiveDate > $startOfMonth
+                        ? ($totalDaysInMonth - date('j', $effectiveDate) + 1)
+                        : $totalDaysInMonth;
+                    // dd($monthOfSal,$totalDaysInMonth,$paidDays);
+                    // Pass data to the view
+                    $this->monthOfSal = $monthOfSal;
+                    $this->totalDaysInMonth = $totalDaysInMonth;
+                    $this->paidDays = $paidDays;
+
+                    // Calculate salary components
+                    $salComponents = $sal->calculateSalaryComponents($sal->salary);
+                    $this->grossPay = $salComponents['earnings'];
+                    $this->deductions = $salComponents['total_deductions'];
+                    $this->netPay = $salComponents['net_pay'];
                 }
             }
+
 
             $this->calculateTaskData();
 
