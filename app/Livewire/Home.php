@@ -120,6 +120,7 @@ class Home extends Component
     public $monthOfSal;
     public $totalDaysInMonth;
     public $paidDays;
+    public $sal;
     public function mount()
     {
         try {
@@ -747,21 +748,21 @@ class Home extends Component
                 ->where('status', 1)
                 ->orderBy('created_at', 'desc')
                 ->first();
-
+            // dd($salaryRevision);
             if ($salaryRevision) {
-                $sal = EmpSalary::where('sal_id', $salaryRevision->id)
+                $this->sal= EmpSalary::where('sal_id', $salaryRevision->id)
                     ->orderBy('created_at', 'desc')
                     ->first();
-
-                if ($sal) {
+                if ($this->sal) {
                     // Get the month and year from 'month_of_sal'
-                    $monthOfSal = date('M Y', strtotime($sal->month_of_sal));
+                    $monthOfSal = date('M Y', strtotime($this->sal->month_of_sal));
 
                     // Calculate the total days in the month
-                    $totalDaysInMonth = date('t', strtotime($sal->month_of_sal));
+                    // $totalDaysInMonth = date('t', strtotime($sal->month_of_sal));
+                     $totalDaysInMonth = 30; // Override with fixed 30 days
                     // Calculate the paid days based on the effective date
-                    $effectiveDate = strtotime($sal->effective_date);
-                    $startOfMonth = strtotime(date('Y-m-01', strtotime($sal->month_of_sal)));
+                    $effectiveDate = strtotime($this->sal->effective_date);
+                    $startOfMonth = strtotime(date('Y-m-01', strtotime($this->sal->month_of_sal)));
 
                     // Determine the number of paid days
                     $paidDays = $effectiveDate > $startOfMonth
@@ -774,7 +775,7 @@ class Home extends Component
                     $this->paidDays = $paidDays;
 
                     // Calculate salary components
-                    $salComponents = $sal->calculateSalaryComponents($sal->salary);
+                    $salComponents = $this->sal->calculateSalaryComponents($this->sal->salary);
                     $this->grossPay = $salComponents['earnings'];
                     $this->deductions = $salComponents['total_deductions'];
                     $this->netPay = $salComponents['net_pay'];
