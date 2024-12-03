@@ -1260,7 +1260,7 @@
                         @if($comment->employee)
                         @if(($comment->employee->image) &&$comment->employee->image !== 'null')
 
-                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{$comment->employee->image_url }}">
+                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="data:image/jpeg;base64,{{  $comment->employee->image}}">
                         @else
                         @if($comment->employee && $comment->employee->gender == "Male")
                         <img style="border-radius: 50%; margin-left: 10px" height="30" width="30" src="{{asset("images/male-default.png")}}" alt="Default Male Image">
