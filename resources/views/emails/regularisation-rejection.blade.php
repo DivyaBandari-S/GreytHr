@@ -36,7 +36,7 @@
                   
             @else
                 <tr>
-                    <td colspan="5">No regularization entries available.</td>
+                    <td colspan="12">No regularization entries available.</td>
                 </tr>
             @endif
         
