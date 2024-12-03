@@ -402,7 +402,20 @@ class Home extends Component
             $loggedInEmpId = Session::get('emp_id');
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+          
+            $this->employeeShiftDetails = EmployeeDetails::where('emp_id',$employeeId) // Match employee ID
+            ->join('company_shifts', function ($join) {
+                $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
+                    ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
+            })
+            ->select(
+                'employee_details.shift_type',          // Select the shift_type from employee_details
+                'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
+                'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
+            )
+            ->first();
+            
+           
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');

@@ -59,25 +59,33 @@
                                 <div class="col-md-6 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
-                                            // Fetch shift times
-                                            $EmployeeStartshiftTime = $employeeShiftDetails->shift_start_time;
-                                            $EmployeeEndshiftTime = $employeeShiftDetails->shift_end_time;
+                                        // Fetch shift times
+                                        if ($this->employeeShiftDetails) {
+                                                    $EmployeeStartshiftTime = $this->employeeShiftDetails->shift_start_time;
+                                                    $EmployeeEndshiftTime = $this->employeeShiftDetails->shift_end_time;
+                                                } else {
+                                                    // Handle the case when no data is found, e.g., set default values or show a message
+                                                    $EmployeeStartshiftTime = null;
+                                                    $EmployeeEndshiftTime = null;
+                                                }
 
-                                            // Default times
-                                            $defaultStartShiftTime = '10:00 am';
-                                            $defaultEndShiftTime = '7:00 pm';
+                                        
 
-                                            // Format the times if they are not null
-                                            $formattedStartShiftTime = $EmployeeStartshiftTime
-                                                ? (new DateTime($EmployeeStartshiftTime))->format('h:i a')
-                                                : $defaultStartShiftTime;
-                                            $formattedEndShiftTime = $EmployeeEndshiftTime
-                                                ? (new DateTime($EmployeeEndshiftTime))->format('h:i a')
-                                                : $defaultEndShiftTime;
+                                        // Default times
+                                       
+
+                                        if ($EmployeeStartshiftTime === null && $EmployeeEndshiftTime === null) {
+                                                $formattedShiftMessage = 'Shift not assigned yet';
+                                            } else {
+                                                // Format the times if they are not null
+                                                $formattedStartShiftTime = (new DateTime($EmployeeStartshiftTime))->format('H:i a');
+                                                $formattedEndShiftTime = (new DateTime($EmployeeEndshiftTime))->format('H:i a');
+                                                $formattedShiftMessage = $formattedStartShiftTime . ' to ' . $formattedEndShiftTime . ' Shift';
+                                            }
 
                                         @endphp
-                                        {{ substr($currentDay, 0, 3) }} | {{ $formattedStartShiftTime }} to
-                                        {{ $formattedEndShiftTime }} Shift
+                                        {{ substr($currentDay, 0, 3) }} | {{ $formattedShiftMessage }} 
+                                        
                                     </p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
                                 </div>
@@ -705,7 +713,7 @@
                         </div>
                     @else
                         <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                            <p class="text-muted">No salary details are available.</p>
+                            <p class=" payslip-small-desc ">No salary details are available.</p>
                         </div>
                     @endif
 
