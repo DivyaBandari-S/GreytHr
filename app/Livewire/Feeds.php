@@ -174,7 +174,7 @@ class Feeds extends Component
                 $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
+                $this->allEmojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
                 $this->loadComments();
@@ -257,7 +257,7 @@ class Feeds extends Component
 
         $this->emp_id = $emp_id;
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
-
+        $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
         $this->showDialog = true;
@@ -272,7 +272,7 @@ class Feeds extends Component
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
-
+ $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
         $this->showDialogEmoji = true;
     }
     public function handleRadioChange($value)
@@ -313,6 +313,7 @@ class Feeds extends Component
     
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+                $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
             } else {
                 throw new \Exception('You can only remove your own reactions.');
             }
@@ -335,12 +336,19 @@ class Feeds extends Component
     
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+                $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
             } else {
                 throw new \Exception('You can only remove your own reactions.');
             }
         } catch (\Exception $e) {
             FlashMessageHelper::flashError($e->getMessage());
         }
+    }
+
+    public function handleEmojiRemoval($emojiId)
+    {
+        // Handle the emoji removal logic (e.g., remove it from the list)
+        $this->allEmojis = $this->allEmojis->reject(fn($item) => $item->id === $emojiId);
     }
 
     // Method to add emoji
@@ -548,7 +556,7 @@ class Feeds extends Component
 
 
     }
-    protected $listeners = ['updateSortType'];
+    protected $listeners = ['updateSortType','emojiRemoved' => 'handleEmojiRemoval'];
     // Toggle dropdown visibility
     public function toggleDropdown()
     {
