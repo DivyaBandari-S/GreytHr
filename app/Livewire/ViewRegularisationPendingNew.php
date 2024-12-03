@@ -11,6 +11,7 @@ use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
+use App\Notifications\RegularisationApproved;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
@@ -168,7 +169,7 @@ class ViewRegularisationPendingNew extends Component
         $item = RegularisationDates::find($id);
        
         $employeeId=$item->emp_id;
-       
+        $employee=EmployeeDetails::find($employeeId);
         $item->status=2;
         if(empty($this->remarks))
         {
@@ -254,6 +255,10 @@ class ViewRegularisationPendingNew extends Component
         $this->closeApproveModal();
         FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
         $this->showAlert=true;
+    
+        
+        // Send the SMS notification to the employee's mobile number
+       
         $this->sendApprovalMail($id);
     }
     public function sendApprovalMail($id)

@@ -488,7 +488,7 @@ Route::get('/clear', function () {
 Route::get('/test-odbc', function () {
     try {
         // Hard-coded DSN, username, and password
-        $dsn = 'Driver={SQL Server};Server=122.175.44.131,1433;Database=eSSL;';
+        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 
@@ -530,7 +530,7 @@ Route::get('/test-odbc-env', function () {
 Route::get('/test-odbc-dir', function () {
     try {
         // Hard-coded ODBC DSN, username, and password
-        $dsn = 'Driver={SQL Server};Server=122.175.44.131,1433;Database=eSSL;';
+        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 

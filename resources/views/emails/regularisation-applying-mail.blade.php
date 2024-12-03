@@ -13,6 +13,7 @@
             <thead>
                 <tr>
                     <th style="width:10%; padding:5px; text-align:center;">Employee ID</th>
+                    <th style="width:10%; padding:5px; text-align:center;">Employee Name</th>
                     <th style="width:15%; padding:5px; text-align:center;">Date</th>
                     <th style="width:10%; padding:5px; text-align:center;">From</th>
                     <th style="width:10%; padding:5px; text-align:center;">To</th>
@@ -35,7 +36,7 @@
                   
             @else
                 <tr>
-                    <td colspan="5">No regularisation entries available.</td>
+                    <td colspan="12">No regularisation entries available.</td>
                 </tr>
             @endif
         
