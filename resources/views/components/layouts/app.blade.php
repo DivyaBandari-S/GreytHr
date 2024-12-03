@@ -81,18 +81,20 @@
     @guest
     {{ $slot }}
     @else
-    <section>
+    <section style="display: flex; flex-direction: column; min-height: 100vh;">
         @livewire('main-layout')
-        <main id="maincontent" style="overflow: auto; height: calc(100vh - 65px);">
+        <main id="maincontent" style="flex-grow: 1; overflow: auto;">
             {{ $slot }}
         </main>
-        <footer>
+        <footer >
             <div class="text-center mt-2 pb-2">
                 <small>
-                    <a href="/Privacy&Policy" class="privacyPolicy" target="_blank"
-                        style="color: rgb(2, 17, 79);">Privacy Policy</a> |
-                    <a href="/Terms&Services" class="privacyPolicy" target="_blank"
-                        style="color: rgb(2, 17, 79);">Terms of Service</a>
+                    <a href="/Privacy&Policy" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">
+                        Privacy Policy
+                    </a> |
+                    <a href="/Terms&Services" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">
+                        Terms of Service
+                    </a>
                 </small>
             </div>
         </footer>
