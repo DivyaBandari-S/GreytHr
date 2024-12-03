@@ -1774,7 +1774,7 @@ color: #fff;
                         <td>
                             <button type="button" style="font-size:12px;background-color: 
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
-               'white':'none'
+               'white':'transparent'
            }};color:#24a7f8;border:none;text-decoration:underline;" wire:click="viewDetails('{{ $dateKeyForLookup }}')">
                                 Info
                             </button>
