@@ -34,6 +34,7 @@ use Throwable;
 use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
+use App\Models\EmpBankDetail;
 
 class Home extends Component
 {
@@ -114,8 +115,12 @@ class Home extends Component
     public $showTodayLeaveRequest = false;
     public $modalLeaveTitle = '';
     public $showModal = false;
-    public $showSalary = false;
-    public  $longitude;
+    public $showSalary = true;
+    public $longitude;
+    public $monthOfSal;
+    public $totalDaysInMonth;
+    public $paidDays;
+    public $sal;
     public function mount()
     {
         try {
@@ -736,24 +741,45 @@ class Home extends Component
 
 
             //##################################### pie chart details #########################
-            $empId = auth()->user()->emp_id; // Assuming emp_id is available on the authenticated user
+            $empId = auth()->user()->emp_id;
 
-            // First, find the salary revision with the specified emp_id and active status
+            // Fetch all salary revision IDs for the employee
+            $salaryRevisionIds = EmpSalaryRevision::where('emp_id', $empId)
+                ->pluck('id'); // Retrieve only IDs
+            //    dd($salaryRevisionIds);
+            if ($salaryRevisionIds->isNotEmpty()) {
+                // Fetch the latest salary by comparing each revision ID with sal_id
+                $this->sal = EmpSalary::whereIn('sal_id', $salaryRevisionIds)
+                    ->latest('month_of_sal')
+                    ->first();
 
-            $salaryRevision = EmpSalaryRevision::where('emp_id', $empId)
-                ->where('status', 1)
-                ->first();
-            if ($salaryRevision) {
-                // Use the found salary revision's sal_id to get the associated EmpSalary record
-                $sal = EmpSalary::where('sal_id', $salaryRevision->id)->first();
+                if ($this->sal) {
+                    // Format the month and year from 'month_of_sal'
+                    $monthOfSal = date('M Y', strtotime($this->sal->month_of_sal));
+                    $totalDaysInMonth = 30; // Fixed to 30 days
 
+                    $effectiveDate = strtotime($this->sal->effective_date);
+                    $startOfMonth = strtotime(date('Y-m-01', strtotime($this->sal->month_of_sal)));
 
-                if ($sal) {
-                    $this->grossPay = $sal->calculateTotalAllowance();
-                    $this->deductions = $sal->calculateTotalDeductions();
-                    $this->netPay = $this->grossPay - $this->deductions;
+                    // Calculate paid days
+                    $paidDays = $effectiveDate > $startOfMonth
+                        ? $totalDaysInMonth - (date('j', $effectiveDate) - 1)
+                        : $totalDaysInMonth;
+
+                    // Pass data to the view
+                    $this->monthOfSal = $monthOfSal;
+                    $this->totalDaysInMonth = $totalDaysInMonth;
+                    $this->paidDays = $paidDays;
+
+                    // Calculate salary components
+                    $salComponents = $this->sal->calculateSalaryComponents($this->sal->salary);
+                    $this->grossPay = $salComponents['earnings'] ?? 0;
+                    $this->deductions = $salComponents['total_deductions'] ?? 0;
+                    $this->netPay = $salComponents['net_pay'] ?? 0;
                 }
             }
+
+
 
             $this->calculateTaskData();
 

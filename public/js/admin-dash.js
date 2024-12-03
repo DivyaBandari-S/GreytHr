@@ -151,17 +151,17 @@ if (toggleSidebar) {
     toggleSidebar.addEventListener("click", toggleSidebarHandler);
 
     // Check if the screen is a mobile size and trigger the sidebar toggle
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 968) {
         // Adjust the width as needed for mobile screens
         toggleSidebarHandler();
     }
 
     // Optional: Listen for window resize events to toggle based on resizing to/from mobile size
     window.addEventListener("resize", function () {
-        if (window.innerWidth <= 768 && !sidebar.classList.contains("hide")) {
+        if (window.innerWidth <= 968 && !sidebar.classList.contains("hide")) {
             toggleSidebarHandler();
         } else if (
-            window.innerWidth > 768 &&
+            window.innerWidth > 968 &&
             sidebar.classList.contains("hide")
         ) {
             toggleSidebarHandler();
