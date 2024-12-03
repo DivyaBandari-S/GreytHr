@@ -705,7 +705,7 @@
                         </div>
                     @else
                         <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
-                            <p class="text-muted">No salary details are available.</p>
+                            <p class=" payslip-small-desc ">No salary details are available.</p>
                         </div>
                     @endif
 
