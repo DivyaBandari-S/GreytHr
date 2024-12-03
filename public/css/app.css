@@ -3523,7 +3523,6 @@ input[type="radio"] {
 } */
 
 .hover-card {
-    position: relative;
     overflow: hidden;
     /* width: 300px;
     height: 200px; */
