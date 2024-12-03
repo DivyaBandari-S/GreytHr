@@ -506,7 +506,7 @@
                                 $allEmojis = $currentCardEmojis->reverse();
                                 @endphp
 
-                                @if($currentCardEmojis && $emojisCount > 1)
+                                @if($currentCardEmojis && $emojisCount > 0)
                                 <div style="white-space: nowrap;">
                                     @foreach($lastTwoEmojis as $index => $emoji_reaction)
                                     <span style="font-size: 16px;margin-left:-7px;">{{ $emoji_reaction->emoji_reaction }}</span>
