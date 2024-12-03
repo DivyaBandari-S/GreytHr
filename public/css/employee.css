@@ -1413,10 +1413,11 @@ main .btn-send:hover {
 }
 
 .cardReport .bottom .content .name {
-	display: inline-block; 
-	max-width: 150px; 
-	white-space: nowrap; 
-	overflow: hidden; 
+	display: inline-block;
+	max-width: 150px;
+	white-space: nowrap;
+    margin-top: 10px;
+	overflow: hidden;
 	text-overflow: ellipsis;
 	cursor: pointer;
     font-size: 1rem;
@@ -1428,7 +1429,6 @@ main .btn-send:hover {
     display: block;
     font-size: 0.9rem;
     color: #02114f;
-    margin-top: 1rem;
 }
 
 .cardReport .bottom .bottom-bottom {
