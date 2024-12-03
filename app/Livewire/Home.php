@@ -120,6 +120,7 @@ class Home extends Component
     public $monthOfSal;
     public $totalDaysInMonth;
     public $paidDays;
+    public $sal;
     public function mount()
     {
         try {
@@ -742,44 +743,42 @@ class Home extends Component
             //##################################### pie chart details #########################
             $empId = auth()->user()->emp_id;
 
-            // Find the most recent active salary revision for the employee
-            $salaryRevision = EmpSalaryRevision::where('emp_id', $empId)
-                ->where('status', 1)
-                ->orderBy('created_at', 'desc')
-                ->first();
-
-            if ($salaryRevision) {
-                $sal = EmpSalary::where('sal_id', $salaryRevision->id)
-                    ->orderBy('created_at', 'desc')
+            // Fetch all salary revision IDs for the employee
+            $salaryRevisionIds = EmpSalaryRevision::where('emp_id', $empId)
+                ->pluck('id'); // Retrieve only IDs
+            //    dd($salaryRevisionIds);
+            if ($salaryRevisionIds->isNotEmpty()) {
+                // Fetch the latest salary by comparing each revision ID with sal_id
+                $this->sal = EmpSalary::whereIn('sal_id', $salaryRevisionIds)
+                    ->latest('month_of_sal')
                     ->first();
 
-                if ($sal) {
-                    // Get the month and year from 'month_of_sal'
-                    $monthOfSal = date('M Y', strtotime($sal->month_of_sal));
+                if ($this->sal) {
+                    // Format the month and year from 'month_of_sal'
+                    $monthOfSal = date('M Y', strtotime($this->sal->month_of_sal));
+                    $totalDaysInMonth = 30; // Fixed to 30 days
 
-                    // Calculate the total days in the month
-                    $totalDaysInMonth = date('t', strtotime($sal->month_of_sal));
-                    // Calculate the paid days based on the effective date
-                    $effectiveDate = strtotime($sal->effective_date);
-                    $startOfMonth = strtotime(date('Y-m-01', strtotime($sal->month_of_sal)));
+                    $effectiveDate = strtotime($this->sal->effective_date);
+                    $startOfMonth = strtotime(date('Y-m-01', strtotime($this->sal->month_of_sal)));
 
-                    // Determine the number of paid days
+                    // Calculate paid days
                     $paidDays = $effectiveDate > $startOfMonth
-                        ? ($totalDaysInMonth - date('j', $effectiveDate) + 1)
+                        ? $totalDaysInMonth - (date('j', $effectiveDate) - 1)
                         : $totalDaysInMonth;
-                    // dd($monthOfSal,$totalDaysInMonth,$paidDays);
+
                     // Pass data to the view
                     $this->monthOfSal = $monthOfSal;
                     $this->totalDaysInMonth = $totalDaysInMonth;
                     $this->paidDays = $paidDays;
 
                     // Calculate salary components
-                    $salComponents = $sal->calculateSalaryComponents($sal->salary);
-                    $this->grossPay = $salComponents['earnings'];
-                    $this->deductions = $salComponents['total_deductions'];
-                    $this->netPay = $salComponents['net_pay'];
+                    $salComponents = $this->sal->calculateSalaryComponents($this->sal->salary);
+                    $this->grossPay = $salComponents['earnings'] ?? 0;
+                    $this->deductions = $salComponents['total_deductions'] ?? 0;
+                    $this->netPay = $salComponents['net_pay'] ?? 0;
                 }
             }
+
 
 
             $this->calculateTaskData();
