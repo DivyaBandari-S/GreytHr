@@ -771,23 +771,31 @@ public function loadaddComments()
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's company ID
             $empCompanyId = auth()->guard('emp')->user()->company_id;
-
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $employeeDetails = DB::table('employee_details')
+            ->where('emp_id', $employeeId)
+            ->select('company_id') // Select only the company_id
+            ->first();
+ 
             // Assuming you have a Company model with a 'company_logo' attribute
-            $company = Company::where('company_id', $empCompanyId)->first();
-
+              $companyIds = json_decode($employeeDetails->company_id);
+            $company = DB::table('companies')
+            ->where('company_id', $companyIds)
+            ->where('is_parent', 'yes')
+            ->first();
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {
             $empCompanyId = auth()->guard('hr')->user()->company_id;
-
+ 
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
             return $company ? $company->company_logo : asset('user.jpg');
         }
-
-
-
-
+ 
+ 
+ 
+ 
     }
 
     public function render()
