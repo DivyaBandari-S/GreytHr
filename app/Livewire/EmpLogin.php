@@ -55,6 +55,7 @@ class EmpLogin extends Component
     public $showPassword = false; // State variable for password visibility
     public $empIdMessageType;
     public $emp_id;
+    public $resetKey = 0;
     public $form = [
         'emp_id' => '',
         'password' => '',
@@ -150,7 +151,6 @@ class EmpLogin extends Component
                 ->first();
             // Check if user exists and is inactive
             if ($user && !$user->status) {
-
                 // sweetalert()->addError('Your account is inactive. Please contact support.');
                 // is_active == false
                 ################################### this is also working by using dispatch event call from in the blade using javascript
@@ -158,7 +158,7 @@ class EmpLogin extends Component
                 $this->dispatch('inactive-user-alert', ['message' => 'Your account is inactive. Please contact support.']);
                 $this->resetForm();
                 $this->reset('form'); // Reset the entire form
-
+                $this->resetKey++;
             } else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
                 session(['post_login' => true]);
                 FlashMessageHelper::flashSuccess("you are logged in successfully");
@@ -171,23 +171,28 @@ class EmpLogin extends Component
                 FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
                 $this->resetForm();
                 $this->reset('form'); // Reset the entire form
+                $this->resetKey++;
             }
         } catch (ValidationException $e) {
             FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
             $this->resetForm();
             $this->reset('form'); // Reset the entire form
+            $this->resetKey++;
         } catch (\Illuminate\Database\QueryException $e) {
             FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
             $this->resetForm();
             $this->reset('form'); // Reset the entire form
+            $this->resetKey++;
         } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
             FlashMessageHelper::flashError('There is a server error. Please try again later.');
             $this->resetForm();
             $this->reset('form'); // Reset the entire form
+            $this->resetKey++;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
             $this->resetForm();
             $this->reset('form'); // Reset the entire form
+            $this->resetKey++;
         }
     }
 
