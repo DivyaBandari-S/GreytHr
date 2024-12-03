@@ -1,11 +1,11 @@
 <div class="position-relative">
-        <div class="position-absolute" wire:loading wire:target="empLogin">
-            <div class="loader-overlay">
-                <div class="loader">
-                    <div></div>
-                </div>
+    <div class="position-absolute" wire:loading wire:target="empLogin">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
             </div>
         </div>
+    </div>
     <div class="container-fluid p-0 loginBGGradiant">
         <div class="m-0 pb-2 pt-3 row">
             <div class="col-md-12" style="text-align: end;">
@@ -44,7 +44,8 @@
                     </div>
                 @endif
 
-                <form wire:submit.prevent="empLogin" class="login-form-with-shadow"
+                <form wire:submit.prevent="empLogin" wire:key="empLogin-{{ $resetKey }}"
+                    class="login-form-with-shadow"
                     style="margin-top: 0px; background-color: #f2f2f6; backdrop-filter: blur(36px);">
                     <div class="text-center mb-1" style="padding-top: 20px;">
                         <img src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo"
@@ -423,7 +424,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         Livewire.on('inactive-user-alert', event => {
-            // Show SweetAlert with a timer
+            console.log('my event is ........', event);
             Swal.fire({
                 icon: 'error',
                 title: 'Account Inactive',

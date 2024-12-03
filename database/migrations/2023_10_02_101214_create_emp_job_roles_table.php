@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('emp_job_roles', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
             $table->string('job_id', 10)->nullable()->unique();
-            $table->string('job_title')->nullable()->unique();
+            $table->string('job_title')->nullable();
             $table->string('dept_id', 10)->nullable();
             $table->string('sub_dept_id', 10)->nullable();
             $table->timestamps();
