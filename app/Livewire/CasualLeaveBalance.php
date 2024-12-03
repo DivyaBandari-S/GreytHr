@@ -16,9 +16,10 @@ class CasualLeaveBalance extends Component
     public $leaveData, $year, $currentYear;
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
+    public $employeeLapsedBalance;
     public $totalSickDays = 0;
     public $employeeDetails;
-    public $Availablebalance, $leaveGrantedData, $availedLeavesCount;
+    public $Availablebalance, $leaveGrantedData, $availedLeavesCount,$lapsedBalance;
 
 
     // public function mount(){
@@ -185,8 +186,14 @@ class CasualLeaveBalance extends Component
         //     $this->Availablebalance = $this->employeeLeaveBalance->leave_balance - $this->totalSickDays;
 
         // }
-        $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
-
+        $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->first();
+        if ($this->employeeLapsedBalance->is_lapsed === true) {
+            $this->lapsedBalance = $this->employeeLeaveBalances - $this->totalSickDays;
+            $this->Availablebalance = 0;
+        } else {
+            $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
+        }
 
         $currentMonth = date('n');
         $lastmonth = 12;
