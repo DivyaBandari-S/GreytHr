@@ -16,6 +16,7 @@
         "google/apiclient": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "jenssegers/agent": "^2.6",
+        "laravel-notification-channels/twilio": "3.4",
         "laravel/framework": "^10.48",
         "laravel/reverb": "^1.4",
         "laravel/sanctum": "^3.2",
@@ -30,7 +31,7 @@
         "power-components/livewire-powergrid": "^5.8",
         "spatie/simple-excel": "^3.4",
         "torann/geoip": "*",
-        "twilio/sdk": "^8.3",
+        "twilio/sdk": "7.16",
         "vinkla/hashids": "^11.0"
     },
     "require-dev": {
