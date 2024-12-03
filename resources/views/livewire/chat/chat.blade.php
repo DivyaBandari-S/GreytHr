@@ -3,7 +3,7 @@
         {{-- chat side bar --}}
         <livewire:chat.chat-side-bar />
         {{-- chat list --}}
-        <livewire:chat.chat-list />
+        <livewire:chat.chat-list/>
         <div class="box-info-content" id="content-chart">
             <div class="top">
                 <a href="#" id="back" class="btn back">
@@ -271,3 +271,14 @@
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('livewire:init', () => {
+        console.log('hello hai i am call js function');
+        Livewire.on('show-toast', (event) => {
+            toastr.success(event[0].message, 'Success', {
+                positionClass: 'toast-top-right',
+                timeOut: 3000, // Time in milliseconds
+            });
+        });
+    });
+</script>

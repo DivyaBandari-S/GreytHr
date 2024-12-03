@@ -137,15 +137,13 @@ class SickLeaveBalances extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
+                ->where('period', 'like', "%$this->year%")
                 ->get();
 
 
             $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Sick Leave\"')) AS sick_leave")
+                ->where('period', 'like', "%$this->year%")
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS sick_leave")
                 ->pluck('sick_leave')
                 ->first();
 
@@ -172,7 +170,7 @@ class SickLeaveBalances extends Component
                     $leaveRequest->to_session,
                     $leaveRequest->leave_type
                 );
-                if( $leaveRequest->leave_status=='2' &&$leaveRequest->cancel_status!='2' &&  $leaveRequest->category_type=='Leave'){
+                if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2' &&  $leaveRequest->category_type == 'Leave') {
                     $this->totalSickDays += $days;
                 }
 
@@ -193,9 +191,8 @@ class SickLeaveBalances extends Component
             $grantedLeavesByMonth = [];
             $availedLeavesByMonth = [];
             $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_balance, '$.\"Sick Leave\"')) AS sick_leave")
+                ->where('period', 'like', "%$this->year%")
+                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS sick_leave")
                 ->pluck('sick_leave')
                 ->first();
             for ($month = $startingMonth; $month <= $lastmonth; $month++) {
@@ -206,12 +203,12 @@ class SickLeaveBalances extends Component
                 $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                     ->where('leave_type', 'Sick Leave')
                     ->where('leave_status', '2')
-                    ->where('cancel_status','!=','2')
+                    ->where('cancel_status', '!=', '2')
                     ->whereYear('from_date', $currentYear)
                     ->where(function ($query) use ($month) {
                         $query->whereMonth('from_date', $month)
                             ->orWhereMonth('to_date', $month);
-                    })->where('category_type','Leave')
+                    })->where('category_type', 'Leave')
                     ->get();
 
                 foreach ($availedLeavesRequests as $availedleaveRequest) {

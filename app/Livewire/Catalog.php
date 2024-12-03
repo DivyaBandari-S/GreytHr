@@ -41,12 +41,15 @@ class Catalog extends Component
     public $superAdmins;
     public $email;
     public $ServiceRequestaceessDialog = false;
-
+    public $RemoveMailRequestaceessDialog=false;
+    public $NewSimRequestaceessDialog=false;
+public $RemoveRequestaceessDialog=false;
     public $recipient;
     public $mobile;
     public $showModal = true;
     public $selectedDeptId;
-
+ public $ShareRequestaceessDialog=false;
+ public $PrivilegeRequestaceessDialog=false;
     public $ItRequestaceessDialog = false;
     public $MailRequestaceessDialog = false;
     public $closeMailRequestaccess = false;
@@ -99,11 +102,13 @@ class Catalog extends Component
     public $DesktopRequestaceessDialog = false;
 
     public $closeDesktopRequestaccess = false;
+
     public $openDesktopRequestaccess = false;
     public $IdRequestaceessDialog = false;
     public $MmsRequestaceessDialog = false;
     public $LapRequestaceessDialog = false;
     public    $InternetRequestaceessDialog = false;
+    public $O365DesktopRequestaceessDialog=false;
       
     public $AddRequestaceessDialog = false;
     public $incidentRequestaceessDialog = false;
@@ -197,8 +202,16 @@ class Catalog extends Component
     public function resetDialogs()
     {
         $this->AddRequestaceessDialog = false;
+        $this->ServiceRequestaceessDialog=false;
+        $this->ShareRequestaceessDialog=false;
+        $this->PrivilegeRequestaceessDialog=false;
         // Close all dialogs
         $this->ItRequestaceessDialog = false;
+        $this-> RemoveRequestaceessDialog = false;
+        $this->InternetRequestaceessDialog=false;
+        $this->RemoveMailRequestaceessDialog=false;
+        $this->NewSimRequestaceessDialog=false;
+        $this->O365DesktopRequestaceessDialog=false;
 
         $this->LapRequestaceessDialog = false;
         $this->DistributionRequestaceessDialog = false;
@@ -307,6 +320,15 @@ class Catalog extends Component
         $this->reset(['category', 'priority']);
         $this->category = 'New Mailbox Request';
     }
+    
+    public function O365Desktop()
+    {
+        $this->resetDialogs();
+        $this->O365DesktopRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Desktop License Access';
+    }
     public function IntenetRequest()
     {
         $this->resetDialogs();
@@ -314,6 +336,54 @@ class Catalog extends Component
         $this->showModal = true;
         $this->reset(['category', 'priority']);
         $this->category = 'Internet Access Request';
+    }
+    public function newSim()
+    {
+        $this->resetDialogs();
+        $this->NewSimRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'New SIM Request';
+    }
+    public function RemoveDistributor()
+    {
+        $this->resetDialogs();
+        $this->RemoveRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Remove Distributor Request';
+    }
+    public function RemoveMail()
+    {
+        $this->resetDialogs();
+        $this->RemoveMailRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Remove MailBox Request';
+    }
+    public function service()
+    {
+        $this->resetDialogs();
+        $this->ServiceRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Other Service Request';
+    }
+    public function SharePointRequest()
+    {
+        $this->resetDialogs();
+        $this->ShareRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Share Point Request';
+    }
+    public function PrivilegeRequest()
+    {
+        $this->resetDialogs();
+        $this->PrivilegeRequestaceessDialog = true;
+        $this->showModal = true;
+        $this->reset(['category', 'priority']);
+        $this->category = 'Privilege Access Request';
     }
     public function openItRequestaccess()
     {
@@ -683,8 +753,8 @@ class Catalog extends Component
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'priority' => $this->priority,
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'status_code' => 8,
             ]);
             $helpDesk->refresh();
@@ -898,7 +968,7 @@ class Catalog extends Component
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
-                'mobile' => 'N/A',
+                'mobile' => $this->mobile??'-',
                 'mail' => $this->mail ?? '-',
                 'distributor_name' => $this->distributor_name ?? '-',
                 'priority' => $this->priority,
@@ -999,20 +1069,127 @@ class Catalog extends Component
                 'mime_type' => $mimeType,
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
-                'mail' => 'N/A',
-                'mobile' => 'N/A',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
                 'priority' => $this->priority,
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
 
             $superAdmins = IT::where('role', 'super_admin')->get();
-            $superAdmins = IT::where('role', 'super_admin')->get();
+            
             foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
                 Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $admin->first_name, $admin->last_name)
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
                 );
             }
+            
+
+
+            FlashMessageHelper::flashSuccess('Request created successfully.');
+            $this->reset();
+            return redirect()->to('/HelpDesk');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $this->employeeDetails->emp_id,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+            ]);
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+        }
+    }
+
+    public function otherService()
+    {
+        try {
+            $messages = [
+                'subject' => 'Request name is required',
+                'description' => 'Description is required',
+             
+                'priority.required' => 'Priority is required.',
+            ];
+            $this->validate([
+                'subject' => 'required|string',
+                'description' => 'required|string',
+                'priority' => 'required|in:High,Medium,Low',
+               
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+            ], $messages);
+
+
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            // Store the file as binary data
+            if ($this->file_path) {
+
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+            $helpDesk =  HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'selected_equipment' => $this->selected_equipment??'-', // Ensure this is correctly referenced
+                'file_path' => $fileContent,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category ?? '-',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
+                'priority' => $this->priority,
+                'distributor_name' => 'N/A',
+                'status_code' => 8,
+            ]);
+
+       // Notify super admins
+       $superAdmins = IT::where('role', 'super_admin')->get();
+            
+       foreach ($superAdmins as $admin) {
+           $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+       
+           $firstName = $employeeDetails->first_name ?? 'N/A';
+           $lastName = $employeeDetails->last_name ?? 'N/A';
+       
+           Mail::to($admin->email)->send(
+               new HelpDeskNotification($helpDesk, $firstName, $lastName)
+           );
+       }
+
+            
 
 
 
@@ -1033,9 +1210,106 @@ class Catalog extends Component
         }
     }
 
+    public function Internet()
+    {
+        try {
+            $messages = [
+           'subject' =>'Business justification is required',
+                'description' => 'Issue is required',
+             
+                'priority.required' => 'Priority is required.',
+            ];
+            $this->validate([
+                'subject' =>'required|string',
+                'description' => 'required|string',
+                'priority' => 'required|in:High,Medium,Low',
+               
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+            ], $messages);
 
 
+            $fileContent = null;
+            $mimeType = null;
+            $fileName = null;
+            // Store the file as binary data
+            if ($this->file_path) {
 
+                $fileContent = file_get_contents($this->file_path->getRealPath());
+                if ($fileContent === false) {
+                    Log::error('Failed to read the uploaded file.', [
+                        'file_path' => $this->file_path->getRealPath(),
+                    ]);
+                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
+                    return;
+                }
+
+                // Check if the file content is too large
+                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
+                    return;
+                }
+
+
+                $mimeType = $this->file_path->getMimeType();
+                $fileName = $this->file_path->getClientOriginalName();
+            }
+
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+
+
+            $helpDesk =  HelpDesks::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+
+                'subject' => $this->subject??'-',
+                'description' => $this->description,
+                'selected_equipment' => $this->selected_equipment??'-', // Ensure this is correctly referenced
+                'file_path' => $fileContent,
+                'file_name' => $fileName,
+                'mime_type' => $mimeType,
+                'cc_to' => $this->cc_to ?? '-',
+                'category' => $this->category ?? '-',
+                'mail' => $this->mail??'-',
+                'mobile' => $this->mobile??'-',
+                'priority' => $this->priority,
+                'distributor_name' => 'N/A',
+                'status_code' => 8,
+            ]);
+
+            // Notify super admins
+            $superAdmins = IT::where('role', 'super_admin')->get();
+            
+            foreach ($superAdmins as $admin) {
+                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+            
+                $firstName = $employeeDetails->first_name ?? 'N/A';
+                $lastName = $employeeDetails->last_name ?? 'N/A';
+            
+                Mail::to($admin->email)->send(
+                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
+                );
+            }
+
+            
+
+
+            FlashMessageHelper::flashSuccess('Request created successfully.');
+            $this->reset();
+            return redirect()->to('/HelpDesk');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->setErrorBag($e->validator->getMessageBag());
+        } catch (\Exception $e) {
+            Log::error('Error creating request: ' . $e->getMessage(), [
+                'employee_id' => $this->employeeDetails->emp_id,
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+            ]);
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+        }
+    }
     protected $listeners = ['closeModal'];
 
     public function closeModal()

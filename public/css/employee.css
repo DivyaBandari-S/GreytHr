@@ -632,6 +632,41 @@ main .btn-send:hover {
 /* MAIN */
 /* CONTENT */
 
+@media screen and (max-width: 968px) {
+    .brandLogoDiv div img {
+        display: none;
+    }
+    #content {
+        position: relative;
+        width: calc(100% - 60px);
+        transition: all 0.3s ease;
+    }
+    #maincontent {
+        position: relative;
+        width: calc(100% - 60px);
+        transition: all 0.3s ease;
+    }
+    /* nav .nav-link,
+	nav .divider {
+		display: block;
+	} */
+    nav form,
+    nav .divider {
+        display: none;
+    }
+    #maincontent.active {
+        width: calc(100% - 0px);
+        left: 0px;
+    }
+    #sidebar.hide + #content,
+    #sidebar.hide + #maincontent {
+        width: calc(100% - 0px);
+        left: 0px;
+    }
+    #sidebar.hide {
+        max-width: 0px;
+    }
+}
 @media screen and (max-width: 768px) {
     .brandLogoDiv div img {
         display: none;
@@ -736,12 +771,11 @@ main .btn-send:hover {
     }
 
     .avatar-chart img {
-        width: 36px; /* Ensure the correct unit (px) */
-        height: 36px; /* Use the same value as width for a perfect circle */
-        border-radius: 50%; /* Makes the avatar circular */
-        object-fit: cover; /* Ensures the image scales properly inside the circle */
+        width: 36p;
+        height: 36px;
+        border-radius: 8px;
+        object-fit: cover;
     }
-
 
     .sidebar-list-contacts {
         width: 480px;
@@ -1294,9 +1328,8 @@ main .btn-send:hover {
 }
 
 /* From Uiverse.io by Smit-Prajapati */
-.card-reporting {
-    width: 255px;
-    height: 325px;
+.cardReport {
+    height: 240px;
     background: #b2d9e0;
     border-radius: 25px;
     padding: 3px;
@@ -1305,24 +1338,25 @@ main .btn-send:hover {
     transition: all 0.5s ease-in-out;
 }
 
-.card-reporting .mail {
+.cardReport .mail {
     position: absolute;
-    right: 2rem;
+    right: 0.5rem;
+    z-index: 4;
     top: 1rem;
     background: transparent;
     border: none;
 }
 
-.card-reporting .mail svg {
+.cardReport .mail svg {
     stroke: #02114f;
     stroke-width: 3px;
 }
 
-.card-reporting .mail svg:hover {
+.cardReport .mail svg:hover {
     stroke: #35c9d8;
 }
 
-.card-reporting .profile-pic {
+.cardReport .profile-pic {
     position: absolute;
     width: calc(100% - 6px);
     height: calc(100% - 6px);
@@ -1335,7 +1369,7 @@ main .btn-send:hover {
     transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
 }
 
-.card-reporting .profile-pic img {
+.cardReport .profile-pic img {
     -o-object-fit: cover;
     object-fit: cover;
     width: 100%;
@@ -1345,7 +1379,7 @@ main .btn-send:hover {
     transition: all 0.5s ease-in-out 0s;
 }
 
-.card-reporting .profile-pic svg {
+.cardReport .profile-pic svg {
     width: 100%;
     height: 100%;
     -o-object-fit: cover;
@@ -1356,7 +1390,7 @@ main .btn-send:hover {
     transition: all 0.5s ease-in-out 0s;
 }
 
-.card-reporting .bottom {
+.cardReport .bottom {
     position: absolute;
     bottom: 3px;
     left: 3px;
@@ -1370,29 +1404,34 @@ main .btn-send:hover {
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
 }
 
-.card-reporting .bottom .content {
+.cardReport .bottom .content {
     position: absolute;
-    bottom: 0;
+    bottom: 3px;
     left: 1.5rem;
     right: 1.5rem;
-    height: 175px;
+    height: 125px;
 }
 
-.card-reporting .bottom .content .name {
-    display: block;
+.cardReport .bottom .content .name {
+	display: inline-block; 
+	max-width: 150px; 
+	white-space: nowrap; 
+	overflow: hidden; 
+	text-overflow: ellipsis;
+	cursor: pointer;
     font-size: 1rem;
     color: #02114f;
     font-weight: bold;
 }
 
-.card-reporting .bottom .content .about-me {
+.cardReport .bottom .content .about-me {
     display: block;
     font-size: 0.9rem;
     color: #02114f;
     margin-top: 1rem;
 }
 
-.card-reporting .bottom .bottom-bottom {
+.cardReport .bottom .bottom-bottom {
     position: absolute;
     bottom: 0.5rem;
     left: 1.5rem;
@@ -1402,23 +1441,23 @@ main .btn-send:hover {
     justify-content: space-between;
 }
 
-.card-reporting .bottom .bottom-bottom .social-links-container {
+.cardReport .bottom .bottom-bottom .social-links-container {
     display: flex;
     gap: 1rem;
 }
 
-.card-reporting .bottom .bottom-bottom .social-links-container svg {
+.cardReport .bottom .bottom-bottom .social-links-container svg {
     height: 20px;
     fill: white;
     filter: drop-shadow(0 5px 5px rgba(165, 132, 130, 0.1333333333));
 }
 
-.card-reporting .bottom .bottom-bottom .social-links-container svg:hover {
+.cardReport .bottom .bottom-bottom .social-links-container svg:hover {
     fill: #35c9d8;
     transform: scale(1.2);
 }
 
-.card-reporting .bottom .bottom-bottom .button {
+.cardReport .bottom .bottom-bottom .button {
     background: #b2d9e0;
     color: #02114f;
     border: none;
@@ -1428,22 +1467,22 @@ main .btn-send:hover {
     box-shadow: rgba(165, 132, 130, 0.1333333333) 0px 5px 5px 0px;
 }
 
-.card-reporting .bottom .bottom-bottom .button:hover {
+.cardReport .bottom .bottom-bottom .button:hover {
     background: #35c9d8;
     color: white;
 }
 
-.card-reporting {
+.cardReport {
     border-top-left-radius: 55px;
 }
 
-.card-reporting .bottom {
+.cardReport .bottom {
     top: 20%;
     border-radius: 80px 29px 23px 23px;
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0.2s;
 }
 
-.card-reporting .profile-pic {
+.cardReport .profile-pic {
     width: 100px;
     height: 100px;
     aspect-ratio: 1;
@@ -1456,19 +1495,19 @@ main .btn-send:hover {
     transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
 }
 
-.card-reporting .profile-pic:hover {
-    transform: scale(1.3);
-    border-radius: 0px;
-}
+/* .cardReport .profile-pic:hover {
+	transform: scale(1.3);
+	border-radius: 0px;
+  } */
 
-.card-reporting .profile-pic img {
+.cardReport .profile-pic img {
     transform: scale(1.5);
     /* -o-object-position: 0px 25px;
 	object-position: 0px 25px; */
     transition: all 0.5s ease-in-out 0.5s;
 }
 
-.card-reporting .profile-pic svg {
+.cardReport .profile-pic svg {
     transform: scale(2.5);
     transition: all 0.5s ease-in-out 0.5s;
 }
@@ -1522,7 +1561,6 @@ main .btn-send:hover {
     display: flex;
     align-items: flex-end;
     margin-bottom: 12px;
-    max-width: 90%;
     max-width: 90%;
 }
 
@@ -1612,4 +1650,9 @@ main .btn-send:hover {
     bottom: 60px;
     right: 20px;
     z-index: 1000;
+}
+
+.item.selected {
+    background-color: #f0f0f0;
+    border-left: 4px solid #007bff;
 }

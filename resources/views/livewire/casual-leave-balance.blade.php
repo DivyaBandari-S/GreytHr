@@ -50,7 +50,6 @@
             </div>
             @else
             <div class="row m-0 p-0">
-
                 <div class="col-12 mt-2 d-flex justify-content-start">
                     <div class="info-container">
                         <div class="info-item px-2">
@@ -63,13 +62,15 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-
                             <div class="info-value">{{ $employeeLeaveBalances}}</div>
-
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
                             <div class="info-value">{{ $totalSickDays }}</div>
+                        </div>
+                        <div class="info-item px-2">
+                            <div class="info-title">Lapsed</div>
+                            <div class="info-value">{{ $lapsedBalance }}</div>
                         </div>
                     </div>
                 </div>

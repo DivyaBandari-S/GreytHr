@@ -19,10 +19,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('App.Models.EmployeeDetails.{emp_id}', function ($user, $emp_id) {
-    Log::info('Broadcast channel authorization called', ['emp_id' => $emp_id]);
-    return (int) $user->emp_id === (int) $emp_id;
-});
+// Broadcast::channel('App.Models.EmployeeDetails.{emp_id}', function ($user, $emp_id) {
+//     Log::info('Broadcast channel authorization called', ['emp_id' => $emp_id]);
+//     return (int) $user->emp_id === (int) $emp_id;
+// });
 
 Broadcast::channel('chat.{receiver}', function (EmployeeDetails $user, $receiver) {
 

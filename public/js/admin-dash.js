@@ -151,17 +151,17 @@ if (toggleSidebar) {
     toggleSidebar.addEventListener("click", toggleSidebarHandler);
 
     // Check if the screen is a mobile size and trigger the sidebar toggle
-    if (window.innerWidth <= 768) {
+    if (window.innerWidth <= 968) {
         // Adjust the width as needed for mobile screens
         toggleSidebarHandler();
     }
 
     // Optional: Listen for window resize events to toggle based on resizing to/from mobile size
     window.addEventListener("resize", function () {
-        if (window.innerWidth <= 768 && !sidebar.classList.contains("hide")) {
+        if (window.innerWidth <= 968 && !sidebar.classList.contains("hide")) {
             toggleSidebarHandler();
         } else if (
-            window.innerWidth > 768 &&
+            window.innerWidth > 968 &&
             sidebar.classList.contains("hide")
         ) {
             toggleSidebarHandler();
@@ -350,33 +350,54 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const emojiPicker = document.getElementById('emojiPicker');
-    const emojiButton = document.getElementById('emojiButton');
-    const messageInput = document.getElementById('messageInput');
+document.addEventListener("DOMContentLoaded", () => {
+    const emojiPicker = document.getElementById("emojiPicker");
+    const emojiButton = document.getElementById("emojiButton");
+    const messageInput = document.getElementById("messageInput");
+    const fileInput = document.getElementById("fileInput");
 
-    // Toggle emoji picker visibility
-    emojiButton.addEventListener('click', () => {
-        if (emojiPicker.style.display === 'none' || !emojiPicker.style.display) {
-            emojiPicker.style.display = 'block';
-        } else {
-            emojiPicker.style.display = 'none';
-        }
+    // Toggle emoji picker visibility when emoji button is clicked
+    emojiButton.addEventListener("click", () => {
+        emojiPickerOpen(); // Toggle emoji picker visibility
     });
 
     // Add emoji to input when selected
-    emojiPicker.addEventListener('emoji-click', (event) => {
-        messageInput.value += event.detail.unicode;
-        emojiPicker.style.display = 'none';
+    emojiPicker.addEventListener("emoji-click", function (event) {
+        console.log("Selected Emoji:", event.detail.unicode);
+        const emoji = event.detail.unicode; // Get the selected emoji
+
+        // Insert emoji at cursor position
+        const cursorPos = messageInput.selectionStart; // Get cursor position
+        const textBefore = messageInput.value.substring(0, cursorPos); // Text before cursor
+        const textAfter = messageInput.value.substring(cursorPos); // Text after cursor
+
+        // Set new value with emoji inserted at cursor position
+        messageInput.value = textBefore + emoji + textAfter;
+
+        // Move the cursor to the end of the text after inserting the emoji
+        messageInput.selectionStart = messageInput.selectionEnd =
+            cursorPos + emoji.length;
+
+        emojiPicker.style.display = "none"; // Hide emoji picker after selection
     });
 
     // Handle file attachment
-    document.getElementById('fileInput').addEventListener('change', (event) => {
+    fileInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
         if (file) {
-            console.log('Attached file:', file.name);
+            console.log("Attached file:", file.name);
             // Add your file upload logic here
         }
     });
 });
+
+// Function to toggle emoji picker visibility
+function emojiPickerOpen() {
+    const emojiPicker = document.getElementById("emojiPicker");
+    emojiPicker.style.display =
+        emojiPicker.style.display === "none" || !emojiPicker.style.display
+            ? "block"
+            : "none";
+}
+
 
