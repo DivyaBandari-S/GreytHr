@@ -27,13 +27,6 @@
                 ->first();
             // Decode the company_id from employee_details
             $companyIds = json_decode($employeeDetails->company_id);
-            // Retrieve the employee details including the company_id
-            $employeeDetails = DB::table('employee_details')
-                ->where('emp_id', $employeeId)
-                ->select('company_id') // Select only the company_id
-                ->first();
-            // Decode the company_id from employee_details
-            $companyIds = json_decode($employeeDetails->company_id);
 
             $needsFlattening = false;
             foreach ($companyIds as $item) {
@@ -42,25 +35,13 @@
                     break;
                 }
             }
-            $needsFlattening = false;
-            foreach ($companyIds as $item) {
-                if (is_array($item)) {
-                    $needsFlattening = true;
-                    break;
-                }
-            }
 
-            if ($needsFlattening) {
-                // If there's nesting, flatten the array
             if ($needsFlattening) {
                 // If there's nesting, flatten the array
     $flattenedArray = array_merge(...$companyIds);
 } else {
-} else {
     // Otherwise, use the array as-is
     $flattenedArray = $companyIds;
-}
-if ($companyIds) {
 }
 if ($companyIds) {
     // Now perform the join with companies table
@@ -71,17 +52,6 @@ if ($companyIds) {
             ->first();
     } else {
         $employee = DB::table('companies')
-            ->whereIn('company_id', $companyIds)
-            ->select('companies.company_logo', 'companies.company_name')
-            ->first();
-    } else {
-        $employee = DB::table('companies')
-            ->whereIn('company_id', $companyIds)
-            ->where('is_parent', 'yes')
-            ->select('companies.company_logo', 'companies.company_name')
-                        ->first();
-                }
-            }
             ->whereIn('company_id', $companyIds)
             ->where('is_parent', 'yes')
             ->select('companies.company_logo', 'companies.company_name')
@@ -112,7 +82,6 @@ if ($companyIds) {
 
 <body>
     @guest
-        {{ $slot }}
         {{ $slot }}
     @else
     <section style="display: flex; flex-direction: column; min-height: 100vh;">
@@ -158,4 +127,3 @@ if ($companyIds) {
 </body>
 
 </html>
-
