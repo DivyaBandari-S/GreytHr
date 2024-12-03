@@ -11,8 +11,8 @@
         <div class="row m-0 p-0 mb-3">
             <div class="col-md-9 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
-                    <div class="card-content row p-0 m-0">
-                        <div class="col-md-6 p-0 ps-3 pt-4">
+                    <div class="card-content  row p-0 m-0">
+                        <div class="col-md-4 p-0 ps-3 pt-4">
                             @if ($greetingText)
                                 <p class="morning-city">{{ $greetingText }}</p>
                             @endif
@@ -27,11 +27,9 @@
 
                         </div> -->
 
-                        <div class="col-md-6">
-                            <div>
-                                <img src="images/admin_banner.png" style="width: 100%" />
-                            </div>
-                            <div class="mb-4 homeBaneerCard row m-0" style="margin-top: -40px !important;">
+                        <div class="col-md-8 px-3 pt-4">
+
+                            <div class="mb-4 homeBaneerCard row m-0" >
 
                                 <div class="col-md-6 pe-0">
                                     <div class="bigCircle">
@@ -83,7 +81,7 @@
                                     </p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
                                 </div>
-                                <div class="locationGlobe row m-0">
+                                <div class="locationGlobe mt-4 row m-0">
                                     <div class="col-1 p-0">
                                         <i class="fa-solid fa-location-dot" id="openMapIcon"
                                             style="color: red;cursor: pointer; font-size: 14px;"></i>
@@ -200,7 +198,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
         <!-- main content -->
