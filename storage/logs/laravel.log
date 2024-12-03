@@ -1,4 +1,4 @@
-[2024-12-03 17:40:25] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
+[2024-12-03 17:41:11] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
 [stacktrace]
 #0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
 #1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
@@ -40,7 +40,7 @@
 #37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
 #38 {main}
 "} 
-[2024-12-03 17:40:27] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
+[2024-12-03 17:41:12] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
 [stacktrace]
 #0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
 #1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
@@ -82,7 +82,7 @@
 #37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
 #38 {main}
 "} 
-[2024-12-03 17:40:29] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
+[2024-12-03 17:41:15] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
 [stacktrace]
 #0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
 #1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
@@ -124,7 +124,7 @@
 #37 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\xampp\\\\htdocs...')
 #38 {main}
 "} 
-[2024-12-03 17:40:31] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
+[2024-12-03 17:41:17] local.ERROR: Exception Encountered : CSRF token mismatch. {"exception":"[object] (Illuminate\\Session\\TokenMismatchException(code: 0): CSRF token mismatch. at C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken.php:85)
 [stacktrace]
 #0 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\Pipeline\\Pipeline.php(183): Illuminate\\Foundation\\Http\\Middleware\\VerifyCsrfToken->handle(Object(Illuminate\\Http\\Request), Object(Closure))
 #1 C:\\xampp\\htdocs\\GreytHr\\vendor\\laravel\\framework\\src\\Illuminate\\View\\Middleware\\ShareErrorsFromSession.php(49): Illuminate\\Pipeline\\Pipeline->Illuminate\\Pipeline\\{closure}(Object(Illuminate\\Http\\Request))
