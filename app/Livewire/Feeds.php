@@ -177,6 +177,7 @@ class Feeds extends Component
                 $this->allEmojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
+
                 $this->loadComments();
       $employeeId = Auth::guard('emp')->user()->emp_id;
       $this->isManager = DB::table('employee_details')
@@ -783,6 +784,7 @@ public function loadaddComments()
             ->where('company_id', $companyIds)
             ->where('is_parent', 'yes')
             ->first();
+         
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {

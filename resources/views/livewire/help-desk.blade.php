@@ -418,8 +418,8 @@
                         <td class="helpdesk-request">
                             {{ $record->priority ?? '-' }}
                         </td>
-                        <td class="helpdesk-request @if($record->status_code == 4) rejectColor @elseif($record->status_code == 12) approvedColor @endif">
-    @if($record->status_code == 4)
+cha                        <td class="helpdesk-request @if($record->status_code == 3) rejectColor @elseif($record->status_code == 11) approvedColor @endif">
+    @if($record->status_code == 3)
         {{ ucfirst($record->status->status_name  ?? '-') }}<br>
         @if($record->rejection_reason)
             <!-- If rejection_reason is not null, show the View Reason link -->
@@ -430,7 +430,7 @@
             <!-- If rejection_reason is null, show "No Reason" -->
            <p class="helpdesk-request">No Reason</p> 
         @endif
-    @elseif($record->status_code == 12)
+    @elseif($record->status_code == 11)
         {{ ucfirst($record->status->status_name ?? '-') }}
     @endif
 </td>
