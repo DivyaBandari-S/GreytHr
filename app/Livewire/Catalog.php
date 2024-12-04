@@ -790,7 +790,7 @@ public $RemoveRequestaceessDialog=false;
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
-
+  
 
     public function Devops()
     {
@@ -913,11 +913,13 @@ public $RemoveRequestaceessDialog=false;
                 'subject.required' => 'Business Justification is required',
                 'cc_to.required' => 'Add members is required',
                 'description' => 'Specific Information is required',
+                'distributor_name.required' => 'MailBox is required',
                 'priority.required' => 'Priority is required.',
 
             ];
             $this->validate([
                 'subject' => 'required|string|max:255',
+                'distributor_name' => 'required',
                 'cc_to' => 'required',
                 'priority' => 'required|in:High,Medium,Low',
                 'description' => 'required|string',
