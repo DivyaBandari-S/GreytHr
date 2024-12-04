@@ -232,17 +232,17 @@ public $closedSearch = '';
     
     public function searchClosedHelpDesk()
     {
-        $this->searchHelpDesk([12,4], $this->closedSearch,$this->closedCategory);
+        $this->searchHelpDesk([11,3], $this->closedSearch,$this->closedCategory);
     }
     
     public function showRejectionReason($id)
     {
-     
+  
         $record = HelpDesks::findOrFail($id);
     
-        if ($record && $record->status === 'Reject') {
+        if ($record && $record->status_code === 3) {
             $this->rejection_reason = $record->rejection_reason;
-        
+       
             $this->isOpen = true;
         } else {
             $this->dispatchBrowserEvent('notification', ['message' => 'Reason not available.']);
