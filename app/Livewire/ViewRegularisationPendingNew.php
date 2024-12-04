@@ -247,7 +247,7 @@ class ViewRegularisationPendingNew extends Component
                 }
                 $swiperecord1->save();
                 // Exit the loop after the first entry since the example has one entry
-               
+                SwipeRecord::whereDate('created_at', $date)->where('is_regularized',NULL)->delete();
             }
         }
         $this->countofregularisations--;

@@ -2048,8 +2048,8 @@ color: #fff;
                         <div class="col-5 pb-1 pt-1">
 
                           
-                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;">Shift:10:00 to
-                                19:00</p>
+                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:{{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}</p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
                           
