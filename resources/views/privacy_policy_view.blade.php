@@ -241,7 +241,7 @@
             <hr>
             <div class="row" style="display: flex;">
                 <div>
-                <span class="privacycontentlinks"><a class="privacycontentlinks"  href="/emplogin">Home</a></span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Privacy&Policy">Privacy Policy</a> </span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Terms&Services">Terms of Service</a> </span>
+                <span class="privacycontentlinks"><a class="privacycontentlinks"  href="/">Home</a></span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Privacy&Policy">Privacy Policy</a> </span> | <span class="privacycontentlinks"><a class="privacycontentlinks" href="/Terms&Services">Terms of Service</a> </span>
 
             </div>
             <div style="margin-left: auto;">

@@ -506,7 +506,7 @@
                                 $allEmojis = $currentCardEmojis->reverse();
                                 @endphp
 
-                                @if($currentCardEmojis && $emojisCount > 1)
+                                @if($currentCardEmojis && $emojisCount > 0)
                                 <div style="white-space: nowrap;">
                                     @foreach($lastTwoEmojis as $index => $emoji_reaction)
                                     <span style="font-size: 16px;margin-left:-7px;">{{ $emoji_reaction->emoji_reaction }}</span>
@@ -873,7 +873,7 @@
 
             // Get card IDs with more than 2 comments
             $validCardIds = $cardCommentsCount->filter(function ($count) {
-            return $count > 2;
+            return $count > 0;
             })->keys();
             $filteredComments = $comments->whereIn('card_id', $validCardIds);
 
@@ -1243,7 +1243,7 @@
 
                 // Get card IDs with more than 2 comments
                 $validCardIds = $cardCommentsCount->filter(function ($count) {
-                return $count >= 2; // Use >= 2 to include cards with exactly 2 comments
+                return $count >= 0; // Use >= 2 to include cards with exactly 2 comments
                 })->keys();
 
                 // Filter comments to include only those for cards with at least 2 comments
@@ -1801,7 +1801,7 @@ return $comments->count();
 
 // Get card IDs with more than 2 comments
 $validCardIds = $cardCommentsCount->filter(function ($count) {
-return $count > 1;
+return $count > 0;
 })->keys();
 $filteredComments = $addcomments->whereIn('card_id', $validCardIds);
 

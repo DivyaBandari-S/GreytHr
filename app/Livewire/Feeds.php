@@ -174,7 +174,7 @@ class Feeds extends Component
                 $this->addcomments = Addcomment::with('employee')->whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
+                $this->allEmojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
                 $this->combinedData = $this->combineAndSortData($this->employees);
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
                 $this->loadComments();
@@ -257,7 +257,7 @@ class Feeds extends Component
 
         $this->emp_id = $emp_id;
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
-
+        $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
         $this->showDialog = true;
@@ -272,7 +272,7 @@ class Feeds extends Component
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
-
+ $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
         $this->showDialogEmoji = true;
     }
     public function handleRadioChange($value)
@@ -313,6 +313,7 @@ class Feeds extends Component
     
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+                $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
             } else {
                 throw new \Exception('You can only remove your own reactions.');
             }
@@ -335,12 +336,19 @@ class Feeds extends Component
     
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
+                $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
             } else {
                 throw new \Exception('You can only remove your own reactions.');
             }
         } catch (\Exception $e) {
             FlashMessageHelper::flashError($e->getMessage());
         }
+    }
+
+    public function handleEmojiRemoval($emojiId)
+    {
+        // Handle the emoji removal logic (e.g., remove it from the list)
+        $this->allEmojis = $this->allEmojis->reject(fn($item) => $item->id === $emojiId);
     }
 
     // Method to add emoji
@@ -548,7 +556,7 @@ class Feeds extends Component
 
 
     }
-    protected $listeners = ['updateSortType'];
+    protected $listeners = ['updateSortType','emojiRemoved' => 'handleEmojiRemoval'];
     // Toggle dropdown visibility
     public function toggleDropdown()
     {
@@ -763,23 +771,31 @@ public function loadaddComments()
         if (auth()->guard('emp')->check()) {
             // Get the current authenticated employee's company ID
             $empCompanyId = auth()->guard('emp')->user()->company_id;
-
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $employeeDetails = DB::table('employee_details')
+            ->where('emp_id', $employeeId)
+            ->select('company_id') // Select only the company_id
+            ->first();
+ 
             // Assuming you have a Company model with a 'company_logo' attribute
-            $company = Company::where('company_id', $empCompanyId)->first();
-
+              $companyIds = json_decode($employeeDetails->company_id);
+            $company = DB::table('companies')
+            ->where('company_id', $companyIds)
+            ->where('is_parent', 'yes')
+            ->first();
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {
             $empCompanyId = auth()->guard('hr')->user()->company_id;
-
+ 
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
             return $company ? $company->company_logo : asset('user.jpg');
         }
-
-
-
-
+ 
+ 
+ 
+ 
     }
 
     public function render()
