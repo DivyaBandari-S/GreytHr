@@ -6,15 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @guest
-      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-    <title>
-        hr xpert
-    </title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+        <title>
+            hr xpert
+        </title>
     @endguest
     @auth('emp')
-
-
-  @livewireStyles
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @livewireStyles
 
         @php
             // Get the logged-in employee ID
@@ -60,9 +59,9 @@ if ($companyIds) {
             }
 
         @endphp
-      <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
-        hr xpert
+            hr xpert
         </title>
     @endauth
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -84,7 +83,7 @@ if ($companyIds) {
     @guest
         {{ $slot }}
     @else
-    <section style="display: flex; flex-direction: column; min-height: 100vh;">
+        <section style="display: flex; flex-direction: column; min-height: 100vh;">
             @livewire('main-layout')
             <main id="maincontent" style="flex-grow: 1; overflow: auto;">
                 {{ $slot }}
@@ -104,8 +103,9 @@ if ($companyIds) {
         </section>
     @endguest
 
-<script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
-<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
+    <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
     <script src="https://cdn.ckeditor.com/4.25.0-lts/standard/ckeditor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
@@ -123,6 +123,7 @@ if ($companyIds) {
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @livewireScripts
 </body>
 

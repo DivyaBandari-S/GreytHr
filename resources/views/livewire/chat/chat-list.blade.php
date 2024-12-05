@@ -1,4 +1,4 @@
-<div class="sidebar-list-contacts" id="contacts" wire:poll.keep-alive>
+<div class="sidebar-list-contacts" id="contacts">
     <div class="top">
         <a href="/">
             <div class="nav-toggle btn">
