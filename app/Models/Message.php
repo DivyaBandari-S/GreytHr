@@ -17,7 +17,8 @@ class Message extends Model
         'read',
         'body',
         'type',
-        'media_path'
+        'media_path',
+        'status'
     ];
 
     /**

@@ -29,6 +29,8 @@ class ChatBox extends Component
     public $receiverInstance;
     public $body = '';
     public $createdMessage;
+    public $messageBeingEdited;
+    public $editMessageBody;
     protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent'];
 
     // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
@@ -48,7 +50,29 @@ class ChatBox extends Component
         ];
     }
 
+    public function editMessage($messageId)
+    {
+        $this->messageBeingEdited = Message::find($messageId);
+        $this->editMessageBody = $this->messageBeingEdited->body;
+        $this->dispatch('showEditMessageModal');
+    }
 
+    public function deleteMessage($messageId)
+    {
+        $message = Message::find($messageId);
+        $message->delete();
+        $this->dispatch('refresh');
+    }
+
+    public function addEmojiReaction($messageId, $emoji)
+    {
+        $message = Message::find($messageId);
+        // Logic to add emoji reaction (you can store the reactions in a related table or update the message itself)
+        $message->reactions()->create([
+            'emoji' => $emoji,
+            'user_id' => auth()->id()
+        ]);
+    }
 
     public function resetComponent()
     {
@@ -126,12 +150,9 @@ class ChatBox extends Component
     {
 
         //  dd('top reached ');
-        $this->paginateVar = $this->paginateVar + 10;
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+        // $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
 
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
-            ->skip($this->messages_count -  $this->paginateVar)
-            ->take($this->paginateVar)->get();
+        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
 
         $height = $this->height;
         $this->dispatch('updatedHeight', ($height));
@@ -160,12 +181,10 @@ class ChatBox extends Component
     {
         $this->selectedConversation =  $conversation;
         $this->receiverInstance =  $receiver;
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+        // $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
 
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
-            ->skip($this->messages_count -  $this->paginateVar)
-            ->take($this->paginateVar)->get();
-            $this->dispatch('chatSelected');
+        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
+        $this->dispatch('chatSelected');
         Message::where('conversation_id', $this->selectedConversation->id)
             ->where('receiver_id',  auth()->id())->update(['read' => 1]);
 

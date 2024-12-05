@@ -1,4 +1,41 @@
 <div>
+    <style>
+        .message-content {
+            position: relative;
+        }
+
+        .message-actions {
+            display: none;
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            padding: 5px;
+            margin-top: 5px;
+        }
+
+        .message:hover .message-actions {
+            display: block;
+        }
+
+        .message-actions span {
+            margin: 0 5px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .message-actions span:hover {
+            color: #f0a500;
+            /* Hover color */
+        }
+
+        .message {
+            position: relative;
+            margin-bottom: 10px;
+        }
+    </style>
     @if ($selectedConversation)
         <div class="chat-body">
             <!-- Loop through the messages to display each one -->
@@ -34,7 +71,17 @@
                                 @endif
                             @endforeach
 
-
+                            <div class="message-actions">
+                                {{-- <!-- Emoji Reaction -->
+                                <span wire:click="addEmojiReaction({{ $message->id }}, '😊')" class="emoji-reaction"><i
+                                        class="fa-regular fa-smile"></i></span>
+                                <!-- Edit Message -->
+                                <span wire:click="editMessage({{ $message->id }})" class="edit-message"><i
+                                        class="fa-solid fa-pen"></i></span>
+                                <!-- Delete Message --> --}}
+                                <span wire:click="deleteMessage({{ $message->id }})" class="delete-message"><i
+                                        class="fa-solid fa-trash"></i></span>
+                            </div>
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
 
                             <!-- Message read status -->
