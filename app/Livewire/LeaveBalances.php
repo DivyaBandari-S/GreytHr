@@ -145,7 +145,6 @@ class LeaveBalances extends Component
                 $this->totalSickDays = $leaveBalances['totalSickDays'];
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
                 $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
-
                 // Retrieve the lapsed status for Sick Leave
                 $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $this->employeeId)
                     ->where('period', 'like', "%$this->selectedYear%")
@@ -163,9 +162,9 @@ class LeaveBalances extends Component
                     $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
                 } else {
                     // Otherwise, apply the deduction logic
-                    $this->sickLeaveBalance = ($this->sickLeavePerYear ?? 0) - ($this->approvedLeaveDays['totalSickDays'] ?? 0);
-                    $this->casualLeaveBalance = ($this->casualLeavePerYear ?? 0) - ($this->approvedLeaveDays['totalCasualDays'] ?? 0);
-                    $this->casualProbationLeaveBalance = ($this->casualProbationLeavePerYear ?? 0) - ($this->approvedLeaveDays['totalCasualLeaveProbationDays'] ?? 0);
+                    $this->sickLeaveBalance = ($this->sickLeavePerYear ?? 0) - ($this->totalSickDays ?? 0);
+                    $this->casualLeaveBalance = ($this->casualLeavePerYear ?? 0) - ($this->totalCasualDays ?? 0);
+                    $this->casualProbationLeaveBalance = ($this->casualProbationLeavePerYear ?? 0) - ($this->totalCasualLeaveProbationDays ?? 0);
                     $this->marriageLeaveBalance = ($this->marriageLeaves ?? 0) - ($this->approvedLeaveDays['totalMarriageDays'] ?? 0);
                     $this->maternityLeaveBalance = ($this->maternityLeaves ?? 0) - ($this->approvedLeaveDays['totalMaternityDays'] ?? 0);
                     $this->paternityLeaveBalance = ($this->paternityLeaves ?? 0) - ($this->approvedLeaveDays['totalPaternityDays'] ?? 0);
