@@ -26,6 +26,7 @@ class HolidayCalender extends Component
     public $calendarData;
     public $previousYear;
     public $nextYear;
+    public $noHolidaysFlag = false;
 
     public function mount()
     {
@@ -53,6 +54,7 @@ class HolidayCalender extends Component
                 $this->selectedYear = $selected_Year;
                 $this->fetchCalendarData($selected_Year);
             }
+           
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while updating the calendar data. Please try again later.');
             // Redirect the user to a safe location
@@ -66,7 +68,11 @@ class HolidayCalender extends Component
     {
         try {
             // Fetch data for the selected year
-            $this->calendarData = HolidayCalendar::where('year', $year)->get();
+
+            $this->calendarData = HolidayCalendar::where('year', $year)
+            ->where('status', 2)
+            ->get();
+            
             $uniqueDates = $this->calendarData->unique('date');
     
             // Update the calendar data with unique dates
