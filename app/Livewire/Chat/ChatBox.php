@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
+use Twilio\Rest\Messaging\V1\Service\AlphaSenderInstance;
 
 class ChatBox extends Component
 {
@@ -27,11 +28,12 @@ class ChatBox extends Component
     public $paginateVar = 10;
     public $height;
     public $receiverInstance;
+    public $senderInstance;
     public $body = '';
     public $createdMessage;
     public $messageBeingEdited;
     public $editMessageBody;
-    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent'];
+    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refresh' => '$refresh'];
 
     // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
     public function  getListeners()
@@ -61,7 +63,9 @@ class ChatBox extends Component
     {
         $message = Message::find($messageId);
         $message->delete();
+        // $this->dispatch('loadConversation');
         $this->dispatch('refresh');
+        // $this->dispatch('refresh')->to(ChatBox::class);
     }
 
     public function addEmojiReaction($messageId, $emoji)
@@ -181,8 +185,7 @@ class ChatBox extends Component
     {
         $this->selectedConversation =  $conversation;
         $this->receiverInstance =  $receiver;
-        // $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
-
+        $this->senderInstance = EmployeeDetails::find(auth()->id());
         $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
         $this->dispatch('chatSelected');
         Message::where('conversation_id', $this->selectedConversation->id)
