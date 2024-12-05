@@ -1564,7 +1564,7 @@ color: #fff;
                                                                <p class="text-2" style="margin-top:30px;">{{$averageWorkHoursForModalTitle}}</p>
                                                                         
 
-                                    l                 </section>
+                                                    </section>
                                             </td>
                                             <td class="insights-for-attendance-period-avg-working-hours">
 
@@ -2047,15 +2047,13 @@ color: #fff;
                         </div>
                         <div class="col-5 pb-1 pt-1">
 
-                            <p class="text-overflow mb-1" style="font-size:12px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
-                                10:00 am to 07:00 pm</p>
-                            <p class="text-muted m-0" style="font-size:12px;">Shift:10:00 to
-                                19:00</p>
+                          
+                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:{{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}</p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
-                            <p class="mb-1" style="font-size:12px;overflow: hidden;font-weight: 500;text-overflow: ellipsis;white-space: nowrap;font-weight: 500;">
-                                10:00 am to 07:00 pm</p>
-                            <p class="text-muted m-0" style="font-size:12px;">Attendance
+                          
+                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;">Attendance
                                 Scheme</p>
 
                         </div>

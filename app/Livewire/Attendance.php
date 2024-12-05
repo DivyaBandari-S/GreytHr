@@ -45,6 +45,8 @@ class Attendance extends Component
 
     public $excessHrs;
     public $percentageDifference;
+
+    public $employeeShiftDetails;
     public $currentDate;
     public $date1;
 
@@ -620,6 +622,14 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $startOfMonth = '2024-08-01';
             $endOfMonth = '2024-08-31';
 
+            $this->employeeShiftDetails = DB::table('employee_details')
+            ->join('company_shifts', function($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                     ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+            })
+            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
+            ->first();
             while ($currentDate->lte($endDate)) {
                 $dateString = $currentDate->toDateString();
 
