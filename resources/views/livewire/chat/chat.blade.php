@@ -3,7 +3,7 @@
         {{-- chat side bar --}}
         <livewire:chat.chat-side-bar />
         {{-- chat list --}}
-        <livewire:chat.chat-list/>
+        <livewire:chat.chat-list />
         <div class="box-info-content" id="content-chart">
             <div class="top">
                 <a href="#" id="back" class="btn back">
@@ -273,12 +273,27 @@
 </div>
 <script>
     document.addEventListener('livewire:init', () => {
-        console.log('hello hai i am call js function');
+        console.log('Hello! I am a JavaScript function.');
+
         Livewire.on('show-toast', (event) => {
-            toastr.success(event[0].message, 'Success', {
+            let message = event[0].message;
+
+            // Truncate the message if it exceeds 50 characters
+            if (message.length > 50) {
+                message = message.substring(0, 50) + '...';
+            }
+
+            toastr.success(message, 'Success', {
                 positionClass: 'toast-top-right',
                 timeOut: 3000, // Time in milliseconds
             });
+        });
+
+        Livewire.on('show-error', (event) => {
+            toastr.error(event[0].message, {
+                positionClass: 'toast-center',  // This will center the toast
+                timeOut: 3000,
+            }); // This will show the error toast
         });
     });
 </script>
