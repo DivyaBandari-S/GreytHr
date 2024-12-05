@@ -112,7 +112,7 @@ class LeaveBalances extends Component
         $this->updateLeaveBalances();
     }
 
-public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
+    public $marriageLeaveBalance, $maternityLeaveBalance, $paternityLeaveBalance;
 
     private function updateLeaveBalances()
     {
@@ -145,12 +145,11 @@ public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
                 $this->totalSickDays = $leaveBalances['totalSickDays'];
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
                 $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
-
                 // Retrieve the lapsed status for Sick Leave
                 $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $this->employeeId)
                     ->where('period', 'like', "%$this->selectedYear%")
                     ->first();
-                if ($toggleLapsedData && $toggleLapsedData->is_lapsed = true) {
+                if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
                     // If lapsed, set the balance directly to leavePerYeacr
                     $this->sickLeaveBalance = 0;
                     $this->casualLeaveBalance = 0;
@@ -163,14 +162,13 @@ public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
                     $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
                 } else {
                     // Otherwise, apply the deduction logic
-                    $this->sickLeaveBalance = $this->sickLeavePerYear - $this->approvedLeaveDays['totalSickDays'];
-                    $this->casualLeaveBalance = $this->casualLeavePerYear - $this->approvedLeaveDays['totalCasualDays'];
-                    $this->casualProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->approvedLeaveDays['totalCasualLeaveProbationDays'];
-                    $this->marriageLeaveBalance = $this->marriageLeaves - $this->approvedLeaveDays['totalMarriageDays'];
-                    $this->maternityLeaveBalance = $this->maternityLeaves - $this->approvedLeaveDays['totalMaternityDays'];
-                    $this->paternityLeaveBalance = $this->paternityLeaves - $this->approvedLeaveDays['totalPaternityDays'];
+                    $this->sickLeaveBalance = ($this->sickLeavePerYear ?? 0) - ($this->totalSickDays ?? 0);
+                    $this->casualLeaveBalance = ($this->casualLeavePerYear ?? 0) - ($this->totalCasualDays ?? 0);
+                    $this->casualProbationLeaveBalance = ($this->casualProbationLeavePerYear ?? 0) - ($this->totalCasualLeaveProbationDays ?? 0);
+                    $this->marriageLeaveBalance = ($this->marriageLeaves ?? 0) - ($this->approvedLeaveDays['totalMarriageDays'] ?? 0);
+                    $this->maternityLeaveBalance = ($this->maternityLeaves ?? 0) - ($this->approvedLeaveDays['totalMaternityDays'] ?? 0);
+                    $this->paternityLeaveBalance = ($this->paternityLeaves ?? 0) - ($this->approvedLeaveDays['totalPaternityDays'] ?? 0);
                 }
-
             }
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while loading the component. Please try again later.');
@@ -288,6 +286,7 @@ public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
             $selectedYear = now()->year;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
+            $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedYear);
             $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $selectedYear);
             $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $selectedYear);
             $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
@@ -308,12 +307,13 @@ public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
                 ->first();
             if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
                 // If lapsed, set the balance directly to leavePerYear
-                $sickLeaveBalance = $sickLeavePerYear;
-                $casualLeaveBalance = $casualLeavePerYear;
-                $casualProbationLeaveBalance = $casualProbationLeavePerYear;
-                $marriageLeaveBalance = $marriageLeaves;
-                $maternityLeaveBalance = $maternityLeaves;
-                $paternityLeaveBalance = $paternityLeaves;
+                $sickLeaveBalance = 0;
+                $casualLeaveBalance = 0;
+                $casualProbationLeaveBalance = 0;
+                $marriageLeaveBalance = 0;
+                $maternityLeaveBalance = 0;
+                $paternityLeaveBalance = 0;
+                $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
             } else {
                 // Otherwise, apply the deduction logic
                 $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
@@ -322,16 +322,8 @@ public $marriageLeaveBalance,$maternityLeaveBalance,$paternityLeaveBalance;
                 $marriageLeaveBalance = $marriageLeaves - $approvedLeaveDays['totalMarriageDays'];
                 $maternityLeaveBalance = $maternityLeaves - $approvedLeaveDays['totalMaternityDays'];
                 $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
+                $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
             }
-            // Calculate leave balances
-            $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
-            $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
-            $lossOfPayBalance = $approvedLeaveDays['totalLossOfPayDays'];
-            $casualProbationLeaveBalance = $casualProbationLeavePerYear - $approvedLeaveDays['totalCasualLeaveProbationDays'];
-            $marriageLeaveBalance = $marriageLeaves - $approvedLeaveDays['totalMarriageDays'];
-            $maternityLeaveBalance = $maternityLeaves - $approvedLeaveDays['totalMaternityDays'];
-            $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
-
             return [
                 'sickLeaveBalance' => $sickLeaveBalance,
                 'casualLeaveBalance' => $casualLeaveBalance,

@@ -58,7 +58,11 @@
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            <div class="info-value">{{$Availablebalance}}</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">0</div>
+                            @else
+                            <div class="info-value">{{ $Availablebalance }}</div>
+                            @endif
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Opening Balance</div>
@@ -66,13 +70,19 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-
                             <div class="info-value">{{ $employeeLeaveBalances }}</div>
-
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
                             <div class="info-value">{{ $totalSickDays }}</div>
+                        </div>
+                        <div class="info-item px-2">
+                            <div class="info-title">Lapsed</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">{{ $Availablebalance }}</div>
+                            @else
+                            <div class="info-value">0</div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -103,7 +113,7 @@
                             <tbody>
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
-                                <td>
+                                    <td>
                                         @if($balance->category_type === 'Leave')
                                         @if($balance->leave_status == '2')
                                         Availed
