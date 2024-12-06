@@ -233,6 +233,7 @@ li {
 #maincontent {
     position: relative;
     width: calc(100% - 250px);
+    display: flex; flex-direction: column;
     left: 250px;
     transition: all 0.3s ease;
 }

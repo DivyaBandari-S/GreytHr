@@ -56,6 +56,7 @@
                                         <img src="images/stopwatch.png" style="width: 2.5em; height: fit-content" />
                                     </div>
                                 </div>
+                              
                                 <div class="col-md-6 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
@@ -905,7 +906,7 @@
                                     <span class="normalText">{{ $currentDate }}</span>
                                 </div>
                                 <div class="col normalTextValue">Shift
-                                    Time : <span class="normalText">10:00 to 19:00</span></div>
+                                    Time : <span class="normalText">{{$formattedStartShiftTime}} to {{$formattedEndShiftTime}}</span></div>
                             </div>
                             <table class="swipes-table mt-2 border w-100">
                                 <tr>

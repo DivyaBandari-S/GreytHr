@@ -1294,27 +1294,27 @@
     </div>
 </div>
 
-@elseif($isPending==1&&$defaultApply==0)
-@if(count($pendingRegularisations)>0)
-@foreach($pendingRegularisations as $pr)
-@if ($pr->regularisation_entries!='[]')
-@php
-$regularisationEntries = json_decode($pr->regularisation_entries, true);
-$numberOfEntries = count($regularisationEntries);
-$firstItem = reset($regularisationEntries); // Get the first item
-$lastItem = end($regularisationEntries); // Get the last item
-@endphp
-<div class="accordion-heading rounded" style="margin-top:10px;">
+    @elseif($isPending==1&&$defaultApply==0)
+          @if(count($pendingRegularisations)>0)
+                    @foreach($pendingRegularisations as $pr)
+                          @if ($pr->regularisation_entries!='[]')
+                                    @php
+                                            $regularisationEntries = json_decode($pr->regularisation_entries, true);
+                                            $numberOfEntries = count($regularisationEntries);
+                                            $firstItem = reset($regularisationEntries); // Get the first item
+                                            $lastItem = end($regularisationEntries); // Get the last item
+                                    @endphp
+                                   <div class="accordion-heading rounded" style="margin-top:10px;">
 
-    <div class="accordion-title p-2 rounded">
+                                         <div class="accordion-title p-2 rounded">
 
-        <!-- Display leave details here based on $leaveRequest -->
+                                            <!-- Display leave details here based on $leaveRequest -->
 
-        <div class="col accordion-content">
+                                                  <div class="col accordion-content">
 
-            <span style="color: #778899; font-size: 12px; font-weight: 500;">Pending&nbsp;With</span>
-            @if(!empty($EmployeeDetails))
-            <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($EmployeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($EmployeeDetails->last_name))}}</span>
+                                                       <span style="color: #778899; font-size: 12px; font-weight: 500;">Pending&nbsp;With</span>
+                                                          @if(!empty($EmployeeDetails))
+                                                              <span style="color: #36454F; font-size: 12px; font-weight: 500;">{{ucwords(strtolower($EmployeeDetails->first_name))}}&nbsp;{{ucwords(strtolower($EmployeeDetails->last_name))}}</span>
             @else
             <span style="color: #36454F; font-size: 12px; font-weight: 500;">Manager Details not Available</span>
             @endif
