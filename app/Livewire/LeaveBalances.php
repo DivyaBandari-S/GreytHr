@@ -232,10 +232,10 @@ class LeaveBalances extends Component
         $this->showModal = false;
     }
 
-
     public function render()
     {
         try {
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             if ($this->casualLeavePerYear > 0) {
                 $this->percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
@@ -258,13 +258,9 @@ class LeaveBalances extends Component
                 $grantedLeave = ($gender === 'Female') ? 90 : 05;
 
                 $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
-
                 return view('livewire.leave-balances', [
                     'gender' => $gender,
                     'grantedLeave' => $grantedLeave,
-                    'sickLeaveBalance' => $leaveBalances['sickLeaveBalance'],
-                    'casualLeaveBalance' => $leaveBalances['casualLeaveBalance'],
-                    'lossOfPayBalance' => $leaveBalances['lossOfPayBalance'],
                     'employeeDetails' => $this->employeeDetails,
                     'leaveTransactions' => $this->leaveTransactions,
                     'percentageCasual' => $this->percentageCasual,
