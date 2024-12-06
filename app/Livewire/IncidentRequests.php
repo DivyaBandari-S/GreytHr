@@ -294,18 +294,17 @@ class IncidentRequests extends Component
 
     public function showRejectionReason($id)
     {
-
-        $record = IncidentRequest::findOrFail($id);
-
+  
+        $record = HelpDesks::findOrFail($id);
+    
         if ($record && $record->status_code === 3) {
             $this->rejection_reason = $record->rejection_reason;
-
+       
             $this->isOpen = true;
         } else {
             $this->dispatchBrowserEvent('notification', ['message' => 'Reason not available.']);
         }
     }
-
     public function closeModal()
     {
         $this->isOpen = false;
