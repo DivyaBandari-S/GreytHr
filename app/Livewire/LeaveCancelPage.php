@@ -53,11 +53,11 @@ class LeaveCancelPage extends Component
     public $empManagerDetails, $selectedManagerDetails;
     public $selectedLeaveType = null;
     protected $rules = [
-        'leave_cancel_reason' => 'required',
+        'selectedLeaveType' => 'required',
     ];
 
     protected $messages = [
-        'leave_cancel_reason.required' => 'Reason is required',
+        'selectedLeaveType.required' => 'Please select a leave type to submit',
     ];
 
 

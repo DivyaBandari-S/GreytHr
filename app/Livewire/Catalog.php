@@ -32,6 +32,7 @@ use App\Mail\ServiceRequestMail;
 use App\Models\IncidentRequest;
 use App\Models\IT;
 use App\Models\ServiceRequest;
+use Illuminate\Support\Facades\Validator;
 
 class Catalog extends Component
 {
@@ -73,7 +74,7 @@ public $RemoveRequestaceessDialog=false;
     public $image;
     public $employeeDetails;
     public $employees;
-
+    public $file_paths = [];
     public $selectedPerson = null;
     public $addselectedPerson = null;
     public $cc_to;
@@ -697,99 +698,148 @@ public $RemoveRequestaceessDialog=false;
     {
         $this->isNames = !$this->isNames;
     }
-    public function DistributorRequest()
-    {
-        $messages = [
-            'subject.required' => 'Business Justification is required',
-            'distributor_name.required' => 'Distributor name is required',
-            'description.required' => 'Specific Information is required',
-            'priority.required' => 'Priority is required.',
-        ];
+   // DistributorRequest method
+   public function DistributorRequest()
+   {
+       // Initialize file paths as an empty array if not provided
+      
+       $messages = [
+        'subject.required' => 'Business Justification is required',
+        'distributor_name.required' => 'Distributor name is required',
+        'description.required' => 'Specific Information is required',
+        'priority.required' => 'Priority is required.',
+    ];
 
-        $this->validate([
-            'distributor_name' => 'required|string',
-            'subject' => 'required|string|max:255',
-            'priority' => 'required|in:High,Medium,Low',
-            'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
-        ], $messages);
+    $this->validate([
+        'distributor_name' => 'required|string',
+        'subject' => 'required|string|max:255',
+        'priority' => 'required|in:High,Medium,Low',
+        'description' => 'required|string',
+        'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
+    ], $messages);
+    $filePaths = $this->file_paths ?? [];
+       // Validate file uploads
+       $validator = Validator::make(
+           ['file_paths' => $filePaths],
+           [
+               'file_paths' => 'required|array', // Ensure file_paths is an array
+               'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+           ],
+           [
+               'file_paths.required' => 'You must upload at least one file.',
+               'file_paths.*.required' => 'Each file is required.',
+               'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+               'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+           ]
+       );
+   
+       // If validation fails, return an error response
+       if ($validator->fails()) {
+           return response()->json($validator->errors(), 422);
+       }
+   
+       // Array to hold processed file data
+       $fileDataArray = [];
+   
+       // Process each file
+       if (!empty($filePaths) && is_array($filePaths)) {
+           foreach ($filePaths as $file) {
+               // Check if the file is valid
+               if ($file->isValid()) {
+                   try {
+                       // Get file details
+                       $mimeType = $file->getMimeType();
+                       $originalName = $file->getClientOriginalName();
+                       $fileContent = file_get_contents($file->getRealPath());
+   
+                       // Encode the file content to base64
+                       $base64File = base64_encode($fileContent);
+   
+                       // Add file data to the array
+                       $fileDataArray[] = [
+                           'data' => $base64File,
+                           'mime_type' => $mimeType,
+                           'original_name' => $originalName,
+                       ];
+                   } catch (\Exception $e) {
+                       Log::error('Error processing file', [
+                           'file_name' => $file->getClientOriginalName(),
+                           'error' => $e->getMessage(),
+                       ]);
+                       return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                   }
+               } else {
+                   Log::error('Invalid file uploaded', [
+                       'file_name' => $file->getClientOriginalName(),
+                   ]);
+                   return response()->json(['error' => 'Invalid file uploaded'], 400);
+               }
+           }
+       } else {
+           Log::warning('No files uploaded.');
+           return response()->json(['error' => 'No files were uploaded.'], 400);
+       }
+   
+       // Further processing, such as saving to the database
+       try {
+           // Fetch employee details
+           $employeeId = auth()->guard('emp')->user()->emp_id;
+           $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+   
+           // If no employee details found, handle the error
+           if (!$this->employeeDetails) {
+               Log::error('Employee details not found', ['emp_id' => $employeeId]);
+               return response()->json(['error' => 'Employee details not found'], 404);
+           }
+   
+           // Create HelpDesk entry
+           $helpDesk = HelpDesks::create([
+               'emp_id' => $this->employeeDetails->emp_id,
+               'distributor_name' => $this->distributor_name,
+               'subject' => $this->subject,
+               'description' => $this->description,
+               'file_paths' => json_encode($fileDataArray) ??'-', // Store file data as JSON
+               'cc_to' => $this->cc_to ?? '-',
+               'category' => $this->category,
+               'priority' => $this->priority,
+               'mail' => $this->mail ?? '-',
+               'mobile' => $this->mobile ?? '-',
+               'status_code' => 8,
+           ]);
+   
+           // Notify super admins
+           $superAdmins = IT::where('role', 'super_admin')->get();
+           foreach ($superAdmins as $admin) {
+               $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+               $firstName = $employeeDetails->first_name ?? 'N/A';
+               $lastName = $employeeDetails->last_name ?? 'N/A';
+   
+               Mail::to($admin->email)->send(
+                   new HelpDeskNotification($helpDesk, $firstName, $lastName)
+               );
+           }
+   
+           // Respond with success message
+           FlashMessageHelper::flashSuccess('Request created successfully.');
+           return redirect()->to('/HelpDesk');
+       } catch (\Exception $e) {
+           // Log the error details
+           Log::error('Error creating request', [
+               'employee_id' => $this->employeeDetails->emp_id ?? 'N/A',
+               'category' => $this->category,
+               'subject' => $this->subject,
+               'description' => $this->description,
+               'file_paths' => $fileDataArray,
+               'error' => $e->getMessage(),
+           ]);
+           FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+           return response()->json(['error' => 'An error occurred while processing your request.'], 500);
+       }
+   }
+   
 
-        try {
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
 
-            if ($this->file_path) {
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
-            }
-
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
-            $helpDesk = HelpDesks::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-
-                'distributor_name' => $this->distributor_name,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
-                'cc_to' => $this->cc_to ?? '-',
-                'category' => $this->category,
-                'priority' => $this->priority,
-                'mail' => $this->mail??'-',
-                'mobile' => $this->mobile??'-',
-                'status_code' => 8,
-            ]);
-            $helpDesk->refresh();
-            
-            // Notify super admins
-            $superAdmins = IT::where('role', 'super_admin')->get();
-            
-            foreach ($superAdmins as $admin) {
-                $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-            
-                $firstName = $employeeDetails->first_name ?? 'N/A';
-                $lastName = $employeeDetails->last_name ?? 'N/A';
-            
-                Mail::to($admin->email)->send(
-                    new HelpDeskNotification($helpDesk, $firstName, $lastName)
-                );
-            }
-
-            FlashMessageHelper::flashSuccess('Request created successfully.');
-            $this->reset();
-            return redirect()->to('/HelpDesk');
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            // Do not reset here, just set the error bag
-            $this->setErrorBag($e->validator->getMessageBag());
-        } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
-                'employee_id' => $this->employeeDetails->emp_id,
-                'category' => $this->category,
-                'subject' => $this->subject,
-                'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
-            ]);
-            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
-        }
-    }
+    
   
 
     public function Devops()
@@ -800,7 +850,7 @@ public $RemoveRequestaceessDialog=false;
             'description.required' => 'Specific Information is required',
             'file_path.file' => 'The uploaded file must be a valid file.',
             'file_path.mimes' => 'The file must be of type: xls, csv, xlsx, pdf, jpeg, png, jpg, gif.',
-            'file_path.max' => 'The file may not be greater than 40MB.',
+        
         ];
 
         // Validate input fields
@@ -808,9 +858,70 @@ public $RemoveRequestaceessDialog=false;
             'subject' => 'required|string|max:255',
             'priority' => 'required|in:High,Medium,Low',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+           
         ], $messages);
-
+        $filePaths = $this->file_paths ?? [];
+        // Validate file uploads
+        $validator = Validator::make(
+            ['file_paths' => $filePaths],
+            [
+                'file_paths' => 'required|array', // Ensure file_paths is an array
+                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+            ],
+            [
+                'file_paths.required' => 'You must upload at least one file.',
+                'file_paths.*.required' => 'Each file is required.',
+                'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+            ]
+        );
+    
+        // If validation fails, return an error response
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+    
+        // Array to hold processed file data
+        $fileDataArray = [];
+    
+        // Process each file
+        if (!empty($filePaths) && is_array($filePaths)) {
+            foreach ($filePaths as $file) {
+                // Check if the file is valid
+                if ($file->isValid()) {
+                    try {
+                        // Get file details
+                        $mimeType = $file->getMimeType();
+                        $originalName = $file->getClientOriginalName();
+                        $fileContent = file_get_contents($file->getRealPath());
+    
+                        // Encode the file content to base64
+                        $base64File = base64_encode($fileContent);
+    
+                        // Add file data to the array
+                        $fileDataArray[] = [
+                            'data' => $base64File,
+                            'mime_type' => $mimeType,
+                            'original_name' => $originalName,
+                        ];
+                    } catch (\Exception $e) {
+                        Log::error('Error processing file', [
+                            'file_name' => $file->getClientOriginalName(),
+                            'error' => $e->getMessage(),
+                        ]);
+                        return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                    }
+                } else {
+                    Log::error('Invalid file uploaded', [
+                        'file_name' => $file->getClientOriginalName(),
+                    ]);
+                    return response()->json(['error' => 'Invalid file uploaded'], 400);
+                }
+            }
+        } else {
+            Log::warning('No files uploaded.');
+            return response()->json(['error' => 'No files were uploaded.'], 400);
+        }
         try {
             // Fetch logged-in employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -829,38 +940,17 @@ public $RemoveRequestaceessDialog=false;
             $this->mail = $employeeDetails->email ?? '-';
             $this->mobile = $employeeDetails->emergency_contact ?? '-'; // Using mobile as emergencyContact
 
-            // Process file upload
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
-
-            if ($this->file_path) {
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                // Check file size limit for BLOB storage
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
-            }
-
+      
             $helpDesk = HelpDesks::create([
                 'emp_id' => $employeeId, // Pass the employee ID directly
                 'distributor_name' => $this->distributor_name ?? '-',
                 'subject' => $this->subject,
                
                 'description' => $this->description,
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
+                'file_paths' => json_encode($fileDataArray) ??'-',
+                
                 'priority' => $this->priority,
-                'mime_type' => $mimeType,
+             
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mail' => $this->mail, // Directly fetched email
@@ -898,7 +988,7 @@ public $RemoveRequestaceessDialog=false;
                 'category' => $this->category ?? null,
                 'subject' => $this->subject ?? null,
                 'description' => $this->description ?? null,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
+                'file_paths' => $fileDataArray,
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -923,36 +1013,73 @@ public $RemoveRequestaceessDialog=false;
                 'cc_to' => 'required',
                 'priority' => 'required|in:High,Medium,Low',
                 'description' => 'required|string',
-                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960', // Adjust max size as needed
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // Adjust max size as needed
 
             ],$messages);
          
     // Store the file as binary data
-    $fileContent=null;
-    $mimeType = null;
-    $fileName = null;
-    if ($this->file_path) {
+    $filePaths = $this->file_paths ?? [];
+       // Validate file uploads
+       $validator = Validator::make(
+           ['file_paths' => $filePaths],
+           [
+               'file_paths' => 'required|array', // Ensure file_paths is an array
+               'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+           ],
+           [
+               'file_paths.required' => 'You must upload at least one file.',
+               'file_paths.*.required' => 'Each file is required.',
+               'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+               'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+           ]
+       );
    
+       // If validation fails, return an error response
+       if ($validator->fails()) {
+           return response()->json($validator->errors(), 422);
+       }
    
-        $fileContent = file_get_contents($this->file_path->getRealPath());
-        if ($fileContent === false) {
-            Log::error('Failed to read the uploaded file.', [
-                'file_path' => $this->file_path->getRealPath(),
-            ]);
-            FlashMessageHelper::flashError( 'Failed to read the uploaded file.');
-            return;
-        }
- 
-        // Check if the file content is too large
-        if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-            FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-            return;
-        }
- 
- 
-        $mimeType = $this->file_path->getMimeType();
-        $fileName = $this->file_path->getClientOriginalName();
-    }
+       // Array to hold processed file data
+       $fileDataArray = [];
+   
+       // Process each file
+       if (!empty($filePaths) && is_array($filePaths)) {
+           foreach ($filePaths as $file) {
+               // Check if the file is valid
+               if ($file->isValid()) {
+                   try {
+                       // Get file details
+                       $mimeType = $file->getMimeType();
+                       $originalName = $file->getClientOriginalName();
+                       $fileContent = file_get_contents($file->getRealPath());
+   
+                       // Encode the file content to base64
+                       $base64File = base64_encode($fileContent);
+   
+                       // Add file data to the array
+                       $fileDataArray[] = [
+                           'data' => $base64File,
+                           'mime_type' => $mimeType,
+                           'original_name' => $originalName,
+                       ];
+                   } catch (\Exception $e) {
+                       Log::error('Error processing file', [
+                           'file_name' => $file->getClientOriginalName(),
+                           'error' => $e->getMessage(),
+                       ]);
+                       return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                   }
+               } else {
+                   Log::error('Invalid file uploaded', [
+                       'file_name' => $file->getClientOriginalName(),
+                   ]);
+                   return response()->json(['error' => 'Invalid file uploaded'], 400);
+               }
+           }
+       } else {
+           Log::warning('No files uploaded.');
+           return response()->json(['error' => 'No files were uploaded.'], 400);
+       }
    
         $employeeId = auth()->guard('emp')->user()->emp_id;
        
@@ -965,9 +1092,9 @@ public $RemoveRequestaceessDialog=false;
 
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' =>  $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => json_encode($fileDataArray) ??'-',
+               
+              
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category,
                 'mobile' => $this->mobile??'-',
@@ -1005,7 +1132,7 @@ public $RemoveRequestaceessDialog=false;
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_paths' => $fileDataArray, // Log the length of the file content
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -1025,36 +1152,72 @@ public $RemoveRequestaceessDialog=false;
                 'description' => 'required|string',
                 'priority' => 'required|in:High,Medium,Low',
                 'selected_equipment' => 'required|in:keyboard,mouse,headset,monitor',
-                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
             ], $messages);
 
 
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
-            // Store the file as binary data
-            if ($this->file_path) {
-
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
+            $filePaths = $this->file_paths ?? [];
+            // Validate file uploads
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'required|array', // Ensure file_paths is an array
+                    'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+                ],
+                [
+                    'file_paths.required' => 'You must upload at least one file.',
+                    'file_paths.*.required' => 'Each file is required.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+        
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
             }
-
+        
+            // Array to hold processed file data
+            $fileDataArray = [];
+        
+            // Process each file
+            if (!empty($filePaths) && is_array($filePaths)) {
+                foreach ($filePaths as $file) {
+                    // Check if the file is valid
+                    if ($file->isValid()) {
+                        try {
+                            // Get file details
+                            $mimeType = $file->getMimeType();
+                            $originalName = $file->getClientOriginalName();
+                            $fileContent = file_get_contents($file->getRealPath());
+        
+                            // Encode the file content to base64
+                            $base64File = base64_encode($fileContent);
+        
+                            // Add file data to the array
+                            $fileDataArray[] = [
+                                'data' => $base64File,
+                                'mime_type' => $mimeType,
+                                'original_name' => $originalName,
+                            ];
+                        } catch (\Exception $e) {
+                            Log::error('Error processing file', [
+                                'file_name' => $file->getClientOriginalName(),
+                                'error' => $e->getMessage(),
+                            ]);
+                            return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                        }
+                    } else {
+                        Log::error('Invalid file uploaded', [
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
+                        return response()->json(['error' => 'Invalid file uploaded'], 400);
+                    }
+                }
+            } else {
+                Log::warning('No files uploaded.');
+                return response()->json(['error' => 'No files were uploaded.'], 400);
+            }
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1066,9 +1229,9 @@ public $RemoveRequestaceessDialog=false;
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'selected_equipment' => $this->selected_equipment, // Ensure this is correctly referenced
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => json_encode($fileDataArray) ??'-',
+              
+             
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
                 'mail' => $this->mail??'-',
@@ -1104,7 +1267,7 @@ public $RemoveRequestaceessDialog=false;
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_paths' => $fileDataArray,// Log the length of the file content
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -1124,36 +1287,73 @@ public $RemoveRequestaceessDialog=false;
                 'description' => 'required|string',
                 'priority' => 'required|in:High,Medium,Low',
                
-                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
             ], $messages);
 
 
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
-            // Store the file as binary data
-            if ($this->file_path) {
-
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
+            $filePaths = $this->file_paths ?? [];
+            // Validate file uploads
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'required|array', // Ensure file_paths is an array
+                    'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+                ],
+                [
+                    'file_paths.required' => 'You must upload at least one file.',
+                    'file_paths.*.required' => 'Each file is required.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+        
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
             }
-
+        
+            // Array to hold processed file data
+            $fileDataArray = [];
+        
+            // Process each file
+            if (!empty($filePaths) && is_array($filePaths)) {
+                foreach ($filePaths as $file) {
+                    // Check if the file is valid
+                    if ($file->isValid()) {
+                        try {
+                            // Get file details
+                            $mimeType = $file->getMimeType();
+                            $originalName = $file->getClientOriginalName();
+                            $fileContent = file_get_contents($file->getRealPath());
+        
+                            // Encode the file content to base64
+                            $base64File = base64_encode($fileContent);
+        
+                            // Add file data to the array
+                            $fileDataArray[] = [
+                                'data' => $base64File,
+                                'mime_type' => $mimeType,
+                                'original_name' => $originalName,
+                            ];
+                        } catch (\Exception $e) {
+                            Log::error('Error processing file', [
+                                'file_name' => $file->getClientOriginalName(),
+                                'error' => $e->getMessage(),
+                            ]);
+                            return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                        }
+                    } else {
+                        Log::error('Invalid file uploaded', [
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
+                        return response()->json(['error' => 'Invalid file uploaded'], 400);
+                    }
+                }
+            } else {
+                Log::warning('No files uploaded.');
+                return response()->json(['error' => 'No files were uploaded.'], 400);
+            }
+        
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1165,9 +1365,8 @@ public $RemoveRequestaceessDialog=false;
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'selected_equipment' => $this->selected_equipment??'-', // Ensure this is correctly referenced
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => json_encode($fileDataArray) ??'-',
+               
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
                 'mail' => $this->mail??'-',
@@ -1206,7 +1405,7 @@ public $RemoveRequestaceessDialog=false;
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_paths' => $fileDataArray, // Log the length of the file content
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -1226,36 +1425,72 @@ public $RemoveRequestaceessDialog=false;
                 'description' => 'required|string',
                 'priority' => 'required|in:High,Medium,Low',
                
-                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:40960',
+                'file_path' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
             ], $messages);
 
 
-            $fileContent = null;
-            $mimeType = null;
-            $fileName = null;
-            // Store the file as binary data
-            if ($this->file_path) {
-
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                    return;
-                }
-
-                // Check if the file content is too large
-                if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                    return;
-                }
-
-
-                $mimeType = $this->file_path->getMimeType();
-                $fileName = $this->file_path->getClientOriginalName();
+            $filePaths = $this->file_paths ?? [];
+            // Validate file uploads
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'required|array', // Ensure file_paths is an array
+                    'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+                ],
+                [
+                    'file_paths.required' => 'You must upload at least one file.',
+                    'file_paths.*.required' => 'Each file is required.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+        
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
             }
-
+        
+            // Array to hold processed file data
+            $fileDataArray = [];
+        
+            // Process each file
+            if (!empty($filePaths) && is_array($filePaths)) {
+                foreach ($filePaths as $file) {
+                    // Check if the file is valid
+                    if ($file->isValid()) {
+                        try {
+                            // Get file details
+                            $mimeType = $file->getMimeType();
+                            $originalName = $file->getClientOriginalName();
+                            $fileContent = file_get_contents($file->getRealPath());
+        
+                            // Encode the file content to base64
+                            $base64File = base64_encode($fileContent);
+        
+                            // Add file data to the array
+                            $fileDataArray[] = [
+                                'data' => $base64File,
+                                'mime_type' => $mimeType,
+                                'original_name' => $originalName,
+                            ];
+                        } catch (\Exception $e) {
+                            Log::error('Error processing file', [
+                                'file_name' => $file->getClientOriginalName(),
+                                'error' => $e->getMessage(),
+                            ]);
+                            return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                        }
+                    } else {
+                        Log::error('Invalid file uploaded', [
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
+                        return response()->json(['error' => 'Invalid file uploaded'], 400);
+                    }
+                }
+            } else {
+                Log::warning('No files uploaded.');
+                return response()->json(['error' => 'No files were uploaded.'], 400);
+            }
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
@@ -1267,9 +1502,7 @@ public $RemoveRequestaceessDialog=false;
                 'subject' => $this->subject??'-',
                 'description' => $this->description,
                 'selected_equipment' => $this->selected_equipment??'-', // Ensure this is correctly referenced
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => json_encode($fileDataArray) ??'-',
                 'cc_to' => $this->cc_to ?? '-',
                 'category' => $this->category ?? '-',
                 'mail' => $this->mail??'-',
@@ -1307,7 +1540,7 @@ public $RemoveRequestaceessDialog=false;
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null, // Log the length of the file content
+                'file_paths' => $fileDataArray, // Log the length of the file content
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -1364,6 +1597,7 @@ public $RemoveRequestaceessDialog=false;
         $employeeName = $employee->first_name . ' ' . $employee->last_name . ' #(' . $employeeId . ')';
         $superAdmins = IT::where('role', 'super_admin')->get();
 
+   
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
                 $query->where('emp_id', $employeeId)

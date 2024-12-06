@@ -41,6 +41,26 @@ class ChatSendMessage extends Component
         $this->body .= $emoji;
     }
 
+
+
+    public function deleteMedia($index)
+    {
+        // Remove the media from the array
+        unset($this->media[$index]);
+
+        // Re-index the array to maintain continuous keys
+        $this->media = array_values($this->media);
+
+        // Call the updatedMedia method to refresh the preview and body
+        $this->updatedMedia();
+    }
+
+
+    public function clearError()
+    {
+        session()->forget('error'); // This clears the error session
+    }
+
     public function updatedMedia()
     {
         $this->mediaPreviews = [];
@@ -64,26 +84,6 @@ class ChatSendMessage extends Component
 
         // Append the file names to the message body
         $this->body = implode(', ', $fileNames) . ' ';
-    }
-
-
-
-    public function deleteMedia($index)
-    {
-        // Remove the media from the array
-        unset($this->media[$index]);
-
-        // Re-index the array to maintain continuous keys
-        $this->media = array_values($this->media);
-
-        // Call the updatedMedia method to refresh the preview and body
-        $this->updatedMedia();
-    }
-
-
-    public function clearError()
-    {
-        session()->forget('error'); // This clears the error session
     }
 
 

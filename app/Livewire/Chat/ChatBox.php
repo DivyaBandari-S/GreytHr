@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
+use Twilio\Rest\Messaging\V1\Service\AlphaSenderInstance;
 
 class ChatBox extends Component
 {
@@ -27,9 +28,12 @@ class ChatBox extends Component
     public $paginateVar = 10;
     public $height;
     public $receiverInstance;
+    public $senderInstance;
     public $body = '';
     public $createdMessage;
-    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent'];
+    public $messageBeingEdited;
+    public $editMessageBody;
+    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refresh' => '$refresh'];
 
     // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
     public function  getListeners()
@@ -48,7 +52,31 @@ class ChatBox extends Component
         ];
     }
 
+    public function editMessage($messageId)
+    {
+        $this->messageBeingEdited = Message::find($messageId);
+        $this->editMessageBody = $this->messageBeingEdited->body;
+        $this->dispatch('showEditMessageModal');
+    }
 
+    public function deleteMessage($messageId)
+    {
+        $message = Message::find($messageId);
+        $message->delete();
+        // $this->dispatch('loadConversation');
+        $this->dispatch('refresh');
+        // $this->dispatch('refresh')->to(ChatBox::class);
+    }
+
+    public function addEmojiReaction($messageId, $emoji)
+    {
+        $message = Message::find($messageId);
+        // Logic to add emoji reaction (you can store the reactions in a related table or update the message itself)
+        $message->reactions()->create([
+            'emoji' => $emoji,
+            'user_id' => auth()->id()
+        ]);
+    }
 
     public function resetComponent()
     {
@@ -59,6 +87,7 @@ class ChatBox extends Component
     public function broadcastedMessageRead($event)
     {
 
+        dd($event);
         if ($this->selectedConversation) {
 
 
@@ -77,6 +106,7 @@ class ChatBox extends Component
 
     function broadcastedMessageReceived($event)
     {
+        dd($event);
         ///here
         $this->dispatch('refresh');
         # code...
@@ -126,12 +156,9 @@ class ChatBox extends Component
     {
 
         //  dd('top reached ');
-        $this->paginateVar = $this->paginateVar + 10;
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
+        // $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
 
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
-            ->skip($this->messages_count -  $this->paginateVar)
-            ->take($this->paginateVar)->get();
+        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
 
         $height = $this->height;
         $this->dispatch('updatedHeight', ($height));
@@ -160,12 +187,9 @@ class ChatBox extends Component
     {
         $this->selectedConversation =  $conversation;
         $this->receiverInstance =  $receiver;
-        $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
-
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)
-            ->skip($this->messages_count -  $this->paginateVar)
-            ->take($this->paginateVar)->get();
-            $this->dispatch('chatSelected');
+        $this->senderInstance = EmployeeDetails::find(auth()->id());
+        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
+        $this->dispatch('chatSelected');
         Message::where('conversation_id', $this->selectedConversation->id)
             ->where('receiver_id',  auth()->id())->update(['read' => 1]);
 

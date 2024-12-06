@@ -21,18 +21,22 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->enum('priority', ['low', 'medium', 'high'])->default('low');
             $table->string('assigned_dept')->nullable();
-            $table->string('file_path')->nullable();
-            $table->string('file_name')->nullable();
-            $table->string('mime_type')->nullable();
+            $table->json('file_paths')->nullable();
+            $table->string('inc_assign_to')->nullable();
             $table->text('active_inc_comment')->nullable();
             $table->text('inc_pending_remarks')->nullable();
-            $table->text('inc_inprogress_remarks')->nullable();
-            $table->string('inc_assign_to')->nullable();
             $table->timestamp('in_progress_since')->nullable();
+            $table->text('inc_inprogress_remarks')->nullable();
             $table->integer('total_in_progress_time')->default(0);
+            $table->string('ser_assign_to')->nullable();
+            $table->text('active_ser_comment')->nullable();
+            $table->text('ser_pending_remarks')->nullable();
+            $table->text('ser_inprogress_remarks')->nullable();
+            $table->integer('total_ser_progress_time')->default(0);
+            $table->timestamp('ser_progress_since')->nullable();
             $table->tinyInteger('status_code')->default(11); // Default to a "Pending" status
             $table->timestamps();
-
+ 
             // Foreign key constraints
             $table->foreign('emp_id')
                 ->references('emp_id')
@@ -44,6 +48,7 @@ return new class extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
+        
 
         // Create the trigger for auto-generating snow_id
         $triggerSQL = <<<SQL
