@@ -4,6 +4,7 @@
             margin-right: 62px;
         }
 
+       
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -80,6 +81,7 @@ width: 170px; */
         .text {
             color: #000;
         }
+       
 
         .arrow-icon-attendance-info {
             position: absolute;
@@ -147,6 +149,7 @@ width: 170px; */
         .text-success {
             color: #5bc67e;
         }
+        
 
         .text-muted {
             color: #a3b2c7;
