@@ -16,9 +16,8 @@ class IncidentRequest extends Model
         'description',
         'priority',
         'assigned_dept',
-        'file_path',
-        'file_name',
-        'mime_type',
+       'file_paths',
+       'mime_type','file_name',
         'status_code',
     ];
     public function emp()
@@ -42,9 +41,10 @@ public function status()
     {
         return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
     }
-    public function getImageUrlAttribute()
+    public function getImageUrlsAttribute()
     {
-        return $this->file_path ? 'data:image/jpeg;base64,' . base64_encode($this->file_path) : null;
+        // Assuming images are stored in the `file_paths` attribute as a JSON array
+        return json_decode($this->file_paths, true); // Adjust based on your actual data structure
     }
 
 }
