@@ -28,7 +28,7 @@
                         <label for="leave_type">Leave Type <span class="requiredMark">*</span> </label> <br>
                         <div class="custom-select-wrapper mb-2" style="width: 65%;">
                             <select id="leave_type" class="form-control outline-none rounded placeholder-small" wire:click="selectLeave" wire:model.lazy="leave_type" name="leave_type" wire:change="handleFieldUpdate('leave_type')">
-                                <option value="" disabled selected>Select Type</option>
+                                <option value="">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
                                 @else
@@ -59,7 +59,16 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="from_date">From Date <span class="requiredMark">*</span> </label>
-                                <input id="from_date" type="date" wire:model.lazy="from_date" wire:keydown.debounce.500ms="validateField('from_date')" class="form-control placeholder-small" name="from_date" wire:change="handleFieldUpdate('from_date')">
+                                <input
+                                    id="from_date"
+                                    type="date"
+                                    wire:model.lazy="from_date"
+                                    wire:keydown.debounce.500ms="validateField('from_date')"
+                                    class="form-control placeholder-small"
+                                    name="from_date"
+                                    wire:change="handleFieldUpdate('from_date')"
+                                    max="{{ now()->endOfYear()->toDateString() }}">
+
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -81,8 +90,16 @@
                     <div class="row d-flex mt-3">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="toDate">To Date <span class="requiredMark">*</span> </label>
-                                <input id="toDate" type="date" wire:model.lazy="to_date" class="form-control placeholder-small" wire:keydown.debounce.500ms="validateField('to_date')" name="toDate" wire:change="handleFieldUpdate('to_date')">
+                                <label for="to_date">To Date <span class="requiredMark">*</span> </label>
+                                <input
+                                    id="to_date"
+                                    type="date"
+                                    wire:model.lazy="to_date"
+                                    wire:keydown.debounce.500ms="validateField('to_date')"
+                                    class="form-control placeholder-small"
+                                    name="to_date"
+                                    wire:change="handleFieldUpdate('to_date')"
+                                    max="{{ now()->endOfYear()->toDateString() }}">
                                 @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -225,35 +242,35 @@
                 @if($showApplyingToContainer)
                 <div class="searchContainer">
                     <!-- Content for the search container -->
-                        <div class=" m-0 p-0 d-flex align-items-center justify-content-between">
-                            <div class="searchapplyingto p-0 m-0">
-                                <div class="input-group">
-                                    <input
-                                        wire:model="searchQuery"
-                                        id="searchInput"
-                                        type="text"
-                                        class="form-control placeholder-small"
-                                        placeholder="Search...."
-                                        aria-label="Search"
-                                        aria-describedby="basic-addon1">
-                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                        <button
-                                            type="button"
-                                            class="search-btn-leave"
-                                            wire:click="getFilteredManagers">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
+                    <div class=" m-0 p-0 d-flex align-items-center justify-content-between">
+                        <div class="searchapplyingto p-0 m-0">
+                            <div class="input-group">
+                                <input
+                                    wire:model="searchQuery"
+                                    id="searchInput"
+                                    type="text"
+                                    class="form-control placeholder-small"
+                                    placeholder="Search...."
+                                    aria-label="Search"
+                                    aria-describedby="basic-addon1">
+                                <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                    <button
+                                        type="button"
+                                        class="search-btn-leave"
+                                        wire:click="getFilteredManagers">
+                                        <i class="fas fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
-
-                            <div class="searchapplyingto-btn ms-2 m-0 p-0 d-flex justify-content-end">
-                                <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close">
-                                    <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
-                                    </span>
-                                </button>
-                            </div>
                         </div>
+
+                        <div class="searchapplyingto-btn ms-2 m-0 p-0 d-flex justify-content-end">
+                            <button wire:click="applyingTo" type="button" class="close rounded px-1 py-0" aria-label="Close">
+                                <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
 
                     <!-- Your Blade file -->
                     <div class="scrollApplyingTO">

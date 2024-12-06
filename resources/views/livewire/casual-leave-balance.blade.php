@@ -54,7 +54,11 @@
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">0</div>
+                            @else
                             <div class="info-value">{{ $Availablebalance }}</div>
+                            @endif
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Opening Balance</div>
@@ -70,7 +74,11 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Lapsed</div>
-                            <div class="info-value">{{ $lapsedBalance }}</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">{{ $Availablebalance }}</div>
+                            @else
+                            <div class="info-value">0</div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -148,12 +156,34 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
                                     <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
-
-
                                     <td>{{ $employeeLeaveBalances }}</td>
                                     <td>Annual Grant for the present year </td>
                                 </tr>
                                 @endforeach
+                                @if($employeeLapsedBalanceList->isNotEmpty())
+                                @foreach($employeeLapsedBalanceList as $index => $balance)
+                                @if($balance->is_lapsed) <!-- Check if is_lapsed is true for each balance -->
+                                <tr>
+                                    <td>Lapsed</td>
+                                    <td>{{ date('d M Y', strtotime($balance->lapsed_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>
+                                        @if($employeeLapsedBalance->is_lapsed)
+                                        {{ $Availablebalance }}
+                                        @else
+                                        0
+                                        @endif
+                                    </td>
+                                    <td>Year end processing</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="6">No lapsed balances available.</td>
+                                </tr>
+                                @endif
 
                             </tbody>
                         </table>

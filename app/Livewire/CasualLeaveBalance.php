@@ -17,9 +17,12 @@ class CasualLeaveBalance extends Component
     public $employeeLeaveBalances;
     public $employeeleaveavlid;
     public $employeeLapsedBalance;
+    public $lapsedLeavesCount;
     public $totalSickDays = 0;
     public $employeeDetails;
-    public $Availablebalance, $leaveGrantedData, $availedLeavesCount,$lapsedBalance;
+    public $employeeLapsedBalanceList;
+    public $Availablebalance, $leaveGrantedData, $availedLeavesCount;
+    public $lapsedBalance;
 
 
     // public function mount(){
@@ -188,13 +191,10 @@ class CasualLeaveBalance extends Component
         // }
         $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")->first();
-        if ($this->employeeLapsedBalance->is_lapsed === true) {
-            $this->lapsedBalance = $this->employeeLeaveBalances - $this->totalSickDays;
-            $this->Availablebalance = 0;
-        } else {
-            $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
-        }
+        $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
 
+        $this->employeeLapsedBalanceList = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->get();
         $currentMonth = date('n');
         $lastmonth = 12;
         $currentYear = date('Y');
@@ -203,13 +203,14 @@ class CasualLeaveBalance extends Component
 
         $grantedLeavesByMonth = [];
         $availedLeavesByMonth = [];
+        $lapsedLeavesByMonth = []; // Add this for lapsed leaves
 
         $grantedLeavesCount =  EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave")
             ->pluck('casual_leave')
             ->first();
-        // dd($grantedLeavesCount);
+
         for ($month = $startingMonth; $month <= $lastmonth; $month++) {
             // Reset availed leaves count for this month
             $this->availedLeavesCount = 0;
@@ -227,7 +228,6 @@ class CasualLeaveBalance extends Component
                 ->get();
 
             foreach ($availedLeavesRequests as $availedleaveRequest) {
-                // dd($availedleaveRequest);
                 $originalStartDate = Carbon::parse($availedleaveRequest->from_date);
                 $originalEndDate = Carbon::parse($availedleaveRequest->to_date);
 
@@ -247,7 +247,6 @@ class CasualLeaveBalance extends Component
                 );
 
                 // Accumulate the days for this month
-
                 $this->availedLeavesCount += $days;
             }
 
@@ -260,8 +259,25 @@ class CasualLeaveBalance extends Component
             // Store the granted leaves count and availed leaves count in their respective arrays
             $grantedLeavesByMonth[] = $grantedLeavesCount;
             $availedLeavesByMonth[] = $this->availedLeavesCount;
+
+            // Calculate lapsed leaves only for December
+            if ($month === 12) {
+                $lapsedLeaves = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                    ->where('period', 'like', "%$this->year%")
+                    ->where('is_lapsed', true) // Add this condition to filter by is_lapsed
+                    ->first();
+                if ($lapsedLeaves) {
+                    $this->lapsedLeavesCount = $this->employeeLeaveBalances - $this->totalSickDays;
+                }
+                $lapsedLeavesByMonth[] = $this->lapsedLeavesCount;
+            } else {
+                $lapsedLeavesByMonth[] = 0; // For all other months, set lapsed leaves to 0
+            }
         }
 
+        // Check if employee has lapsed leave balance
+        $employeeLapsedChartBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->first();
 
         $chartData = [
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
@@ -283,6 +299,18 @@ class CasualLeaveBalance extends Component
             ]
         ];
 
+        // Add "Lapsed Leaves" dataset only if employee has lapsed leave balance
+        if ($employeeLapsedChartBalance->is_lapsed) {
+            $chartData['datasets'][] = [
+                'label' => 'Lapsed Leaves',
+                'data' => $lapsedLeavesByMonth,
+                'backgroundColor' => 'rgba(255, 159, 64, 0.5)',
+                'borderColor' => 'rgba(255, 159, 64, 1)',
+                'borderWidth' => 1
+            ];
+        }
+
+
         $chartOptions = [
             'scales' => [
                 'y' => [
@@ -290,20 +318,20 @@ class CasualLeaveBalance extends Component
                         'beginAtZero' => true,
                         'min' => 0,
                         'max' => 10,
-                        'stepSize' => 2 // Adjust the step size to show values at intervals of 2
+                        'stepSize' => 2
                     ],
                     'grid' => [
-                        'display' => false // Remove grid lines from the y-axis
+                        'display' => false
                     ]
                 ],
                 'x' => [
                     'grid' => [
-                        'display' => false // Remove grid lines from the x-axis
+                        'display' => false
                     ]
                 ]
             ],
-            'maintainAspectRatio' => false, // Allow chart to be resized
-            'responsive' => true // Make chart responsive
+            'maintainAspectRatio' => false,
+            'responsive' => true
         ];
 
         return view('livewire.casual-leave-balance', [
@@ -311,8 +339,10 @@ class CasualLeaveBalance extends Component
             'employeeleaveavlid' => $this->employeeleaveavlid,
             'totalSickDays' => $this->totalSickDays,
             'Availablebalance' => $this->Availablebalance,
+            'lapsedBalance' => $this->lapsedBalance,
             'chartData' => $chartData,
-            'chartOptions' => $chartOptions // Pass chart options to the view
+            'employeeLapsedBalanceList' => $this->employeeLapsedBalanceList,
+            'chartOptions' => $chartOptions
         ]);
     }
 }

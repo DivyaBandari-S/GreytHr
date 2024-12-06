@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('body')->nullable();
             $table->boolean('read')->default(0); // Read status
             $table->string('type')->nullable(); // Message type: text, image, video, etc.
-            $table->string('media_path')->nullable(); // Path to uploaded file
+            $table->json('media_path')->nullable(); // Path to uploaded file
             $table->timestamp('last_time_message')->nullable();
             $table->timestamps();
             // Foreign key constraints
