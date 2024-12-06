@@ -175,7 +175,7 @@
                         </div>
                     </div>
                     @endif
-                    @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
+                    @error('selectedLeaveType') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
                     <span class="normalTextValue">

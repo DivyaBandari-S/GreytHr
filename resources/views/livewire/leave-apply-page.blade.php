@@ -99,7 +99,8 @@
                                     class="form-control placeholder-small"
                                     name="to_date"
                                     wire:change="handleFieldUpdate('to_date')"
-                                    max="{{ now()->endOfYear()->toDateString() }}">
+                                    max="{{ now()->endOfYear()->toDateString() }}"
+                                    >
                                 @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
