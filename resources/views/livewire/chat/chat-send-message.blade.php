@@ -59,9 +59,10 @@
                             <!-- Delete Button in top-right corner -->
                             <button type="button" class="btn btn-danger btn-sm"
                                 wire:click="deleteMedia({{ $loop->index }})"
-                                style="position: absolute; top: 0; right: 0; z-index: 10; margin: 5px;">
-                                <i class="fa-solid fa-trash"></i>
+                                style="position: absolute; top: 0; right: 0; z-index: 10; margin: 5px; padding: 2px 5px; font-size: 12px;">
+                                <i class="fa fa-times"></i>
                             </button>
+
                         </div>
                     @endforeach
                 </div>
