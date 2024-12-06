@@ -87,6 +87,7 @@ class ChatBox extends Component
     public function broadcastedMessageRead($event)
     {
 
+        dd($event);
         if ($this->selectedConversation) {
 
 
@@ -105,6 +106,7 @@ class ChatBox extends Component
 
     function broadcastedMessageReceived($event)
     {
+        dd($event);
         ///here
         $this->dispatch('refresh');
         # code...

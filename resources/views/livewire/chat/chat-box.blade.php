@@ -70,12 +70,21 @@
                                     </video>
                                 @elseif (in_array($extension, ['pdf', 'docx', 'txt', 'xlsx']))
                                     <!-- Document file -->
-                                    <a href="{{ asset('storage/' . $path) }}" target="_blank">Download
-                                        {{ strtoupper($extension) }} File</a>
+                                    <div class="file-container text-center"
+                                        style="width: 100px;height: 100px;object-fit: cover;border-radius: 5px;margin-left: 103px;/* margin-block-end: auto; */margin-top: -61px;">
+                                        <a href="{{ asset('storage/' . $path) }}" target="_blank">
+                                            <i class="fas fa-file fa-3x"></i>
+                                            <p>{{ strtoupper($extension) }} File</p>
+                                        </a>
+                                    </div>
                                 @else
                                     <!-- Default file (e.g., zip, unknown) -->
-                                    <a href="{{ asset('storage/' . $path) }}" target="_blank">Download
-                                        {{ ucfirst($extension) }} File</a>
+                                    <div class="file-container text-center">
+                                        <a href="{{ asset('storage/' . $path) }}" target="_blank">
+                                            <i class="fas fa-file fa-3x"></i>
+                                            <p>{{ ucfirst($extension) }} File</p>
+                                        </a>
+                                    </div>
                                 @endif
                             @endforeach
 
@@ -132,12 +141,21 @@
                                     </video>
                                 @elseif (in_array($extension, ['pdf', 'docx', 'txt', 'xlsx']))
                                     <!-- Document file -->
-                                    <a href="{{ asset('storage/' . $path) }}" target="_blank">Download
-                                        {{ strtoupper($extension) }} File</a>
+                                    <div class="file-container text-center"
+                                        style="width: 100px;height: 100px;object-fit: cover;border-radius: 5px;margin-left: 103px;/* margin-block-end: auto; */margin-top: -61px;">
+                                        <a href="{{ asset('storage/' . $path) }}" target="_blank">
+                                            <i class="fas fa-file fa-3x"></i>
+                                            <p>{{ strtoupper($extension) }} File</p>
+                                        </a>
+                                    </div>
                                 @else
                                     <!-- Default file (e.g., zip, unknown) -->
-                                    <a href="{{ asset('storage/' . $path) }}" target="_blank">Download
-                                        {{ ucfirst($extension) }} File</a>
+                                    <div class="file-container text-center">
+                                        <a href="{{ asset('storage/' . $path) }}" target="_blank">
+                                            <i class="fas fa-file fa-3x"></i>
+                                            <p>{{ ucfirst($extension) }} File</p>
+                                        </a>
+                                    </div>
                                 @endif
                             @endforeach
 
