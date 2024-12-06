@@ -12,9 +12,7 @@
         </title>
     @endguest
     @auth('emp')
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
-
         @php
             // Get the logged-in employee ID
             $employeeId = auth()->guard('emp')->user()->emp_id;
