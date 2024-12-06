@@ -30,6 +30,7 @@ class MessageSent implements ShouldBroadcast
         $this->message = $message;
         $this->conversation = $conversation;
         $this->receiver = $receiver;
+        // dd($this->user->emp_id,$this->receiver->emp_id);
     }
 
 
@@ -40,7 +41,7 @@ class MessageSent implements ShouldBroadcast
             'user_id' => $this->user->emp_id,
             'message' => $this->message->id,
             'conversation_id' => $this->conversation->id,
-            'receiver_id' => $this->receiver->id,
+            'receiver_id' => $this->receiver->emp_id,
         ];
         # code...
     }
@@ -55,6 +56,6 @@ class MessageSent implements ShouldBroadcast
     {
         error_log($this->user);
         error_log($this->receiver);
-        return new PrivateChannel('chat.' . $this->receiver->id);
+        return new PrivateChannel('chat.' . $this->receiver->emp_id);
     }
 }
