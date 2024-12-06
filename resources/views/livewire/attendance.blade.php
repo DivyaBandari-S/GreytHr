@@ -2048,8 +2048,14 @@ color: #fff;
                         <div class="col-5 pb-1 pt-1">
 
                           
-                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:{{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
-                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}</p>
+                            <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:
+                            @if(empty($employeeShiftDetails))
+                                   NA
+                            @else
+                                    {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
+                                    {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}
+                            @endif
+                        </p>
                         </div>
                         <div class="col-5 pb-1 pt-1">
                           
@@ -2238,7 +2244,7 @@ color: #fff;
 
                                 <tr class="container3-table-row">
                                     <td class="container3-table-data">Session&nbsp;1</td>
-                                    <td class="container3-table-data">10:00 - 14:00</td>
+                                    <td class="container3-table-data">{{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i')}} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->addHours(4)->format('H:i')}} </td>
                                     <td class="container3-table-data">
                                         @if($changeDate==1)
                                         {{$this->first_in_time}}
@@ -2251,7 +2257,7 @@ color: #fff;
                                 </tr>
                                 <tr class="container3-table-row">
                                     <td class="container3-table-data">Session&nbsp;2</td>
-                                    <td class="container3-table-data">14:01 - 19:00</td>
+                                    <td class="container3-table-data">{{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->subMinutes(299)->format('h:i')}} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}} </td>
                                     <td class="container3-table-data">-</td>
                                     <td class="container3-table-data">
                                         @if($changeDate==1)

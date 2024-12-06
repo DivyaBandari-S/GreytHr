@@ -768,6 +768,7 @@ public function applyButton()
 public function pendingButton()
 {
     try {
+        
         $this->isApply = 0;
         $this->isPending = 1;
         $this->isHistory = 0;

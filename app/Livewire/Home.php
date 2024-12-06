@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
 
+
 class Home extends Component
 {
     public $currentDate;
@@ -52,6 +53,8 @@ class Home extends Component
     public $TaskAssignedToCount;
     public $TasksCompletedCount;
     public $TasksInProgressCount;
+
+
     public $totalTasksCount;
     public $taskCount;
     public $employeeNames;
@@ -108,6 +111,8 @@ class Home extends Component
     public $country;
     public $postal_code;
     public $lon;
+
+   
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
@@ -115,11 +120,15 @@ class Home extends Component
     public $showTodayLeaveRequest = false;
     public $modalLeaveTitle = '';
     public $showModal = false;
+
+ 
     public $showSalary = true;
     public $longitude;
     public $monthOfSal;
     public $totalDaysInMonth;
     public $paidDays;
+
+  
     public $sal;
     public function mount()
     {
@@ -145,6 +154,9 @@ class Home extends Component
             // Get employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
+          
+            
+                
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
@@ -271,20 +283,7 @@ class Home extends Component
     {
         $this->showSalary = !$this->showSalary;
     }
-    public function determineSwipeDevice()
-    {
-        try {
-            $agent = new Agent();
-
-            if ($agent->isDesktop()) {
-                return 'desktop';
-            } else {
-                return 'mobile';
-            }
-        } catch (Throwable $e) {
-            FlashMessageHelper::flashError('An error occurred while getting the data, please try again later.');
-        }
-    }
+    
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {
         try {
@@ -342,12 +341,16 @@ class Home extends Component
             } elseif ($agent->isTablet()) {
                 $deviceName = 'Tablet';
             } elseif ($agent->isDesktop()) {
-                $screenWidth = $_SERVER['HTTP_UA_PIXELS'] ?? null;
-                if ($screenWidth && $screenWidth < 1440) {
+              
+                
+                $screenWidth = $agent->device(); // Returns specific device details if available
+                // You can add logic here to refine "Laptop" detection based on known laptop models
+                if (str_contains($screenWidth, 'MacBook') || str_contains($agent->platform(), 'Windows')) {
                     $deviceName = 'Laptop';
                 } else {
                     $deviceName = 'Desktop';
                 }
+             
             } else {
                 $deviceName = 'Unknown Device';
             }
@@ -418,7 +421,9 @@ class Home extends Component
            
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
-            $today = Carbon::now()->format('Y-m-d');
+            $today=Carbon::now()->format('Y-m-d');
+
+             
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
