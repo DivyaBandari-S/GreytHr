@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('month',10);
             $table->string('year',10);
             $table->string('festivals',50)->nullable();
+            $table->smallInteger('status')->default(5);
             $table->timestamps();
         });
     }

@@ -494,6 +494,25 @@ class LeaveApplyPage extends Component
             return redirect()->to('/leave-form-page');
         }
     }
+    public function updatedFromDate()
+    {
+        $this->validateDateField('from_date');
+    }
+
+    public function updatedToDate()
+    {
+        $this->validateDateField('to_date');
+    }
+
+    private function validateDateField($field)
+    {
+        $maxDate = now()->endOfYear()->toDateString();
+
+        if ($this->$field > $maxDate) {
+            $this->$field = $maxDate;
+            FlashMessageHelper::flashWarning(ucfirst(str_replace('_', ' ', $field)) . ' cannot be beyond the current year.');
+        }
+    }
     public $errorMessageValidation;
     public $propertyName;
     public function handleFieldUpdate($field)
@@ -542,24 +561,24 @@ class LeaveApplyPage extends Component
             // 1. Check if the selected dates are on weekends
             if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
-                return false; 
+                return false;
             }
 
             // 3. Validate leave balance
-            if ($this->leave_type) {
+            if ($this->leave_type != 'Loss Of Pay') {
                 $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
                 $leaveBalance = $this->getLeaveBalance($employeeId);
-                if ($totalNumberOfDays > $leaveBalance) {
+                if ($totalNumberOfDays > $leaveBalance ) {
                     Log::debug('Total number of leave days exceed balance', ['totalNumberOfDays' => $totalNumberOfDays, 'leaveBalance' => $leaveBalance]);
                     $this->errorMessageValidation = FlashMessageHelper::flashError('It looks like you have already used all your leave balance.');
-                    return false; 
+                    return false;
                 }
             }
 
             // 4. Check for holidays
             if ($this->checkForHolidays()) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('The selected leave dates overlap with existing holidays. Please pick different dates.');
-                return false; 
+                return false;
             }
 
             // 5. Validate from date for joining date
@@ -732,17 +751,32 @@ class LeaveApplyPage extends Component
         try {
             // Retrieve leave balances for the current year
             $currentYear = now()->year;
-            $leaveBalances = [
-                'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
-                'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
-                'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
-                'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),
-                'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $currentYear),
-                'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $currentYear),
-            ];
+            $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->where('is_lapsed', true)
+                ->where('period', 'like', "%$currentYear%")
+                ->first();
+            if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
+                // If lapsed, set the balance directly to leavePerYear
+                $leaveBalances = [
+                    'Sick Leave' => 0,
+                    'Casual Leave' => 0,
+                    'Casual Leave Probation' => 0,
+                    'Marriage Leave' => 0,
+                    'Maternity Leave' => 0,
+                    'Paternity Leave' => 0
+                ];
+            } else {
+                $leaveBalances = [
+                    'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
+                    'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
+                    'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
+                    'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),
+                    'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $currentYear),
+                    'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $currentYear),
+                ];
+            }
 
-            return (float)($leaveBalances[$this->leave_type] ?? 0); // Default to 0 if leave_type is not found
-
+            return (float)($leaveBalances[$this->leave_type] ?? 0);
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while retrieving leave balance. Please try again.');
             return false;
@@ -841,7 +875,6 @@ class LeaveApplyPage extends Component
                 break;
         }
 
-
         if ($leaveBalanceKey && $calculatedNumberOfDays >= ($leaveBalances[$leaveBalanceKey] ?? 0)) {
             FlashMessageHelper::flashError('Insufficient leave balance for ' . $leave_type);
             return true; // Indicates insufficient balance
@@ -892,7 +925,6 @@ class LeaveApplyPage extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             // Retrieve all leave balances
             $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
-
             // Filter leave balances based on the selected leave type
             switch ($this->leave_type) {
                 case 'Casual Leave Probation':

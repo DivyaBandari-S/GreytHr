@@ -54,7 +54,7 @@
                     <li><a href="/leave-form-page">Leave Apply</a></li>
                     <li><a href="/leave-balances">Leave Balances</a></li>
                     <li><a href="/leave-calender">Leave Calendar</a></li>
-                    <li><a href="/holiday-calendaar">Holiday Calendar</a></li>
+                    <li><a href="/holiday-calendar">Holiday Calendar</a></li>
                     @if($managerId)
                     <li>
                         <a href="/team-on-leave-chart">
