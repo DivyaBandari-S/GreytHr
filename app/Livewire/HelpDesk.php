@@ -601,35 +601,35 @@ public function closeImageDialog()
     {
         try {
             $this->validate($this->rules);
-           
     
-            // Validate the maximum followers selection
-      
+            // Initialize file paths as an empty array if not provided
             $filePaths = $this->file_paths ?? [];
-            // Validate file uploads
-            $validator = Validator::make(
-                ['file_paths' => $filePaths],
-                [
-                    'file_paths' => 'required|array', // Ensure file_paths is an array
-                    'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
-                ],
-                [
-                    'file_paths.required' => 'You must upload at least one file.',
-                    'file_paths.*.required' => 'Each file is required.',
-                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
-                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
-                ]
-            );
-        
-            // If validation fails, return an error response
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 422);
+    
+            // Validate file uploads if files are uploaded
+            if (!empty($filePaths) && is_array($filePaths)) {
+                $validator = Validator::make(
+                    ['file_paths' => $filePaths],
+                    [
+                        'file_paths' => 'array', // Ensure file_paths is an array
+                        'file_paths.*' => 'file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif|max:1024', // 1MB max
+                    ],
+                    [
+                        'file_paths.*.file' => 'Each file must be a valid file.',
+                        'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                        'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                    ]
+                );
+    
+                // If validation fails, return an error response
+                if ($validator->fails()) {
+                    return response()->json($validator->errors(), 422);
+                }
             }
-        
+    
             // Array to hold processed file data
             $fileDataArray = [];
-        
-            // Process each file
+    
+            // Process each file if uploaded
             if (!empty($filePaths) && is_array($filePaths)) {
                 foreach ($filePaths as $file) {
                     // Check if the file is valid
@@ -639,10 +639,10 @@ public function closeImageDialog()
                             $mimeType = $file->getMimeType();
                             $originalName = $file->getClientOriginalName();
                             $fileContent = file_get_contents($file->getRealPath());
-        
+    
                             // Encode the file content to base64
                             $base64File = base64_encode($fileContent);
-        
+    
                             // Add file data to the array
                             $fileDataArray[] = [
                                 'data' => $base64File,
@@ -663,30 +663,27 @@ public function closeImageDialog()
                         return response()->json(['error' => 'Invalid file uploaded'], 400);
                     }
                 }
-            } else {
-                Log::warning('No files uploaded.');
-                return response()->json(['error' => 'No files were uploaded.'], 400);
             }
     
+            // If no files are uploaded, the array will be empty and file_paths will be null
+            // Fetch employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-          
+    
+            // Create HelpDesk entry
             HelpDesks::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_paths' => json_encode($fileDataArray) ??'-',
+                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Nullable file paths
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
                 'distributor_name' => 'N/A',
-               
-           
             ]);
-            
     
-            FlashMessageHelper::flashSuccess( 'Request created successfully.');
+            FlashMessageHelper::flashSuccess('Request created successfully.');
             return redirect()->to('/HelpDesk');
     
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -696,11 +693,11 @@ public function closeImageDialog()
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    
     
 
     public function downloadFile($id)

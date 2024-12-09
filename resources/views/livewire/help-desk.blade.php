@@ -240,7 +240,7 @@
             <td class="helpdesk-request">{{ $record->subject ?? '-' }}</td>
             <td class="helpdesk-request">{{ $record->description ?? '-' }}</td>
             <td class="helpdesk-request">
-    {{-- Process images and files --}}
+   
     @php
         // Check if file_paths is empty or null
         $fileDataArray = isset($record->file_paths) && !empty($record->file_paths) 
