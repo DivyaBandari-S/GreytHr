@@ -26,11 +26,17 @@ use Illuminate\Support\Facades\Log;
 use Livewire\WithFileUploads;
 use App\Helpers\FlashMessageHelper; 
 use Illuminate\Support\Facades\Response;
-
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
+use Illuminate\Support\Facades\Validator;
 class HelpDesk extends Component
 {
     use WithFileUploads;
     public $isOpen = false;
+    public $images = [];
+    public $file_paths = [];
+ 
+
     public $rejection_reason;
     public $selectedCategory = [];
     public $activeCategory = null; // Category for Active tab
@@ -54,6 +60,7 @@ public $closedCategory = null; // Category for Closed tab
     public $ccToArray = [];
     public $request;
     public $subject;
+    public $showViewImageDialog=false;
     public $description;
     public $file_path;
     public $cc_to;
@@ -68,6 +75,7 @@ public $closedCategory = null; // Category for Closed tab
 
     public $showDialogFinance = false;
     public $record;
+    public $files = [];
     public $peopleData = '';
     public $filterData;
     public $activeTab = 'active';
@@ -79,7 +87,7 @@ public $closedSearch = '';
         'category' => 'required|string',
         'subject' => 'required|string',
         'description' => 'required|string',
-        'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,csv,xls,xlsx|max:40960', // Adjust max size as needed
+        'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx,csv,xls,xlsx', // Adjust max size as needed
         'priority' => 'required|in:High,Medium,Low',
 
     ];
@@ -106,6 +114,7 @@ public $closedSearch = '';
     {
         $this->showDialog = true;
     }
+    
     public function mount()
     {
         // Fetch unique requests with their categories
@@ -177,7 +186,77 @@ public $closedSearch = '';
     {
         $this->loadHelpDeskData(); // Reload data when the tab is updated
     }
+    // To track the current image index
+    public function setActiveImageIndex($index)
+    {
+        $this->currentImageIndex = $index; // Update current index dynamically
+    }
     
+    public function downloadActiveImage()
+    {
+        if (!isset($this->images[$this->currentImageIndex])) {
+            session()->flash('error', 'No active image to download.');
+            return;
+        }
+    
+        $activeImage = $this->images[$this->currentImageIndex];
+        $imageData = base64_decode($activeImage['data']);
+        $mimeType = $activeImage['mime_type'];
+        $originalName = $activeImage['original_name'];
+    
+        return response()->stream(
+            function () use ($imageData) {
+                echo $imageData;
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+            ]
+        );
+    }
+
+    public function nextImage()
+    {
+        $this->currentImageIndex = ($this->currentImageIndex + 1) % count($this->images);
+    }
+
+    public function previousImage()
+    {
+        $this->currentImageIndex = ($this->currentImageIndex - 1 + count($this->images)) % count($this->images);
+    }
+    public function downloadAllImages()
+    {
+        if (empty($this->images)) {
+            session()->flash('error', 'No images available to download.');
+            return;
+        }
+    
+        // Create a temporary file for the zip archive
+        $zipFilePath = storage_path('app/public/carousel_images.zip');
+        $zip = new \ZipArchive();
+    
+        if ($zip->open($zipFilePath, \ZipArchive::CREATE | \ZipArchive::OVERWRITE) === true) {
+            foreach ($this->images as $index => $image) {
+                $imageData = base64_decode($image['data']);
+                $originalName = $image['original_name'];
+    
+                // Add each image to the zip file
+                $zip->addFromString($originalName, $imageData);
+            }
+    
+            // Close the zip archive
+            $zip->close();
+    
+            // Return the zip file as a download response
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            session()->flash('error', 'Failed to create ZIP file.');
+            return;
+        }
+    }
+    
+ 
   
     public function searchHelpDesk($status_code, $searchTerm,$selectedCategory)
     {
@@ -339,9 +418,40 @@ public $closedSearch = '';
    
     }
 
+    public function downloadAllFiles()
+    {
+        if (empty($this->files)) {
+            session()->flash('error', 'No files available to download.');
+            return;
+        }
+    
+        // Create a temporary file for the zip archive
+        $zipFilePath = storage_path('app/public/files_archive.zip');
+        $zip = new ZipArchive();
+    
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($this->files as $file) {
+                $fileData = base64_decode($file['data']);
+                $originalName = $file['original_name'];
+    
+                // Add each file to the zip archive
+                $zip->addFromString($originalName, $fileData);
+            }
+    
+            // Close the zip archive
+            $zip->close();
+    
+            // Return the zip file as a download response
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            session()->flash('error', 'Failed to create ZIP file.');
+            return;
+        }
+    }
+    
 
 
-
+    
     public function showFile($id)
     {
         $record = HelpDesks::findOrFail($id);
@@ -362,69 +472,118 @@ public $closedSearch = '';
 
     public function showViewFile($id)
     {
-        $this->records = HelpDesks::findOrFail($id);
+        $this->recordId = $id;
 
-        if ($this->records && $this->records->file_path !== 'null') {
-            $this->file_path = $this->records->file_path;
-            $this->showViewFileDialog = true;
-        } else {
-            // Handle case where file is not found or is null
-            $this->dispatch('file-not-found', ['message' => 'File not found.']);
-        }
+        // Fetch the record
+        $record = HelpDesks::find($id);
+
+        $this->files = $record->getImageUrlsAttribute(); 
+
+        // Set the current image index
+      
+    
+       
     }
+    public function downloadFilesAsZip($id)
+{
+    // Fetch the record
+    $record = HelpDesks::find($id);
+    if (!$record) {
+        return response()->json(['error' => 'Record not found'], 404);
+    }
+
+    $files = $record->getImageUrlsAttribute(); // Assuming this retrieves an array of files
+    if (empty($files)) {
+        return response()->json(['error' => 'No files available for download'], 404);
+    }
+
+    // Create a unique name for the ZIP file
+    $zipFileName = 'files_' . $id . '_' . time() . '.zip';
+    $zipPath = storage_path('app/public/' . $zipFileName);
+
+    // Create a new ZIP archive
+    $zip = new ZipArchive;
+    if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+        foreach ($files as $file) {
+            $fileContent = base64_decode($file['data']);
+            $originalName = $file['original_name'];
+            $zip->addFromString($originalName, $fileContent);
+        }
+        $zip->close();
+    } else {
+        return response()->json(['error' => 'Unable to create ZIP file'], 500);
+    }
+
+    // Return the ZIP file for download
+    return response()->download($zipPath)->deleteFileAfterSend(true);
+}
     public $showImageDialog = false;
-    public $imageUrl;
-    public function downloadImage()
+    public $imageUrl;  
+
+    public $currentImageIndex = 0;  // To track which image is being shown
+    
+    // Show the image modal
+    public function getImageUrlsAttribute()
+{
+    $fileDataArray = is_string($this->file_paths)
+        ? json_decode($this->file_paths, true)
+        : $this->file_paths;
+
+    return array_filter($fileDataArray, function ($fileData) {
+        return isset($fileData['mime_type']) && strpos($fileData['mime_type'], 'image') !== false;
+    });
+}
+public function getFileUrlsAttribute()
+{
+    $fileDataArray = is_string($this->file_paths)
+        ? json_decode($this->file_paths, true)
+        : $this->file_paths;
+
+    return array_filter($fileDataArray, function ($fileData) {
+        // Check if MIME type is not an image
+        return isset($fileData['mime_type']) && strpos($fileData['mime_type'], 'image') === false;
+    });
+}
+
+
+public function showViewImage($id) 
+{
+    $this->recordId = $id;
+
+    // Fetch the record
+    $record = HelpDesks::find($id);
+    
+    // Get the images (assuming a JSON structure for images)
+    $this->images = $record->getImageUrlsAttribute(); 
+
+    // Set the current image index
+  
+
+    // Show the dialog
+    $this->showViewImageDialog = true;
+}
+
+
+
+  
+    
+    // Close the image modal
+    public function closeViewImage()
     {
-        if ($this->imageUrl) {
-            // Decode the Base64 data if necessary
-            $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageUrl));
-
-            // Determine MIME type and file extension
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_buffer($finfo, $fileData);
-            finfo_close($finfo);
-
-            $extension = '';
-            switch ($mimeType) {
-                case 'image/jpeg':
-                    $extension = 'jpg';
-                    break;
-                case 'image/png':
-                    $extension = 'png';
-                    break;
-                case 'image/gif':
-                    $extension = 'gif';
-                    break;
-                default:
-                    return abort(415, 'Unsupported Media Type');
-            }
-
-            // Prepare file name and response
-            $fileName = 'image-' . time() . '.' . $extension;
-            return response()->streamDownload(
-                function () use ($fileData) {
-                    echo $fileData;
-                },
-                $fileName,
-                [
-                    'Content-Type' => $mimeType,
-                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-                ]
-            );
-        }
-        return abort(404, 'Image not found');
+        $this->showViewImageDialog = false;
     }
-    public function showImage($url)
-    {
-        $this->imageUrl = $url;
-        $this->showImageDialog = true;
-    }
+    
+    // Navigate to the previous image
+ 
+    
 
-    public function closeImageDialog()
-    {
-        $this->showImageDialog = false;
-    }
+
+
+public function closeImageDialog()
+{
+    // Set the flag to close the image view modal
+    $this->showViewImageDialog = false;
+}
 
     public function show()
     {
@@ -446,30 +605,67 @@ public $closedSearch = '';
     
             // Validate the maximum followers selection
       
-            $fileContent = null;
-            $mime_type = null;
-            $file_name = null;
-    
-            if ($this->file_path) {
-                $fileContent = file_get_contents($this->file_path->getRealPath());
-    
-                if ($fileContent === false) {
-                    Log::error('Failed to read the uploaded file.', [
-                        'file_path' => $this->file_path->getRealPath(),
-                    ]);
-                    session()->flashError('error', 'Failed to read the uploaded file.');
-                    return;
+            $filePaths = $this->file_paths ?? [];
+            // Validate file uploads
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'required|array', // Ensure file_paths is an array
+                    'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
+                ],
+                [
+                    'file_paths.required' => 'You must upload at least one file.',
+                    'file_paths.*.required' => 'Each file is required.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+        
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
+        
+            // Array to hold processed file data
+            $fileDataArray = [];
+        
+            // Process each file
+            if (!empty($filePaths) && is_array($filePaths)) {
+                foreach ($filePaths as $file) {
+                    // Check if the file is valid
+                    if ($file->isValid()) {
+                        try {
+                            // Get file details
+                            $mimeType = $file->getMimeType();
+                            $originalName = $file->getClientOriginalName();
+                            $fileContent = file_get_contents($file->getRealPath());
+        
+                            // Encode the file content to base64
+                            $base64File = base64_encode($fileContent);
+        
+                            // Add file data to the array
+                            $fileDataArray[] = [
+                                'data' => $base64File,
+                                'mime_type' => $mimeType,
+                                'original_name' => $originalName,
+                            ];
+                        } catch (\Exception $e) {
+                            Log::error('Error processing file', [
+                                'file_name' => $file->getClientOriginalName(),
+                                'error' => $e->getMessage(),
+                            ]);
+                            return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                        }
+                    } else {
+                        Log::error('Invalid file uploaded', [
+                            'file_name' => $file->getClientOriginalName(),
+                        ]);
+                        return response()->json(['error' => 'Invalid file uploaded'], 400);
+                    }
                 }
-    
-                // Check if the file content is too large
-                $maxFileSize = 16777215; // 16MB for MEDIUMBLOB
-                if (strlen($fileContent) > $maxFileSize) {
-                    FlashMessageHelper::flashWarning( 'File size exceeds the allowed limit.');
-                    return;
-                }
-    
-                $mime_type = $this->file_path->getMimeType();
-                $file_name = $this->file_path->getClientOriginalName();
+            } else {
+                Log::warning('No files uploaded.');
+                return response()->json(['error' => 'No files were uploaded.'], 400);
             }
     
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -480,10 +676,7 @@ public $closedSearch = '';
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path' => $fileContent, // Store the binary file data
-                'file_name' => $file_name,
-                'mime_type' => $mime_type,
-                'cc_to' => $this->cc_to ?? '-',
+                'file_paths' => json_encode($fileDataArray) ??'-',
                 'priority' => $this->priority,
                 'mail' => 'N/A',
                 'mobile' => 'N/A',
@@ -503,7 +696,7 @@ public $closedSearch = '';
                 'category' => $this->category,
                 'subject' => $this->subject,
                 'description' => $this->description,
-                'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
+
             ]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
@@ -640,18 +833,22 @@ public $closedSearch = '';
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::where('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])->get();
-
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->get();
+    
         $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-
-        $this->peoples = EmployeeDetails::where('company_id', $companyId) ->whereNotIn('employee_status', ['rejected', 'terminated'])
+    
+        $this->peoples = EmployeeDetails::where('company_id', $companyId)
+            ->whereNotIn('employee_status', ['rejected', 'terminated'])
             ->orderBy('first_name')
             ->orderBy('last_name')
             ->get();
-
+    
         $searchData = $this->filterData ?: $this->records;
         $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
-
+    
+        // Attempt to decode file_oaths
         $this->records = HelpDesks::with('emp')
             ->where(function ($query) use ($employeeId, $employeeName) {
                 $query->where('emp_id', $employeeId)
@@ -659,34 +856,66 @@ public $closedSearch = '';
             })
             ->orderBy('created_at', 'desc')
             ->get();
-
+    
         // Apply filtering based on the selected category
         if ($this->selectedCategory) {
             $this->records->where('request', function ($q) {
                 $q->where('category', $this->selectedCategory);
             });
         }
-
-
-
+        $requestCategories = Request::select('Request', 'category')->get();
+       
+        $this->selectedPeople = [];
+        $this->selectedPeopleNames = [];
+        $employeeName = auth()->user()->first_name . ' #(' . $employeeId . ')';
+        $this->records = HelpDesks::with('emp')
+            ->where(function ($query) use ($employeeId, $employeeName) {
+                $query->where('emp_id', $employeeId)
+                    ->orWhere('cc_to', 'LIKE', "%$employeeName%");
+            })
+            ->orderBy('created_at', 'desc')
+            ->get();
+         
+         
+         
+     
+        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->whereNotIn('employee_status', ['rejected', 'terminated'])
+            ->orderBy('first_name')
+            ->orderBy('last_name')
+            ->get();
+   $this->loadHelpDeskData();
+        // Group categories by their request
+        if ($requestCategories->isNotEmpty()) {
+            // Group categories by their request
+            $this->requestCategories = $requestCategories->groupBy('Request')->map(function ($group) {
+                return $group->unique('category'); // Ensure categories are unique
+            });
+        } else {
+            // Handle the case where there are no requests
+            $this->requestCategories = collect(); // Initialize as an empty collection
+        }
+        // Loop through the records and check for file_paths
+       
+    
+        // Filter people data if necessary
         $query = HelpDesks::with('emp')
             ->where('emp_id', $employeeId);
-
+    
         // Apply filtering based on the selected category
-
         $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+    
         // Initialize peopleData properly
         $peopleData = $this->filteredPeoples ?: $this->peoples;
-
+    
         // Ensure peopleData is a collection, not null
         $peopleData = $peopleData ?: collect();
-
+    
         return view('livewire.help-desk', [
             'records' => $this->records,
             'searchData' => $this->filterData ?: $this->records,
             'requestCategories' => $this->requestCategories,
-            'peopleData' => $this->peopleData,
-            
+            'peopleData' => $peopleData,
+            'showViewImageDialog' => $this->showViewImageDialog,
         ]);
     }
-}
+}    

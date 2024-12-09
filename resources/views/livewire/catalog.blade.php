@@ -1,6 +1,6 @@
 <div>
     <div wire:loading
-        wire:target="file_path,AddRequest,DistributorRequest,ItRequest,submit,MailRequest,Request,IdRequest,Devops,MmsRequest,DistributionRequest,DistributorRequest,LapRequest,DevopsRequest,closecatalog,redirectToHelpDesk,NamesSearch,ServiceRequest,incidentRequest,createIncidentRequest,NewMailRequest,IntenetRequest">
+        wire:target="file_path,AddRequest,DistributorRequest,ItRequest,submit,MailRequest,Request,IdRequest,Devops,MmsRequest,DistributionRequest,DistributorRequest,LapRequest,DevopsRequest,closecatalog,redirectToHelpDesk,NamesSearch,ServiceRequest,incidentRequest,createIncidentRequest,NewMailRequest,IntenetRequest,file_paths">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -216,7 +216,8 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -406,7 +407,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -414,7 +415,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -537,7 +538,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -545,7 +546,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
                                                 </form>
@@ -672,7 +673,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -680,7 +681,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -798,9 +799,9 @@
                                                     </div>
 
 
-                                                    <div class="row ">
+                                                    <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -808,7 +809,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -999,7 +1000,7 @@
                                                     </div>
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -1007,7 +1008,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
                                                 </form>
@@ -1132,10 +1133,9 @@
                                                         @enderror
                                                     </div>
 
-
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -1143,7 +1143,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -1341,7 +1341,8 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -1468,10 +1469,9 @@
                                                         @error('description') <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
-
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -1479,7 +1479,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -1616,7 +1616,8 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -1743,18 +1744,18 @@
 
 
 <div class="row mt-2">
-    <div class="col">
-        <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
-            <i class="fa fa-paperclip"></i> Attach Image
-        </label>
-    </div>
-    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-</div>
+                                                        <div class="col">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
+                                                                <i class="fa fa-paperclip"></i> Attach Image
+                                                            </label>
+                                                        </div>
+                                                        @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                    </div>
 
-<div>
-    <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <div>
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
-</div>
+                                                    </div>
 
 </form>
                                             </div>
@@ -1884,7 +1885,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -1892,7 +1893,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -2089,7 +2090,6 @@
                                                         </div>
                                                         @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                                                     </div>
-
                                                     <div class="row mt-2">
                                                         <div class="col">
                                                             <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
@@ -2100,7 +2100,8 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -2303,7 +2304,8 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
+
                                                     </div>
                                                 </form>
                                             </div>
@@ -2416,7 +2418,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -2424,7 +2426,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
 
@@ -2560,7 +2562,7 @@
 
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -2568,7 +2570,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
                                                 </form>
@@ -2697,10 +2699,9 @@
                                                         @enderror
                                                     </div>
 
-
                                                     <div class="row mt-2">
                                                         <div class="col">
-                                                            <label for="fileInput" style="color:#778899;font-weight:500;font-size:12px;cursor:pointer;">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
                                                                 <i class="fa fa-paperclip"></i> Attach Image
                                                             </label>
                                                         </div>
@@ -2708,7 +2709,7 @@
                                                     </div>
 
                                                     <div>
-                                                        <input type="file" wire:model="file_path" id="file_path" class="form-control">
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
                                                     </div>
                                                 </form>
