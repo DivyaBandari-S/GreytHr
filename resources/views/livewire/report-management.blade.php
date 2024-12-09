@@ -1,4 +1,12 @@
-<div class="row p-0 m-0 mt-3 p-2">
+<div class="row p-0 m-0 mt-3 p-2 position-relative">
+    <div class="position-absolute" wire:loading
+    wire:target="downloadLeaveAvailedReportInExcel,close,resetFields,downloadNegativeLeaveBalanceReport,dayWiseLeaveTransactionReport">
+    <div class="loader-overlay">
+        <div class="loader">
+            <div></div>
+        </div>
+    </div>
+</div>
     <style>
         .report-search-input {
             font-size: 0.75rem !important;
@@ -199,29 +207,29 @@
                         <div class="modal-body">
                             <div class="row">
                                 <div class="form-group col-md-6 mb-2">
-                                    <label for="from-date">From <span
+                                    <label for="fromDate">From <span
                                             style="color: var(--requiredAlert);">*</span></label>
                                     <input type="date" class="form-control placeholder-small"
-                                        wire:model="fromDate" wire:change="updateFromDate"
-                                        wire:model.lazy="fromDate">
+                                        wire:change="updateFromDate"   id="fromDate"
+                                        wire:model="fromDate">
                                     @error('fromDate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6 mb-2">
-                                    <label for="to-date">To <span
+                                    <label for="toDate">To <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    <input type="date" class="form-control placeholder-small" wire:model="toDate"
-                                        wire:change="updateToDate" wire:model.lazy="toDate">
+                                    <input type="date" class="form-control placeholder-small" 
+                                        wire:change="updateToDate" wire:model="toDate"   id="toDate">
                                     @error('toDate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
                                 <div class="form-group col-md-6 mb-2">
-                                    <label for="to-date">Leave
+                                    <label for="leaveType">Leave
                                         Type</label>
-                                    <select id="leaveType" wire:model="leaveType" wire:change="updateLeaveType"
-                                        wire:model.lazy="leaveType" class="form-select placeholder-small">
+                                    <select id="leaveType"  wire:change="updateLeaveType"
+                                        wire:model="leaveType" class="form-select placeholder-small">
                                         <option value="all">All Leaves</option>
                                         <option value="lop">Loss Of Pay</option>
                                         <option value="casual_leave">Casual Leave</option>
@@ -374,11 +382,18 @@
                         <div class="form-group col-md-6 mb-2">
                             <label for="to-date">Transaction
                                 Type</label>
-                            <select id="transactionType" wire:model="transactionType"
+                            <select id="transactionType" 
                                 wire:change="updateTransactionType($event.target.value)"
                                 wire:model.lazy="transactionType" class="form-select placeholder-small">
-                                <option value="all">All </option>
-                                <option value="approved">Availed</option>
+                                {{-- <option value="all">All </option>
+                                <option value="approved">Availed</option> --}}
+                                <option value="all">All</option>
+                                <option value="availed">Availed</option> <!-- Availed maps to '2' in DB -->
+                                <option value="rejected">Rejected</option> <!-- Rejected maps to '3' in DB -->
+                                <option value="withdrawn">Withdrawn</option> <!-- Withdrawn maps to '4' in DB -->
+                                <option value="Granted">Granted</option> <!-- Rejected maps to '3' in DB -->
+                                <option value="is_lapsed">Lapsed</option>
+                              
 
                                 <!-- Add other leave types as needed -->
                             </select>

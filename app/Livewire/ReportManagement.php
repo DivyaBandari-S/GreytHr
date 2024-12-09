@@ -115,12 +115,12 @@ class ReportManagement extends Component
     {
         $this->fromDate = null;
         $this->toDate = null;
+        $this->leaveType = 'all';
         $this->leaveBalance = [];
     }
 
     public function downloadLeaveAvailedReportInExcel()
     {
-        try {
         $this->validate([
             'fromDate' => 'required|date',
             'toDate' => 'required|date|after_or_equal:fromDate',
@@ -129,6 +129,8 @@ class ReportManagement extends Component
             'toDate.required' => 'To date is required.',
             'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
         ]);
+        try {
+       
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
     
         $query = LeaveRequest::select(
@@ -236,7 +238,7 @@ class ReportManagement extends Component
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_Status' => $item->status,
+                        'leave_status' => $item->status,
                     ];
                 })
             ];
@@ -257,7 +259,9 @@ class ReportManagement extends Component
         }, 'leave_availed_report.pdf');
     } catch (\Exception $e) {
       
-
+        Log::error('Error generating Leave Availed Report', [
+            'exception' => $e, // Logs the exception details
+        ]);
         // Optionally, return a user-friendly error message
         FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
     }
@@ -292,15 +296,12 @@ class ReportManagement extends Component
 
 public  function updateTransactionType($event){
     $this->transactionType=$event;
-//   dd($this->transactionType);
 
 }
 
 
     public function dayWiseLeaveTransactionReport()
     {
-        try{
-
         $this->validate([
             'fromDate' => 'required|date',
             'toDate' => 'required|date|after_or_equal:fromDate',
@@ -314,10 +315,36 @@ public  function updateTransactionType($event){
             'transactionType.required' => 'Leave type is required.',
             'employeeType.required' => 'Employee type is required.',
         ]);
+        try{
 
         // dd($this->fromDate,$this->toDate,$this->transactionType,$this->employeeType);
 
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+        $transactionTypeMap = [
+            'availed' => 2,    // Availed maps to 2 in DB
+            'rejected' => 3,   // Rejected maps to 3 in DB
+            'withdrawn' => 4,  // Withdrawn maps to 4 in DB
+        ];
+
+        $transactionFilter = null;
+
+        // Handle granted status - If 'Granted' is selected, do special handling
+        if ($this->transactionType === 'Granted') {
+            // Add logic to filter based on granted status (e.g., from employee_leave_balances table)
+            // Assuming 'status' is 'Granted' in employee_leave_balances
+            $transactionFilter = 'Granted';
+        }
+
+        // Handle lapsed status - If 'Lapsed' is selected, do special handling
+        if ($this->transactionType === 'is_lapsed') {
+            // Add logic to filter based on lapsed status (e.g., where 'is_lapsed' is 1)
+            $transactionFilter = 'Lapsed';
+        }
+
+        // Handle other status filters
+        if ($this->transactionType !== 'all' && !in_array($this->transactionType, ['Granted', 'is_lapsed'])) {
+            $transactionFilter = $transactionTypeMap[$this->transactionType] ?? null;
+        }
 
         $query = LeaveRequest::select(
             DB::raw('DATE(from_date) as date_only'), // Extract date part only
@@ -332,6 +359,8 @@ public  function updateTransactionType($event){
             'leave_applications.from_session',
             'leave_applications.to_session',
             'leave_applications.leave_status',
+            'employee_leave_balances.status as leave_balance_status',
+            'employee_leave_balances.is_lapsed as lapsed_status',
         )
             // ->where('leave_applications.status', 'approved')
             ->where(function ($query) use ($loggedInEmpId) {
@@ -347,12 +376,25 @@ public  function updateTransactionType($event){
                     });
             })
             ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->groupBy('date_only', 'leave_applications.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.reason', 'leave_applications.from_session', 'leave_applications.to_session','leave_applications.leave_status'); // Group by the date-only field
+            ->join('employee_leave_balances', 'leave_applications.emp_id', '=', 'employee_leave_balances.emp_id')  
+            ->groupBy('date_only', 'leave_applications.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'leave_applications.leave_type', 'leave_applications.from_date', 'leave_applications.to_date', 'leave_applications.reason', 'leave_applications.from_session', 'leave_applications.to_session','leave_applications.leave_status','employee_leave_balances.status','employee_leave_balances.is_lapsed'); // Group by the date-only field
 
-            if ($this->transactionType !== 'all') {
-                $query->where('leave_applications.leave_status', $this->transactionType);
+            // if ($this->transactionType !== 'all') {
+            //     $query->where('leave_applications.leave_status', $this->transactionType);
+            // }
+
+            if ($transactionFilter !== null) {
+                if ($transactionFilter === 'Granted') {
+
+                    // Logic for filtering Granted (for example from the employee_leave_balances table)
+                    $query->where('employee_leave_balances.status', $transactionFilter);
+                } elseif ($transactionFilter === 'Lapsed') {
+                    $query->where('employee_leave_balances.is_lapsed', 1);
+                } else {
+                    $query->where('leave_applications.leave_status', $transactionFilter);
+                }
             }
-
+    
            if($this->employeeType=='active'){
             $query->where(function ($query) {
                 $query->where('employee_details.employee_status', 'active')
@@ -395,12 +437,11 @@ public  function updateTransactionType($event){
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_Status'=>$item->status,
+                        'leave_status'=>$item->leave_status,
                     ];
                 })
             ];
         });
-        // dd( $aggregatedData);
 
         $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
         $pdf = Pdf::loadView('daywiseLeaveTransactionReportPdf', [
@@ -408,6 +449,7 @@ public  function updateTransactionType($event){
             'leaveTransactions' => $aggregatedData,
             'fromDate' => $this->fromDate,
             'toDate' => $this->toDate,
+            'transactionFilter' => $transactionFilter,
         ]);
         FlashMessageHelper::flashSuccess('DayWise Leave Transaction Report Downloaded Successfully!');
 
@@ -416,7 +458,9 @@ public  function updateTransactionType($event){
         }, 'Daywise_leave_transactions.pdf');
     } catch (\Exception $e) {
       
-
+        Log::error('Error generating Leave Availed Report', [
+            'exception' => $e, // Logs the exception details
+        ]);
         // Optionally, return a user-friendly error message
         FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
     }
@@ -426,14 +470,15 @@ public  function updateTransactionType($event){
 
 public function leaveBalanceAsOnADayReport()
 {
-try{
-
-    // Validate the 'toDate' input
     $this->validate([
         'toDate' => 'required|date',
     ], [
         'toDate.required' => 'Date is required.',
     ]);
+try{
+
+    // Validate the 'toDate' input
+  
     
 
     // Check if any employees are selected
@@ -623,7 +668,7 @@ try{
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_Status' => $item->status,
+                        'leave_status' => $item->status,
                     ];
                 })
             ];
@@ -651,14 +696,15 @@ try{
     
     public function downloadNegativeLeaveBalanceReport()
     {
-        try
-        {
-
         $this->validate([
             'toDate' => 'required|date',
         ], [
             'toDate.required' => 'Date is required.',
         ]);
+        try
+        {
+
+       
     
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
     
@@ -766,11 +812,12 @@ try{
                         'from_session' => $item->from_session,
                         'to_session' => $item->to_session,
                         'leave_days' => $leaveDays,
-                        'leave_Status' => $item->status,
+                        'leave_status' => $item->status,
                     ];
                 })
             ];
         });
+       
      
 
     

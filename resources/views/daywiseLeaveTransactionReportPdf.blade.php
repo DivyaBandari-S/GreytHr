@@ -196,7 +196,33 @@
                 <td>{{ $transaction['leave_type']}}</td>
                 <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}</td>
                 <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}</td>
-                <td>{{ ucwords(strtolower($transaction['leave_status'])) }}</td>
+                {{-- <td>{{ ucwords(strtolower($transaction['leave_status'])) }}</td> --}}
+                <td>
+                    @php
+                        $leaveStatus = $transaction['leave_status'];
+                        switch ($leaveStatus) {
+                            case 2:
+                                $status = 'Availed';
+                                break;
+                            case 3:
+                                $status = 'Rejected';
+                                break;
+                            case 4:
+                                $status = 'Withdrawn';
+                                break;
+                            case 'Granted':
+                                $status = 'Granted';
+                                break;
+                            case 'Lapsed':
+                                $status = 'Lapsed';
+                                break;
+                            default:
+                                $status = 'Unknown Status';
+                        }
+                    @endphp
+                    {{ ucwords(strtolower($status)) }}
+                </td>
+                
                 <td>{{ $transaction['leave_days'] }}</td>
                 <td>{{ ucwords(strtolower($transaction['reason'])) }}</td>
             </tr>
