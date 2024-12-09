@@ -665,38 +665,39 @@ class IncidentRequests extends Component
     public function createIncidentRequest()
     {
         // Initialize file paths as an empty array if not provided
-       
         $this->validate([
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
         ]);
-   
-     $filePaths = $this->file_paths ?? [];
-        // Validate file uploads
-        $validator = Validator::make(
-            ['file_paths' => $filePaths],
-            [
-                'file_paths' => 'required|array', // Ensure file_paths is an array
-                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
-            ],
-            [
-                'file_paths.required' => 'You must upload at least one file.',
-                'file_paths.*.required' => 'Each file is required.',
-                'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
-                'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
-            ]
-        );
     
-        // If validation fails, return an error response
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        $filePaths = $this->file_paths ?? []; // Default to empty array if no files are uploaded
+    
+        // Validate file uploads if any files are uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'array', // Ensure file_paths is an array
+                    'file_paths.*' => 'file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif]', // 1MB max
+                ],
+                [
+                    'file_paths.*.file' => 'Each file must be a valid file.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+    
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
         }
     
         // Array to hold processed file data
         $fileDataArray = [];
     
-        // Process each file
+        // Process each file if uploaded
         if (!empty($filePaths) && is_array($filePaths)) {
             foreach ($filePaths as $file) {
                 // Check if the file is valid
@@ -732,7 +733,6 @@ class IncidentRequests extends Component
             }
         } else {
             Log::warning('No files uploaded.');
-            return response()->json(['error' => 'No files were uploaded.'], 400);
         }
     
         // Further processing, such as saving to the database
@@ -747,7 +747,7 @@ class IncidentRequests extends Component
                 return response()->json(['error' => 'Employee details not found'], 404);
             }
     
-            // Create HelpDesk entry
+            // Create Incident Request entry
             $incidentRequest = IncidentRequest::create([
                 'emp_id' => $employeeId,
                 'category' => $this->category,
@@ -755,29 +755,31 @@ class IncidentRequests extends Component
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_paths' => json_encode($fileDataArray) ??'-', 
+                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
                 'status_code' => 10, // Set default status
             ]);
     
-            // Notify super admins
+            // Notify admin users
             $incidentRequest->refresh();
             $this->resetIncidentFields();
             $this->showModal = false;
             FlashMessageHelper::flashSuccess('Incident request created successfully.');
+    
             // Fetch all admin emails from the IT table
             $adminEmails = IT::where('role', 'admin')->pluck('email')->toArray();
+    
             // Send Email Notification
             foreach ($adminEmails as $email) {
                 // Get the admin's emp_id from the IT table
                 $admin = IT::where('email', $email)->first();
-
+    
                 if ($admin) {
                     // Retrieve the corresponding first name and last name from EmployeeDetails
                     $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-
+    
                     $firstName = $employeeDetails ? $employeeDetails->first_name : 'N/A';
                     $lastName = $employeeDetails ? $employeeDetails->last_name : 'N/A';
-
+    
                     // Send email
                     Mail::to($email)
                         ->send(new IncidentRequestMail(
@@ -789,11 +791,8 @@ class IncidentRequests extends Component
                     Log::warning("No admin found in IT table for email: $email");
                 }
             }
-            return redirect()->to('/incident');
     
-            // Respond with success message
-           
-        
+            return redirect()->to('/incident');
         } catch (\Exception $e) {
             // Log the error details
             Log::error('Error creating request', [
@@ -808,41 +807,44 @@ class IncidentRequests extends Component
             return response()->json(['error' => 'An error occurred while processing your request.'], 500);
         }
     }
+    
     public function createServiceRequest()
     {
         // Initialize file paths as an empty array if not provided
-       
-        $this->validate([
+         // Initialize file paths as an empty array if not provided
+         $this->validate([
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
         ]);
-   
-     $filePaths = $this->file_paths ?? [];
-        // Validate file uploads
-        $validator = Validator::make(
-            ['file_paths' => $filePaths],
-            [
-                'file_paths' => 'required|array', // Ensure file_paths is an array
-                'file_paths.*' => 'required|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // 1MB max
-            ],
-            [
-                'file_paths.required' => 'You must upload at least one file.',
-                'file_paths.*.required' => 'Each file is required.',
-                'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
-                'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
-            ]
-        );
     
-        // If validation fails, return an error response
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+        $filePaths = $this->file_paths ?? []; // Default to empty array if no files are uploaded
+    
+        // Validate file uploads if any files are uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'array', // Ensure file_paths is an array
+                    'file_paths.*' => 'file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif]', // 1MB max
+                ],
+                [
+                    'file_paths.*.file' => 'Each file must be a valid file.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+    
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
+            }
         }
     
         // Array to hold processed file data
         $fileDataArray = [];
     
-        // Process each file
+        // Process each file if uploaded
         if (!empty($filePaths) && is_array($filePaths)) {
             foreach ($filePaths as $file) {
                 // Check if the file is valid
@@ -878,7 +880,6 @@ class IncidentRequests extends Component
             }
         } else {
             Log::warning('No files uploaded.');
-            return response()->json(['error' => 'No files were uploaded.'], 400);
         }
     
         // Further processing, such as saving to the database
@@ -893,7 +894,7 @@ class IncidentRequests extends Component
                 return response()->json(['error' => 'Employee details not found'], 404);
             }
     
-            // Create HelpDesk entry
+            // Create Incident Request entry
             $incidentRequest = IncidentRequest::create([
                 'emp_id' => $employeeId,
                 'category' => $this->category,
@@ -901,29 +902,31 @@ class IncidentRequests extends Component
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_paths' => json_encode($fileDataArray) ??'-', 
+                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
                 'status_code' => 10, // Set default status
             ]);
     
-            // Notify super admins
+            // Notify admin users
             $incidentRequest->refresh();
             $this->resetIncidentFields();
             $this->showModal = false;
-            FlashMessageHelper::flashSuccess('Incident request created successfully.');
+            FlashMessageHelper::flashSuccess('Service request created successfully.');
+    
             // Fetch all admin emails from the IT table
             $adminEmails = IT::where('role', 'admin')->pluck('email')->toArray();
+    
             // Send Email Notification
             foreach ($adminEmails as $email) {
                 // Get the admin's emp_id from the IT table
                 $admin = IT::where('email', $email)->first();
-
+    
                 if ($admin) {
                     // Retrieve the corresponding first name and last name from EmployeeDetails
                     $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-
+    
                     $firstName = $employeeDetails ? $employeeDetails->first_name : 'N/A';
                     $lastName = $employeeDetails ? $employeeDetails->last_name : 'N/A';
-
+    
                     // Send email
                     Mail::to($email)
                         ->send(new IncidentRequestMail(
@@ -935,11 +938,8 @@ class IncidentRequests extends Component
                     Log::warning("No admin found in IT table for email: $email");
                 }
             }
-            return redirect()->to('/incident');
     
-            // Respond with success message
-           
-        
+            return redirect()->to('/incident');
         } catch (\Exception $e) {
             // Log the error details
             Log::error('Error creating request', [
@@ -953,6 +953,7 @@ class IncidentRequests extends Component
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
             return response()->json(['error' => 'An error occurred while processing your request.'], 500);
         }
+    
     }
 
     public function render()
