@@ -202,7 +202,7 @@
         <tbody>
             @if ($leaveTransactions->isEmpty())
                 <tr>
-                    <td class="leavesdate" colspan="12"
+                    <td class="leavesdate" colspan="13"
                         style="text-align: center;  font-weight:600;   font-size:15px ;">No data found</td>
                 </tr>
             @else
