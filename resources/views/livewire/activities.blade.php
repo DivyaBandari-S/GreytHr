@@ -408,7 +408,7 @@
                             <div class="cards">
                                 <div class="row mt-2">
                                     <div class="col-12 col-md-4 text-center mb-2 mb-md-0">
-                                        <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
+                                        <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
                                     </div>
                                     <div class="col-6 col-md-4 text-center" style="font-size: 12px;">
                                         {{ $post->category }}
