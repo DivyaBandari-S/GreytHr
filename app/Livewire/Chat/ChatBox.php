@@ -33,7 +33,7 @@ class ChatBox extends Component
     public $createdMessage;
     public $messageBeingEdited;
     public $editMessageBody;
-    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refresh' => '$refresh'];
+    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refreshChatBox' => '$refresh', 'rowChatBottom'];
 
     // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
     public function  getListeners()
@@ -65,7 +65,7 @@ class ChatBox extends Component
         $message->delete();
         // $this->dispatch('loadConversation');
         $this->dispatch('refresh');
-        // $this->dispatch('refresh')->to(ChatBox::class);
+        $this->dispatch('refreshChatBox');
     }
 
     public function addEmojiReaction($messageId, $emoji)
@@ -100,10 +100,6 @@ class ChatBox extends Component
 
         # code...
     }
-    /*---------------------------------------------------------------------------------------*/
-    /*-----------------------------Broadcasted Event fucntion-------------------------------------------*/
-    /*----------------------------------------------------------------------------*/
-
     function broadcastedMessageReceived($event)
     {
         dd($event);
@@ -144,7 +140,6 @@ class ChatBox extends Component
         $newMessage = Message::find($messageId);
         $this->messages->push($newMessage);
         $this->dispatch('rowChatToBottom');
-        # code...
     }
 
 
@@ -189,12 +184,14 @@ class ChatBox extends Component
         $this->receiverInstance =  $receiver;
         $this->senderInstance = EmployeeDetails::find(auth()->id());
         $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
-        $this->dispatch('chatSelected');
+        // $this->dispatch('chatSelected');
         Message::where('conversation_id', $this->selectedConversation->id)
             ->where('receiver_id',  auth()->id())->update(['read' => 1]);
 
 
         $this->dispatch('broadcastMessageRead')->self();
+        $this->dispatch('rowChatToBottom');
+
         # code...
     }
 
