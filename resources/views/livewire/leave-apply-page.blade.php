@@ -95,7 +95,6 @@
                                     id="to_date"
                                     type="date"
                                     wire:model.lazy="to_date"
-                                    wire:keydown.debounce.500ms="validateField('to_date')"
                                     class="form-control placeholder-small"
                                     name="to_date"
                                     wire:change="handleFieldUpdate('to_date')"
