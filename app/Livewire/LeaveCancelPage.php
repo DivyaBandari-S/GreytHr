@@ -59,7 +59,10 @@ class LeaveCancelPage extends Component
     protected $messages = [
         'selectedLeaveType.required' => 'Please select a leave type to submit',
     ];
-
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function mount()
     {
@@ -110,10 +113,7 @@ class LeaveCancelPage extends Component
             return redirect()->back();
         }
     }
-    public function validateField($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
+
     public function fetchEmployeeDetails()
     {
         // Reset the list of selected employees

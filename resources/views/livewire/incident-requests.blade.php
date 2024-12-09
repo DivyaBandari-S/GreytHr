@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div wire:loading
-        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,file_paths">
+        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,file_paths,createServiceRequest,createIncidentRequest">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>

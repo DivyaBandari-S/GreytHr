@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     @guest
     <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
     <title>
@@ -12,50 +11,6 @@
     </title>
     @endguest
     @auth('emp')
-    @php
-    // Get the logged-in employee ID
-    $employeeId = auth()->guard('emp')->user()->emp_id;
-
-    // Retrieve the employee details including the company_id
-    $employeeDetails = DB::table('employee_details')
-    ->where('emp_id', $employeeId)
-    ->select('company_id') // Select only the company_id
-    ->first();
-    // Decode the company_id from employee_details
-    $companyIds = json_decode($employeeDetails->company_id);
-
-    $needsFlattening = false;
-    foreach ($companyIds as $item) {
-    if (is_array($item)) {
-    $needsFlattening = true;
-    break;
-    }
-    }
-
-    if ($needsFlattening) {
-    // If there's nesting, flatten the array
-    $flattenedArray = array_merge(...$companyIds);
-    } else {
-    // Otherwise, use the array as-is
-    $flattenedArray = $companyIds;
-    }
-    if ($companyIds) {
-    // Now perform the join with companies table
-    if (count($flattenedArray) <= 1) {
-        $employee=DB::table('companies')
-        ->whereIn('company_id', $companyIds)
-        ->select('companies.company_logo', 'companies.company_name')
-        ->first();
-        } else {
-        $employee = DB::table('companies')
-        ->whereIn('company_id', $companyIds)
-        ->where('is_parent', 'yes')
-        ->select('companies.company_logo', 'companies.company_name')
-        ->first();
-        }
-        }
-
-        @endphp
         <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
         <title>
             hr xpert
