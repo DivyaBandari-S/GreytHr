@@ -555,7 +555,7 @@ class LeaveApplyPage extends Component
                     return false;
                 }
             }
-       // Check for insufficient leave balancev
+            // Check for insufficient leave balancev
             // Extract the year from the from_date for leave balance check
             $fromDateYear = Carbon::parse($this->from_date)->year;
             if ($this->leave_type) {
@@ -764,6 +764,7 @@ class LeaveApplyPage extends Component
         try {
             // Extract the year from the 'from_date' (use the year from the 'from_date' instead of the current year)
             $fromDateYear = Carbon::parse($this->from_date)->year;
+
             // Retrieve leave balances for the year from 'from_date'
             $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
                 ->where('is_lapsed', true)
