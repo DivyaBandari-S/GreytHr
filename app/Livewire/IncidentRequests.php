@@ -22,6 +22,9 @@ use App\Models\IT;
 use App\Models\ServiceRequest;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class IncidentRequests extends Component
 {
@@ -30,10 +33,12 @@ class IncidentRequests extends Component
     public $incidentRequestaceessDialog = false;
     use WithFileUploads;
     public $isOpen = false;
+  
     public $short_description;
     public $rejection_reason;
     public $full_name;
     public $selectedCategory = [];
+    public $file_paths = [];
 
     public $activeCategory = '';
     public $pendingCategory = '';
@@ -43,6 +48,9 @@ class IncidentRequests extends Component
     public $showModal = false;
     public $search = '';
     public $isRotated = false;
+    public $images = [];
+
+    public $files=[];
     public $requestId;
 
     public $requestCategories = '';
@@ -77,6 +85,7 @@ class IncidentRequests extends Component
     public $activeSearch = [];
     public $pendingSearch = '';
     public $closedSearch = '';
+    public $showViewImageDialog=false;
 
 
 
@@ -415,6 +424,39 @@ class IncidentRequests extends Component
 
     public $recordId;
     public $viewrecord;
+    public function downloadFilesAsZip($id)
+    {
+        // Fetch the record
+        $record = IncidentRequest::find($id);
+        if (!$record) {
+            return response()->json(['error' => 'Record not found'], 404);
+        }
+    
+        $files = $record->getImageUrlsAttribute(); // Assuming this retrieves an array of files
+        if (empty($files)) {
+            return response()->json(['error' => 'No files available for download'], 404);
+        }
+    
+        // Create a unique name for the ZIP file
+        $zipFileName = 'files_' . $id . '_' . time() . '.zip';
+        $zipPath = storage_path('app/public/' . $zipFileName);
+    
+        // Create a new ZIP archive
+        $zip = new ZipArchive;
+        if ($zip->open($zipPath, ZipArchive::CREATE) === TRUE) {
+            foreach ($files as $file) {
+                $fileContent = base64_decode($file['data']);
+                $originalName = $file['original_name'];
+                $zip->addFromString($originalName, $fileContent);
+            }
+            $zip->close();
+        } else {
+            return response()->json(['error' => 'Unable to create ZIP file'], 500);
+        }
+    
+        // Return the ZIP file for download
+        return response()->download($zipPath)->deleteFileAfterSend(true);
+    }
 
     public function showViewFile($id)
     {
@@ -442,47 +484,7 @@ class IncidentRequests extends Component
     }
     public $showImageDialog = false;
     public $imageUrl;
-    public function downloadImage()
-    {
-        if ($this->imageUrl) {
-            // Decode the Base64 data if necessary
-            $fileData = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $this->imageUrl));
 
-            // Determine MIME type and file extension
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $mimeType = finfo_buffer($finfo, $fileData);
-            finfo_close($finfo);
-
-            $extension = '';
-            switch ($mimeType) {
-                case 'image/jpeg':
-                    $extension = 'jpg';
-                    break;
-                case 'image/png':
-                    $extension = 'png';
-                    break;
-                case 'image/gif':
-                    $extension = 'gif';
-                    break;
-                default:
-                    return abort(415, 'Unsupported Media Type');
-            }
-
-            // Prepare file name and response
-            $fileName = 'image-' . time() . '.' . $extension;
-            return response()->streamDownload(
-                function () use ($fileData) {
-                    echo $fileData;
-                },
-                $fileName,
-                [
-                    'Content-Type' => $mimeType,
-                    'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
-                ]
-            );
-        }
-        return abort(404, 'Image not found');
-    }
     public function getImageUrlAttribute()
     {
         if ($this->file_path && $this->mime_type) {
@@ -521,6 +523,128 @@ class IncidentRequests extends Component
         $this->resetErrorBag();
         $this->resetValidation();
     }
+    public function downloadActiveImage()
+    {
+        if (!isset($this->images[$this->currentImageIndex])) {
+            session()->flash('error', 'No active image to download.');
+            return;
+        }
+    
+        $activeImage = $this->images[$this->currentImageIndex];
+        $imageData = base64_decode($activeImage['data']);
+        $mimeType = $activeImage['mime_type'];
+        $originalName = $activeImage['original_name'];
+    
+        return response()->stream(
+            function () use ($imageData) {
+                echo $imageData;
+            },
+            200,
+            [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+            ]
+        );
+    }
+    public function getImageUrlsAttribute()
+    {
+        $fileDataArray = is_string($this->file_paths)
+            ? json_decode($this->file_paths, true)
+            : $this->file_paths;
+    
+        return array_filter($fileDataArray, function ($fileData) {
+            return isset($fileData['mime_type']) && strpos($fileData['mime_type'], 'image') !== false;
+        });
+    }
+    public function getFileUrlsAttribute()
+    {
+        $fileDataArray = is_string($this->file_paths)
+            ? json_decode($this->file_paths, true)
+            : $this->file_paths;
+    
+        return array_filter($fileDataArray, function ($fileData) {
+            // Check if MIME type is not an image
+            return isset($fileData['mime_type']) && strpos($fileData['mime_type'], 'image') === false;
+        });
+    }
+    
+    public $currentImageIndex = 0;  
+    
+    public function closeViewImage()
+    {
+        $this->showViewImageDialog = false;
+    }
+    
+    // Navigate to the previous image
+ 
+    
+
+
+
+    public function showViewImage($id) 
+    {
+        $this->recordId = $id;
+    
+        // Fetch the record
+        $record = IncidentRequest::find($id);
+        
+        // Get the images (assuming a JSON structure for images)
+        $this->images = $record->getImageUrlsAttribute(); 
+    
+        // Set the current image index
+      
+    
+        // Show the dialog
+        $this->showViewImageDialog = true;
+    }
+    
+    public function setActiveImageIndex($index)
+    {
+        $this->currentImageIndex = $index; // Update current index dynamically
+    }
+    public function nextImage()
+    {
+        $this->currentImageIndex = ($this->currentImageIndex + 1) % count($this->images);
+    }
+
+    public function previousImage()
+    {
+        $this->currentImageIndex = ($this->currentImageIndex - 1 + count($this->images)) % count($this->images);
+    }
+    public function downloadAllImages()
+    {
+     
+        if (empty($this->images)) {
+            session()->flash('error', 'No images available to download.');
+            return;
+        }
+
+        // Create a temporary file for the zip archive
+        $zipFilePath = storage_path('app/public/incident_images.zip');
+        $zip = new ZipArchive();
+    
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($this->images as $index => $image) {
+                $imageData = base64_decode($image['data']);
+                $originalName = $image['original_name'];
+    
+                // Add each image to the zip file
+                $zip->addFromString($originalName, $imageData);
+            }
+    
+            // Close the zip archive
+            $zip->close();
+    
+            // Return the zip file as a download response
+            return response()->download($zipFilePath)->deleteFileAfterSend(true);
+        } else {
+            session()->flash('error', 'Failed to create ZIP file.');
+            return;
+        }
+    }
+    
+ 
+  
     public function ServiceRequest()
     {
 
@@ -538,49 +662,92 @@ class IncidentRequests extends Component
         $this->showModal = true;
         $this->category = 'Incident Request';
     }
-
     public function createIncidentRequest()
     {
+        // Initialize file paths as an empty array if not provided
         $this->validate([
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
-            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
         ]);
-
-        // Get the logged-in employee ID
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        Log::debug('Create Incident Request called by employee ID: ' . $employeeId);
-
-        // Handle file upload if there is a file
-        $fileContent = null;
-        $mimeType = null;
-        $fileName = null;
-        // Store the file as binary data
-        if ($this->file_path) {
-
-            $fileContent = file_get_contents($this->file_path->getRealPath());
-            if ($fileContent === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                return;
+    
+        $filePaths = $this->file_paths ?? []; // Default to empty array if no files are uploaded
+    
+        // Validate file uploads if any files are uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'array', // Ensure file_paths is an array
+                    'file_paths.*' => 'file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif]', // 1MB max
+                ],
+                [
+                    'file_paths.*.file' => 'Each file must be a valid file.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+    
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
             }
-
-            // Check if the file content is too large
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                return;
-            }
-
-
-            $mimeType = $this->file_path->getMimeType();
-            $fileName = $this->file_path->getClientOriginalName();
         }
-
-        // Create the new IncidentRequest
+    
+        // Array to hold processed file data
+        $fileDataArray = [];
+    
+        // Process each file if uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            foreach ($filePaths as $file) {
+                // Check if the file is valid
+                if ($file->isValid()) {
+                    try {
+                        // Get file details
+                        $mimeType = $file->getMimeType();
+                        $originalName = $file->getClientOriginalName();
+                        $fileContent = file_get_contents($file->getRealPath());
+    
+                        // Encode the file content to base64
+                        $base64File = base64_encode($fileContent);
+    
+                        // Add file data to the array
+                        $fileDataArray[] = [
+                            'data' => $base64File,
+                            'mime_type' => $mimeType,
+                            'original_name' => $originalName,
+                        ];
+                    } catch (\Exception $e) {
+                        Log::error('Error processing file', [
+                            'file_name' => $file->getClientOriginalName(),
+                            'error' => $e->getMessage(),
+                        ]);
+                        return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                    }
+                } else {
+                    Log::error('Invalid file uploaded', [
+                        'file_name' => $file->getClientOriginalName(),
+                    ]);
+                    return response()->json(['error' => 'Invalid file uploaded'], 400);
+                }
+            }
+        } else {
+            Log::warning('No files uploaded.');
+        }
+    
+        // Further processing, such as saving to the database
         try {
+            // Fetch employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+    
+            // If no employee details found, handle the error
+            if (!$this->employeeDetails) {
+                Log::error('Employee details not found', ['emp_id' => $employeeId]);
+                return response()->json(['error' => 'Employee details not found'], 404);
+            }
+    
+            // Create Incident Request entry
             $incidentRequest = IncidentRequest::create([
                 'emp_id' => $employeeId,
                 'category' => $this->category,
@@ -588,29 +755,31 @@ class IncidentRequests extends Component
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
                 'status_code' => 10, // Set default status
             ]);
+    
+            // Notify admin users
             $incidentRequest->refresh();
             $this->resetIncidentFields();
             $this->showModal = false;
             FlashMessageHelper::flashSuccess('Incident request created successfully.');
+    
             // Fetch all admin emails from the IT table
             $adminEmails = IT::where('role', 'admin')->pluck('email')->toArray();
+    
             // Send Email Notification
             foreach ($adminEmails as $email) {
                 // Get the admin's emp_id from the IT table
                 $admin = IT::where('email', $email)->first();
-
+    
                 if ($admin) {
                     // Retrieve the corresponding first name and last name from EmployeeDetails
                     $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-
+    
                     $firstName = $employeeDetails ? $employeeDetails->first_name : 'N/A';
                     $lastName = $employeeDetails ? $employeeDetails->last_name : 'N/A';
-
+    
                     // Send email
                     Mail::to($email)
                         ->send(new IncidentRequestMail(
@@ -622,86 +791,146 @@ class IncidentRequests extends Component
                     Log::warning("No admin found in IT table for email: $email");
                 }
             }
+    
             return redirect()->to('/incident');
         } catch (\Exception $e) {
-            Log::error('Error creating Incident Request: ' . $e->getMessage());
-            FlashMessageHelper::flashError('Error creating Incident Request.');
-            return;
+            // Log the error details
+            Log::error('Error creating request', [
+                'employee_id' => $this->employeeDetails->emp_id ?? 'N/A',
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_paths' => $fileDataArray,
+                'error' => $e->getMessage(),
+            ]);
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+            return response()->json(['error' => 'An error occurred while processing your request.'], 500);
         }
     }
-
+    
     public function createServiceRequest()
     {
-        $this->validate([
+        // Initialize file paths as an empty array if not provided
+         // Initialize file paths as an empty array if not provided
+         $this->validate([
             'short_description' => 'required|string|max:255',
             'description' => 'required|string',
             'priority' => 'required|in:Low,Medium,High',
-            'file_path' => 'nullable|file|max:10240',  // Validate that file is an actual file and its size is within limit (e.g., 10MB)
         ]);
-
-        // Get the logged-in employee ID
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-
-        // Handle file upload if there is a file
-        $fileContent = null;
-        $mimeType = null;
-        $fileName = null;
-        // Store the file as binary data
-        if ($this->file_path) {
-
-            $fileContent = file_get_contents($this->file_path->getRealPath());
-            if ($fileContent === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                return;
+    
+        $filePaths = $this->file_paths ?? []; // Default to empty array if no files are uploaded
+    
+        // Validate file uploads if any files are uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            $validator = Validator::make(
+                ['file_paths' => $filePaths],
+                [
+                    'file_paths' => 'array', // Ensure file_paths is an array
+                    'file_paths.*' => 'file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif]', // 1MB max
+                ],
+                [
+                    'file_paths.*.file' => 'Each file must be a valid file.',
+                    'file_paths.*.mimes' => 'Invalid file type. Only xls, csv, xlsx, pdf, jpeg, png, jpg, and gif are allowed.',
+                    'file_paths.*.max' => 'Each file must not exceed 1MB in size.',
+                ]
+            );
+    
+            // If validation fails, return an error response
+            if ($validator->fails()) {
+                return response()->json($validator->errors(), 422);
             }
-
-            // Check if the file content is too large
-            if (strlen($fileContent) > 16777215) { // 16MB for MEDIUMBLOB
-                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                return;
-            }
-
-
-            $mimeType = $this->file_path->getMimeType();
-            $fileName = $this->file_path->getClientOriginalName();
         }
-
-
-        // Create the new IncidentRequest
+    
+        // Array to hold processed file data
+        $fileDataArray = [];
+    
+        // Process each file if uploaded
+        if (!empty($filePaths) && is_array($filePaths)) {
+            foreach ($filePaths as $file) {
+                // Check if the file is valid
+                if ($file->isValid()) {
+                    try {
+                        // Get file details
+                        $mimeType = $file->getMimeType();
+                        $originalName = $file->getClientOriginalName();
+                        $fileContent = file_get_contents($file->getRealPath());
+    
+                        // Encode the file content to base64
+                        $base64File = base64_encode($fileContent);
+    
+                        // Add file data to the array
+                        $fileDataArray[] = [
+                            'data' => $base64File,
+                            'mime_type' => $mimeType,
+                            'original_name' => $originalName,
+                        ];
+                    } catch (\Exception $e) {
+                        Log::error('Error processing file', [
+                            'file_name' => $file->getClientOriginalName(),
+                            'error' => $e->getMessage(),
+                        ]);
+                        return response()->json(['error' => 'An error occurred while processing the file.'], 500);
+                    }
+                } else {
+                    Log::error('Invalid file uploaded', [
+                        'file_name' => $file->getClientOriginalName(),
+                    ]);
+                    return response()->json(['error' => 'Invalid file uploaded'], 400);
+                }
+            }
+        } else {
+            Log::warning('No files uploaded.');
+        }
+    
+        // Further processing, such as saving to the database
         try {
-            $serviceRequest = IncidentRequest::create([
+            // Fetch employee details
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+    
+            // If no employee details found, handle the error
+            if (!$this->employeeDetails) {
+                Log::error('Employee details not found', ['emp_id' => $employeeId]);
+                return response()->json(['error' => 'Employee details not found'], 404);
+            }
+    
+            // Create Incident Request entry
+            $incidentRequest = IncidentRequest::create([
                 'emp_id' => $employeeId,
                 'category' => $this->category,
                 'short_description' => $this->short_description,
                 'description' => $this->description,
                 'priority' => $this->priority,
                 'assigned_dept' => 'IT',
-                'file_path' => $fileContent,
-                'file_name' => $fileName,
-                'mime_type' => $mimeType,
+                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
                 'status_code' => 10, // Set default status
             ]);
-            $serviceRequest->refresh();
+    
+            // Notify admin users
+            $incidentRequest->refresh();
+            $this->resetIncidentFields();
+            $this->showModal = false;
+            FlashMessageHelper::flashSuccess('Service request created successfully.');
+    
+            // Fetch all admin emails from the IT table
             $adminEmails = IT::where('role', 'admin')->pluck('email')->toArray();
+    
             // Send Email Notification
             foreach ($adminEmails as $email) {
                 // Get the admin's emp_id from the IT table
                 $admin = IT::where('email', $email)->first();
-
+    
                 if ($admin) {
                     // Retrieve the corresponding first name and last name from EmployeeDetails
                     $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-
+    
                     $firstName = $employeeDetails ? $employeeDetails->first_name : 'N/A';
                     $lastName = $employeeDetails ? $employeeDetails->last_name : 'N/A';
-
+    
                     // Send email
                     Mail::to($email)
-                        ->send(new ServiceRequestMail(
-                            $serviceRequest,
+                        ->send(new IncidentRequestMail(
+                            $incidentRequest,
                             $firstName,
                             $lastName
                         ));
@@ -709,17 +938,24 @@ class IncidentRequests extends Component
                     Log::warning("No admin found in IT table for email: $email");
                 }
             }
-            $this->resetIncidentFields();
-            $this->showModal = false;
-            FlashMessageHelper::flashSuccess('Service request created successfully.');
-
+    
             return redirect()->to('/incident');
         } catch (\Exception $e) {
-            Log::error('Error creating Service Request: ' . $e->getMessage());
-            FlashMessageHelper::flashError('Error creating Service Request.');
-            return;
+            // Log the error details
+            Log::error('Error creating request', [
+                'employee_id' => $this->employeeDetails->emp_id ?? 'N/A',
+                'category' => $this->category,
+                'subject' => $this->subject,
+                'description' => $this->description,
+                'file_paths' => $fileDataArray,
+                'error' => $e->getMessage(),
+            ]);
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+            return response()->json(['error' => 'An error occurred while processing your request.'], 500);
         }
+    
     }
+
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -765,6 +1001,7 @@ class IncidentRequests extends Component
             'searchData' => $this->filterData ?: $this->records,
             'requestCategories' => $this->requestCategories,
             'peopleData' => $this->peopleData,
+            'showViewImageDialog' => $this->showViewImageDialog,
 
         ]);
     }

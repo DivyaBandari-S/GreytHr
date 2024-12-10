@@ -41,6 +41,26 @@ class ChatSendMessage extends Component
         $this->body .= $emoji;
     }
 
+
+
+    public function deleteMedia($index)
+    {
+        // Remove the media from the array
+        unset($this->media[$index]);
+
+        // Re-index the array to maintain continuous keys
+        $this->media = array_values($this->media);
+
+        // Call the updatedMedia method to refresh the preview and body
+        $this->updatedMedia();
+    }
+
+
+    public function clearError()
+    {
+        session()->forget('error'); // This clears the error session
+    }
+
     public function updatedMedia()
     {
         $this->mediaPreviews = [];
@@ -64,26 +84,6 @@ class ChatSendMessage extends Component
 
         // Append the file names to the message body
         $this->body = implode(', ', $fileNames) . ' ';
-    }
-
-
-
-    public function deleteMedia($index)
-    {
-        // Remove the media from the array
-        unset($this->media[$index]);
-
-        // Re-index the array to maintain continuous keys
-        $this->media = array_values($this->media);
-
-        // Call the updatedMedia method to refresh the preview and body
-        $this->updatedMedia();
-    }
-
-
-    public function clearError()
-    {
-        session()->forget('error'); // This clears the error session
     }
 
 
@@ -162,6 +162,7 @@ class ChatSendMessage extends Component
 
         $this->dispatch('pushMessage', $this->createdMessage->id)->to(ChatBox::class);
         $this->dispatch('show-toast', ['message' => $trimmedBody]);
+        $this->dispatch('sendMessageSound'); // Emit send sound event
         $this->dispatch('refresh')->to(ChatList::class);
         $this->reset(['body', 'media', 'mediaPreviews']);
         $this->dispatch('dispatchMessageSent')->self();
@@ -171,7 +172,8 @@ class ChatSendMessage extends Component
 
     public function dispatchMessageSent()
     {
-        broadcast(new MessageSent(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance));
+         broadcast(new MessageSent(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance));
+        // MessageSent::dispatch(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance);
     }
 
     public function render()

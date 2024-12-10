@@ -59,9 +59,10 @@
                             <!-- Delete Button in top-right corner -->
                             <button type="button" class="btn btn-danger btn-sm"
                                 wire:click="deleteMedia({{ $loop->index }})"
-                                style="position: absolute; top: 0; right: 0; z-index: 10; margin: 5px;">
-                                <i class="fa-solid fa-trash"></i>
+                                style="position: absolute; top: 0; right: 0; z-index: 10; margin: 5px; padding: 2px 5px; font-size: 12px;">
+                                <i class="fa fa-times"></i>
                             </button>
+
                         </div>
                     @endforeach
                 </div>
@@ -69,6 +70,8 @@
             <emoji-picker id="emojiPicker" style="display: none;" class="light"></emoji-picker>
         </form>
     @endif
+    <!-- Sound Effect Scripts -->
+    <audio id="sendSound" src="{{ asset('sounds/send-sound.mp3') }}"></audio>
 </div>
 
 <script>
@@ -107,4 +110,9 @@
     //         }
     //     });
     // });
+
+    // Play sound when a message is sent
+    window.addEventListener('sendMessageSound', () => {
+        document.getElementById('sendSound').play();
+    });
 </script>

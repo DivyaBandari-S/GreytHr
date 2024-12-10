@@ -10,12 +10,17 @@ class HelpDesks extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'emp_id', 'category', 'subject', 'description', 'file_path','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
+        'id','emp_id', 'category', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
      ];
     public function emp()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
+    public function employee()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
+    }
+
     public function request()
     {
         return $this->belongsTo(Request::class, 'emp_id');// Update the foreign key as necessary
@@ -37,9 +42,10 @@ public function status()
     {
         return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
     }
-    public function getImageUrlAttribute()
+    public function getImageUrlsAttribute()
     {
-        return $this->file_path ? 'data:image/jpeg;base64,' . base64_encode($this->file_path) : null;
+        // Assuming images are stored in the `file_paths` attribute as a JSON array
+        return json_decode($this->file_paths, true); // Adjust based on your actual data structure
     }
-
+    
 }

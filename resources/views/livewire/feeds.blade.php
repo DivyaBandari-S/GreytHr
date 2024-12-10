@@ -225,7 +225,7 @@
                                 <div class="input-group">
                                 <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" id="searchInput"
                                         type="text"
-                                        class="form-control placeholder-small"
+                                        class="form-control  task-search-input placeholder-small"
                                         placeholder="Search...."
                                         aria-label="Search"
                                         aria-describedby="basic-addon1">
@@ -425,7 +425,7 @@
 
                             <div class="row m-0">
                                 <div class="col-md-4 mb-2" style="text-align: center;">
-                                    <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                                    <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                                 </div>
                                 <div class="col-md-4 group-events m-auto">
                                     Group Events
@@ -887,7 +887,7 @@
                 <div class="cards mb-4">
                     <div class="row m-0">
                         <div class="col-md-3 mb-2 text-align-center">
-                            <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                            <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                         </div>
                         <div class="col-md-4 group-events m-auto">
                             Group Events
@@ -1336,7 +1336,7 @@
 
             <div class="row m-0">
                 <div class="col-md-3 mb-2" style="text-align: center;">
-                    <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                    <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
                 </div>
                 <div class="col-md-4 group-events m-auto">
                     Group Events
@@ -1818,7 +1818,7 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
     <div class="F mb-4" style="padding: 15px; background-color: white; border-radius: 5px; border: 1px solid #CFCACA; color: #3b4452; margin-top: 5px">
         <div class="row m-0">
             <div class="col-md-4 mb-2" style="text-align: center;">
-                <img src="{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
+                <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width:120px">
             </div>
             <div class="col-md-4 group-events  m-auto">
                 Group Events

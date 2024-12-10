@@ -1,4 +1,4 @@
-import 'bootstrap';
+import "bootstrap";
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -6,10 +6,10 @@ import 'bootstrap';
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-import axios from 'axios';
+import axios from "axios";
 window.axios = axios;
 
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
@@ -32,17 +32,33 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     enabledTransports: ['ws', 'wss'],
 // });
 
-import Echo from 'laravel-echo';
+import Echo from "laravel-echo";
 
-import Pusher from 'pusher-js';
+import Pusher from "pusher-js";
 window.Pusher = Pusher;
 
 window.Echo = new Echo({
-    broadcaster: 'reverb',
+    broadcaster: "reverb",
     key: import.meta.env.VITE_REVERB_APP_KEY,
     wsHost: import.meta.env.VITE_REVERB_HOST,
     wsPort: import.meta.env.VITE_REVERB_PORT ?? 80,
     wssPort: import.meta.env.VITE_REVERB_PORT ?? 443,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? 'https') === 'https',
-    enabledTransports: ['ws', 'wss'],
+    forceTLS: (import.meta.env.VITE_REVERB_SCHEME ?? "https") === "https",
+    enabledTransports: ["ws", "wss"],
 });
+
+// window.Echo.channel(chat).listen('MessageSent', (event) => {
+//     console.log(event);
+// });
+
+// window.Echo.private(`chat.${receiverId}`)
+//     .listen('MessageSent', (event) => {
+//         console.log(event);
+//     });
+window.Echo.private('chat.XSS-0488') // Replace with actual emp_id
+    .listen('MessageSent', (event) => {
+        console.log('Event Received...................................................:', event);
+    });
+
+
+

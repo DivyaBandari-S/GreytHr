@@ -1,5 +1,5 @@
 <div class="position-relative">
-    <div class="position-absolute"  wire:loading
+    <div class="position-absolute" wire:loading
         wire:target="markAsLeaveCancel,toggleInfoLeave,applyingTo,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,cancel,toggleApplyingto">
         <div class="loader-overlay">
             <div class="loader">
@@ -39,25 +39,29 @@
                             @foreach($cancelLeaveRequests as $leaveRequest)
                             <tr>
                                 <td wire:click="applyingTo({{ $leaveRequest->id }})">
-                                    <input type="radio" name="leaveType" value="{{ $leaveRequest->id }}" wire:model="selectedLeaveType">
+                                    <input type="radio" name="leaveType" value="{{ $leaveRequest->id }}"
+                                        wire:model="selectedLeaveType"
+                                        wire:change="validateField('selectedLeaveType')"> <!-- Wire change event -->
                                 </td>
                                 <td>{{ $leaveRequest->leave_type }}</td>
                                 <td>{{ $leaveRequest->from_date->format('d M, Y') }}</td>
                                 <td>{{ $leaveRequest->to_date->format('d M, Y') }}</td>
-                                <td>{{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session,$leaveRequest->leave_type) }}</td>
+                                <td>{{ $this->calculateNumberOfDays($leaveRequest->from_date, $leaveRequest->from_session, $leaveRequest->to_date, $leaveRequest->to_session, $leaveRequest->leave_type) }}</td>
                                 <td>{{ $leaveRequest->reason }}</td>
                             </tr>
                             @endforeach
                             @else
                             <tr>
-                                <td colspan="6">
-                                    No data found.
-                                </td>
+                                <td colspan="6">No data found.</td>
                             </tr>
                             @endif
+                            <!-- Show error message only if 'selectedLeaveType' is not selected -->
                         </tbody>
                     </table>
                 </div>
+                @error('selectedLeaveType')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
                 <!-- inputs fields -->
                 @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                 <div>
@@ -107,35 +111,35 @@
                     @if($showApplyingToContainer)
                     <div class="searchContainer">
                         <!-- Content for the search container -->
-                            <div class="aaCont-search d-flex align-items-center justify-content-between">
-                                <div class=" m-0 py-0 px-2">
-                                    <div class="input-group">
-                                        <input
-                                            wire:model="searchQuery"
-                                            id="searchInput"
-                                            type="text"
-                                            class="form-control searchBar placeholder-small"
-                                            placeholder="Search...."
-                                            aria-label="Search"
-                                            aria-describedby="basic-addon1">
-                                        <div class="input-group-append searchBtnBg d-flex align-items-center">
-                                            <button
-                                                type="button"
-                                                class="search-btn-leave"
-                                                wire:click="getFilteredManagers">
-                                                <i class="fas fa-search "></i>
-                                            </button>
-                                        </div>
+                        <div class="aaCont-search d-flex align-items-center justify-content-between">
+                            <div class=" m-0 py-0 px-2">
+                                <div class="input-group">
+                                    <input
+                                        wire:model="searchQuery"
+                                        id="searchInput"
+                                        type="text"
+                                        class="form-control searchBar placeholder-small"
+                                        placeholder="Search...."
+                                        aria-label="Search"
+                                        aria-describedby="basic-addon1">
+                                    <div class="input-group-append searchBtnBg d-flex align-items-center">
+                                        <button
+                                            type="button"
+                                            class="search-btn-leave"
+                                            wire:click="getFilteredManagers">
+                                            <i class="fas fa-search "></i>
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div class="aaCont-search m-0 p-0">
-                                    <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close">
-                                        <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
-                                        </span>
-                                    </button>
-                                </div>
                             </div>
+
+                            <div class="aaCont-search m-0 p-0">
+                                <button wire:click="toggleApplyingto" type="button" class="close rounded px-1 py-0" aria-label="Close">
+                                    <span aria-hidden="true" class="closeIcon"><i class="fas fa-times "></i>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
 
                         <!-- Your Blade file -->
                         <div class="scrollApplyingTO">
@@ -175,7 +179,6 @@
                         </div>
                     </div>
                     @endif
-                    @error('applying_to') <span class="text-danger">{{ $message }}</span> @enderror
                 </div>
                 <div class="form-group mt-3">
                     <span class="normalTextValue">

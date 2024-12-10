@@ -169,9 +169,9 @@
                             <div class="setting-password-submit-container">
                                 <button class="submit-btn" type="submit" wire:loading.attr="disabled"
                                     wire:loading.class="btn-loading" aria-disabled="true">
-                                    <span wire:loading.remove>Save Password</span>
-                                    <span wire:loading>
-                                        <i class="fa fa-spinner fa-spin"></i> Saving...
+                                    <span wire:loading.remove wire:target='changePassword'>Save Password</span>
+                                    <span wire:loading wire:target='changePassword'>
+                                        <i class="fa fa-spinner fa-spin"></i> Verifying...
                                     </span>
                                 </button>
                             </div>

@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div wire:loading
-        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,">
+        wire:target="open,file_path,submitHR,Catalog,activeTab,closeImageDialog,downloadImage,showImage,file_paths">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -124,19 +124,20 @@
                             @error('description') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
+         
                         <div class="row mt-2">
-                            <div class="col">
-                                <label for="fileInput" class="helpdesk-label">
-                                    <i class="fa fa-paperclip"></i> Attach Image
-                                </label>
-                            </div>
-                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-                        </div>
+                                                        <div class="col">
+                                                            <label for="fileInput" style="color:#778899; font-weight:500; font-size:12px; cursor:pointer;">
+                                                                <i class="fa fa-paperclip"></i> Attach Image
+                                                            </label>
+                                                        </div>
+                                                        @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+                                                    </div>
 
-                        <div>
-                            <input type="file" wire:model="file_path" class="form-control">
+                                                    <div>
+                                                    <input id="file_paths" type="file" wire:model="file_paths" multiple />
 
-                        </div>
+                                                    </div>
 
 
 
@@ -219,83 +220,140 @@
         </tr>
     </thead>
     <tbody>
-        @if ($searchData && $searchData->whereIn('status_code', [8,10])->isEmpty())
-        <tr>
-            <td colspan="8" style="text-align: center; border: none;">
-                <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
-            </td>
-        </tr>
-        @else
-        @foreach ($searchData->whereIn('status_code', [8,10])->sortByDesc('created_at') as $index => $record)
+  @if ($searchData && $searchData->whereIn('status_code', [8, 10])->isEmpty())
+    <tr>
+        <td colspan="8" style="text-align: center; border: none;">
+            <img style="width: 10em; margin: 20px;" 
+                 src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" 
+                 alt="No items found">
+        </td>
+    </tr>
+@else
+    @foreach ($searchData->whereIn('status_code', [8, 10])->sortByDesc('created_at') as $index => $record)
         <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
             <td class="helpdesk-request">
                 {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
                 <strong style="font-size: 10px;">({{ $record->emp_id }})</strong>
             </td>
+            <td class="helpdesk-request">{{ $record->request_id ?? '-' }}</td>
+            <td class="helpdesk-request">{{ $record->category ?? '-' }}</td>
+            <td class="helpdesk-request">{{ $record->subject ?? '-' }}</td>
+            <td class="helpdesk-request">{{ $record->description ?? '-' }}</td>
             <td class="helpdesk-request">
-                {{ $record->request_id ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->category ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->subject ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->description ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-            @if ($record->file_path)
-                        @if(strpos($record->mime_type, 'image') !== false)
-                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
-                            View Image
-                        </a>
-                        @else
-                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
-                            Download file
-                        </a>
-                        @endif
-                    @else
-                        <p style="color: gray;">-</p>
-                    @endif
-                    @if ($showImageDialog)
-                                <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">View File</h5>
-                                            </div>
-                                            <div class="modal-body text-center">
-                                                <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                                <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                            </div>
-                                        </div>
+   
+    @php
+        // Check if file_paths is empty or null
+        $fileDataArray = isset($record->file_paths) && !empty($record->file_paths) 
+            ? (is_string($record->file_paths) 
+                ? json_decode($record->file_paths, true) 
+                : $record->file_paths)
+            : '-';
+
+        // If fileDataArray is not an empty array, separate images and files
+        $images = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') !== false
+            )
+            : [];
+
+        $files = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') === false
+            )
+            : [];
+    @endphp
+
+    {{-- Modal to display the images --}}
+    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Images</a>
+    @elseif ($fileDataArray !== '-' && !empty($images) && count($images) == 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
+    @endif
+
+    {{-- Modal to display the images --}}
+    @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
+        <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
+                <div class="modal-content custom-modal-content">
+                    <div class="modal-header custom-modal-header">
+                        <h5 class="modal-title view-file">View Image</h5>
+                    </div>
+
+                    <div class="modal-body custom-modal-body">
+                        <div id="imageCarousel" class="carousel slide">
+                            <div class="carousel-inner">
+                                @foreach ($images as $index => $image)
+                                    <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
+                                        <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
+                                            alt="{{ $image['original_name'] }}" 
+                                            style="width:100%; height:auto;" />
                                     </div>
-                                </div>
-                                <div class="modal-backdrop fade show"></div>
-                            @endif
-            </td>
-            <td class="helpdesk-request">
-                {{ $record->priority ?? '-' }}
-            </td>
-            <td class="helpdesk-request">
-    @if ($record->status_code == 10)
-        <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
-    @elseif ($record->status_code == 8)
-        <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
-    @else
-        {{$record->status->status->status_name ?? '-' }}
+                                @endforeach
+                            </div>
+
+                            {{-- Carousel Controls --}}
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
+                                    class="carousel-control-prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
+                                    class="carousel-control-next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer custom-modal-footer">
+                        <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+
+    {{-- File Modal --}}
+    @if ($fileDataArray !== '-' && !empty($files) && count($files) > 1)
+        <a href="{{ route('download.files.zip', ['id' => $record->id]) }}" class="anchorTagDetails">Download Files</a>
+    @elseif ($fileDataArray !== '-' && !empty($files) && count($files) == 1)
+        @foreach ($files as $file)
+            @php
+                $base64File = trim($file['data'] ?? '');
+                $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+            @endphp
+            <a href="data:{{ $mimeType }};base64,{{ $base64File }}" download="{{ $originalName }}" class="anchorTagDetails">Download File</a>
+        @endforeach
+    @endif
+
+    {{-- Display message when no files or images are present --}}
+    @if ($fileDataArray === '-' || (empty($images) && empty($files)))
+        <p>-</p>
     @endif
 </td>
 
+            <td class="helpdesk-request">{{ $record->priority ?? '-' }}</td>
+            <td class="helpdesk-request">
+                @if ($record->status_code == 10)
+                    <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
+                @elseif ($record->status_code == 8)
+                    <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
+                @else
+                    {{$record->status->status_name ?? '-' }}
+                @endif
+            </td>
         </tr>
-     
-        @endforeach
+    @endforeach
+    
+@endif
+
    
-        @endif
     </tbody>
     <tbody>
 
@@ -384,41 +442,111 @@
                         <td class="helpdesk-request">
                             {{ $record->description ?? '-' }}
                         </td>
+                    
                         <td class="helpdesk-request">
-                            @if ($record->file_path)
-                            @if(strpos($record->mime_type, 'image') !== false)
-                            <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">View Image</a>
-                            @else
-                            <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">Download file</a>
-                            @endif
-                            @else
-                            <p style="color: gray;">-</p>
-                            @endif
+    {{-- Process images and files --}}
+    @php
+        // Check if file_paths is empty or null
+        $fileDataArray = isset($record->file_paths) && !empty($record->file_paths) 
+            ? (is_string($record->file_paths) 
+                ? json_decode($record->file_paths, true) 
+                : $record->file_paths)
+            : '-';
 
-                            @if ($showImageDialog)
-                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
+        // If fileDataArray is not an empty array, separate images and files
+        $images = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') !== false
+            )
+            : [];
+
+        $files = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') === false
+            )
+            : [];
+    @endphp
+
+    {{-- Modal to display the images --}}
+    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Images</a>
+    @elseif ($fileDataArray !== '-' && !empty($images) && count($images) == 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
+    @endif
+
+    {{-- Modal to display the images --}}
+    @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
+        <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
+                <div class="modal-content custom-modal-content">
+                    <div class="modal-header custom-modal-header">
+                        <h5 class="modal-title view-file">View Image</h5>
+                    </div>
+
+                    <div class="modal-body custom-modal-body">
+                        <div id="imageCarousel" class="carousel slide">
+                            <div class="carousel-inner">
+                                @foreach ($images as $index => $image)
+                                    <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
+                                        <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
+                                            alt="{{ $image['original_name'] }}" 
+                                            style="width:100%; height:auto;" />
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
-                            <div class="modal-backdrop fade show"></div>
-                            @endif
-                        </td>
+
+                            {{-- Carousel Controls --}}
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
+                                    class="carousel-control-prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
+                                    class="carousel-control-next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer custom-modal-footer">
+                        <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+
+    {{-- File Modal --}}
+    @if ($fileDataArray !== '-' && !empty($files) && count($files) > 1)
+        <a href="{{ route('download.files.zip', ['id' => $record->id]) }}" class="anchorTagDetails">Download Files</a>
+    @elseif ($fileDataArray !== '-' && !empty($files) && count($files) == 1)
+        @foreach ($files as $file)
+            @php
+                $base64File = trim($file['data'] ?? '');
+                $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+            @endphp
+            <a href="data:{{ $mimeType }};base64,{{ $base64File }}" download="{{ $originalName }}" class="anchorTagDetails">Download File</a>
+        @endforeach
+    @endif
+
+    {{-- Display message when no files or images are present --}}
+    @if ($fileDataArray === '-' || (empty($images) && empty($files)))
+        <p>-</p>
+    @endif
+</td>
+
+
                         <td class="helpdesk-request">
                             {{ $record->priority ?? '-' }}
                         </td>
-cha                        <td class="helpdesk-request @if($record->status_code == 3) rejectColor @elseif($record->status_code == 11) approvedColor @endif">
+                        <td class="helpdesk-request @if($record->status_code == 3) rejectColor @elseif($record->status_code == 11) approvedColor @endif">
     @if($record->status_code == 3)
         {{ ucfirst($record->status->status_name  ?? '-') }}<br>
         @if($record->rejection_reason)
@@ -540,40 +668,106 @@ cha                        <td class="helpdesk-request @if($record->status_code 
                     <td class="helpdesk-request">
                         {{ $record->description ?? '-' }}
                     </td>
+                     
                     <td class="helpdesk-request">
-                        @if ($record->file_path)
-                        @if(strpos($record->mime_type, 'image') !== false)
-                        <a href="#" class="anchorTagDetails" wire:click.prevent="showImage('{{ $record->getImageUrlAttribute() }}')">
-                            View Image
-                        </a>
-                        @else
-                        <a class="anchorTagDetails" href="{{ route('file.show', $record->id) }}" download="{{ $record->file_name }}" style="margin-top: 10px;">
-                            Download file
-                        </a>
-                        @endif
-                        @else
-                        <p style="color: gray;">-</p>
-                        @endif
-                        @if ($showImageDialog)
-                            <div class="modal fade show d-block" tabindex="-1" role="dialog">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">View File</h5>
-                                        </div>
-                                        <div class="modal-body text-center">
-                                            <img src="{{ $imageUrl }}" class="img-fluid" alt="Image preview" style="width:50%;height:50%">
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="submit-btn" wire:click.prevent="downloadImage">Download</button>
-                                            <button type="button" class="cancel-btn1" wire:click="closeImageDialog">Close</button>
-                                        </div>
+    {{-- Process images and files --}}
+    @php
+        // Check if file_paths is empty or null
+        $fileDataArray = isset($record->file_paths) && !empty($record->file_paths) 
+            ? (is_string($record->file_paths) 
+                ? json_decode($record->file_paths, true) 
+                : $record->file_paths)
+            : '-';
+
+        // If fileDataArray is not an empty array, separate images and files
+        $images = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') !== false
+            )
+            : [];
+
+        $files = ($fileDataArray !== '-' && is_array($fileDataArray)) 
+            ? array_filter(
+                $fileDataArray,
+                fn($fileData) => strpos($fileData['mime_type'], 'image') === false
+            )
+            : [];
+    @endphp
+
+    {{-- Modal to display the images --}}
+    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Images</a>
+    @elseif ($fileDataArray !== '-' && !empty($images) && count($images) == 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
+    @endif
+
+    {{-- Modal to display the images --}}
+    @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
+        <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
+                <div class="modal-content custom-modal-content">
+                    <div class="modal-header custom-modal-header">
+                        <h5 class="modal-title view-file">View Image</h5>
+                    </div>
+
+                    <div class="modal-body custom-modal-body">
+                        <div id="imageCarousel" class="carousel slide">
+                            <div class="carousel-inner">
+                                @foreach ($images as $index => $image)
+                                    <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
+                                        <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
+                                            alt="{{ $image['original_name'] }}" 
+                                            style="width:100%; height:auto;" />
                                     </div>
-                                </div>
+                                @endforeach
                             </div>
-                            <div class="modal-backdrop fade show"></div>
-                            @endif
-                    </td>
+
+                            {{-- Carousel Controls --}}
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
+                                    class="carousel-control-prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
+                                    class="carousel-control-next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer custom-modal-footer">
+                        <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+
+    {{-- File Modal --}}
+    @if ($fileDataArray !== '-' && !empty($files) && count($files) > 1)
+        <a href="{{ route('download.files.zip', ['id' => $record->id]) }}" class="anchorTagDetails">Download Files</a>
+    @elseif ($fileDataArray !== '-' && !empty($files) && count($files) == 1)
+        @foreach ($files as $file)
+            @php
+                $base64File = trim($file['data'] ?? '');
+                $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+            @endphp
+            <a href="data:{{ $mimeType }};base64,{{ $base64File }}" download="{{ $originalName }}" class="anchorTagDetails">Download File</a>
+        @endforeach
+    @endif
+
+    {{-- Display message when no files or images are present --}}
+    @if ($fileDataArray === '-' || (empty($images) && empty($files)))
+        <p>-</p>
+    @endif
+</td>
+
                     <td class="helpdesk-request">
                         {{ $record->priority ?? '-' }}
                     </td>
@@ -598,5 +792,19 @@ cha                        <td class="helpdesk-request @if($record->status_code 
 
     </div>
     @endif
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const imageCarousel = document.getElementById('imageCarousel');
+        
+        // Listen for the carousel's 'slid.bs.carousel' event
+        imageCarousel.addEventListener('slid.bs.carousel', function (event) {
+            const activeIndex = event.relatedTarget.getAttribute('data-index'); // Get the active index
+            Livewire.emit('updateActiveImageIndex', parseInt(activeIndex)); // Emit the index to Livewire
+        });
+    });
+</script>
+
+
 </div>
+
 </div>

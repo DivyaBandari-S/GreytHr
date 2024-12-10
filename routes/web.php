@@ -291,6 +291,8 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     //Helpdesk module
 
     Route::get('/HelpDesk', HelpDesk::class)->name('helpdesk');
+    Route::get('/download-files/{id}', [HelpDesk::class, 'downloadFilesAsZip'])->name('download.files.zip');
+    Route::get('/incident-files/{id}', [IncidentRequests::class, 'downloadFilesAsZip'])->name('incident.files.zip');
 
     Route::get('/catalog', Catalog::class)->name('catalog');
     Route::get('/incident', IncidentRequests::class)->name('incident');
@@ -636,3 +638,13 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'status' => $salaryRevision->status,
     ]);
 });
+Route::get('/storage-link', function () {
+    try {
+        Artisan::call('storage:link');
+        return response()->json(['message' => 'Storage link created successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+

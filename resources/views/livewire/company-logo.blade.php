@@ -1,11 +1,11 @@
 <div>
 @auth('emp')
-    <img  src="{{$employee->company_logo}}" alt="">
+    <img src="data:image/jpeg;base64,{{ ($employee->company_logo) }}" alt="">
     @endauth
     @auth('hr')
     <img src="{{ optional($hr)->company_logo }}" alt="">
     @endauth
- 
+
     @auth('it')
     <img  src="{{ optional($it)->com->company_logo }}" alt="">
     @endauth

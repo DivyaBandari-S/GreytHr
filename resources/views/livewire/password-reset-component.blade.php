@@ -27,7 +27,7 @@
         <!-- Conditionally render the form if passwordResetSuccessful is false -->
         @if ($isValidToken && !$passwordResetSuccessful)
             <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-header text-center bg-primary text-white">
+                <div class="card-header text-center text-white" style="background-color: #02114f">
                     <h5>{{ __('Reset Password') }}</h5>
                 </div>
 
@@ -39,7 +39,7 @@
                         <div class="form-group mb-3">
                             <label for="password" class="form-label">{{ __('Password') }}</label>
                             <input type="password" id="password" wire:model.lazy="newPassword"
-                             wire:keydown.debounce.500ms="validateField('newPassword')"
+                                wire:keydown.debounce.500ms="validateField('newPassword')"
                                 class="form-control @error('newPassword') is-invalid @enderror"
                                 placeholder="Enter your new password" aria-label="New password">
                             @error('newPassword')
@@ -66,7 +66,8 @@
 
                         <!-- Submit Button -->
                         <div class="form-group text-center">
-                            <button type="submit" class="btn btn-primary btn-sm" wire:loading.attr="disabled">
+                            <button type="submit" class="btn btn-sm text-center text-white"
+                                wire:loading.attr="disabled" style="background-color: #02114f">
                                 <span wire:loading.remove>
                                     {{ __('Reset Password') }}
                                 </span>
