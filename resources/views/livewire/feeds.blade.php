@@ -225,7 +225,7 @@
                                 <div class="input-group">
                                 <input wire:model="search" id="filterSearch" onkeyup="filterDropdowns()" id="searchInput"
                                         type="text"
-                                        class="form-control placeholder-small"
+                                        class="form-control  task-search-input placeholder-small"
                                         placeholder="Search...."
                                         aria-label="Search"
                                         aria-describedby="basic-addon1">
