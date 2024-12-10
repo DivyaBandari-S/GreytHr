@@ -192,11 +192,17 @@
             <p>Please select a conversation and start chatting</p>
         </div>
     @endif
+    <audio id="receiveSound" src="{{ asset('sounds/receive-sound.mp3') }}"></audio>
 </div>
 <script>
     window.addEventListener('rowChatToBottom', function() {
         const chatBody = document.getElementById('chatBody');
         chatBody.scrollTop = chatBody.scrollHeight;
+    });
+
+    // Play sound when a message is received
+    window.addEventListener('receiveMessageSound', () => {
+        document.getElementById('receiveSound').play();
     });
 </script>
 {{-- <script>

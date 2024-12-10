@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Log;
-use Twilio\Rest\Messaging\V1\Service\AlphaSenderInstance;
+use Livewire\Attributes\On;
 
 class ChatBox extends Component
 {
@@ -38,8 +38,8 @@ class ChatBox extends Component
     // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
     public function  getListeners()
     {
-
-        $auth_id = auth()->user()->id;
+        // $auth_id = auth()->user()->emp_id;
+        $auth_id = auth()->id();
         return [
             "echo-private:chat.{$auth_id},MessageSent" => 'broadcastedMessageReceived',
             "echo-private:chat.{$auth_id},MessageRead" => 'broadcastedMessageRead',
@@ -86,8 +86,6 @@ class ChatBox extends Component
 
     public function broadcastedMessageRead($event)
     {
-
-        dd($event);
         if ($this->selectedConversation) {
 
 
@@ -100,9 +98,17 @@ class ChatBox extends Component
 
         # code...
     }
+
+    public function mount()
+    {
+
+        // $auth_id = auth()->user()->emp_id; or
+        $auth_id = auth()->id();
+    }
+
     function broadcastedMessageReceived($event)
     {
-        dd($event);
+
         ///here
         $this->dispatch('refresh');
         # code...
@@ -184,7 +190,8 @@ class ChatBox extends Component
         $this->receiverInstance =  $receiver;
         $this->senderInstance = EmployeeDetails::find(auth()->id());
         $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
-        // $this->dispatch('chatSelected');
+        $this->dispatch('chatSelected');
+        $this->dispatch('receiveMessageSound');
         Message::where('conversation_id', $this->selectedConversation->id)
             ->where('receiver_id',  auth()->id())->update(['read' => 1]);
 

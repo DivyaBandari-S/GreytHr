@@ -72,7 +72,6 @@
     @endif
     <!-- Sound Effect Scripts -->
     <audio id="sendSound" src="{{ asset('sounds/send-sound.mp3') }}"></audio>
-    <audio id="receiveSound" src="{{ asset('sounds/receive-sound.mp3') }}"></audio>
 </div>
 
 <script>
@@ -115,10 +114,5 @@
     // Play sound when a message is sent
     window.addEventListener('sendMessageSound', () => {
         document.getElementById('sendSound').play();
-    });
-
-    // Play sound when a message is received
-    window.addEventListener('receiveMessageSound', () => {
-        document.getElementById('receiveSound').play();
     });
 </script>
