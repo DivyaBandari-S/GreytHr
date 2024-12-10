@@ -29,7 +29,7 @@
                     @foreach($details['regularisationRequests'] as $entry)
                         <tr>
                             <td style="text-align:center; padding:5px;">{{ $details['sender_id']}}</td>
-                            <td style="text-align:center; padding:5px;">{{ ucwords(strtolower($details['sender_first_name'])) }} {{ ucwords(strtolower($details['sender_last_name'])) }}/td>
+                            <td style="text-align:center; padding:5px;">{{ ucwords(strtolower($details['sender_first_name'])) }} {{ ucwords(strtolower($details['sender_last_name'])) }}</td>
                             <td style="text-align:center; padding:5px;"> {{ \Carbon\Carbon::parse($entry['date'])->format('jS M, Y') }} </td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['from']) }}</td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['to']) }}</td>
