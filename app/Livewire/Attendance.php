@@ -1863,15 +1863,17 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $date = Carbon::create($this->year, $this->month, 1)->subMonth();
             $this->year = $date->year;
             $this->month = $date->month;
+            
             $today = Carbon::today();
             $this->generateCalendar();
             $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
-
+                
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->toDateString());
             } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
+               
                 $this->averageWorkHrsForCurrentMonth = '-';
             } else {
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
@@ -1906,10 +1908,12 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
 
-                $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->toDateString());
+                
+                $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->copy()->subDay()->toDateString());
             } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 $this->averageWorkHrsForCurrentMonth = '-';
             } else {
+              
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
             $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
@@ -2015,6 +2019,12 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             if ($this->changeDate == 1) {
                 $this->currentDate2 = $this->dateclicked;
+                if($this->currentDate2==date('Y-m-d'))
+                { 
+                    $this->currentDate2recordin = '-';
+                    $this->currentDate2recordout = '-';
+
+                }
                 if ($this->isEmployeeRegularisedOnDate($this->currentDate2) == true) {
 
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->where('is_regularized', 1)->first();
@@ -2024,6 +2034,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->first();
                     $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->orderBy('updated_at', 'desc')->first();
                 }
+                
 
                 if (isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
@@ -2093,6 +2104,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->currentDate2recordexists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->exists();
             } else {
                 $this->currentDate2 = Carbon::now()->format('Y-m-d');
+                
             }
 
             $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();

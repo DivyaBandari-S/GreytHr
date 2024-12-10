@@ -124,7 +124,6 @@
             <tr>
                 <th class="header-style">Date</th>
                 <th class="header-style">Approve/Reject</th>
-                <th class="header-style">Approver&nbsp;Remarks</th>
                 <th class="header-style">Shift</th>
                 <th class="header-style">First In Time</th>
                 <th class="header-style">Last Out Time</th>
@@ -135,7 +134,6 @@
         <tbody >
                 <td>{{ \Carbon\Carbon::parse($entry['date'])->format('d M, Y') }}</td>
                 <td style="text-transform: uppercase;">pending</td>
-                <td>-</td>
                 <td >{{ \Carbon\Carbon::parse($empDetails->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($empDetails->shift_end_time)->format('H:i a') }}</td>
                 <td>
                        @if(empty($entry['from']))

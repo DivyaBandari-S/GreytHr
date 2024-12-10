@@ -973,12 +973,7 @@
     </div>
     @endif
     @if($isApply==1&&$defaultApply==1)
-    @if (session('flash_error'))
-            
-    @endif
-    @if (session('flash_success'))
-            
-    @endif
+ 
     <div class="h row m-0 mt-4">
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
@@ -1455,6 +1450,7 @@
 @endif
 
 @elseif($isHistory==1&&$defaultApply==0)
+
 @if(count($historyRegularisations)>0)
     @foreach($historyRegularisations as $hr)
 
