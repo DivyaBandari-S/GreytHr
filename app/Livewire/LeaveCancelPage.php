@@ -54,12 +54,18 @@ class LeaveCancelPage extends Component
     public $selectedLeaveType = null;
     protected $rules = [
         'selectedLeaveType' => 'required',
+        'leave_cancel_reason' => 'required'
     ];
 
     protected $messages = [
         'selectedLeaveType.required' => 'Please select a leave type to submit',
-    ];
+        'leave_cancel_reason.required' => 'Reason is arequired',
 
+    ];
+    public function validateField($propertyName)
+    {
+        $this->validateOnly($propertyName);
+    }
 
     public function mount()
     {
@@ -110,10 +116,7 @@ class LeaveCancelPage extends Component
             return redirect()->back();
         }
     }
-    public function validateField($propertyName)
-    {
-        $this->validateOnly($propertyName);
-    }
+
     public function fetchEmployeeDetails()
     {
         // Reset the list of selected employees
