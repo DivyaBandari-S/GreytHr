@@ -749,7 +749,7 @@ public $RemoveRequestaceessDialog=false;
                'mobile' => $this->mobile ?? '-',
                'status_code' => 8,
            ]);
-   
+           $helpDesk->refresh();
            // Notify super admins
            $superAdmins = IT::where('role', 'super_admin')->get();
            foreach ($superAdmins as $admin) {
@@ -858,7 +858,7 @@ public $RemoveRequestaceessDialog=false;
                'mobile' => $this->mobile,
                'status_code' => 8,
            ]);
-   
+           $helpDesk->refresh();
            // Notify super admins
            $superAdmins = IT::where('role', 'super_admin')->get();
            foreach ($superAdmins as $admin) {
@@ -1091,7 +1091,7 @@ public $RemoveRequestaceessDialog=false;
                'distributor_name' => 'N/A',
                'status_code' => 8,
            ]);
-   
+           $helpDesk->refresh();
            // Notify super admins
            $superAdmins = IT::where('role', 'super_admin')->get();
            foreach ($superAdmins as $admin) {
@@ -1213,7 +1213,7 @@ public $RemoveRequestaceessDialog=false;
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
-    
+            $helpDesk->refresh();
             // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
@@ -1318,7 +1318,7 @@ public $RemoveRequestaceessDialog=false;
                 'distributor_name' => 'N/A',
                 'status_code' => 8,
             ]);
-    
+            $helpDesk->refresh();
             // Notify super admins
             $superAdmins = IT::where('role', 'super_admin')->get();
             foreach ($superAdmins as $admin) {
