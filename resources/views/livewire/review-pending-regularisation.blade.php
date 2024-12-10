@@ -436,7 +436,7 @@
    
   </div>
   
-                <div style="display:flex; justify-content: right;">
+                <div style="display:flex; justify-content: right;margin-top:20px;">
                     
                     <a style="color:rgb(2,17,79); margin-right: 20px; padding: 10px 20px;"href="{{ route('review') }}">Cancel</a>
                     <button type="button"style="margin-right: 20px;color: #fff; border:1px solid rgb(2,17,79); background: rgb(2,17,79); border-radius:5px; padding: 10px 20px;"wire:click="rejectAll('{{$regularisationrequest->id}}')">Reject All</button>

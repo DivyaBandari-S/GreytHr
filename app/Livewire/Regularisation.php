@@ -685,68 +685,89 @@ public function nextMonth()
     }
     //This function will store regularisation details in the database
     public function storearraydates()
-{
-    try {
-       
-        $validatedData = $this->validate([
-            'shift_times.*.from' => 'required|date_format:H:i',
-            'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
-            'shift_times.*.reason' => 'required',
-        ], [
-            'shift_times.*.from.required' => 'Please enter the sign-in time',
-            'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
-            'shift_times.*.to.required' => 'Please enter the sign-out time',
-            'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
-            'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
-            'shift_times.*.reason.required' => 'Please enter the reason',
-        ]);
-        $this->isdatesApplied = true;
-
-        $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
-        $emp_id = $employeeDetails->emp_id;
-        $regularisationEntriesJson = json_encode($this->shift_times);
-        if ($this->isdeletedArray > 0) {
-            $regularisationEntriesArray = $this->updatedregularisationEntries;
-        } else {
-            $regularisationEntriesArray = json_decode($regularisationEntriesJson, true);
-        }
+    {
+        try {
+            Log::info('storearraydates method started.');
     
-        // Count the number of items
-        $this->numberOfItems = count($regularisationEntriesArray);
-
-        RegularisationDates::create([
-            'emp_id' => $emp_id,
-            'employee_remarks' => $this->remarks,
-            'regularisation_entries' => $regularisationEntriesJson,
-            'is_withdraw' => 0,
-            'status'=>5,
-            'regularisation_date' => null,
-        ]);
-        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
-        sleep(1);
-        $details = [
-           
-            'regularisationRequests'=>$regularisationEntriesArray,
-            'employee_id'=>$this->employeeId,
-            'employee_name'=>$employeeDetails->first_name.' '.$employeeDetails->last_name,
-           
-        ];
-        Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));
-
- 
-        $this->remarks='';
-        $regularisationEntriesJson = [];
-        $this->regularisationEntries = [];
-        $this->shift_times=[];
-    } catch (\Exception $e) {
-        // Log the error or handle it as needed
-        Log::error('Error in storearraydates method: ' . $e->getMessage());
-        
-        // You might want to inform the user about the error or take other appropriate actions
-        FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
-        
+            // Validate the data
+            Log::info('Validating input data.');
+            $validatedData = $this->validate([
+                'shift_times.*.from' => 'required|date_format:H:i',
+                'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
+                'shift_times.*.reason' => 'required',
+            ], [
+                'shift_times.*.from.required' => 'Please enter the sign-in time',
+                'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+                'shift_times.*.to.required' => 'Please enter the sign-out time',
+                'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
+                'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+                'shift_times.*.reason.required' => 'Please enter the reason',
+            ]);
+            Log::info('Validation successful.');
+    
+            // Mark dates as applied
+            $this->isdatesApplied = true;
+            Log::info('isdatesApplied set to true.');
+    
+            // Get employee details
+            Log::info('Fetching employee details.');
+            $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
+            $emp_id = $employeeDetails->emp_id;
+            Log::info('Employee details fetched:', ['emp_id' => $emp_id]);
+    
+            // Prepare regularisation entries
+            $regularisationEntriesJson = json_encode($this->shift_times);
+            Log::info('Shift times JSON:', ['shift_times' => $this->shift_times]);
+    
+            if ($this->isdeletedArray > 0) {
+                $regularisationEntriesArray = $this->updatedregularisationEntries;
+                Log::info('Using updated regularisation entries.', ['entries' => $regularisationEntriesArray]);
+            } else {
+                $regularisationEntriesArray = json_decode($regularisationEntriesJson, true);
+                Log::info('Decoded regularisation entries.', ['entries' => $regularisationEntriesArray]);
+            }
+    
+            // Count the number of items
+            $this->numberOfItems = count($regularisationEntriesArray);
+            Log::info('Number of regularisation entries:', ['count' => $this->numberOfItems]);
+    
+            // Save to database
+            Log::info('Saving regularisation dates to database.');
+            RegularisationDates::create([
+                'emp_id' => $emp_id,
+                'employee_remarks' => $this->remarks,
+                'regularisation_entries' => $regularisationEntriesJson,
+                'is_withdraw' => 0,
+                'status' => 5,
+                'regularisation_date' => null,
+            ]);
+            Log::info('Regularisation dates saved successfully.');
+    
+            // Send email notification
+            $details = [
+                'regularisationRequests' => $regularisationEntriesArray,
+                'employee_id' => $this->employeeId,
+                'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+            ];
+            Log::info('Sending regularisation email.', ['email' => $this->employeeEmail, 'details' => $details]);
+            Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));
+            Log::info('Regularisation email sent.');
+    
+            // Reset variables
+            $this->remarks = '';
+            $regularisationEntriesJson = [];
+            $this->regularisationEntries = [];
+            $this->shift_times = [];
+            Log::info('Variables reset successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error in storearraydates method: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+    
+            FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
+        }
     }
-}
+    
 
 //This function will show the page where we can apply for regularisation    
 public function applyButton()

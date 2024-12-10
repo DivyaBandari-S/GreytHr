@@ -343,9 +343,11 @@ class Home extends Component
             } elseif ($agent->isDesktop()) {
               
                 
-                $screenWidth = $agent->device(); // Returns specific device details if available
-                // You can add logic here to refine "Laptop" detection based on known laptop models
-                if (str_contains($screenWidth, 'MacBook') || str_contains($agent->platform(), 'Windows')) {
+                $screenWidth = $agent->device(); // Get device details
+                $platform = $agent->platform(); // Get platform details
+                
+                // Check for Laptop Devices
+                if (str_contains($screenWidth, 'MacBook') || str_contains($platform, 'Windows') || str_contains($platform, 'Linux') || str_contains($platform, 'ChromeOS')) {
                     $deviceName = 'Laptop';
                 } else {
                     $deviceName = 'Desktop';

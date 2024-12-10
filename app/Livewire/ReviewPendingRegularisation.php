@@ -56,6 +56,8 @@ class ReviewPendingRegularisation extends Component
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
         $this->countofregularisations=$count;
         $this->totalEntries = count($this->regularisationEntries);
+        Log::info('Remarks are: ' . json_encode($this->remarks));
+
     }
    
     public function approve($date)
@@ -86,6 +88,7 @@ class ReviewPendingRegularisation extends Component
 
     public function rejectAll($id)
     {
+        
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         if(empty($this->remarks))
@@ -108,18 +111,21 @@ class ReviewPendingRegularisation extends Component
        
         $this->sendRejectionMail($id);
         FlashMessageHelper::flashSuccess('Regularisation Request rejected successfully');
+        return redirect()->route('review');
    
     }
     public function sendRejectionMail($id)
     {
+        
         $item = RegularisationDates::find($id); // Ensure you have the correct ID to fetch data
  
         $regularisationEntriesforRejection = json_decode($item->regularisation_entries, true); // Decode the JSON entries
-   
+        
     $employee = EmployeeDetails::where('emp_id', $item->emp_id)->first();
     // Prepare the HTML table
     
     $this->employeeEmailForRejection=$employee->email;
+  
     $details = [
      
         'regularisationRequests'=>$regularisationEntriesforRejection,
@@ -145,6 +151,7 @@ class ReviewPendingRegularisation extends Component
         foreach ($this->regularisationEntries as &$entry) {
             if ($entry['date'] === $date) {
                 $entry['status'] = 'rejected';
+               
                 $entry['remark'] = $remark; // Optionally add the remark to the entry
                 FlashMessageHelper::flashSuccess('Regularization Request Rejected Successfully');
                 break;
@@ -158,60 +165,95 @@ class ReviewPendingRegularisation extends Component
    
     public function submitRegularisation()
     {
-        Log::info('Welcome to submitRegularisation method');
+        Log::info('Method `submitRegularisation` started.');
+     
+        // Check if regularisation request exists
         if ($this->regularisationrequest) {
-            Log::info('Regularisation request found, updating status.');
+            Log::info('Regularisation request found.', ['request' => $this->regularisationrequest]);
     
-            // Update the status field
-            $this->regularisationrequest->status = 13;
-            $this->regularisationrequest->regularisation_date =  Carbon::now();
-            // Save the changes to the database
-            $this->regularisationrequest->save();
-            Log::info('Regularisation status updated and saved.', ['status' => $this->regularisationrequest->status]);
-    
+            // Validation
+            $validationErrors = [];
             foreach ($this->regularisationEntries as $entry) {
-                Log::info('Processing regularisation entry.', $entry);
+                Log::info('Validating entry.', ['entry' => $entry]);
+    
+                $date = $entry['date'];
                 
-                // Checking if entry status is approved
+                // Check if status is not set
+                if (!isset($entry['status']) || empty($entry['status'])) {
+                    $validationErrors[] = "Status (approve/reject) must be selected for the date: $date.";
+                    Log::warning("Validation error: Status missing for date $date.");
+                }
+            
+                // Check if remarks are empty or contain only whitespace
+                if (!isset($entry['remark']) || empty(trim($entry['remark']))) {
+                    $validationErrors[] = "Remarks are required for the date: $date.";
+                    Log::warning("Validation error: Remarks missing or invalid for date $date.");
+                }
+                Log::info('Validating entry.', ['entry' => $entry]);
+            }
+    
+            if (!empty($validationErrors)) {
+                Log::info('Validation failed. Errors:', ['errors' => $validationErrors]);
+                foreach ($validationErrors as $error) {
+                    FlashMessageHelper::flashError($error);
+                }
+                Log::info('Exiting method due to validation failure.');
+                return;
+            }
+    
+            Log::info('Validation passed.');
+    
+            // Update the regularisation request
+            Log::info('Updating regularisation request.');
+            $this->regularisationrequest->status = 13;
+            $this->regularisationrequest->regularisation_date = Carbon::now();
+            $this->regularisationrequest->save();
+            Log::info('Regularisation request updated.', [
+                'status' => $this->regularisationrequest->status,
+                'date' => $this->regularisationrequest->regularisation_date
+            ]);
+    
+            // Process each regularisation entry
+            foreach ($this->regularisationEntries as $entry) {
+                Log::info('Processing entry.', ['entry' => $entry]);
+    
                 if ($entry['status'] === 'approved') {
-                    Log::info('Entry status is approved, creating swipe records.', [
+                    Log::info('Entry approved. Creating swipe records.', [
                         'in_time' => $entry['from'],
                         'out_time' => $entry['to'],
                         'date' => $entry['date']
                     ]);
     
                     // Create IN SwipeRecord
-                    $swiperecord = new SwipeRecord();
-                    $swiperecord->emp_id= $this->regularisationrequest->employee->emp_id;
-                    $swiperecord->in_or_out = 'IN';
-                    $swiperecord->swipe_time = $entry['from'];
-                    $swiperecord->created_at = $entry['date'];
-                    $swiperecord->is_regularized = 1;
-                    $swiperecord->save();
-                    Log::info('IN swipe record saved.', [
-                        'emp_id'=>$this->regularisationrequest->employee->emp_id,
-                        'swipe_time' => $entry['from'],
-                        'created_at' => $entry['date']
-                    ]);
+                    $swipeIn = new SwipeRecord();
+                    $swipeIn->emp_id = $this->regularisationrequest->employee->emp_id;
+                    $swipeIn->in_or_out = 'IN';
+                    $swipeIn->swipe_time = $entry['from'];
+                    $swipeIn->created_at = $entry['date'];
+                    $swipeIn->is_regularized = 1;
+                    $swipeIn->save();
+                    Log::info('IN swipe record saved.', ['swipe_in' => $swipeIn]);
     
                     // Create OUT SwipeRecord
-                    $swiperecord1 = new SwipeRecord();
-                    $swiperecord1->emp_id= $this->regularisationrequest->employee->emp_id;
-                    $swiperecord1->in_or_out = 'OUT';
-                    $swiperecord1->swipe_time = $entry['to'];
-                    $swiperecord1->created_at = $entry['date'];
-                    $swiperecord1->is_regularized = 1;
-                    $swiperecord1->save();
-                    Log::info('OUT swipe record saved.', [
-                        'emp_id'=>$this->regularisationrequest->employee->emp_id,
-                        'swipe_time' => $entry['to'],
-                        'created_at' => $entry['date']
-                    ]);
+                    $swipeOut = new SwipeRecord();
+                    $swipeOut->emp_id = $this->regularisationrequest->employee->emp_id;
+                    $swipeOut->in_or_out = 'OUT';
+                    $swipeOut->swipe_time = $entry['to'];
+                    $swipeOut->created_at = $entry['date'];
+                    $swipeOut->is_regularized = 1;
+                    $swipeOut->save();
+                    Log::info('OUT swipe record saved.', ['swipe_out' => $swipeOut]);
+                } else {
+                    Log::info('Entry not approved. No swipe records created.', ['entry_status' => $entry['status']]);
                 }
             }
+    
+            // Send notification email
+            Log::info('Sending notification email for regularisation.');
             $this->sendmailForRegularisation($this->regularisationrequest);
-            
-            // Optionally, add a confirmation message
+            Log::info('Notification email sent.');
+    
+            // Success message
             FlashMessageHelper::flashSuccess('Regularisation status submitted successfully.');
             Log::info('Regularisation submission complete. Redirecting to review page.');
     
@@ -221,6 +263,8 @@ class ReviewPendingRegularisation extends Component
             FlashMessageHelper::flashError('Regularisation request not found.');
         }
     }
+    
+
     public function sendmailForRegularisation($r1)
     {
        
