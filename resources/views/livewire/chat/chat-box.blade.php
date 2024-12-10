@@ -37,7 +37,7 @@
         }
     </style>
     @if ($selectedConversation)
-        <div class="chat-body">
+        <div id="chatBody" class="chat-body">
             <!-- Loop through the messages to display each one -->
             @foreach ($messages as $message)
                 @if ($message->sender_id == auth()->user()->emp_id)
@@ -192,4 +192,26 @@
             <p>Please select a conversation and start chatting</p>
         </div>
     @endif
+    <audio id="receiveSound" src="{{ asset('sounds/receive-sound.mp3') }}"></audio>
 </div>
+<script>
+    window.addEventListener('rowChatToBottom', function() {
+        const chatBody = document.getElementById('chatBody');
+        chatBody.scrollTop = chatBody.scrollHeight;
+    });
+
+    // Play sound when a message is received
+    window.addEventListener('receiveMessageSound', () => {
+        document.getElementById('receiveSound').play();
+    });
+</script>
+{{-- <script>
+    window.addEventListener('rowChatToBottom', function() {
+        const chatBody = document.getElementById('chatBody');
+        // Scroll to the bottom
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // After that, adjust the scroll position to be from the bottom upwards
+        chatBody.scrollTop = chatBody.scrollHeight - chatBody.clientHeight;
+    });
+</script> --}}

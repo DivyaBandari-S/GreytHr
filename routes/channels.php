@@ -19,14 +19,22 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-// Broadcast::channel('App.Models.EmployeeDetails.{emp_id}', function ($user, $emp_id) {
-//     Log::info('Broadcast channel authorization called', ['emp_id' => $emp_id]);
-//     return (int) $user->emp_id === (int) $emp_id;
+// Broadcast::channel('chat.{receiver}', function (EmployeeDetails $user, $receiver) {
+
+//     #check if user is same as receiver
+
+//     return (int) $user->emp_id === (int) $receiver;
+// });
+//or
+// Broadcast::channel('chat.{empId}', function ($user, $empId) {
+//     return (int) $user->emp_id === (int) $empId;
 // });
 
-Broadcast::channel('chat.{receiver}', function (EmployeeDetails $user, $receiver) {
+// Broadcast::channel('chat.{receiver}', function (EmployeeDetails $user, $receiver) {
+//     // Ensure both user ID and receiver ID are compared as strings
+//     return $user->emp_id === $receiver;
+// });
 
-    #check if user is same as receiver
-
-    return (int) $user->emp_id === (int) $receiver;
+Broadcast::channel('chat.{empId}', function ($user, $empId) {
+    return $user->emp_id === $empId;
 });

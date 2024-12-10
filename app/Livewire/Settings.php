@@ -69,7 +69,7 @@ class Settings extends Component
             $this->editingBiography = true;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('Error in editBiography method:');
-            
+
         }
     }
 
@@ -419,7 +419,7 @@ class Settings extends Component
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
             return view('livewire.settings', ['employees' => $this->employees]);
         } catch (\Exception $e) {
-            
+
             FlashMessageHelper::flashError('Error in render method: ');
             return view('livewire.settings')->withErrors(['error' => 'An error occurred while loading the data. Please try again later.']);
         }

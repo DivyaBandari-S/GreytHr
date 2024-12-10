@@ -27,30 +27,37 @@ class ChatList extends Component
     {
         $this->fetchConversations(); // Refetch conversations when search query updates
     }
-
     public function fetchConversations()
     {
         $this->conversations = Conversation::with(['sender', 'receiver'])
             ->where(function ($query) {
+                // Ensure the conversation involves the authenticated user
                 $query->where('sender_id', $this->auth_id)
                     ->orWhere('receiver_id', $this->auth_id);
             })
             ->when($this->search, function ($query) {
-                $query->whereHas('sender', function ($subQuery) {
-                    $subQuery->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('job_role', 'like', '%' . $this->search . '%');
-                })->orWhereHas('receiver', function ($subQuery) {
-                    $subQuery->where('first_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%')
-                        ->orWhere('job_role', 'like', '%' . $this->search . '%');
+                // Apply the search conditions only for the users involved in the conversation
+                $query->where(function ($subQuery) {
+                    $subQuery->whereHas('sender', function ($senderQuery) {
+                        $senderQuery->where('first_name', 'like', '%' . $this->search . '%')
+                            ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                            ->orWhere('email', 'like', '%' . $this->search . '%')
+                            ->orWhere('job_role', 'like', '%' . $this->search . '%');
+                    })
+                        ->orWhereHas('receiver', function ($receiverQuery) {
+                            $receiverQuery->where('first_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                                ->orWhere('email', 'like', '%' . $this->search . '%')
+                                ->orWhere('job_role', 'like', '%' . $this->search . '%');
+                        });
                 });
             })
             ->orderBy('last_time_message', 'DESC')
+            ->distinct() // Eliminate duplicates
             ->get();
     }
+
+
 
     public function resetComponent()
     {

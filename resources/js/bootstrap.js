@@ -47,9 +47,10 @@ window.Echo = new Echo({
     enabledTransports: ["ws", "wss"],
 });
 
-const userId = "xss-0488"; // Replace this with dynamic value from your app
-
-Echo.private('chat.${userId}').listen("MessageSent", (event) => {
-    console.log("the event is calling Message................................");
-    console.log(event); // This will log the event to the browser console
-});
+window.Echo.private("chat.XSS-0488") // Replace with actual emp_id
+    .listen("MessageSent", (event) => {
+        console.log(
+            "Event Received...................................................:",
+            event
+        );
+    });
