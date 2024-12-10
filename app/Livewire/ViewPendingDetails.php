@@ -123,7 +123,7 @@ class ViewPendingDetails extends Component
                     ];
                 }
             }
-            // After the foreach, compare the collection with the logged-in emp_id
+            // After the foreach, compare ethe collection with the logged-in emp_id
             $this->isLoggedInEmpInCcTo = in_array($employeeId, $allCcToEmpIds);
             $this->leaveApplications = $matchingLeaveApplications;
             $this->count = count($matchingLeaveApplications);
