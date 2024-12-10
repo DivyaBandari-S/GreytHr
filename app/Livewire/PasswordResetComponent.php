@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Models\Company;
 use App\Models\EmployeeDetails;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
@@ -14,7 +15,7 @@ class PasswordResetComponent extends Component
     public $confirmNewPassword;
     public $isValidToken = true;
     public $passwordResetSuccessful = false; // Add this flag to track success
-
+    public $companyName;
     protected $rules = [
         'newPassword' => [
             'required',
@@ -40,7 +41,7 @@ class PasswordResetComponent extends Component
         if (!$tokenData) {
             $this->isValidToken = false;
             session()->flash('error', 'The password reset link is invalid or has already been used.');
-            FlashMessageHelper::flashError('The password reset link is invalid or has already been used.');
+            // FlashMessageHelper::flashError('The password reset link is invalid or has already been used.');
         }
     }
 
@@ -65,9 +66,16 @@ class PasswordResetComponent extends Component
 
         $user = EmployeeDetails::where('email', $tokenData->email)->first();
         if ($user) {
+            $companyId = $user->company_id;
+            // Fetch the company details using company_id
+            $company = Company::where('company_id', $companyId)->first();
+            $this->companyName = $company->company_name;
             $user->password = bcrypt($this->newPassword);
             $user->save();
-
+            // Send password change notification
+            if ($user && !empty($user->email)) {
+                $user->notify(new \App\Notifications\PasswordChangedNotification($this->companyName));
+            }
             DB::table('password_reset_tokens')->where('email', $tokenData->email)->delete();
 
             $this->newPassword = '';
@@ -75,6 +83,7 @@ class PasswordResetComponent extends Component
 
             session()->flash('success', 'Password reset successfully. Click below to log in.');
             FlashMessageHelper::flashSuccess('Password reset successfully.');
+
             // Set the passwordResetSuccessful flag to true
             $this->passwordResetSuccessful = true;
         } else {

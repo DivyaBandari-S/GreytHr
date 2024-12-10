@@ -5,7 +5,7 @@
     @auth('hr')
     <img src="{{ optional($hr)->company_logo }}" alt="">
     @endauth
- 
+
     @auth('it')
     <img  src="{{ optional($it)->com->company_logo }}" alt="">
     @endauth

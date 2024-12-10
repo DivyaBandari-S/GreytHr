@@ -10307,6 +10307,7 @@ div.fl-main-container[data-position="top-center"] {
 
 
 input[type="date"] {
-    background-image: none;   /* Ensure no custom background image is overriding the icon */
-    -webkit-appearance: textfield; /* Make sure it's not using a textfield style */
+    background-image: none;
+    cursor: pointer;
+    -webkit-appearance: textfield;
 }

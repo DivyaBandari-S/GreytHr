@@ -196,13 +196,17 @@
                             <span class="normalText">HR will assign a reporting manager soon</span>
                             @endif
                             <!-- Display email if it is not null -->
-                            @if ($loginEmpManagerDetails->email)
-                            <span class="mangerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">Email : {{ $loginEmpManagerDetails->email }}</span>
+                            @if(isset($loginEmpManagerDetails->email) && !empty($loginEmpManagerDetails->email))
+                            <span class="managerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">
+                                <a class="emailNav" href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
+                            </span>
+                            @else
+                            <span class="managerOtherDetails">Email not available</span>
                             @endif
 
                             <!-- Display mobile number if it is not null -->
                             @if ($loginEmpManagerDetails->emergency_contact)
-                            <span class="mangerOtherDetails" title="Mobile: {{ $loginEmpManagerDetails->emergency_contact }}">Mobile : {{ $loginEmpManagerDetails->emergency_contact }}</span>
+                            <span class="managerOtherDetails" >Mobile : {{ $loginEmpManagerDetails->emergency_contact }}</span>
                             @endif
 
                         </div>

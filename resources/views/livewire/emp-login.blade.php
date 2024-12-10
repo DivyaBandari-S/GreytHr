@@ -300,8 +300,8 @@
                                         <div class="d-flex justify-content-center mt-2">
                                             <button type="submit" class="submit-btn" wire:loading.attr="disabled"
                                                 wire:loading.class="btn-loading" aria-disabled="true">
-                                                <span wire:loading.remove>Verify</span>
-                                                <span wire:loading>
+                                                <span wire:loading.remove wire:target="verifyLoginId">Verify</span>
+                                                <span wire:loading wire:target="verifyLoginId">
                                                     <i class="fa fa-spinner fa-spin"></i> Verifying...
                                                 </span>
                                             </button>

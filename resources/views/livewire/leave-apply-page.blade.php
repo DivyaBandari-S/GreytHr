@@ -62,12 +62,15 @@
                                 <input
                                     id="from_date"
                                     type="date"
+                                    value="yyyy-mm-dd"
                                     wire:model.lazy="from_date"
                                     wire:keydown.debounce.500ms="validateField('from_date')"
                                     class="form-control placeholder-small"
                                     name="from_date"
                                     wire:change="handleFieldUpdate('from_date')"
-                                    max="{{ now()->endOfYear()->toDateString() }}">
+                                    max="{{ now()->endOfYear()->toDateString() }}"
+                                    onkeypress="return false"
+                                   >
 
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -94,11 +97,13 @@
                                 <input
                                     id="to_date"
                                     type="date"
+                                    value="yyyy-mm-dd"
                                     wire:model.lazy="to_date"
                                     class="form-control placeholder-small"
                                     name="to_date"
                                     wire:change="handleFieldUpdate('to_date')"
                                     max="{{ now()->endOfYear()->toDateString() }}"
+                                    onkeypress="return false"
                                     >
                                 @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>

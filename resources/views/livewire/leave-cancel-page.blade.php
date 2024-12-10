@@ -55,14 +55,13 @@
                                 <td colspan="6">No data found.</td>
                             </tr>
                             @endif
-
                             <!-- Show error message only if 'selectedLeaveType' is not selected -->
-                            @error('selectedLeaveType')
-                            <span class="text-danger">{{ $message }}</span>
-                            @enderror
                         </tbody>
                     </table>
                 </div>
+                @error('selectedLeaveType')
+                <span class="text-danger">{{ $message }}</span>
+                @enderror
                 <!-- inputs fields -->
                 @if($cancelLeaveRequests && $cancelLeaveRequests->count() > 0)
                 <div>

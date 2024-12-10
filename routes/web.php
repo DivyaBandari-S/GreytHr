@@ -638,3 +638,13 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'status' => $salaryRevision->status,
     ]);
 });
+Route::get('/storage-link', function () {
+    try {
+        Artisan::call('storage:link');
+        return response()->json(['message' => 'Storage link created successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+
