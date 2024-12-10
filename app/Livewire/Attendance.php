@@ -698,7 +698,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $today = Carbon::now();
             $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
 
-            $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(), $today->toDateString());
+            $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(), $today->copy()->subDay()->toDateString());
 
             // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
 
