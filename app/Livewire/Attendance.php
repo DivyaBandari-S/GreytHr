@@ -1913,6 +1913,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 $this->averageWorkHrsForCurrentMonth = '-';
             } else {
+              
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
             $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
