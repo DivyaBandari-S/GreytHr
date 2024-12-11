@@ -1,5 +1,16 @@
 <?php
-
+// File Name                       : HelpDesk.php
+// Description                     : This file contains the information about various IT requests related to the catalog.
+//                                   It includes functionality for adding members to distribution lists and mailboxes, requesting IT accessories,
+//                                   new ID cards, MMS accounts, new distribution lists, laptops, new mailboxes, and DevOps access.
+// Creator                         : Asapu Sri Kumar Mmanikanta,Ashannagari Archana
+// Email                           : archanaashannagari@gmail.com
+// Organization                    : PayG.
+// Date                            : 2023-09-07
+// Framework                       : Laravel (10.10 Version)
+// Programming Language            : PHP (8.1 Version)
+// Database                        : MySQL
+// Models                          : HelpDesk,EmployeeDetails
 namespace App\Mail;
 
 use App\Models\EmployeeDetails;
