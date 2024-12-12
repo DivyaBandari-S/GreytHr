@@ -7,7 +7,7 @@
 
     <h1>Regularization Withdrawal Mail</h1>
     <p>Your regularization request has been withdrawn for the following dates.</p>
-    
+    {{$details['regularisationRequests']}}    
     <div style="margin-bottom: 20px;">
         <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
             <thead>
@@ -22,11 +22,11 @@
              
             </thead>
             <tbody>
-            @if(!empty($details['regularisationRequests']) && is_array($details['regularisationRequests']))
-                    @foreach($details['regularisationRequests'] as $entry)
+            @if(!empty($details['regularisationRequests1']) && is_array($details['regularisationRequests1']))
+                    @foreach($details['regularisationRequests1'] as $entry)
                         <tr>
-                            <td style="text-align:center; padding:5px;">{{ $details['sender_id'] }}</td>
-                            <td style="text-align:center; padding:5px;">{{ $details['sender_first_name'] }}  {{ $details['sender_last_name'] }}</td>
+                            <td style="text-align:center; padding:5px;">{{ $details['employee_id'] }}</td>
+                            <td style="text-align:center; padding:5px;">{{ $details['employee_name'] }}</td>
                             <td style="text-align:center; padding:5px;">{{ \Carbon\Carbon::parse($entry['date'])->format('jS M, Y') }}</td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['from']) }}</td>
                             <td style="text-align:center; padding:5px;">{{ htmlspecialchars($entry['to']) }}</td>

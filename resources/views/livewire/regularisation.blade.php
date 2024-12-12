@@ -1406,7 +1406,7 @@
                 <span style="color: #3a9efd; font-size: 12px; font-weight: 500;">View Details</span>
 
             </a>
-            <button class="withdraw mb-2" wire:click="openWithdrawModal">Withdraw</button>
+            <button class="withdraw mb-2" wire:click="openWithdrawModal({{$pr->id}})">Withdraw</button>
 
         </div>
 
@@ -1425,7 +1425,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="approveBtn" wire:click="withdraw({{$pr->id}})">Confirm</button>
+                    <button type="button" class="approveBtn" wire:click="withdraw({{$idforrecordWithdrawal}})">Confirm</button>
                     <button type="button" class="rejectBtn" wire:click="closewithdrawModal">Cancel</button>
 
                 </div>
