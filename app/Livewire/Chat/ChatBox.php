@@ -8,16 +8,14 @@ use App\Models\Conversation;
 use App\Models\EmployeeDetails;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Illuminate\Support\Facades\Log;
-use Livewire\Attributes\On;
 
 class ChatBox extends Component
 {
     use WithFileUploads;
 
-    public $conversationId;
     public $messages;
     public $newMessage;
     public $media;
@@ -25,7 +23,6 @@ class ChatBox extends Component
     public $selectedConversation;
     public $messages_count;
     public $receiver;
-    public $paginateVar = 10;
     public $height;
     public $receiverInstance;
     public $senderInstance;
@@ -33,12 +30,11 @@ class ChatBox extends Component
     public $createdMessage;
     public $messageBeingEdited;
     public $editMessageBody;
-    protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refreshChatBox' => '$refresh', 'rowChatBottom'];
 
-    // protected $listeners = [ 'loadConversation', 'pushMessage', 'loadmore', 'updateHeight', "echo-private:chat. {$auth_id},MessageSent"=>'broadcastedMessageReceived',];
-    public function  getListeners()
+    // protected $listeners = ['loadConversation', 'updateSendMessage', 'dispatchMessageSent', 'resetComponent', 'refreshChatBox' => '$refresh', 'rowChatBottom'];
+
+    public function getListeners()
     {
-        // $auth_id = auth()->user()->emp_id;
         $auth_id = auth()->id();
         return [
             "echo-private:chat.{$auth_id},MessageSent" => 'broadcastedMessageReceived',
@@ -48,160 +44,127 @@ class ChatBox extends Component
             'loadmore',
             'updateHeight',
             'broadcastMessageRead',
-            'resetComponent'
+            'resetComponent',
+            'refreshChatBox' => '$refresh',
+            'rowChatBottom',
+            'updateSendMessage'
         ];
     }
 
     public function editMessage($messageId)
     {
-        $this->messageBeingEdited = Message::find($messageId);
-        $this->editMessageBody = $this->messageBeingEdited->body;
-        $this->dispatch('showEditMessageModal');
+        try {
+            $this->messageBeingEdited = Message::find($messageId);
+            if (!$this->messageBeingEdited) {
+                throw new \Exception('Message not found');
+            }
+            $this->editMessageBody = $this->messageBeingEdited->body;
+            $this->dispatch('showEditMessageModal');
+        } catch (\Exception $e) {
+            Log::error('Error editing message: ' . $e->getMessage());
+        }
     }
 
     public function deleteMessage($messageId)
     {
-        $message = Message::find($messageId);
-        $message->delete();
-        // $this->dispatch('loadConversation');
-        $this->dispatch('refresh');
-        $this->dispatch('refreshChatBox');
+        try {
+            $message = Message::find($messageId);
+            if (!$message) {
+                throw new \Exception('Message not found');
+            }
+            $message->delete();
+            $this->dispatch('refreshChatBox');
+            $this->dispatch('refresh');
+        } catch (\Exception $e) {
+            Log::error('Error deleting message: ' . $e->getMessage());
+        }
     }
 
-    public function addEmojiReaction($messageId, $emoji)
-    {
-        $message = Message::find($messageId);
-        // Logic to add emoji reaction (you can store the reactions in a related table or update the message itself)
-        $message->reactions()->create([
-            'emoji' => $emoji,
-            'user_id' => auth()->id()
-        ]);
-    }
 
-    public function resetComponent()
-    {
 
-        $this->selectedConversation = null;
-    }
+    // public function resetComponent()
+    // {
+    //     $this->selectedConversation = null;
+    // }
 
     public function broadcastedMessageRead($event)
     {
-        if ($this->selectedConversation) {
-
-
-
-            if ((int) $this->selectedConversation->id === (int) $event['conversation_id']) {
-
+        try {
+            if ($this->selectedConversation && (int) $this->selectedConversation->id === (int) $event['conversation_id']) {
                 $this->dispatch('markMessageAsRead');
             }
+        } catch (\Exception $e) {
+            Log::error('Error in broadcastedMessageRead: ' . $e->getMessage());
         }
-
-        # code...
     }
 
-    public function mount()
+    public function broadcastedMessageReceived($event)
     {
+        try {
+            $this->dispatch('refresh');
+            $broadcastedMessage = Message::find($event['message']);
+            if (!$broadcastedMessage) {
+                throw new \Exception('Broadcasted message not found');
+            }
 
-        // $auth_id = auth()->user()->emp_id; or
-        $auth_id = auth()->id();
-    }
-
-    function broadcastedMessageReceived($event)
-    {
-
-        ///here
-        $this->dispatch('refresh');
-        # code...
-
-        $broadcastedMessage = Message::find($event['message']);
-
-
-        #check if any selected conversation is set
-        if ($this->selectedConversation) {
-            #check if Auth/current selected conversation is same as broadcasted selecetedConversationgfg
-            if ((int) $this->selectedConversation->id  === (int)$event['conversation_id']) {
-                # if true  mark message as read
+            if ($this->selectedConversation && (int) $this->selectedConversation->id === (int) $event['conversation_id']) {
                 $broadcastedMessage->read = 1;
                 $broadcastedMessage->save();
                 $this->pushMessage($broadcastedMessage->id);
-                // dd($event);
-
                 $this->dispatch('broadcastMessageRead');
             }
+        } catch (\Exception $e) {
+            Log::error('Error in broadcastedMessageReceived: ' . $e->getMessage());
         }
     }
 
-
-    public function broadcastMessageRead()
-    {
-        broadcast(new MessageRead($this->selectedConversation->id, $this->receiverInstance->emp_id));
-        # code...
-    }
-
-    /*--------------------------------------------------*/
-    /*------------------push message to chat--------------*/
-    /*------------------------------------------------ */
     public function pushMessage($messageId)
     {
-        $newMessage = Message::find($messageId);
-        $this->messages->push($newMessage);
-        $this->dispatch('rowChatToBottom');
+        try {
+            $newMessage = Message::find($messageId);
+
+            if (!$newMessage) {
+                throw new \Exception('Message not found');
+            }
+
+            $this->messages->push($newMessage);
+
+            // Optionally broadcast the new message event here if needed
+            // Example: broadcast(new NewMessageReceived($newMessage))->toOthers();
+
+            $this->dispatch('rowChatToBottom');
+        } catch (\Exception $e) {
+            Log::error('Error pushing message: ' . $e->getMessage(), [
+                'messageId' => $messageId,
+            ]);
+        }
     }
 
-
-
-    /*--------------------------------------------------*/
-    /*------------------load More --------------------*/
-    /*------------------------------------------------ */
-    function loadmore()
-    {
-
-        //  dd('top reached ');
-        // $this->messages_count = Message::where('conversation_id', $this->selectedConversation->id)->count();
-
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
-
-        $height = $this->height;
-        $this->dispatch('updatedHeight', ($height));
-        # code...
-    }
-
-
-    /*---------------------------------------------------------------------*/
-    /*------------------Update height of messageBody-----------------------*/
-    /*---------------------------------------------------------------------*/
-    function updateHeight($height)
-    {
-
-        // dd($height);
-        $this->height = $height;
-
-        # code...
-    }
-
-
-
-    /*---------------------------------------------------------------------*/
-    /*------------------load conversations----------------------------------*/
-    /*---------------------------------------------------------------------*/
     public function loadConversation(Conversation $conversation, EmployeeDetails $receiver)
     {
-        $this->selectedConversation =  $conversation;
-        $this->receiverInstance =  $receiver;
-        $this->senderInstance = EmployeeDetails::find(auth()->id());
-        $this->messages = Message::where('conversation_id',  $this->selectedConversation->id)->get();
-        $this->dispatch('chatSelected');
-        $this->dispatch('receiveMessageSound');
-        Message::where('conversation_id', $this->selectedConversation->id)
-            ->where('receiver_id',  auth()->id())->update(['read' => 1]);
+        try {
+            $this->selectedConversation = $conversation;
+            $this->receiverInstance = $receiver;
+            $this->senderInstance = EmployeeDetails::find(auth()->id());
+            if (!$this->selectedConversation || !$this->receiverInstance || !$this->senderInstance) {
+                throw new \Exception('Invalid conversation or receiver');
+            }
 
+            $this->messages = Message::where('conversation_id', $this->selectedConversation->id)->get();
+            $this->dispatch('chatSelected');
+            $this->dispatch('receiveMessageSound');
 
-        $this->dispatch('broadcastMessageRead')->self();
-        $this->dispatch('rowChatToBottom');
+            Message::where('conversation_id', $this->selectedConversation->id)
+                ->where('receiver_id', auth()->id())
+                ->update(['read' => 1]);
 
-        # code...
+            $this->dispatch('broadcastMessageRead')->self();
+            $this->dispatch('rowChatToBottom');
+        } catch (\Exception $e) {
+            Log::error('Error loading conversation: ' . $e->getMessage());
+            $this->addError('loadConversation', 'Failed to load the conversation.');
+        }
     }
-
 
     public function render()
     {
