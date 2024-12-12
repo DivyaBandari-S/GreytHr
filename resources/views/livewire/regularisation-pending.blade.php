@@ -104,7 +104,7 @@
                                       @elseif(\Carbon\Carbon::parse($regularisationrequest->created_at)->isYesterday())
                                                 Yesterday
                                       @else
-                                         {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('Y-m-d') }}
+                                         {{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('jS F,Y') }}
                                       @endif
                                       &nbsp;&nbsp;&nbsp;{{ \Carbon\Carbon::parse($regularisationrequest->created_at)->format('h:i A') }}
                 </span>

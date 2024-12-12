@@ -5,6 +5,7 @@ namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
 use App\Mail\RegularisationApplyingMail;
+use App\Mail\RegularisationWithdrawalMail;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -35,6 +36,7 @@ class Regularisation extends Component
     public $pendingRegularisations;
 
 
+    public $idforrecordWithdrawal;
 
     public $historyRegularisations;
 
@@ -846,26 +848,74 @@ public function historyButton()
         }
     }
  //This function will withdraw the regularisation page 
-    public function withdraw($id)
-    {
-        try {
-          
-            $currentDateTime = Carbon::now();
-            $this->data = RegularisationDates::where('id', $id)->update([
-                'is_withdraw' => 1,
-                'withdraw_date' => $currentDateTime,
-                'status'=> 4,
-            ]);
-            $this->withdraw_session = true;
-            $this->withdrawModal=false;
-            FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn  successfully');
-           
+ public function openWithdrawModal($id)
+ {
+     $this->withdrawModal=true;
+     $this->idforrecordWithdrawal=$id;
+     
+ }
+ public function withdraw()
+{
 
-        } catch (\Exception $ex) {
-            FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
-          
+    try {
+        // Log an initial message to check method entry
+        Log::info("Entering Withdraw Method with ID: $this->idforrecordWithdrawal");
+
+        $currentDateTime = Carbon::now();
+        Log::info("Current Date and Time: " . $currentDateTime);
+
+        // Update the RegularisationDates record
+        $this->data = RegularisationDates::where('id', $this->idforrecordWithdrawal)->update([
+            'is_withdraw' => 1,
+            'withdraw_date' => $currentDateTime,
+            'status' => 4,
+        ]);
+        $item=RegularisationDates::find($this->idforrecordWithdrawal);
+        // Log the updated data to confirm the update was successful
+        Log::info("Regularisation entry updated: ", ['data' => $this->data]);
+
+        $regularisationEntriesArray = json_decode($item->regularisation_entries, true);
+       
+        // Assuming you have $this->data, you can log the employee ID
+        $this->employeeId = $item->emp_id;
+        Log::info("Employee ID: " . $this->employeeId);
+
+        // Fetch employee details from the database
+        $employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+        if ($employeeDetails) {
+            Log::info("Employee Details: ", ['employee' => $employeeDetails]);
+        } else {
+            Log::warning("Employee details not found for employee ID: " . $this->employeeId);
         }
+
+        
+        // Prepare details for email
+        $details = [
+            'regularisationRequests1' => $regularisationEntriesArray,
+            'employee_id' => $this->employeeId,
+            'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+        ];
+        
+        // Log email details
+        Log::info("Prepared email details: ", ['details' => $details]);
+
+        // Process the withdrawal session
+        $this->withdraw_session = true;
+        $this->withdrawModal = false;
+
+        // Flash success message
+        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn successfully');
+        
+        // Send email
+        Mail::to($this->employeeEmail)->send(new RegularisationWithdrawalMail($details));
+        Log::info("Withdrawal email sent to: " . $this->employeeEmail);
+
+    } catch (\Exception $ex) {
+        // Log the exception error
+        Log::error("Error during withdrawal process: " . $ex->getMessage());
+        FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
     }
+}
     //This function will update the count of regularisation
     public function updateCount()
     {
@@ -877,10 +927,7 @@ public function historyButton()
         }
     }
 
-    public function openWithdrawModal()
-    {
-        $this->withdrawModal=true;
-    }
+    
     public function closewithdrawModal()
     {
         $this->withdrawModal=false;

@@ -21,6 +21,7 @@ class RegularisationWithdrawalMail extends Mailable
     public function __construct($details)
     {
         $this->details = $details;
+   
     }
 
 
