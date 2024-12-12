@@ -6,8 +6,11 @@ use Livewire\Component;
 
 class Chat extends Component
 {
+
     public function render()
     {
+        // $receiverId = session('receiverId');
+
         return view('livewire.chat.chat');
     }
 }
