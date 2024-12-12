@@ -539,15 +539,28 @@ class LeaveApplyPage extends Component
             // Check for date parsing errors
             try {
                 $fromDate = Carbon::parse($this->from_date)->format('Y-m-d');
+                $toDate = Carbon::parse($this->to_date)->format('Y-m-d');
                 $hireDate = Carbon::parse($checkJoinDate->hire_date)->format('Y-m-d');
             } catch (\Exception $e) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Invalid date format.');
                 return false; // Stop further processing
             }
+            $currentYear = Carbon::now()->year;
+            $fromYear = Carbon::parse($this->from_date)->year;
+            $toYear = Carbon::parse($this->to_date)->year;
+            // Validate that the selected year is current year or last year
+            if ($this->from_date && $this->to_date) {
+                if ($fromYear != $currentYear) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashWarning('Leave date has to be on or after the current leave year ' . $currentYear . '!');
+                    return false;
+                }
+            }
             // Check for insufficient leave balancev
+            // Extract the year from the from_date for leave balance check
+            $fromDateYear = Carbon::parse($this->from_date)->year;
             if ($this->leave_type) {
                 $leaveBalance = $this->getLeaveBalance($employeeId);
-                if ($leaveBalance <= 0 && $this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type)) {
+                if ($leaveBalance <= 0 && $this->checkLeaveBalance($this->calculatedNumberOfDays, $this->leaveBalances, $this->leave_type, $fromDateYear)) {
                     return false;
                 }
             }
@@ -568,7 +581,7 @@ class LeaveApplyPage extends Component
             if ($this->leave_type != 'Loss Of Pay') {
                 $totalNumberOfDays = $this->getTotalLeaveDays($employeeId);
                 $leaveBalance = $this->getLeaveBalance($employeeId);
-                if ($totalNumberOfDays > $leaveBalance ) {
+                if ($totalNumberOfDays > $leaveBalance) {
                     Log::debug('Total number of leave days exceed balance', ['totalNumberOfDays' => $totalNumberOfDays, 'leaveBalance' => $leaveBalance]);
                     $this->errorMessageValidation = FlashMessageHelper::flashError('It looks like you have already used all your leave balance.');
                     return false;
@@ -749,14 +762,17 @@ class LeaveApplyPage extends Component
     protected function getLeaveBalance($employeeId)
     {
         try {
-            // Retrieve leave balances for the current year
-            $currentYear = now()->year;
+            // Extract the year from the 'from_date' (use the year from the 'from_date' instead of the current year)
+            $fromDateYear = Carbon::parse($this->from_date)->year;
+
+            // Retrieve leave balances for the year from 'from_date'
             $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
                 ->where('is_lapsed', true)
-                ->where('period', 'like', "%$currentYear%")
+                ->where('period', 'like', "%$fromDateYear%")
                 ->first();
+
             if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
-                // If lapsed, set the balance directly to leavePerYear
+                // If lapsed, set the balance directly to 0 for all leave types
                 $leaveBalances = [
                     'Sick Leave' => 0,
                     'Casual Leave' => 0,
@@ -766,22 +782,25 @@ class LeaveApplyPage extends Component
                     'Paternity Leave' => 0
                 ];
             } else {
+                // Get the leave balance per year based on the 'from_date' year
                 $leaveBalances = [
-                    'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $currentYear),
-                    'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $currentYear),
-                    'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $currentYear),
-                    'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $currentYear),
-                    'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $currentYear),
-                    'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $currentYear),
+                    'Sick Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $fromDateYear),
+                    'Casual Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $fromDateYear),
+                    'Casual Leave Probation' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $fromDateYear),
+                    'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $fromDateYear),
+                    'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $fromDateYear),
+                    'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $fromDateYear),
                 ];
             }
 
+            // Return the balance for the specific leave type
             return (float)($leaveBalances[$this->leave_type] ?? 0);
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while retrieving leave balance. Please try again.');
             return false;
         }
     }
+
 
     //check for exsiting holidays
     protected function checkForHolidays()
@@ -850,10 +869,11 @@ class LeaveApplyPage extends Component
     }
 
     //calculate leave balance dynamically
-    public function checkLeaveBalance($calculatedNumberOfDays, $leaveBalances, $leave_type)
+    public function checkLeaveBalance($calculatedNumberOfDays, $leaveBalances, $leave_type, $fromDateYear)
     {
         $leaveBalanceKey = '';
 
+        // Determine the leave balance key based on the leave type
         switch ($leave_type) {
             case 'Sick Leave':
                 $leaveBalanceKey = 'sickLeaveBalance';
@@ -875,13 +895,21 @@ class LeaveApplyPage extends Component
                 break;
         }
 
-        if ($leaveBalanceKey && $calculatedNumberOfDays >= ($leaveBalances[$leaveBalanceKey] ?? 0)) {
-            FlashMessageHelper::flashError('Insufficient leave balance for ' . $leave_type);
-            return true; // Indicates insufficient balance
+        // Ensure the balance key is set and the year matches
+        if ($leaveBalanceKey) {
+            // Get the leave balance for the year extracted from from_date
+            $leaveBalanceForYear = $leaveBalances[$fromDateYear][$leaveBalanceKey] ?? 0;
+
+            // Check if there is enough leave balance for the specified year
+            if ($calculatedNumberOfDays >= $leaveBalanceForYear) {
+                FlashMessageHelper::flashError('Insufficient leave balance for ' . $leave_type . ' for the year ' . $fromDateYear);
+                return true; // Indicates insufficient balance
+            }
         }
 
         return false; // Indicates sufficient balance
     }
+
 
 
 
@@ -922,6 +950,17 @@ class LeaveApplyPage extends Component
             $this->show_reporting = $this->leave_type !== 'default';
             $this->showApplyingTo = false;
             $this->selectedYear = Carbon::now()->format('Y');
+            // Check if 'from_date' and 'to_date' are set
+            if ($this->from_date && $this->to_date) {
+                $fromYear = Carbon::parse($this->from_date)->format('Y');
+                $toYear = Carbon::parse($this->to_date)->format('Y');
+                // If both from and to dates belong to the same year, use that year
+                // Otherwise, use the current year or the year from 'from_date' as fallback
+                $this->selectedYear = ($fromYear === $toYear) ? $fromYear : Carbon::now()->format('Y');
+            } else {
+                // Fallback to the current year if no dates are set
+                $this->selectedYear = Carbon::now()->format('Y');
+            }
             $employeeId = auth()->guard('emp')->user()->emp_id;
             // Retrieve all leave balances
             $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);

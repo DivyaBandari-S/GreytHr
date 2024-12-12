@@ -8,9 +8,9 @@
         <div class="row m-0 p-0">
             <div class="col-md-7 col-sm-12 p-0 m-0 ">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb d-flex align-items-center " >
-                        <li class="breadcrumb-item"><a  href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a  href="{{ route('leave-balance') }}">Leave Balances</a></li>
+                    <ol class="breadcrumb d-flex aclign-items-center ">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balances</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Casual Probation Leave</li>
                     </ol>
                 </nav>
@@ -18,7 +18,7 @@
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end  p-0 ">
                     <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
-                    <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)'  wire:model='year'>
+                    <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)' wire:model='year'>
                         <?php
                         // Get the current year
                         $currentYear = date('Y');
@@ -26,7 +26,7 @@
                         $options = [$currentYear - 2, $currentYear - 1, $currentYear, $currentYear + 1];
                         ?>
                         @foreach($options as $pre_year)
-                        <option  value="{{ $pre_year }}">{{ $pre_year }}</option>
+                        <option value="{{ $pre_year }}">{{ $pre_year }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -34,14 +34,14 @@
             @if($employeeLeaveBalances == 0)
             <div class="row m-0 p-0">
                 <div class="col-md-12  leave-details-col-md-12">
-                    <div class="card  leave-details-card" >
-                        <div class="card-body leave-details-card-body" >
+                    <div class="card  leave-details-card">
+                        <div class="card-body leave-details-card-body">
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
-                            <p class="card-text">No information found</p>
-                            @else
-                            <p class="card-text">HR will add the leaves</p>
-                            @endif
+                                <p class="card-text">No information found</p>
+                                @else
+                                <p class="card-text">HR will add the leaves</p>
+                                @endif
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,11 @@
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            <div class="info-value">{{$Availablebalance}}</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">0</div>
+                            @else
+                            <div class="info-value">{{ $Availablebalance }}</div>
+                            @endif
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Opening Balance</div>
@@ -61,13 +65,19 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-
                             <div class="info-value">{{ $employeeLeaveBalances }}</div>
-
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
                             <div class="info-value">{{ $totalSickDays }}</div>
+                        </div>
+                        <div class="info-item px-2">
+                            <div class="info-title">Lapsed</div>
+                            @if($employeeLapsedBalance->is_lapsed)
+                            <div class="info-value">{{ $Availablebalance }}</div>
+                            @else
+                            <div class="info-value">0</div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -98,7 +108,7 @@
                             <tbody>
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
-                                <td>
+                                    <td>
                                         @if($balance->category_type === 'Leave')
                                         @if($balance->leave_status == '2')
                                         Availed
@@ -122,8 +132,8 @@
                                         @endif
                                         @endif
                                     </td>
-                                @endforeach
-                                @foreach($leaveGrantedData as $index => $balance)
+                                    @endforeach
+                                    @foreach($leaveGrantedData as $index => $balance)
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>

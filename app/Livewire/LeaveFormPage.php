@@ -315,7 +315,7 @@ class LeaveFormPage extends Component
                     $leaveRequest,        // Leave request object
                     $applyingToDetailsArray[0],  // First applying-to recipient's details
                     $ccToDetailsArray,    // CC details
-                    false                 // Set forMainRecipient to false (since this is not for the main applicant)
+                    false
                 ));
             }
 

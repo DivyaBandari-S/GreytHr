@@ -591,11 +591,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         // Output results
 
         try {
-
             $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type')->first();
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
             $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $this->to_date = Carbon::now()->toDateString();
+            $this->to_date = Carbon::now()->subDay()->toDateString();
+
             $this->updateModalTitle();
             $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
             $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
@@ -1249,7 +1249,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $toDatetemp = Carbon::parse($this->to_date);
             $formattedFromDateForModalTitle = Carbon::parse($this->start_date_for_insights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->to_date)->format('d M');
-            
+
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
 
             $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
