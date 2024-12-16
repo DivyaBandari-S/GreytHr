@@ -65,20 +65,20 @@ class ChatBox extends Component
         }
     }
 
-    public function deleteMessage($messageId)
-    {
-        try {
-            $message = Message::find($messageId);
-            if (!$message) {
-                throw new \Exception('Message not found');
-            }
-            $message->delete();
-            $this->dispatch('refreshChatBox');
-            $this->dispatch('refresh');
-        } catch (\Exception $e) {
-            Log::error('Error deleting message: ' . $e->getMessage());
-        }
-    }
+    // public function deleteMessage($messageId)
+    // {
+    //     try {
+    //         $message = Message::find($messageId);
+    //         if (!$message) {
+    //             throw new \Exception('Message not found');
+    //         }
+    //         $message->delete();
+    //         $this->dispatch('refreshChatBox');
+    //         $this->dispatch('refresh');
+    //     } catch (\Exception $e) {
+    //         Log::error('Error deleting message: ' . $e->getMessage());
+    //     }
+    // }
 
 
 
