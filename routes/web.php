@@ -353,7 +353,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
-    Route::get('/chat', Chat::class)->name('chat');
+    Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 

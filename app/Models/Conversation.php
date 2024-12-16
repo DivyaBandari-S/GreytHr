@@ -26,17 +26,4 @@ class Conversation extends Model
         return $this->hasMany(Message::class, 'conversation_id');
     }
 
-    /**
-     * Members of the conversation (many-to-many relationship with EmployeeDetails).
-     */
-    public function members()
-    {
-        return $this->belongsToMany(
-            EmployeeDetails::class,
-            'group_conversations', // Pivot table name
-            'conversation_id',     // Foreign key on pivot table
-            'emp_id'               // Related key on pivot table
-        );
-    }
-   
 }
