@@ -160,9 +160,10 @@ class ChatSendMessage extends Component
         $this->selectedConversation->last_time_message = $this->createdMessage->created_at;
         $this->selectedConversation->save();
 
-        $this->dispatch('pushMessage', $this->createdMessage->id)->to(ChatBox::class);
+        $this->dispatch('pushMessage', $this->createdMessage->id)->to('chat.chat-box');
         $this->dispatch('show-toast', ['message' => $trimmedBody]);
-        $this->dispatch('refresh')->to(ChatList::class);
+        $this->dispatch('sendMessageSound'); // Emit send sound event
+        $this->dispatch('refresh')->to('chat.chat-list');
         $this->reset(['body', 'media', 'mediaPreviews']);
         $this->dispatch('dispatchMessageSent')->self();
     }
@@ -171,7 +172,8 @@ class ChatSendMessage extends Component
 
     public function dispatchMessageSent()
     {
-        broadcast(new MessageSent(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance));
+         broadcast(new MessageSent(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance));
+        // MessageSent::dispatch(Auth()->user(), $this->createdMessage, $this->selectedConversation, $this->receiverInstance);
     }
 
     public function render()

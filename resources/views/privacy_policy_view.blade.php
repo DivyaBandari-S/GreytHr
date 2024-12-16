@@ -226,7 +226,7 @@
 
             <div class="row">
                 <p class="privacyheadings">How to Contact Us</p>
-                <p class="privacyContent">If you have any questions or complaints about this Privacy Policy or how we collect or process your personal information or would like us modify, correct or erase any Personal Data or would like us to stop communicating with you, please contact us at privacy@HR-Xpert.com. You may also contact us by mail at:</p>
+                <p class="privacyContent">If you have any questions or complaints about this Privacy Policy or how we collect or process your personal information or would like us modify, correct or erase any Personal Data or would like us to stop communicating with you, please contact us at info@s6.payg-india.com. You may also contact us by mail at:</p>
                 <p class="privacyContent">Privacy Matters</p>
                 <p class="privacyContent">c/o HR-Expert Software Pvt. Ltd.</p>
                 <p class="privacyContent">3rd floor, Kapil Kavuri Hub, Nanakaramguda,</p>
@@ -234,7 +234,7 @@
                 <p class="privacyContent">Hyderabad -500032 ,</p>
                 <p class="privacyContent">India.</p>
               <br>
-                <p class="privacyContent">Email: privacy@hrexpert.com</p>
+                <p class="privacyContent">Email: info@s6.payg-india.com</p>
                 <p class="privacyContent">Effective Date: 31 October 2023</p>
             </div>
 

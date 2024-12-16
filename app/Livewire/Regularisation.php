@@ -5,6 +5,7 @@ namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
 use App\Mail\RegularisationApplyingMail;
+use App\Mail\RegularisationWithdrawalMail;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -35,6 +36,7 @@ class Regularisation extends Component
     public $pendingRegularisations;
 
 
+    public $idforrecordWithdrawal;
 
     public $historyRegularisations;
 
@@ -85,15 +87,17 @@ class Regularisation extends Component
     public $currentMonth;
 
     public $reportingmanagerinloop;
-    public $openAccordionForPending = null;
+    
 
-    public $openAccordionForHistory = null;
+    public $openAccordionForHistory = [];
     public $reportingmanager;
     public $showApplyingToContainer = false;
 
     public $istogglehigherManagers=false;
     public $heademployees;
     public $chevronButton=false;
+
+    public $openAccordionForPending=[];
     
     public $reportingmanagerfullName;
     public $isdeletedArray=0;
@@ -170,10 +174,12 @@ class Regularisation extends Component
     public function togglePendingAccordion($id)
     {
         
-        if ($this->openAccordionForPending === $id) {
-            $this->openAccordionForPending = null; // Close if already open
+        if (in_array($id, $this->openAccordionForPending)) {
+            // Remove from open accordions if already open
+            $this->openAccordionForPending = array_diff($this->openAccordionForPending, [$id]);
         } else {
-            $this->openAccordionForPending = $id; // Set to open
+            // Add to open accordions if not open
+            $this->openAccordionForPending[] = $id;
         }
       
     }
@@ -185,11 +191,13 @@ class Regularisation extends Component
     }
     public function toggleHistoryAccordion($id)
     {
-        
-        if ($this->openAccordionForHistory === $id) {
-            $this->openAccordionForHistory = null; // Close if already open
+              
+        if (in_array($id, $this->openAccordionForHistory)) {
+            // Remove from open accordions if already open
+            $this->openAccordionForHistory = array_diff($this->openAccordionForHistory, [$id]);
         } else {
-            $this->openAccordionForHistory = $id; // Set to open
+            // Add to open accordions if not open
+            $this->openAccordionForHistory[] = $id;
         }
     }
     public function applyingTo()
@@ -685,68 +693,89 @@ public function nextMonth()
     }
     //This function will store regularisation details in the database
     public function storearraydates()
-{
-    try {
-       
-        $validatedData = $this->validate([
-            'shift_times.*.from' => 'required|date_format:H:i',
-            'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
-            'shift_times.*.reason' => 'required',
-        ], [
-            'shift_times.*.from.required' => 'Please enter the sign-in time',
-            'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
-            'shift_times.*.to.required' => 'Please enter the sign-out time',
-            'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
-            'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
-            'shift_times.*.reason.required' => 'Please enter the reason',
-        ]);
-        $this->isdatesApplied = true;
-
-        $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
-        $emp_id = $employeeDetails->emp_id;
-        $regularisationEntriesJson = json_encode($this->shift_times);
-        if ($this->isdeletedArray > 0) {
-            $regularisationEntriesArray = $this->updatedregularisationEntries;
-        } else {
-            $regularisationEntriesArray = json_decode($regularisationEntriesJson, true);
-        }
+    {
+        try {
+            Log::info('storearraydates method started.');
     
-        // Count the number of items
-        $this->numberOfItems = count($regularisationEntriesArray);
-
-        RegularisationDates::create([
-            'emp_id' => $emp_id,
-            'employee_remarks' => $this->remarks,
-            'regularisation_entries' => $regularisationEntriesJson,
-            'is_withdraw' => 0,
-            'status'=>5,
-            'regularisation_date' => null,
-        ]);
-        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation Created  successfully');
-        sleep(1);
-        $details = [
-           
-            'regularisationRequests'=>$regularisationEntriesArray,
-            'employee_id'=>$this->employeeId,
-            'employee_name'=>$employeeDetails->first_name.' '.$employeeDetails->last_name,
-           
-        ];
-        Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));
-
- 
-        $this->remarks='';
-        $regularisationEntriesJson = [];
-        $this->regularisationEntries = [];
-        $this->shift_times=[];
-    } catch (\Exception $e) {
-        // Log the error or handle it as needed
-        Log::error('Error in storearraydates method: ' . $e->getMessage());
-        
-        // You might want to inform the user about the error or take other appropriate actions
-        FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
-        
+            // Validate the data
+            Log::info('Validating input data.');
+            $validatedData = $this->validate([
+                'shift_times.*.from' => 'required|date_format:H:i',
+                'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
+                'shift_times.*.reason' => 'required',
+            ], [
+                'shift_times.*.from.required' => 'Please enter the sign-in time',
+                'shift_times.*.from.date_format' => 'Please enter sign-in time in HH:MM format',
+                'shift_times.*.to.required' => 'Please enter the sign-out time',
+                'shift_times.*.to.date_format' => 'Please enter sign-out time in HH:MM format',
+                'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
+                'shift_times.*.reason.required' => 'Please enter the reason',
+            ]);
+            Log::info('Validation successful.');
+    
+            // Mark dates as applied
+            $this->isdatesApplied = true;
+            Log::info('isdatesApplied set to true.');
+    
+            // Get employee details
+            Log::info('Fetching employee details.');
+            $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
+            $emp_id = $employeeDetails->emp_id;
+            Log::info('Employee details fetched:', ['emp_id' => $emp_id]);
+    
+            // Prepare regularisation entries
+            $regularisationEntriesJson = json_encode($this->shift_times);
+            Log::info('Shift times JSON:', ['shift_times' => $this->shift_times]);
+    
+            if ($this->isdeletedArray > 0) {
+                $regularisationEntriesArray = $this->updatedregularisationEntries;
+                Log::info('Using updated regularisation entries.', ['entries' => $regularisationEntriesArray]);
+            } else {
+                $regularisationEntriesArray = json_decode($regularisationEntriesJson, true);
+                Log::info('Decoded regularisation entries.', ['entries' => $regularisationEntriesArray]);
+            }
+    
+            // Count the number of items
+            $this->numberOfItems = count($regularisationEntriesArray);
+            Log::info('Number of regularisation entries:', ['count' => $this->numberOfItems]);
+    
+            // Save to database
+            Log::info('Saving regularisation dates to database.');
+            RegularisationDates::create([
+                'emp_id' => $emp_id,
+                'employee_remarks' => $this->remarks,
+                'regularisation_entries' => $regularisationEntriesJson,
+                'is_withdraw' => 0,
+                'status' => 5,
+                'regularisation_date' => null,
+            ]);
+            Log::info('Regularisation dates saved successfully.');
+    
+            // Send email notification
+            $details = [
+                'regularisationRequests' => $regularisationEntriesArray,
+                'employee_id' => $this->employeeId,
+                'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+            ];
+            Log::info('Sending regularisation email.', ['email' => $this->employeeEmail, 'details' => $details]);
+            Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));
+            Log::info('Regularisation email sent.');
+    
+            // Reset variables
+            $this->remarks = '';
+            $regularisationEntriesJson = [];
+            $this->regularisationEntries = [];
+            $this->shift_times = [];
+            Log::info('Variables reset successfully.');
+        } catch (\Exception $e) {
+            Log::error('Error in storearraydates method: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+    
+            FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
+        }
     }
-}
+    
 
 //This function will show the page where we can apply for regularisation    
 public function applyButton()
@@ -819,26 +848,74 @@ public function historyButton()
         }
     }
  //This function will withdraw the regularisation page 
-    public function withdraw($id)
-    {
-        try {
-          
-            $currentDateTime = Carbon::now();
-            $this->data = RegularisationDates::where('id', $id)->update([
-                'is_withdraw' => 1,
-                'withdraw_date' => $currentDateTime,
-                'status'=> 4,
-            ]);
-            $this->withdraw_session = true;
-            $this->withdrawModal=false;
-            FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn  successfully');
-           
+ public function openWithdrawModal($id)
+ {
+     $this->withdrawModal=true;
+     $this->idforrecordWithdrawal=$id;
+     
+ }
+ public function withdraw()
+{
 
-        } catch (\Exception $ex) {
-            FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
-          
+    try {
+        // Log an initial message to check method entry
+        Log::info("Entering Withdraw Method with ID: $this->idforrecordWithdrawal");
+
+        $currentDateTime = Carbon::now();
+        Log::info("Current Date and Time: " . $currentDateTime);
+
+        // Update the RegularisationDates record
+        $this->data = RegularisationDates::where('id', $this->idforrecordWithdrawal)->update([
+            'is_withdraw' => 1,
+            'withdraw_date' => $currentDateTime,
+            'status' => 4,
+        ]);
+        $item=RegularisationDates::find($this->idforrecordWithdrawal);
+        // Log the updated data to confirm the update was successful
+        Log::info("Regularisation entry updated: ", ['data' => $this->data]);
+
+        $regularisationEntriesArray = json_decode($item->regularisation_entries, true);
+       
+        // Assuming you have $this->data, you can log the employee ID
+        $this->employeeId = $item->emp_id;
+        Log::info("Employee ID: " . $this->employeeId);
+
+        // Fetch employee details from the database
+        $employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
+        if ($employeeDetails) {
+            Log::info("Employee Details: ", ['employee' => $employeeDetails]);
+        } else {
+            Log::warning("Employee details not found for employee ID: " . $this->employeeId);
         }
+
+        
+        // Prepare details for email
+        $details = [
+            'regularisationRequests1' => $regularisationEntriesArray,
+            'employee_id' => $this->employeeId,
+            'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
+        ];
+        
+        // Log email details
+        Log::info("Prepared email details: ", ['details' => $details]);
+
+        // Process the withdrawal session
+        $this->withdraw_session = true;
+        $this->withdrawModal = false;
+
+        // Flash success message
+        FlashMessageHelper::flashSuccess('Hurry Up! Regularisation withdrawn successfully');
+        
+        // Send email
+        Mail::to($this->employeeEmail)->send(new RegularisationWithdrawalMail($details));
+        Log::info("Withdrawal email sent to: " . $this->employeeEmail);
+
+    } catch (\Exception $ex) {
+        // Log the exception error
+        Log::error("Error during withdrawal process: " . $ex->getMessage());
+        FlashMessageHelper::flashError('Something went wrong while withdrawing regularisation.');
     }
+}
     //This function will update the count of regularisation
     public function updateCount()
     {
@@ -850,10 +927,7 @@ public function historyButton()
         }
     }
 
-    public function openWithdrawModal()
-    {
-        $this->withdrawModal=true;
-    }
+    
     public function closewithdrawModal()
     {
         $this->withdrawModal=false;

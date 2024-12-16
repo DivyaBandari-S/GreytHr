@@ -973,12 +973,7 @@
     </div>
     @endif
     @if($isApply==1&&$defaultApply==1)
-    @if (session('flash_error'))
-            
-    @endif
-    @if (session('flash_success'))
-            
-    @endif
+ 
     <div class="h row m-0 mt-4">
         <div class="col-md-5 mb-3">
             <div class="calendar-box">
@@ -1411,7 +1406,7 @@
                 <span style="color: #3a9efd; font-size: 12px; font-weight: 500;">View Details</span>
 
             </a>
-            <button class="withdraw mb-2" wire:click="openWithdrawModal">Withdraw</button>
+            <button class="withdraw mb-2" wire:click="openWithdrawModal({{$pr->id}})">Withdraw</button>
 
         </div>
 
@@ -1430,7 +1425,7 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="approveBtn" wire:click="withdraw({{$pr->id}})">Confirm</button>
+                    <button type="button" class="approveBtn" wire:click="withdraw({{$idforrecordWithdrawal}})">Confirm</button>
                     <button type="button" class="rejectBtn" wire:click="closewithdrawModal">Cancel</button>
 
                 </div>
@@ -1455,6 +1450,7 @@
 @endif
 
 @elseif($isHistory==1&&$defaultApply==0)
+
 @if(count($historyRegularisations)>0)
     @foreach($historyRegularisations as $hr)
 

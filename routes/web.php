@@ -352,7 +352,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
-    Route::get('/chat', Chat::class)->name('chat');
+    Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
 
@@ -638,3 +638,13 @@ Route::get('/salary/{emp_id}', function ($emp_id) {
         'status' => $salaryRevision->status,
     ]);
 });
+Route::get('/storage-link', function () {
+    try {
+        Artisan::call('storage:link');
+        return response()->json(['message' => 'Storage link created successfully']);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+

@@ -24,7 +24,8 @@ class Task extends Model
         'file_path',
         'file_name',
         'mime_type',
-        'status'
+        'status',
+        'reminder_sent'
     ];
     public function emp()
     {

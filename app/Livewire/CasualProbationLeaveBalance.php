@@ -16,6 +16,10 @@ class CasualProbationLeaveBalance extends Component
     public $employeeleaveavlid;
     public $totalSickDays = 0;
     public $Availablebalance, $employeeDetails, $availedLeavesCount;
+    public $lapsedBalance;
+    public $employeeLapsedBalanceList;
+    public $employeeLapsedBalance;
+    public $lapsedLeavesCount;
 
 
     ///calculate number of days
@@ -109,180 +113,214 @@ class CasualProbationLeaveBalance extends Component
 
     public function render()
     {
-        try {
+        $this->currentYear = date('Y');
+        $this->year = request()->query('year') ?? date('Y');
 
-            $this->currentYear = date('Y');
-            $this->year = request()->query('year') ?? date('Y');
+        // $this->yearDropDown();
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")
+            ->get();
+        // dd( $this->leaveGrantedData);
 
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('period', 'like', "%$this->year%")
-                ->get();
-
-
-            $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('period', 'like', "%$this->year%")
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_probation")
-                ->pluck('casual_leave_probation')
-                ->first();
+        $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")
+            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_probation")
+            ->pluck('casual_leave_probation')
+            ->first();
 
 
-            // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
-            // where emp_id matches and leave_type is "Sick Leave"
-            $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
+        // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
+        // where emp_id matches and leave_type is "Sick Leave"
+        $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
+            ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
+            ->whereYear('to_date', '>=', $this->year)
+            ->where('leave_type', 'Casual Leave Probation')
+            // ->where(function ($query) {
+            //     $query->whereIn('status', ['approved', 'rejected','Withdrawn','Pending'])  // Include both approved and rejected statuses
+            //         ->whereIn('cancel_status', ['Re-applied', 'Pending Leave Cancel', 'rejected', 'Withdrawn','Pending','approved']);
+            // })
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // dd(  $this->employeeleaveavlid);
+
+        foreach ($this->employeeleaveavlid as $leaveRequest) {
+            //$leaveType = $leaveRequest->leave_type;
+            $days = self::calculateNumberOfDays(
+                $leaveRequest->from_date,
+                $leaveRequest->from_session,
+                $leaveRequest->to_date,
+                $leaveRequest->to_session,
+                $leaveRequest->leave_type
+            );
+            if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2 ' &&  $leaveRequest->category_type == 'Leave') {
+                $this->totalSickDays += $days;
+            }
+
+
+
+            // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
+        }
+        // foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
+        //     $this->Availablebalance = $this->employeeLeaveBalance->leave_balance - $this->totalSickDays;
+
+        // }
+        $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->first();
+        $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
+
+        $this->employeeLapsedBalanceList = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->get();
+        $currentMonth = date('n');
+        $lastmonth = 12;
+        $currentYear = date('Y');
+
+        $startingMonth = 1; // January
+
+        $grantedLeavesByMonth = [];
+        $availedLeavesByMonth = [];
+        $lapsedLeavesByMonth = []; // Add this for lapsed leaves
+
+        $grantedLeavesCount =  EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")
+            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_probation")
+            ->pluck('casual_leave_probation')
+            ->first();
+
+        for ($month = $startingMonth; $month <= $lastmonth; $month++) {
+            // Reset availed leaves count for this month
+            $this->availedLeavesCount = 0;
+
+            // Fetch leave requests that overlap with the current month
+            $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_type', 'Casual Leave Probation')
-                ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
-                ->whereYear('to_date', '>=', $this->year)
-                // ->where(function ($query) {
-                //     $query->whereIn('status', ['approved', 'rejected','Withdrawn'])
-                //     ->whereIn('cancel_status', ['Re-applied', 'Pending', 'rejected', 'Withdrawn']);
-                // })
-                ->orderBy('created_at', 'desc')
+                ->where('leave_status', '2')
+                ->where('cancel_status', '!=', '2')
+                ->whereYear('from_date', $currentYear)
+                ->where(function ($query) use ($month) {
+                    $query->whereMonth('from_date', $month)
+                        ->orWhereMonth('to_date', $month);
+                })->where('category_type', 'Leave')
                 ->get();
 
-            foreach ($this->employeeleaveavlid as $leaveRequest) {
-                //$leaveType = $leaveRequest->leave_type;
+            foreach ($availedLeavesRequests as $availedleaveRequest) {
+                $originalStartDate = Carbon::parse($availedleaveRequest->from_date);
+                $originalEndDate = Carbon::parse($availedleaveRequest->to_date);
+
+                // Adjust the start date to the first day of the month if it is earlier
+                $startDate = $originalStartDate->month < $month ? Carbon::create($currentYear, $month, 1) : $originalStartDate;
+
+                // Adjust the end date to the last day of the month if it is later
+                $endDate = $originalEndDate->month > $month ? Carbon::create($currentYear, $month, Carbon::create($currentYear, $month)->daysInMonth) : $originalEndDate;
+
+                // Calculate the number of days within this month
                 $days = self::calculateNumberOfDays(
-                    $leaveRequest->from_date,
-                    $leaveRequest->from_session,
-                    $leaveRequest->to_date,
-                    $leaveRequest->to_session
+                    $startDate,
+                    $availedleaveRequest->from_session,
+                    $endDate,
+                    $availedleaveRequest->to_session,
+                    $availedleaveRequest->leave_type
                 );
 
-                if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2' &&  $leaveRequest->category_type == 'Leave') {
-                    $this->totalSickDays += $days;
-                }
-
-                // $this->Availablebalance = $this->employeeLeaveBalances->leave_balance - $this->totalSickDays;
-            }
-            // foreach ($this->employeeLeaveBalances as $employeeLeaveBalance) {
-            //     $this->Availablebalance = $employeeLeaveBalance->leave_balance - $this->totalSickDays;
-
-            // }
-
-            $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
-
-
-
-
-
-            $currentMonth = date('n');
-            $lastmonth = "12";
-            $currentYear = date('Y');
-            $startingMonth = 1; // January
-
-            $grantedLeavesByMonth = [];
-            $availedLeavesByMonth = [];
-            $grantedLeavesCount = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('period', 'like', "%$this->year%")
-                ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS casual_leave_prob")
-                ->pluck('casual_leave_prob')
-                ->first();
-
-            for ($month = $startingMonth; $month <= $lastmonth; $month++) {
-                // Reset availed leaves count for this month
-                $this->availedLeavesCount = 0;
-
-                // Fetch leave requests that overlap with the current month
-                $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_type', 'Casual Leave Probation')
-                    ->where('leave_status', '2')
-                    ->where('cancel_status', '!=', '2')
-                    ->whereYear('from_date', $currentYear)
-                    ->where(function ($query) use ($month) {
-                        $query->whereMonth('from_date', $month)
-                            ->orWhereMonth('to_date', $month);
-                    })->where('category_type', 'Leave')
-                    ->get();
-
-                foreach ($availedLeavesRequests as $availedleaveRequest) {
-                    $originalStartDate = Carbon::parse($availedleaveRequest->from_date);
-                    $originalEndDate = Carbon::parse($availedleaveRequest->to_date);
-
-                    // Adjust the start date to the first day of the month if it is earlier
-                    $startDate = $originalStartDate->month < $month ? Carbon::create($currentYear, $month, 1) : $originalStartDate;
-
-                    // Adjust the end date to the last day of the month if it is later
-                    $endDate = $originalEndDate->month > $month ? Carbon::create($currentYear, $month, Carbon::create($currentYear, $month)->daysInMonth) : $originalEndDate;
-
-                    // Calculate the number of days within this month
-                    $days = self::calculateNumberOfDays(
-                        $startDate,
-                        $availedleaveRequest->from_session,
-                        $endDate,
-                        $availedleaveRequest->to_session
-                    );
-
-                    // Accumulate the days for this month
-                    $this->availedLeavesCount += $days;
-                }
-
-                // Adjust granted leaves count by subtracting availed leaves count
-                $grantedLeavesCount -= $this->availedLeavesCount;
-
-                // Ensure granted leaves count is non-negative
-                $grantedLeavesCount = max(0, $grantedLeavesCount);
-
-                // Store the granted leaves count and availed leaves count in their respective arrays
-                $grantedLeavesByMonth[] = $grantedLeavesCount;
-                $availedLeavesByMonth[] = $this->availedLeavesCount;
+                // Accumulate the days for this month
+                $this->availedLeavesCount += $days;
             }
 
+            // Adjust granted leaves count by subtracting availed leaves count
+            $grantedLeavesCount -= $this->availedLeavesCount;
 
-            $chartData = [
-                'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-                'datasets' => [
-                    [
-                        'label' => 'Granted Leaves',
-                        'data' => $grantedLeavesByMonth,
-                        'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
-                        'borderColor' => 'rgba(54, 162, 235, 1)',
-                        'borderWidth' => 1
-                    ],
-                    [
-                        'label' => 'Availed Leaves',
-                        'data' => $availedLeavesByMonth,
-                        'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
-                        'borderColor' => 'rgba(255, 99, 132, 1)',
-                        'borderWidth' => 1
-                    ]
+            // Ensure granted leaves count is non-negative
+            $grantedLeavesCount = max(0, $grantedLeavesCount);
+
+            // Store the granted leaves count and availed leaves count in their respective arrays
+            $grantedLeavesByMonth[] = $grantedLeavesCount;
+            $availedLeavesByMonth[] = $this->availedLeavesCount;
+
+            // Calculate lapsed leaves only for December
+            if ($month === 12) {
+                $lapsedLeaves = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                    ->where('period', 'like', "%$this->year%")
+                    ->where('is_lapsed', true) // Add this condition to filter by is_lapsed
+                    ->first();
+                if ($lapsedLeaves) {
+                    $this->lapsedLeavesCount = $this->employeeLeaveBalances - $this->totalSickDays;
+                }
+                $lapsedLeavesByMonth[] = $this->lapsedLeavesCount;
+            } else {
+                $lapsedLeavesByMonth[] = 0; // For all other months, set lapsed leaves to 0
+            }
+        }
+
+        // Check if employee has lapsed leave balance
+        $employeeLapsedChartBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+            ->where('period', 'like', "%$this->year%")->first();
+
+        $chartData = [
+            'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            'datasets' => [
+                [
+                    'label' => 'Granted Leaves',
+                    'data' => $grantedLeavesByMonth,
+                    'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
+                    'borderColor' => 'rgba(54, 162, 235, 1)',
+                    'borderWidth' => 1
+                ],
+                [
+                    'label' => 'Availed Leaves',
+                    'data' => $availedLeavesByMonth,
+                    'backgroundColor' => 'rgba(255, 99, 132, 0.5)',
+                    'borderColor' => 'rgba(255, 99, 132, 1)',
+                    'borderWidth' => 1
                 ]
-            ];
+            ]
+        ];
 
-            $chartOptions = [
-                'scales' => [
-                    'y' => [
-                        'ticks' => [
-                            'beginAtZero' => true,
-                            'min' => 0,
-                            'max' => 10,
-                            'stepSize' => 2 // Adjust the step size to show values at intervals of 2
-                        ],
-                        'grid' => [
-                            'display' => false // Remove grid lines from the y-axis
-                        ]
+        // Add "Lapsed Leaves" dataset only if employee has lapsed leave balance
+        if ($employeeLapsedChartBalance->is_lapsed) {
+            $chartData['datasets'][] = [
+                'label' => 'Lapsed Leaves',
+                'data' => $lapsedLeavesByMonth,
+                'backgroundColor' => 'rgba(255, 159, 64, 0.5)',
+                'borderColor' => 'rgba(255, 159, 64, 1)',
+                'borderWidth' => 1
+            ];
+        }
+
+
+        $chartOptions = [
+            'scales' => [
+                'y' => [
+                    'ticks' => [
+                        'beginAtZero' => true,
+                        'min' => 0,
+                        'max' => 10,
+                        'stepSize' => 2
                     ],
-                    'x' => [
-                        'grid' => [
-                            'display' => false // Remove grid lines from the x-axis
-                        ]
+                    'grid' => [
+                        'display' => false
                     ]
                 ],
-                'maintainAspectRatio' => false, // Allow chart to be resized
-                'responsive' => true // Make chart responsive
-            ];
-            return view('livewire.casual-probation-leave-balance', [
-                'employeeLeaveBalances' => $this->employeeLeaveBalances,
-                'employeeleaveavlid' => $this->employeeleaveavlid,
-                'totalSickDays' => $this->totalSickDays,
-                'Availablebalance' => $this->Availablebalance,
-                'chartData' => $chartData,
-                'chartOptions' => $chartOptions // Pass chart options to the view
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error in Casual Leave Probation Balance render method: ' . $e->getMessage());
-            return view('livewire.casual-probation-leave-balance');
-        }
+                'x' => [
+                    'grid' => [
+                        'display' => false
+                    ]
+                ]
+            ],
+            'maintainAspectRatio' => false,
+            'responsive' => true
+        ];
+
+        return view('livewire.casual-leave-balance', [
+            'employeeLeaveBalances' => $this->employeeLeaveBalances,
+            'employeeleaveavlid' => $this->employeeleaveavlid,
+            'totalSickDays' => $this->totalSickDays,
+            'Availablebalance' => $this->Availablebalance,
+            'lapsedBalance' => $this->lapsedBalance,
+            'chartData' => $chartData,
+            'employeeLapsedBalanceList' => $this->employeeLapsedBalanceList,
+            'chartOptions' => $chartOptions
+        ]);
     }
 }

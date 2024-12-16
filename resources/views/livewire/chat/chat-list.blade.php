@@ -22,41 +22,43 @@
             <!-- Display Filtered Conversations -->
             @forelse ($conversations as $conversation)
                 @php
-                    $otherUser =
-                        $conversation->sender_id === auth()->user()->emp_id
-                            ? $conversation->receiver
-                            : $conversation->sender;
-                    $lastMessage = $conversation->messages()->latest()->first();
+                    $isSender = $conversation?->sender_id === auth()->user()?->emp_id;
+                    $otherUser = $isSender ? $conversation?->receiver : $conversation?->sender;
+                    $lastMessage = $conversation?->messages()?->latest()?->first();
                 @endphp
-                <div class="item {{ $selectedUserId === $otherUser->emp_id ? 'selected' : '' }}">
+                <div class="item {{ $selectedUserId === ($otherUser?->emp_id ?? '') ? 'selected' : '' }}">
                     <div class="avatar-chart">
-                        <img src="{{ $otherUser->image
+                        <img src="{{ $otherUser?->image
                             ? 'data:image/jpeg;base64,' . $otherUser->image
-                            : ($otherUser->gender === 'MALE'
+                            : ($otherUser?->gender === 'MALE'
                                 ? asset('images/male-default.png')
                                 : asset('images/female-default.jpg')) }}"
                             alt="Avatar">
-                        <span class="dot @if ($otherUser->isOnline()) -online @else -offline @endif"></span>
+                        <span class="dot @if ($otherUser?->isOnline()) -online @else -offline @endif"></span>
                     </div>
-                    <div class="text-content" wire:key='{{ $otherUser->emp_id }}'
-                        wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()->emp_id }}', receiverId: '{{ $otherUser->emp_id }}' })">
-                        <div class="name">{{ $otherUser->first_name }} {{ $otherUser->last_name }}</div>
+                    <div class="text-content" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}"
+                        {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
+                        wire:click="chatUserSelected('{{ auth()->user()?->emp_id }}', '{{ $otherUser?->emp_id }}')">
+                        <div class="name">{{ $otherUser?->first_name ?? 'Unknown' }}
+                            {{ $otherUser?->last_name ?? '' }}</div>
                         <div class="last-message">
-                            {{ $lastMessage ? \Illuminate\Support\Str::limit($lastMessage->body, 20, '.....') : 'No messages yet.' }}
-
+                            {{ $lastMessage?->body ? \Illuminate\Support\Str::limit($lastMessage->body, 20, '.....') : 'No messages yet.' }}
                         </div>
                     </div>
 
                     <div class="actions">
-                        <button class="btn" wire:key='{{ $otherUser->emp_id }}'
-                            wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()->emp_id }}', receiverId: '{{ $otherUser->emp_id }}' })">
+                        <button class="btn" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}"
+                            {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
+                            {{-- wire:click="chatUserSelected('{{ auth()->user()?->emp_id }}', '{{ $otherUser?->emp_id }}')" --}}
+                            >
                             <span class="material-icons position-relative">
                                 question_answer
-                                @if ($conversation->unreadMessagesCount(auth()->user()->emp_id) > 0)
+                                @if ($conversation?->unreadMessagesCount(auth()->user()?->emp_id ?? 0) > 0)
                                     <span class="msgCount badge rounded-pill text-bg-danger">
-                                        {{ $conversation->unreadMessagesCount(auth()->user()->emp_id) }}
+                                        {{ $conversation->unreadMessagesCount(auth()->user()?->emp_id ?? 0) }}
                                     </span>
                                 @endif
+                            </span>
                         </button>
                     </div>
                 </div>

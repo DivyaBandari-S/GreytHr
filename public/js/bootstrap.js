@@ -47,4 +47,18 @@ window.Echo = new Echo({
     enabledTransports: ["ws", "wss"],
 });
 
+// window.Echo.channel(chat).listen('MessageSent', (event) => {
+//     console.log(event);
+// });
+
+// window.Echo.private(`chat.${receiverId}`)
+//     .listen('MessageSent', (event) => {
+//         console.log(event);
+//     });
+window.Echo.private('chat.XSS-0488') // Replace with actual emp_id
+    .listen('MessageSent', (event) => {
+        console.log('Event Received...................................................:', event);
+    });
+
+
 

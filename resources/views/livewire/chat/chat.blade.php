@@ -291,7 +291,7 @@
 
         Livewire.on('show-error', (event) => {
             toastr.error(event[0].message, {
-                positionClass: 'toast-center',  // This will center the toast
+                positionClass: 'toast-center', // This will center the toast
                 timeOut: 3000,
             }); // This will show the error toast
         });

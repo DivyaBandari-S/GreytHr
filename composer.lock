@@ -172,17 +172,17 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0-dev"
-                },
                 "laravel": {
-                    "providers": [
-                        "Barryvdh\\Snappy\\ServiceProvider"
-                    ],
                     "aliases": {
                         "PDF": "Barryvdh\\Snappy\\Facades\\SnappyPdf",
                         "SnappyImage": "Barryvdh\\Snappy\\Facades\\SnappyImage"
-                    }
+                    },
+                    "providers": [
+                        "Barryvdh\\Snappy\\ServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
                 }
             },
             "autoload": {
@@ -1173,16 +1173,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.384.0",
+            "version": "v0.385.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "fcb190bb02cea2c939e67867bf9122fd8d02c351"
+                "reference": "d6a89ec1883ecd1de145179d44cb274cf4927da9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/fcb190bb02cea2c939e67867bf9122fd8d02c351",
-                "reference": "fcb190bb02cea2c939e67867bf9122fd8d02c351",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/d6a89ec1883ecd1de145179d44cb274cf4927da9",
+                "reference": "d6a89ec1883ecd1de145179d44cb274cf4927da9",
                 "shasum": ""
             },
             "require": {
@@ -1211,31 +1211,32 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.384.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.385.0"
             },
-            "time": "2024-11-27T01:08:46+00:00"
+            "time": "2024-12-09T01:08:31+00:00"
         },
         {
             "name": "google/auth",
-            "version": "v1.44.0",
+            "version": "v1.45.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-auth-library-php.git",
-                "reference": "5670e56307d7a2eac931f677c0e59a4f8abb2e43"
+                "reference": "cfcb93162341ed5022fa976e621f0fa2b05ba6ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/5670e56307d7a2eac931f677c0e59a4f8abb2e43",
-                "reference": "5670e56307d7a2eac931f677c0e59a4f8abb2e43",
+                "url": "https://api.github.com/repos/googleapis/google-auth-library-php/zipball/cfcb93162341ed5022fa976e621f0fa2b05ba6ad",
+                "reference": "cfcb93162341ed5022fa976e621f0fa2b05ba6ad",
                 "shasum": ""
             },
             "require": {
                 "firebase/php-jwt": "^6.0",
                 "guzzlehttp/guzzle": "^7.4.5",
                 "guzzlehttp/psr7": "^2.4.5",
-                "php": "^8.1",
+                "php": "^8.0",
                 "psr/cache": "^2.0||^3.0",
-                "psr/http-message": "^1.1||^2.0"
+                "psr/http-message": "^1.1||^2.0",
+                "psr/log": "^3.0"
             },
             "require-dev": {
                 "guzzlehttp/promises": "^2.0",
@@ -1271,9 +1272,9 @@
             "support": {
                 "docs": "https://googleapis.github.io/google-auth-library-php/main/",
                 "issues": "https://github.com/googleapis/google-auth-library-php/issues",
-                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.44.0"
+                "source": "https://github.com/googleapis/google-auth-library-php/tree/v1.45.0"
             },
-            "time": "2024-12-04T15:34:58+00:00"
+            "time": "2024-12-11T02:10:48+00:00"
         },
         {
             "name": "graham-campbell/manager",
@@ -2429,16 +2430,16 @@
         },
         {
             "name": "laravel/reverb",
-            "version": "v1.4.3",
+            "version": "v1.4.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/reverb.git",
-                "reference": "3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe"
+                "reference": "22eab51c56c9a06e26a892b57e9b9d392e4e1da0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/reverb/zipball/3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe",
-                "reference": "3b00b9cc5c9c4075a3e48bb50ffcca7a91ed96fe",
+                "url": "https://api.github.com/repos/laravel/reverb/zipball/22eab51c56c9a06e26a892b57e9b9d392e4e1da0",
+                "reference": "22eab51c56c9a06e26a892b57e9b9d392e4e1da0",
                 "shasum": ""
             },
             "require": {
@@ -2505,9 +2506,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/reverb/issues",
-                "source": "https://github.com/laravel/reverb/tree/v1.4.3"
+                "source": "https://github.com/laravel/reverb/tree/v1.4.4"
             },
-            "time": "2024-10-31T17:06:44+00:00"
+            "time": "2024-12-06T18:56:46+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -2539,13 +2540,13 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                },
                 "laravel": {
                     "providers": [
                         "Laravel\\Sanctum\\SanctumServiceProvider"
                     ]
+                },
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
                 }
             },
             "autoload": {
@@ -2669,16 +2670,16 @@
             },
             "type": "library",
             "extra": {
-                "branch-alias": {
-                    "dev-master": "5.x-dev"
-                },
                 "laravel": {
-                    "providers": [
-                        "Laravel\\Socialite\\SocialiteServiceProvider"
-                    ],
                     "aliases": {
                         "Socialite": "Laravel\\Socialite\\Facades\\Socialite"
-                    }
+                    },
+                    "providers": [
+                        "Laravel\\Socialite\\SocialiteServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-master": "5.x-dev"
                 }
             },
             "autoload": {
@@ -2776,16 +2777,16 @@
         },
         {
             "name": "league/commonmark",
-            "version": "2.5.3",
+            "version": "2.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/commonmark.git",
-                "reference": "b650144166dfa7703e62a22e493b853b58d874b0"
+                "reference": "d150f911e0079e90ae3c106734c93137c184f932"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/b650144166dfa7703e62a22e493b853b58d874b0",
-                "reference": "b650144166dfa7703e62a22e493b853b58d874b0",
+                "url": "https://api.github.com/repos/thephpleague/commonmark/zipball/d150f911e0079e90ae3c106734c93137c184f932",
+                "reference": "d150f911e0079e90ae3c106734c93137c184f932",
                 "shasum": ""
             },
             "require": {
@@ -2810,8 +2811,9 @@
                 "phpstan/phpstan": "^1.8.2",
                 "phpunit/phpunit": "^9.5.21 || ^10.5.9 || ^11.0.0",
                 "scrutinizer/ocular": "^1.8.1",
-                "symfony/finder": "^5.3 | ^6.0 || ^7.0",
-                "symfony/yaml": "^2.3 | ^3.0 | ^4.0 | ^5.0 | ^6.0 || ^7.0",
+                "symfony/finder": "^5.3 | ^6.0 | ^7.0",
+                "symfony/process": "^5.4 | ^6.0 | ^7.0",
+                "symfony/yaml": "^2.3 | ^3.0 | ^4.0 | ^5.0 | ^6.0 | ^7.0",
                 "unleashedtech/php-coding-standard": "^3.1.1",
                 "vimeo/psalm": "^4.24.0 || ^5.0.0"
             },
@@ -2821,7 +2823,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.6-dev"
+                    "dev-main": "2.7-dev"
                 }
             },
             "autoload": {
@@ -2878,7 +2880,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-16T11:46:16+00:00"
+            "time": "2024-12-07T15:34:16+00:00"
         },
         {
             "name": "league/config",
@@ -3152,16 +3154,16 @@
         },
         {
             "name": "league/oauth1-client",
-            "version": "v1.10.1",
+            "version": "v1.11.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/oauth1-client.git",
-                "reference": "d6365b901b5c287dd41f143033315e2f777e1167"
+                "reference": "f9c94b088837eb1aae1ad7c4f23eb65cc6993055"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/d6365b901b5c287dd41f143033315e2f777e1167",
-                "reference": "d6365b901b5c287dd41f143033315e2f777e1167",
+                "url": "https://api.github.com/repos/thephpleague/oauth1-client/zipball/f9c94b088837eb1aae1ad7c4f23eb65cc6993055",
+                "reference": "f9c94b088837eb1aae1ad7c4f23eb65cc6993055",
                 "shasum": ""
             },
             "require": {
@@ -3222,22 +3224,22 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/oauth1-client/issues",
-                "source": "https://github.com/thephpleague/oauth1-client/tree/v1.10.1"
+                "source": "https://github.com/thephpleague/oauth1-client/tree/v1.11.0"
             },
-            "time": "2022-04-15T14:02:14+00:00"
+            "time": "2024-12-10T19:59:05+00:00"
         },
         {
             "name": "livewire/livewire",
-            "version": "v3.5.16",
+            "version": "v3.5.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/livewire/livewire.git",
-                "reference": "0b842088d716cadaf9d94fc4f096bc688db29d65"
+                "reference": "7bbf80d93db9b866776bf957ca6229364bca8d87"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/livewire/livewire/zipball/0b842088d716cadaf9d94fc4f096bc688db29d65",
-                "reference": "0b842088d716cadaf9d94fc4f096bc688db29d65",
+                "url": "https://api.github.com/repos/livewire/livewire/zipball/7bbf80d93db9b866776bf957ca6229364bca8d87",
+                "reference": "7bbf80d93db9b866776bf957ca6229364bca8d87",
                 "shasum": ""
             },
             "require": {
@@ -3292,7 +3294,7 @@
             "description": "A front-end framework for Laravel.",
             "support": {
                 "issues": "https://github.com/livewire/livewire/issues",
-                "source": "https://github.com/livewire/livewire/tree/v3.5.16"
+                "source": "https://github.com/livewire/livewire/tree/v3.5.17"
             },
             "funding": [
                 {
@@ -3300,7 +3302,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-12-02T15:57:58+00:00"
+            "time": "2024-12-06T13:41:21+00:00"
         },
         {
             "name": "maatwebsite/excel",
@@ -4177,16 +4179,16 @@
         },
         {
             "name": "openspout/openspout",
-            "version": "v4.28.0",
+            "version": "v4.28.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/openspout/openspout.git",
-                "reference": "3e9ef74f13ba5e887e4afc7a4e0110e63559e902"
+                "reference": "d6dd654b5db502f28c5773edfa785b516745a142"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/openspout/openspout/zipball/3e9ef74f13ba5e887e4afc7a4e0110e63559e902",
-                "reference": "3e9ef74f13ba5e887e4afc7a4e0110e63559e902",
+                "url": "https://api.github.com/repos/openspout/openspout/zipball/d6dd654b5db502f28c5773edfa785b516745a142",
+                "reference": "d6dd654b5db502f28c5773edfa785b516745a142",
                 "shasum": ""
             },
             "require": {
@@ -4254,7 +4256,7 @@
             ],
             "support": {
                 "issues": "https://github.com/openspout/openspout/issues",
-                "source": "https://github.com/openspout/openspout/tree/v4.28.0"
+                "source": "https://github.com/openspout/openspout/tree/v4.28.2"
             },
             "funding": [
                 {
@@ -4266,7 +4268,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-29T09:45:53+00:00"
+            "time": "2024-12-06T06:17:37+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
@@ -5009,16 +5011,16 @@
         },
         {
             "name": "phpoffice/phpspreadsheet",
-            "version": "2.3.3",
+            "version": "2.3.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPOffice/PhpSpreadsheet.git",
-                "reference": "91a4b42e41976a0b2f839720c3e20a12a84f6852"
+                "reference": "01c4122a12327378ab5d97a56a4cbab07e7fa70b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/91a4b42e41976a0b2f839720c3e20a12a84f6852",
-                "reference": "91a4b42e41976a0b2f839720c3e20a12a84f6852",
+                "url": "https://api.github.com/repos/PHPOffice/PhpSpreadsheet/zipball/01c4122a12327378ab5d97a56a4cbab07e7fa70b",
+                "reference": "01c4122a12327378ab5d97a56a4cbab07e7fa70b",
                 "shasum": ""
             },
             "require": {
@@ -5107,9 +5109,9 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPOffice/PhpSpreadsheet/issues",
-                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.3"
+                "source": "https://github.com/PHPOffice/PhpSpreadsheet/tree/2.3.4"
             },
-            "time": "2024-11-22T06:11:37+00:00"
+            "time": "2024-12-08T15:43:45+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -5840,16 +5842,16 @@
         },
         {
             "name": "psy/psysh",
-            "version": "v0.12.5",
+            "version": "v0.12.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bobthecow/psysh.git",
-                "reference": "36a03ff27986682c22985e56aabaf840dd173cb5"
+                "reference": "d73fa3c74918ef4522bb8a3bf9cab39161c4b57c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/36a03ff27986682c22985e56aabaf840dd173cb5",
-                "reference": "36a03ff27986682c22985e56aabaf840dd173cb5",
+                "url": "https://api.github.com/repos/bobthecow/psysh/zipball/d73fa3c74918ef4522bb8a3bf9cab39161c4b57c",
+                "reference": "d73fa3c74918ef4522bb8a3bf9cab39161c4b57c",
                 "shasum": ""
             },
             "require": {
@@ -5913,9 +5915,9 @@
             ],
             "support": {
                 "issues": "https://github.com/bobthecow/psysh/issues",
-                "source": "https://github.com/bobthecow/psysh/tree/v0.12.5"
+                "source": "https://github.com/bobthecow/psysh/tree/v0.12.7"
             },
-            "time": "2024-11-29T06:14:30+00:00"
+            "time": "2024-12-10T01:58:33+00:00"
         },
         {
             "name": "pusher/pusher-php-server",
@@ -7819,8 +7821,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -7895,8 +7897,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -7974,8 +7976,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -8056,8 +8058,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -8140,8 +8142,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -8214,8 +8216,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -8294,8 +8296,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -8376,8 +8378,8 @@
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "autoload": {
@@ -11620,16 +11622,16 @@
         },
         {
             "name": "spatie/error-solutions",
-            "version": "1.1.1",
+            "version": "1.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/error-solutions.git",
-                "reference": "ae7393122eda72eed7cc4f176d1e96ea444f2d67"
+                "reference": "d239a65235a1eb128dfa0a4e4c4ef032ea11b541"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/ae7393122eda72eed7cc4f176d1e96ea444f2d67",
-                "reference": "ae7393122eda72eed7cc4f176d1e96ea444f2d67",
+                "url": "https://api.github.com/repos/spatie/error-solutions/zipball/d239a65235a1eb128dfa0a4e4c4ef032ea11b541",
+                "reference": "d239a65235a1eb128dfa0a4e4c4ef032ea11b541",
                 "shasum": ""
             },
             "require": {
@@ -11682,7 +11684,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/error-solutions/issues",
-                "source": "https://github.com/spatie/error-solutions/tree/1.1.1"
+                "source": "https://github.com/spatie/error-solutions/tree/1.1.2"
             },
             "funding": [
                 {
@@ -11690,7 +11692,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-25T11:06:04+00:00"
+            "time": "2024-12-11T09:51:56+00:00"
         },
         {
             "name": "spatie/flare-client-php",

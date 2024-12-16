@@ -206,7 +206,7 @@
 
                             <!-- Display mobile number if it is not null -->
                             @if ($loginEmpManagerDetails->emergency_contact)
-                            <span class="managerOtherDetails" title="Mobile: {{ $loginEmpManagerDetails->emergency_contact }}">Mobile : {{ $loginEmpManagerDetails->emergency_contact }}</span>
+                            <span class="managerOtherDetails" >Mobile : {{ $loginEmpManagerDetails->emergency_contact }}</span>
                             @endif
 
                         </div>

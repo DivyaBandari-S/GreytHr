@@ -312,7 +312,7 @@
 
                             @else
                             <div class="mb-0 normalTextValue">
-                                No found
+                                No results found
                             </div>
                             @endif
                         </div>
