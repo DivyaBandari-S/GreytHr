@@ -278,14 +278,16 @@
         </tr>
     </thead>
     <tbody>
-        @if ($searchData && $searchData->whereIn('status_code', [8,10])->isEmpty())
+
+
+    @if ($searchData && $searchData->whereIn('status_code', [8, 10])->isEmpty())
         <tr>
             <td colspan="8" style="text-align: center; border: none;">
                 <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
             </td>
         </tr>
         @else
-        @foreach ($searchData->whereIn('status_code', [8,10])->sortByDesc('created_at') as $index => $record)
+        @foreach ($searchData->whereIn('status_code', [8, 10])->sortByDesc('created_at') as $index => $record)
         <tr class="helpdesk-main" style="background-color: white; border-bottom: none;">
             <td class="helpdesk-request">
                 {{ ucfirst(strtolower($record->emp->first_name)) }} {{ ucfirst(strtolower($record->emp->last_name)) }} <br>
@@ -406,11 +408,11 @@
                 {{ $record->priority ?? '-' }}
             </td>
             <td class="helpdesk-request">
-    @if ($record->status_code == 10)
-        <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
-    @elseif ($record->status_code == 8)
-        <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
-    @else
+            @if ($record->status_code == 10)
+                    <span style="color: green;">{{ $record->status->status_name ?? '-' }}</span>
+                @elseif ($record->status_code == 8)
+                    <span style="color: orange;">{{ $record->status->status_name ?? '-' }}</span>
+                @else
         {{$record->status->status_name->status_name ?? '-' }}
     @endif
 </td>
