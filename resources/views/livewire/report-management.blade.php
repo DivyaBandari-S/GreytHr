@@ -1,6 +1,6 @@
 <div class="row p-0 m-0 mt-3 p-2 position-relative">
     <div class="position-absolute" wire:loading
-    wire:target="downloadLeaveAvailedReportInExcel,close,resetFields,downloadNegativeLeaveBalanceReport,dayWiseLeaveTransactionReport">
+    wire:target="downloadLeaveAvailedReportInExcel,close,resetFields,downloadNegativeLeaveBalanceReport,dayWiseLeaveTransactionReport,downloadLeaveTransactionReport,leaveBalanceAsOnADayReport">
     <div class="loader-overlay">
         <div class="loader">
             <div></div>
@@ -385,14 +385,12 @@
                             <select id="transactionType" 
                                 wire:change="updateTransactionType($event.target.value)"
                                 wire:model.lazy="transactionType" class="form-select placeholder-small">
-                                {{-- <option value="all">All </option>
-                                <option value="approved">Availed</option> --}}
-                                <option value="all">All</option>
-                                <option value="availed">Availed</option> <!-- Availed maps to '2' in DB -->
-                                <option value="rejected">Rejected</option> <!-- Rejected maps to '3' in DB -->
-                                <option value="withdrawn">Withdrawn</option> <!-- Withdrawn maps to '4' in DB -->
-                                <option value="Granted">Granted</option> <!-- Rejected maps to '3' in DB -->
-                                <option value="is_lapsed">Lapsed</option>
+                                <option value="all">All Transactions</option>
+                                        <option value="granted">Granted</option>
+                                        <option value="availed">Availed</option>
+                                        <option value="lapsed">Lapsed</option>
+                                        <option value="withdrawn">Withdrawn</option>
+                                        <option value="rejected">Rejected</option>
                               
 
                                 <!-- Add other leave types as needed -->
@@ -593,9 +591,11 @@
                             <select id="transactionType" wire:model="transactionType"
                                 class="form-select placeholder-small">
                                 <option value="all">All</option>
+                                <option value="granted">Granted</option>
                                 <option value="availed">Availed</option>
                                 <option value="withdrawn">Withdrawn</option>
                                 <option value="rejected">Rejected</option>
+                                <option value="lapsed">Lapsed</option>
 
                                 <!-- Add other leave types as needed -->
                             </select>

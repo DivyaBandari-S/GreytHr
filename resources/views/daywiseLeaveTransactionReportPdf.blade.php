@@ -176,59 +176,117 @@
             </tr>
         </thead>
         <tbody>
-            @if($leaveTransactions->isEmpty())
-            <tr>
-                <td  class="leavesdate" colspan="11" style="text-align: center;  font-weight:600;   font-size:15px ;">No data found</td>
-            </tr>
-            @else
-            @foreach($leaveTransactions as $onedaytransaction)
-            <tr >
-                <td  class="leavesdate" colspan='11'> {{ $onedaytransaction['date'] }}</td>
-             </tr>
 
-            @foreach ($onedaytransaction['details'] as $transaction)
-            <tr>
-                <td>{{ $loop->index + 1 }}</td>
-                <td>{{ $transaction['emp_id' ]}}</td>
-                <td>{{ucwords(strtolower($transaction['first_name']))}} {{ucwords(strtolower($transaction['last_name']))}} </td>
-                <td>{{ $employeeDetails->emp_id}}</td>
-                <td>{{ ucwords(strtolower($employeeDetails->first_name))}} {{ ucwords(strtolower($employeeDetails->last_name))}}</td>
-                <td>{{ $transaction['leave_type']}}</td>
-                <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}</td>
-                {{-- <td>{{ ucwords(strtolower($transaction['leave_status'])) }}</td> --}}
-                <td>
-                    @php
-                        $leaveStatus = $transaction['leave_status'];
-                        switch ($leaveStatus) {
-                            case 2:
-                                $status = 'Availed';
-                                break;
-                            case 3:
-                                $status = 'Rejected';
-                                break;
-                            case 4:
-                                $status = 'Withdrawn';
-                                break;
-                            case 'Granted':
-                                $status = 'Granted';
-                                break;
-                            case 'Lapsed':
-                                $status = 'Lapsed';
-                                break;
-                            default:
-                                $status = 'Unknown Status';
-                        }
-                    @endphp
-                    {{ ucwords(strtolower($status)) }}
-                </td>
-                
-                <td>{{ $transaction['leave_days'] }}</td>
-                <td>{{ ucwords(strtolower($transaction['reason'])) }}</td>
-            </tr>
-            @endforeach
-            @endforeach
+            {{-- Check if leaveTransactions is empty --}}
+            @if ($leaveTransactions->isEmpty())
+                <tr>
+                    <td class="leavesdate" colspan="12" style="text-align: center; font-weight:600; font-size:15px ;">
+                        No data found
+                    </td>
+                </tr>
+            @else
+           
+                @php $siNo = 1; 
+               
+                 @endphp
+               
+                {{-- Loop through each leave transaction --}}
+                @foreach ($leaveTransactions as $leaveTransaction)
+               
+                    @if (!isset($leaveTransaction['date']) || empty($leaveTransaction['date']))
+
+                        {{-- Loop through each leave details if it's not a granted leave --}}
+                        @foreach ($leaveTransaction['leave_details'] as $transactions)
+                        
+                            {{-- Loop through each transaction and check for 'Granted' status --}}
+                            @foreach ($transactions as $transaction)
+                                {{-- Process only Granted leave transactions --}}
+                                <tr>
+                                    <td>{{ $siNo++ }}</td>
+                                    <td>{{ $leaveTransaction['emp_id'] }}</td>
+                                    <td>{{ ucwords(strtolower($leaveTransaction['first_name'])) }}
+                                        {{ ucwords(strtolower($leaveTransaction['last_name'])) }}</td>
+                                    <td>{{ $employeeDetails->emp_id }}</td>
+                                    <td>{{ ucwords(strtolower($employeeDetails->first_name)) }}
+                                        {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
+                                    <td>{{ $transaction['leave_name'] }}</td> {{-- Leave Type --}}
+                                    <td>{{ \Carbon\Carbon::parse($transaction['from_date'])->format('d M Y H:i') }}
+                                    </td>
+                                    <td>{{ \Carbon\Carbon::parse($transaction['to_date'])->format('d M Y H:i') }}</td>
+                                    <td>{{ $transaction['status'] }}</td>
+                                    {{-- <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}
+                                    </td> --}}
+                                    
+                                    <td>{{ $transaction['grant_days'] }}</td> {{-- Grant Days --}}
+                                    <td> @if ($transactionType == 'lapsed')
+                                        Year End Processing
+                                    @elseif ($transactionType == 'granted')
+                                        Annual Grant for the year
+                                    @else
+                                        {{ $transaction['status'] }}
+                                    @endif</td> {{-- Static reason for granted leaves --}}
+                                </tr>
+                            @endforeach
+                        @endforeach
+                    @else
+                        {{-- Process other (non-Granted) transactions --}}
+                      
+
+                        @foreach ($leaveTransaction['leave_details'] as $transaction)
+         
+                            {{-- Loop through the leave details --}}
+                            <tr>
+                                <td>{{ $siNo++ }}</td>
+
+                                {{-- Access emp_id, first_name, last_name from the first transaction in leave_details --}}
+                                <td>{{ $transaction['emp_id'] ?? 'No Emp ID' }}</td> {{-- If emp_id doesn't exist, show 'No Emp ID' --}}
+                                <td>
+                                    {{ ucwords(strtolower($transaction['first_name'] ?? 'No First Name')) }}
+                                    {{ ucwords(strtolower($transaction['last_name'] ?? 'No Last Name')) }}
+                                </td> {{-- Full Name --}}
+
+                                {{-- You can also display the employee's own details --}}
+                                <td>{{ $employeeDetails->emp_id }}</td>
+                                <td>{{ ucwords(strtolower($employeeDetails->first_name)) }}
+                                    {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
+
+                                <td>{{ $transaction['leave_type'] }}</td> {{-- Leave Type --}}
+                                <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y H:i') }}
+                                </td>
+                                <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y H:i') }}
+                                </td>
+
+                                {{-- Status: Adjust this based on your logic (approved, rejected, etc.) --}}
+                                <td>
+                                    @if ($transaction['leave_status'] == 2)
+                                        Approved
+                                    @elseif ($transaction['leave_status'] == 3)
+                                        Rejected
+                                    @elseif ($transaction['leave_status'] == 4)
+                                        Withdrawn
+                                    @else
+                                        {{($transaction['leave_status'])}}
+                                    @endif
+                                </td>
+
+                                {{-- <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}</td> --}}
+                               
+                                <td>{{ $transaction['leave_days'] }}</td> {{-- Leave Days --}}
+
+                                {{-- If the leave is granted, show a static reason or dynamic reason --}}
+                                <td>
+                                    @if ($transaction['leave_status'] == 1)
+                                        Annual Grant for the year
+                                    @else
+                                        {{ ucwords(strtolower($transaction['reason'] ?? 'No reason provided')) }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endif
+                @endforeach
             @endif
+
         </tbody>
     </table>
 </body>
