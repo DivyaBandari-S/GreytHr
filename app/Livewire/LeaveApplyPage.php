@@ -687,30 +687,43 @@ class LeaveApplyPage extends Component
             // Parse and format the entered dates
             $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date)->toDateString(); // 'Y-m-d'
             $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date)->toDateString();     // 'Y-m-d'
+            $fromSession = $this->from_session;  // Get the from_session value
+            $toSession = $this->to_session;      // Get the to_session value
+
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('category_type', 'Leave')
-                ->whereIn('leave_status', [2, 5])
+                ->whereIn('leave_status', [2, 5]) // Only active/approved leave requests
                 ->get();
 
             // Iterate over each leave request to format the dates and check for overlaps
             foreach ($leaveRequests as $leaveRequest) {
+                // Parse existing leave request's dates
                 $existingFromDate = Carbon::parse($leaveRequest->from_date)->toDateString();
                 $existingToDate = Carbon::parse($leaveRequest->to_date)->toDateString();
-                // Check for overlaps
-                if (
-                    ($fromDate <= $existingToDate && $toDate >= $existingFromDate)
-                ) {
+                $existingFromSession = $leaveRequest->from_session; // Existing from session
+                $existingToSession = $leaveRequest->to_session;     // Existing to session
+
+                // Check for date overlap
+                $dateOverlap = ($fromDate <= $existingToDate && $toDate >= $existingFromDate);
+
+                // Check for session overlap
+                $sessionOverlap = ($fromSession <= $existingToSession && $toSession >= $existingFromSession);
+
+                // If both date and session overlap, return true (overlap found)
+                if ($dateOverlap && $sessionOverlap) {
                     return true; // Overlap found
                 }
             }
 
-            return false; // No overlaps found
+            // No overlaps found
+            return false;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError("Failed to check leave request.");
-            return 0;
+            return false; // Return false on failure
         }
     }
+
     //calculate number of days for a leave request
     protected function getTotalLeaveDays($employeeId)
     {
