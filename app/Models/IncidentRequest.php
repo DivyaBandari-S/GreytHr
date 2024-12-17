@@ -60,15 +60,16 @@ class IncidentRequest extends Model
             $title = '';
             $message = '';
             $redirect_url = '';
-        
+
             if ($incidentRequest->category == 'Incident Request') {
-                $title = 'Incident Request Created';
-                $message = "An Incident Request has been created with ID: {$incidentRequest->snow_id}";
-                $redirect_url = route('it.incidentRequest.show', ['currentRequestId' => $incidentRequest->id]);
+                $title = ' Incident Request ';
+                $message = "Subject : {$incidentRequest->short_description}";
+                $redirect_url = 'incidentRequests?currentRequestId=' . $incidentRequest->id;
             } elseif ($incidentRequest->category == 'Service Request') {
-                $title = 'Service Request Created';
-                $message = "A Service Request has been created with ID: {$incidentRequest->snow_id}";
-                $redirect_url = route('it.serviceRequest.show', ['currentRequestId' => $incidentRequest->id]);
+                $title = ' Service Request ';
+                $message = "Subject : {$incidentRequest->short_description}";
+                $redirect_url = 'serviceRequests?currentRequestId=' . $incidentRequest->id;
+ 
             }
      
             // Check if any value is missing, if so, log it
