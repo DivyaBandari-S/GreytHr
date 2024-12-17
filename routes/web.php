@@ -296,7 +296,10 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     Route::get('/catalog', Catalog::class)->name('catalog');
     Route::get('/incident', IncidentRequests::class)->name('incident');
-
+    Route::get('/it/incidentRequests', [IncidentRequests::class, 'show'])->name('it.incidentRequest.show');
+    Route::get('/it/serviceRequests', [IncidentRequests::class, 'show'])->name('it.serviceRequest.show');
+    Route::get('/it/itrequest', [HelpDesk::class, 'show'])->name('it.itrequest.show');
+    Route::get('/serviceRequests', IncidentRequests::class)->name('serviceRequests');
     // Related salary module and ITdeclaration Document center
     Route::get('/payslip', Payroll::class);
     Route::get('/slip', SalarySlips::class)->name('payslips');
