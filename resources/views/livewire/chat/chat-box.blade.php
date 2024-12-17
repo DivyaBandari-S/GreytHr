@@ -89,19 +89,12 @@
                             @endforeach
 
                             <div class="message-actions">
-                                {{-- <!-- Emoji Reaction -->
-                                <span wire:click="addEmojiReaction({{ $message->id }}, '😊')" class="emoji-reaction"><i
-                                        class="fa-regular fa-smile"></i></span>
-                                <!-- Edit Message -->
-                                <span wire:click="editMessage({{ $message->id }})" class="edit-message"><i
-                                        class="fa-solid fa-pen"></i></span>
-                                <!-- Delete Message --> --}}
                                 <span wire:click="deleteMessage({{ $message->id }})" class="delete-message"><i
                                         class="fa-solid fa-trash"></i></span>
                             </div>
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
 
-                            <!-- Message read status -->
+                            <!-- Message read status (show only for sent messages) -->
                             <span class="message-status">
                                 @if ($message->read == 0)
                                     <i class="fa-solid fa-check"></i> <!-- Single tick -->
@@ -114,13 +107,14 @@
                 @else
                     <!-- Received message -->
                     <div class="message received">
-                        <div class="avatar-chart"> <img
-                                src="{{ $receiverInstance->image
-                                    ? 'data:image/jpeg;base64,' . $receiverInstance->image
-                                    : ($receiverInstance->gender === 'MALE'
-                                        ? asset('images/male-default.png')
-                                        : asset('images/female-default.jpg')) }}"
-                                alt="Avatar"></i></div>
+                        <div class="avatar-chart">
+                            <img src="{{ $receiverInstance->image
+                                ? 'data:image/jpeg;base64,' . $receiverInstance->image
+                                : ($receiverInstance->gender === 'MALE'
+                                    ? asset('images/male-default.png')
+                                    : asset('images/female-default.jpg')) }}"
+                                alt="Avatar">
+                        </div>
                         <div class="message-content">
                             <p>{{ $message->body }}</p>
                             @foreach ($message->media_path ? json_decode($message->media_path) : [] as $path)
@@ -160,26 +154,10 @@
                             @endforeach
 
                             <div class="message-actions">
-                                {{-- <!-- Emoji Reaction -->
-                                <span wire:click="addEmojiReaction({{ $message->id }}, '😊')" class="emoji-reaction"><i
-                                        class="fa-regular fa-smile"></i></span>
-                                <!-- Edit Message -->
-                                <span wire:click="editMessage({{ $message->id }})" class="edit-message"><i
-                                        class="fa-solid fa-pen"></i></span>
-                                <!-- Delete Message --> --}}
                                 <span wire:click="deleteMessage({{ $message->id }})" class="delete-message"><i
                                         class="fa-solid fa-trash"></i></span>
                             </div>
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
-
-                            <!-- Message read status -->
-                            <span class="message-status">
-                                @if ($message->read == 0)
-                                    <i class="fa-solid fa-check"></i> <!-- Single tick -->
-                                @else
-                                    <i class="fa-solid fa-check-double"></i> <!-- Double blue tick -->
-                                @endif
-                            </span>
                         </div>
                     </div>
                 @endif

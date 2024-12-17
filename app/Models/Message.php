@@ -29,13 +29,4 @@ class Message extends Model
         return $this->belongsTo(Conversation::class, 'conversation_id');
     }
 
-    public function isMedia()
-    {
-        return in_array($this->type, ['image', 'video']);
-    }
-
-    public function getMediaUrlAttribute()
-    {
-        return $this->media_path ? asset('storage/' . $this->media_path) : null;
-    }
 }
