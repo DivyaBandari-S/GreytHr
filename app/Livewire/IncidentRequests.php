@@ -93,7 +93,6 @@ class IncidentRequests extends Component
 
         'short_description' => 'required|string|max:255',
 
-        'description' => 'required|string',
 
         'priority' => 'required|in:High,Medium,Low',
 

@@ -59,14 +59,16 @@ class IncidentRequest extends Model
         static::created(function ($incidentRequest) {
             $title = '';
             $message = '';
-            $redirect_url = route('incidentRequest.show', ['id' => $incidentRequest->id]);
-     
+            $redirect_url = '';
+        
             if ($incidentRequest->category == 'Incident Request') {
-                $title = 'New Incident Request Created';
+                $title = 'Incident Request Created';
                 $message = "An Incident Request has been created with ID: {$incidentRequest->snow_id}";
+                $redirect_url = route('it.incidentRequest.show', ['currentRequestId' => $incidentRequest->id]);
             } elseif ($incidentRequest->category == 'Service Request') {
-                $title = 'New Service Request Created';
+                $title = 'Service Request Created';
                 $message = "A Service Request has been created with ID: {$incidentRequest->snow_id}";
+                $redirect_url = route('it.serviceRequest.show', ['currentRequestId' => $incidentRequest->id]);
             }
      
             // Check if any value is missing, if so, log it

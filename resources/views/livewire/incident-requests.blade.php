@@ -340,6 +340,9 @@
     @endif
 
     {{-- Modal to display the images --}}
+
+
+    {{-- Modal to display the images --}}
     @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
         <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
             <div class="modal-dialog custom-modal-dialog custom-modal-dialog-centered custom-modal-lg" role="document">
@@ -355,28 +358,30 @@
                                     <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
                                         <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
                                             alt="{{ $image['original_name'] }}" 
-                                            style="width:100%; height:auto;" />
+                                            style="width:80%; height:auto;" />
                                     </div>
                                 @endforeach
                             </div>
 
                             {{-- Carousel Controls --}}
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
-                                    class="carousel-control-prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    class="carousel-control-prev" style="color:black">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
-                                    class="carousel-control-next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    class="carousel-control-next" style="color:black">
+                                <span class="carousel-control-next-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
 
                     <div class="modal-footer custom-modal-footer">
+                    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
                         <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
-                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        @endif
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Current Image</button>
                         <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
                     </div>
                 </div>
@@ -540,6 +545,11 @@
     @elseif ($fileDataArray !== '-' && !empty($images) && count($images) == 1)
         <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
     @endif
+    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Images</a>
+    @elseif ($fileDataArray !== '-' && !empty($images) && count($images) == 1)
+        <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
+    @endif
 
     {{-- Modal to display the images --}}
     @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
@@ -557,28 +567,30 @@
                                     <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
                                         <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
                                             alt="{{ $image['original_name'] }}" 
-                                            style="width:100%; height:auto;" />
+                                            style="width:80%; height:auto;" />
                                     </div>
                                 @endforeach
                             </div>
 
                             {{-- Carousel Controls --}}
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
-                                    class="carousel-control-prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    class="carousel-control-prev" style="color:black">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
-                                    class="carousel-control-next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    class="carousel-control-next" style="color:black">
+                                <span class="carousel-control-next-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
 
                     <div class="modal-footer custom-modal-footer">
+                    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
                         <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
-                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        @endif
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Current Image</button>
                         <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
                     </div>
                 </div>
@@ -762,6 +774,7 @@
         <a href="#" wire:click.prevent="showViewImage({{ $record->id }})" class="anchorTagDetails">View Image</a>
     @endif
 
+
     {{-- Modal to display the images --}}
     @if ($showViewImageDialog && $recordId == $record->id && $fileDataArray !== '-' && !empty($images))
         <div class="modal custom-modal d-block" tabindex="-1" role="dialog">
@@ -778,28 +791,30 @@
                                     <div class="carousel-item {{ $currentImageIndex == $index ? 'active' : '' }}">
                                         <img src="data:{{ $image['mime_type'] }};base64,{{ $image['data'] }}" 
                                             alt="{{ $image['original_name'] }}" 
-                                            style="width:100%; height:auto;" />
+                                            style="width:80%; height:auto;" />
                                     </div>
                                 @endforeach
                             </div>
 
                             {{-- Carousel Controls --}}
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex - 1 + count($images)) % count($images) }})" 
-                                    class="carousel-control-prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    class="carousel-control-prev" style="color:black">
+                                <span class="carousel-control-prev-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Previous</span>
                             </button>
                             <button wire:click="setActiveImageIndex({{ ($currentImageIndex + 1) % count($images) }})" 
-                                    class="carousel-control-next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    class="carousel-control-next" style="color:black">
+                                <span class="carousel-control-next-icon" aria-hidden="true" ></span>
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>
                     </div>
 
                     <div class="modal-footer custom-modal-footer">
+                    @if ($fileDataArray !== '-' && !empty($images) && count($images) > 1)
                         <button wire:click="downloadAllImages" type="button" class="submit-btn">Download All Images</button>
-                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Active Image</button>
+                        @endif
+                        <button wire:click="downloadActiveImage" type="button" class="submit-btn">Download Current Image</button>
                         <button type="button" class="cancel-btn1" wire:click="closeViewImage">Close</button>
                     </div>
                 </div>
