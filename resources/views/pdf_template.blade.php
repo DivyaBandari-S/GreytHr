@@ -115,53 +115,84 @@
     </style>
     <div class="leave-transctions">
         <div class="pdf-heading">
-            @if($employeeDetails->company_id === 'XSS-12345')
-            <img src="https://media.licdn.com/dms/image/C4D0BAQHZsEJO8wdHKg/company-logo_200_200/0/1677514035093/xsilica_software_solutions_logo?e=2147483647&v=beta&t=rFgO4i60YIbR5hKJQUL87_VV9lk3hLqilBebF2_JqJg" alt="" style="width:200px;height:125px;">
-            <div>
-                <h2>XSILICA SOFTWARE SOLUTIONS P LTD <br>
-                    <span>
-                        <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road, Hyderabad, Rangareddy, <br> Telangana, 500032</p>
-                    </span>
-                </h2>
-                <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
-            </div>
-            <!-- payglogo -->
-            @elseif($employeeDetails->company_id === 'PAYG-12345')
-            <img src="https://play-lh.googleusercontent.com/qUGkF93p010_IHxbn8FbnFWZfqb2lk_z07i6JkpOhC9zf8hLzxTdRGv2oPpNOOGVaA=w600-h300-pc0xffffff-pd" style="width:200px;height:125px;">
-            <div>
-                <h2> PayG <br>
-                    <span>
-                        <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road, Hyderabad, Rangareddy, <br> Telangana, 500032</p>
-                    </span>
-                </h2>
-                <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
-            </div>
-            <!-- attune golabal logo -->
-            @elseif($employeeDetails->company_id === 'AGS-12345')
-            <img src="https://images.crunchbase.com/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco,dpr_1/rxyycak6d2ydcybdbb3e" alt="" style="width:200px;height:125px;">
-            <div>
-                <h2>Attune Global Solutions<br>
-                    <span>
-                        <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road, Hyderabad, Rangareddy, <br> Telangana, 500032</p>
-                    </span>
-                </h2>
-                <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
-            </div>
-            @endif
+            @php
+                use App\Models\EmployeeDetails;
+                use App\Models\Company;
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+
+                // Fetch the company_ids for the logged-in employee
+                $companyIds = EmployeeDetails::where('emp_id', $employeeId)->value('company_id');
+
+                // Check if companyIds is an array; decode if it's a JSON string
+                $companyIdsArray = is_array($companyIds) ? $companyIds : json_decode($companyIds, true);
+            @endphp
+            @foreach ($companyIdsArray as $companyId)
+                @php
+                    // Fetch the company by company_id
+                    $company = Company::where('company_id', $companyId)->where('is_parent', 'yes')->first();
+                @endphp
+
+                @if ($company)
+                    <!-- Display company details if a matching company is found -->
+                    @if ($company->company_id === 'XSS-12345')
+                        <img src="data:image/jpeg;base64,{{ $company->company_logo }}">
+                        <div>
+                            <h2>XSILICA SOFTWARE SOLUTIONS P LTD <br>
+                                <span>
+                                    <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road,
+                                        Hyderabad, Rangareddy, <br> Telangana, 500032</p>
+                                </span>
+                            </h2>
+                            <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                                {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                        </div>
+                    @elseif($company->company_id === 'PAYG-12345')
+                        <img src="data:image/jpeg;base64,{{ $company->company_logo }}" style="width:200px;height:125px;">
+                        <div>
+                            <h2> PayG <br>
+                                <span>
+                                    <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road,
+                                        Hyderabad, Rangareddy, <br> Telangana, 500032</p>
+                                </span>
+                            </h2>
+                            <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                                {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                        </div>
+                    @elseif($company->company_id === 'AGS-12345')
+                        <img src="data:image/jpeg;base64,{{ $company->company_logo }}" alt=""
+                            style="width:200px;height:125px;">
+                        <div>
+                            <h2>Attune Global Solutions<br>
+                                <span>
+                                    <p>3rd Floor, Unit No.4, Kapil Kavuri Hub IT Block, Nanakramguda Main Road,
+                                        Hyderabad, Rangareddy, <br> Telangana, 500032</p>
+                                </span>
+                            </h2>
+                            <h3>Leave Transactions From {{ \Carbon\Carbon::parse($fromDate)->format('d M Y') }} to
+                                {{ \Carbon\Carbon::parse($toDate)->format('d M Y') }}</h3>
+                        </div>
+                    @endif
+                @endif
+            @endforeach
         </div>
     </div>
 
 
     <div class="emp-info">
         <div class="emp-details">
-            <p> Name <span style="padding-left: 180px;">: {{ ucwords(strtolower($employeeDetails->first_name))}} {{ ucwords(strtolower($employeeDetails->last_name))}}</span></p>
-            <p>Date of Join <span style="padding-left: 142px;">: {{ optional(\Carbon\Carbon::parse($employeeDetails->hire_date))->format('d M, Y') }}
+            <p> Name <span style="padding-left: 180px;">: {{ ucwords(strtolower($employeeDetails->first_name)) }}
+                    {{ ucwords(strtolower($employeeDetails->last_name)) }}</span></p>
+            <p>Date of Join <span style="padding-left: 142px;">:
+                    {{ optional(\Carbon\Carbon::parse($employeeDetails->hire_date))->format('d M, Y') }}
                 </span></p>
-            <p>Reporting Manager <span style=" padding-left: 94px;">: {{ ucwords($employeeDetails->report_to) }} ({{ $employeeDetails->manager_id}}) </span></p>
-            <p>Employee No <span style="padding-left: 134px;">: {{ $employeeDetails->emp_id}}</span></p>
-            <p>Date of Birth <span style="padding-left: 133px;">: {{ optional(\Carbon\Carbon::parse($employeeDetails->date_of_birth))->format('d M, Y') }}
+            <p>Reporting Manager <span style=" padding-left: 94px;">: {{ ucwords($employeeDetails->report_to) }}
+                    ({{ $employeeDetails->manager_id }}) </span></p>
+            <p>Employee No <span style="padding-left: 134px;">: {{ $employeeDetails->emp_id }}</span></p>
+            <p>Date of Birth <span style="padding-left: 133px;">:
+                    {{ optional(\Carbon\Carbon::parse($employeeDetails->date_of_birth))->format('d M, Y') }}
                 </span></p>
-            <p>Gender <span style="padding-left: 166px;">: {{ $employeeDetails->gender}}</span></p>
+            <p>Gender <span style="padding-left: 166px;">: {{ ucwords(strtolower($employeeDetails->gender)) }}</span>
+            </p>
         </div>
     </div>
 
@@ -176,35 +207,56 @@
                 <th>Posted Date</th>
                 <th>From Date</th>
                 <th>To Date</th>
-                <th >Days</th>
+                <th>Days</th>
                 <th>Leave Type</th>
                 <th>Transaction Type</th>
                 <th>Reason</th>
-
-
             </tr>
         </thead>
         <tbody>
-            @if($leaveTransactions->isEmpty())
-            <tr>
-                <td colspan="8" style="text-align: center;">No data found</td>
-            </tr>
+
+            @if ($leaveTransactions->isEmpty())
+                <tr>
+                    <td colspan="8" style="text-align: center;">No data found</td>
+                </tr>
             @else
-            @foreach ($leaveTransactions as $transaction)
-            <tr>
-                <td>{{ $loop->index + 1 }}</td>
-                <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y H:i') }}</td>
-                <td>{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M Y') }}</td>
-                <td>{{ \Carbon\Carbon::parse($transaction->to_date)->format('d M Y') }}</td>
-                <td>{{ $transaction->days }}</td>
-                <td>{{ $transaction->leave_type }}</td>
-                <td>{{ ucwords(strtolower($transaction->status)) }}</td>
-                <td>{{ ucwords(strtolower($transaction->reason)) }}</td>
-            </tr>
-            @endforeach
+                @foreach ($leaveTransactions as $transaction)
+                    <tr>
+                        <td>{{ $loop->index + 1 }}</td>
+                        <td>{{ \Carbon\Carbon::parse($transaction->created_at)->format('d M Y H:i') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($transaction->from_date)->format('d M Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($transaction->to_date)->format('d M Y') }}</td>
+                        <td>{{ $transaction->days }}</td>
+                        <td>{{ $transaction->leave_name }}</td>
+                        <td>
+                            @if ($transaction->transaction_type == 4)
+                                Withdrawn
+                            @elseif ($transaction->transaction_type == 2)
+                                Availed
+                            @elseif ($transaction->transaction_type == 3)
+                                Rejected
+                            @elseif ($transaction->transaction_type == 'lapsed')
+                                Lapsed
+                            @else
+                                {{ $transaction->transaction_type }}
+                            @endif
+                        </td>
+                        <td>
+                            @if ($transaction->transaction_type == 'Granted')
+                                Annual Grant for the year
+                            @elseif($transaction->transaction_type == 'lapsed')
+                                Year End Processing
+                            @else
+                                {{ ucwords(strtolower($transaction->reason)) }}
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
             @endif
         </tbody>
+
     </table>
+
 </body>
 
 </html>

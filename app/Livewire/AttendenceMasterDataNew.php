@@ -127,7 +127,9 @@ class AttendenceMasterDataNew extends Component
             $AttendanceYear = $this->selectedYear;
             $currentYear = date('Y');
             $todaysDate = date('Y-m-d');
+            $AttendanceYear = (int) $AttendanceYear;
             $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $AttendanceYear);
+           
             $data = [['List of Employees for ' . $currentMonth . ' ' . $AttendanceYear],
                     ['Employee ID', 'Name', 'No. of Present'],
                     ];
