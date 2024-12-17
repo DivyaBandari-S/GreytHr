@@ -23,7 +23,7 @@ class CasualProbationLeaveBalance extends Component
 
 
     ///calculate number of days
-    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession)
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
@@ -278,7 +278,7 @@ class CasualProbationLeaveBalance extends Component
         ];
 
         // Add "Lapsed Leaves" dataset only if employee has lapsed leave balance
-        if ($employeeLapsedChartBalance->is_lapsed) {
+        if ($employeeLapsedChartBalance && $employeeLapsedChartBalance->is_lapsed) {
             $chartData['datasets'][] = [
                 'label' => 'Lapsed Leaves',
                 'data' => $lapsedLeavesByMonth,
