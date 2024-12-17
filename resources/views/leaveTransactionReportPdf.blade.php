@@ -226,6 +226,7 @@
                 @php $siNo = 1; @endphp
                 {{-- Loop through each leave transaction --}}
                 @foreach ($leaveTransactions as $leaveTransaction)
+               
                     @if (!isset($leaveTransaction['date']) || empty($leaveTransaction['date']))
                         {{-- Loop through each leave details if it's not a granted leave --}}
                         @foreach ($leaveTransaction['leave_details'] as $transactions)
@@ -255,16 +256,17 @@
                     @else
                         {{-- Process other (non-Granted) transactions --}}
 
+
                         @foreach ($leaveTransaction['leave_details'] as $transaction)
                             {{-- Loop through the leave details --}}
                             <tr>
                                 <td>{{ $siNo++ }}</td>
 
                                 {{-- Access emp_id, first_name, last_name from the first transaction in leave_details --}}
-                                <td>{{ $transaction['emp_id'] ?? 'No Emp ID' }}</td> {{-- If emp_id doesn't exist, show 'No Emp ID' --}}
+                                <td>{{ $leaveTransaction['emp_id'] ?? 'No Emp ID' }}</td> {{-- If emp_id doesn't exist, show 'No Emp ID' --}}
                                 <td>
-                                    {{ ucwords(strtolower($transaction['first_name'] ?? 'No First Name')) }}
-                                    {{ ucwords(strtolower($transaction['last_name'] ?? 'No Last Name')) }}
+                                    {{ ucwords(strtolower($leaveTransaction['first_name'] ?? 'No First Name')) }}
+                                    {{ ucwords(strtolower($leaveTransaction['last_name'] ?? 'No Last Name')) }}
                                 </td> {{-- Full Name --}}
 
                                 {{-- You can also display the employee's own details --}}

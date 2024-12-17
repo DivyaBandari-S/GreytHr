@@ -239,10 +239,10 @@
                                 <td>{{ $siNo++ }}</td>
 
                                 {{-- Access emp_id, first_name, last_name from the first transaction in leave_details --}}
-                                <td>{{ $transaction['emp_id'] ?? 'No Emp ID' }}</td> {{-- If emp_id doesn't exist, show 'No Emp ID' --}}
+                                <td>{{ $leaveTransaction['emp_id'] ?? 'No Emp ID' }}</td> {{-- If emp_id doesn't exist, show 'No Emp ID' --}}
                                 <td>
-                                    {{ ucwords(strtolower($transaction['first_name'] ?? 'No First Name')) }}
-                                    {{ ucwords(strtolower($transaction['last_name'] ?? 'No Last Name')) }}
+                                    {{ ucwords(strtolower($leaveTransaction['first_name'] ?? 'No First Name')) }}
+                                    {{ ucwords(strtolower($leaveTransaction['last_name'] ?? 'No Last Name')) }}
                                 </td> {{-- Full Name --}}
 
                                 {{-- You can also display the employee's own details --}}
