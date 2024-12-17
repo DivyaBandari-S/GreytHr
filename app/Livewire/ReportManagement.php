@@ -324,7 +324,7 @@ class ReportManagement extends Component
             // Log::info('Logged in employee ID: ' . $loggedInEmpId);
 
             if ($this->transactionType === 'granted') {
-               
+
                 // When the transaction type is granted, fetch data from employee_leave_balances
                 // Log::info('Fetching granted leave data from employee_leave_balances.');
 
@@ -405,9 +405,7 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-            
-            }
-            elseif($this->transactionType === 'lapsed'){
+            } elseif ($this->transactionType === 'lapsed') {
                 $query = EmployeeLeaveBalances::select(
                     'employee_leave_balances.emp_id',
                     'employee_details.first_name',
@@ -423,7 +421,7 @@ class ReportManagement extends Component
                         $query->where('employee_details.manager_id', $loggedInEmpId)
                             ->whereNotIn('employee_details.employee_status', ['terminated', 'resigned']);
                     })
-                    ->where('employee_leave_balances.is_lapsed', 1) 
+                    ->where('employee_leave_balances.is_lapsed', 1)
                     ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
                         $leaveTypes = [
                             'casual_probation' => 'Casual Leave',
@@ -450,15 +448,15 @@ class ReportManagement extends Component
                         'first_name' => $group->first()->first_name,
                         'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
- 
+
                             $period = $item->period;
                             $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                             $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
                             $leaveBalances = LeaveBalances::getLeaveLapsedBalances($item->emp_id, $item->period);
-               
 
-    
+
+
                             // Decode the JSON to get all leave types
                             $leaveDetails1 = json_decode($item->leave_policy_id, true);
                             $leaveDetails = [];
@@ -473,7 +471,7 @@ class ReportManagement extends Component
                             // Loop through all the leave types in the JSON array
 
                             foreach ($leaveTypes as $key => $leaveName) {
-                              
+
                                 if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
@@ -499,7 +497,7 @@ class ReportManagement extends Component
                                     'from_date' => $decemberStart,  // The start date of the year
                                     'to_date' => $decemberEnd,      // The end date of the year
 
-                                  
+
                                 ];
                             }
 
@@ -507,10 +505,7 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-               
-            
-            } 
-        elseif ($this->transactionType === 'all') {
+            } elseif ($this->transactionType === 'all') {
 
                 $query = EmployeeLeaveBalances::select(
                     'employee_leave_balances.emp_id',
@@ -603,7 +598,7 @@ class ReportManagement extends Component
                         $query->where('employee_details.manager_id', $loggedInEmpId)
                             ->whereNotIn('employee_details.employee_status', ['terminated', 'resigned']);
                     })
-                    ->where('employee_leave_balances.is_lapsed', 1) 
+                    ->where('employee_leave_balances.is_lapsed', 1)
                     ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
                         $leaveTypes = [
                             'casual_probation' => 'Casual Leave',
@@ -630,15 +625,15 @@ class ReportManagement extends Component
                         'first_name' => $group->first()->first_name,
                         'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
- 
+
                             $period = $item->period;
                             $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                             $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
                             $leaveBalances = LeaveBalances::getLeaveLapsedBalances($item->emp_id, $item->period);
-               
 
-    
+
+
                             // Decode the JSON to get all leave types
                             $leaveDetails1 = json_decode($item->leave_policy_id, true);
                             $leaveDetails = [];
@@ -653,7 +648,7 @@ class ReportManagement extends Component
                             // Loop through all the leave types in the JSON array
 
                             foreach ($leaveTypes as $key => $leaveName) {
-                              
+
                                 if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
@@ -679,7 +674,7 @@ class ReportManagement extends Component
                                     'from_date' => $decemberStart,  // The start date of the year
                                     'to_date' => $decemberEnd,      // The end date of the year
 
-                                  
+
                                 ];
                             }
 
@@ -781,6 +776,9 @@ class ReportManagement extends Component
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'emp_id' => $group->first()->emp_id,  // Add emp_id
+                        'first_name' => $group->first()->first_name,  // Add first_name
+                        'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
                             $leaveRequest = new LeaveRequest();
                             $leaveDays = $leaveRequest->calculateLeaveDays(
@@ -904,6 +902,9 @@ class ReportManagement extends Component
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'emp_id' => $group->first()->emp_id,  // Add emp_id
+                        'first_name' => $group->first()->first_name,  // Add first_name
+                        'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
                             $leaveRequest = new LeaveRequest();
                             $leaveDays = $leaveRequest->calculateLeaveDays(
@@ -941,13 +942,13 @@ class ReportManagement extends Component
             $pdf = Pdf::loadView('daywiseLeaveTransactionReportPdf', [
                 'employeeDetails' => $employeeDetails,
                 'leaveTransactions' => isset($leaveTransactions)
-                ? $leaveTransactions
-                : ($this->transactionType == 'granted'
-                    ? $grantedData
-                    : ($this->transactionType == 'lapsed'
-                        ? $lapsedData
-                        : $leaveTransactionData)
-                ),
+                    ? $leaveTransactions
+                    : ($this->transactionType == 'granted'
+                        ? $grantedData
+                        : ($this->transactionType == 'lapsed'
+                            ? $lapsedData
+                            : $leaveTransactionData)
+                    ),
 
                 'toDate' => $this->toDate,
                 'fromDate' => $this->fromDate,
@@ -1144,11 +1145,9 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-               
-               
             } elseif ($this->transactionType == 'lapsed') {
                 $employeeId = auth()->guard('emp')->user()->emp_id;
-              
+
 
                 $query = EmployeeLeaveBalances::select(
                     'employee_leave_balances.emp_id',
@@ -1181,8 +1180,8 @@ class ReportManagement extends Component
                     })
                     ->get();
 
-                   
- // Check what is being grouped by emp_id
+
+                // Check what is being grouped by emp_id
 
 
                 // Group the data by emp_id
@@ -1192,15 +1191,15 @@ class ReportManagement extends Component
                         'first_name' => $group->first()->first_name,
                         'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
- 
+
                             $period = $item->period;
                             $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                             $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
                             $leaveBalances = LeaveBalances::getLeaveLapsedBalances($item->emp_id, $item->period);
-               
 
-    
+
+
                             // Decode the JSON to get all leave types
                             $leaveDetails1 = json_decode($item->leave_policy_id, true);
                             $leaveDetails = [];
@@ -1215,7 +1214,7 @@ class ReportManagement extends Component
                             // Loop through all the leave types in the JSON array
 
                             foreach ($leaveTypes as $key => $leaveName) {
-                              
+
                                 if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
@@ -1241,7 +1240,7 @@ class ReportManagement extends Component
                                     'from_date' => $decemberStart,  // The start date of the year
                                     'to_date' => $decemberEnd,      // The end date of the year
 
-                                  
+
                                 ];
                             }
 
@@ -1250,8 +1249,8 @@ class ReportManagement extends Component
                     ];
                 });
 
-              
-                
+
+
                 // The $lapsedData will now contain the employee leave details with the remaining balances.
 
             } elseif ($this->transactionType === 'all') {
@@ -1332,10 +1331,10 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-              
-             
-             
-              
+
+
+
+
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
                     DB::raw('count(*) as total_requests'),
@@ -1362,7 +1361,7 @@ class ReportManagement extends Component
                             'maternity' => 'Maternity Leave',
                             'marriage_leave' => 'Marriage Leave',
                         ];
-            
+
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
                             $query->where('leave_applications.leave_type', $leaveTypes[$this->leaveType]);
                         }
@@ -1419,10 +1418,13 @@ class ReportManagement extends Component
                         'leave_applications.leave_status'
                     )
                     ->get();
-          
+
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
-                      'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'emp_id' => $group->first()->emp_id,  // Add emp_id
+                        'first_name' => $group->first()->first_name,  // Add first_name
+                        'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
                             $leaveRequest = new LeaveRequest();
                             $leaveDays = $leaveRequest->calculateLeaveDays(
@@ -1444,9 +1446,9 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-              
-                
-              
+
+
+
                 $query = EmployeeLeaveBalances::select(
                     'employee_leave_balances.emp_id',
                     'employee_details.first_name',
@@ -1478,8 +1480,8 @@ class ReportManagement extends Component
                     })
                     ->get();
 
-                   
- // Check what is being grouped by emp_id
+
+                // Check what is being grouped by emp_id
 
 
                 // Group the data by emp_id
@@ -1489,15 +1491,15 @@ class ReportManagement extends Component
                         'first_name' => $group->first()->first_name,
                         'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
- 
+
                             $period = $item->period;
                             $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                             $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
                             $leaveBalances = LeaveBalances::getLeaveLapsedBalances($item->emp_id, $item->period);
-               
 
-    
+
+
                             // Decode the JSON to get all leave types
                             $leaveDetails1 = json_decode($item->leave_policy_id, true);
                             $leaveDetails = [];
@@ -1512,7 +1514,7 @@ class ReportManagement extends Component
                             // Loop through all the leave types in the JSON array
 
                             foreach ($leaveTypes as $key => $leaveName) {
-                              
+
                                 if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
@@ -1538,7 +1540,7 @@ class ReportManagement extends Component
                                     'from_date' => $decemberStart,  // The start date of the year
                                     'to_date' => $decemberEnd,      // The end date of the year
 
-                                  
+
                                 ];
                             }
 
@@ -1546,22 +1548,17 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-                
-            
-                 
-             
+
+
+
+
                 $leaveTransactions = $leaveTransactionData->concat($lapsedData)->concat($grantedData);
+               
 
-     
-
-              
-                
-           
-              
             } else {
                 // The existing code for handling leave requests in 'availed', 'rejected', etc.
                 // Log::info('Fetching leave request data for transaction type: ' . $this->transactionType);
-            
+
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
                     DB::raw('count(*) as total_requests'),
@@ -1588,7 +1585,7 @@ class ReportManagement extends Component
                             'maternity' => 'Maternity Leave',
                             'marriage_leave' => 'Marriage Leave',
                         ];
-            
+
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
                             $query->where('leave_applications.leave_type', $leaveTypes[$this->leaveType]);
                         }
@@ -1645,11 +1642,14 @@ class ReportManagement extends Component
                         'leave_applications.leave_status'
                     )
                     ->get();
-            
+
                 // Refactor the data grouping
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
-                      'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
+                        'emp_id' => $group->first()->emp_id,  // Add emp_id
+                        'first_name' => $group->first()->first_name,  // Add first_name
+                        'last_name' => $group->first()->last_name,
                         'leave_details' => $group->map(function ($item) {
                             $leaveRequest = new LeaveRequest();
                             $leaveDays = $leaveRequest->calculateLeaveDays(
@@ -1671,7 +1671,6 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
-                
             }
 
             // Log data before generating the PDF
@@ -1683,16 +1682,16 @@ class ReportManagement extends Component
                 'employeeDetails' => $employeeDetails,
                 // 'leaveTransactions' => isset($leaveTransactions) ? $leaveTransactions : ($this->transactionType == 'granted' ? $grantedData : $leaveTransactionData),
                 'leaveTransactions' => isset($leaveTransactions)
-                ? $leaveTransactions
-                : ($this->transactionType == 'granted'
-                    ? $grantedData
-                    : ($this->transactionType == 'lapsed'
-                        ? $lapsedData
-                        : $leaveTransactionData)
-                ),
+                    ? $leaveTransactions
+                    : ($this->transactionType == 'granted'
+                        ? $grantedData
+                        : ($this->transactionType == 'lapsed'
+                            ? $lapsedData
+                            : $leaveTransactionData)
+                    ),
                 'fromDate' => $this->fromDate,
                 'toDate' => $this->toDate,
-                'transactionType' => $this->transactionType, 
+                'transactionType' => $this->transactionType,
             ]);
             $this->currentSection = '';
 
@@ -1708,13 +1707,13 @@ class ReportManagement extends Component
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
         }
     }
-// Inside your ReportManagement class, move the function here.
-public function normalizeLeaveNameToBalanceKey($leaveName)
-{
-    $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
-    $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
-    return $balanceKey;
-}
+    // Inside your ReportManagement class, move the function here.
+    public function normalizeLeaveNameToBalanceKey($leaveName)
+    {
+        $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
+        $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
+        return $balanceKey;
+    }
 
 
 
