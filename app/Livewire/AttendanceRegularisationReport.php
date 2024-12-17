@@ -93,7 +93,7 @@ class AttendanceRegularisationReport extends Component
         {
             if ($this->selectedStatus == 'applied') {
                 if ($this->fromDate && $this->toDate) {
-                    $this->regularisationDetails = RegularisationDates::whereIn('regularisation_dates.emp_id', $this->selectedEmployees)
+                    $this->regularisationDetails = RegularisationDates::whereIn(column: 'regularisation_dates.emp_id', $this->selectedEmployees)
                         ->where('regularisation_dates.status', 'pending')
                         ->where('regularisation_dates.is_withdraw', 0)
                         ->whereDate('regularisation_dates.created_at', '>=', $this->fromDate)
