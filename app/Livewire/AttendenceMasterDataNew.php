@@ -118,154 +118,143 @@ class AttendenceMasterDataNew extends Component
     }
     //This method will help us to know the attendance  status for the employees for the particular month and year in excel sheet
     public function downloadExcel()
-    {
-        try {
-            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status','active')->get();
-            $currentMonth = date('F');
-            $currentMonth1 = date('n');
-            $AttendanceYear = $this->selectedYear;
-            $currentYear = date('Y');
-            $todaysDate = date('Y-m-d');
-            $AttendanceYear = (int) $AttendanceYear;
-            $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $AttendanceYear);
-           
-            $data = [['List of Employees for ' . $currentMonth . ' ' . $AttendanceYear],
-                    ['Employee ID', 'Name', 'No. of Present'],
-                    ];
-    
-            for ($i = 1; $i <= $daysInMonth; $i++) {
-                $date = new DateTime("$AttendanceYear-$currentMonth1-$i");
-                // Get the day name
-                $dayName = $date->format('D');
-                $data[1][] = $i . $dayName;
-            }
-    
-            $employeeIds = $employees->pluck('emp_id');
-            $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
-                ->whereMonth('swipe_records.created_at', $currentMonth1)
-                ->whereYear('swipe_records.created_at', $AttendanceYear)
-                ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') 
-                ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
-                ->groupBy('swipe_records.emp_id', 'employee_details.first_name', 'employee_details.last_name')
-                ->get()
-                ->keyBy('emp_id')
-                ->toArray();
-                
-    
-            $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
-                ->whereMonth('created_at', $currentMonth1)
-                ->whereYear('created_at', $this->selectedYear)
-                ->selectRaw('DISTINCT emp_id, DATE(created_at) as distinct_date')
-                ->get()
-                ->groupBy('emp_id')
-                ->map(function ($dates) {
-                    return $dates->pluck('distinct_date')->toArray();
-                })
-                ->toArray();
-                
-            
-                $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join status_type to get status_name
-                ->where('leave_applications.leave_status', 2) // Approved leave status
-                ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-                ->where('employee_details.manager_id', $loggedInEmpId)
-                ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth1 . '-01') // Start of the current month
-                ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth1 . '-' . $daysInMonth) // End of the current month
-                ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name'])
-                ->map(function ($leaveRequest) {
-                    $fromDate = \Carbon\Carbon::parse($leaveRequest->from_date);
-                    $toDate = \Carbon\Carbon::parse($leaveRequest->to_date);
+{
+    try {
+        Log::info('Excel generation started');
+        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+        Log::info("Logged-in Employee ID: $loggedInEmpId");
 
-                    // Get today's date
-                    $today = \Carbon\Carbon::today();
-            
-                    // Ensure toDate doesn't exceed today's date
-                    if ($toDate->greaterThan($today)) {
-                        $toDate = $today;
-                    }
-            
-                    // Calculate the number of days up to today
-                    $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1; 
-                    return $leaveRequest;
-                });
-            $year = $currentYear;
-            $holiday = HolidayCalendar::where('month', $currentMonth)
-                ->where('year', $AttendanceYear)
-                ->pluck('date')
-                ->toArray();
-                foreach ($approvedLeaveRequests as $leaveRequest) {
-                    $empId = $leaveRequest->emp_id;
-                    
-                    if (isset($distinctDatesMapCount[$empId])) {
-                        // Get the employee's swipe date count
-                        $dateCount = $distinctDatesMapCount[$empId]['date_count'];
-                        
-                        // Deduct the number of leave days from date count
-                        $distinctDatesMapCount[$empId]['date_count'] = max(0, $dateCount - $leaveRequest->number_of_days);
-                        break;
-                    }
-                }
-            if ($AttendanceYear <= $currentYear) {
-                foreach ($employees as $employee) {
-                    $rowData = [$employee['emp_id'], $employee['first_name'] . ' ' . $employee['last_name']];
-                    if (isset($distinctDatesMapCount[$employee['emp_id']])) {
-                        $dateCount = $distinctDatesMapCount[$employee['emp_id']]['date_count'];
-                    } else {
-                        $dateCount = 0;
-                    }
-                    $rowData[] = $dateCount;
-    
-                    for ($i = 1; $i <= $daysInMonth; $i++) {
-                        $currentDate = $AttendanceYear . '-' . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-                        
-                        if ($currentDate <= $todaysDate) {
-                            if (date('N', strtotime($currentDate)) == 6 || date('N', strtotime($currentDate)) == 7) {
-                                $rowData[] = 'O'; 
-                            } elseif (in_array($currentDate, $holiday)) {
-                                $rowData[] = 'H'; 
-                            } else {
-                                $dateExists = false;
-                                $leaveExists = false;
-                                foreach ($distinctDatesMap as $empId => $dates) {
-                                    if ($employee['emp_id'] == $empId && in_array($currentDate, $dates)) {
-                                        $dateExists = true;
-                                        break;
-                                    }
-                                }
-                                foreach ($approvedLeaveRequests as $leaveRequest) {
-                                    if ($leaveRequest->emp_id === $employee['emp_id']) {
-                                        $fromDate = Carbon::parse($leaveRequest->from_date);
-                                        $toDate = Carbon::parse($leaveRequest->to_date);
-                                        if ($currentDate >= $fromDate->format('Y-m-d') && $currentDate <= $toDate->format('Y-m-d')) {
-                                            $leaveExists = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if ($leaveExists) {
-                                    $rowData[] = 'L';
-                                } else {
-                                    $rowData[] = $dateExists ? 'P' : 'A'; 
+        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            ->select('emp_id', 'first_name', 'last_name')
+            ->where('employee_status', 'active')
+            ->get();
+
+        Log::info('Employees fetched', ['employees' => $employees]);
+
+        $currentMonth = date('F');
+        $currentMonth1 = date('n');
+        $AttendanceYear = $this->selectedYear;
+        $todaysDate = date('Y-m-d');
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $AttendanceYear);
+
+        Log::info("Generating report for $currentMonth, Year: $AttendanceYear");
+
+        $data = [['List of Employees for ' . $currentMonth . ' ' . $AttendanceYear],
+                 ['Employee ID', 'Name', 'No. of Present']];
+
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $date = new DateTime("$AttendanceYear-$currentMonth1-$i");
+            $dayName = $date->format('D');
+            $data[1][] = $i . $dayName;
+        }
+
+        $employeeIds = $employees->pluck('emp_id');
+        Log::info('Employee IDs for swipe records', ['ids' => $employeeIds]);
+
+        $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
+            ->whereMonth('swipe_records.created_at', $currentMonth1)
+            ->whereYear('swipe_records.created_at', $AttendanceYear)
+            ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)')
+            ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
+            ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
+            ->groupBy('swipe_records.emp_id', 'employee_details.first_name', 'employee_details.last_name')
+            ->get()
+            ->keyBy('emp_id')
+            ->toArray();
+
+        Log::info('Swipe record counts fetched', ['distinctDatesMapCount' => $distinctDatesMapCount]);
+
+        $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
+            ->whereMonth('created_at', $currentMonth1)
+            ->whereYear('created_at', $this->selectedYear)
+            ->selectRaw('DISTINCT emp_id, DATE(created_at) as distinct_date')
+            ->get()
+            ->groupBy('emp_id')
+            ->map(function ($dates) {
+                return $dates->pluck('distinct_date')->toArray();
+            })
+            ->toArray();
+
+        Log::info('Distinct swipe dates map fetched', ['distinctDatesMap' => $distinctDatesMap]);
+
+        $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->where('leave_applications.leave_status', 2)
+            ->whereIn('leave_applications.emp_id', $employeeIds)
+            ->whereDate('from_date', '>=', "$AttendanceYear-$currentMonth1-01")
+            ->whereDate('to_date', '<=', "$AttendanceYear-$currentMonth1-$daysInMonth")
+            ->get();
+
+        Log::info('Approved leave requests fetched', ['approvedLeaveRequests' => $approvedLeaveRequests]);
+
+        $holiday = HolidayCalendar::where('month', $currentMonth)
+            ->where('year', $AttendanceYear)
+            ->pluck('date')
+            ->toArray();
+
+        Log::info('Holidays fetched', ['holidays' => $holiday]);
+
+        foreach ($employees as $employee) {
+            $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
+
+            $dateCount = $distinctDatesMapCount[$employee['emp_id']]['date_count'] ?? 0;
+            Log::debug("Date count for employee {$employee['emp_id']}: $dateCount");
+
+            $rowData[] = $dateCount;
+
+            for ($i = 1; $i <= $daysInMonth; $i++) {
+                $currentDate = "$AttendanceYear-" . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+
+                if ($currentDate <= $todaysDate) {
+                    if (in_array($currentDate, $holiday)) {
+                        $rowData[] = 'H';
+                    } elseif (date('N', strtotime($currentDate)) >= 6) {
+                        $rowData[] = 'O';
+                    }  else {
+                        $dateExists = false;
+                        $leaveExists = false;
+                        foreach ($distinctDatesMap as $empId => $dates) {
+                            if ($employee['emp_id'] == $empId && in_array($currentDate, $dates)) {
+                                $dateExists = true;
+                                break;
+                            }
+                        }
+                        foreach ($approvedLeaveRequests as $leaveRequest) {
+                            if ($leaveRequest->emp_id === $employee['emp_id']) {
+                                $fromDate = Carbon::parse($leaveRequest->from_date);
+                                $toDate = Carbon::parse($leaveRequest->to_date);
+                                if ($currentDate >= $fromDate->format('Y-m-d') && $currentDate <= $toDate->format('Y-m-d')) {
+                                    $leaveExists = true;
+                                    break;
                                 }
                             }
                         }
+                        if ($leaveExists) {
+                            $rowData[] = 'L';
+                        } else {
+                            $rowData[] = $dateExists ? 'P' : 'A'; 
+                        }
                     }
-                    $data[] = $rowData;
+
                 }
             }
-    
-            $filePath = storage_path('app/Attendance_Muster_Report.xlsx');
-            SimpleExcelWriter::create($filePath)->addRows($data);
-            return response()->download($filePath, 'Attendance_Muster_Report.xlsx');
-        } catch (\Exception $e) {
-            Log::error('Error generating Excel report: ' . $e->getMessage());
-            FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
+
+            $data[] = $rowData;
         }
- 
-        
+
+        Log::info('Final data for Excel prepared', ['data' => $data]);
+
+        $filePath = storage_path('app/Attendance_Muster_Report.xlsx');
+        SimpleExcelWriter::create($filePath)->addRows($data);
+
+        Log::info('Excel file created', ['path' => $filePath]);
+
+        return response()->download($filePath, 'Attendance_Muster_Report.xlsx');
+    } catch (\Exception $e) {
+        Log::error('Error generating Excel report', ['error' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()]);
+        FlashMessageHelper::flashError('An error occurred while generating the Excel report. Please try again.');
     }
+}
+
     public function render()
     {
        
