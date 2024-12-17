@@ -55,7 +55,7 @@
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
                             @if($employeeLapsedBalance->is_lapsed)
-                            <div class="info-value">0</div>
+                            <div class="infso-value">0</div>
                             @else
                             <div class="info-value">{{ $Availablebalance }}</div>
                             @endif
