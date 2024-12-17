@@ -218,9 +218,9 @@
                                     </td> --}}
                                     
                                     <td>{{ $transaction['grant_days'] }}</td> {{-- Grant Days --}}
-                                    <td> @if ($transactionType == 'lapsed')
+                                    <td> @if ($transaction['status'] == 'Lapsed')
                                         Year End Processing
-                                    @elseif ($transactionType == 'granted')
+                                    @elseif ($transaction['status']  == 'Granted')
                                         Annual Grant for the year
                                     @else
                                         {{ $transaction['status'] }}
