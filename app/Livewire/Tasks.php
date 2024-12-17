@@ -434,7 +434,7 @@ class Tasks extends Component
     public function autoValidate()
     {
         if ($this->validate_tasks) {
-            if (is_null($this->client_id)) {
+            if (is_null($this->selectedPersonClients)) {
                 $this->validate([
                     'due_date' => 'required',
                     'assignee' => 'required',
@@ -451,16 +451,19 @@ class Tasks extends Component
             }
         }
     }
+
     public $maxFollowers = 5;
     public $validationFollowerMessage = '';
 
 
     public function submit()
     {
+          
+            // $this->projectValidation();
         try {
+            
             $this->validate_tasks = true;
             $this->autoValidate();
-
             if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
                 session()->flash('error', 'You can only select up to 5 followers.');
                 // FlashMessageHelper::flashError('You can only select up to 5 followers.');
@@ -666,6 +669,8 @@ class Tasks extends Component
     {
         $this->showDialog = true;
         $this->selectedPeopleForFollowers = [];
+        $this->selectedPersonClients = null;
+        $this->selectedPersonClientsWithProjects = null;
     }
     public $recordId;
     public $viewrecord;

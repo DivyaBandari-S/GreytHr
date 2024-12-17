@@ -8,7 +8,8 @@ use App\Models\Salaryslip;
 use App\Models\EmployeeDetails;
 use App\Models\SalaryRevision;
 use App\Models\EmpBankDetail;
-
+use App\Models\EmpSalaryRevision;
+use App\Models\IT;
 use Illuminate\Support\Facades\Response;
 use PDF;
 class Itstatement1 extends Component
@@ -51,7 +52,7 @@ class Itstatement1 extends Component
         }
     
         try {
-            $this->salaryRevision = SalaryRevision::where('emp_id', $employeeId)->get();
+            $this->salaryRevision = EmpSalaryRevision::where('emp_id', $employeeId)->get();
         } catch (\Exception $e) {
             $this->salaryRevision = collect();
         }
@@ -75,7 +76,7 @@ class Itstatement1 extends Component
   
     
         try {
-            $this->itStatements = ITStatement::all();
+            $this->itStatements = IT::all();
         } catch (\Exception $e) {
             $this->itStatements = collect();
         }
