@@ -192,7 +192,7 @@ class Attendance extends Component
     public $previousMonthTotalMinutes;
 
     public $currentMonthTotalMinutes;
-    public $avergageFirstInTime = 0;
+    public $averageFirstInTime = 0;
 
     public $averageLastOutTime = 0;
     public $totalnumberofAbsents = 0;
@@ -1225,7 +1225,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->totalnumberofLeaves = '-';
                 $this->totalnumberofAbsents = '-';
                 $this->averageWorkHoursForModalTitle = '-';
-                $this->avergageFirstInTime = 'N/A';
+                $this->averageFirstInTime = 'N/A';
                 $this->averageLastOutTime = 'N/A';
                 return; // Stop execution after setting values
             }
@@ -1240,7 +1240,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->totalnumberofLeaves = '-';
                 $this->totalnumberofAbsents = '-';
                 $this->averageWorkHoursForModalTitle = '-';
-                $this->avergageFirstInTime = 'N/A';
+                $this->averageFirstInTime = 'N/A';
                 $this->averageLastOutTime = 'N/A';
                 return; // Stop execution after setting values
             }
@@ -1260,7 +1260,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->start_date_for_insights), Carbon::parse($this->to_date));
             $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
             $this->averageLastOutTime = $outsights['averageLastOutTime'];
-            $this->avergageFirstInTime = $insights['averageFirstInTime'];
+            $this->averageFirstInTime = $insights['averageFirstInTime'];
 
             // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
 
