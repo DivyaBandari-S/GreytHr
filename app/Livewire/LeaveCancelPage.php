@@ -59,7 +59,7 @@ class LeaveCancelPage extends Component
 
     protected $messages = [
         'selectedLeaveType.required' => 'Please select a leave type to submit',
-        'leave_cancel_reason.required' => 'Reason is arequired',
+        'leave_cancel_reason.required' => 'Reason is required',
 
     ];
     public function validateField($propertyName)

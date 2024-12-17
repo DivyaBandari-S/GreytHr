@@ -30,7 +30,7 @@
  </strong>,{{ ucwords(strtolower($firstName ))}} {{ ucwords(strtolower($lastName ))}}
 </p>
 
-            <p>You got a new request <strong> {{ $RequestId }} </strong> from  <b> {{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }})</p>
+            <p>You got a New request <strong> {{ $RequestId }} </strong> from  <b> {{ $createdbyFirstName }} {{ $createdbyLastName }}</b> ({{ $employeeId }})</p>
  
         
         <p>Below are the New Request details:</p>
