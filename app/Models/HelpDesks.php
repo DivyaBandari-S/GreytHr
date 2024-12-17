@@ -17,7 +17,7 @@ class HelpDesks extends Model
          static::created(function ($helpDesk) {
              $title = 'Catalog Request'; // Default title
              $message = "Subject : {$helpDesk->category}";
-             $redirect_url = route('it.itrequest.show', ['currentCatalogId' => $helpDesk->id]);
+             $redirect_url ='itrequest?currentCatalogId=' . $helpDesk->id;
   
              // Check if any value is missing, log it if necessary
              if (!$title || !$message || !$redirect_url) {
