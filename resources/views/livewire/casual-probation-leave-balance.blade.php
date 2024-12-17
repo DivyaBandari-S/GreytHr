@@ -137,12 +137,36 @@
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y',strtotime($balance->from_date)) }}</td>
-                                    <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
                                     <td>{{ $employeeLeaveBalances }}</td>
-                                    <td>Annual Grant for the present year</td>
+                                    <td>Annual Grant for the present year </td>
                                 </tr>
                                 @endforeach
+                                @if($employeeLapsedBalanceList->isNotEmpty())
+                                @foreach($employeeLapsedBalanceList as $index => $balance)
+                                @if($balance->is_lapsed) <!-- Check if is_lapsed is true for each balance -->
+                                <tr>
+                                    <td>Lapsed</td>
+                                    <td>{{ date('d M Y', strtotime($balance->lapsed_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>
+                                        @if($employeeLapsedBalance->is_lapsed)
+                                        {{ $Availablebalance }}
+                                        @else
+                                        0
+                                        @endif
+                                    </td>
+                                    <td>Year end processing</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="6">No lapsed balances available.</td>
+                                </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
