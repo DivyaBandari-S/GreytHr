@@ -755,6 +755,7 @@ class ReportManagement extends Component
                             });
                         }
                     })
+                    ->where('leave_status', '!=', 5)
                     ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                     ->groupBy(
                         DB::raw('DATE(from_date)'),
@@ -877,6 +878,7 @@ class ReportManagement extends Component
                             });
                         }
                     })
+                    ->where('leave_status', '!=', 5)
                     ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                     ->groupBy(
                         DB::raw('DATE(from_date)'),
@@ -1400,6 +1402,7 @@ class ReportManagement extends Component
                             });
                         }
                     })
+                    ->where('leave_status', '!=', 5)
                     ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                     ->groupBy(
                         DB::raw('DATE(from_date)'),
@@ -1625,6 +1628,7 @@ class ReportManagement extends Component
                             });
                         }
                     })
+                    ->where('leave_status', '!=', 5)
                     ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                     ->groupBy(
                         DB::raw('DATE(from_date)'),

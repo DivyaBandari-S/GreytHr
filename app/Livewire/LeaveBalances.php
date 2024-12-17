@@ -771,6 +771,7 @@ class LeaveBalances extends Component
                         $query->where('leave_status', $transactionTypes[$this->transactionType]);
                     }
                 })
+                ->where('leave_status', '!=', 5)
                 ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                 ->get()
                 ->map(function ($leaveRequest) {
@@ -908,6 +909,7 @@ class LeaveBalances extends Component
                         $query->where('leave_status', $transactionTypes[$this->transactionType]);
                     }
                 })
+                ->where('leave_status', '!=', 5)
                 ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
                 ->get()
                 ->map(function ($leaveRequest) {
