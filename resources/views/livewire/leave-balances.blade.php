@@ -109,7 +109,7 @@
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="submit" class="submit-btn">Download</button>
                         <button type="button" class="cancel-btn" wire:click="resetFields"
-                                style="border:1px solid rgb(2,17,79);">Clear</button>
+                            style="border:1px solid rgb(2,17,79);">Clear</button>
                         <!-- <button type="button" class="cancel-btn1" data-dismiss="modal" wire:click="closeModal">Cancel</button> -->
                     </div>
                 </form>
@@ -195,6 +195,7 @@
                         </div>
                     </div>
                 </div>
+                @if($hideCasualLeave === true)
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white ">
                         <div class="balance mb-2 d-flex flex-row justify-content-between ">
@@ -228,6 +229,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white   ">
                         <div class="balance d-flex flex-row justify-content-between">
@@ -261,7 +263,7 @@
                         @endif
                     </div>
                 </div>
-                @if( $casualProbationLeavePerYear > 0)
+                @if( $showCasualLeaveProbation || $showCasualLeaveProbationYear)
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white   ">
                         <div class="balance d-flex flex-row justify-content-between">
@@ -279,6 +281,7 @@
                             <a href="/leave-balances/casualprobationleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
+                        @if($casualProbationLeavePerYear > 0)
                         <div class="px-3">
                             <div class="tube-container">
                                 <p class="mb-0 consumedContent">
@@ -291,6 +294,7 @@
                                 <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -311,7 +315,20 @@
                             <a href="#" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
-
+                        @if($marriageLeaves > 0)
+                        <div class="px-3">
+                            <div class="tube-container">
+                                <p class="mb-0 consumedContent">
+                                    @if($consumedProbationLeaveBalance > 0)
+                                    {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
+                                    @else
+                                    0 of {{ $casualProbationLeaveBalance }} Consumed
+                                    @endif
+                                </p>
+                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

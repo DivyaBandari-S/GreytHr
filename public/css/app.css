@@ -1006,6 +1006,29 @@ button.close-button {
     border-collapse: collapse;
     overflow-x: auto;
 }
+/* Override Bootstrap's default background images for carousel icons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-image: none !important; /* Remove default arrow images */
+  color: black !important; /* Set icon color to black */
+    width: 70%; /* Adjust size */
+    height: 70%;
+ /* Optional: make circular */
+}
+
+/* Add custom arrows using pseudo-elements */
+.carousel-control-prev-icon::after {
+    content: '\2039'; /* Unicode for a left arrow */
+    font-size: 50px; /* Adjust the arrow size */
+    color: black; /* Ensure arrow is black */
+}
+
+.carousel-control-next-icon::after {
+    content: '\203A'; /* Unicode for a right arrow */
+    font-size: 50px; /* Adjust the arrow size */
+    color: black; /* Ensure arrow is black */
+}
+
 
 .help-desk-table-row {
     background-color: rgb(2, 17, 79);
@@ -5105,6 +5128,12 @@ input[type="radio"] {
     font-weight: 500;
     cursor: pointer;
 }
+.anchorTagDetailsCrumb{
+    color: rgb(2, 17, 79) !important;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 .viewSwipesList {
     font-size: var(--normal-font-size);
@@ -6761,7 +6790,8 @@ select .yearSelect {
 
 .select-year-dropdown {
     margin-right: 5px;
-    width: fit-content;
+    width: 100px;
+    padding: 5px;
 }
 
 .leave-details-col-md-12 {

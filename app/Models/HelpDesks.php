@@ -12,6 +12,30 @@ class HelpDesks extends Model
     protected $fillable=[
         'id','emp_id', 'category', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
      ];
+     protected static function booted()
+     {
+         static::created(function ($helpDesk) {
+             $title = 'Catalog Request'; // Default title
+             $message = "Subject : {$helpDesk->category}";
+             $redirect_url ='itrequest?currentCatalogId=' . $helpDesk->id;
+  
+             // Check if any value is missing, log it if necessary
+             if (!$title || !$message || !$redirect_url) {
+                 Log::error('Missing required notification data: title, message or redirect_url');
+                 return; // Prevent creating a notification if any data is missing
+             }
+  
+             // Create the notification
+             ticket_notifications::create([
+                 'title' => $title,
+                 'message' => $message,
+                 'redirect_url' => $redirect_url,
+                 'notifiable_id' => $helpDesk->id,
+                 'notifiable_type' => HelpDesks::class, // Use the HelpDesks model as the notifiable type
+             ]);
+         });
+     }
+
     public function emp()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');

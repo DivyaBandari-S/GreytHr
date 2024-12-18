@@ -110,6 +110,7 @@ width: 170px; */
             color: #7f8fa4;
         }
 
+        
         .text-center {
             text-align: center;
         }
@@ -1584,7 +1585,7 @@ color: #fff;
                                 </table>
 
                             </div>
-
+                             
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageFirstInTime}}</span></p>
@@ -1669,7 +1670,7 @@ color: #fff;
 
 
                                 @if ($day)
-                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L') @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
+                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if(($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L')&&$day['onleave']==true) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1) rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
                                     <div>
 
                                        @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend)
@@ -1681,6 +1682,26 @@ color: #fff;
                                                 </div>
                                                 
 
+                                       @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend)  
+                                          <div style="background-color: rgb(252, 242, 255);margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                                        
+                                                        <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                        @if($day['status'] == 'CLP')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
+                                                        @elseif($day['status'] == 'SL')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
+                                                        @elseif($day['status'] == 'LOP')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
+                                                        @elseif($day['status'] == 'CL')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
+                                                        @elseif($day['status'] == 'ML')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Marriage Leave">ML</span>
+                                                        @elseif($day['status'] == 'PL')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
+                                                        @elseif($day['status'] == 'L')
+                                                             <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
+                                                        @endif     
+                                               </div>   
                                        @else
                                                 <div>
                                                         @if ($day['isToday'])
@@ -1695,8 +1716,90 @@ color: #fff;
                                                 
 
                                        @endif
+                                        @if($day['onHalfDayLeave']==true&&!$day['isToday'])
 
-                                        @if($day['status']=='HP'&&!$day['isToday'])
+
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;padding-top:6px;">
+                                            <!-- Render your grey circle -->
+                                            @if ($isWeekend&&$isCurrentMonth)
+                                            <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
+
+                                            <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;"title="Off Day">
+                                                O
+                                            </span>
+                                            @elseif($isCurrentMonth)
+
+
+                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
+
+                                                @if($day['isPublicHoliday'])
+                                                <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
+                                             
+                                                @elseif($day['onHalfDayLeave']==true)
+                                                <span style="background-color:  #fcf0f0;color: #f66;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">A</span>
+                                                @elseif($day['status'] == 'CLP'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
+                                                @elseif($day['status'] == 'SL'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
+                                                @elseif($day['status'] == 'LOP'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
+                                                @elseif($day['status'] == 'CL'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
+                                                @elseif($day['status'] == 'ML'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Marriage Leave">ML</span>
+                                                @elseif($day['status'] == 'PL'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
+                                                @elseif($day['status'] == 'L'&&$day['onleave']==true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
+                                               
+                                                @elseif($day['status'] == 'A')
+                                                  
+                                                <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
+                    
+
+                                                @elseif($day['status'] == 'P')
+                                                   
+                                                   <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
+                                                   
+                                                @endif
+
+
+                                                </span>
+                                                @endif
+
+                                                
+                                                @if($day['isRegularised']==true&&($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='MTL'||$day['status']=='L'))
+                                                @php
+                                                $Regularised=true;
+                                                @endphp
+                                                
+                                                @if($day['status']=='P')
+                                                <span style="display:flex;text-align:start;width:10px;height:10px;border-radius:50%;padding-right: 10px; margin-right:25px;">
+                                                    <div class="down-arrow-reg"></div>
+                                                </span>
+                                                @endif
+                                                @endif
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                
+                                                @elseif($isCurrentMonth)
+                                                @if($day['isRegularised']==true)
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+                                                @else
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                </span>
+
+                                                @endif
+                                                @endif
+                                                @endif
+                                        </div>
+
+                                        @elseif($day['status']=='HP'&&!$day['isToday'])
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;">
                                             <!-- Render your grey circle -->
@@ -1713,11 +1816,13 @@ color: #fff;
 
                                                 @if($day['isPublicHoliday'])
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
+                                                @elseif($day['onHalfDayLeave'] == true)
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Leave">HDL</span>
                                                 @elseif($day['status'] == 'CLP')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
                                                 @elseif($day['status'] == 'SL')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
-                                                @elseif($day['status'] == 'LOP')
+                                                @elseif($day['status'] == 'LOP'&&$day['onleave']==true)
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
                                                 @elseif($day['status'] == 'CL')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
@@ -1727,6 +1832,7 @@ color: #fff;
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
                                                 @elseif($day['status'] == 'L')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
+                                               
                                                 @elseif($day['status'] == 'A')
                                                   
                                                 <span style="color:#ff6666; background-color: #fcf0f0;text-align:center;padding-left:30px;margin-left: 37px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
@@ -1741,12 +1847,15 @@ color: #fff;
 
                                                 </span>
                                                 @endif
+
                                                 @if($day['status']=='HP')
                                                 
                                                 <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:#f66;padding-left: 39px;margin-top: -5px;"title="Absent">
                                                     A
                                                 </span>
                                                 @endif
+                                                
+                                                
                                                 @if($day['isRegularised']==true&&($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='MTL'||$day['status']=='L'))
                                                 @php
                                                 $Regularised=true;
@@ -1765,6 +1874,12 @@ color: #fff;
                                                 @elseif($day['status']=='HP')
                                                 <div style="background-color:#fcf0f0;">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
+                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
+                                                    </span>
+                                                </div>
+                                                @elseif($day['onHalfDayLeave']==true)
+                                                <div style="background-color:#fcf0f0;">
+                                                    <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-20px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                         <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
                                                     </span>
                                                 </div>
@@ -1803,7 +1918,7 @@ color: #fff;
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
                                                 @elseif($day['status'] == 'SL')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
-                                                @elseif($day['status'] == 'LOP')
+                                                @elseif($day['status'] == 'LOP'&&$day['onleave']==true)
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
                                                 @elseif($day['status'] == 'CL')
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
@@ -2412,8 +2527,7 @@ color: #fff;
 
 
 
-
-
+    
 
 
 
