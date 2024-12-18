@@ -288,6 +288,11 @@
 
                                                     </div>
 
+                                                    <div class="form-group mt-2">
+                                                        <label for="mailbox">Provide the New Mailbox Name<span style="color:red">*</span></label>
+                                                        <input wire:model.lazy="mailbox" wire:keydown.debounce.500ms="validateField('form.mailbox')" type="text" class="form-control" id="mailbox">
+                                                        @error('mailbox') <span class="text-danger">{{ $message }}</span> @enderror
+                                                    </div>
 
                                                     <div class="form-group mt-2">
                                                         <label for="distributor_name">New Mailbox Owner Name<span style="color:red">*</span></label>
@@ -667,7 +672,7 @@
                                                     </div>
                                                 </div>
                                                 <hr style="border: 1px solid #ccc;margin: 10px 0;">
-                                                <form wire:submit.prevent="Request" style="width:80%">
+                                                <form wire:submit.prevent="OldRequest" style="width:80%">
 
                                                     <div class="form-group mt-2">
                                                         <label for="Name">Requested By:</label>
@@ -687,10 +692,16 @@
 
                                                     </div>
                                                     <div class="form-group mt-2">
-                                                        <label for="distributor_name">Provide the Name of Mailbox<span style="color:red">*</span></label>
-                                                        <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
-                                                        @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    </div>
+    <label for="mailbox">Provide the name of the Mailbox<span style="color:red">*</span></label>
+    <select wire:model.lazy="mailbox" class="form-control" id="mailbox">
+        <option value=""  selected hidden>-- Select Mailbox --</option>
+        @foreach($mailboxes as $mailbox)
+            <option value="{{ $mailbox }}">{{ $mailbox }}</option>
+        @endforeach
+    </select>
+    @error('mailbox') <span class="text-danger">{{ $message }}</span> @enderror
+</div>
+
                                                     <div class="form-group mt-2">
                                                         <label for="Name">Please select the users to be added to New Mailbox :</label>
                                                         <div class="input-group mb-3">
@@ -822,7 +833,7 @@
                                             <div class="modal-footer justify-content-center">
                                                 <div class="m-0 p-0 mt-3 d-flex gap-3 justify-content-center">
 
-                                                    <button type="button" wire:click="Request" class="submit-btn">Submit</button>
+                                                    <button type="button" wire:click="OldRequest" class="submit-btn">Submit</button>
                                                     <button wire:click="closecatalog" type="button" class="cancel-btn" style="border:1px solid rgb(2,17,79);">Cancel</button>
                                                 </div>
 

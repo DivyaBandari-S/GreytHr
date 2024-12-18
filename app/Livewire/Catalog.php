@@ -40,6 +40,9 @@ class Catalog extends Component
     use WithFileUploads;
     public $searchTerm = '';
     public $superAdmins;
+    public $fileDataArray;
+    public $mailbox=[];
+    public $mailboxes=[];
     public $email;
     public $ServiceRequestaceessDialog = false;
     public $RemoveMailRequestaceessDialog=false;
@@ -167,7 +170,10 @@ public $RemoveRequestaceessDialog=false;
             ->orderBy('last_name')
             ->get();
 
-
+            $this->mailboxes = HelpDesks::where('category', 'New Mailbox Request')
+            ->whereNotNull('mailbox')
+            ->pluck('mailbox')
+            ->toArray();
         $this->selected_equipment = '';  // Initialize with a default value if needed
     }
 
@@ -256,7 +262,7 @@ public $RemoveRequestaceessDialog=false;
         $this->MailRequestaceessDialog = true;
         $this->showModal = true;
         $this->reset(['category', 'priority']);
-        $this->category = 'New Mailbox Request';
+        $this->category = 'Mailbox Request';
     }
 
     public function DevopsRequest()
@@ -558,30 +564,46 @@ public $RemoveRequestaceessDialog=false;
     public function addselectPerson($personId)
     {
         try {
-            // Limit to a maximum of 5 selected people
-
-            $addselectedPerson = $this->peoples->where('emp_id', $personId)->first();
-
-            if ($addselectedPerson) {
-                // Add or remove the person's name based on current selection
-                if (in_array($personId, $this->addselectedPeople)) {
-                    $name = ucwords(strtolower($addselectedPerson->first_name)) . ' ' . ucwords(strtolower($addselectedPerson->last_name)) . ' #(' . $addselectedPerson->emp_id . ')';
-                    if (!in_array($name, $this->selectedPeopleNames)) {
-                        $this->selectedPeopleNames[] = $name;
-                    }
-                } else {
-                    // Remove the person's name from selectedPeopleNames if they are unselected
-                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($addselectedPerson->first_name)) . ' ' . ucwords(strtolower($addselectedPerson->last_name)) . ' #(' . $addselectedPerson->emp_id . ')']);
+            // Fetch the selected mailbox and its associated CC list (only for that mailbox)
+            $selectedMailbox = $this->mailbox; // This assumes `$this->mailbox` contains the selected mailbox from the dropdown
+            
+            // Retrieve the existing `cc_to` list for this mailbox from the HelpDesks table
+            $existingCcTo = HelpDesks::where('mailbox', $selectedMailbox)
+                ->whereNotNull('cc_to')
+                ->pluck('cc_to')
+                ->first(); // Get the first (and only) entry since each mailbox should have one CC list
+    
+            // If the `cc_to` field is not null, split it into an array of names
+            $existingCcToArray = $existingCcTo ? array_map('trim', explode(',', $existingCcTo)) : [];
+    
+            // Retrieve the selected person's details
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+    
+            if ($selectedPerson) {
+                $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+    
+                // Check if the person is already in the existing `cc_to` for this mailbox
+                if (in_array($name, $existingCcToArray)) {
+                    // Show the warning using FlashMessageHelper
+                    FlashMessageHelper::flashWarning("$name is already added to the CC list for this mailbox.");
+                    return;
                 }
-
-                // Update cc_to field
+    
+                // Add the person to the `selectedPeopleNames` list if not already present
+                $this->selectedPeopleNames[] = $name;
+    
+                // Update the `cc_to` field
                 $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+            } else {
+                // Handle the case where the person could not be found
+                FlashMessageHelper::flashError('Person not found. Please try again.');
             }
         } catch (\Exception $e) {
-            Log::error('Error selecting person: ' . $e->getMessage());
-            $this->dispatch('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
+            Log::error('Error adding person to CC list: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while adding the person to the CC list.');
         }
     }
+    
 
 
     public function filter()
@@ -900,13 +922,120 @@ public function updatedAddselectedPeople()
        }
    }
    
+   public function OldRequest()
+   {
+       try {
+           $messages = [
+               'subject.required' => 'Business Justification is required',
+              
+               'cc_to.required' => 'Add members is required',
+               'description.required' => 'Specific Information is required',
+         
+               'priority.required' => 'Priority is required.',
+           ];
+   
+           $this->validate([
+               'subject' => 'required|string|max:255',
+             
+             
+               'cc_to' => 'required',
+               'priority' => 'required|in:High,Medium,Low',
+               'description' => 'required|string',
+               'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // Adjust max size as needed
+           ], $messages);
+   
+           // Handle file uploads
+           $filePaths = $this->file_paths ?? [];
+           $fileDataArray = [];
+   
+           if (!empty($filePaths) && is_array($filePaths)) {
+               foreach ($filePaths as $file) {
+                   if ($file->isValid()) {
+                       try {
+                           $fileDataArray[] = [
+                               'data' => base64_encode(file_get_contents($file->getRealPath())),
+                               'mime_type' => $file->getMimeType(),
+                               'original_name' => $file->getClientOriginalName(),
+                           ];
+                       } catch (\Exception $e) {
+                           Log::error('Error processing file', [
+                               'file_name' => $file->getClientOriginalName(),
+                               'error' => $e->getMessage(),
+                           ]);
+                           FlashMessageHelper::flashError('An error occurred while processing the file.');
+                           return;
+                       }
+                   } else {
+                       FlashMessageHelper::flashError('Invalid file uploaded.');
+                       return;
+                   }
+               }
+           }
+ 
+       
+           $employeeId = auth()->guard('emp')->user()->emp_id;
+           $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+   
+           if (!$this->employeeDetails) {
+               FlashMessageHelper::flashError('Employee details not found.');
+               return;
+           }
+       // Debug the fetched mailbox data
+        
+        
+           $helpDesk = HelpDesks::create([
+               'emp_id' => $this->employeeDetails->emp_id,
+               'subject' => $this->subject,
+               'mailbox' =>  $this->mailbox,
+               'description' => $this->description,
+               'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
+               'cc_to' => $this->cc_to ?? '-',
+               'category' => $this->category,
+               'mobile' => $this->mobile ?? '-',
+               'mail' => $this->mail ?? '-',
+               'distributor_name' => $this->distributor_name ?? '-',
+               'priority' => $this->priority,
+               'status_code' => 8,
+           ]);
+         
 
+           $helpDesk->refresh();
+   
+           // Notify super admins
+           $superAdmins = IT::where('role', 'super_admin')->get();
+           foreach ($superAdmins as $admin) {
+               $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+               $firstName = $employeeDetails->first_name ?? 'N/A';
+               $lastName = $employeeDetails->last_name ?? 'N/A';
+   
+               Mail::to($admin->email)->send(
+                   new HelpDeskNotification($helpDesk, $firstName, $lastName)
+               );
+           }
+   
+           FlashMessageHelper::flashSuccess('Request created successfully.');
+           $this->reset();
+           return redirect()->to('/HelpDesk');
+       } catch (\Illuminate\Validation\ValidationException $e) {
+           $this->setErrorBag($e->validator->getMessageBag());
+       } catch (\Exception $e) {
+           Log::error('Error creating request: ' . $e->getMessage(), [
+               'employee_id' => $this->employeeDetails->emp_id ?? 'N/A',
+               'category' => $this->category,
+               'subject' => $this->subject,
+               'description' => $this->description,
+                // Log the file data
+           ]);
+           FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+       }
+   }
 
    public function Request()
    {
        try {
            $messages = [
                'subject.required' => 'Business Justification is required',
+               'mailbox.required' => ' Mail Box name is required',
                'cc_to.required' => 'Add members is required',
                'description.required' => 'Specific Information is required',
                'distributor_name.required' => 'MailBox is required',
@@ -915,6 +1044,7 @@ public function updatedAddselectedPeople()
    
            $this->validate([
                'subject' => 'required|string|max:255',
+               'mailbox' => 'required|string',
                'distributor_name' => 'required',
                'cc_to' => 'required',
                'priority' => 'required|in:High,Medium,Low',
@@ -961,6 +1091,7 @@ public function updatedAddselectedPeople()
            $helpDesk = HelpDesks::create([
                'emp_id' => $this->employeeDetails->emp_id,
                'subject' => $this->subject,
+               'mailbox' => $this->mailbox??'-',
                'description' => $this->description,
                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
                'cc_to' => $this->cc_to ?? '-',
@@ -971,6 +1102,7 @@ public function updatedAddselectedPeople()
                'priority' => $this->priority,
                'status_code' => 8,
            ]);
+         
    
            $helpDesk->refresh();
    
@@ -997,7 +1129,7 @@ public function updatedAddselectedPeople()
                'category' => $this->category,
                'subject' => $this->subject,
                'description' => $this->description,
-               'file_paths' => $fileDataArray, // Log the file data
+                // Log the file data
            ]);
            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
        }

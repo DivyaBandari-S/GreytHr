@@ -10,7 +10,7 @@ class HelpDesks extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'id','emp_id', 'category', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
+        'id','emp_id', 'category','mailbox', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
      ];
      protected static function booted()
      {
