@@ -105,7 +105,7 @@
                                         @else
                                         {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         @endif
-                                        <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
+                                        <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}" >
                                             <!-- Render your content -->
                                         </div>
                                         @if (!$isWeekend && $leaveCount > 0) {{-- Only display leave count for weekdays --}}

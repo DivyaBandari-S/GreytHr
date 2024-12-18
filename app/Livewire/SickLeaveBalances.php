@@ -338,7 +338,7 @@ class SickLeaveBalances extends Component
         ];
 
         // Add "Lapsed Leaves" dataset only if employee has lapsed leave balance
-        if ($employeeLapsedChartBalance && $employeeLapsedChartBalance->is_lapsed) {
+        if (!$grantedLeavesCountData->isEmpty() && $employeeLapsedChartBalance->first() && $employeeLapsedChartBalance->first()->is_lapsed) {
             $chartData['datasets'][] = [
                 'label' => 'Lapsed Leaves',
                 'data' => $lapsedLeavesByMonth,
