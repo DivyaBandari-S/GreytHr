@@ -1044,7 +1044,7 @@ public function updatedAddselectedPeople()
    
            $this->validate([
                'subject' => 'required|string|max:255',
-               'mailbox' => 'required|string',
+               'mailbox' => 'required|email',
                'distributor_name' => 'required',
                'cc_to' => 'required',
                'priority' => 'required|in:High,Medium,Low',
