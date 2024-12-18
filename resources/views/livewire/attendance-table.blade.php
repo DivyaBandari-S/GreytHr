@@ -268,6 +268,7 @@ width: 170px; */
 
         .table thead {
             border: none;
+         
         }
 
         .table th {
@@ -701,7 +702,7 @@ width: 170px; */
             width: 100%;
             overflow-x: auto;
         }
-
+       
         .second-header-row th.date {
             background-color: #ebf5ff;
             color: #778899;
@@ -734,9 +735,9 @@ width: 170px; */
 
         .large-box-attendance-info table {
 
-            max-width: 100%;
+          
             margin-top: -20px;
-            table-layout: fixed;
+           
             /* Fix the table layout */
             width: auto;
             /* Set the table to an appropriate width or it will expand to the container's full width */
@@ -845,6 +846,7 @@ width: 170px; */
         table {
             border-collapse: collapse;
             width: 100%;
+            
 
         }
 
@@ -1337,7 +1339,7 @@ color: #fff;
             display: block;
             max-height: 400px;
             /* Adjust as needed */
-            overflow-y: auto;
+            overflow-y: scroll;
             border: 1px solid #cbd5e1;
         }
 
@@ -1517,7 +1519,7 @@ color: #fff;
         </div>
         <div class="col-md-6"></div>
     </div>
-    <div class="m-auto">
+    <div>
         <div class="table-container scrollable-table" style=" width: 100%;">
         <table>
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
@@ -1688,7 +1690,7 @@ color: #fff;
                         <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
-           ;}}">
+           ;}}">  
                             @if($isDate == false||$isWeekend||$isOnLeave||$holidayNote)
                             00:00
                             @elseif(empty($record['last_out_time']))
@@ -1790,7 +1792,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($totalWorkedMinutes < $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
+                            @if($totalWorkedMinutes < $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent &&$isDate)
                                 @php
                                 $shortfalltime=$standardWorkingMinutes - $totalWorkedMinutes;
                                 $shortfallHours=floor($shortfalltime / 60);
@@ -1809,7 +1811,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">
-                            @if($totalWorkedMinutes > $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent)
+                            @if($totalWorkedMinutes > $standardWorkingMinutes && !empty($record['last_out_time']) && !$isWeekend && !$holidayNote && $isPresent&& $isDate)
                             @php
                             $excesstime = $totalWorkedMinutes - $standardWorkingMinutes;
                             $excessHours = floor($excesstime / 60);
@@ -1898,7 +1900,7 @@ color: #fff;
            {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
                'white':'none'
            ;}}">00:00</td>
-                        @if($distinctDates->has($dateKeyForLookup))
+                        @if($distinctDates->has($dateKeyForLookup)&&$isDate)
                         @php
 
                         $record = $distinctDates[$dateKeyForLookup];

@@ -40,10 +40,11 @@
                     <tr style="border:1px solid #ccc;">
 
                         <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 10px;white-space:nowrap;">
-
-                            <input type="checkbox" wire:model="selectedEmployees" wire:click="$emit('employeeSelected', {{$emp->emp_id}})" name="employee_checkbox[]" value="{{$emp->emp_id}}">
-
+                        <label class="custom-checkbox">
+                            <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:model="selectedEmployees" wire:click="$emit('employeeSelected', {{$emp->emp_id}})" value="{{$emp->emp_id}}">
+                            <span class="checkmark"></span>
                             {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}
+                         </label>   
                         </td>
                         <td style="width:50%;font-size: 10px; color: <?php echo ($emp->employee_status == 'active') ? '#778899' : '#f66'; ?>;text-align:start;padding:5px 32px;white-space:nowrap;">{{$emp->emp_id}}</td>
                     </tr>
