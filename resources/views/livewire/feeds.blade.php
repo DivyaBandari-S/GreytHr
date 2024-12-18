@@ -81,32 +81,43 @@
 
                                             <div class="modal-body">
                                                 <div class="row">
-                                                    <div class="form-group col-md-6 mb-2">
-                                                        <label for="from-date">You are po <span
+                                                    <div class="d-flex col-12 mb-2">
+                                                        <label for="from-date">You are posting in:</label>
+                                                        <select id="postType"
+                                                            wire:change="updatePostType($event.target.value)"
+                                                            wire:model.lazy="postType"
+                                                            class="Employee-select-leave placeholder-big" style="border: none; margin-left: 10px;">
+                                                            <option value="appreciations">Appreciations</option>
+                                                            <option value="buysellrent">Buy/Sell/Rent</option>
+                                                            <option value="companynews">Company News</option>
+                                                            <option value="events">Events</option>
+                                                            <option value="everyone">Everyone</option>
+                                                            <option value="hyderabad">Hyderabad</option>
+                                                            <option value="technology">Technology</option>
+
+
+                                                            <!-- Add other leave types as needed -->
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="search">Search Employee<span
                                                                 style="color: var(--requiredAlert);">*</span></label>
-                                                        <input type="date" class="form-control placeholder-small"
-                                                            wire:model="fromDate" wire:change="updateFromDate"
-                                                            wire:model.lazy="fromDate">
-                                                        @error('fromDate')
+                                                        <div class="analytic-view-all-search-bar">
+                                                            <div class="search-wrapper">
+                                                                <input wire:click="searchFilter" wire:input="searchFilter"
+                                                                    wire:model.debounce.500ms="search" type="text" placeholder="Search...">
+                                                                <i class="search-icon bx bx-search"></i>
+                                                            </div>
+                                                        </div>
+                                                        @error('search')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
-                                                    <div class="form-group col-md-6 mb-2">
-                                                        <label for="to-date">To <span
-                                                                style="color: var(--requiredAlert);">*</span></label>
-                                                        <input type="date" class="form-control placeholder-small"
-                                                            wire:model="toDate" wire:change="updateToDate"
-                                                            wire:model.lazy="toDate">
-                                                        @error('toDate')
-                                                            <span class="text-danger">{{ $message }}</span>
-                                                        @enderror
-                                                    </div>
-                                                    <div class="form-group col-md-6 mb-2">
-                                                        <label for="to-date">Transaction
-                                                            Type</label>
-                                                        <select id="transactionType"
-                                                            wire:change="updateTransactionType($event.target.value)"
-                                                            wire:model.lazy="transactionType"
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="to-date">Recognize Values</label>
+                                                        <select id="recognizeType"
+                                                            wire:change="recognizeType($event.target.value)"
+                                                            wire:model.lazy="recognizeType"
                                                             class="form-select placeholder-small">
                                                             <option value="all">All Transactions</option>
                                                             <option value="granted">Granted</option>
