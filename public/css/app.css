@@ -6783,7 +6783,7 @@ select .yearSelect {
 
 .select-year-dropdown {
     margin-right: 5px;
-    width: fit-content;
+    width: 100px;
 }
 
 .leave-details-col-md-12 {
