@@ -6784,6 +6784,7 @@ select .yearSelect {
 .select-year-dropdown {
     margin-right: 5px;
     width: 100px;
+    padding: 5px;
 }
 
 .leave-details-col-md-12 {
