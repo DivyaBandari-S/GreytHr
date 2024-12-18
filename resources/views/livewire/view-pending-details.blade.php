@@ -123,7 +123,7 @@
                             </p>
                         </div>
                         <!-- Add other details based on your leave request structure -->
-                        <div class="arrow-btn ">
+                        <div class="arrow-btn active ">
                             <i class="fa fa-angle-down"></i>
                         </div>
                     </div>
@@ -285,14 +285,28 @@
         @endif
     </div>
     <script>
-        function toggleAccordion(element) {
+         function toggleAccordion(element) {
             const accordionBody = element.nextElementSibling;
+            const arrowIcon = element.querySelector('.fa'); // Select the arrow icon
+            const arrowBtn = element.querySelector('.arrow-btn');
             if (accordionBody.style.display === 'block') {
+
                 accordionBody.style.display = 'none';
-                element.classList.remove('active'); // Remove active class
-            } else {
-                accordionBody.style.display = 'block';
                 element.classList.add('active'); // Add active class
+
+                arrowIcon.classList.remove('rotate'); // Remove rotation class
+                arrowIcon.classList.remove('active-color');
+                arrowBtn.classList.remove('active-border-color');
+
+            } else {
+
+                accordionBody.style.display = 'block';
+
+                element.classList.add('active'); // Add active class
+                arrowIcon.classList.add('rotate'); // Add rotation class
+                arrowIcon.classList.add('active-color');
+                arrowBtn.classList.add('active-border-color');
+
             }
         }
     </script>

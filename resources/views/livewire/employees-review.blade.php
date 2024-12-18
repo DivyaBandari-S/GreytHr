@@ -155,24 +155,23 @@
             @else
 
             <div class="row p-0 mt-3">
-    <div class="row m-0 p-0 mt-3 w-100">
-        <div 
-            class="search-container d-flex align-items-end ms-auto p-2" 
-            style="position: relative; width: 220px;">
-            <input 
-                type="text" 
-                wire:model.debounce.500ms="searchQuery" 
-                id="searchInput" 
-                placeholder="Search..." 
-                class="form-control placeholder-small border outline-none rounded" 
-                style="padding-right: 40px;"
-            >
-            <button wire:click="searchApprovedLeave" id="searchButtonReports">
-                <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
-            </button>
-        </div>
-    </div>
-</div>
+                <div class="row m-0 p-0 mt-3 w-100">
+                    <div
+                        class="search-container d-flex align-items-end ms-auto p-2"
+                        style="position: relative; width: 220px;">
+                        <input
+                            type="text"
+                            wire:model.debounce.500ms="searchQuery"
+                            id="searchInput"
+                            placeholder="Search..."
+                            class="form-control placeholder-small border outline-none rounded"
+                            style="padding-right: 40px;">
+                        <button wire:click="searchApprovedLeave" id="searchButtonReports">
+                            <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
 
 
@@ -217,17 +216,17 @@
                             <div class="col accordion-content">
 
 
-                            @if(isset($arrl->image) && $arrl->image !== 'null' && $arrl->image != "Null" && $arrl->image != "")
-                                    <img height="40" width="40" src="data:image/jpeg;base64,{{ ($arrl->image) }}" style="border-radius: 50%;">
-                                    @else
-                                    @if($arrl->gender === 'FEMALE')
-                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                    @elseif($arrl->gender === 'MALE')
-                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                    @else
-                                    <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
-                                    @endif
-                                    @endif
+                                @if(isset($arrl->image) && $arrl->image !== 'null' && $arrl->image != "Null" && $arrl->image != "")
+                                <img height="40" width="40" src="data:image/jpeg;base64,{{ ($arrl->image) }}" style="border-radius: 50%;">
+                                @else
+                                @if($arrl->gender === 'FEMALE')
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @elseif($arrl->gender === 'MALE')
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @else
+                                <img src="{{ asset('images/user.jpg') }}" alt="" height="40" width="40" style="border-radius: 50%;">
+                                @endif
+                                @endif
                             </div>
 
                             <div class="col accordion-content">
@@ -261,10 +260,10 @@
                                 @endif
                             </div>
 
-                            <div class="arrow-btn"wire:click="toggleActiveAccordion({{ $arrl->id }})" style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};
+                            <div class="arrow-btn" wire:click="toggleActiveAccordion({{ $arrl->id }})" style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};
                                 border:1px solid {{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }};">
                                 <i class="fa fa-angle-{{ in_array($arrl->id, $openAccordionsForClosed) ? 'up' : 'down' }}"
-                                style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }}"></i>
+                                    style="color:{{ in_array($arrl->id, $openAccordionsForClosed) ? '#3a9efd' : '#778899' }}"></i>
                             </div>
 
                         </div>
@@ -345,7 +344,7 @@
                         <div class="reviewActiveButtons custom-nav-link {{ $leaveactiveTab === 'active' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('active')">Active</div>
                     </li>
                     <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
-                        <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}"  wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
+                        <div class="reviewClosedButtons custom-nav-link {{ $leaveactiveTab === 'closed' ? 'active' : '' }}" wire:click.prevent="setActiveLeaveTab('closed')">Closed</div>
                     </li>
                 </ul>
             </div>
@@ -454,7 +453,7 @@
                                 @elseif($leaveRequest['approvedLeaveRequest']->leave_status === 3)
                                 <span class="rejectColor">REJECTED</span>
                                 @else
-                                <span class="normalTextValue">-</span>
+                                <span class="normalTextValue">WITHDRAWN</span>
                                 @endif
                             </div>
                             @else
@@ -464,11 +463,11 @@
                                 @elseif($leaveRequest['approvedLeaveRequest']->cancel_status === 3)
                                 <span class="rejectColor">REJECTED</span>
                                 @else
-                                <span class="normalTextValue">-</span>
+                                <span class="normalTextValue">WITHDRAWN</span>
                                 @endif
                             </div>
                             @endif
-                            <div class="arrow-btn px-1">
+                            <div class="arrow-btn rotate px-1">
                                 <i class="fa fa-angle-down"></i>
                             </div>
                         </div>
@@ -816,20 +815,26 @@
 
     <script>
         function toggleAccordion(element) {
-
             const accordionBody = element.nextElementSibling;
-
+            const arrowIcon = element.querySelector('.fa'); // Select the arrow icon
+            const arrowBtn = element.querySelector('.arrow-btn');
             if (accordionBody.style.display === 'block') {
 
                 accordionBody.style.display = 'none';
+                element.classList.add('active'); // Add active class
 
-                element.classList.remove('active'); // Remove active class
+                arrowIcon.classList.remove('rotate'); // Remove rotation class
+                arrowIcon.classList.remove('active-color');
+                arrowBtn.classList.remove('active-border-color');
 
             } else {
 
                 accordionBody.style.display = 'block';
 
                 element.classList.add('active'); // Add active class
+                arrowIcon.classList.add('rotate'); // Add rotation class
+                arrowIcon.classList.add('active-color');
+                arrowBtn.classList.add('active-border-color');
 
             }
         }

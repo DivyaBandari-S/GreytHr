@@ -48,6 +48,7 @@ class LeaveCalender extends Component
     public $showDepartment = false;
     public $selectedLocations = [];
     public $filterType;
+    public $backgroundColor;
     public $selectedDepartments = [];
 
 
@@ -225,7 +226,7 @@ class LeaveCalender extends Component
                             $publicHolidays->pluck('date')->toArray()
                         );
 
-                        $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
+                        $this->backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
 
                         $date = Carbon::create($this->year, $this->month, $dayCount)->toDateString();
                         $leaveCountMe = 0;
@@ -243,7 +244,7 @@ class LeaveCalender extends Component
                             'isPublicHoliday' => $isPublicHoliday,
                             'isCurrentMonth' => true,
                             'isPreviousMonth' => false,
-                            'backgroundColor' => $backgroundColor,
+                            'backgroundColor' => $this->backgroundColor,
                             'leaveCountMe' => $leaveCountMe,
                             'leaveCountMyTeam' => $leaveCountMyTeam,
                         ];
@@ -438,6 +439,7 @@ class LeaveCalender extends Component
             return view('livewire.leave-calender', [
                 'holidays' => $holidays,
                 'leaveTransactions' => $this->leaveTransactions,
+                'backgroundColor' =>$this->backgroundColor
             ]);
         } catch (\Illuminate\Database\QueryException $e) {
             // Handle database query exceptions

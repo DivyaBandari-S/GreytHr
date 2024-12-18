@@ -2868,6 +2868,13 @@ td {
     font-family: "Montserrat", sans-serif;
     font-weight: normal;
 }
+.placeholder-big {
+    color: var(--main-heading-color);
+    /* Placeholder text color */
+    font-size: var(--normal-font-size);
+    font-family: "Montserrat", sans-serif;
+    font-weight: normal;
+}
 
 #category::placeholder {
     color: var(--label-color);
@@ -5707,7 +5714,7 @@ select .yearSelect {
     line-height: 20px;
 }
 
-.circle.IRIS {
+.IRIS {
     background-color: #d29be1;
 }
 
@@ -6783,7 +6790,8 @@ select .yearSelect {
 
 .select-year-dropdown {
     margin-right: 5px;
-    width: fit-content;
+    width: 100px;
+    padding: 5px;
 }
 
 .leave-details-col-md-12 {
@@ -10338,4 +10346,39 @@ input[type="date"] {
     background-image: none;
     cursor: pointer;
     -webkit-appearance: textfield;
+}
+
+.analytic-view-all-search-bar {
+    display: flex;
+    padding: 20px 0px;
+    justify-content: space-between;
+    /* Adjust spacing between items */
+    align-items: center;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.analytic-view-all-search-bar input[type="text"] {
+    width: 200px;
+    padding: 6px 28px 6px 10px;
+    /* Adjust padding for right space */
+    border: 1px solid #ccc;
+    border-radius: 18px;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    color: #666;
+    pointer-events: none;
+}
+.Employee-select-leave {
+    font-weight: 500;
+    font-size: var(--main-headings-font-size);
+    color: var(--main-heading-color);
 }
