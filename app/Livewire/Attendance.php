@@ -39,8 +39,12 @@ class Attendance extends Component
     public $totalWorkingPercentage;
     public $minutesFormatted;
 
+    
     public $avgWorkHoursFromJuly = 0;
 
+   
+
+   
     public $last_out_time;
 
     public $excessHrs;
@@ -1175,6 +1179,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 if(!$isOnLeave)
                 {
                     $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
+                    
                     Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
                     if ($isAbsent) {
                         $absentDays++;
