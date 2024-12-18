@@ -814,6 +814,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $employeeId = auth()->guard('emp')->user()->emp_id;
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
+                ->where('from_session','Session 1')
+                ->where('to_session','Session 2')
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
@@ -826,6 +828,27 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return false; // Return false to handle the error gracefully
         }
     }
+    private function isEmployeeHalfDayLeaveOnDate($date, $employeeId)
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        return LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_applications.leave_status', 2)
+            ->where('from_session', 'Session 1') // Add condition for from_session = 1
+            ->where('to_session', 'Session 1')   // Add condition for to_session = 1
+            ->where(function ($query) use ($date) {
+                $query->whereDate('from_date', '<=', $date)
+                      ->whereDate('to_date', '>=', $date);
+            })
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
+            ->exists();
+    } catch (\Exception $e) {
+        Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+        return false; // Return false to handle the error gracefully
+    }
+}
     private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
     {
         $countofleaves = 0;
@@ -932,7 +955,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'isRegularised' => false,
                             'backgroundColor' => '',
                             'status' => '',
+                            'onHalfDayLeave'=>'',
                             'onleave' => ''
+
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
                         $date = Carbon::create($this->year, $this->month, $dayCount);
@@ -950,7 +975,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
                         $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId);
                         Log::info('Is On Leave:', ['isOnLeave' => $isOnLeave]);
-
+                          
+                        $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId);
+                        Log::info('Is On Half Day Leave:', ['isOnHalfDayLeave' => $isOnHalfDayLeave]);
                         $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
                         Log::info('Leave Type:', ['leaveType' => $leaveType]);
 
@@ -1005,7 +1032,37 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
                             }
                         }
-                        if ($isOnLeave) {
+                        if($isOnHalfDayLeave)
+                        {
+
+                            switch ($leaveType) {
+                                case 'Casual Leave Probation':
+                                    $status = 'CLP';
+                                    break;
+                                case 'Sick Leave':
+                                    $status = 'SL';
+                                    break;
+                                case 'Loss Of Pay':
+                                    $status = 'LOP';
+                                    break;
+                                case 'Casual Leave':
+                                    $status = 'CL';
+                                    break;
+                                case 'Marriage Leave':
+                                    $status = 'ML';
+                                    break;
+                                case 'Paternity Leave':
+                                    $status = 'PL';
+                                    break;
+                                case 'Maternity Leave':
+                                    $status = 'MTL';
+                                    break;
+                                default:
+                                    $status = 'L';
+                                    break;
+                            }
+                        }
+                        elseif ($isOnLeave) {
                             switch ($leaveType) {
                                 case 'Casual Leave Probation':
                                     $status = 'CLP';
@@ -1053,6 +1110,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'isPreviousMonth' => false,
                             'backgroundColor' => $backgroundColor,
                             'onleave' => $isOnLeave,
+                            'onHalfDayLeave'=>$isOnHalfDayLeave,
                             'status' => $status,
                         ];
 
@@ -1067,6 +1125,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'isNextMonth' => true,
                             'backgroundColor' => '',
                             'onleave' => false,
+                            'onHalfDayLeave'=>false,
                             'status' => '',
                         ];
                         $dayCount++;
@@ -1143,6 +1202,53 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
     }
 
+    private function calculateWorkHrsForAbsentEmployees($date)
+{
+    Log::info('Welcome to calculateWorkHrsForAbsentEmployees method');
+    // Fetch IN swipe record
+    $inSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+        ->where('in_or_out', 'IN')
+        ->whereDate('created_at', $date)
+        ->first();
+
+    // Fetch OUT swipe record
+    $outSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+        ->where('in_or_out', 'OUT')
+        ->whereDate('created_at', $date)
+        ->orderByDesc('created_at')
+        ->first();
+
+    // Log fetched swipe records
+    Log::info('IN Swipe Record:', ['data' => $inSwipeRecord]);
+    Log::info('OUT Swipe Record:', ['data' => $outSwipeRecord]);
+
+    if ($inSwipeRecord && $outSwipeRecord) {
+        // Parse swipe times using Carbon
+        $inTime = Carbon::parse($inSwipeRecord->swipe_time);
+        $outTime = Carbon::parse($outSwipeRecord->swipe_time);
+
+        Log::info('Parsed IN Time:', ['time' => $inTime]);
+        Log::info('Parsed OUT Time:', ['time' => $outTime]);
+
+        // Calculate the difference
+        $timeDifference = $inTime->diff($outTime);
+        $formattedDifference = $timeDifference->format('%h hours %i minutes');
+        $totalMinutes = $inTime->diffInMinutes($outTime);
+
+        // Log calculated results
+        Log::info('Time Difference:', ['formatted' => $formattedDifference, 'total_minutes' => $totalMinutes]);
+
+        return [
+            'formatted_difference' => $formattedDifference,
+            'total_minutes' => $totalMinutes,
+        ];
+    }
+
+    // Log missing swipe records case
+    Log::warning('Swipe records missing for date:', ['date' => $date]);
+
+    return null; // Return null if records are not found
+}
     public function updatedToDate($value)
     {
         try {
@@ -1179,13 +1285,29 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 if(!$isOnLeave)
                 {
                     $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
-                    
+                    $totalWorkHrs =$this->calculateWorkHrsForAbsentEmployees($date->format('Y-m-d'));
+                    if ($totalWorkHrs !== null) {
+                        $totalMinutes = $totalWorkHrs['total_minutes'];
+                        
+                        // Log the total minutes fetched
+                        Log::info('Total Minutes:', ['minutes' => $totalMinutes]);
+                
+                       
+                    }
+                
                     Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
-                    if ($isAbsent) {
+                    if ($isAbsent || ($totalMinutes < 240)) {
                         $absentDays++;
                         // Log the increment of absent days
                         Log::info('Absent days count incremented to: ' . $absentDays);
                     }
+                    elseif($totalMinutes >= 240 &&  $totalMinutes < 480)
+                    {
+                        $absentDays+=0.5;
+                        Log::info('Absent days count incremented to: ' . $absentDays);
+                    }
+
+
                 }
             }
             
