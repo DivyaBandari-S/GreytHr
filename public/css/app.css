@@ -5121,6 +5121,12 @@ input[type="radio"] {
     font-weight: 500;
     cursor: pointer;
 }
+.anchorTagDetailsCrumb{
+    color: rgb(2, 17, 79) !important;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 .viewSwipesList {
     font-size: var(--normal-font-size);
@@ -6777,7 +6783,8 @@ select .yearSelect {
 
 .select-year-dropdown {
     margin-right: 5px;
-    width: fit-content;
+    width: 100px;
+    padding: 5px;
 }
 
 .leave-details-col-md-12 {
