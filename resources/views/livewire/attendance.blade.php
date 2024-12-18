@@ -110,6 +110,7 @@ width: 170px; */
             color: #7f8fa4;
         }
 
+        
         .text-center {
             text-align: center;
         }
@@ -1584,7 +1585,7 @@ color: #fff;
                                 </table>
 
                             </div>
-
+                             
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageFirstInTime}}</span></p>
@@ -2412,8 +2413,7 @@ color: #fff;
 
 
 
-
-
+    
 
 
 
