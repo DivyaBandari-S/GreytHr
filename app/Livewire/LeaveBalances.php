@@ -20,7 +20,7 @@ use App\Models\EmployeeLeaveBalances;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
-
+use Exception;
 
 class LeaveBalances extends Component
 {
@@ -63,9 +63,13 @@ class LeaveBalances extends Component
     public $percentageCasual;
     public $percentageSick;
     public $percentageCasualProbation, $differenceInMonths;
+    public $showCasualLeaveProbation, $showCasualLeaveProbationYear;
+    public $consumedMarriageLeaves;
+    public $consumedMaternityLeaves;
+    public $consumedPaternityLeaves;
     public $showModal = false;
+    public $hideCasualLeave;
     public $dateErrorMessage;
-
     protected $rules = [
         'fromDateModal' => 'required|date',
         'toDateModal' => 'required|date|after_or_equal:fromDateModal',
@@ -91,15 +95,14 @@ class LeaveBalances extends Component
         try {
             $this->selectedYear = Carbon::now()->format('Y'); // Initialize to the current year
             $this->updateLeaveBalances();
-            $hireDate = $this->employeeDetails->hire_date;
-            if ($hireDate) {
-                $hireDate = Carbon::parse($hireDate);
-                $currentDate = Carbon::now();
-
-                $this->differenceInMonths = $hireDate->diffInMonths($currentDate);
-            } else {
-                $this->differenceInMonths = null;
-            }
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->showCasualLeaveProbation = $this->employeeDetails && empty($this->employeeDetails->confirmation_date);
+            $this->hideCasualLeave = $this->employeeDetails && !empty($this->employeeDetails->confirmation_date);
+            $currentYear = date('Y');
+            $this->showCasualLeaveProbationYear = $this->employeeDetails &&
+                !empty($this->employeeDetails->confirmation_date) &&
+                (date('Y', strtotime($this->employeeDetails->confirmation_date)) == $currentYear);
         } catch (\Exception $e) {
             // Set an error message in the session
             FlashMessageHelper::flashError('An error occurred while loading the component. Please try again later.');
@@ -160,6 +163,9 @@ class LeaveBalances extends Component
                     $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
                     $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
                     $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
+                    $this->consumedMarriageLeaves = $this->marriageLeaves - $this->marriageLeaveBalance;
+                    $this->consumedMaternityLeaves = $this->maternityLeaves - $this->maternityLeaveBalance;
+                    $this->consumedPaternityLeaves  = $this->paternityLeaves - $this->paternityLeaveBalance;
                 } else {
                     // Otherwise, apply the deduction logic
                     $this->sickLeaveBalance = ($this->sickLeavePerYear ?? 0) - ($this->totalSickDays ?? 0);
@@ -168,6 +174,12 @@ class LeaveBalances extends Component
                     $this->marriageLeaveBalance = ($this->marriageLeaves ?? 0) - ($this->approvedLeaveDays['totalMarriageDays'] ?? 0);
                     $this->maternityLeaveBalance = ($this->maternityLeaves ?? 0) - ($this->approvedLeaveDays['totalMaternityDays'] ?? 0);
                     $this->paternityLeaveBalance = ($this->paternityLeaves ?? 0) - ($this->approvedLeaveDays['totalPaternityDays'] ?? 0);
+                    $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
+                    $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
+                    $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
+                    $this->consumedMarriageLeaves = $this->marriageLeaves - $this->marriageLeaveBalance;
+                    $this->consumedMaternityLeaves = $this->maternityLeaves - $this->maternityLeaveBalance;
+                    $this->consumedPaternityLeaves  = $this->paternityLeaves - $this->paternityLeaveBalance;
                 }
             }
         } catch (\Exception $e) {
@@ -189,6 +201,12 @@ class LeaveBalances extends Component
                     case 'Casual Leave Probation':
                         return $this->getSickLeaveColor($percentage);
                     case 'Casual Leave':
+                        return $this->getSickLeaveColor($percentage);
+                    case 'Marriage Leave':
+                        return $this->getSickLeaveColor($percentage);
+                    case 'Paternity Leave':
+                        return $this->getSickLeaveColor($percentage);
+                    case 'Maternity Leave':
                         return $this->getSickLeaveColor($percentage);
                     default:
                         return '#000000';
@@ -363,7 +381,7 @@ class LeaveBalances extends Component
 
             // Get the logged-in employee's approved leave days for all leave types
             $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
-          
+
 
 
             // Retrieve the lapsed status for Sick Leave
@@ -371,7 +389,7 @@ class LeaveBalances extends Component
                 ->where('is_lapsed', true)
                 ->where('period', 'like', "%$selectedYear%")
                 ->first();
-               
+
             if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
                 // If lapsed, set the balance directly to leavePerYear
                 $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
@@ -524,7 +542,7 @@ class LeaveBalances extends Component
 
     public function generatePdf()
     {
-    
+
         $this->validate();
 
         if ($this->dateErrorMessage) {
@@ -532,453 +550,453 @@ class LeaveBalances extends Component
         }
         try {
 
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-
-        // Fetch employee details
-        $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        if ($this->transactionType == 'granted') {
-            // Logic for 'granted' transaction type
-
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            // Fetch leave balances for granted transaction
-            $leaveBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
+            // Fetch employee details
+            $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            if ($this->transactionType == 'granted') {
+                // Logic for 'granted' transaction type
 
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
-                    }
-                })
-                ->get()
-                ->map(function ($balance) {
-                    // Declare startDate and endDate based on the period
-                    $period = $balance->period;
-                    $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
+                $employeeId = auth()->guard('emp')->user()->emp_id;
 
-                    // Get the end date (last day of the year)
-                    $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString(); // End date for the year
-
-                    // Decode the leave_policy_id from JSON
-                    $leaveDetails = json_decode($balance->leave_policy_id, true);
-                    $formattedLeaves = [];
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-
-                    // Loop through the leave details and format them
-                    foreach ($leaveDetails as $leave) {
-                        // Filter leaves based on the leave type (if selected)
-                        if ($this->leaveType && $this->leaveType != 'all' && $leave['leave_name'] !== $leaveTypes[$this->leaveType]) {
-                            continue;  // Skip if the leave name doesn't match the selected leave type
-                        }
-
-                        // Add formatted leave object to the array
-                        $formattedLeaves[] = (object)[
-                            'from_date' => $startDate,
-                            'to_date' => $endDate,
-                            'days' => $leave['grant_days'],
-                            'leave_name' => $leave['leave_name'],
-                            'transaction_type' => $balance->status,
-                            'created_at' => $balance->created_at,
+                // Fetch leave balances for granted transaction
+                $leaveBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
                         ];
-                    }
 
-                    return $formattedLeaves;
-                })
-                ->flatten(1);
-        } elseif ($this->transactionType == 'lapsed') {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            // Fetch lapsed leave transactions for the employee
-            $lapsedLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('is_lapsed', 1)  // Filter for lapsed leave
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
-                    }
-                })
-                ->get()
-                ->map(function ($balance) use ($employeeId) {
-                    // Declare startDate and endDate based on the last month of the year
-                    $period = $balance->period;
-                    $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
-                    $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
-
-                    // Get the remaining leave balances using the getLeaveBalances method
-                    $leaveBalances = LeaveBalances::getLeaveLapsedBalances($employeeId, $period);
-
-                    // Use the leave balance for the respective leave type
-                    $leaveDetails = json_decode($balance->leave_policy_id, true);
-                    $formattedLeaves = [];
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-                    function normalizeLeaveNameToBalanceKey($leaveName)
-                    {
-                        $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
-                        $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
-                        return $balanceKey;
-                    }
-
-                    // Loop through the leave details and format them
-                    foreach ($leaveTypes as $key => $leaveName) {
-                        if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
-                            continue;  // Skip if the leave name doesn't match the selected leave type
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
-                        $balanceKey = normalizeLeaveNameToBalanceKey($leaveName);
+                    })
+                    ->get()
+                    ->map(function ($balance) {
+                        // Declare startDate and endDate based on the period
+                        $period = $balance->period;
+                        $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
 
-                        // This will print the balance key for debugging
+                        // Get the end date (last day of the year)
+                        $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString(); // End date for the year
 
-                        // Get the balance for this leave type (defaults to 0 if not found)
-                        $remainingBalance = $leaveBalances[$balanceKey] ?? 0;
-
-                        // Skip if there's no remaining balance for this leave type
-                        if ($remainingBalance <= 0) {
-                            continue;
-                        }
-
-                        // Add formatted leave object to the array with remaining balance (days)
-                        $formattedLeaves[] = (object)[
-                            'from_date' => $decemberStart,
-                            'to_date' => $decemberEnd,
-                            'days' => $remainingBalance,  // Use the remaining balance (days)
-                            'leave_name' => $leaveName,
-                            'transaction_type' => 'lapsed',  // Indicate it's a lapsed transaction
-                            'created_at' => $balance->created_at,
+                        // Decode the leave_policy_id from JSON
+                        $leaveDetails = json_decode($balance->leave_policy_id, true);
+                        $formattedLeaves = [];
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
                         ];
-                    }
 
-                    return $formattedLeaves;
-                })
-                ->flatten(1);
-        }
+                        // Loop through the leave details and format them
+                        foreach ($leaveDetails as $leave) {
+                            // Filter leaves based on the leave type (if selected)
+                            if ($this->leaveType && $this->leaveType != 'all' && $leave['leave_name'] !== $leaveTypes[$this->leaveType]) {
+                                continue;  // Skip if the leave name doesn't match the selected leave type
+                            }
 
-
-        // If transaction type is 'all', merge both 'granted' and the other transaction types
-        elseif ($this->transactionType == 'all') {
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-
-            // Fetch leave balances for granted transaction
-            $leaveBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
-                    }
-                })
-                ->get()
-                ->map(function ($balance) {
-                    // Declare startDate and endDate based on the period
-                    $period = $balance->period;
-                    $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
-
-                    // Get the end date (last day of the year)
-                    $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString(); // End date for the year   // End date for the year
-
-                    // Decode the leave_policy_id from JSON
-                    $leaveDetails = json_decode($balance->leave_policy_id, true);
-                    $formattedLeaves = [];
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-
-                    // Loop through the leave details and format them
-                    foreach ($leaveDetails as $leave) {
-                        // Filter leaves based on the leave type (if selected)
-                        if ($this->leaveType && $this->leaveType != 'all' && $leave['leave_name'] !== $leaveTypes[$this->leaveType]) {
-                            continue;  // Skip if the leave name doesn't match the selected leave type
+                            // Add formatted leave object to the array
+                            $formattedLeaves[] = (object)[
+                                'from_date' => $startDate,
+                                'to_date' => $endDate,
+                                'days' => $leave['grant_days'],
+                                'leave_name' => $leave['leave_name'],
+                                'transaction_type' => $balance->status,
+                                'created_at' => $balance->created_at,
+                            ];
                         }
 
-                        // Add formatted leave object to the array
-                        $formattedLeaves[] = (object)[
-                            'from_date' => $startDate,
-                            'to_date' => $endDate,
-                            'days' => $leave['grant_days'],
-                            'leave_name' => $leave['leave_name'],
-                            'transaction_type' => $balance->status,
-                            'created_at' => $balance->created_at,
+                        return $formattedLeaves;
+                    })
+                    ->flatten(1);
+            } elseif ($this->transactionType == 'lapsed') {
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+
+                // Fetch lapsed leave transactions for the employee
+                $lapsedLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                    ->where('is_lapsed', 1)  // Filter for lapsed leave
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
                         ];
-                    }
 
-                    return $formattedLeaves;
-                })
-                ->flatten(1);
-               
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
+                        }
+                    })
+                    ->get()
+                    ->map(function ($balance) use ($employeeId) {
+                        // Declare startDate and endDate based on the last month of the year
+                        $period = $balance->period;
+                        $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
+                        $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
-            // Fetch leave requests (other transaction types like availed, withdrawn, etc.)
-            $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->when($this->fromDateModal, function ($query) {
-                    $query->where('from_date', '>=', $this->fromDateModal);
-                })
-                ->when($this->toDateModal, function ($query) {
-                    $query->where('to_date', '<=', $this->toDateModal);
-                })
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay'
-                    ];
+                        // Get the remaining leave balances using the getLeaveBalances method
+                        $leaveBalances = LeaveBalances::getLeaveLapsedBalances($employeeId, $period);
 
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->where('leave_type', $leaveTypes[$this->leaveType]);
-                    }
-                })
-                ->when($this->transactionType && $this->transactionType != 'all', function ($query) {
-                    $transactionTypes = [
-                        'granted' => 'Granted',
-                        'availed' => 2,
-                        'withdrawn' => 4,
-                        'rejected' => 3,
-                    ];
-                    if (array_key_exists($this->transactionType, $transactionTypes)) {
-                        $query->where('leave_status', $transactionTypes[$this->transactionType]);
-                    }
-                })
-                ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
-                ->get()
-                ->map(function ($leaveRequest) {
-                    // Calculate the leave days and transform the data into objects
-                    $leaveRequest->days = $leaveRequest->calculateLeaveDays(
-                        $leaveRequest->from_date,
-                        $leaveRequest->from_session,
-                        $leaveRequest->to_date,
-                        $leaveRequest->to_session,
-                        $leaveRequest->leave_type
-                    );
+                        // Use the leave balance for the respective leave type
+                        $leaveDetails = json_decode($balance->leave_policy_id, true);
+                        $formattedLeaves = [];
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
+                        ];
+                        function normalizeLeaveNameToBalanceKey($leaveName)
+                        {
+                            $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
+                            $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
+                            return $balanceKey;
+                        }
 
-                    return (object)[
-                        'from_date' => $leaveRequest->from_date,
-                        'to_date' => $leaveRequest->to_date,
-                        'days' => $leaveRequest->days,
-                        'leave_name' => $leaveRequest->leave_type,
-                        'transaction_type' => $leaveRequest->leave_status,
-                        'reason' => $leaveRequest->reason,
-                        'created_at' => $leaveRequest->created_at,
-                    ];
-                });
+                        // Loop through the leave details and format them
+                        foreach ($leaveTypes as $key => $leaveName) {
+                            if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
+                                continue;  // Skip if the leave name doesn't match the selected leave type
+                            }
+                            $balanceKey = normalizeLeaveNameToBalanceKey($leaveName);
+
+                            // This will print the balance key for debugging
+
+                            // Get the balance for this leave type (defaults to 0 if not found)
+                            $remainingBalance = $leaveBalances[$balanceKey] ?? 0;
+
+                            // Skip if there's no remaining balance for this leave type
+                            if ($remainingBalance <= 0) {
+                                continue;
+                            }
+
+                            // Add formatted leave object to the array with remaining balance (days)
+                            $formattedLeaves[] = (object)[
+                                'from_date' => $decemberStart,
+                                'to_date' => $decemberEnd,
+                                'days' => $remainingBalance,  // Use the remaining balance (days)
+                                'leave_name' => $leaveName,
+                                'transaction_type' => 'lapsed',  // Indicate it's a lapsed transaction
+                                'created_at' => $balance->created_at,
+                            ];
+                        }
+
+                        return $formattedLeaves;
+                    })
+                    ->flatten(1);
+            }
+
+
+            // If transaction type is 'all', merge both 'granted' and the other transaction types
+            elseif ($this->transactionType == 'all') {
+                $employeeId = auth()->guard('emp')->user()->emp_id;
+
+                // Fetch leave balances for granted transaction
+                $leaveBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
+                        ];
+
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
+                        }
+                    })
+                    ->get()
+                    ->map(function ($balance) {
+                        // Declare startDate and endDate based on the period
+                        $period = $balance->period;
+                        $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
+
+                        // Get the end date (last day of the year)
+                        $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString(); // End date for the year   // End date for the year
+
+                        // Decode the leave_policy_id from JSON
+                        $leaveDetails = json_decode($balance->leave_policy_id, true);
+                        $formattedLeaves = [];
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
+                        ];
+
+                        // Loop through the leave details and format them
+                        foreach ($leaveDetails as $leave) {
+                            // Filter leaves based on the leave type (if selected)
+                            if ($this->leaveType && $this->leaveType != 'all' && $leave['leave_name'] !== $leaveTypes[$this->leaveType]) {
+                                continue;  // Skip if the leave name doesn't match the selected leave type
+                            }
+
+                            // Add formatted leave object to the array
+                            $formattedLeaves[] = (object)[
+                                'from_date' => $startDate,
+                                'to_date' => $endDate,
+                                'days' => $leave['grant_days'],
+                                'leave_name' => $leave['leave_name'],
+                                'transaction_type' => $balance->status,
+                                'created_at' => $balance->created_at,
+                            ];
+                        }
+
+                        return $formattedLeaves;
+                    })
+                    ->flatten(1);
+
+
+                // Fetch leave requests (other transaction types like availed, withdrawn, etc.)
+                $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                    ->when($this->fromDateModal, function ($query) {
+                        $query->where('from_date', '>=', $this->fromDateModal);
+                    })
+                    ->when($this->toDateModal, function ($query) {
+                        $query->where('to_date', '<=', $this->toDateModal);
+                    })
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay'
+                        ];
+
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->where('leave_type', $leaveTypes[$this->leaveType]);
+                        }
+                    })
+                    ->when($this->transactionType && $this->transactionType != 'all', function ($query) {
+                        $transactionTypes = [
+                            'granted' => 'Granted',
+                            'availed' => 2,
+                            'withdrawn' => 4,
+                            'rejected' => 3,
+                        ];
+                        if (array_key_exists($this->transactionType, $transactionTypes)) {
+                            $query->where('leave_status', $transactionTypes[$this->transactionType]);
+                        }
+                    })
+                    ->where('leave_status', '!=', 5)
+                    ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
+                    ->get()
+                    ->map(function ($leaveRequest) {
+                        // Calculate the leave days and transform the data into objects
+                        $leaveRequest->days = $leaveRequest->calculateLeaveDays(
+                            $leaveRequest->from_date,
+                            $leaveRequest->from_session,
+                            $leaveRequest->to_date,
+                            $leaveRequest->to_session,
+                            $leaveRequest->leave_type
+                        );
+
+                        return (object)[
+                            'from_date' => $leaveRequest->from_date,
+                            'to_date' => $leaveRequest->to_date,
+                            'days' => $leaveRequest->days,
+                            'leave_name' => $leaveRequest->leave_type,
+                            'transaction_type' => $leaveRequest->leave_status,
+                            'reason' => $leaveRequest->reason,
+                            'created_at' => $leaveRequest->created_at,
+                        ];
+                    });
 
                 $lapsedLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
-                ->where('is_lapsed', 1)  // Filter for lapsed leave
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
-                    }
-                })
-                ->get()
-                ->map(function ($balance) use ($employeeId) {
-                    // Declare startDate and endDate based on the last month of the year
-                    $period = $balance->period;
-                    $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
-                    $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
-
-                    // Get the remaining leave balances using the getLeaveBalances method
-                    $leaveBalances = LeaveBalances::getLeaveLapsedBalances($employeeId, $period);
-
-                    // Use the leave balance for the respective leave type
-                    $leaveDetails = json_decode($balance->leave_policy_id, true);
-                    $formattedLeaves = [];
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay',
-                    ];
-                    function normalizeLeaveNameToBalanceKey($leaveName)
-                    {
-                        $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
-                        $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
-                        return $balanceKey;
-                    }
-
-                    // Loop through the leave details and format them
-                    foreach ($leaveTypes as $key => $leaveName) {
-                        if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
-                            continue;  // Skip if the leave name doesn't match the selected leave type
-                        }
-                        $balanceKey = normalizeLeaveNameToBalanceKey($leaveName);
-
-                        // This will print the balance key for debugging
-
-                        // Get the balance for this leave type (defaults to 0 if not found)
-                        $remainingBalance = $leaveBalances[$balanceKey] ?? 0;
-
-                        // Skip if there's no remaining balance for this leave type
-                        if ($remainingBalance <= 0) {
-                            continue;
-                        }
-
-                        // Add formatted leave object to the array with remaining balance (days)
-                        $formattedLeaves[] = (object)[
-                            'from_date' => $decemberStart,
-                            'to_date' => $decemberEnd,
-                            'days' => $remainingBalance,  // Use the remaining balance (days)
-                            'leave_name' => $leaveName,
-                            'transaction_type' => 'lapsed',  // Indicate it's a lapsed transaction
-                            'created_at' => $balance->created_at,
+                    ->where('is_lapsed', 1)  // Filter for lapsed leave
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
                         ];
-                    }
 
-                    return $formattedLeaves;
-                })
-                ->flatten(1);
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
+                        }
+                    })
+                    ->get()
+                    ->map(function ($balance) use ($employeeId) {
+                        // Declare startDate and endDate based on the last month of the year
+                        $period = $balance->period;
+                        $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
+                        $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
-            // Merge both leave balances and leave requests
-            $leaveTransactions = $leaveBalance->merge($leaveRequests)->merge($lapsedLeaveBalances);
+                        // Get the remaining leave balances using the getLeaveBalances method
+                        $leaveBalances = LeaveBalances::getLeaveLapsedBalances($employeeId, $period);
 
-        } else {
+                        // Use the leave balance for the respective leave type
+                        $leaveDetails = json_decode($balance->leave_policy_id, true);
+                        $formattedLeaves = [];
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay',
+                        ];
+                        function normalizeLeaveNameToBalanceKey($leaveName)
+                        {
+                            $leaveName = str_replace(' ', '', ucwords(strtolower($leaveName))); // Remove spaces and capitalize words
+                            $balanceKey = lcfirst($leaveName) . 'Balance'; // Ensure the first letter is lowercase and append 'Balance'
+                            return $balanceKey;
+                        }
 
-            // Logic for other transaction types (e.g., availed, withdrawn, etc.)
-            $employeeId = auth()->guard('emp')->user()->emp_id;
+                        // Loop through the leave details and format them
+                        foreach ($leaveTypes as $key => $leaveName) {
+                            if ($this->leaveType && $this->leaveType != 'all' && $leaveName !== $leaveTypes[$this->leaveType]) {
+                                continue;  // Skip if the leave name doesn't match the selected leave type
+                            }
+                            $balanceKey = normalizeLeaveNameToBalanceKey($leaveName);
+
+                            // This will print the balance key for debugging
+
+                            // Get the balance for this leave type (defaults to 0 if not found)
+                            $remainingBalance = $leaveBalances[$balanceKey] ?? 0;
+
+                            // Skip if there's no remaining balance for this leave type
+                            if ($remainingBalance <= 0) {
+                                continue;
+                            }
+
+                            // Add formatted leave object to the array with remaining balance (days)
+                            $formattedLeaves[] = (object)[
+                                'from_date' => $decemberStart,
+                                'to_date' => $decemberEnd,
+                                'days' => $remainingBalance,  // Use the remaining balance (days)
+                                'leave_name' => $leaveName,
+                                'transaction_type' => 'lapsed',  // Indicate it's a lapsed transaction
+                                'created_at' => $balance->created_at,
+                            ];
+                        }
+
+                        return $formattedLeaves;
+                    })
+                    ->flatten(1);
+
+                // Merge both leave balances and leave requests
+                $leaveTransactions = $leaveBalance->merge($leaveRequests)->merge($lapsedLeaveBalances);
+            } else {
+
+                // Logic for other transaction types (e.g., availed, withdrawn, etc.)
+                $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-            $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->when($this->fromDateModal, function ($query) {
-                    $query->where('from_date', '>=', $this->fromDateModal);
-                })
-                ->when($this->toDateModal, function ($query) {
-                    $query->where('to_date', '<=', $this->toDateModal);
-                })
-                ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
-                    $leaveTypes = [
-                        'casual_probation' => 'Casual Leave',
-                        'maternity' => 'Maternity Leave',
-                        'paternity' => 'Paternity Leave',
-                        'sick' => 'Sick Leave',
-                        'lop' => 'Loss of Pay'
-                    ];
+                $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                    ->when($this->fromDateModal, function ($query) {
+                        $query->where('from_date', '>=', $this->fromDateModal);
+                    })
+                    ->when($this->toDateModal, function ($query) {
+                        $query->where('to_date', '<=', $this->toDateModal);
+                    })
+                    ->when($this->leaveType && $this->leaveType != 'all', function ($query) {
+                        $leaveTypes = [
+                            'casual_probation' => 'Casual Leave',
+                            'maternity' => 'Maternity Leave',
+                            'paternity' => 'Paternity Leave',
+                            'sick' => 'Sick Leave',
+                            'lop' => 'Loss of Pay'
+                        ];
 
-                    if (array_key_exists($this->leaveType, $leaveTypes)) {
-                        $query->where('leave_type', $leaveTypes[$this->leaveType]);
-                    }
-                })
-                ->when($this->transactionType && $this->transactionType != 'all', function ($query) {
-                    $transactionTypes = [
-                        'granted' => 'Granted',
-                        'availed' => 2,
-                        'withdrawn' => 4,
-                        'rejected' => 3,
-                    ];
-                    if (array_key_exists($this->transactionType, $transactionTypes)) {
-                        $query->where('leave_status', $transactionTypes[$this->transactionType]);
-                    }
-                })
-                ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
-                ->get()
-                ->map(function ($leaveRequest) {
-                    // Calculate the leave days and transform the data into objects
-                    $leaveRequest->days = $leaveRequest->calculateLeaveDays(
-                        $leaveRequest->from_date,
-                        $leaveRequest->from_session,
-                        $leaveRequest->to_date,
-                        $leaveRequest->to_session,
-                        $leaveRequest->leave_type
-                    );
+                        if (array_key_exists($this->leaveType, $leaveTypes)) {
+                            $query->where('leave_type', $leaveTypes[$this->leaveType]);
+                        }
+                    })
+                    ->when($this->transactionType && $this->transactionType != 'all', function ($query) {
+                        $transactionTypes = [
+                            'granted' => 'Granted',
+                            'availed' => 2,
+                            'withdrawn' => 4,
+                            'rejected' => 3,
+                        ];
+                        if (array_key_exists($this->transactionType, $transactionTypes)) {
+                            $query->where('leave_status', $transactionTypes[$this->transactionType]);
+                        }
+                    })
+                    ->where('leave_status', '!=', 5)
+                    ->orderBy('created_at', $this->sortBy === 'oldest_first' ? 'asc' : 'desc')
+                    ->get()
+                    ->map(function ($leaveRequest) {
+                        // Calculate the leave days and transform the data into objects
+                        $leaveRequest->days = $leaveRequest->calculateLeaveDays(
+                            $leaveRequest->from_date,
+                            $leaveRequest->from_session,
+                            $leaveRequest->to_date,
+                            $leaveRequest->to_session,
+                            $leaveRequest->leave_type
+                        );
 
-                    return (object)[
-                        'from_date' => $leaveRequest->from_date,
-                        'to_date' => $leaveRequest->to_date,
-                        'days' => $leaveRequest->days,
-                        'leave_name' => $leaveRequest->leave_type,
-                        'transaction_type' => $leaveRequest->leave_status,
-                        'reason' => $leaveRequest->reason,
-                        'created_at' => $leaveRequest->created_at,
-                    ];
-                });
-        }
+                        return (object)[
+                            'from_date' => $leaveRequest->from_date,
+                            'to_date' => $leaveRequest->to_date,
+                            'days' => $leaveRequest->days,
+                            'leave_name' => $leaveRequest->leave_type,
+                            'transaction_type' => $leaveRequest->leave_status,
+                            'reason' => $leaveRequest->reason,
+                            'created_at' => $leaveRequest->created_at,
+                        ];
+                    });
+            }
 
-        Log::info('Starting PDF generation for leave transactions', [
-            'employeeDetails' => $employeeDetails,
-            'transaction_type' => $this->transactionType,
-            'from_date' => $this->fromDateModal,
-            'to_date' => $this->toDateModal
-        ]);
+            Log::info('Starting PDF generation for leave transactions', [
+                'employeeDetails' => $employeeDetails,
+                'transaction_type' => $this->transactionType,
+                'from_date' => $this->fromDateModal,
+                'to_date' => $this->toDateModal
+            ]);
 
-        // Generate the PDF using merged data for 'all'
-        $pdf = Pdf::loadView('pdf_template', [
-            'employeeDetails' => $employeeDetails,
-            'leaveTransactions' => isset($leaveTransactions)
-                ? $leaveTransactions
-                : ($this->transactionType == 'granted'
-                    ? $leaveBalance
-                    : ($this->transactionType == 'lapsed'
-                        ? $lapsedLeaveBalances
-                        : $leaveRequests)
-                ),
+            // Generate the PDF using merged data for 'all'
+            $pdf = Pdf::loadView('pdf_template', [
+                'employeeDetails' => $employeeDetails,
+                'leaveTransactions' => isset($leaveTransactions)
+                    ? $leaveTransactions
+                    : ($this->transactionType == 'granted'
+                        ? $leaveBalance
+                        : ($this->transactionType == 'lapsed'
+                            ? $lapsedLeaveBalances
+                            : $leaveRequests)
+                    ),
 
-            'fromDate' => $this->fromDateModal,
-            'toDate' => $this->toDateModal,
-        ]);
+                'fromDate' => $this->fromDateModal,
+                'toDate' => $this->toDateModal,
+            ]);
 
-        // Log::info('PDF generated successfully', [
-        //     'employee_id' => $employeeDetails->emp_id,
-        //     'transaction_type' => $this->transactionType
-        // ]);
+            // Log::info('PDF generated successfully', [
+            //     'employee_id' => $employeeDetails->emp_id,
+            //     'transaction_type' => $this->transactionType
+            // ]);
 
-        $this->showModal = false;
-        $this->updateLeaveBalances();
-        FlashMessageHelper::flashSuccess('Leave Transaction Report Downloaded Successfully!');
+            $this->showModal = false;
+            $this->updateLeaveBalances();
+            FlashMessageHelper::flashSuccess('Leave Transaction Report Downloaded Successfully!');
 
-        // Return the PDF as a downloadable response
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, 'leave_transactions.pdf');
-    }
-        catch (Exception $e) {
+            // Return the PDF as a downloadable response
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->stream();
+            }, 'leave_transactions.pdf');
+        } catch (Exception $e) {
             // Log the exception
             Log::error('Error generating PDF for leave transactions: ' . $e->getMessage(), [
                 'transaction_type' => $this->transactionType,
                 'employee_id' => $employeeId ?? 'N/A'
             ]);
-    
+
             // Show a friendly error message to the user
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again later.');
-            
+
             // Optionally, you could rethrow the exception if you want to handle it elsewhere
             // throw $e;
         }

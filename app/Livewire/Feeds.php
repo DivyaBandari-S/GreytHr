@@ -85,6 +85,7 @@ class Feeds extends Component
       public $showDialogEmoji=false;
 
     public $showFeedsDialog = false;
+    public $showKudosDialog = false;
     public $showMessage = true;
     public $empCompanyLogoUrl;
 
@@ -107,6 +108,10 @@ class Feeds extends Component
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
+    }
+    public function addKudos()
+    {
+        $this->showKudosDialog = true;
     }
 
     public function closeFeeds()
