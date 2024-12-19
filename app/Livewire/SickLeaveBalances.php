@@ -21,7 +21,10 @@ class SickLeaveBalances extends Component
     public $employeeLapsedBalanceList;
     public $Availablebalance, $leaveGrantedData, $availedLeavesCount;
     public $lapsedBalance;
-
+    public $casualLeaveGrantDays;
+    public $employeeLeaveBalancesData;
+    public $employeeLapsedBalanceData;
+    public $grantedLeavesCount;
 
 
     ///calculate number of days
@@ -142,14 +145,29 @@ class SickLeaveBalances extends Component
         $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
         $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
+            ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
             ->get();
         // dd( $this->leaveGrantedData);
 
-        $this->employeeLeaveBalances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+        $this->employeeLeaveBalancesData = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
-            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS sick_leave")
-            ->pluck('sick_leave')
-            ->first();
+            ->get();
+        if ($this->employeeLeaveBalancesData) {
+            foreach ($this->employeeLeaveBalancesData as $balance) {
+                // Decode the leave_policy_id JSON field
+                $leavePolicyData = json_decode($balance->leave_policy_id, true);
+
+                // Loop through each leave policy to check for 'Casual Leave'
+                foreach ($leavePolicyData as $leavePolicy) {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Casual Leave') {
+                        // If found, get the grant_days and process
+                        $this->casualLeaveGrantDays = $leavePolicy['grant_days'] ?? 0;
+                    }
+                }
+            }
+        }
+
 
 
         // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
@@ -189,11 +207,19 @@ class SickLeaveBalances extends Component
 
         // }
         $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('period', 'like', "%$this->year%")->first();
-        $this->Availablebalance = $this->employeeLeaveBalances - $this->totalSickDays;
+            ->where('period', 'like', "%$this->year%")
+            ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
+            ->get();
+
+        $this->Availablebalance = $this->casualLeaveGrantDays - $this->totalSickDays;
 
         $this->employeeLapsedBalanceList = EmployeeLeaveBalances::where('emp_id', $employeeId)
-            ->where('period', 'like', "%$this->year%")->get();
+            ->where('period', 'like', "%$this->year%")
+            ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
+            ->get();
+
         $currentMonth = date('n');
         $lastmonth = 12;
         $currentYear = date('Y');
@@ -204,11 +230,24 @@ class SickLeaveBalances extends Component
         $availedLeavesByMonth = [];
         $lapsedLeavesByMonth = []; // Add this for lapsed leaves
 
-        $grantedLeavesCount =  EmployeeLeaveBalances::where('emp_id', $employeeId)
+        $grantedLeavesCountData =  EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
-            ->selectRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[1].grant_days')) AS sick_leave")
-            ->pluck('sick_leave')
-            ->first();
+            ->get();
+        $grantedLeavesCount = 0;
+        if (!$grantedLeavesCountData->isEmpty()) {
+            foreach ($grantedLeavesCountData as $balance) {
+                // Decode the leave_policy_id JSON field
+                $leavePolicyData = json_decode($balance->leave_policy_id, true);
+
+                // Loop through each leave policy to check for 'Casual Leave'
+                foreach ($leavePolicyData as $leavePolicy) {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Casual Leave') {
+                        // If found, get the grant_days and process
+                        $grantedLeavesCount = $leavePolicy['grant_days'] ?? 0;
+                    }
+                }
+            }
+        }
 
         for ($month = $startingMonth; $month <= $lastmonth; $month++) {
             // Reset availed leaves count for this month
@@ -219,7 +258,7 @@ class SickLeaveBalances extends Component
                 ->where('leave_type', 'Sick Leave')
                 ->where('leave_status', '2')
                 ->where('cancel_status', '!=', '2')
-                ->whereYear('from_date', $currentYear)
+                ->whereYear('from_date', $this->year)
                 ->where(function ($query) use ($month) {
                     $query->whereMonth('from_date', $month)
                         ->orWhereMonth('to_date', $month);
@@ -264,9 +303,9 @@ class SickLeaveBalances extends Component
                 $lapsedLeaves = EmployeeLeaveBalances::where('emp_id', $employeeId)
                     ->where('period', 'like', "%$this->year%")
                     ->where('is_lapsed', true) // Add this condition to filter by is_lapsed
-                    ->first();
+                    ->get();
                 if ($lapsedLeaves) {
-                    $this->lapsedLeavesCount = $this->employeeLeaveBalances - $this->totalSickDays;
+                    $this->lapsedLeavesCount = $this->casualLeaveGrantDays - $this->totalSickDays;
                 }
                 $lapsedLeavesByMonth[] = $this->lapsedLeavesCount;
             } else {
@@ -299,7 +338,7 @@ class SickLeaveBalances extends Component
         ];
 
         // Add "Lapsed Leaves" dataset only if employee has lapsed leave balance
-        if ($employeeLapsedChartBalance->is_lapsed) {
+        if (!$grantedLeavesCountData->isEmpty() && $employeeLapsedChartBalance->first() && $employeeLapsedChartBalance->first()->is_lapsed) {
             $chartData['datasets'][] = [
                 'label' => 'Lapsed Leaves',
                 'data' => $lapsedLeavesByMonth,

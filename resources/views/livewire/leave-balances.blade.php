@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="yearDropDown,showPopupModal,closeModal">
+        wire:target="yearDropDown,showPopupModal,closeModal,generatePdf">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">From date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate">
+                                        <input type="date" wire:model="fromDateModal" class="form-control input-placeholder-small" id="fromDateModal" name="fromDateModal">
                                     </div>
                                     @error('fromDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -59,7 +59,7 @@
                                 <div class="form-group">
                                     <label class="required-field label-style">To date</label>
                                     <div class="input-group date">
-                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="fromDate" name="fromDate">
+                                        <input type="date" wire:model="toDateModal" class="form-control input-placeholder-small" id="toDateModal" name="toDateModal">
                                     </div>
                                     @error('toDateModal') <span class="text-danger">{{ $message }}</span> @enderror
                                 </div>
@@ -71,7 +71,7 @@
                                     <label class="label-style">Leave type</label>
                                     <select name="leaveType" wire:model="leaveType" class="form-control input-placeholder-small">
                                         <option value="all">All Leaves</option>
-                                        <option value="casual_probation">Casual Leave Probation</option>
+                                        <option value="casual_probation">Casual Leave</option>
                                         <option value="maternity">Maternity Leave</option>
                                         <option value="paternity">Paternity Leave</option>
                                         <option value="sick">Sick Leave</option>
@@ -86,10 +86,10 @@
                                         <option value="all">All Transactions</option>
                                         <option value="granted">Granted</option>
                                         <option value="availed">Availed</option>
-                                        <option value="cancelled">Cancelled</option>
+                                        <option value="lapsed">Lapsed</option>
                                         <option value="withdrawn">Withdrawn</option>
                                         <option value="rejected">Rejected</option>
-                                        <option value="approved">Approved</option>
+                                        {{-- <option value="approved">Approved</option> --}}
                                     </select>
                                 </div>
                             </div>
@@ -108,6 +108,8 @@
                     </div>
                     <div class="modal-footer d-flex justify-content-center">
                         <button type="submit" class="submit-btn">Download</button>
+                        <button type="button" class="cancel-btn" wire:click="resetFields"
+                            style="border:1px solid rgb(2,17,79);">Clear</button>
                         <!-- <button type="button" class="cancel-btn1" data-dismiss="modal" wire:click="closeModal">Cancel</button> -->
                     </div>
                 </form>
@@ -193,6 +195,7 @@
                         </div>
                     </div>
                 </div>
+                @if($hideCasualLeave === true)
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white ">
                         <div class="balance mb-2 d-flex flex-row justify-content-between ">
@@ -226,6 +229,7 @@
                         @endif
                     </div>
                 </div>
+                @endif
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white   ">
                         <div class="balance d-flex flex-row justify-content-between">
@@ -259,7 +263,7 @@
                         @endif
                     </div>
                 </div>
-                @if( $casualProbationLeavePerYear > 0)
+                @if( $showCasualLeaveProbation || $showCasualLeaveProbationYear)
                 <div class="col-md-4 containerBalanceHeight mb-2">
                     <div class="leave-bal mb-2 bg-white   ">
                         <div class="balance d-flex flex-row justify-content-between">
@@ -277,6 +281,7 @@
                             <a href="/leave-balances/casualprobationleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
+                        @if($casualProbationLeavePerYear > 0)
                         <div class="px-3">
                             <div class="tube-container">
                                 <p class="mb-0 consumedContent">
@@ -289,6 +294,7 @@
                                 <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
                 @endif
@@ -309,7 +315,20 @@
                             <a href="#" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
-
+                        @if($marriageLeaves > 0)
+                        <div class="px-3">
+                            <div class="tube-container">
+                                <p class="mb-0 consumedContent">
+                                    @if($consumedProbationLeaveBalance > 0)
+                                    {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
+                                    @else
+                                    0 of {{ $casualProbationLeaveBalance }} Consumed
+                                    @endif
+                                </p>
+                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                            </div>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

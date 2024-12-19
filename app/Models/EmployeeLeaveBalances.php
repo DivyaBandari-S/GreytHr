@@ -1,14 +1,14 @@
 <?php
- 
+
 namespace App\Models;
- 
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
- 
+
 class EmployeeLeaveBalances extends Model
 {
     use HasFactory;
- 
+
     // Fields that can be mass-assigned
     protected $fillable = [
         'emp_id',
@@ -30,7 +30,7 @@ class EmployeeLeaveBalances extends Model
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
- 
+
     /**
      * Get the leave balance for a given year, leave type, and employee.
      *
@@ -41,30 +41,28 @@ class EmployeeLeaveBalances extends Model
      */
     public static function getLeaveBalancePerYear($employeeId, $leaveName, $year)
     {
-        
-        // Retrieve the record for the specific employee and year
-        $balance = self::where('emp_id', $employeeId)
-        ->where('period', 'like', "%$year%")
-            ->first();
 
-            if ($balance) {
-                // Decode the JSON leave_policy_id column
-                $leavePolicies = is_string($balance->leave_policy_id) ? json_decode($balance->leave_policy_id, true) : $balance->leave_policy_id;
-            
-                if (is_array($leavePolicies)) {
-                    foreach ($leavePolicies as $policy) {
-                        // Check if the leave_name matches the specified leave name
-                        if (isset($policy['leave_name']) && $policy['leave_name'] == $leaveName) {
-                            // Return the grant_days for the specified leave_name
-                            return $policy['grant_days'];
-                        }
+        // Retrieve all records for the specific employee and year
+        $balances = self::where('emp_id', $employeeId)
+            ->where('granted_for_year', 'like', "%$year%")
+            ->get();
+        // Loop through each balance record
+        foreach ($balances as $balance) {
+            // Decode the JSON leave_policy_id column
+            $leavePolicies = is_string($balance->leave_policy_id) ? json_decode($balance->leave_policy_id, true) : $balance->leave_policy_id;
+
+            if (is_array($leavePolicies)) {
+                foreach ($leavePolicies as $policy) {
+                    // Check if the leave_name matches the specified leave name
+                    if (isset($policy['leave_name']) && $policy['leave_name'] == $leaveName) {
+                        // Return the grant_days for the specified leave_name
+                        return $policy['grant_days'];
                     }
                 }
             }
+        }
 
-        // Return 0 if the leave type is not found or if no record exists
+        // Return 0 if the leave type is not found in any of the records
         return 0;
     }
- 
 }
-

@@ -620,22 +620,35 @@ public $RemoveRequestaceessDialog=false;
             ->orderBy('created_at', 'desc')
             ->get();
     }
-    public function updatedAddselectedPeople()
-    {
-        // Ensure $this->addselectedPeople is always an array
-        if (!is_array($this->addselectedPeople)) {
-            $this->addselectedPeople = [];
-        }
+    public $flashWarningShown = false; // Track whether a flash message is currently active
 
-        // Limit the selection in addselectedPeople to a maximum of 5
-        if (count($this->addselectedPeople) > 5) {
-            FlashMessageHelper::flashWarning('You can only select up to 5 people.');
-            $this->addselectedPeople = array_slice($this->addselectedPeople, 0, 5); // Trim the array
-        }
-
-        // Update cc_to field
-        $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+public function updatedAddselectedPeople()
+{
+    // Ensure $this->addselectedPeople is always an array
+    if (!is_array($this->addselectedPeople)) {
+        $this->addselectedPeople = [];
     }
+
+    // Limit the selection in addselectedPeople to a maximum of 5
+    if (count($this->addselectedPeople) > 5) {
+        // Show the flash message only if it hasn't been shown yet
+        if (!$this->flashWarningShown) {
+            FlashMessageHelper::flashWarning('You can only select up to 5 people.');
+            $this->flashWarningShown = true; // Mark the message as shown
+        }
+
+        // Trim the array to ensure only the first 5 are retained
+        $this->addselectedPeople = array_slice($this->addselectedPeople, 0, 5);
+    } else {
+        // Reset the flag when the selection is within the limit
+        $this->flashWarningShown = false;
+    }
+
+    // Update cc_to field
+    $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+}
+
+    
     public function updatedSelectedPeople()
     {
         // Ensure $this->selectedPeople is an array
