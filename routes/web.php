@@ -102,6 +102,7 @@ use App\Livewire\ImageUpload;
 use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\LeaveBalancesChart;
+use App\Livewire\MarriageLeaveBalance;
 use App\Livewire\OrganisationChart;
 use App\Livewire\PasswordResetComponent;
 use App\Livewire\ReportManagement;
@@ -339,6 +340,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/leave-balances/casualleavebalance', CasualLeaveBalance::class)->name('casual-leave-balance');
     Route::get('/leave-balances/sickleavebalance', SickLeaveBalances::class)->name('sick-leave-balance');
     Route::get('/leave-balances/casualprobationleavebalance', CasualProbationLeaveBalance::class)->name('casual-probation-leave-balance');
+    Route::get('/leave-balances/marriageleavebalance', MarriageLeaveBalance::class)->name('marriage-leave-balance');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');
