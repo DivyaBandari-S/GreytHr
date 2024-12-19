@@ -1719,7 +1719,10 @@ color: #fff;
                                         @if($day['onHalfDayLeave']==true&&!$day['isToday'])
 
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;padding-top:6px;">
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 6px; background-color: {{ $day['onHalfDayLeave'] == true 
+                                                                                                                ? ($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) 
+                                                                                                                : '#ffffff'
+                                                                                                            }};">
                                             <!-- Render your grey circle -->
                                             @if ($isWeekend&&$isCurrentMonth)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
@@ -1735,8 +1738,10 @@ color: #fff;
                                                 @if($day['isPublicHoliday'])
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
                                              
-                                                @elseif($day['onHalfDayLeave']==true)
-                                                <span style="background-color:  #fcf0f0;color: #f66;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">A</span>
+                                                @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='A')
+                                                <span style="background-color:  #fcf0f0;color: #f66;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
+                                                @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP')
+                                                <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
                                                 @elseif($day['status'] == 'CLP'&&$day['onleave']==true)
                                                 <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
                                                 @elseif($day['status'] == 'SL'&&$day['onleave']==true)
