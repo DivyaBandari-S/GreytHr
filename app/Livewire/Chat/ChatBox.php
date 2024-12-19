@@ -166,6 +166,13 @@ class ChatBox extends Component
         }
     }
 
+    public function broadcastMessageRead()
+    {
+        // dd('broadcastMessageRead');
+        broadcast(new MessageRead($this->selectedConversation->id, $this->receiverInstance->id));
+        # code...
+    }
+
     public function render()
     {
         return view('livewire.chat.chat-box');
