@@ -956,7 +956,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'backgroundColor' => '',
                             'status' => '',
                             'onHalfDayLeave'=>'',
-                            'onleave' => ''
+                            'onleave' => '',
+                            'halfdaypresent'=>'',
 
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
@@ -965,7 +966,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
                         $isAbsentFor = false;
                         $isHalfDayPresent = false;
-
+                        $halfdaypresent=null; 
                         $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
                         $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray());
                         Log::info('Is Public Holiday:', ['isPublicHoliday' => $isPublicHoliday]);
@@ -1061,6 +1062,15 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     $status = 'L';
                                     break;
                             }
+                            $isAbsent = !$this->isEmployeePresentOnDate($date->toDateString()) || $isAbsentFor;
+                            if ($isAbsent) {
+                                $halfdaypresent = 'A';
+                            } elseif ($isHalfDayPresent) {
+                                $halfdaypresent = 'HP';
+                            } else {
+                                $halfdaypresent = 'P';
+                            }
+                           
                         }
                         elseif ($isOnLeave) {
                             switch ($leaveType) {
@@ -1112,6 +1122,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'onleave' => $isOnLeave,
                             'onHalfDayLeave'=>$isOnHalfDayLeave,
                             'status' => $status,
+                            'halfdaypresent'=>$halfdaypresent,
                         ];
 
                         $dayCount++;
@@ -1127,6 +1138,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'onleave' => false,
                             'onHalfDayLeave'=>false,
                             'status' => '',
+                            'halfdaypresent'=>'',
                         ];
                         $dayCount++;
                     }
@@ -1296,7 +1308,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     }
                 
                     Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
-                    if ($isAbsent || ($totalMinutes < 240)) {
+                    if ($isAbsent || ($totalMinutes < 240)||$totalWorkHrs==null) {
                         $absentDays++;
                         // Log the increment of absent days
                         Log::info('Absent days count incremented to: ' . $absentDays);
