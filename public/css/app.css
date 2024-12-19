@@ -9614,15 +9614,16 @@ peoples module styles started */
 .avatarImgDiv {
     position: relative;
     height: 4em;
+    margin-left: 44px;
 }
 
-.firstImg {
+/* .firstImg {
     width: 3.7em;
     left: 68px;
     cursor: pointer;
-}
+} */
 
-.secondImg {
+/* .secondImg {
     width: 3.7em;
     left: 40px;
     cursor: pointer;
@@ -9632,7 +9633,7 @@ peoples module styles started */
     width: 3.7em;
     left: 14px;
     cursor: pointer;
-}
+} */
 
 .moreImgTxt {
     background-color: black;
@@ -9640,12 +9641,13 @@ peoples module styles started */
     border-radius: 50%;
     padding: 10px 10px;
     position: absolute;
-    left: 0px;
+    left: -42px;
     font-size: 12px;
     height: 3em;
     width: 3em;
     margin: 0px;
     cursor: pointer;
+    margin-top: -37px;
 }
 
 .avtHoverClass:hover {
@@ -10382,3 +10384,4 @@ input[type="date"] {
     font-size: var(--main-headings-font-size);
     color: var(--main-heading-color);
 }
+

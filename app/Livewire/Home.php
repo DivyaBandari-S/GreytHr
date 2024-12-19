@@ -14,6 +14,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Models\Conversation;
 use App\Models\EmployeeDetails;
 use App\Models\EmpSalary;
 use App\Models\LeaveRequest;
@@ -112,7 +113,7 @@ class Home extends Component
     public $postal_code;
     public $lon;
 
-   
+
     public $lat;
     public $latitude;
     public $loginEmpManagerDetails;
@@ -121,14 +122,14 @@ class Home extends Component
     public $modalLeaveTitle = '';
     public $showModal = false;
 
- 
+
     public $showSalary = true;
     public $longitude;
     public $monthOfSal;
     public $totalDaysInMonth;
     public $paidDays;
 
-  
+
     public $sal;
     public function mount()
     {
@@ -154,9 +155,9 @@ class Home extends Component
             // Get employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-          
-            
-                
+
+
+
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
@@ -283,7 +284,7 @@ class Home extends Component
     {
         $this->showSalary = !$this->showSalary;
     }
-    
+
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {
         try {
@@ -341,18 +342,17 @@ class Home extends Component
             } elseif ($agent->isTablet()) {
                 $deviceName = 'Tablet';
             } elseif ($agent->isDesktop()) {
-              
-                
+
+
                 $screenWidth = $agent->device(); // Get device details
                 $platform = $agent->platform(); // Get platform details
-                
+
                 // Check for Laptop Devices
                 if (str_contains($screenWidth, 'MacBook') || str_contains($platform, 'Windows') || str_contains($platform, 'Linux') || str_contains($platform, 'ChromeOS')) {
                     $deviceName = 'Laptop';
                 } else {
                     $deviceName = 'Desktop';
                 }
-             
             } else {
                 $deviceName = 'Unknown Device';
             }
@@ -401,31 +401,54 @@ class Home extends Component
         $this->whoisinTitle = '';
         $this->showAllLateEmployees = false;
     }
+
+
+    public function getChatUserImages()
+    {
+        $authUserId = Auth::id();
+
+        // Get all conversations where the auth user is either sender or receiver
+        $conversations = Conversation::where('sender_id', $authUserId)
+            ->orWhere('receiver_id', $authUserId)
+            ->get();
+
+        // Get the employees excluding the auth user
+        $employeeIds = $conversations->pluck('sender_id')
+            ->merge($conversations->pluck('receiver_id'))
+            ->unique()
+            ->filter(fn($id) => $id != $authUserId);
+
+        // Fetch employee details
+        return EmployeeDetails::whereIn('emp_id', $employeeIds)
+            ->take(6) // Limit to 6 for display
+            ->get(['emp_id', 'image','gender']);
+    }
+
     public function render()
     {
         try {
             $loggedInEmpId = Session::get('emp_id');
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
-          
-            $this->employeeShiftDetails = EmployeeDetails::where('emp_id',$employeeId) // Match employee ID
-            ->join('company_shifts', function ($join) {
-                $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
-                    ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
-            })
-            ->select(
-                'employee_details.shift_type',          // Select the shift_type from employee_details
-                'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
-                'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
-            )
-            ->first();
-            
-           
+
+            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId) // Match employee ID
+                ->join('company_shifts', function ($join) {
+                    $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
+                        ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
+                })
+                ->select(
+                    'employee_details.shift_type',          // Select the shift_type from employee_details
+                    'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
+                    'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
+                )
+                ->first();
+
+
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
-            $today=Carbon::now()->format('Y-m-d');
+            $today = Carbon::now()->format('Y-m-d');
 
-             
+
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
@@ -802,6 +825,7 @@ class Home extends Component
 
 
             $this->calculateTaskData();
+            $this->getChatUserImages();
 
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
