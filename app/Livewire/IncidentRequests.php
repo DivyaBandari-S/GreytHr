@@ -93,7 +93,6 @@ class IncidentRequests extends Component
 
         'short_description' => 'required|string|max:255',
 
-        'description' => 'required|string',
 
         'priority' => 'required|in:High,Medium,Low',
 
@@ -117,6 +116,7 @@ class IncidentRequests extends Component
     {
         $this->showDialog = true;
     }
+ 
     public function mount()
     {
         // Fetch unique requests with their categories
@@ -140,15 +140,7 @@ class IncidentRequests extends Component
 
 
             ->get();
-        $this->servicerecords = ServiceRequest::with('emp')
-            ->whereHas('emp', function ($query) {
-                $query->where('first_name', 'like', '%' . $this->searchTerm . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->searchTerm . '%');
-            })
-            ->orderBy('created_at', 'desc')
 
-
-            ->get();
 
 
         if ($this->employeeDetails) {
@@ -281,6 +273,7 @@ class IncidentRequests extends Component
             $this->activeSearch,
             $this->activeCategory,      // Request ID
         );
+     
     }
 
     public function searchPendingHelpDesk()

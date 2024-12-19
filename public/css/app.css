@@ -1006,6 +1006,29 @@ button.close-button {
     border-collapse: collapse;
     overflow-x: auto;
 }
+/* Override Bootstrap's default background images for carousel icons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    background-image: none !important; /* Remove default arrow images */
+  color: black !important; /* Set icon color to black */
+    width: 70%; /* Adjust size */
+    height: 70%;
+ /* Optional: make circular */
+}
+
+/* Add custom arrows using pseudo-elements */
+.carousel-control-prev-icon::after {
+    content: '\2039'; /* Unicode for a left arrow */
+    font-size: 50px; /* Adjust the arrow size */
+    color: black; /* Ensure arrow is black */
+}
+
+.carousel-control-next-icon::after {
+    content: '\203A'; /* Unicode for a right arrow */
+    font-size: 50px; /* Adjust the arrow size */
+    color: black; /* Ensure arrow is black */
+}
+
 
 .help-desk-table-row {
     background-color: rgb(2, 17, 79);
@@ -2840,6 +2863,13 @@ td {
 
 .placeholder-small {
     color: var(--label-color);
+    /* Placeholder text color */
+    font-size: var(--normal-font-size);
+    font-family: "Montserrat", sans-serif;
+    font-weight: normal;
+}
+.placeholder-big {
+    color: var(--main-heading-color);
     /* Placeholder text color */
     font-size: var(--normal-font-size);
     font-family: "Montserrat", sans-serif;
@@ -5098,6 +5128,12 @@ input[type="radio"] {
     font-weight: 500;
     cursor: pointer;
 }
+.anchorTagDetailsCrumb{
+    color: rgb(2, 17, 79) !important;
+    text-decoration: underline;
+    font-weight: 500;
+    cursor: pointer;
+}
 
 .viewSwipesList {
     font-size: var(--normal-font-size);
@@ -5678,7 +5714,7 @@ select .yearSelect {
     line-height: 20px;
 }
 
-.circle.IRIS {
+.IRIS {
     background-color: #d29be1;
 }
 
@@ -6754,7 +6790,8 @@ select .yearSelect {
 
 .select-year-dropdown {
     margin-right: 5px;
-    width: fit-content;
+    width: 100px;
+    padding: 5px;
 }
 
 .leave-details-col-md-12 {
@@ -10309,4 +10346,39 @@ input[type="date"] {
     background-image: none;
     cursor: pointer;
     -webkit-appearance: textfield;
+}
+
+.analytic-view-all-search-bar {
+    display: flex;
+    padding: 20px 0px;
+    justify-content: space-between;
+    /* Adjust spacing between items */
+    align-items: center;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.analytic-view-all-search-bar input[type="text"] {
+    width: 200px;
+    padding: 6px 28px 6px 10px;
+    /* Adjust padding for right space */
+    border: 1px solid #ccc;
+    border-radius: 18px;
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    right: 10px;
+    color: #666;
+    pointer-events: none;
+}
+.Employee-select-leave {
+    font-weight: 500;
+    font-size: var(--main-headings-font-size);
+    color: var(--main-heading-color);
 }

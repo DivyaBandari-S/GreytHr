@@ -44,9 +44,8 @@ class EmployeeLeaveBalances extends Model
 
         // Retrieve all records for the specific employee and year
         $balances = self::where('emp_id', $employeeId)
-            ->where('period', 'like', "%$year%")
-            ->get(); // Using get() to retrieve all records
-
+            ->where('granted_for_year', 'like', "%$year%")
+            ->get();
         // Loop through each balance record
         foreach ($balances as $balance) {
             // Decode the JSON leave_policy_id column

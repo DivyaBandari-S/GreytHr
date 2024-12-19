@@ -31,7 +31,7 @@
                     </select>
                 </div>
             </div>
-            @if($employeeLeaveBalances == 0)
+            @if($casualLeaveGrantDays === 0)
             <div class="row m-0 p-0">
                 <div class="col-md-12  leave-details-col-md-12">
                     <div class="card  leave-details-card">
@@ -53,8 +53,8 @@
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            @if($employeeLapsedBalance->is_lapsed)
-                            <div class="info-value">0</div>
+                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->is_lapsed)
+                            <div class="infso-value">0</div>
                             @else
                             <div class="info-value">{{ $Availablebalance }}</div>
                             @endif
@@ -65,7 +65,7 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
-                            <div class="info-value">{{ $employeeLeaveBalances }}</div>
+                            <div class="info-value">{{ isset($casualLeaveGrantDays) ? $casualLeaveGrantDays : 0 }}</div>
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Availed</div>
@@ -73,7 +73,7 @@
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Lapsed</div>
-                            @if($employeeLapsedBalance->is_lapsed)
+                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->is_lapsed)
                             <div class="info-value">{{ $Availablebalance }}</div>
                             @else
                             <div class="info-value">0</div>
@@ -139,7 +139,7 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
                                     <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
-                                    <td>{{ $employeeLeaveBalances }}</td>
+                                    <td>{{ $casualLeaveGrantDays }}</td>
                                     <td>Annual Grant for the present year </td>
                                 </tr>
                                 @endforeach
@@ -152,7 +152,7 @@
                                     <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
                                     <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
                                     <td>
-                                        @if($employeeLapsedBalance->is_lapsed)
+                                    @if($employeeLapsedBalance->first()->is_lapsed)
                                         {{ $Availablebalance }}
                                         @else
                                         0
