@@ -25,7 +25,8 @@
     
             @foreach (range(1, 12) as $monthIndex)
                 @php
-                    $monthName = \Carbon\Carbon::createFromFormat('m', $monthIndex)->format('F Y');
+                     $monthName = \Carbon\Carbon::createFromFormat('m', $monthIndex)->format('F'); // Only the month name
+                     $monthYearName = $monthName . ' ' . $selectedYear; 
                     $entriesForMonth = $calendarData->filter(function($entry) use ($monthIndex) {
                         return \Carbon\Carbon::parse($entry->date)->month == $monthIndex;
                     });
@@ -40,7 +41,7 @@
                     <div class="col-md-3">
                         <div class="inner-container">
                             <div class="headerMonth">
-                                <h6>{{ $monthName }}</h6>
+                                <h6>{{ $monthYearName }}</h6>
                             </div>
     
                             @if ($entriesForMonth->isEmpty())

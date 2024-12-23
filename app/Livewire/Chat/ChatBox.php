@@ -65,20 +65,20 @@ class ChatBox extends Component
         }
     }
 
-    public function deleteMessage($messageId)
-    {
-        try {
-            $message = Message::find($messageId);
-            if (!$message) {
-                throw new \Exception('Message not found');
-            }
-            $message->delete();
-            $this->dispatch('refreshChatBox');
-            $this->dispatch('refresh');
-        } catch (\Exception $e) {
-            Log::error('Error deleting message: ' . $e->getMessage());
-        }
-    }
+    // public function deleteMessage($messageId)
+    // {
+    //     try {
+    //         $message = Message::find($messageId);
+    //         if (!$message) {
+    //             throw new \Exception('Message not found');
+    //         }
+    //         $message->delete();
+    //         $this->dispatch('refreshChatBox');
+    //         $this->dispatch('refresh');
+    //     } catch (\Exception $e) {
+    //         Log::error('Error deleting message: ' . $e->getMessage());
+    //     }
+    // }
 
 
 
@@ -164,6 +164,13 @@ class ChatBox extends Component
             Log::error('Error loading conversation: ' . $e->getMessage());
             $this->addError('loadConversation', 'Failed to load the conversation.');
         }
+    }
+
+    public function broadcastMessageRead()
+    {
+        // dd('broadcastMessageRead');
+        broadcast(new MessageRead($this->selectedConversation->id, $this->receiverInstance->id));
+        # code...
     }
 
     public function render()

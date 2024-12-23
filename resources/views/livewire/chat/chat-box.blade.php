@@ -36,7 +36,34 @@
             margin-bottom: 10px;
         }
     </style>
+
     @if ($selectedConversation)
+        <div class="chat-profile d-flex align-items-center p-3 bg-light border-bottom">
+            <div class="avatar me-3">
+                <img src="{{ $receiverInstance->image
+                    ? 'data:image/jpeg;base64,' . $receiverInstance->image
+                    : ($receiverInstance->gender === 'MALE'
+                        ? asset('images/male-default.png')
+                        : asset('images/female-default.jpg')) }}"
+                    alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+            </div>
+            <div class='profile'>
+                <h6 class="mb-0 text-solid">{{ $receiverInstance->first_name ?? '' }}
+                    {{ $receiverInstance->last_name ?? '' }}</h6>
+                <small class="text-primary">{{ $receiverInstance->email ?? '' }}</small>
+            </div>
+            <div class="ms-auto">
+                {{-- <button class="btn btn-sm btn-outline-primary" title="Start Video Call">
+                    <i class="fas fa-video"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-secondary" title="Start Voice Call">
+                    <i class="fas fa-phone"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger" title="Block User">
+                    <i class="fas fa-ban"></i>
+                </button> --}}
+            </div>
+        </div>
         <div id="chatBody" class="chat-body">
             <!-- Loop through the messages to display each one -->
             @foreach ($messages as $message)
@@ -88,10 +115,10 @@
                                 @endif
                             @endforeach
 
-                            <div class="message-actions">
+                            {{-- <div class="message-actions">
                                 <span wire:click="deleteMessage({{ $message->id }})" class="delete-message"><i
                                         class="fa-solid fa-trash"></i></span>
-                            </div>
+                            </div> --}}
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
 
                             <!-- Message read status (show only for sent messages) -->
@@ -153,10 +180,10 @@
                                 @endif
                             @endforeach
 
-                            <div class="message-actions">
+                            {{-- <div class="message-actions">
                                 <span wire:click="deleteMessage({{ $message->id }})" class="delete-message"><i
                                         class="fa-solid fa-trash"></i></span>
-                            </div>
+                            </div> --}}
                             <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
                         </div>
                     </div>
