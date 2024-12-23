@@ -15,7 +15,7 @@
             </span>
             <input type="text" class="contSearch form-control" wire:model.live="search"
                 placeholder="Search for a name, email, or phone number" aria-label="Search"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" autocomplete="off" id="searchField">
         </div>
 
         <div class="list-users">
@@ -68,3 +68,9 @@
         </div>
     </div>
 </div>
+{{-- <script>
+    document.getElementById('searchField').setAttribute('autocomplete', 'off');
+    document.getElementById('searchField').addEventListener('focus', function () {
+        this.value = ''; // Clear any prefilled value
+    });
+</script> --}}

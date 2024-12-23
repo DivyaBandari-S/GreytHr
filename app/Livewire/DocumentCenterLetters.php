@@ -12,14 +12,28 @@ class DocumentCenterLetters extends Component
     public $jumpToTab = "Confirmation Letter";
     public $activeTab = "Apply";
 
-    public $letter_type, $priority, $reason;
+    public $letter_type;
+    public  $priority;
+    public $reason;
+
+    protected $rules = [
+        'letter_type' => 'required',
+        'priority' => 'required',
+        'reason' => 'required',
+    ];
+
+    protected $messages = [
+        'letter_type.required' => 'Letter type is required',
+        'priority.required' => 'Priority is required',
+        'reason.required' => 'Reason is required',
+    ];
+
+    public function validateField($field){
+        $this->validateOnly($field);
+    }
     public function submitRequest()
     {
-        $this->validate([
-            'letter_type' => 'required',
-            'priority' => 'required',
-            'reason' => 'required',
-        ]);
+        $this->validate();
 
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
