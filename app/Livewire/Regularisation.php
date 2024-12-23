@@ -214,6 +214,8 @@ class Regularisation extends Component
 
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
+                ->where('leave_applications.from_session','Session 1')
+                ->where('leave_applications.to_session','Session 2')
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
