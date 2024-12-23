@@ -1154,7 +1154,8 @@ td {
 .jump-to {
     cursor: pointer;
     font-size: var(--normal-font-size);
-    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
     transition: color 0.3s ease-in-out;
     border: none;
     background-color: white;
@@ -1169,6 +1170,8 @@ td {
     background-color: rgb(2, 12, 53);
     border-radius: 5px;
     color: white !important;
+    padding: 5px 10px;
+    margin-bottom: 10px;
 }
 
 .button-dl {

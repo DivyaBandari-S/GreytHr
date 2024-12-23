@@ -517,24 +517,14 @@ class LeaveApplyPage extends Component
     public $propertyName;
     public function handleFieldUpdate($field)
     {
+        $this->validateOnly($field);
         try {
-            $this->validateOnly($field);
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
             // Clear any previous error messages
             $this->errorMessageValidation = null;
-
-            // Validate only the field
-            $this->validateOnly($field);
-
-            // Clear any previous error messages
-            $this->errorMessageValidation = null;
-
-
-            // Additional validation if necessary (e.g., compare dates, etc.)
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            $checkJoinDate = EmployeeDetails::where('emp_id', $employeeId)->first();
 
             // Check for date parsing errors
             try {
@@ -693,8 +683,10 @@ class LeaveApplyPage extends Component
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
                 ->where('category_type', 'Leave')
-                ->whereIn('leave_status', [2, 5]) // Only active/approved leave requests
+                ->whereIn('leave_status', [2, 5])
+                ->whereIn('cancel_status', [5, 7])
                 ->get();
+
 
             // Iterate over each leave request to format the dates and check for overlaps
             foreach ($leaveRequests as $leaveRequest) {
@@ -819,13 +811,18 @@ class LeaveApplyPage extends Component
     protected function checkForHolidays()
     {
         try {
-            return HolidayCalendar::whereBetween('date', [$this->from_date, $this->to_date])->whereNotNull('festivals')
-                ->where('festivals', '!=', '')->exists();
+            // Check if both from_date and to_date exactly match holidays
+            return HolidayCalendar::whereIn('date', [$this->from_date, $this->to_date])
+                ->whereNotNull('festivals')
+                ->where('festivals', '!=', '')
+                ->exists();
         } catch (\Exception $e) {
+            // Handle errors
             FlashMessageHelper::flashError('An error occurred while checking for holidays. Please try again.');
             return false;
         }
     }
+
 
     //check for casual leave limit for the month
     protected function checkCasualLeaveLimit($employeeId)
@@ -1035,8 +1032,11 @@ class LeaveApplyPage extends Component
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -1045,11 +1045,10 @@ class LeaveApplyPage extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -1058,11 +1057,10 @@ class LeaveApplyPage extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -1070,13 +1068,18 @@ class LeaveApplyPage extends Component
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -1088,9 +1091,9 @@ class LeaveApplyPage extends Component
             if ($this->getSessionNumber($toSession) < 2) {
                 $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -1106,10 +1109,19 @@ class LeaveApplyPage extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occured while calculating Number of days.');
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
             return false;
         }
     }
+
+
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
+
 
     private function getSessionNumber($session)
     {

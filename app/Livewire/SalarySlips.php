@@ -52,8 +52,6 @@ class SalarySlips extends Component
     public function downloadPdf()
     {
 
-
-
         // Generate PDF using the fetched data
         $pdf = Pdf::loadView('download-pdf', [
             'employees' =>  $this->employeeDetails,
@@ -62,7 +60,6 @@ class SalarySlips extends Component
             'rupeesInText' => $this->convertNumberToWords($this->salaryDivisions['net_pay']),
             'salMonth' => Carbon::parse($this->selectedMonth)->format('F Y')
         ]);
-
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
         }, 'payslip.pdf');
@@ -182,7 +179,7 @@ class SalarySlips extends Component
         ->where('salary_revisions.emp_id',$employeeId)
             ->where('month_of_sal', 'like', $this->selectedMonth . '%')
             ->first();
-        // dd($this->empSalaryDetails);
+
 
         if ($this->empSalaryDetails) {
             $this->salaryDivisions = $this->empSalaryDetails->calculateSalaryComponents($this->empSalaryDetails->salary);
@@ -195,21 +192,7 @@ class SalarySlips extends Component
             // Handle the null case (e.g., log an error or set a default value)
             $this->salaryDivisions = [];
         }
-        //    dd( $this->salaryDivisions);
-        //    $this->basic=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->hra=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->convayance=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->medical=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->special=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->pf=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->esi=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->prof_tax=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
-        //    $this->prof_tax=$this->empSalaryDetails->getBasicSalary( $this->empSalaryDetails->salary);
 
-
-
-
-        // $this->empBankDetails = EmpBankDetail::where('emp_id', $employeeId)->get();
 
     }
     public function mount()
