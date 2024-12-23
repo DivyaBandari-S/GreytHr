@@ -321,6 +321,7 @@ class AttendenceMasterDataNew extends Component
                 return $dates->pluck('distinct_date')->toArray();
             })
             ->toArray();
+        
             
             $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name

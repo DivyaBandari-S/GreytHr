@@ -2002,11 +2002,12 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $date = Carbon::create($this->year, $this->month, 1)->subMonth();
             $this->year = $date->year;
             $this->month = $date->month;
-            
+           
             $today = Carbon::today();
             $this->generateCalendar();
             $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
+           
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
                 
@@ -2038,12 +2039,14 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $this->month = $date->month;
             $today = Carbon::today();
             $this->generateCalendar();
+           
             $this->changeDate = 1;
             $this->dateClicked($date->toDateString());
             $nextdate = Carbon::create($date->year, $date->month, 1)->addMonth();
             $lastDateOfNextMonth = $date->endOfMonth()->toDateString();
             $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
+          
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
 
