@@ -377,7 +377,6 @@ class ViewPendingDetails extends Component
                     // Only send email if employee or CC emails are not empty
                     if (!empty($sendEmailToEmp) || !empty($ccEmails)) {
                         // Send email to the main recipient (the employee)
-                        dd($sendEmailToEmp);
                         if (!empty($sendEmailToEmp)) {
                             Mail::to($sendEmailToEmp)
                                 ->send(new LeaveApprovalNotification($leaveRequest, $applyingToDetails, $ccToDetails, true));

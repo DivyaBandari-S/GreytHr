@@ -312,7 +312,7 @@
                             <h5 class="mb-0">{{ $marriageLeaves }}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($marriageLeaves > 0)
-                            <a href="#" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/marriageleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
                         @if($marriageLeaves > 0)
