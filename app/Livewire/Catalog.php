@@ -558,51 +558,66 @@ public $RemoveRequestaceessDialog=false;
             $this->dispatchBrowserEvent('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
     }
-
-
+    public $warningShown = false;
 
     public function addselectPerson($personId)
     {
         try {
-            // Fetch the selected mailbox and its associated CC list (only for that mailbox)
-            $selectedMailbox = $this->mailbox; // This assumes `$this->mailbox` contains the selected mailbox from the dropdown
+            // Fetch the selected mailbox and its associated CC lists (all matching entries)
+            $selectedMailbox = $this->mailbox; // `$this->mailbox` is the selected mailbox from the dropdown
             
-            // Retrieve the existing `cc_to` list for this mailbox from the HelpDesks table
+            // Retrieve the existing `cc_to` list for this mailbox from all HelpDesks table entries
             $existingCcTo = HelpDesks::where('mailbox', $selectedMailbox)
                 ->whereNotNull('cc_to')
-                ->pluck('cc_to')
-                ->first(); // Get the first (and only) entry since each mailbox should have one CC list
-    
-            // If the `cc_to` field is not null, split it into an array of names
-            $existingCcToArray = $existingCcTo ? array_map('trim', explode(',', $existingCcTo)) : [];
+                ->pluck('cc_to'); // Get all `cc_to` entries, not just the first one
+            
+            // Flatten the array and split into individual names
+            $existingCcToArray = [];
+            foreach ($existingCcTo as $cc) {
+                $existingCcToArray = array_merge($existingCcToArray, array_map('trim', explode(',', $cc)));
+            }
     
             // Retrieve the selected person's details
             $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
     
             if ($selectedPerson) {
                 $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-    
-                // Check if the person is already in the existing `cc_to` for this mailbox
-                if (in_array($name, $existingCcToArray)) {
-                    // Show the warning using FlashMessageHelper
-                    FlashMessageHelper::flashWarning("$name is already added to the CC list for this mailbox.");
-                    return;
+        
+                // Ensure this logic only triggers during an addition and not an unchecking
+                if (!in_array($name, $this->selectedPeopleNames)) {
+                    // Check if the person is already in any of the existing `cc_to` lists
+                    if (in_array($name, $existingCcToArray)) {
+                        // Prevent duplicate warnings using a session variable or a class property
+                        if ($this->warningShown === false) {
+                            Log::info('Duplicate person added to CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
+                            FlashMessageHelper::flashWarning("$name is already added to this mailbox.");
+                            // Mark warning as shown and reset it after displaying the message
+                            $this->warningShown = true;
+                        }
+                        return;
+                    }
+        
+                    // Add the person to the `selectedPeopleNames` list
+                    $this->selectedPeopleNames[] = $name;
+                    // Update the `cc_to` field
+                    $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
+                    Log::info('Person added to CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
                 }
-    
-                // Add the person to the `selectedPeopleNames` list if not already present
-                $this->selectedPeopleNames[] = $name;
-    
-                // Update the `cc_to` field
-                $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
             } else {
                 // Handle the case where the person could not be found
+                Log::error('Person not found', ['person_id' => $personId]);
                 FlashMessageHelper::flashError('Person not found. Please try again.');
             }
         } catch (\Exception $e) {
-            Log::error('Error adding person to CC list: ' . $e->getMessage());
+            Log::error('Error adding person to CC list', ['error' => $e->getMessage()]);
             FlashMessageHelper::flashError('An error occurred while adding the person to the CC list.');
         }
+        
+        // Reset the warning flag after the operation to ensure it doesn't persist
+        $this->warningShown = false;
     }
+    
+    
     
 
 
@@ -721,12 +736,16 @@ public function updatedAddselectedPeople()
            'subject.required' => 'Business Justification is required',
            'distributor_name.required' => 'Distributor name is required',
            'description.required' => 'Specific Information is required',
+           'mailbox.required' => 'Mail Box name is required',
+           'mailbox.email' => 'Mail Box must be a valid email address',
+           'mailbox.unique' => 'This Mailbox already exists. Provide another mailbox name.',
            'priority.required' => 'Priority is required.',
        ];
    
        $this->validate([
            'distributor_name' => 'required|string',
            'subject' => 'required|string|max:255',
+           'mailbox' => 'required|email|unique:help_desks,mailbox',
            'priority' => 'required|in:High,Medium,Low',
            'description' => 'required|string',
            'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
@@ -774,6 +793,7 @@ public function updatedAddselectedPeople()
            $helpDesk = HelpDesks::create([
                'emp_id' => $this->employeeDetails->emp_id,
                'distributor_name' => $this->distributor_name,
+               'mailbox' => $this->mailbox,
                'subject' => $this->subject,
                'description' => $this->description,
                'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Store file data or null
@@ -1032,108 +1052,88 @@ public function updatedAddselectedPeople()
 
    public function Request()
    {
-       try {
-           $messages = [
-               'subject.required' => 'Business Justification is required',
-               'mailbox.required' => ' Mail Box name is required',
-               'cc_to.required' => 'Add members is required',
-               'description.required' => 'Specific Information is required',
-               'distributor_name.required' => 'MailBox is required',
-               'priority.required' => 'Priority is required.',
-           ];
+       // Custom validation messages
+       $messages = [
+           'subject.required' => 'Business Justification is required',
+           'mailbox.required' => 'Mail Box name is required',
+           'mailbox.email' => 'Mail Box must be a valid email address',
+           'mailbox.unique' => 'This Mailbox already exists. Provide another mailbox name.',
+           'cc_to.required' => 'Add members is required',
+           'description.required' => 'Specific Information is required',
+           'distributor_name.required' => 'MailBox is required',
+           'priority.required' => 'Priority is required.',
+       ];
    
-           $this->validate([
-               'subject' => 'required|string|max:255',
-               'mailbox' => 'required|email',
-               'distributor_name' => 'required',
-               'cc_to' => 'required',
-               'priority' => 'required|in:High,Medium,Low',
-               'description' => 'required|string',
-               'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif', // Adjust max size as needed
-           ], $messages);
+       // Validate the input data
+       $validatedData = $this->validate([
+           'subject' => 'required|string|max:255',
+           'mailbox' => 'required|email|unique:help_desks,mailbox',
+           'distributor_name' => 'required',
+           'cc_to' => 'required',
+           'priority' => 'required|in:High,Medium,Low',
+           'description' => 'required|string',
+           'file_paths.*' => 'nullable|file|mimes:xls,csv,xlsx,pdf,jpeg,png,jpg,gif',
+       ], $messages);
    
-           // Handle file uploads
-           $filePaths = $this->file_paths ?? [];
-           $fileDataArray = [];
+       // Process file uploads
+       $filePaths = $this->file_paths ?? [];
+       $fileDataArray = [];
    
-           if (!empty($filePaths) && is_array($filePaths)) {
-               foreach ($filePaths as $file) {
-                   if ($file->isValid()) {
-                       try {
-                           $fileDataArray[] = [
-                               'data' => base64_encode(file_get_contents($file->getRealPath())),
-                               'mime_type' => $file->getMimeType(),
-                               'original_name' => $file->getClientOriginalName(),
-                           ];
-                       } catch (\Exception $e) {
-                           Log::error('Error processing file', [
-                               'file_name' => $file->getClientOriginalName(),
-                               'error' => $e->getMessage(),
-                           ]);
-                           FlashMessageHelper::flashError('An error occurred while processing the file.');
-                           return;
-                       }
-                   } else {
-                       FlashMessageHelper::flashError('Invalid file uploaded.');
-                       return;
-                   }
-               }
-           }
-   
-           $employeeId = auth()->guard('emp')->user()->emp_id;
-           $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-   
-           if (!$this->employeeDetails) {
-               FlashMessageHelper::flashError('Employee details not found.');
+       foreach ($filePaths as $file) {
+           if ($file->isValid()) {
+               $fileDataArray[] = [
+                   'data' => base64_encode(file_get_contents($file->getRealPath())),
+                   'mime_type' => $file->getMimeType(),
+                   'original_name' => $file->getClientOriginalName(),
+               ];
+           } else {
+               FlashMessageHelper::flashError('Invalid file uploaded.');
                return;
            }
-   
-           $helpDesk = HelpDesks::create([
-               'emp_id' => $this->employeeDetails->emp_id,
-               'subject' => $this->subject,
-               'mailbox' => $this->mailbox??'-',
-               'description' => $this->description,
-               'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null, // Set to null if no files
-               'cc_to' => $this->cc_to ?? '-',
-               'category' => $this->category,
-               'mobile' => $this->mobile ?? '-',
-               'mail' => $this->mail ?? '-',
-               'distributor_name' => $this->distributor_name ?? '-',
-               'priority' => $this->priority,
-               'status_code' => 8,
-           ]);
-         
-   
-           $helpDesk->refresh();
-   
-           // Notify super admins
-           $superAdmins = IT::where('role', 'super_admin')->get();
-           foreach ($superAdmins as $admin) {
-               $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
-               $firstName = $employeeDetails->first_name ?? 'N/A';
-               $lastName = $employeeDetails->last_name ?? 'N/A';
-   
-               Mail::to($admin->email)->send(
-                   new HelpDeskNotification($helpDesk, $firstName, $lastName)
-               );
-           }
-   
-           FlashMessageHelper::flashSuccess('Request created successfully.');
-           $this->reset();
-           return redirect()->to('/HelpDesk');
-       } catch (\Illuminate\Validation\ValidationException $e) {
-           $this->setErrorBag($e->validator->getMessageBag());
-       } catch (\Exception $e) {
-           Log::error('Error creating request: ' . $e->getMessage(), [
-               'employee_id' => $this->employeeDetails->emp_id ?? 'N/A',
-               'category' => $this->category,
-               'subject' => $this->subject,
-               'description' => $this->description,
-                // Log the file data
-           ]);
-           FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
        }
+   
+       // Fetch employee details
+       $employeeId = auth()->guard('emp')->user()->emp_id;
+       $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+   
+       if (!$this->employeeDetails) {
+           FlashMessageHelper::flashError('Employee details not found.');
+           return;
+       }
+   
+       // Create the HelpDesk request
+       $helpDesk = HelpDesks::create([
+           'emp_id' => $this->employeeDetails->emp_id,
+           'subject' => $this->subject,
+           'mailbox' => $this->mailbox,
+           'description' => $this->description,
+           'file_paths' => !empty($fileDataArray) ? json_encode($fileDataArray) : null,
+           'cc_to' => $this->cc_to,
+           'category' => $this->category,
+           'mobile' => $this->mobile ?? '-',
+           'mail' => $this->mail ?? '-',
+           'distributor_name' => $this->distributor_name,
+           'priority' => $this->priority,
+           'status_code' => 8,
+       ]);
+   
+       // Notify super admins
+       $superAdmins = IT::where('role', 'super_admin')->get();
+       foreach ($superAdmins as $admin) {
+           $employeeDetails = EmployeeDetails::where('emp_id', $admin->emp_id)->first();
+           $firstName = $employeeDetails->first_name ?? 'N/A';
+           $lastName = $employeeDetails->last_name ?? 'N/A';
+   
+           Mail::to($admin->email)->send(
+               new HelpDeskNotification($helpDesk, $firstName, $lastName)
+           );
+       }
+   
+       FlashMessageHelper::flashSuccess('Request created successfully.');
+       $this->reset();
+       return redirect()->to('/HelpDesk');
    }
+   
    
 
    public function submit()

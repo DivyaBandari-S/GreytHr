@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('emp_id');
             $table->string('category');
             $table->string('mail');
-            $table->string('mailbox')->nullable()->unique();
+            $table->string('mailbox')->nullable();
             $table->string('distributor_name');
             $table->string('mobile');
             $table->string('subject');

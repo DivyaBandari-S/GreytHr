@@ -89,16 +89,20 @@
                                                         </div>
 
                                                     </div>
-
                                                     <div class="form-group mt-2">
-                                                        <label for="contactDetails">Provide the Name of Distribution List<span style="color:red">*</span></label>
+                                                        <label for="mailbox">Provide the Name of Distribution List<span style="color:red">*</span></label>
+                                                        <input wire:model.lazy="mailbox" wire:keydown.debounce.500ms="validateField('form.mailbox')" type="text" class="form-control" id="mailbox">
+                                                        @error('mailbox') <span class="text-danger">{{ $message }}</span> @enderror
+                                                    </div>
+                                                    <div class="form-group mt-2">
+                                                        <label for="contactDetails">DL Owner Name<span style="color:red">*</span></label>
                                                         <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('distributor_name')" type="text" class="form-control">
                                                         @error('distributor_name') <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
 
                                                     <div class="form-group mt-2">
-                                                        <label for="Name">DL Owner Name
+                                                        <label for="Name">Members to be Added
                                                         </label>
                                                         <div class="input-group mb-3">
                                                             <!-- Info icon on the left side -->
