@@ -133,9 +133,9 @@
                         @if($loginEmployeeProfile->image !== null && $loginEmployeeProfile->image != "null" && $loginEmployeeProfile->image != "Null" && $loginEmployeeProfile->image != "")
                         <img class="navProfileImg" src="data:image/jpeg;base64,{{ ($loginEmployeeProfile->image) }}" alt="" onclick="openProfile()">
                         @else
-                        @if($loginEmployeeProfile->gender=='Male')
+                        @if($loginEmployeeProfile->gender=='MALE')
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
-                        @elseif($loginEmployeeProfile->gender=='Female')
+                        @elseif($loginEmployeeProfile->gender=='FEMALE')
                         <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
                         @else
                         <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
