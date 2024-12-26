@@ -300,7 +300,7 @@ class ApprovedDetails extends Component
     public function fetchLeaveApplications()
     {
         try {
-            $this->leaveApplications = LeaveRequest::whereIn('leave_status', [2,3])
+            $this->leaveApplications = LeaveRequest::whereIn('leave_status', [2,3,4])
                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where(function ($query) {
                     $query->whereBetween('from_date', [$this->startOfWeek, $this->endOfWeek])

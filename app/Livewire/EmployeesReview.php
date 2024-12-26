@@ -85,7 +85,8 @@ class EmployeesReview extends Component
             $this->approvedLeaveRequests = LeaveRequest::whereIn('leave_applications.leave_status', [2, 3])
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
-                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]]);
+                        ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]])
+                        ->where('action_by' , $employeeId);
                 })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types
@@ -97,12 +98,11 @@ class EmployeesReview extends Component
                         ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
                 })
                 ->where(function ($query) {
-                    $query->whereIn('leave_applications.leave_status', [2, 3])
+                    $query->whereIn('leave_applications.leave_status', [2, 3,4])
                         ->where('leave_applications.cancel_status', '!=', 7); // Exclude Pending cancel status
                 })
                 ->orderBy('leave_applications.created_at', 'desc') // Adjusted to refer to the correct table
                 ->get(['leave_applications.*', 'employee_details.image', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']);
-
             $approvedLeaveApplications = [];
 
             foreach ($this->approvedLeaveRequests as $approvedLeaveRequest) {
@@ -179,12 +179,13 @@ class EmployeesReview extends Component
     }
 
 
-
+public $isActionBy;
     public function mount(Request $request)
     {
         try {
             $loggedInEmpId = auth()->guard('emp')->user()->emp_id;
             $this->isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
+            $this->isActionBy = LeaveRequest::where('action_by', $loggedInEmpId)->get();
             $companyIds = auth()->guard('emp')->user()->company_id;
 
             // Ensure $companyIds is an array
@@ -506,7 +507,8 @@ class EmployeesReview extends Component
             'activeContent' => $this->activeContent,
             'regularisation_count' => $this->regularisation_count,
             'countofregularisations' => $this->countofregularisations,
-            'isManager' => $this->isManager
+            'isManager' => $this->isManager,
+            'isActionBy' => $this->isActionBy
         ]);
     }
 }
