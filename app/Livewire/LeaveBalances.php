@@ -463,7 +463,7 @@ class LeaveBalances extends Component
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    return 0;
+                    return 0.5;
                 }
             }
 
@@ -475,7 +475,7 @@ class LeaveBalances extends Component
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    return 0;
+                    return 1;
                 }
             }
 

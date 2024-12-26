@@ -49,7 +49,7 @@ class SickLeaveBalances extends Component
                     return 0.5;
                 } else {
                     // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 0.5;
                 }
             }
 
@@ -62,7 +62,7 @@ class SickLeaveBalances extends Component
                     return 1;
                 } else {
                     // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 1;
                 }
             }
 
