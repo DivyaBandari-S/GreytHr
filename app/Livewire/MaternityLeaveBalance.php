@@ -2,15 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeLeaveBalances;
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
-use App\Models\EmployeeLeaveBalances;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Livewire\Component;
 
-class MarriageLeaveBalance extends Component
+class MaternityLeaveBalance extends Component
 {
     public $leaveData, $year, $currentYear;
     public $employeeLeaveBalances;
@@ -145,7 +145,7 @@ class MarriageLeaveBalance extends Component
 
     public function changeYear($year)
     {
-        return redirect()->to("/leave-balances/marriageleavebalance?year={$year}");
+        return redirect()->to("/leave-balances/maternityleavebalance?year={$year}");
     }
     public function render()
     {
@@ -158,7 +158,7 @@ class MarriageLeaveBalance extends Component
         $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Marriage Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Maternity Leave%'") // Filter based on Casual Leave
             ->get();
         // dd( $this->leaveGrantedData);
 
@@ -172,7 +172,7 @@ class MarriageLeaveBalance extends Component
 
                 // Loop through each leave policy to check for 'Casual Leave'
                 foreach ($leavePolicyData as $leavePolicy) {
-                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Marriage Leave') {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Maternity Leave') {
                         // If found, get the grant_days and process
                         $this->casualLeaveGrantDays = $leavePolicy['grant_days'] ?? 0;
                     }
@@ -187,7 +187,7 @@ class MarriageLeaveBalance extends Component
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
             ->whereYear('to_date', '>=', $this->year)
-            ->where('leave_type', 'Marriage Leave')
+            ->where('leave_type', 'Maternity Leave')
             // ->where(function ($query) {
             //     $query->whereIn('status', ['approved', 'rejected','Withdrawn','Pending'])  // Include both approved and rejected statuses
             //         ->whereIn('cancel_status', ['Re-applied', 'Pending Leave Cancel', 'rejected', 'Withdrawn','Pending','approved']);
@@ -221,7 +221,7 @@ class MarriageLeaveBalance extends Component
         $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Marriage Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Maternity Leave%'") // Filter based on Casual Leave
             ->get();
 
         $this->Availablebalance = $this->casualLeaveGrantDays - $this->totalSickDays;
@@ -229,7 +229,7 @@ class MarriageLeaveBalance extends Component
         $this->employeeLapsedBalanceList = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Marriage Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Maternity Leave%'") // Filter based on Casual Leave
             ->get();
 
         $currentMonth = date('n');
@@ -253,7 +253,7 @@ class MarriageLeaveBalance extends Component
 
                 // Loop through each leave policy to check for 'Casual Leave'
                 foreach ($leavePolicyData as $leavePolicy) {
-                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Marriage Leave') {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Maternity Leave') {
                         // If found, get the grant_days and process
                         $grantedLeavesCount = $leavePolicy['grant_days'] ?? 0;
                     }
@@ -267,7 +267,7 @@ class MarriageLeaveBalance extends Component
 
             // Fetch leave requests that overlap with the current month
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_type', 'Marriage Leave')
+                ->where('leave_type', 'Maternity Leave')
                 ->where('leave_status', '2')
                 ->where('cancel_status', '!=', '2')
                 ->whereYear('from_date', $this->year)
@@ -385,7 +385,7 @@ class MarriageLeaveBalance extends Component
         ];
 
         return view(
-            'livewire.marriage-leave-balance',
+            'livewire.maternity-leave-balance',
             [
                 'employeeLeaveBalances' => $this->employeeLeaveBalances,
                 'employeeleaveavlid' => $this->employeeleaveavlid,
@@ -398,4 +398,5 @@ class MarriageLeaveBalance extends Component
             ]
         );
     }
+
 }

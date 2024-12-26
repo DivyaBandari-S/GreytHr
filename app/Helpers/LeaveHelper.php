@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\HolidayCalendar;
 use Carbon\Carbon;
 use App\Models\LeaveRequest;
 
@@ -13,17 +14,34 @@ class LeaveHelper
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
-                return 'Error: Selected dates fall on a weekend. Please choose weekdays.';
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
+                return 0;
             }
 
-            if ($startDate->isSameDay($endDate)) {
-                if (self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)) {
-
-                    return 1;
-                } elseif (self::getSessionNumber($fromSession) == self::getSessionNumber($toSession)) {
+            // Check if the start and end sessions are different on the same day
+            if (
+                $startDate->isSameDay($endDate) &&
+               self::getSessionNumber($fromSession) ===self::getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !self::isHoliday($startDate, $holidays) && !self::isHoliday($endDate, $holidays)) {
                     return 0.5;
+                } else {
+                    return 0;
+                }
+            }
+
+            if (
+                $startDate->isSameDay($endDate) &&
+               self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)
+            ) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !self::isHoliday($startDate, $holidays) && !self::isHoliday($endDate, $holidays)) {
+                    return 1;
                 } else {
                     return 0;
                 }
@@ -32,27 +50,32 @@ class LeaveHelper
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!self::isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!self::isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
 
             // Deduct weekends based on the session numbers
             if (self::getSessionNumber($fromSession) > 1) {
-                $totalDays -= self::getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+                $totalDays -=self::getSessionNumber($fromSession) - 1; // Deduct days for the starting session
             }
             if (self::getSessionNumber($toSession) < 2) {
-                $totalDays -= 2 - self::getSessionNumber($toSession); // Deduct days for the ending session
+                $totalDays -= 2 -self::getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if (self::getSessionNumber($fromSession) === self::getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if (self::getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -68,16 +91,23 @@ class LeaveHelper
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occured while calculating no. of days.');
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
             return false;
         }
     }
 
+    private static function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
+
     private static function getSessionNumber($session)
     {
-        // You might need to customize this based on your actual session values
+        // Customize this function to return session number (e.g., "Session 1" -> 1)
         return (int) str_replace('Session ', '', $session);
     }
+
 
     public static function getApprovedLeaveDays($employeeId, $selectedYear)
     {
@@ -86,7 +116,7 @@ class LeaveHelper
             // Fetch approved leave requests
             $selectedYear = (int) $selectedYear;
             $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('category_type','Leave')
+                ->where('category_type', 'Leave')
                 ->where(function ($query) {
                     $query->where('leave_status', 2)
                         ->whereIn('cancel_status', [6, 5, 3, 4]);
@@ -166,7 +196,7 @@ class LeaveHelper
     public static function getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear)
     {
         // Fetch approved leave requests
-      
+
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where(function ($query) {
                 $query->where('leave_status', 2)
@@ -183,7 +213,7 @@ class LeaveHelper
             ])
             ->where('to_date', '=', $selectedYear)
             ->get();
-          
+
 
 
         $totalCasualDays = 0;
@@ -211,7 +241,7 @@ class LeaveHelper
                     $totalCasualDays += $days;
                     break;
                 case 'Sick Leave':
-                   
+
                     $totalSickDays += $days;
                     break;
                 case 'Loss Of Pay':

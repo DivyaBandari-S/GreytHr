@@ -15,6 +15,7 @@ use App\Helpers\FlashMessageHelper;
 
 use Illuminate\Http\Request;
 use App\Models\EmployeeDetails;
+use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use App\Models\RegularisationDates;
 use Carbon\Carbon;
@@ -39,7 +40,7 @@ class EmployeesReview extends Component
     public $approvedRegularisationRequestList;
     public $count;
 
-    public $openAccordionsForClosed=[];
+    public $openAccordionsForClosed = [];
     public $approvedLeaveApplicationsList;
     public $empLeaveRequests;
     public $activeContent, $leaveRequests;
@@ -86,7 +87,7 @@ class EmployeesReview extends Component
                 ->where(function ($query) use ($employeeId) {
                     $query->whereJsonContains('applying_to', [['manager_id' => $employeeId]])
                         ->orWhereJsonContains('cc_to', [['emp_id' => $employeeId]])
-                        ->where('action_by' , $employeeId);
+                        ->where('action_by', $employeeId);
                 })
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join status_types
@@ -98,7 +99,7 @@ class EmployeesReview extends Component
                         ->orWhere('employee_details.last_name', 'LIKE', '%' . $this->searchQuery . '%');
                 })
                 ->where(function ($query) {
-                    $query->whereIn('leave_applications.leave_status', [2, 3,4])
+                    $query->whereIn('leave_applications.leave_status', [2, 3, 4])
                         ->where('leave_applications.cancel_status', '!=', 7); // Exclude Pending cancel status
                 })
                 ->orderBy('leave_applications.created_at', 'desc') // Adjusted to refer to the correct table
@@ -179,7 +180,7 @@ class EmployeesReview extends Component
     }
 
 
-public $isActionBy;
+    public $isActionBy;
     public function mount(Request $request)
     {
         try {
@@ -337,8 +338,11 @@ public $isActionBy;
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -347,11 +351,10 @@ public $isActionBy;
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -360,11 +363,10 @@ public $isActionBy;
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    // If either start or end date is a weekend, return 0
                     return 0;
                 }
             }
@@ -372,13 +374,18 @@ public $isActionBy;
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -390,9 +397,9 @@ public $isActionBy;
             if ($this->getSessionNumber($toSession) < 2) {
                 $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -408,10 +415,16 @@ public $isActionBy;
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occured please try again later.');
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
+            return false;
         }
     }
-
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
     private function getSessionNumber($session)
     {
         return (int) str_replace('Session ', '', $session);
@@ -436,13 +449,13 @@ public $isActionBy;
 
     public function toggleActiveAccordion($id)
     {
-            if (in_array($id, $this->openAccordionsForClosed)) {
-                // Remove from open accordions if already open
-                $this->openAccordionsForClosed = array_diff($this->openAccordionsForClosed, [$id]);
-            } else {
-                // Add to open accordions if not open
-                $this->openAccordionsForClosed[] = $id;
-            }
+        if (in_array($id, $this->openAccordionsForClosed)) {
+            // Remove from open accordions if already open
+            $this->openAccordionsForClosed = array_diff($this->openAccordionsForClosed, [$id]);
+        } else {
+            // Add to open accordions if not open
+            $this->openAccordionsForClosed[] = $id;
+        }
     }
     public function render()
     {
@@ -456,7 +469,7 @@ public $isActionBy;
 
         if ($this->searching == 1) {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-                ->whereIn('regularisation_dates.status', [2, 3,13])
+                ->whereIn('regularisation_dates.status', [2, 3, 13])
                 ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
                 ->where(function ($query) {
@@ -477,7 +490,7 @@ public $isActionBy;
                 ->get();
         } else {
             $this->approvedRegularisationRequestList = RegularisationDates::whereIn('regularisation_dates.emp_id', $empIds)
-                ->whereIn('regularisation_dates.status', [2, 3,13])
+                ->whereIn('regularisation_dates.status', [2, 3, 13])
                 ->join('employee_details', 'regularisation_dates.emp_id', '=', 'employee_details.emp_id')
                 ->join('status_types', 'regularisation_dates.status', '=', 'status_types.status_code') // Join with status_types table
                 ->select(
