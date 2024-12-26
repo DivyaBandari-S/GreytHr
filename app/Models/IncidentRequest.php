@@ -41,7 +41,7 @@ class IncidentRequest extends Model
             'ser_end_date',
             'priority',
             'assigned_dept',
-            'file_path',
+            'file_paths',
      
             'status_code',
         ];
