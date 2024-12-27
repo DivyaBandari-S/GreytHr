@@ -1173,7 +1173,11 @@
                             </div>
                             <div class="col-5 pb-1 pt-1">
                                 <p class="shift-time-for-regularisation text-overflow mb-1 disabled">
-                                    10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
+                                    10:00 am to 07:00 pm 
+                                    <span style="pointer-events: none;">
+                                          <i class="fas fa-caret-down" style="opacity: 0.5; cursor: default;"></i>
+                                    </span>
+                                </p>
 
                             </div>
                             <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
