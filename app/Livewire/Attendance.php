@@ -849,6 +849,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         return false; // Return false to handle the error gracefully
     }
 }
+
     private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
     {
         $countofleaves = 0;
@@ -902,16 +903,48 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
         return false;
     }
+    private function isEmployeeFullDayLeaveOnDate($date, $employeeId)
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+      
+      
+        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_applications.leave_status', 2)
+            ->where('from_session', 'Session 1') // Add condition for from_session = 1
+            ->where('to_session', 'Session 1')   // Add condition for to_session = 1
+            ->where(function ($query) use ($date) {
+                $query->whereDate('from_date', '<=', $date)
+                      ->whereDate('to_date', '>', $date);
+            })
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
+            ->exists();
+         
+
+        // Check if the date is less than to_date
+       
+       
+      
+        return $leaveRecord;
+    } catch (\Exception $e) {
+        Log::error('Error in isEmployeeHalfDayLeaveOnDate method: ' . $e->getMessage());
+        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+        return false; // Return false to handle the error gracefully
+    }
+}
 
     //This function will help us to create the calendar
     public function generateCalendar()
     {
         try {
+            Log::info('Welcome to generateCalendar method');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             Log::info('Employee ID:', ['employeeId' => $employeeId]);
 
             $firstDay = Carbon::create($this->year, $this->month, 1);
+            
             $daysInMonth = $firstDay->daysInMonth;
+            
             $today = now();
 
             Log::info('First Day of Month:', ['firstDay' => $firstDay->toDateString()]);
@@ -923,18 +956,22 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             // Fetch public holidays for the current month
             $publicHolidays = $this->getPublicHolidaysForMonth($this->year, $this->month);
+            
             Log::info('Public Holidays for Current Month:', ['publicHolidays' => $publicHolidays]);
 
             $firstDayOfWeek = $firstDay->dayOfWeek;
+           
             Log::info('First Day of Week:', ['firstDayOfWeek' => $firstDayOfWeek]);
 
             $startOfPreviousMonth = $firstDay->copy()->subMonth();
+            
             $publicHolidaysPreviousMonth = $this->getPublicHolidaysForMonth(
                 $startOfPreviousMonth->year,
                 $startOfPreviousMonth->month
             );
+           
             $lastDayOfPreviousMonth = $firstDay->copy()->subDay();
-
+            
             Log::info('Start of Previous Month:', ['startOfPreviousMonth' => $startOfPreviousMonth->toDateString()]);
             Log::info('Public Holidays for Previous Month:', ['publicHolidaysPreviousMonth' => $publicHolidaysPreviousMonth]);
 
@@ -956,6 +993,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'backgroundColor' => '',
                             'status' => '',
                             'onHalfDayLeave'=>'',
+                            'onFullDayLeave'=>'',
                             'onleave' => '',
                             'halfdaypresent'=>'',
 
@@ -966,7 +1004,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
                         $isAbsentFor = false;
                         $isHalfDayPresent = false;
-                        $halfdaypresent=null; 
+                        $halfdaypresent=null;
+                        $isBeforeToDate=null; 
                         $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
                         $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray());
                         Log::info('Is Public Holiday:', ['isPublicHoliday' => $isPublicHoliday]);
@@ -977,7 +1016,17 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId);
                         Log::info('Is On Leave:', ['isOnLeave' => $isOnLeave]);
                           
-                        $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId);
+                        $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date->toDateString(), $employeeId);
+                        Log::info('Is On Full Day Leave:', ['isonFullDayLeave' => $isBeforeToDate]);
+                        if($isBeforeToDate==true)
+                        {
+                            $isOnHalfDayLeave=false;
+                        }
+                        else
+                        {
+                            $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId);
+                        }
+                       
                         Log::info('Is On Half Day Leave:', ['isOnHalfDayLeave' => $isOnHalfDayLeave]);
                         $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
                         Log::info('Leave Type:', ['leaveType' => $leaveType]);
@@ -1033,7 +1082,39 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
                             }
                         }
-                        if($isOnHalfDayLeave)
+                        if($isBeforeToDate)
+                        {
+
+                            switch ($leaveType) {
+                                case 'Casual Leave Probation':
+                                    $status = 'CLP';
+                                    break;
+                                case 'Sick Leave':
+                                    $status = 'SL';
+                                    break;
+                                case 'Loss Of Pay':
+                                    $status = 'LOP';
+                                    break;
+                                case 'Casual Leave':
+                                    $status = 'CL';
+                                    break;
+                                case 'Marriage Leave':
+                                    $status = 'ML';
+                                    break;
+                                case 'Paternity Leave':
+                                    $status = 'PL';
+                                    break;
+                                case 'Maternity Leave':
+                                    $status = 'MTL';
+                                    break;
+                                default:
+                                    $status = 'L';
+                                    break;
+                            }
+                            
+                           
+                        }
+                        elseif($isOnHalfDayLeave)
                         {
 
                             switch ($leaveType) {
@@ -1121,6 +1202,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'backgroundColor' => $backgroundColor,
                             'onleave' => $isOnLeave,
                             'onHalfDayLeave'=>$isOnHalfDayLeave,
+                            'onFullDayLeave'=>$isBeforeToDate,
                             'status' => $status,
                             'halfdaypresent'=>$halfdaypresent,
                         ];
@@ -1139,6 +1221,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'onHalfDayLeave'=>false,
                             'status' => '',
                             'halfdaypresent'=>'',
+                            'onFullDayLeave'=>'',
                         ];
                         $dayCount++;
                     }

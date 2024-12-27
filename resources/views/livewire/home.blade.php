@@ -211,13 +211,15 @@
                                         href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
                                 </span>
                             @else
-                                <span class="managerOtherDetails">Email not available</span>
+                                <span class="managerOtherDetails"></span>
                             @endif
 
                             <!-- Display mobile number if it is not null -->
-                            @if ($loginEmpManagerDetails->emergency_contact)
+                            @if ($loginEmpManagerDetails)
                                 <span class="managerOtherDetails">Mobile :
                                     {{ $loginEmpManagerDetails->emergency_contact }}</span>
+                                    @else
+                                    <span></span>
                             @endif
 
                         </div>

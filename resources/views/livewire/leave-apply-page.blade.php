@@ -215,15 +215,15 @@
                     @else
                     @if($selectedManagerDetails->gender=='FEMALE')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/female-default.jpg') }}" class=" rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
                     @elseif($selectedManagerDetails->gender=='MALE')
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/male-default.png') }}" class=" rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
                     @else
                     <div class="employee-profile-image-container">
-                        <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="40" width="40" alt="Default Image">
+                        <img src="{{ asset('images/user.jpg') }}" class=" rounded-circle" height="40" width="40" alt="Default Image">
                     </div>
                     @endif
                     @endif
