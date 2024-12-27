@@ -556,13 +556,7 @@ class LeaveApplyPage extends Component
             }
 
             // 1. Check if the selected dates are on weekends
-            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
-                return false;
-            }
-
-            // 1. Check if the selected dates are on weekends
-            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
+            if (!$this->isWeekday($this->from_date)) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
                 return false;
             }
@@ -1049,7 +1043,7 @@ class LeaveApplyPage extends Component
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    return 0;
+                    return 0.5;
                 }
             }
 
@@ -1061,7 +1055,7 @@ class LeaveApplyPage extends Component
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    return 0;
+                    return 1;
                 }
             }
 
@@ -1113,15 +1107,12 @@ class LeaveApplyPage extends Component
             return false;
         }
     }
-
-
     // Helper method to check if a date is a holiday
     private function isHoliday($date, $holidays)
     {
         // Check if the date exists in the holiday collection
         return $holidays->contains('date', $date->toDateString());
     }
-
 
     private function getSessionNumber($session)
     {

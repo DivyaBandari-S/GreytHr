@@ -17,6 +17,7 @@ use Livewire\Component;
 use App\Helpers\LeaveHelper;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
+use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -47,8 +48,11 @@ class LeaveBalances extends Component
     public $leaveType;
     public $transactionType;
     public $consumedSickLeaves;
+    public $percentageMarriageLeaves;
+    public $percentagePaternityLeaves;
     public $consumedCasualLeaves;
     public $consumedLossOfPayLeaves;
+    public $gender;
     public $consumedProbationLeaveBalance;
     public $sortBy = 'newest_first';
     public $selectedYear;
@@ -140,7 +144,6 @@ class LeaveBalances extends Component
                 $this->lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Loss Of Pay', $this->currentYear);
                 $this->casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave', $this->currentYear);
                 $this->casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Casual Leave Probation', $this->currentYear);
-                $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
                 $this->maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Maternity Leave', $this->currentYear);
                 $this->paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Paternity Leave', $this->currentYear);
                 $leaveBalances = LeaveHelper::getApprovedLeaveDays($this->employeeId, $this->selectedYear);
@@ -148,6 +151,8 @@ class LeaveBalances extends Component
                 $this->totalSickDays = $leaveBalances['totalSickDays'];
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
                 $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
+                $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
+
                 // Retrieve the lapsed status for Sick Leave
                 $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $this->employeeId)
                     ->where('period', 'like', "%$this->selectedYear%")
@@ -171,9 +176,9 @@ class LeaveBalances extends Component
                     $this->sickLeaveBalance = ($this->sickLeavePerYear ?? 0) - ($this->totalSickDays ?? 0);
                     $this->casualLeaveBalance = ($this->casualLeavePerYear ?? 0) - ($this->totalCasualDays ?? 0);
                     $this->casualProbationLeaveBalance = ($this->casualProbationLeavePerYear ?? 0) - ($this->totalCasualLeaveProbationDays ?? 0);
-                    $this->marriageLeaveBalance = ($this->marriageLeaves ?? 0) - ($this->approvedLeaveDays['totalMarriageDays'] ?? 0);
-                    $this->maternityLeaveBalance = ($this->maternityLeaves ?? 0) - ($this->approvedLeaveDays['totalMaternityDays'] ?? 0);
-                    $this->paternityLeaveBalance = ($this->paternityLeaves ?? 0) - ($this->approvedLeaveDays['totalPaternityDays'] ?? 0);
+                    $this->marriageLeaveBalance = ($this->marriageLeaves ?? 0) - ($leaveBalances['totalMarriageDays'] ?? 0);
+                    $this->maternityLeaveBalance = ($this->maternityLeaves ?? 0) - ($leaveBalances['totalMaternityDays'] ?? 0);
+                    $this->paternityLeaveBalance = ($this->paternityLeaves ?? 0) - ($leaveBalances['totalPaternityDays'] ?? 0);
                     $this->consumedCasualLeaves = $this->casualLeavePerYear - $this->casualLeaveBalance;
                     $this->consumedSickLeaves = $this->sickLeavePerYear - $this->sickLeaveBalance;
                     $this->consumedProbationLeaveBalance = $this->casualProbationLeavePerYear - $this->casualProbationLeaveBalance;
@@ -268,6 +273,12 @@ class LeaveBalances extends Component
             if ($this->casualProbationLeavePerYear > 0) {
                 $this->percentageCasualProbation = ($this->consumedProbationLeaveBalance / $this->casualProbationLeavePerYear) * 100;
             }
+            if ($this->marriageLeaves > 0) {
+                $this->percentageMarriageLeaves = ($this->consumedMarriageLeaves / $this->marriageLeaves) * 100;
+            }
+            if ($this->paternityLeaves > 0) {
+                $this->percentagePaternityLeaves= ($this->consumedPaternityLeaves / $this->paternityLeaves) * 100;
+            }
 
 
             $this->yearDropDown();
@@ -276,13 +287,10 @@ class LeaveBalances extends Component
 
             //to check employee details are not null
             if ($this->employeeDetails) {
-                $gender = $this->employeeDetails->gender;
-                $grantedLeave = ($gender === 'Female') ? 90 : 05;
-
+                $this->gender = $this->employeeDetails->gender;
                 $leaveBalances = LeaveBalances::getLeaveBalances($employeeId, $this->selectedYear);
                 return view('livewire.leave-balances', [
-                    'gender' => $gender,
-                    'grantedLeave' => $grantedLeave,
+                    'gender' => $this->gender,
                     'employeeDetails' => $this->employeeDetails,
                     'leaveTransactions' => $this->leaveTransactions,
                     'percentageCasual' => $this->percentageCasual,
@@ -317,7 +325,6 @@ class LeaveBalances extends Component
 
             // Get the logged-in employee's approved leave days for all leave types
             $approvedLeaveDays = LeaveHelper::getApprovedLeaveDays($employeeId, $selectedYear);
-
 
             // Retrieve the lapsed status for Sick Leave
             $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
@@ -439,8 +446,11 @@ class LeaveBalances extends Component
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -449,12 +459,11 @@ class LeaveBalances extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 0.5;
                 }
             }
 
@@ -462,25 +471,29 @@ class LeaveBalances extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 1;
                 }
             }
 
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -492,9 +505,9 @@ class LeaveBalances extends Component
             if ($this->getSessionNumber($toSession) < 2) {
                 $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -510,8 +523,15 @@ class LeaveBalances extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occured while calculating the no. of days.');
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
+            return false;
         }
+    }
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
     }
 
     private function getSessionNumber($session)

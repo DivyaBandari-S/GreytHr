@@ -20,6 +20,7 @@ use Livewire\Component;
 use App\Helpers\LeaveHelper;
 use Carbon\Carbon;
 use App\Livewire\LeavePage;
+use App\Models\HolidayCalendar;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 
@@ -64,52 +65,52 @@ class LeavePending extends Component
             $fileDataArray,
             fn($fileData) => strpos($fileData['mime_type'], 'image') !== false,
         );
-            // If only one image, provide direct download
-    if (count($images) === 1) {
-        $image = reset($images); // Get the single image
-        $base64File = $image['data'];
-        $mimeType = $image['mime_type'];
-        $originalName = $image['original_name'];
- 
-        // Decode base64 content
-        $fileContent = base64_decode($base64File);
- 
-        // Return the image directly
-        return response()->stream(
-            function () use ($fileContent) {
-                echo $fileContent;
-            },
-            200,
-            [
-                'Content-Type' => $mimeType,
-                'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
-            ]
-        );
-    }
+        // If only one image, provide direct download
+        if (count($images) === 1) {
+            $image = reset($images); // Get the single image
+            $base64File = $image['data'];
+            $mimeType = $image['mime_type'];
+            $originalName = $image['original_name'];
+
+            // Decode base64 content
+            $fileContent = base64_decode($base64File);
+
+            // Return the image directly
+            return response()->stream(
+                function () use ($fileContent) {
+                    echo $fileContent;
+                },
+                200,
+                [
+                    'Content-Type' => $mimeType,
+                    'Content-Disposition' => 'attachment; filename="' . $originalName . '"',
+                ]
+            );
+        }
 
         // Create a zip file for the images
         if (count($images) > 1) {
-        $zipFileName = 'images.zip';
-        $zip = new \ZipArchive();
-        $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+            $zipFileName = 'images.zip';
+            $zip = new \ZipArchive();
+            $zip->open(storage_path($zipFileName), \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
 
-        foreach ($images as $image) {
-            $base64File = $image['data'];
-            $mimeType = $image['mime_type'];
-            $extension = explode('/', $mimeType)[1];
-            $imageName = uniqid() . '.' . $extension;
+            foreach ($images as $image) {
+                $base64File = $image['data'];
+                $mimeType = $image['mime_type'];
+                $extension = explode('/', $mimeType)[1];
+                $imageName = uniqid() . '.' . $extension;
 
-            $zip->addFromString($imageName, base64_decode($base64File));
+                $zip->addFromString($imageName, base64_decode($base64File));
+            }
+
+            $zip->close();
+
+            // Return the zip file as a download
+            return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
         }
-
-        $zip->close();
-
-        // Return the zip file as a download
-        return response()->download(storage_path($zipFileName))->deleteFileAfterSend(true);
+        // If no images, return an appropriate response
+        return response()->json(['message' => 'No images found'], 404);
     }
-      // If no images, return an appropriate response
-      return response()->json(['message' => 'No images found'], 404);
-}
     public $showViewFileDialog = false; // Toggle modal visibility
     public $files = []; // Store files array
     public $selectedFile; // Store the selected file's data
@@ -121,13 +122,13 @@ class LeavePending extends Component
     }
     public function showViewFile()
     {
-      
+
         $this->showViewFileDialog = true;
     }
 
     public function showViewImage()
     {
-      
+
         $this->showViewImageDialog = true;
     }
     public function closeViewImage()
@@ -136,14 +137,18 @@ class LeavePending extends Component
     }
 
 
+    //it will calculate number of days for leave application
     public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
     {
         try {
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -152,12 +157,11 @@ class LeavePending extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 0.5;
                 }
             }
 
@@ -165,25 +169,29 @@ class LeavePending extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0;
+                    return 1;
                 }
             }
 
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -195,9 +203,9 @@ class LeavePending extends Component
             if ($this->getSessionNumber($toSession) < 2) {
                 $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -213,13 +221,19 @@ class LeavePending extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occured while calulating no. of days');
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
+            return false;
         }
     }
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
+
     private function getSessionNumber($session)
     {
-        // You might need to customize this based on your actual session values
         return (int) str_replace('Session ', '', $session);
     }
 
