@@ -150,7 +150,10 @@ class ChatBox extends Component
                 throw new \Exception('Invalid conversation or receiver');
             }
 
-            $this->messages = Message::where('conversation_id', $this->selectedConversation->id)->get();
+            $this->messages = Message::where('conversation_id', $this->selectedConversation->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
             $this->dispatch('chatSelected');
             $this->dispatch('receiveMessageSound');
 
