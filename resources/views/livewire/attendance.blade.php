@@ -1632,6 +1632,7 @@ color: #fff;
         <div class="row m-0 p-0">
             @if($defaultfaCalendar==1)
             <div class="col-12 col-md-7 m-0 p-1 calendar custom-scrollbar">
+                
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="calendar-heading-container">
                         <button wire:click="beforeMonth" class="nav-btn">&lt; Prev</button>
