@@ -167,9 +167,9 @@
                                 <span class="leave-gran font-weight-500">Granted:
                                     <span class="leave-gran font-weight-500">
                                         @if($gender === 'FEMALE')
-                                        {{$maternityLeaves}}
+                                        {{ $maternityLeaves }}
                                         @elseif($gender === 'MALE')
-                                        {{$paternityLeaves}}
+                                        {{ $paternityLeaves }}
                                         @else
                                         0
                                         @endif
@@ -178,7 +178,8 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0"> @if($gender === 'FEMALE')
+                            <h5 class="mb-0">
+                                @if($gender === 'FEMALE')
                                 {{$maternityLeaves}}
                                 @elseif($gender === 'MALE')
                                 {{$paternityLeaves}}
@@ -187,10 +188,12 @@
                                 @endif
                             </h5>
                             <p class="mb-0 remaining">Balance</p>
-                            @if($gender === 'FEMALE' && $maternityLeaves > 0)
-                            <a href="#" class="anchorTagDetails">View Details</a>
-                            @elseif($gender === 'Male' && $paternityLeaves > 0)
-                            <a href="#" class="anchorTagDetails">View Details</a>
+                            @if($paternityLeaves > 0 || $maternityLeaves > 0)
+                            @if($gender === 'FEMALE')
+                            <a href="/leave-balances/maternityleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            @else
+                            <a href="/leave-balances/paternityleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            @endif
                             @endif
                         </div>
                     </div>
@@ -309,7 +312,7 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0">{{ $marriageLeaves }}</h5>
+                            <h5 class="mb-0">{{ $marriageLeaveBalance }}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($marriageLeaves > 0)
                             <a href="/leave-balances/marriageleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
@@ -319,13 +322,13 @@
                         <div class="px-3">
                             <div class="tube-container">
                                 <p class="mb-0 consumedContent">
-                                    @if($consumedProbationLeaveBalance > 0)
-                                    {{ $consumedProbationLeaveBalance }} of {{ $casualProbationLeavePerYear }} Consumed
+                                    @if($consumedMarriageLeaves > 0)
+                                    {{ $consumedMarriageLeaves }} of {{ $marriageLeaves }} Consumed
                                     @else
-                                    0 of {{ $casualProbationLeaveBalance }} Consumed
+                                    0 of {{ $marriageLeaves }} Consumed
                                     @endif
                                 </p>
-                                <div class="tube" style="width: {{ $percentageCasualProbation }}%; background-color: {{ $this->getTubeColor($consumedProbationLeaveBalance, $casualProbationLeavePerYear, 'Casual Leave Probation') }};"></div>
+                                <div class="tube" style="width: {{ $percentageMarriageLeaves }}%; background-color: {{ $this->getTubeColor($consumedMarriageLeaves, $marriageLeaves, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
                         @endif

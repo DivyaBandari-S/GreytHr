@@ -387,7 +387,7 @@
                 </div>
             </div>
 
-            @if($isManager)
+            @if($isManager || $isActionBy)
             <div class="closed-leaves-container px-2">
                 @if(!empty($approvedLeaveApplicationsList))
                 @foreach($approvedLeaveApplicationsList as $leaveRequest)
@@ -483,11 +483,11 @@
 
                                 <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->formatted_from_date }}</span>
 
-                                ({{ $leaveRequest['approvedLeaveRequest']->from_session }} ) to
+                               <span class="normalText"> ({{ $leaveRequest['approvedLeaveRequest']->from_session }} )</span> to
 
                                 <span class="normalText">{{ $leaveRequest['approvedLeaveRequest']->formatted_to_date }}</span>
 
-                                ( {{ $leaveRequest['approvedLeaveRequest']->to_session }} )
+                                <span class="normalText"> ( {{ $leaveRequest['approvedLeaveRequest']->to_session }} )</span>
 
                             </span>
 

@@ -44,7 +44,7 @@ class EmployeeLeaveBalances extends Model
 
         // Retrieve all records for the specific employee and year
         $balances = self::where('emp_id', $employeeId)
-            ->where('granted_for_year', 'like', "%$year%")
+            ->where('period', 'like', "%$year%")
             ->get();
         // Loop through each balance record
         foreach ($balances as $balance) {
