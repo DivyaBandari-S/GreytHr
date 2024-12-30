@@ -55,39 +55,48 @@ class IncidentRequest extends Model
      
      
         protected static function booted()
-    {
-        static::created(function ($incidentRequest) {
-            $title = '';
-            $message = '';
-            $redirect_url = '';
-
-            if ($incidentRequest->category == 'Incident Request') {
-                $title = ' Incident Request ';
-                $message = "Subject : {$incidentRequest->short_description}";
-                $redirect_url = 'incidentRequests?currentRequestId=' . $incidentRequest->id;
-            } elseif ($incidentRequest->category == 'Service Request') {
-                $title = ' Service Request ';
-                $message = "Subject : {$incidentRequest->short_description}";
-                $redirect_url = 'serviceRequests?currentRequestId=' . $incidentRequest->id;
- 
-            }
+        {
+            static::created(function ($incidentRequest) {
+                $title = '';
+                $message = '';
+                $redirect_url = '';
      
-            // Check if any value is missing, if so, log it
-            if (!$title || !$message || !$redirect_url) {
-                Log::error('Missing required notification data: title, message or redirect_url');
-                return; // Prevent creating a notification if any data is missing
-            }
+                $employee = EmployeeDetails::where('emp_id', $incidentRequest->emp_id)->first();
      
-            // Create notification
-            ticket_notifications::create([
-                'title' => $title,
-                'message' => $message,
-                'redirect_url' => $redirect_url,
-                'notifiable_id' => $incidentRequest->id,
-                'notifiable_type' => IncidentRequest::class,
-            ]);
-        });
-    }
+                if (!$employee) {
+                    Log::error("Employee not found for ID: {$incidentRequest->employee_id}");
+                    return; // Prevent creating a notification if the employee is not found
+                }
+     
+                $employeeName = "{$employee->first_name} {$employee->last_name}";
+             
+                if ($incidentRequest->category == 'Incident Request') {
+                    $title = "Incident Request Raised by {$employeeName}";
+                    $message = "Subject : {$incidentRequest->short_description}";
+                    $redirect_url = 'incidentRequests?currentRequestId=' . $incidentRequest->id;
+                } elseif ($incidentRequest->category == 'Service Request') {
+                    $title =  "Service Request Raised by {$employeeName}";
+                    $message = "Subject : {$incidentRequest->short_description}";
+                    $redirect_url = 'serviceRequests?currentRequestId=' . $incidentRequest->id;
+                }
+     
+                // Check if any value is missing, if so, log it
+                if (!$title || !$message || !$redirect_url) {
+                    Log::error('Missing required notification data: title, message or redirect_url');
+                    return; // Prevent creating a notification if any data is missing
+                }
+     
+                // Create notification
+                ticket_notifications::create([
+                    'title' => $title,
+                    'message' => $message,
+                    'redirect_url' => $redirect_url,
+                    'notifiable_id' => $incidentRequest->id,
+                    'notifiable_type' => IncidentRequest::class,
+                ]);
+            });
+        }
+     
      
      
      

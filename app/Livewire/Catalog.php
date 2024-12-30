@@ -941,7 +941,55 @@ public function updatedAddselectedPeople()
            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
        }
    }
-   
+   public function removeSelectedPerson($personId)
+{
+    try {
+        // Fetch the selected mailbox
+        $selectedMailbox = $this->mailbox; // `$this->mailbox` is the selected mailbox from the dropdown
+        
+        // Retrieve the existing `cc_to` list for this mailbox from HelpDesks table entries
+        $helpDesk = HelpDesks::where('mailbox', $selectedMailbox)
+            ->whereNotNull('cc_to')
+            ->first(); // Get the first entry for this mailbox
+
+        if ($helpDesk) {
+            $existingCcTo = $helpDesk->cc_to; // Existing cc_to list
+            $existingCcToArray = array_map('trim', explode(',', $existingCcTo)); // Convert to an array and trim spaces
+            
+            // Retrieve the selected person's details
+            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
+
+            if ($selectedPerson) {
+                $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
+
+                // Check if the person is in the `cc_to` list
+                if (in_array($name, $existingCcToArray)) {
+                    // If the person is in the list, remove them
+                    $updatedCcTo = array_diff($existingCcToArray, [$name]); // Remove the person from the array
+                    $helpDesk->cc_to = implode(', ', $updatedCcTo); // Update the `cc_to` field
+                    $helpDesk->save(); // Save the changes to the database
+
+                    Log::info('Person removed from CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
+                    FlashMessageHelper::flashSuccess("$name has been removed from the CC list.");
+                } else {
+                    FlashMessageHelper::flashWarning("$name is not in the CC list for this mailbox.");
+                }
+            } else {
+                // Handle the case where the person could not be found
+                Log::error('Person not found', ['person_id' => $personId]);
+                FlashMessageHelper::flashError('Person not found. Please try again.');
+            }
+        } else {
+            // Handle case where no `cc_to` exists for the selected mailbox
+            Log::error('Mailbox not found or no cc_to exists', ['mailbox' => $selectedMailbox]);
+            FlashMessageHelper::flashError('No CC list exists for the selected mailbox.');
+        }
+    } catch (\Exception $e) {
+        Log::error('Error removing person from CC list', ['error' => $e->getMessage()]);
+        FlashMessageHelper::flashError('An error occurred while removing the person from the CC list.');
+    }
+}
+
    public function OldRequest()
    {
        try {
