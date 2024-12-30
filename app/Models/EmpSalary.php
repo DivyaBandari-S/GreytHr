@@ -128,10 +128,10 @@ class EmpSalary extends Model
         return $this->where('emp_id', $emp_id)->first();
     }
 
-    public function decodedSalary($value)
-    {
-        return $value ? $this->decodeCTC($value) : 0;
-    }
+    // public function decodedSalary($value)
+    // {
+    //     return $value ? $this->decodeCTC($value) : 0;
+    // }
     public function calculateSalaryComponents($value)
     {
         $gross = $value ? $this->decodeCTC($value) : 0;
@@ -161,18 +161,37 @@ class EmpSalary extends Model
             'medical_allowance' => $medicalAllowance,
             'special_allowance' => $specialAllowance,
             'earnings' => $total,
-            'gross'=> $gross,
+            'gross'=> round($gross,2),
             'pf' => $pf,
             'esi' => $esi,
             'professional_tax' => $professionalTax,
             'total_deductions' => $totalDeductions,
-            'net_pay'=> $total- $totalDeductions
+            'net_pay'=> $total- $totalDeductions,
+            'working_days'=>'30'
+        ];
+    }
+
+    public function calculatePfComponents($value){
+        $gross = $value ? $this->decodeCTC($value) : 0;
+        $basic =round($gross * 0.4200,2); // 41.96%
+        $pf = round($gross * 0.0504,2); // 5.04%
+        $vpf = 0.00; // 0%
+        $employeer_pf = round($pf * 0.3000,2); // 30%
+        $employeer_pension = round($pf * 0.7000,2); // 70%
+
+
+        return [
+            'basic' => $basic,
+            'pf' => $pf,
+            'vpf' => $vpf,
+            'employeer_pf' => $employeer_pf,
+            'employeer_pension'=> $employeer_pension,
         ];
     }
 
     private function decodeCTC($value)
     {
-        Log::info('Decoding CTC: ' . $value);
+        Log::info('Decodinggg CTC: ' . $value);
         $decoded = Hashids::decode($value);
 
         if (count($decoded) === 0) {

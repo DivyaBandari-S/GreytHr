@@ -78,11 +78,11 @@
                                     @endif
                                     @else
                                     <!-- Default images based on gender -->
-                                    @if ($employeeDetails->gender == 'Male')
+                                    @if ($employeeDetails->gender == 'MALE')
                                     <div class="employee-profile-image-container mb-2">
                                         <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder" alt="Default Image">
                                     </div>
-                                    @elseif($employeeDetails->gender == 'Female')
+                                    @elseif($employeeDetails->gender == 'FEMALE')
                                     <div class="employee-profile-image-container mb-2">
                                         <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder" alt="Default Image">
                                     </div>
@@ -953,8 +953,8 @@
                                 Job Mode
                             </div>
                             <div style="margin-left: 15px; font-size: 12px; margin-bottom: 10px;">
-                                @if ($employeeDetails->job_mode)
-                                {{ ucwords(strtolower($manager->job_mode)) }}
+                                @if ($employeeDetails)
+                                {{ ucwords(strtolower($employeeDetails->job_mode)) }}
                                 @else
                                 NA
                                 @endif

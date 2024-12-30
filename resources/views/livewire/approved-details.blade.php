@@ -365,16 +365,16 @@
                                         @elseif(!empty($files) && count($files) == 1)
                                         @foreach($files as $file)
                                         @php
-                                            $base64File = trim($file['data'] ?? '');
-                                            $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
-                                            $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
+                                        $base64File = trim($file['data'] ?? '');
+                                        $mimeType = $file['mime_type'] ?? 'application/octet-stream'; // Default MIME type
+                                        $originalName = $file['original_name'] ?? 'download.pdf'; // Default file name
                                         @endphp
-                                
+
                                         <a href="data:{{ $mimeType }};base64,{{ $base64File }}"
-                                           download="{{ $originalName }}" class="anchorTagDetails">
+                                            download="{{ $originalName }}" class="anchorTagDetails">
                                             Download File
                                         </a>
-                                    @endforeach
+                                        @endforeach
                                         @endif
                                         @endif
                                     </div>
@@ -418,12 +418,12 @@
                                     @else
                                     Rejected by <br>
                                     <span class="normalText">
-                                    @if(!empty($actionTakenBy))
-                                    {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
-                                    @else
-                                    <span>N/A</span>
-                                    @endif
-                                     <br>
+                                        @if(!empty($actionTakenBy))
+                                        {{ ucwords(strtolower($actionTakenBy->first_name))}} {{ ucwords(strtolower($actionTakenBy->last_name))}}
+                                        @else
+                                        <span>N/A</span>
+                                        @endif
+                                        <br>
                                         <span class="normalTextSmall"> {{ $leaveRequest->updated_at->format('d M, Y g:i a')  }}</span>
 
                                     </span>
@@ -493,19 +493,28 @@
                 </div>
                 @if ($this->leaveApplications !== null && !$this->leaveApplications->isEmpty())
                 <div class="p-3">
-                    <h6 class="normalText">{{$employeeName}}'s Leave Transctions</h6>
+                    <h6 class="normalText">{{$employeeName}}'s Leave Transactions</h6>
                     <div class="col-md-4 rounded mt-3 p-1" style="background-color: #ffffe8;">
                         <span class="normalTextValue">Total leaves taken
                         </span> <br>
                         @php
                         $totalDays = 0;
                         @endphp
-
                         @foreach($leaveApplications as $leaveCountOfEmp)
                         @php
-                        $totalDays += $this->calculateNumberOfDays($leaveCountOfEmp->from_date, $leaveCountOfEmp->from_session, $leaveCountOfEmp->to_date, $leaveCountOfEmp->to_session,$leaveCountOfEmp->leave_type);
+                        // Check if category_type is 'leave' and leave_status is either 2 or 6
+                            if ($leaveCountOfEmp->category_type === 'Leave' && in_array($leaveCountOfEmp->leave_status, [2, 6])) {
+                                $totalDays += $this->calculateNumberOfDays(
+                                $leaveCountOfEmp->from_date,
+                                $leaveCountOfEmp->from_session,
+                                $leaveCountOfEmp->to_date,
+                                $leaveCountOfEmp->to_session,
+                                $leaveCountOfEmp->leave_type
+                                );
+                        }
                         @endphp
                         @endforeach
+
 
                         <span class="normalText"> {{ $totalDays }}
                         </span>
@@ -541,9 +550,9 @@
                                     <td> {{ $this->calculateNumberOfDays($leaveApplication->from_date, $leaveApplication->from_session, $leaveApplication->to_date, $leaveApplication->to_session, $leaveApplication->leave_type) }}</td>
                                     <td>
                                         @if($leaveApplication->category_type === 'Leave')
-                                        {{ ucfirst($leaveApplication->leave_status === 2 ? 'Availed' : $leaveApplication->leave_status) }}
+                                        {{ ucfirst($leaveApplication->leave_status === 2 ? 'Applied-Approved' : ($leaveApplication->leave_status === 3 ? 'Rejected' : ($leaveApplication->leave_status === 4 ? 'Withdrawn' : $leaveApplication->leave_status))) }}
                                         @else
-                                        {{ ucfirst($leaveApplication->cancel_status === 2 ? 'Applied-Approved' : $leaveApplication->leave_status) }}
+                                        {{ ucfirst($leaveApplication->cancel_status === 2 ? 'Applied-Approved' : ($leaveApplication->cancel_status === 3 ? 'Rejected' : ($leaveApplication->cancel_status === 4 ? 'Withdrawn' : $leaveApplication->cancel_status))) }}
                                         @endif
                                     </td>
                                 </tr>
