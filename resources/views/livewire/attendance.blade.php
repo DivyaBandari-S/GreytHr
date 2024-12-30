@@ -2226,6 +2226,8 @@ color: #fff;
                                 <tr>
                                     <th class="attendance-info-table-head">First&nbsp;In</th>
                                     <th class="attendance-info-table-head">Last&nbsp;Out</th>
+                                    <th class="attendance-info-table-head">Late&nbsp;In</th>
+                                    <th class="attendance-info-table-head">Early&nbsp;Out</th>
                                     <th class="attendance-info-table-head">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Break&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Actual&nbsp;Work&nbsp;Hrs</th>
@@ -2253,6 +2255,12 @@ color: #fff;
                                         @else
                                         -
                                         @endif
+                                    </td>
+                                    <td class="attendance-info-table-data">
+                                        Late In
+                                    </td>
+                                    <td class="attendance-info-table-data">
+                                        Early Out
                                     </td>
                                     <td>
                                         @if($this->first_in_time!=$this->last_out_time)

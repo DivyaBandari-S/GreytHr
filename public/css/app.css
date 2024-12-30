@@ -750,9 +750,10 @@ body {
     background-color: #f9f9f9;
 }
 .employee-profile-image-placeholder{
-    height: 100px;
-    width: 100px;
+    height:33px;
+    width: 33px;
 }
+
 div.align-prof-dev{
     display: flex;
     flex-direction: row;
