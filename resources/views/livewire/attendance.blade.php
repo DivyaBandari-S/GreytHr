@@ -2257,10 +2257,10 @@ color: #fff;
                                         @endif
                                     </td>
                                     <td class="attendance-info-table-data">
-                                        Late In
+                                        -
                                     </td>
                                     <td class="attendance-info-table-data">
-                                        Early Out
+                                        -
                                     </td>
                                     <td>
                                         @if($this->first_in_time!=$this->last_out_time)
