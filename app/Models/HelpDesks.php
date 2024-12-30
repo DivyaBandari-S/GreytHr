@@ -10,14 +10,26 @@ class HelpDesks extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'id','emp_id', 'category', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
+        'id','emp_id', 'category','mailbox', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
      ];
      protected static function booted()
      {
          static::created(function ($helpDesk) {
-             $title = 'Catalog Request'; // Default title
+  
+             $employee = EmployeeDetails::where('emp_id', $helpDesk->emp_id)->first();
+  
+             if (!$employee) {
+                 Log::error("Employee not found for ID: {$helpDesk->employee_id}");
+                 return; // Prevent creating a notification if the employee is not found
+             }
+  
+             $employeeName = "{$employee->first_name} {$employee->last_name}";
+  
+             $title = "Catalog Request Raised by {$employeeName}";
              $message = "Subject : {$helpDesk->category}";
-             $redirect_url ='itrequest?currentCatalogId=' . $helpDesk->id;
+             $redirect_url = 'itrequest?currentCatalogId=' . $helpDesk->id;
+  
+  
   
              // Check if any value is missing, log it if necessary
              if (!$title || !$message || !$redirect_url) {

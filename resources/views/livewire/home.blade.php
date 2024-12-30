@@ -1139,9 +1139,9 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {{ $grossPay}}; // Dynamic data from Laravel
-        var deductions = {{ $deductions }}; // Dynamic data from Laravel
-        var netPay = {{ $netPay}}; // Dynamic data from Laravel
+        var grossPay = {{ $grossPay }};   // Correct data injection
+        var deductions = {{ $deductions }};   // Correct data injection
+        var netPay = {{ $netPay }};
 
         // Total of netPay and deductions should equal grossPay
         if (grossPay !== (netPay + deductions)) {

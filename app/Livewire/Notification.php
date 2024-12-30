@@ -65,8 +65,11 @@ class Notification extends Component
                 ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                 ->select('employee_details.*')
                 ->get();
-
-            $count = count($birthdayEmployees);
+            $newlyJoinedEmployees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                ->whereDay('hire_date', $currentDay)
+                ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->get();
+            $count = count($birthdayEmployees) + count($newlyJoinedEmployees);
 
             if ($count > 0) {
 
@@ -135,7 +138,7 @@ class Notification extends Component
                     ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                     ->where('employee_details.emp_id', $loggedInEmpId)
                     ->first();
-                    // dd( $YourBirthday);
+                // dd( $YourBirthday);
 
                 $this->totalBirthdays = $this->birthdayRecord->chatting_id;
                 // dd( $this->totalBirthdays);
@@ -149,7 +152,7 @@ class Notification extends Component
                             ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
                             ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                             ->select('employee_details.*')
-                            ->where('employee_details.emp_id','!=', $loggedInEmpId)
+                            ->where('employee_details.emp_id', '!=', $loggedInEmpId)
                             ->first();
                         //   dd( $this->getRemainingBirthday->first_name);
 
