@@ -1137,29 +1137,25 @@
             rect.right <= (window.innerWidth || document.documentElement.clientWidth)
         );
     }
+
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {
-            {
-                $grossPay
-            }
-        }; // Dynamic data from Laravel
-        var deductions = {
-            {
-                $deductions
-            }
-        }; // Dynamic data from Laravel
-        var netPay = {
-            {
-                $netPay
-            }
-        }; // Dynamic data from Laravel
+        // Correctly inject the dynamic data from Laravel
+        var grossPay = {{ $grossPay }};   // Correct data injection
+        var deductions = {{ $deductions }};   // Correct data injection
+        var netPay = {{ $netPay }};   // Correct data injection
 
-        // Total of netPay and deductions should equal grossPay
+        // Check if the sum of netPay and deductions equals grossPay
         if (grossPay !== (netPay + deductions)) {
             console.error('The sum of net pay and deductions does not match the gross pay.');
         }
 
+        // Check the data in the console
+        console.log('Gross Pay:', grossPay);
+        console.log('Deductions:', deductions);
+        console.log('Net Pay:', netPay);
+
+        // Render the chart
         var ctx = document.getElementById('combinedPieChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
@@ -1170,9 +1166,7 @@
                     {
                         label: 'Gross Pay',
                         data: [grossPay, 0, 0], // Gross Pay only in the outer ring
-                        backgroundColor: ['#000000', 'transparent',
-                            'transparent'
-                        ], // Black for Gross Pay, Transparent for the rest
+                        backgroundColor: ['#000000', 'transparent', 'transparent'], // Black for Gross Pay, Transparent for the rest
                         borderColor: 'transparent', // No border for outer ring
                         borderWidth: 2,
                         hoverBorderWidth: 3,
@@ -1181,12 +1175,8 @@
                     // Inner ring for Net Pay and Deductions
                     {
                         label: 'Net Pay and Deductions',
-                        data: [0, netPay,
-                            deductions
-                        ], // Inner ring is split between Net Pay and Deductions
-                        backgroundColor: ['transparent', '#1C9372',
-                            '#B9E3C6'
-                        ], // Green for Net Pay, Light Green for Deductions
+                        data: [0, netPay, deductions], // Inner ring is split between Net Pay and Deductions
+                        backgroundColor: ['transparent', '#1C9372', '#B9E3C6'], // Green for Net Pay, Light Green for Deductions
                         borderColor: 'transparent', // No border for inner ring
                         borderWidth: 2,
                         hoverBorderWidth: 3,
@@ -1210,11 +1200,9 @@
                                 if (tooltipItem.dataIndex === 0) {
                                     percentage = 100; // Gross Pay is always 100%
                                 } else if (tooltipItem.dataIndex === 1) {
-                                    percentage = (netPay / grossPay) *
-                                        100; // Calculate percentage for Net Pay
+                                    percentage = (netPay / grossPay) * 100; // Calculate percentage for Net Pay
                                 } else if (tooltipItem.dataIndex === 2) {
-                                    percentage = (deductions / grossPay) *
-                                        100; // Calculate percentage for Deductions
+                                    percentage = (deductions / grossPay) * 100; // Calculate percentage for Deductions
                                 }
 
                                 // Return the percentage with two decimal places
