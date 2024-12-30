@@ -29,7 +29,8 @@ use App\Models\Company;
 use App\Models\Hr;
 use Illuminate\Support\Facades\Session;
 use App\Models\Post;
-
+use App\Models\Kudos;
+use App\Models\KudosReactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -90,6 +91,157 @@ class Feeds extends Component
     public $empCompanyLogoUrl;
 
     public $combinedData = [];
+
+    // In your Livewire Component
+public $recognizeType = [];  // Array to store selected values
+public $searchTerm = '';  // Store search term
+public $dropdownOpen = false;  // Boolean flag to manage dropdown visibility
+public $kudosId; // Store the kudos ID
+public $kudoMessage; // Store the message content
+public $reactions = []; // Store reactions for this kudos post
+public $showKudoEmojiPicker = false; // Track if the emoji picker is visible
+public $postType;
+public function updatePostType($value)
+{
+    $this->postType = $value;  // Update postType when the select changes
+}
+
+
+// Array of options with the label and description
+public $options = [
+    'Approachable' => 'You work well with others',
+    'Articulate' => 'You can express yourself well in front of groups.',
+    'Autonomous' => 'You are a self-starter with lots of initiative and agency.',
+    'Collaborator' => 'You are a teamwork champion and culture builder.',
+    'Competitive' => 'You thrive under pressure.',
+    'Creative' => 'You are the endless source of original ideas.',
+    'Devoted' => 'You are committed to the company\'s success.',
+    'Efficient' => 'You have a very quick turnaround time.',
+    'Enthusiastic' => 'You put all in every project.',
+    'Independent' => 'You need a little direction.',
+    'Innovator' => 'You are the visionary boundary-pusher.',
+    'Leader' => 'You set an example for an exemplary role model and empowerer.',
+    'Learner' => 'You can learn new things and put that learning to good use.',
+    'Motivator' => 'You are the true inspiration and change driver.',
+    'Open-minded' => 'You take constructive criticism well.',
+    'Opinionated' => 'You are comfortable voicing opinions.',
+    'Planning' => 'You can come up with a good plan for a project or initiative.',
+    'Problem Solver' => 'You can solve problems in the most elegant and effective manner.',
+    'Resourceful' => 'You use every tool at hand.',
+    'Strategist' => 'You have the planning mastery with clear vision.',
+    'Team Player' => 'You foster unity and team binding.',
+];
+private $reactionEmojis = [
+    'thumbs_up' => '👍',
+    'heart' => '❤️',
+    'clap' => '👏',
+    'laugh' => '😂',
+    'surprised' => '😲',
+    'sad' => '😢',
+    'fire' => '🔥',
+    'star' => '⭐',
+    'party' => '🎉',
+    'thinking' => '🤔',
+    'love' => '😍',
+    'happy' => '😀',
+    'grin' => '😁',
+    'joy' => '😂',
+    'smile' => '😃',
+    'big_smile' => '😄',
+    'sweat_smile' => '😅',
+    'laughing' => '😆',
+    'angel' => '😇',
+    'devil' => '😈',
+    'wink' => '😉',
+    'blush' => '😊',
+    'tongue_out' => '😋',
+    'in_love' => '😍',
+    'relieved' => '😌',
+    'cool' => '😎',
+    'smirk' => '😏',
+    'neutral' => '😐',
+    'expressionless' => '😑',
+    'unamused' => '😒',
+    'pensive' => '😓',
+    'disappointed' => '😔',
+    'confused' => '😕',
+    'confounded' => '😖',
+    'kissing' => '😗',
+    'blowing_kiss' => '😘',
+    'kissing_heart' => '😙',
+    'kissing_smiling_eyes' => '😚',
+    'stuck_out_tongue' => '😛',
+    'stuck_out_tongue_winking_eye' => '😜',
+    'stuck_out_tongue_closed_eyes' => '😝',
+    'disappointed_relieved' => '😞',
+    'worried' => '😟',
+    'angry' => '😠',
+    'rage' => '😡',
+    'cry' => '😢',
+    'persevere' => '😣',
+    'angry_face' => '😤',
+    'disappointed_face' => '😥',
+    'frowning' => '😦',
+    'anguished' => '😧',
+    'fearful' => '😨',
+    'weary' => '😩',
+    'sleepy' => '😪',
+    'tired_face' => '😫',
+    'grimacing' => '😬',
+    'sob' => '😭',
+    'astonished' => '😮',
+    'hushed' => '😯',
+    'open_mouth' => '😲',
+    'flushed' => '😳',
+    'sleeping' => '😴',
+    'dizzy_face' => '😵',
+    'face_without_mouth' => '😶',
+    'mask' => '😷',
+    'raised_hand' => '👋',
+    'raised_back_of_hand' => '✋',
+    'hand' => '🖐',
+    'vulcan_salute' => '🖖',
+    'raised_hand_with_fingers_splayed' => '🤚',
+    'point_up' => '☝',
+    'point_up_2' => '👆',
+    'point_down' => '👇',
+    'point_left' => '👈',
+    'point_right' => '👉',
+    'middle_finger' => '🖕',
+    'fist_raised' => '✊',
+    'fist' => '👊',
+    'thumbs_up_reversed' => '👍',
+    'victory_hand' => '✌',
+    'ok_hand' => '👌',
+    'pinching_hand' => '🤏',
+];
+
+public $recognizeOptions = [];
+
+public function searchRecognizeValues(){
+    if ($this->searchTerm) {
+    $filteredOptions = collect($this->options)
+            ->filter(function ($value,$key) {
+                return strpos(strtolower($key), strtolower($this->searchTerm)) !== false ;
+            })
+            ->toArray();
+            $this->recognizeOptions =   $filteredOptions;
+        }
+        else{
+            $this->recognizeOptions = $this->options;
+        }
+}
+
+public function recognizeToggleDropdown()
+{
+    $this->dropdownOpen = !$this->dropdownOpen;  // Toggle dropdown visibility
+}
+
+public function updatedSearchTerm()
+{
+    // This method is triggered whenever the searchTerm changes, and Livewire will automatically refresh the view
+}
+
     public function closeMessage()
     {
         $this->showMessage = false;
@@ -113,6 +265,61 @@ class Feeds extends Component
     {
         $this->showKudosDialog = true;
     }
+    public function close(){
+        $this->showKudosDialog= false;
+    }
+    public $search1 = ''; // Property for the search field
+    public $employees1 = []; // Property to hold employee data
+    public $selectedEmployee = null;
+    public function selectEmployee($employeeId)
+{
+   
+    $this->selectedEmployee = EmployeeDetails::find($employeeId); // Find and store selected employee
+    $this->validateOnly('selectedEmployee');
+    $this->search1 = ''; 
+}
+
+public function removeSelectedEmployee()
+{
+    $this->selectedEmployee = null; // Reset the selected employee
+    $this->search1 = '';  // Optionally clear the search input field
+}
+
+
+    public function searchEmployees()
+    {
+      
+        $loggedInId = auth()->guard('emp')->user()->emp_id;
+
+        // Fetch all employees excluding the logged-in one
+        $employees = EmployeeDetails::query()
+            ->where('emp_id', '!=', $loggedInId) // Exclude the logged-in employee's record
+            ->get(['first_name', 'last_name', 'emp_id']); // Fetch only the required fields
+        
+        // Filter based on search input
+        if ($this->search1) {
+            $filteredEmployees = $employees->filter(function ($employee) {
+                return str_contains(strtolower($employee->first_name), strtolower($this->search1)) ||
+                       str_contains(strtolower($employee->last_name), strtolower($this->search1)) ||
+                       str_contains(strtolower($employee->emp_id), strtolower($this->search1));
+            });
+        
+            // If search term is entered, update the employees list
+            $this->employees1 = collect($filteredEmployees);
+        } else {
+            // If no search term, set employees1 to an empty collection
+            $this->employees1 = collect();
+        }
+        
+    }
+
+    public function removeItem($type)
+    {
+        $this->recognizeType = array_filter($this->recognizeType, function($item) use ($type) {
+            return $item !== $type;
+        });
+        $this->recognizeType = array_values($this->recognizeType); // Reindex array
+    }
 
     public function closeFeeds()
     {
@@ -125,23 +332,34 @@ class Feeds extends Component
     protected $rules = [
 
         'newComment' => 'required|string',
+        'message' => 'required|string|min:5',
+        'selectedEmployee' => 'required',
     ];
     protected $newCommentRules = [
         'category' => 'required',
         'description' => 'required',
         'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
+       
     ];
     protected $messages = [
         'category.required' => 'Category is required.',
 
         'description.required' => 'Description is required.',
+        'message.required' => 'Message is required.',
+        'message.min' => 'Message must be at least 5 characters.',
+        'selectedEmployee.required' => 'Please select an employee.',
 
     ];
-
-
-    public function toggleEmojiPicker()
+    public function validateField($field)
     {
-        $this->showEmojiPicker = !$this->showEmojiPicker;
+
+        $this->validateOnly($field, $this->rules);
+    }
+
+
+    public function toggleKudosEmojiPicker()
+    {
+        $this->showKudoEmojiPicker = !$this->showKudoEmojiPicker;
     }
 
 
@@ -149,9 +367,124 @@ class Feeds extends Component
     {
         $this->validateOnly($propertyName);
     }
+    // public function loadReactions()
+    // {
+    //     $kudos = Kudos::find($this->kudosId);
+    //     if ($kudos) {
+    //         $this->reactions = $kudos->reactions ?? [];
+    //     }
+    // }
+    public function resetFields()
+{
+    $this->message = '';
+    $this->selectedEmployee = null;
+    $this->postType = '';
+    $this->recognizeType = [];
+    $this->reactions = [];
+}
+
+    public function submitKudos()
+    {
+     
+    
+        // Debug logs
+        $validatedData = $this->validate();
+        Log::debug('Recognize Type:', $this->recognizeType);
+        Log::debug('Reactions:', $this->reactions);
+        $emojiReactions = [];
+        foreach ($this->reactions as $reactionKey) {
+            if (isset($this->reactionEmojis[$reactionKey])) {
+                $emojiReactions[] =  [
+                    'emoji' => $this->reactionEmojis[$reactionKey],  // The emoji character
+                    'employee_id' => Auth::user()->emp_id,  // The employee who reacted
+                    'created_at' => now(),  // Timestamp when the reaction was created
+                ]; // Get the emoji character
+            }
+        }    
+    
+        // Ensure recognizeType and reactions are properly encoded as JSON
+        $recognizeTypeJson = !empty($this->recognizeType) ? json_encode($this->recognizeType) : null;
+        $reactionsJson = !empty($emojiReactions) ? json_encode($emojiReactions) : null;
+      
+
+    
+        // Save Kudos entry
+        Kudos::create([
+            'employee_id' => Auth::user()->emp_id,  // Assuming the logged-in employee
+            'recipient_id' => $this->selectedEmployee->emp_id,
+            'message' => $this->message,
+            'recognize_type' => $recognizeTypeJson,  // Save the encoded JSON
+            'reactions' => $reactionsJson,  // Save the encoded JSON
+            'post_type' => $this->postType,  // Save the postType
+        ]);
+    
+        // Reset form fields after submission
+        $this->resetFields();
+        session()->flash('message', 'Kudos given successfully!');
+    }
+    
+    
+    public function toggleEmojiPicker()
+    {
+        $this->showEmojiPicker = !$this->showEmojiPicker;
+    }
+
+    public function addReaction($reaction)
+    {
+        if (!in_array($reaction, $this->reactions)) {
+            $this->reactions[] = $reaction;
+
+            // Save to kudos_reactions table
+            KudosReactions::create([
+                'employee_id' => Auth::user()->emp_id,
+                'reaction' => $reaction,
+            ]);
+        }
+
+        // Close the emoji picker after selection
+        $this->showKudoEmojiPicker = false;
+
+        // Update the kudos reactions in the kudos table
+        $this->updateKudosReactions();
+    }  
+    
+    private function updateKudosReactions()
+    {
+        // Encode reactions array as JSON
+        $encodedReactions = json_encode($this->reactions);
+
+        // Update the kudos table with the new reactions
+        Kudos::where('id', $this->kudosId)->update(['reactions' => $encodedReactions]);
+    }
+    public function getReactionEmojis()
+    {
+        return $this->reactionEmojis;
+    }
+
+    // Get emoji for a given reaction
+    public function getEmoji($reaction)
+    {
+        return $this->reactionEmojis[$reaction] ?? ''; // Return empty if not found
+    }
+    public function removeKudosReaction($reaction)
+    {
+        $this->reactions = array_filter($this->reactions, fn($item) => $item !== $reaction);
+        $this->reactions = array_values($this->reactions); // Reindex the array
+
+        // Remove from the kudos_reactions table
+        KudosReactions::where('employee_id', Auth::user()->emp_id)
+            ->where('reaction', $reaction)
+            ->delete();
+
+        // Update the kudos reactions in the kudos table
+        $this->updateKudosReactions();
+    }
 
     public function mount()
     {
+        // $this->kudosId = $kudosId;
+        // $this->loadReactions();
+    
         // Get the authenticated user's company ID
         $authCompanyId = Auth::user()->company_id;
 
@@ -287,6 +620,7 @@ class Feeds extends Component
     $urls = [
         'posts' => '/everyone',
         'activities' => '/Feeds',
+        'kudos' => '/kudos',
         'post-requests'=>'/emp-post-requests'
         // Add more mappings if necessary
     ];

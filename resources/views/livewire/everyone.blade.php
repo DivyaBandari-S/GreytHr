@@ -179,6 +179,23 @@
                             <span class="custom-radio-content ">All Activities</span>
                         </label>
                     </div>
+                    <div class="posts">
+                        <label class="custom-radio-label">
+
+                            <input type="radio" id="radio-hr" name="radio" value="posts"
+                                data-url="/kudos" wire:click="handleRadioChange('kudos')">
+
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">
+
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Kudos</span>
+                        </label>
+                    </div>
 
 
                     <div class="posts">
