@@ -2137,18 +2137,39 @@ color: #fff;
                             <p class="m-1 attendance-legend-text">IT Maintanance</p>
                         </div>
                     </div>
+                    @if(count($leaveTypes)>0)
                     <div class="row m-0 mb-3">
                         <h6 class="m-0 p-2 mb-2" style="background-color: #f1f4f7">Leave Type</h6>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <span class="legendsIcon sickleaveIcon">SL</span>
-                            </p>
-                            <p class="m-1 attendance-legend-text">Sick Leave</p>
-                        </div>
+                              @foreach($leaveTypes as $leaveType)
+                                  @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
 
+                                            $abbreviation = $leaveAbbreviations[$leaveType] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+                                    <p class="mb-0">
+                                        <span class="legendsIcon {{ strtolower(str_replace(' ', '', $leaveType)) }}Icon">
+                                            {{ $abbreviation }}
+                                        </span>
+                                    </p>
+                                    <p class="m-1 attendance-legend-text">{{ $leaveType }}</p>
+                              @endforeach
+                           
+                        </div>
+                       
 
 
                     </div>
+                    @endif
+                    
                 </div>
 
             </div>
@@ -2205,6 +2226,8 @@ color: #fff;
                                 <tr>
                                     <th class="attendance-info-table-head">First&nbsp;In</th>
                                     <th class="attendance-info-table-head">Last&nbsp;Out</th>
+                                    <th class="attendance-info-table-head">Late&nbsp;In</th>
+                                    <th class="attendance-info-table-head">Early&nbsp;Out</th>
                                     <th class="attendance-info-table-head">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Break&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Actual&nbsp;Work&nbsp;Hrs</th>
@@ -2232,6 +2255,12 @@ color: #fff;
                                         @else
                                         -
                                         @endif
+                                    </td>
+                                    <td class="attendance-info-table-data">
+                                        -
+                                    </td>
+                                    <td class="attendance-info-table-data">
+                                        -
                                     </td>
                                     <td>
                                         @if($this->first_in_time!=$this->last_out_time)
@@ -2380,7 +2409,7 @@ color: #fff;
                                 </tr>
                                 <tr class="container3-table-row">
                                     <td class="container3-table-data">Session&nbsp;2</td>
-                                    <td class="container3-table-data">{{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->subMinutes(299)->format('h:i')}} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}} </td>
+                                    <td class="container3-table-data">{{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->subMinutes(299)->format('H:i') }} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}} </td>
                                     <td class="container3-table-data">-</td>
                                     <td class="container3-table-data">
                                         @if($changeDate==1)

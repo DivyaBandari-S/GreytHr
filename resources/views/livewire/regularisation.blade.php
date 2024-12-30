@@ -1105,20 +1105,20 @@
 
                             @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                             <div class="employee-profile-image-container">
-                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                <img class="rounded-circle" height="35px" width="35px"src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
                             @if($employee['gender'] === "Male")
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholders rounded-circle" height="33" width="33">
                             </div>
                             @elseif($employee['gender'] === "Female")
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholders rounded-circle" height="33" width="33">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholders rounded-circle" height="35px" width="35px">
                             </div>
                             @endif
                             @endif
@@ -1180,8 +1180,8 @@
                                 </p>
 
                             </div>
-                            <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
-                                <i class="fa fa-times"></i>
+                            <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;">
+                                <i class="fa fa-times"wire:click="deleteStoredArray({{ $index }})"></i>
                             </div>
                         </div>
 

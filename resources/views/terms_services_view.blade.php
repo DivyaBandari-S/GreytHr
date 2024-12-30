@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-    <title>HR Xpert</title></title>
+    <title>hr xpert</title></title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
@@ -28,7 +28,7 @@
 
         <!-- For Prior version, please click here -->
         <p class="privacyContent">
-            Welcome! Thank you for choosing the services (hereinafter referred to as "Services" or "Site" or "site") offered by HR-Xpert Software Pvt. Ltd. (hereinafter referred to as "Company", "We", "Us", "Our" or "HR-Xpert", "HR-Xpert mobile application", "HR-Xpert Pro", "HR-Xpert Unite marketplace"). The term "You" (or "Your" as applicable) refers to the user or viewer or customer of our Site. By browsing, accessing, subscribing or using our Service or Site or installing our mobile App (also referred to as "using"), you hereby expressly acknowledge and agree to comply with and be bound by the following terms of Service. Please review the following terms carefully. If you do not agree to these terms, you should not use this Site. </p>
+            Welcome! Thank you for choosing the services (hereinafter referred to as "Services" or "Site" or "site") offered by hr xpert Software Pvt. Ltd. (hereinafter referred to as "Company", "We", "Us", "Our" or "hr xpert", "hr xpert mobile application", "hr xpert Pro", "hr xpert Unite marketplace"). The term "You" (or "Your" as applicable) refers to the user or viewer or customer of our Site. By browsing, accessing, subscribing or using our Service or Site or installing our mobile App (also referred to as "using"), you hereby expressly acknowledge and agree to comply with and be bound by the following terms of Service. Please review the following terms carefully. If you do not agree to these terms, you should not use this Site. </p>
         <p class="privacyContent">
             By using the Site, You represent and warrant that:
         </p>
@@ -42,7 +42,7 @@
         <p class="privacyheadings">Intellectual Property Rights</p>
         <p class="privacyContent"> You hereby acknowledge that any and all intellectual property rights (including but not limited to all trademark (registered & unregistered, copyright, patent, service marks, etc.) and other proprietary rights in and in relation to the Site and any Contents and Materials including without limitation any derivatives, improvements or modifications which ownership is directly attributable to the Company ("Company IP") shall vest wholly, completely and fully with the Company throughout the territory of the world and You shall have no right or claim to the Company IP in any manner whatsoever. You acknowledge that You will abide by any and all additional copyright notices, information, or restrictions contained in the Website. Copying, downloading, storing or otherwise using the Company IP in any manner not expressly permitted vide these Terms is expressly prohibited unless prior written permission from the Company for such use has been obtained.
         </p>
-        <p class="privacyContent">The rights granted to You to use the Site under these Terms do not convey any additional rights in the Site, or in any Intellectual Property Rights associated therewith. HR-Xpert shall have a fully paid-up, royalty-free, worldwide, transferable, sub-licensable, irrevocable and perpetual license to implement, use, modify, commercially exploit, and/or incorporate into the Site or otherwise use any suggestions, enhancement requests, recommendations or other feedback We receive from You or other third parties acting on Your behalf.</p>
+        <p class="privacyContent">The rights granted to You to use the Site under these Terms do not convey any additional rights in the Site, or in any Intellectual Property Rights associated therewith. hr xpert shall have a fully paid-up, royalty-free, worldwide, transferable, sub-licensable, irrevocable and perpetual license to implement, use, modify, commercially exploit, and/or incorporate into the Site or otherwise use any suggestions, enhancement requests, recommendations or other feedback We receive from You or other third parties acting on Your behalf.</p>
         <p class="privacyContent">The contents of the Service are only for the purposes that you may be licensed for. It is further specifically stated that this Agreement does not specifically permit You to use the contents of the Service in any manner whatsoever.</p>
 
 
@@ -176,7 +176,7 @@
             <p class="privacyheadings"> Our other Products and Services</p>
 
             <p class="privacyContent">
-                HR-Xpert may inform you about Our other Products and / or services. You may be offered other services and/or products by Us. Additional terms and conditions and fees may apply for these. With some Services you may upload or enter data from your account(s) such as names, addresses and phone numbers, purchases, etc., to the Internet. You grant Us permission to use information about your business and experience to help us to provide the Services to you and to enhance the Services.
+                hr xpert may inform you about Our other Products and / or services. You may be offered other services and/or products by Us. Additional terms and conditions and fees may apply for these. With some Services you may upload or enter data from your account(s) such as names, addresses and phone numbers, purchases, etc., to the Internet. You grant Us permission to use information about your business and experience to help us to provide the Services to you and to enhance the Services.
         </div>
         <div class="row">
             <p class="privacyheadings"> Unlawful Activity</p>
@@ -251,7 +251,7 @@
             <p class="privacyheadings">Advertisers</p>
 
             <p class="privacyContent">
-                The Site may contain advertising and sponsorships. Advertisers and sponsors are responsible for ensuring that material submitted for inclusion on the Site is accurate and complies with applicable laws. We are not responsible for the illegality or any error, inaccuracy or problem in the advertiser's or sponsor's materials. In addition, HR-Xpert reserves the right to refuse acceptance of any advertisement it considers inappropriate for whatever reason. </p>
+                The Site may contain advertising and sponsorships. Advertisers and sponsors are responsible for ensuring that material submitted for inclusion on the Site is accurate and complies with applicable laws. We are not responsible for the illegality or any error, inaccuracy or problem in the advertiser's or sponsor's materials. In addition, hr xpert reserves the right to refuse acceptance of any advertisement it considers inappropriate for whatever reason. </p>
         </div>
         <div class="row">
             <p class="privacyheadings">Third Party Content</p>
@@ -262,13 +262,13 @@
 
         <div class="row">
             <p class="privacyheadings">Third Party Products and Services</p>
-            <p class="privacyContent">We may tell you about third party products or services, including via the Service or through Unite marketplace. HR-Xpert may offer products and services on behalf of third parties who are not affiliated with Us ("Third Party Products"). If you decide to use any Third Party Products, you are solely responsible for your selection, review of separate product terms, website terms and privacy policies. We are not affiliated with these Third Party Products and do not endorse or recommend Third Party Products even if such products are marketed or distributed via our products or website or Unite marketplace. You agree that the third parties, and not HR-Xpert, are solely responsible for their Product's performance (including technical support), the content on their websites and their use or disclosure of your data. HR-Xpert will not be liable for any damages, claims or liabilities arising from the third parties, Third Party Products or Third Party Sites. You agree that you will</p>
+            <p class="privacyContent">We may tell you about third party products or services, including via the Service or through Unite marketplace. hr xpert may offer products and services on behalf of third parties who are not affiliated with Us ("Third Party Products"). If you decide to use any Third Party Products, you are solely responsible for your selection, review of separate product terms, website terms and privacy policies. We are not affiliated with these Third Party Products and do not endorse or recommend Third Party Products even if such products are marketed or distributed via our products or website or Unite marketplace. You agree that the third parties, and not hr xpert, are solely responsible for their Product's performance (including technical support), the content on their websites and their use or disclosure of your data. hr xpert will not be liable for any damages, claims or liabilities arising from the third parties, Third Party Products or Third Party Sites. You agree that you will</p>
 
             <p class="privacyContent">
                 1.Comply with all applicable laws, regulation and ordinances;
             </p>
             <p class="privacyContent">
-                2. Not use the Third Party Products in any manner that would infringe or violate the rights of HR-Xpert or any other party; and
+                2. Not use the Third Party Products in any manner that would infringe or violate the rights of hr xpert or any other party; and
             </p>
             <p class="privacyContent">
                 3. Not use the Third Party Products in any way in furtherance of criminal, fraudulent or other unlawful activity.Your use or misuse of the Site or Service;
@@ -323,7 +323,7 @@
             <p class="privacyheadings">Additional Terms</p>
 
             <p class="privacyContent">
-                We do not provide professional advice. Unless specifically included with the Services, HR-Xpert is not in the business of providing legal, accounting or other professional services or advice. Please consult a competent professional when you need this type of advice or help.
+                We do not provide professional advice. Unless specifically included with the Services, hr xpert is not in the business of providing legal, accounting or other professional services or advice. Please consult a competent professional when you need this type of advice or help.
 
             </p>
         </div>
@@ -341,7 +341,7 @@
             <p class="privacyheadings">Assignment</p>
 
             <p class="privacyContent">
-                You may not, directly or indirectly, by operation of law or otherwise, assign all or any part of these Terms or Your rights under these Terms or delegate performance of Your duties under these Terms without Our prior consent. We may, without Your consent, assign Our agreement with You to any member of the HR-Xpert Group or in connection with any merger or change of control of the HR-Xpert Group or the sale of all or substantially all of Our assets provided that any such successor agrees to fulfill its obligations pursuant to these Terms. Subject to the foregoing restrictions, these Terms will be fully binding upon, inure to the benefit of and be enforceable by the parties and their respective successors and assigns.
+                You may not, directly or indirectly, by operation of law or otherwise, assign all or any part of these Terms or Your rights under these Terms or delegate performance of Your duties under these Terms without Our prior consent. We may, without Your consent, assign Our agreement with You to any member of the hr xpert Group or in connection with any merger or change of control of the hr xpert Group or the sale of all or substantially all of Our assets provided that any such successor agrees to fulfill its obligations pursuant to these Terms. Subject to the foregoing restrictions, these Terms will be fully binding upon, inure to the benefit of and be enforceable by the parties and their respective successors and assigns.
             </p>
         </div>
         <div class="row">
@@ -356,7 +356,7 @@
             <p class="privacyheadings">Complaints</p>
 
             <p class="privacyContent">
-                If we receive a complaint from any person with respect to your activities as part of use of the Services (other than where the grievance redressal mechanism provided under the head "Grievance Redressal" applies), we will forward the complaint to the primary email address of your user account. You must respond to the complainant directly within 10 days of receiving the complaint forwarded by us and copy HR-Xpert in the communication. If you do not respond to the complainant within 10 days from the date of our email to you, we may disclose your name and contact information to the complainant to enable further course of action as may be necessary. You understand that your failure to respond to the forwarded complaint within the 10 days' time limit will be construed as your consent to disclosure of your name and contact information by HR-Xpert to the complainant.
+                If we receive a complaint from any person with respect to your activities as part of use of the Services (other than where the grievance redressal mechanism provided under the head "Grievance Redressal" applies), we will forward the complaint to the primary email address of your user account. You must respond to the complainant directly within 10 days of receiving the complaint forwarded by us and copy hr xpert in the communication. If you do not respond to the complainant within 10 days from the date of our email to you, we may disclose your name and contact information to the complainant to enable further course of action as may be necessary. You understand that your failure to respond to the forwarded complaint within the 10 days' time limit will be construed as your consent to disclosure of your name and contact information by hr xpert to the complainant.
             </p>
         </div>
         <div class="row">
@@ -369,13 +369,13 @@
 
         <div class="row">
             <p class="privacyheadings">Notice</p>
-            <p class="privacyContent">All notices to be provided by HR-Xpert to You under this Agreement may be delivered in writing</p>
+            <p class="privacyContent">All notices to be provided by hr xpert to You under this Agreement may be delivered in writing</p>
 
             <p class="privacyContent">
                 1. By Courier, mail to the contact mailing address provided by You on any Form; or
             </p>
             <p class="privacyContent">
-                2. Electronic mail to the electronic mail address provided You. You must give notice to HR-Xpert in writing by Courier or Mail to the registered address available on the Contact Us section of our corporate website www.HR-Xpert.com.
+                2. Electronic mail to the electronic mail address provided You. You must give notice to hr xpert in writing by Courier or Mail to the registered address available on the Contact Us section of our corporate website www.hr xpert.com.
             </p>
             <p class="privacyContent">
                 3. All notices shall be deemed to have been given immediately upon delivery by electronic mail, or if otherwise delivered upon receipt or, if earlier, two (2) business days after being deposited in the mail or with a Courier as permitted above.
@@ -397,7 +397,7 @@
 
             </div>
             <div style="margin-left: auto;">
-           <p class="privacyContent" style="margin: 0px;"> Copyright © 2018 HR-Xpert Software Pvt. Ltd. All rights reserved.</p>
+           <p class="privacyContent" style="margin: 0px;"> Copyright © 2018 hr xpert Software Pvt. Ltd. All rights reserved.</p>
             </div>
             </div>
     </div>
