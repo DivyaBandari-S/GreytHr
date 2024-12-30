@@ -1105,7 +1105,7 @@
 
                             @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                             <div class="employee-profile-image-container">
-                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                <img class="rounded-circle" height="35px" width="35px"src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
                             @if($employee['gender'] === "Male")

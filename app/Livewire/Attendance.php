@@ -57,6 +57,7 @@ class Attendance extends Component
     public $avgSignInTime;
 
 
+    public $leaveTypes = [];
     public $averageWorkHours;
 
     public $totalnumberofEarlyOut = 0;
@@ -94,6 +95,7 @@ class Attendance extends Component
     public $swiperecords;
     public $currentDate1;
 
+    
     public $currentDate2recordin;
 
     public $currentDate2recordout;
@@ -833,16 +835,38 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     try {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        return LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_applications.leave_status', 2)
-            ->where('from_session', 'Session 1') // Add condition for from_session = 1
-            ->where('to_session', 'Session 1')   // Add condition for to_session = 1
-            ->where(function ($query) use ($date) {
-                $query->whereDate('from_date', '<=', $date)
-                      ->whereDate('to_date', '>=', $date);
-            })
-            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
-            ->exists();
+        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
+    ->where('leave_applications.leave_status', 2)
+    ->where('from_session', 'Session 1')
+    ->where('to_session', 'Session 1')
+    ->exists();
+
+if ($sessionCheck) {
+    // Case when both sessions are 'Session 1'
+    $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+        ->where('leave_applications.leave_status', 2)
+        ->where('from_session', 'Session 1')
+        ->where('to_session', 'Session 1')
+        ->where(function ($query) use ($date) {
+            $query->whereDate('from_date', '<=', $date)
+                  ->whereDate('to_date', '>=', $date);
+        })
+        ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+        ->exists();
+} else {
+    // Case when sessions are not both 'Session 1'
+    $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+        ->where('leave_applications.leave_status', 2)
+        ->where('from_session', 'Session 2')
+        ->where('to_session', 'Session 2')
+        ->where(function ($query) use ($date) {
+            $query->whereDate('from_date', '<=', $date)
+                  ->whereDate('to_date', '>=', $date);
+        })
+        ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+        ->exists();
+}
+return $leaveRecord;
     } catch (\Exception $e) {
         Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
         FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
@@ -881,6 +905,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return LeaveRequest::where('emp_id', $employeeId)
                 ->whereDate('from_date', '<=', $date)
                 ->whereDate('to_date', '>=', $date)
+                ->where('leave_status',2)
                 ->value('leave_type');
         } catch (\Exception $e) {
             Log::error('Error in getLeaveType method: ' . $e->getMessage());
@@ -908,23 +933,37 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     try {
         $employeeId = auth()->guard('emp')->user()->emp_id;
       
-      
-        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_applications.leave_status', 2)
-            ->where('from_session', 'Session 1') // Add condition for from_session = 1
-            ->where('to_session', 'Session 1')   // Add condition for to_session = 1
-            ->where(function ($query) use ($date) {
-                $query->whereDate('from_date', '<=', $date)
-                      ->whereDate('to_date', '>', $date);
-            })
-            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
-            ->exists();
-         
+        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->exists();
 
-        // Check if the date is less than to_date
-       
-       
-      
+        if ($sessionCheck) {
+            // Case when both sessions are 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+        } else {
+            // Case when sessions are not both 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+        }
         return $leaveRecord;
     } catch (\Exception $e) {
         Log::error('Error in isEmployeeHalfDayLeaveOnDate method: ' . $e->getMessage());
@@ -937,6 +976,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     public function generateCalendar()
     {
         try {
+            $this->leaveTypes=[];
             Log::info('Welcome to generateCalendar method');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             Log::info('Employee ID:', ['employeeId' => $employeeId]);
@@ -1030,7 +1070,10 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         Log::info('Is On Half Day Leave:', ['isOnHalfDayLeave' => $isOnHalfDayLeave]);
                         $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
                         Log::info('Leave Type:', ['leaveType' => $leaveType]);
-
+                        if ($leaveType && !in_array($leaveType, $this->leaveTypes)) {
+                            $this->leaveTypes[] = $leaveType;
+                        }
+                       
                         $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
                         if (!$isOnLeave && !$isHoliday && !$date->isWeekend()) {
                             $isPresentOnDate = $this->isEmployeePresentOnDate($date);
@@ -1231,6 +1274,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             Log::info('Generated Calendar:', ['calendar' => $calendar]);
 
+            Log::info('Leave Type added to array:', [
+                
+                'currentLeaveTypes' => $this->leaveTypes
+            ]);
+            
             $this->calendar = $calendar;
         } catch (\Exception $e) {
             Log::error('Error in generateCalendar method: ' . $e->getMessage());

@@ -1418,6 +1418,10 @@ td {
     padding: 0;
     text-decoration: none;
 }
+.info-button:hover
+{
+    text-decoration: underline;
+}
 
 .dropdown-btn {
     background-color: transparent;
