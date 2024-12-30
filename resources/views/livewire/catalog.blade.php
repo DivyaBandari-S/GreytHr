@@ -2034,12 +2034,7 @@
             <option value="{{ $mailbox }}">{{ $mailbox }}</option>
         @endforeach
     </select>
-    <div class="dropdown-icon-wrapper" 
-         style="position: absolute; top:25%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-        <button class="btn btn-outline-secondary dropdown-toggle" 
-                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
-        </button>
-    </div>
+ 
     @error('mailbox') 
     <span class="text-danger">{{ $message }}</span> 
     @enderror
@@ -2251,12 +2246,7 @@
             <option value="{{ $mailbox }}">{{ $mailbox }}</option>
         @endforeach
     </select>
-    <div class="dropdown-icon-wrapper" 
-         style="position: absolute; top:15%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
-        <button class="btn btn-outline-secondary dropdown-toggle" 
-                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
-        </button>
-    </div>
+ 
     @error('mailbox') 
     <span class="text-danger">{{ $message }}</span> 
     @enderror
