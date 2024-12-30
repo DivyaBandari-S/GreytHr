@@ -493,11 +493,27 @@
                                                     </div>
 
 
-                                                    <div class="form-group mt-2">
-                                                        <label for="distributor_name">Provide the Name of Distribution List<span style="color:red">*</span></label>
-                                                        <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
-                                                        @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
-                                                    </div>
+                                                    <div class="form-group mt-2" style="position: relative;">
+    <label for="mailbox">Provide the Name of Distribution List<span style="color:red">*</span></label>
+    <select wire:model.lazy="mailbox" class="form-control" id="mailbox" 
+            style="appearance: none; -moz-appearance: none; -webkit-appearance: none; padding-right: 40px;">
+        <option value="" selected hidden>Select Mailbox</option>
+        @foreach($mailboxes as $mailbox)
+            <option value="{{ $mailbox }}">{{ $mailbox }}</option>
+        @endforeach
+    </select>
+    <div class="dropdown-icon-wrapper" 
+         style="position: absolute; top:25%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+        <button class="btn btn-outline-secondary dropdown-toggle" 
+                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
+        </button>
+    </div>
+    @error('mailbox') 
+    <span class="text-danger">{{ $message }}</span> 
+    @enderror
+</div>
+
+
                                                     <div class="form-group mt-2">
                                                         <label for="Name">Add Members to Distribution List</label>
                                                         <div class="input-group mb-3">
@@ -697,13 +713,22 @@
                                                     </div>
                                                     <div class="form-group mt-2">
     <label for="mailbox">Provide the name of the Mailbox<span style="color:red">*</span></label>
-    <select wire:model.lazy="mailbox" class="form-control" id="mailbox">
-        <option value=""  selected hidden>-- Select Mailbox --</option>
+    <select wire:model.lazy="mailbox" class="form-control" id="mailbox" 
+            style="appearance: none; -moz-appearance: none; -webkit-appearance: none; padding-right: 40px;">
+        <option value="" selected hidden>Select Mailbox</option>
         @foreach($mailboxes as $mailbox)
             <option value="{{ $mailbox }}">{{ $mailbox }}</option>
         @endforeach
     </select>
-    @error('mailbox') <span class="text-danger">{{ $message }}</span> @enderror
+    <div class="dropdown-icon-wrapper" 
+         style="position: absolute; top:25%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+        <button class="btn btn-outline-secondary dropdown-toggle" 
+                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
+        </button>
+    </div>
+    @error('mailbox') 
+    <span class="text-danger">{{ $message }}</span> 
+    @enderror
 </div>
 
                                                     <div class="form-group mt-2">
@@ -2002,8 +2027,22 @@
 
                                                     <div class="form-group mt-2">
                                                         <label for="distributor_name">Provide the Name of Distribution List<span style="color:red">*</span></label>
-                                                        <input wire:model.lazy="distributor_name" wire:keydown.debounce.500ms="validateField('form.distributor_name')" type="text" class="form-control" id="distributor_name">
-                                                        @error('distributor_name') <span class="text-danger">{{ $message }}</span> @enderror
+                                                        <select wire:model.lazy="mailbox" class="form-control" id="mailbox" 
+            style="appearance: none; -moz-appearance: none; -webkit-appearance: none; padding-right: 40px;">
+        <option value="" selected hidden>Select Mailbox</option>
+        @foreach($mailboxes as $mailbox)
+            <option value="{{ $mailbox }}">{{ $mailbox }}</option>
+        @endforeach
+    </select>
+    <div class="dropdown-icon-wrapper" 
+         style="position: absolute; top:25%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+        <button class="btn btn-outline-secondary dropdown-toggle" 
+                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
+        </button>
+    </div>
+    @error('mailbox') 
+    <span class="text-danger">{{ $message }}</span> 
+    @enderror
                                                     </div>
                                                     <div class="form-group mt-2">
                                                         <label for="Name">Members to be Removed from Distribution List</label>
@@ -2205,13 +2244,22 @@
 
                                                     <div class="form-group mt-2">
     <label for="mailbox">Provide the name of the Mailbox<span style="color:red">*</span></label>
-    <select wire:model.lazy="mailbox" class="form-control" id="mailbox">
-        <option value=""  selected hidden>-- Select Mailbox --</option>
+    <select wire:model.lazy="mailbox" class="form-control" id="mailbox" 
+            style="appearance: none; -moz-appearance: none; -webkit-appearance: none; padding-right: 40px;">
+        <option value="" selected hidden>Select Mailbox</option>
         @foreach($mailboxes as $mailbox)
             <option value="{{ $mailbox }}">{{ $mailbox }}</option>
         @endforeach
     </select>
-    @error('mailbox') <span class="text-danger">{{ $message }}</span> @enderror
+    <div class="dropdown-icon-wrapper" 
+         style="position: absolute; top:25%; right: 0; height: 100%; width: 40px; display: flex; align-items: center; justify-content: center; pointer-events: none;">
+        <button class="btn btn-outline-secondary dropdown-toggle" 
+                style="background: transparent; border: none; box-shadow: none; pointer-events: none;">
+        </button>
+    </div>
+    @error('mailbox') 
+    <span class="text-danger">{{ $message }}</span> 
+    @enderror
 </div>
                                                     <div class="form-group mt-2">
                                                         <label for="Name">Provide User names to be removed from Mailbox</label>

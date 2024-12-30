@@ -183,6 +183,7 @@ public $RemoveRequestaceessDialog=false;
     }
     public function validateField($field)
     {
+        
         if (in_array($field, ['mail', 'description', 'subject', 'category', 'selected_equipment', 'distributor_name', 'mobile'])) {
             $this->validateOnly($field, $this->rules);
         }
@@ -252,7 +253,7 @@ public $RemoveRequestaceessDialog=false;
         $this->resetDialogs();
         $this->DistributionRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
+        $this->reset(['category', 'priority','mailbox']);
         $this->category = 'New Distribution Request';
     }
 
@@ -261,7 +262,7 @@ public $RemoveRequestaceessDialog=false;
         $this->resetDialogs();
         $this->MailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
+        $this->reset(['category', 'priority','mailbox']);
         $this->category = 'Mailbox Request';
     }
 
@@ -305,7 +306,7 @@ public $RemoveRequestaceessDialog=false;
         $this->resetDialogs();
         $this->NewMailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
+        $this->reset(['category', 'priority','mailbox']);
         $this->category = 'New Mailbox Request';
     }
     
@@ -338,7 +339,7 @@ public $RemoveRequestaceessDialog=false;
         $this->resetDialogs();
         $this->RemoveRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
+        $this->reset(['category', 'priority','mailbox']);
         $this->category = 'Remove Distributor Request';
     }
     public function RemoveMail()
@@ -346,7 +347,7 @@ public $RemoveRequestaceessDialog=false;
         $this->resetDialogs();
         $this->RemoveMailRequestaceessDialog = true;
         $this->showModal = true;
-        $this->reset(['category', 'priority']);
+        $this->reset(['category', 'priority','mailbox']);
         $this->category = 'Remove MailBox Request';
     }
     public function service()
@@ -563,59 +564,31 @@ public $RemoveRequestaceessDialog=false;
     public function addselectPerson($personId)
     {
         try {
-            // Fetch the selected mailbox and its associated CC lists (all matching entries)
-            $selectedMailbox = $this->mailbox; // `$this->mailbox` is the selected mailbox from the dropdown
-            
-            // Retrieve the existing `cc_to` list for this mailbox from all HelpDesks table entries
-            $existingCcTo = HelpDesks::where('mailbox', $selectedMailbox)
-                ->whereNotNull('cc_to')
-                ->pluck('cc_to'); // Get all `cc_to` entries, not just the first one
-            
-            // Flatten the array and split into individual names
-            $existingCcToArray = [];
-            foreach ($existingCcTo as $cc) {
-                $existingCcToArray = array_merge($existingCcToArray, array_map('trim', explode(',', $cc)));
-            }
-    
-            // Retrieve the selected person's details
-            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-    
-            if ($selectedPerson) {
-                $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-        
-                // Ensure this logic only triggers during an addition and not an unchecking
-                if (!in_array($name, $this->selectedPeopleNames)) {
-                    // Check if the person is already in any of the existing `cc_to` lists
-                    if (in_array($name, $existingCcToArray)) {
-                        // Prevent duplicate warnings using a session variable or a class property
-                        if ($this->warningShown === false) {
-                            Log::info('Duplicate person added to CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
-                            FlashMessageHelper::flashWarning("$name is already added to this mailbox.");
-                            // Mark warning as shown and reset it after displaying the message
-                            $this->warningShown = true;
-                        }
-                        return;
+            // Limit to a maximum of 5 selected people
+
+            $addselectedPerson = $this->peoples->where('emp_id', $personId)->first();
+
+            if ($addselectedPerson) {
+                // Add or remove the person's name based on current selection
+                if (in_array($personId, $this->addselectedPeople)) {
+                    $name = ucwords(strtolower($addselectedPerson->first_name)) . ' ' . ucwords(strtolower($addselectedPerson->last_name)) . ' #(' . $addselectedPerson->emp_id . ')';
+                    if (!in_array($name, $this->selectedPeopleNames)) {
+                        $this->selectedPeopleNames[] = $name;
                     }
-        
-                    // Add the person to the `selectedPeopleNames` list
-                    $this->selectedPeopleNames[] = $name;
-                    // Update the `cc_to` field
-                    $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
-                    Log::info('Person added to CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
+                } else {
+                    // Remove the person's name from selectedPeopleNames if they are unselected
+                    $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [ucwords(strtolower($addselectedPerson->first_name)) . ' ' . ucwords(strtolower($addselectedPerson->last_name)) . ' #(' . $addselectedPerson->emp_id . ')']);
                 }
-            } else {
-                // Handle the case where the person could not be found
-                Log::error('Person not found', ['person_id' => $personId]);
-                FlashMessageHelper::flashError('Person not found. Please try again.');
+
+                // Update cc_to field
+                $this->cc_to = implode(', ', array_unique($this->selectedPeopleNames));
             }
         } catch (\Exception $e) {
-            Log::error('Error adding person to CC list', ['error' => $e->getMessage()]);
-            FlashMessageHelper::flashError('An error occurred while adding the person to the CC list.');
+            Log::error('Error selecting person: ' . $e->getMessage());
+            $this->dispatch('error', ['message' => 'An error occurred while selecting the person. Please try again.']);
         }
-        
-        // Reset the warning flag after the operation to ensure it doesn't persist
-        $this->warningShown = false;
     }
+
     
     
     
@@ -941,61 +914,15 @@ public function updatedAddselectedPeople()
            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
        }
    }
-   public function removeSelectedPerson($personId)
-{
-    try {
-        // Fetch the selected mailbox
-        $selectedMailbox = $this->mailbox; // `$this->mailbox` is the selected mailbox from the dropdown
-        
-        // Retrieve the existing `cc_to` list for this mailbox from HelpDesks table entries
-        $helpDesk = HelpDesks::where('mailbox', $selectedMailbox)
-            ->whereNotNull('cc_to')
-            ->first(); // Get the first entry for this mailbox
 
-        if ($helpDesk) {
-            $existingCcTo = $helpDesk->cc_to; // Existing cc_to list
-            $existingCcToArray = array_map('trim', explode(',', $existingCcTo)); // Convert to an array and trim spaces
-            
-            // Retrieve the selected person's details
-            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-
-            if ($selectedPerson) {
-                $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-
-                // Check if the person is in the `cc_to` list
-                if (in_array($name, $existingCcToArray)) {
-                    // If the person is in the list, remove them
-                    $updatedCcTo = array_diff($existingCcToArray, [$name]); // Remove the person from the array
-                    $helpDesk->cc_to = implode(', ', $updatedCcTo); // Update the `cc_to` field
-                    $helpDesk->save(); // Save the changes to the database
-
-                    Log::info('Person removed from CC list', ['person_name' => $name, 'mailbox' => $selectedMailbox]);
-                    FlashMessageHelper::flashSuccess("$name has been removed from the CC list.");
-                } else {
-                    FlashMessageHelper::flashWarning("$name is not in the CC list for this mailbox.");
-                }
-            } else {
-                // Handle the case where the person could not be found
-                Log::error('Person not found', ['person_id' => $personId]);
-                FlashMessageHelper::flashError('Person not found. Please try again.');
-            }
-        } else {
-            // Handle case where no `cc_to` exists for the selected mailbox
-            Log::error('Mailbox not found or no cc_to exists', ['mailbox' => $selectedMailbox]);
-            FlashMessageHelper::flashError('No CC list exists for the selected mailbox.');
-        }
-    } catch (\Exception $e) {
-        Log::error('Error removing person from CC list', ['error' => $e->getMessage()]);
-        FlashMessageHelper::flashError('An error occurred while removing the person from the CC list.');
-    }
-}
 
    public function OldRequest()
    {
        try {
            $messages = [
                'subject.required' => 'Business Justification is required',
-              
+               'mailbox.required' => 'Mail Box name is required',
+               'mailbox.email' => 'Mail Box must be a valid email address',
                'cc_to.required' => 'Add members is required',
                'description.required' => 'Specific Information is required',
          
@@ -1005,7 +932,7 @@ public function updatedAddselectedPeople()
            $this->validate([
                'subject' => 'required|string|max:255',
              
-             
+             'mailbox' =>'required|email',
                'cc_to' => 'required',
                'priority' => 'required|in:High,Medium,Low',
                'description' => 'required|string',
