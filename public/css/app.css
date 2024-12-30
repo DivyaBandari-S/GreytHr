@@ -749,6 +749,11 @@ body {
     border-radius: 5px;
     background-color: #f9f9f9;
 }
+.employee-profile-image-placeholder{
+    height:33px;
+    width: 33px;
+}
+
 div.align-prof-dev{
     display: flex;
     flex-direction: row;
@@ -1154,7 +1159,8 @@ td {
 .jump-to {
     cursor: pointer;
     font-size: var(--normal-font-size);
-    margin-top: 5px;
+    margin-bottom: 10px;
+    padding: 5px 10px;
     transition: color 0.3s ease-in-out;
     border: none;
     background-color: white;
@@ -1169,6 +1175,8 @@ td {
     background-color: rgb(2, 12, 53);
     border-radius: 5px;
     color: white !important;
+    padding: 5px 10px;
+    margin-bottom: 10px;
 }
 
 .button-dl {
@@ -1410,6 +1418,10 @@ td {
     cursor: pointer;
     padding: 0;
     text-decoration: none;
+}
+.info-button:hover
+{
+    text-decoration: underline;
 }
 
 .dropdown-btn {
@@ -2102,7 +2114,7 @@ input[type="date"]::before {
 
 .search-container-who-is-in {
     display: flex;
-    margin-top: 10px;
+    margin-top: -90px;
 }
 
 .form-group label {
@@ -5724,7 +5736,7 @@ select .yearSelect {
     line-height: 20px;
 }
 
-.circle.IRIS {
+.IRIS {
     background-color: #d29be1;
 }
 
@@ -9624,15 +9636,16 @@ peoples module styles started */
 .avatarImgDiv {
     position: relative;
     height: 4em;
+    margin-left: 44px;
 }
 
-.firstImg {
+/* .firstImg {
     width: 3.7em;
     left: 68px;
     cursor: pointer;
-}
+} */
 
-.secondImg {
+/* .secondImg {
     width: 3.7em;
     left: 40px;
     cursor: pointer;
@@ -9642,7 +9655,7 @@ peoples module styles started */
     width: 3.7em;
     left: 14px;
     cursor: pointer;
-}
+} */
 
 .moreImgTxt {
     background-color: black;
@@ -9650,12 +9663,13 @@ peoples module styles started */
     border-radius: 50%;
     padding: 10px 10px;
     position: absolute;
-    left: 0px;
+    left: -42px;
     font-size: 12px;
     height: 3em;
     width: 3em;
     margin: 0px;
     cursor: pointer;
+    margin-top: -37px;
 }
 
 .avtHoverClass:hover {
@@ -10780,3 +10794,4 @@ cursor: pointer;
     font-size: var(--main-headings-font-size);
     color: var(--main-heading-color);
 }
+

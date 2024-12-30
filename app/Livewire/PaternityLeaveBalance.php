@@ -2,14 +2,15 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\EmployeeLeaveBalances;
+use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 
-class SickLeaveBalances extends Component
+class PaternityLeaveBalance extends Component
 {
     public $leaveData, $year, $currentYear;
     public $employeeLeaveBalances;
@@ -34,8 +35,11 @@ class SickLeaveBalances extends Component
             $startDate = Carbon::parse($fromDate);
             $endDate = Carbon::parse($toDate);
 
-            // Check if the start or end date is a weekend
-            if ($startDate->isWeekend() || $endDate->isWeekend()) {
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -44,12 +48,11 @@ class SickLeaveBalances extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 0.5;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 0.5;
+                    return 0;
                 }
             }
 
@@ -57,25 +60,29 @@ class SickLeaveBalances extends Component
                 $startDate->isSameDay($endDate) &&
                 $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)
             ) {
-                // Inner condition to check if both start and end dates are weekdays
-                if (!$startDate->isWeekend() && !$endDate->isWeekend()) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
                     return 1;
                 } else {
-                    // If either start or end date is a weekend, return 0
-                    return 1;
+                    return 0;
                 }
             }
 
             $totalDays = 0;
 
             while ($startDate->lte($endDate)) {
-                if ($leaveType == 'Sick Leave') {
-                    $totalDays += 1;
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
                 } else {
-                    if ($startDate->isWeekday()) {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
                         $totalDays += 1;
                     }
                 }
+
                 // Move to the next day
                 $startDate->addDay();
             }
@@ -87,9 +94,9 @@ class SickLeaveBalances extends Component
             if ($this->getSessionNumber($toSession) < 2) {
                 $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
             }
+
             // Adjust for half days
             if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
-                // If start and end sessions are the same, check if the session is not 1
                 if ($this->getSessionNumber($fromSession) !== 1) {
                     $totalDays += 0.5; // Add half a day
                 } else {
@@ -105,10 +112,16 @@ class SickLeaveBalances extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            return 'Error: ' . $e->getMessage();
+            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
+            return false;
         }
     }
-
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
     private function getSessionNumber($session)
     {
         return (int) str_replace('Session ', '', $session);
@@ -132,9 +145,8 @@ class SickLeaveBalances extends Component
 
     public function changeYear($year)
     {
-        return redirect()->to("/leave-balances/sickleavebalance?year={$year}");
+        return redirect()->to("/leave-balances/paternityleavebalance?year={$year}");
     }
-
     public function render()
     {
         $this->currentYear = date('Y');
@@ -146,7 +158,7 @@ class SickLeaveBalances extends Component
         $this->leaveGrantedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Paternity Leave%'") // Filter based on Casual Leave
             ->get();
         // dd( $this->leaveGrantedData);
 
@@ -160,7 +172,7 @@ class SickLeaveBalances extends Component
 
                 // Loop through each leave policy to check for 'Casual Leave'
                 foreach ($leavePolicyData as $leavePolicy) {
-                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Sick Leave') {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Paternity Leave') {
                         // If found, get the grant_days and process
                         $this->casualLeaveGrantDays = $leavePolicy['grant_days'] ?? 0;
                     }
@@ -175,7 +187,7 @@ class SickLeaveBalances extends Component
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
             ->whereYear('from_date', '<=', $this->year)   // Check if the from_date year is less than or equal to the given year
             ->whereYear('to_date', '>=', $this->year)
-            ->where('leave_type', 'Sick Leave')
+            ->where('leave_type', 'Paternity Leave')
             // ->where(function ($query) {
             //     $query->whereIn('status', ['approved', 'rejected','Withdrawn','Pending'])  // Include both approved and rejected statuses
             //         ->whereIn('cancel_status', ['Re-applied', 'Pending Leave Cancel', 'rejected', 'Withdrawn','Pending','approved']);
@@ -194,7 +206,7 @@ class SickLeaveBalances extends Component
                 $leaveRequest->to_session,
                 $leaveRequest->leave_type
             );
-            if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2 ' &&  $leaveRequest->category_type == 'Leave') {
+            if ($leaveRequest->leave_status == '2' && $leaveRequest->cancel_status != '2' &&  $leaveRequest->category_type === 'Leave') {
                 $this->totalSickDays += $days;
             }
 
@@ -209,7 +221,7 @@ class SickLeaveBalances extends Component
         $this->employeeLapsedBalance = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Paternity Leave%'") // Filter based on Casual Leave
             ->get();
 
         $this->Availablebalance = $this->casualLeaveGrantDays - $this->totalSickDays;
@@ -217,7 +229,7 @@ class SickLeaveBalances extends Component
         $this->employeeLapsedBalanceList = EmployeeLeaveBalances::where('emp_id', $employeeId)
             ->where('period', 'like', "%$this->year%")
             ->selectRaw("*, JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) AS leave_name") // Get all columns and also leave_name for filtering
-            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Sick Leave%'") // Filter based on Casual Leave
+            ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(leave_policy_id, '$[*].leave_name')) LIKE '%Paternity Leave%'") // Filter based on Casual Leave
             ->get();
 
         $currentMonth = date('n');
@@ -241,7 +253,7 @@ class SickLeaveBalances extends Component
 
                 // Loop through each leave policy to check for 'Casual Leave'
                 foreach ($leavePolicyData as $leavePolicy) {
-                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Sick Leave') {
+                    if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Paternity Leave') {
                         // If found, get the grant_days and process
                         $grantedLeavesCount = $leavePolicy['grant_days'] ?? 0;
                     }
@@ -255,7 +267,7 @@ class SickLeaveBalances extends Component
 
             // Fetch leave requests that overlap with the current month
             $availedLeavesRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_type', 'Sick Leave')
+                ->where('leave_type', 'Paternity Leave')
                 ->where('leave_status', '2')
                 ->where('cancel_status', '!=', '2')
                 ->whereYear('from_date', $this->year)
@@ -372,15 +384,18 @@ class SickLeaveBalances extends Component
             'responsive' => true
         ];
 
-        return view('livewire.sick-leave-balances', [
-            'employeeLeaveBalances' => $this->employeeLeaveBalances,
-            'employeeleaveavlid' => $this->employeeleaveavlid,
-            'totalSickDays' => $this->totalSickDays,
-            'Availablebalance' => $this->Availablebalance,
-            'lapsedBalance' => $this->lapsedBalance,
-            'chartData' => $chartData,
-            'employeeLapsedBalanceList' => $this->employeeLapsedBalanceList,
-            'chartOptions' => $chartOptions
-        ]);
+        return view(
+            'livewire.paternity-leave-balance',
+            [
+                'employeeLeaveBalances' => $this->employeeLeaveBalances,
+                'employeeleaveavlid' => $this->employeeleaveavlid,
+                'totalSickDays' => $this->totalSickDays,
+                'Availablebalance' => $this->Availablebalance,
+                'lapsedBalance' => $this->lapsedBalance,
+                'chartData' => $chartData,
+                'employeeLapsedBalanceList' => $this->employeeLapsedBalanceList,
+                'chartOptions' => $chartOptions
+            ]
+        );
     }
 }

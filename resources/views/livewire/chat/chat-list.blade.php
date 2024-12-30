@@ -1,6 +1,6 @@
 <div class="sidebar-list-contacts" id="contacts">
     <div class="top">
-        <a href="/">
+        <a href="{{ route('users') }}">
             <div class="nav-toggle btn">
                 <span class="material-icons">keyboard_backspace</span>
             </div>
@@ -15,7 +15,7 @@
             </span>
             <input type="text" class="contSearch form-control" wire:model.live="search"
                 placeholder="Search for a name, email, or phone number" aria-label="Search"
-                aria-describedby="basic-addon1">
+                aria-describedby="basic-addon1" autocomplete="off" id="searchField">
         </div>
 
         <div class="list-users">
@@ -36,8 +36,7 @@
                             alt="Avatar">
                         <span class="dot @if ($otherUser?->isOnline()) -online @else -offline @endif"></span>
                     </div>
-                    <div class="text-content" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}"
-                        {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
+                    <div class="text-content" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}" {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
                         wire:click="chatUserSelected('{{ auth()->user()?->emp_id }}', '{{ $otherUser?->emp_id }}')">
                         <div class="name">{{ $otherUser?->first_name ?? 'Unknown' }}
                             {{ $otherUser?->last_name ?? '' }}</div>
@@ -47,10 +46,8 @@
                     </div>
 
                     <div class="actions">
-                        <button class="btn" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}"
-                            {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
-                            {{-- wire:click="chatUserSelected('{{ auth()->user()?->emp_id }}', '{{ $otherUser?->emp_id }}')" --}}
-                            >
+                        <button class="btn" wire:key="{{ $otherUser?->emp_id ?? 'unknown' }}" {{-- wire:click="$dispatch('chatUserSelected', { senderId: '{{ auth()->user()?->emp_id }}', receiverId: '{{ $otherUser?->emp_id }}' })"> --}}
+                            {{-- wire:click="chatUserSelected('{{ auth()->user()?->emp_id }}', '{{ $otherUser?->emp_id }}')" --}}>
                             <span class="material-icons position-relative">
                                 question_answer
                                 @if ($conversation?->unreadMessagesCount(auth()->user()?->emp_id ?? 0) > 0)
@@ -68,3 +65,9 @@
         </div>
     </div>
 </div>
+{{-- <script>
+    document.getElementById('searchField').setAttribute('autocomplete', 'off');
+    document.getElementById('searchField').addEventListener('focus', function () {
+        this.value = ''; // Clear any prefilled value
+    });
+</script> --}}

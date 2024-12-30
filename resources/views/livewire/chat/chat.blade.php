@@ -5,15 +5,6 @@
         {{-- chat list --}}
         <livewire:chat.chat-list />
         <div class="box-info-content" id="content-chart">
-            <div class="top">
-                <a href="#" id="back" class="btn back">
-                    <span class="material-icons">
-                        chevron_left
-                    </span>
-                </a>
-                <div class="menu-right">
-                </div>
-            </div>
             {{-- chat body --}}
             <livewire:chat.chat-box />
             {{-- chat send message --}}

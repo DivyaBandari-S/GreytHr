@@ -1,4 +1,5 @@
 <div>
+
     <div class="row m-0 px-2 py-1 ">
         @if(session()->has('emp_error'))
         <div class="alert alert-danger">
@@ -7,17 +8,17 @@
         @endif
         <div class="row m-0 p-0">
             <div class="col-md-7 col-sm-12 p-0 m-0 ">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb d-flex aclign-items-center ">
-                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balances</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Casual Probation Leave</li>
-                    </ol>
-                </nav>
+                <ol class="breadcrumb d-flex align-items-center ">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Marriage Leave</li>
+                </ol>
             </div>
             <div class="col-md-5 ">
                 <div class="buttons-container d-flex gap-3 justify-content-end  p-0 ">
-                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-page'">Apply</button>
+                    @if($year==$currentYear)
+                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
+                    @endif
                     <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)' wire:model='year'>
                         <?php
                         // Get the current year
@@ -33,13 +34,14 @@
             </div>
             @if($casualLeaveGrantDays === 0)
             <div class="row m-0 p-0">
-                <div class="col-md-12  leave-details-col-md-12">
-                    <div class="card  leave-details-card">
+                <div class="col-md-12 leave-details-col-md-12">
+                    <div class="card leave-details-card">
                         <div class="card-body leave-details-card-body">
                             <h6 class="card-title">Information</h6>
                             @if($year <= $currentYear)
                                 <p class="card-text">No information found</p>
                                 @else
+
                                 <p class="card-text">HR will add the leaves</p>
                                 @endif
                         </div>
@@ -48,7 +50,6 @@
             </div>
             @else
             <div class="row m-0 p-0">
-
                 <div class="col-12 mt-2 d-flex justify-content-start">
                     <div class="info-container">
                         <div class="info-item px-2">
@@ -86,7 +87,8 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas class="leave-details-canvas" id="casualLeaveProbChart"></canvas>
+                            <canvas class="leave-details-canvas" id="casualLeaveChart">
+                            </canvas>
                         </div>
                     </div>
                 </div>
@@ -94,7 +96,7 @@
             <div class="row p-0 m-0">
                 <div class="col-md-12 mt-4">
                     <div class="custom-table-wrapper-leave-details bg-white border rounded ">
-                        <table class="balance-table table-responsive">
+                        <table class="balance-table table-responsive ">
                             <thead class="thead">
                                 <tr>
                                     <th>Transaction Type</th>
@@ -132,13 +134,28 @@
                                         @endif
                                         @endif
                                     </td>
-                                    @endforeach
-                                    @foreach($leaveGrantedData as $index => $balance)
+                                    <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->from_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->to_date)) }}</td>
+                                    <td>
+                                        @php
+                                        $days = $this->calculateNumberOfDays($balance->from_date, $balance->from_session, $balance->to_date, $balance->to_session,$balance->leave_type);
+                                        @endphp
+                                        {{ $days }}
+                                    </td>
+                                    @if($balance->category_type === 'Leave')
+                                    <td>{{ $balance->reason }}</td>
+                                    @else
+                                    <td>{{ $balance->leave_cancel_reason }}</td>
+                                    @endif
+                                </tr>
+                                @endforeach
+                                @foreach($leaveGrantedData as $index => $balance)
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
-                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>{{date('d M Y', strtotime($balance->from_date))  }}</td>
+                                    <td>{{ date('d M Y', strtotime($balance->to_date))  }}</td>
                                     <td>{{ $casualLeaveGrantDays }}</td>
                                     <td>Annual Grant for the present year </td>
                                 </tr>
@@ -152,7 +169,7 @@
                                     <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
                                     <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
                                     <td>
-                                    @if($employeeLapsedBalance->first()->is_lapsed)
+                                        @if($employeeLapsedBalance->first()->is_lapsed)
                                         {{ $Availablebalance }}
                                         @else
                                         0
@@ -167,6 +184,7 @@
                                     <td colspan="6">No lapsed balances available.</td>
                                 </tr>
                                 @endif
+
                             </tbody>
                         </table>
                     </div>
@@ -184,7 +202,7 @@
         var chartOptions = @json($chartOptions);
 
         // Get the context of the canvas element
-        var ctx = document.getElementById('casualLeaveProbChart').getContext('2d');
+        var ctx = document.getElementById('casualLeaveChart').getContext('2d');
 
         // Create the chart
         var myChart = new Chart(ctx, {
@@ -195,3 +213,13 @@
 
     });
 </script>
+
+<!-- <script>
+    var ctx = document.getElementById('sickLeaveChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data:  json_encode($chartData),
+        options: json_encode($chartOptions)
+    });
+    console.log(json_encode($chartData));
+</script> -->

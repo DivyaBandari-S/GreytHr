@@ -12,7 +12,7 @@
             <i class='fas fa-comment-dots icon notifications-pointer '></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
-                {{ $chatNotificationCount }}
+                  {{ $chatNotificationCount }}
             </span>
             @endif
         </div>

@@ -209,7 +209,7 @@ public function toggleAccordionForLate($index)
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
@@ -742,7 +742,7 @@ public function toggleAccordionForLate($index)
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
-                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name', 'company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
+                ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.email','employee_details.emergency_contact', 'employee_details.job_role','employee_details.job_location','company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
                 ->distinct()
                 ->orderBy('swipe_records.swipe_time', 'DESC') // Order by swipe_time in descending order
@@ -818,7 +818,7 @@ public function toggleAccordionForLate($index)
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+               
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on('employee_details.company_id', '=', DB::raw("JSON_UNQUOTE(JSON_EXTRACT(company_shifts.company_id, '$[0]'))"))
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');

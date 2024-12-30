@@ -6,7 +6,7 @@
     @endphp
     <!-- SIDEBAR -->
     <section id="sidebar">
-        <a href="#" class="brand">
+        <a href="{{route('home')}}" class="brand">
             <!-- <i class='bx bxs-smile icon'></i> -->
             <img class="m-auto" src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 6em !important;">
         </a>
@@ -67,7 +67,7 @@
             <li>
                 <a href="#"class="{{ request()->is('regularisation') ? 'active-bg1223' : '' }}"><i class='fas fa-clock icon {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i> Attendance <i class='fa fa-chevron-right icon-right {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i></a>
                 <ul class="side-dropdown">
-                    
+
                     <li><a href="/Attendance">Attendance Info</a></li>
                     @if ($managerId)
                     <li>
@@ -133,9 +133,9 @@
                         @if($loginEmployeeProfile->image !== null && $loginEmployeeProfile->image != "null" && $loginEmployeeProfile->image != "Null" && $loginEmployeeProfile->image != "")
                         <img class="navProfileImg" src="data:image/jpeg;base64,{{ ($loginEmployeeProfile->image) }}" alt="" onclick="openProfile()">
                         @else
-                        @if($loginEmployeeProfile->gender=='Male')
+                        @if($loginEmployeeProfile->gender=='MALE')
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
-                        @elseif($loginEmployeeProfile->gender=='Female')
+                        @elseif($loginEmployeeProfile->gender=='FEMALE')
                         <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
                         @else
                         <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">

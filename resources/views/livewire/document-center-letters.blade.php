@@ -1,5 +1,5 @@
 <div>
-<ul class="breadcrumb">
+    <ul class="breadcrumb">
         <li class="breadcrumb-item"><a href="/document">Document Center</a></li>
         <li class="breadcrumb-item active" aria-current="page">Letters</li>
 
@@ -15,7 +15,7 @@
                     <div class="tab {{ $tab === 'Request Letter' ? 'active' : '' }}">Request Letter</div>
                 </div>
             </div>
-            <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: 0; left: {{ $tab === 'Letters List' ? '0' : '15%' }}; width: 15%; height: 6px; background-color: rgb(2, 17, 79); text-align: start;border-radius :5px;"></div>
+            <div style="transition: left 0.3s ease-in-out; position: absolute; bottom: 0; left: {{ $tab === 'Letters List' ? '0' : '15%' }}; width: 15%; height: 3px; background-color: rgb(2, 17, 79); text-align: start;border-radius :5px;"></div>
         </div>
 
         <div class="row mt-4" style="background-color: white; border-radius: 5px; height: auto;">
@@ -75,18 +75,18 @@
             @endif
         </div>
         @if($tab=="Request Letter")
-        <div style="text-align:center;justify-content:center;display:flex;padding:5px;align-items:center">
-            <div class="row mt-2 mb-2" style="background-color: white;max-width:500px;width:100%;padding:5px;border-radius:5px;height:52px">
-                <div class="col-md-4">
-                    <button style="margin-left: 0;" wire:click="$set('activeTab', 'Apply')" class="button-dl {{ $activeTab === 'Apply' ? 'active' : '' }}">Apply</button>
-                </div>
-                <div class="col-md-4">
-                    <button wire:click="$set('activeTab', 'Pending')" class="button-dl {{ $activeTab === 'Pending' ? 'active' : '' }}">Pending</button>
-                </div>
-                <div class="col-md-4">
-                    <button wire:click="$set('activeTab', 'History')" class="button-dl {{ $activeTab === 'History' ? 'active' : '' }}">History</button>
-                </div>
-            </div>
+        <div class="nav-buttons mt-2 mb-3 d-flex justify-content-center">
+            <ul class="nav custom-nav-tabs border">
+                <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-active">
+                    <div class="reviewActiveButtons custom-nav-link {{ $activeTab === 'Apply' ? 'active' : '' }} " wire:click="$set('activeTab', 'Apply')">Apply</div>
+                </li>
+                <li class="pendingCustomStyles custom-item m-0 p-0 flex-grow-1">
+                    <a href="#" class="custom-nav-link {{ $activeTab === 'Pending' ? 'active' : '' }}" wire:click="$set('activeTab', 'Pending')">Pending</a>
+                </li>
+                <li class="custom-item m-0 p-0 flex-grow-1 mbl-dev-closed">
+                    <a href="#" class="reviewClosedButtons custom-nav-link {{ $activeTab === 'History' ? 'active' : '' }}" wire:click="$set('activeTab', 'History')">History</a>
+                </li>
+            </ul>
         </div>
         @if (Session::has('success'))
         <div style="text-align: center;" id="success-alert" class="alert alert-success show">
@@ -111,45 +111,50 @@
             <div class="row" style="margin-top:15px;">
                 <div class="col-md-6">
                     <form>
-                        <div style="margin-bottom: 8px;" class="form-group row">
-                            <label for="priority" class="col-sm-4 col-form-label">Letter Type</label>
+                        <div class="form-group mb-3 row">
+                            <label for="letter_type" class="col-sm-4 col-form-label">Letter Type</label>
                             <div class="col-sm-8">
-                                <select wire:model="letter_type" style="font-size: 0.9rem;" class="form-control" id="priority" name="priority">
+                                <select wire:model="letter_type"
+                                    wire:change="validateField('letter_type')"
+                                    style="font-size: 12px;" class="form-control" id="letter_type" name="letter_type">
                                     <option value="">Select Type</option>
                                     <option value="Confirmation Letter">Confirmation Letter</option>
                                     <option value="Appointment Order">Appointment Order</option>
                                     <option value="Offer Letter">Offer Letter</option>
                                 </select>
+                                @error('letter_type') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
-                            @error('letter_type') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div style="margin-bottom: 8px;" class="form-group row">
+                        <div class="form-group mb-3 row">
                             <label for="priority" class="col-sm-4 col-form-label">Priority</label>
                             <div class="col-sm-8">
-                                <select wire:model="priority" style="font-size: 0.9rem;" class="form-control" id="priority" name="priority">
+                                <select wire:model="priority"
+                                    wire:change="validateField('priority')"
+                                    style="font-size: 12px;" class="form-control" id="priority" name="priority">
                                     <option value="">Select Priority</option>
                                     <option value="Low">Low</option>
                                     <option value="Medium">Medium</option>
                                     <option value="High">High</option>
                                 </select>
+                                @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
-                            @error('priority') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
-                        <div style="margin-bottom: 8px;" class="form-group row">
+                        <div class="form-group mb-3 row">
                             <label for="reason" class="col-sm-4 col-form-label">Reason</label>
                             <div class="col-sm-8">
-                                <textarea wire:model="reason" style="font-size: 0.9rem;" placeholder="Enter reason" class="form-control" id="reason" name="reason" rows="3"></textarea>
+                                <textarea wire:model="reason"
+                                    wire:keydown.debounce.500ms="validateField('reason')"
+                                    style="font-size: 12px;" placeholder="Enter reason" class="form-control" id="reason" name="reason" rows="3"></textarea>
+                                @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
-                            @error('reason') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
 
                         <div style="text-align: center;">
-                            <button class="submit-for-LR" type="button" wire:click="submitRequest" style="background-color: rgb(2,17,79);color:white;padding:5px;border-radius:5px;border:none">Submit</button>
+                            <button class="submit-btn mt-2" type="button" wire:click="submitRequest">Submit</button>
                         </div>
                     </form>
-
                 </div>
                 <div class="col-md-6">
                     <img style="width: 450px;" src="https://proofed.com/wp-content/webp-express/webp-images/uploads/2023/07/28-Graphic-Funding-Request-Letter-Template.png.webp" alt="">
@@ -163,7 +168,7 @@
                         <thead class="table-header">
                             <tr style="background-color: rgb(2,17,79);color:white;padding:8px">
                                 <th style="padding: 8px;width:20%;">Employee ID</th>
-                                <th style="width:20%;" >Letter Type</th>
+                                <th style="width:20%;">Letter Type</th>
                                 <th style="width:20%;">Priority</th>
                                 <th style="width:20%;">Reason</th>
                                 <th style="width:20%;">Status</th>
