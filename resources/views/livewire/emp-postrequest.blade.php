@@ -380,7 +380,7 @@
                         <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
                             <gt-heading _ngcontent-eff-c648="" size="md" class="ng-tns-c648-2 hydrated"></gt-heading>
-                            <div class="medium-header border-cyan-200" style="margin-left:-1px">Post Requests</div>
+                            <div class="medium-header border-cyan-200" style="margin-left:-1px;color:#3b4452">Post Requests</div>
                         </div>
 
                  
@@ -403,30 +403,44 @@
                    
                     @foreach($posts->where('status', 'Pending') as $post)
 
-                    <div class="col-12 bg-white" style="border-radius:5px; border:1px solid #ccc; height:auto; margin-top:10px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="col-12 bg-white" style="border-radius:5px; border:1px solid #ccc; height:auto; margin-top:5px;box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                    <div class="row mt-2">
+                                    <div class="col-12 col-md-4 text-center mb-1 mb-md-0">
+                                        <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
+                                    </div>
+                                    <div class="col-6  col-md-7 text-md-end mt-1" style="font-size: 12px;">
+                                        {{ $post->updated_at->diffForHumans() }}
+                                    </div>
+                                    </div>
+                   
+             
+          
+       
+            
+
     <div class="row m-2">
-        <p class="text-feed">Post Requests :</p>
-        <div class="col-12 col-md-4" style="font-size:12px;">
-            Employee ID: {{ $post->emp_id }}
-        </div>
-        <div class="col-12 col-md-8" style="font-size:12px;">
+    
+    <div class="col-12 col-md-5" style="font-size:12px;">
             @if($post->employeeDetails)
                 Employee Name: {{ $post->employeeDetails->first_name }} {{ $post->employeeDetails->last_name }}
             @else
                 No employee details found for this post.
             @endif
         </div>
+    <div class="col-12 col-md-4" style="font-size:12px;">
+            Employee ID: {{ $post->emp_id }}
+        </div>
+        
     </div>
     <div class="row m-2">
-        <div class="col-12" style="font-size:12px;">
+    <div class="col-12 col-md-5" style="font-size:12px;">
             Category: {{ $post->category }}
         </div>
-    </div>
-    <div class="row m-2">
-        <div class="col-12" style="font-size:12px;">
+        <div class="col-12 col-md-7" style="font-size:12px;">
             Description: {{ $post->description }}
         </div>
     </div>
+   
     <div class="row m-2 align-items-center">
         <div class="col-12 col-md-5" style="font-size:12px;">
             @if ($post->getImageUrlAttribute())
