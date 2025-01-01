@@ -206,6 +206,10 @@ class Regularisation extends Component
         $this->showApplyingToContainer = !$this->showApplyingToContainer;
             
     }
+    public function removeContainerBox()
+    {
+        $this->showApplyingToContainer = false;   
+    }
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {
         try {
