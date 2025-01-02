@@ -75,8 +75,10 @@
                             <div class="col setting-history-modal-text">{{ $lastLoginFailure }}</div>
                             <div class="col setting-history-modal-text">{{ $lastPasswordChanged }}</div>
                         </div>
-                        <table class="table-s setting-history-modal-table" border="1">
+                        <table class="table-s setting-history-modal-table">
                             <tr class="tr-s">
+                                <th class="th-s setting-history-modal-table-label">
+                                    Date</th>
                                 <th class="th-s setting-history-modal-table-label">
                                     Login Location</th>
                                 <th class="th-s setting-history-modal-table-label">
@@ -89,6 +91,8 @@
 
                             @foreach ($loginHistory as $history)
                                 <tr class="tr-s">
+                                    <td class="th-d setting-history-modal-table-value">
+                                        {{ $history->location }}</td>
                                     <td class="th-d setting-history-modal-table-value">
                                         {{ $history->location }}</td>
                                     <td class="th-d setting-history-modal-table-value">

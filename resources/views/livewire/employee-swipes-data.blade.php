@@ -66,9 +66,9 @@
                     </thead>
                     <div>
                     <tbody>
-                  
-                         
-                   
+
+
+
     <!-- Display the filtered collection or any other content -->
                       @if(count($SignedInEmployees))
                         @foreach($SignedInEmployees as $swipe)
