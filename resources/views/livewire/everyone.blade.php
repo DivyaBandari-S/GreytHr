@@ -370,7 +370,7 @@
 
                 </div>
             </div>
-            <div class="col-md-9 m-0 feeds-main-content">
+            <div class="col-md-9 m-0 ">
             <div class="row">
             <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
@@ -394,98 +394,194 @@
                             <!-- Form content here -->
                             @endif
                     @else
-                    @foreach($posts as $post)
-                        <div class="col-12 col-md-8" style="margin-top: 10px;margin-left:-80px">
-                            <!-- Upcoming Birthdays List -->
-                            <div class="cards">
-                                <div class="row ">
-                                    <div class="col-12 col-md-4 mb-5 text-center mb-md-0">
-                                        <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
-                                    </div>
-                                    <div class="col-6 col-md-4 mt-3 text-center" style="font-size: 12px;">
-                                        {{ $post->category }}
-                                    </div>
-                                    <div class="col-6  col-md-4 mt-3 text-md-end" style="font-size: 12px;">
-                                        {{ $post->updated_at->diffForHumans() }}
-                                    </div>
-                                </div>
-                                <div class="row m-0 mt-3 align-items-center">
-                                    @php
-                                    $employee = $post->employeeDetails;
-                                    $manager = $post->managerDetails;
-                                    @endphp
+                    <style>
+    /* Global Styling */
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f4f6f8;
+        color: #2b2b2b;
+        margin: 0;
+        padding: 30px;
+        line-height: 1.6;
+    }
 
-                                    {{-- Display Employee Details --}}
-                                    @if($employee)
-                                    <div class="col-3 text-center">
-                                        @if($employee->image && $employee->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image">
-                                        @else
-                                        @if($employee->gender == "Male")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                        @elseif($employee->gender == "Female")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                        @else
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                        @endif
-                                        @endif
-                                    </div>
-                                    <div class="col-9">
-                                        <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                                            {{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}
-                                        </p>
-                                    </div>
-                                    @else($manager)
-                                    <div class="col-3 text-center">
-                                        @if($manager->image && $manager->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$manager->image}}" alt="Manager Image">
-                                        @else
-                                        @if($manager->gender == "Male")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                        @elseif($manager->gender == "Female")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                        @else
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                        @endif
-                                        @endif
-                                    </div>
-                                    <div class="col-9">
-                                        <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                                            {{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}
-                                        </p>
-                                    </div>
-                                    @endif
-                                </div>
+    /* Card Design */
+    .post-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+        padding: 20px;
+        border:1px solid silver;
+        display: flex;
+        flex-direction: column;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
+    .post-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.1);
+    }
 
-                                <div class="row m-0 mb-3">
-                                    <div class="col-6 text-start mt-3">
-                                        <img src="{{ $post->image_url ?? ''}}" class="img-fluid" style="max-width: 70px; max-height: 70px;border-radius:5px">
-                                    </div>
-                                    <div class="col-6 m-auto text-start mt-3">
-                                        <p style="font-size: 14px; margin-top: 10px; font-weight: 100; color: #677A8E;">
-                                            {{ $post->description }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <confirmation-modal class="confirmation-modal">
-                                    <gt-popup-modal label="modal" size="sm" class="hydrated">
-                                        <div class="body-content">
-                                            <div slot="modal-body">
-                                                <!-- Content for modal body -->
-                                            </div>
-                                        </div>
-                                        <div slot="modal-footer">
-                                            <div class="flex justify-end">
-                                                <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated"></gt-button>
-                                                <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
-                                            </div>
-                                        </div>
-                                    </gt-popup-modal>
-                                </confirmation-modal>
-                            </div>
+    /* Header Styling */
+    .post-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .category {
+        font-size: 13px;
+        color: #7a7a7a;
+        text-transform: uppercase;
+        font-weight: 400;
+    }
+
+    .updated-time {
+        font-size: 12px;
+        color: #b0b0b0;
+    }
+
+    /* Profile Section */
+    .profile-info {
+        display: flex;
+        align-items: center;
+        margin-top: 15px;
+    }
+
+    .profile-img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 15px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        text-transform: capitalize;
+    }
+
+    /* Post Content */
+    .post-content {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+    }
+
+    .description {
+        font-size: 12px;
+        color: #676767;
+        margin-bottom: 12px;
+    }
+
+    .post-image {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .company-logo {
+        max-width: 130px;
+        height: auto;
+    }
+
+    /* Loading Indicator */
+    .loading {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 16px;
+        color: #009688;
+        font-weight: bold;
+    }
+
+    /* Button Styling */
+    .btn {
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 500;
+        font-size: 12px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        border: none;
+    }
+
+    .btn-primary {
+        background-color: #009688;
+        color: white;
+    }
+
+    .btn-secondary {
+        background-color: #f7f7f7;
+        color: #333;
+        border: 1px solid #e0e0e0;
+    }
+
+    .btn-primary:hover {
+        background-color: #00796b;
+    }
+
+    .btn-secondary:hover {
+        background-color: #e0e0e0;
+    }
+</style>
+
+<!-- Post Container -->
+<div id="post-container " class="feeds-main-content">
+    @foreach($posts as $post)
+        <div class="col-12 col-md-8 mt-2" id="post-{{ $post->id }}">
+            <div class="post-card">
+                <div class="post-header">
+                    <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" class="company-logo">
+                    <div class="category">{{ $post->category }}</div>
+                    <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                </div>
+
+                <div class="profile-info">
+                    @php
+                        $employee = $post->employeeDetails;
+                        $manager = $post->managerDetails;
+                    @endphp
+
+                    @if($employee)
+                        <img src="data:image/jpeg;base64,{{$employee->image ?? ''}}" alt="Employee Image" class="profile-img">
+                        <div>
+                            <p class="profile-name">{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</p>
                         </div>
-                        @endforeach
+                    @elseif($manager)
+                        <img src="data:image/jpeg;base64,{{$manager->image ?? ''}}" alt="Manager Image" class="profile-img">
+                        <div>
+                            <p class="profile-name">{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</p>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Post Content -->
+                <div class="post-content">
+                    <div class="description">
+                        {{ $post->description }}
+                    </div>
+                    @if($post->image_url)
+                        <img src="{{ $post->image_url }}" alt="Post Image" class="post-image">
+                    @endif
+                </div>
+
+                <!-- Footer with Buttons -->
+                <div class="modal-footer">
+                    <button class="btn btn-primary">Read More</button>
+                    <button class="btn btn-secondary">Bookmark</button>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
+
+
 
 
 
