@@ -23,15 +23,20 @@ class Notification extends Component
     public $leaveRejectNotification;
     public $leavenotifications, $leavecancelnotifications;
     public $tasknotifications;
+    public $successfulYears;
     public $totalnotifications;
     public $totalnotificationscount;
     public $birthdayRecord;
     public $manager_id;
     public $totalBirthdays;
     public $isYourBirthday = false;
+    public $isYourJoining = false;
     public $getRemainingBirthday;
     public $birthdayTime;
-
+    public $newJoinRecord;
+    public $getRemainingJoinees;
+    public $totalJoinees;
+    public $joiningTime;
 
     public function mount()
     {
@@ -39,7 +44,7 @@ class Notification extends Component
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
             $CompanyId = Auth::user()->company_id[0];
-
+            $this->getNewlyJoinedEmpList();
             $today = now();
             $currentDate = $today->toDateString();
             $currentMonth = $today->month;
@@ -65,8 +70,12 @@ class Notification extends Component
                 ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                 ->select('employee_details.*')
                 ->get();
-
-            $count = count($birthdayEmployees);
+            $newlyJoinedEmployees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                ->whereDay('hire_date', $currentDay)
+                ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->select('employee_details.*')
+                ->get();
+            $count = count($birthdayEmployees) + count($newlyJoinedEmployees);
 
             if ($count > 0) {
 
@@ -112,6 +121,77 @@ class Notification extends Component
         }
     }
 
+    public function getNewlyJoinedEmpList()
+    {
+        try {
+
+            $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+            $CompanyId = Auth::user()->company_id[0];
+            $today = now();
+            $currentDate = $today->toDateString();
+            $currentMonth = $today->month;
+            $currentDay = $today->day;
+            $this->joiningTime = Carbon::parse($today->startOfDay())->diffForHumans();
+            $employees = EmployeeDetails::whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->get(['emp_id']); // Only fetch the emp_id field
+            // Initialize an empty array to store emp_ids with value 0
+            $empIds = [];
+
+            // Loop through the results and populate the array with emp_id => 0
+            foreach ($employees as $employee) {
+                $empIds[$employee->emp_id] = 0;
+            }
+            // dd(  $empIds);
+            $newlyJoinedEmployees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                ->whereDay('hire_date', $currentDay)
+                ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                ->select('employee_details.*')
+                ->get();
+            $count =  count($newlyJoinedEmployees);
+
+            if ($count > 0) {
+                $isJoinedEmpAvailable = ModelsNotification::where('assignee', $CompanyId)
+                    ->where('body', $currentDate)
+                    ->where('notification_type', 'new join')->get();
+
+                // dd($isBirthdayAvailable);
+                if (count($isJoinedEmpAvailable) > 0) {
+
+                    if ($count != $isJoinedEmpAvailable[0]->chatting_id) {
+                        ModelsNotification::where('id', $isJoinedEmpAvailable[0]->id)  // Ensure to specify the correct `id` to update
+                            ->update([
+                                'emp_id' => $loggedInEmpId,
+                                'chatting_id' => $count,
+                                'notification_type' => 'new join',
+                                'assignee' => $CompanyId,
+                                'body' => $currentDate,  // Assuming `$today` contains the current date
+                                'is_birthday_read' => json_encode($empIds)
+                            ]);
+                    }
+                } else {
+                    ModelsNotification::create([
+                        'emp_id' => $loggedInEmpId,
+                        'chatting_id' => $count,
+                        'notification_type' => 'new join',
+                        'assignee' => $CompanyId,
+                        'body' => $currentDate,  // Assuming `$today` contains the current date
+                        'is_birthday_read' => json_encode($empIds)
+                    ]);
+                }
+            } else {
+                DB::table('notifications')
+                    ->Where('body', $currentDate)
+                    ->where('notification_type', 'new join')
+                    ->where('assignee', $CompanyId)
+                    ->delete();
+            }
+
+            $this->fetchNotifications();
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
     public function fetchNotifications()
     {
         try {
@@ -135,7 +215,6 @@ class Notification extends Component
                     ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                     ->where('employee_details.emp_id', $loggedInEmpId)
                     ->first();
-                    // dd( $YourBirthday);
 
                 $this->totalBirthdays = $this->birthdayRecord->chatting_id;
                 // dd( $this->totalBirthdays);
@@ -149,13 +228,12 @@ class Notification extends Component
                             ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
                             ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                             ->select('employee_details.*')
-                            ->where('employee_details.emp_id','!=', $loggedInEmpId)
+                            ->where('employee_details.emp_id', '!=', $loggedInEmpId)
                             ->first();
                         //   dd( $this->getRemainingBirthday->first_name);
 
                     }
                 } elseif ($this->totalBirthdays == 1) {
-
                     $this->getRemainingBirthday = EmpPersonalInfo::whereMonth('date_of_birth', $currentMonth)
                         ->whereDay('date_of_birth', $currentDay)
                         ->join('employee_details', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
@@ -163,10 +241,58 @@ class Notification extends Component
                         ->select('employee_details.*')
                         ->first();
                 }
+
+                else{
+                    $this->getRemainingBirthday = null;
+                }
+            }
+
+
+
+            $this->newJoinRecord = ModelsNotification::where('body', $currentDate)
+                ->where('assignee', $CompanyId)
+                ->where('notification_type', 'new join')
+                ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(is_birthday_read, '$.\"$loggedInEmpId\"')) = '0'")
+                ->first();
+            if ($this->newJoinRecord) {
+
+                $YourJoining = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                    ->whereDay('hire_date', $currentDay)
+                    ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                    ->where('employee_details.emp_id', $loggedInEmpId)
+                    ->select('employee_details.*')
+                    ->first();
+                // dd( $YourBirthday);
+                $this->totalJoinees = $this->newJoinRecord->chatting_id;
+                // dd( $this->totalBirthdays);
+                if ($YourJoining) {
+                    $this->isYourJoining = true;
+                    $this->totalJoinees = $this->newJoinRecord->chatting_id - 1;
+
+                    if ($this->totalJoinees == 1) {
+                        $this->getRemainingJoinees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                            ->whereDay('hire_date', $currentDay)
+                            ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                            ->select('employee_details.*')
+                            ->where('employee_details.emp_id', '!=', $loggedInEmpId)
+                            ->first();
+                        //   dd( $this->getRemainingBirthday->first_name);
+                        $this->successfulYears = now()->year - Carbon::parse($this->getRemainingJoinees->hire_date)->year;
+
+                    }
+                } elseif ($this->totalJoinees == 1) {
+
+                    $this->getRemainingJoinees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
+                        ->whereDay('hire_date', $currentDay)
+                        ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                        ->select('employee_details.*')
+                        ->first();
+                        $this->successfulYears = now()->year - Carbon::parse($this->getRemainingJoinees->hire_date)->year;
+
+                }
                 //  dd( $this->totalBirthdays);
 
             }
-
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
             // working groupby messages notifications
@@ -256,12 +382,11 @@ class Notification extends Component
             })->sortByDesc('created_at')->values();
 
 
-            if ($this->totalBirthdays > 0) {
+            if ($this->totalBirthdays > 0 || $this->totalJoinees > 0) {
                 $this->totalnotificationscount = $this->totalnotifications->count() + 1;
             } else {
                 $this->totalnotificationscount = $this->totalnotifications->count();
             }
-
 
 
             $this->chatNotificationCount = DB::table('notifications')
@@ -329,6 +454,10 @@ class Notification extends Component
 
     public function render()
     {
-        return view('livewire.notification');
+        return view('livewire.notification',[
+            'totalJoinees' => $this->totalJoinees,
+            'getRemainingJoinees' => $this->getRemainingJoinees,
+            'joiningTime' => $this->joiningTime
+        ]);
     }
 }

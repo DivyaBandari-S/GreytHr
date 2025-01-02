@@ -412,17 +412,17 @@
                             @endif
                     @else
                     @foreach($posts as $post)
-                        <div class="col-12 col-md-8" style="margin-top: 10px;margin-left:-60px">
+                        <div class="col-12 col-md-8" style="margin-top: 10px;margin-left:-80px">
                             <!-- Upcoming Birthdays List -->
                             <div class="cards">
-                                <div class="row mt-2">
-                                    <div class="col-12 col-md-4 text-center mb-2 mb-md-0">
+                                <div class="row ">
+                                    <div class="col-12 col-md-4 mb-5 text-center mb-md-0">
                                         <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
                                     </div>
-                                    <div class="col-6 col-md-4 text-center" style="font-size: 12px;">
+                                    <div class="col-6 col-md-4 mt-3 text-center" style="font-size: 12px;">
                                         {{ $post->category }}
                                     </div>
-                                    <div class="col-6  col-md-4 text-md-end" style="font-size: 12px;">
+                                    <div class="col-6  col-md-4 mt-3 text-md-end" style="font-size: 12px;">
                                         {{ $post->updated_at->diffForHumans() }}
                                     </div>
                                 </div>

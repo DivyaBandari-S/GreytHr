@@ -42,6 +42,7 @@ class Attendance extends Component
     
     public $avgWorkHoursFromJuly = 0;
 
+  
    
 
    
@@ -836,42 +837,48 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
         $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
-    ->where('leave_applications.leave_status', 2)
-    ->where('from_session', 'Session 1')
-    ->where('to_session', 'Session 1')
-    ->exists();
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 1')
+                    ->where('to_session', 'Session 1')
+                    ->exists();
 
-if ($sessionCheck) {
-    // Case when both sessions are 'Session 1'
-    $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-        ->where('leave_applications.leave_status', 2)
-        ->where('from_session', 'Session 1')
-        ->where('to_session', 'Session 1')
-        ->where(function ($query) use ($date) {
-            $query->whereDate('from_date', '<=', $date)
-                  ->whereDate('to_date', '>=', $date);
-        })
-        ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-        ->exists();
-} else {
-    // Case when sessions are not both 'Session 1'
-    $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-        ->where('leave_applications.leave_status', 2)
-        ->where('from_session', 'Session 2')
-        ->where('to_session', 'Session 2')
-        ->where(function ($query) use ($date) {
-            $query->whereDate('from_date', '<=', $date)
-                  ->whereDate('to_date', '>=', $date);
-        })
-        ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-        ->exists();
-}
-return $leaveRecord;
-    } catch (\Exception $e) {
-        Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
-        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
-        return false; // Return false to handle the error gracefully
-    }
+                    if ($sessionCheck) {
+                        // Case when both sessions are 'Session 1'
+                        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                            ->where('leave_applications.leave_status', 2)
+                            ->where('from_session', 'Session 1')
+                            ->where('to_session', 'Session 1')
+                            ->where(function ($query) use ($date) {
+                                $query->whereDate('from_date', '<=', $date)
+                                    ->whereDate('to_date', '>=', $date);
+                            })
+                            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                            ->exists();
+                    } else {
+                        // Case when sessions are not both 'Session 1'
+                        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                            ->where('leave_applications.leave_status', 2)
+                            ->where('from_session', 'Session 2')
+                            ->where('to_session', 'Session 2')
+                            ->where(function ($query) use ($date) {
+                                $query->whereDate('from_date', '<=', $date)
+                                    ->whereDate('to_date', '>=', $date);
+                            })
+                            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                            ->exists();
+                    }
+                    return [
+                        'session' => $sessionCheck ? 'Session 1' : 'Session 2',
+                        'leaveRecord' => $leaveRecord,
+                    ];
+                        } catch (\Exception $e) {
+                            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
+                            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+                            return [
+                                'session' => null,
+                                'leaveRecord' => false,
+                            ]; // Return false to handle the error gracefully
+                        }
 }
 
     private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
@@ -1036,6 +1043,7 @@ return $leaveRecord;
                             'onFullDayLeave'=>'',
                             'onleave' => '',
                             'halfdaypresent'=>'',
+                            'session2leave'=>null,
 
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
@@ -1064,10 +1072,13 @@ return $leaveRecord;
                         }
                         else
                         {
-                            $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId);
+                            $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['leaveRecord'];
+                            $isOnSecondSessionLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['session'];
                         }
                        
                         Log::info('Is On Half Day Leave:', ['isOnHalfDayLeave' => $isOnHalfDayLeave]);
+                        Log::info('Is On Second Session Leave:', ['session2leave' => $isOnSecondSessionLeave]);
+                        
                         $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
                         Log::info('Leave Type:', ['leaveType' => $leaveType]);
                         if ($leaveType && !in_array($leaveType, $this->leaveTypes)) {
@@ -1087,9 +1098,14 @@ return $leaveRecord;
                                     ->whereDate('created_at', $date->toDateString())
                                     ->whereIn('in_or_out', ['IN', 'OUT'])
                                     ->get();
+                               $swipeoutRecords = SwipeRecord::where('emp_id', $employeeId)
+                                    ->whereDate('created_at', $date->toDateString())
+                                    ->whereIn('in_or_out', ['OUT'])
+                                    ->orderByDesc('created_at')
+                                    ->get();    
 
                                 $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
-                                $outSwipeTime = $swipeRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
+                                $outSwipeTime = $swipeoutRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
 
                                 if ($inSwipeTime) {
                                     Log::info('Swipe In Time for Date: ' . $date->toDateString() . ' is ' . $inSwipeTime->swipe_time);
@@ -1248,6 +1264,8 @@ return $leaveRecord;
                             'onFullDayLeave'=>$isBeforeToDate,
                             'status' => $status,
                             'halfdaypresent'=>$halfdaypresent,
+                            'session2leave'=>$isOnSecondSessionLeave,
+
                         ];
 
                         $dayCount++;
@@ -1265,6 +1283,8 @@ return $leaveRecord;
                             'status' => '',
                             'halfdaypresent'=>'',
                             'onFullDayLeave'=>'',
+                            'session2leave'=>null,
+
                         ];
                         $dayCount++;
                     }
@@ -2324,30 +2344,35 @@ return $leaveRecord;
                     }
                     $this->first_in_time_for_date = $firstInTime;
                     $this->last_out_time_for_date = $lastOutTime;
-
+                    $this->lateInTime='Late In';
                     $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
                 } elseif (!isset($this->currentDate2recordout) && isset($this->currentDate2recordin)) {
-                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);;
-                    $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);;
+                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
+                    $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
+                    
                 } else {
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
+                
                 }
                 if (Carbon::parse($this->currentDate2)->isWeekend()) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
+                    
                 } elseif ($this->isHolidayOnDate($this->currentDate2)) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
+                   
                 } elseif ($this->first_in_time == $this->last_out_time) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
+                   
                 } else {
                     $standardMinutesForShortFall = 9 * 60; // 9 hours in minutes (540 minutes)
                     $timeDifferenceForShortFall = $standardMinutesForShortFall - $this->timeDifferenceInMinutesForCalendar; // Subtracting the time difference
@@ -2360,8 +2385,10 @@ return $leaveRecord;
                     if ($timeDifferenceForShortFall == 0) {
                         $this->shortFallHrs = '08:59';
                         $this->excessHrs = '-';
+                       
                     } elseif ($this->timeDifferenceInMinutesForCalendar > $standardMinutesForShortFall) {
                         $this->shortFallHrs = '-';
+                      
                         $timeDifferenceForExcess = $this->timeDifferenceInMinutesForCalendar - $standardMinutesForShortFall;
                         $excesshours = floor($timeDifferenceForExcess / 60); // Get the full hours
                         $excessminutes = $timeDifferenceForExcess % 60; // Get the remaining minutes
@@ -2369,6 +2396,7 @@ return $leaveRecord;
                     } else {
                         $this->shortFallHrs = sprintf('%02d:%02d', $shortfallhours, $shortfallminutes);
                         $this->excessHrs = '-';
+                       
                     }
 
 

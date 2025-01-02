@@ -1684,23 +1684,35 @@ color: #fff;
                                                 
 
                                        @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend)  
-                                          <div style="background-color: rgb(252, 242, 255);margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                          <div style="background-color:{{ $day['onHalfDayLeave'] == true 
+                                                                                                                ? ($day['session2leave']== 'Session 1' ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
+                                                                                                                : '#ffffff'
+                                                                                                            }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
                                                         <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
-                                                        @if($day['status'] == 'CLP')
+                                                        @if($day['status'] == 'CLP'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
-                                                        @elseif($day['status'] == 'SL')
+                                                        @elseif($day['status'] == 'SL'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
-                                                        @elseif($day['status'] == 'LOP')
+                                                        @elseif($day['status'] == 'LOP'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
-                                                        @elseif($day['status'] == 'CL')
+                                                        @elseif($day['status'] == 'CL'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
-                                                        @elseif($day['status'] == 'ML')
+                                                        @elseif($day['status'] == 'ML'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Marriage Leave">ML</span>
-                                                        @elseif($day['status'] == 'PL')
+                                                        @elseif($day['status'] == 'PL'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
-                                                        @elseif($day['status'] == 'L')
+                                                        @elseif($day['status'] == 'L'&&$day['session2leave']=='Session 1')
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
+
+                                                        
+                                                   
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='A')
+                                                             <span style="background-color:  #fcf0f0;color: #f66;text-align:center;  margin-left: 7px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP')
+                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='P')
+                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
                                                         @endif     
                                                </div>   
                                        @else
@@ -1720,8 +1732,8 @@ color: #fff;
                                         @if($day['onHalfDayLeave']==true&&!$day['isToday'])
 
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 8px; background-color: {{ $day['onHalfDayLeave'] == true 
-                                                                                                                ? ($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) 
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 14px; background-color: {{ $day['onHalfDayLeave'] == true 
+                                                                                                                ? ($day['session2leave']== 'Session 2' ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
                                                                                                             }};">
                                             <!-- Render your grey circle -->
@@ -1738,7 +1750,23 @@ color: #fff;
 
                                                 @if($day['isPublicHoliday'])
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
-                                             
+                                                
+                                                @elseif($day['status'] == 'CLP'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 30px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
+                                                @elseif($day['status'] == 'SL'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
+                                                @elseif($day['status'] == 'LOP'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 10px; margin-left: 57px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
+                                                @elseif($day['status'] == 'CL'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
+                                                @elseif($day['status'] == 'ML'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Marriage Leave">ML</span>
+                                                @elseif($day['status'] == 'PL'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
+                                                @elseif($day['status'] == 'L'&&$day['session2leave']=='Session 2')
+                                                <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
+                                       
+
                                                 @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='A')
                                                 <span style="background-color:  #fcf0f0;color: #f66;text-align:center; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
                                                 @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP')
@@ -2226,8 +2254,7 @@ color: #fff;
                                 <tr>
                                     <th class="attendance-info-table-head">First&nbsp;In</th>
                                     <th class="attendance-info-table-head">Last&nbsp;Out</th>
-                                    <th class="attendance-info-table-head">Late&nbsp;In</th>
-                                    <th class="attendance-info-table-head">Early&nbsp;Out</th>
+                               
                                     <th class="attendance-info-table-head">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Break&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Actual&nbsp;Work&nbsp;Hrs</th>
@@ -2256,12 +2283,7 @@ color: #fff;
                                         -
                                         @endif
                                     </td>
-                                    <td class="attendance-info-table-data">
-                                        -
-                                    </td>
-                                    <td class="attendance-info-table-data">
-                                        -
-                                    </td>
+                                    
                                     <td>
                                         @if($this->first_in_time!=$this->last_out_time)
                                         {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
