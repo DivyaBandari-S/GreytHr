@@ -498,28 +498,10 @@ Route::get('/clear', function () {
 
 Route::get('/test-odbc', function () {
     try {
-        // Updated DSN for SQL Server
-        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
+        // Hard-coded DSN, username, and password
+        $dsn = 'Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
-
-        // Create a new PDO instance
-        $dbh = new PDO($dsn, $username, $password);
-
-        return "Connection successful!";
-    } catch (\PDOException $e) {
-        return "Connection failed: " . $e->getMessage();
-    }
-});
-
-
-
-Route::get('/test-odbc-env', function () {
-    try {
-        // Fetch details from .env file
-        $dsn = env('DB_ODBC_DSN');
-        $username = env('DB_ODBC_USERNAME');
-        $password = env('DB_ODBC_PASSWORD');
 
         // Create a new PDO instance
         $dbh = new PDO("odbc:{$dsn}", $username, $password);
@@ -533,52 +515,38 @@ Route::get('/test-odbc-env', function () {
     }
 });
 
-
-Route::get('/test-sqlsrv', function () {
+Route::get('/test-srv', function () {
     try {
-        $connection = DB::connection('sqlsrv')->getPdo();
-        return "Connected successfully to the SQL Server database!";
+        $pdo = DB::connection('sqlsrv')->getPdo();
+        if ($pdo) {
+            return "Connected successfully!";
+        }
     } catch (\Exception $e) {
-        return "Connection failed: " . $e->getMessage();
-    }
-});
-
-
-Route::get('/test-odbc-dir', function () {
-    try {
-        // Hard-coded DSN, username, and password for ODBC connection
-        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
-        $username = 'essl'; // Replace with your actual username
-        $password = 'essl'; // Replace with your actual password
-
-        // Create a new PDO instance
-        $dbh = new PDO($dsn, $username, $password);
-
-        // Define your table name and user ID
-        $tableName = 'DeviceLogs_1_2024'; // Replace with your actual table name
-        $normalizedUserId = 'XSS0480'; // Replace with your actual user ID
-        $today = now()->subYear()->toDateString();// Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
-
-        // Fetch data using raw PDO query
-        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction
-                               FROM {$tableName}
-                               WHERE UserId = ?
-                               AND CONVERT(DATE, logDate) = ?
-                               ORDER BY logDate");
-        $stmt->execute([$normalizedUserId, $today]);
-        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Debugging: Output the raw data fetched
-        dd($data);
-
-        // If the data is fetched successfully
-        return "Data fetched successfully!";
-    } catch (\PDOException $e) {
-        // Catch errors and display the error message
         return "Error: " . $e->getMessage();
     }
 });
 
+Route::get('/test-odbc-dir', function () {
+    try {
+        $dsn = 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+        $username = 'essl';
+        $password = 'essl';
+
+        $dbh = new PDO($dsn, $username, $password);
+
+        $tableName = 'DeviceLogs_12_2024';
+        $normalizedUserId = 'XSS0480';
+        $today = now()->toDateString();
+
+        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? ORDER BY logDate");
+        $stmt->execute([$normalizedUserId]);
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        dd($data);
+    } catch (\PDOException $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
 
 
 Route::get('/down', function () {
