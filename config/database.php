@@ -80,8 +80,8 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-            'host' => env('SECOND_DB_HOST'),
-            'port' => env('SECOND_DB_PORT'),
+            'host' => env('SECOND_DB_HOST','localhost'),
+            'port' => env('SECOND_DB_PORT', '1433'),
             'database' => env('SECOND_DB_DATABASE', 'forge'),
             'username' => env('SECOND_DB_USERNAME', 'forge'),
             'password' => env('SECOND_DB_PASSWORD', ''),

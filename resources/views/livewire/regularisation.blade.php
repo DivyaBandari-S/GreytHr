@@ -1131,10 +1131,11 @@
                             </div>
                         </div>
                         @endforeach
-
+                       
 
 
                     </div>
+                    <button type="button" class="btn-close position-absolute" style="top: 12px; right: 5px;" wire:click="removeContainerBox"></button>
                 </div>
                 @endif
                 <input type="text" placeholder="Enter Remarks" wire:model="remarks" class="remarks-input">
