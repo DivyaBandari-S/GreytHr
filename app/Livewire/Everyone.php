@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 class Everyone extends Component
 {
     
@@ -187,11 +188,10 @@ class Everyone extends Component
 
     public function submit()
     {
-        // Update validation to only allow image files
         $validatedData = $this->validate([
             'category' => 'required|string|max:255',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files with a max size of 2MB
+            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
     
         try {
@@ -199,9 +199,7 @@ class Everyone extends Component
             $mimeType = null;
             $fileName = null;
     
-            // Process the uploaded image file
             if ($this->file_path) {
-                // Validate file is an image
                 if (!in_array($this->file_path->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'])) {
                     session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
                     return;
@@ -210,71 +208,62 @@ class Everyone extends Component
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
+    
+                if ($fileContent === false || strlen($fileContent) > 16777215) {
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit or could not be read.');
+                    return;
+                }
             }
     
-            // Check if the file content is valid
-            if ($fileContent === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                return;
-            }
-    
-            // Check if the file content is too large (16MB limit for MEDIUMBLOB)
-            if (strlen($fileContent) > 16777215) {
-                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                return;
-            }
-    
-            // Get the authenticated user
             $user = Auth::user();
-    
-            // Get the authenticated employee ID and their details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
     
-            // Check if the authenticated employee is a manager
             $isManager = DB::table('employee_details')
                 ->where('manager_id', $employeeId)
                 ->exists();
     
-            // If not a manager, set `emp_id` instead of `manager_id`
-            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
+            $postStatus = $isManager ? 'Closed' : 'Pending';
             $managerId = $isManager ? $employeeId : null;
             $empId = $isManager ? null : $employeeId;
     
-            // Retrieve the HR details if applicable
             $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
     
-            // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' => $managerId, // Set manager_id only if the user is a manager
-                'emp_id' => $empId,          // Set emp_id only if the user is an employee
+                'manager_id' => $managerId,
+                'emp_id' => $empId,
                 'category' => $this->category,
                 'description' => $this->description,
-                'file_path' => $fileContent, // Store binary data in the database
+                'file_path' => $fileContent,
                 'mime_type' => $mimeType,
                 'file_name' => $fileName,
                 'status' => $postStatus,
             ]);
     
-            // Reset form fields and display success message
+            // Send email notification to manager
+            if ($managerId) {
+                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
+                if ($managerDetails && $managerDetails->email) {
+                    Mail::to($managerDetails->email)->send(new \App\Mail\PostCreatedNotification($post, $employeeDetails));
+                }
+            }
+    
             $this->reset(['category', 'description', 'file_path']);
-            FlashMessageHelper::flashSuccess( 'Post created successfully!');
+            FlashMessageHelper::flashSuccess('Post created successfully!');
             $this->showFeedsDialog = false;
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
+            Log::error('Error creating post: ' . $e->getMessage(), [
                 'employee_id' => $employeeId ?? 'N/A',
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the post. Please try again.');
         }
     }
+    
     
     
 
