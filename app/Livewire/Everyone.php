@@ -165,6 +165,7 @@ class Everyone extends Component
     $urls = [
         'posts' => '/everyone',
         'activities' => '/Feeds',
+        'kudos' => '/kudos',
         'post-requests'=>'/emp-post-requests'
         // Add more mappings if necessary
     ];
