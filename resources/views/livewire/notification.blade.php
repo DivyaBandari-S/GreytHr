@@ -12,7 +12,7 @@
             <i class='fas fa-comment-dots icon notifications-pointer '></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
-                  {{ $chatNotificationCount }}
+                {{ $chatNotificationCount }}
             </span>
             @endif
         </div>
@@ -25,9 +25,8 @@
         </div>
         <div class="notification-horizontal-line"></div>
         <div class="offcanvas-body">
-
-            @if($totalBirthdays>0)
-            @if($totalBirthdays==1)
+            @if($totalBirthdays>0 && $getRemainingBirthday)
+            @if($totalBirthdays == 1 )
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" title="{{ ucwords(strtolower($getRemainingBirthday->first_name)) }} {{ ucwords(strtolower($getRemainingBirthday->last_name)) }}
                             (#{{ $getRemainingBirthday->emp_id }}) is Celebrating birthday today" class="notification-head">
@@ -54,7 +53,78 @@
                     <p class="notify-time-para">{{$birthdayTime}}</p>
                 </div>
             </div>
+            @endif
+            @endif
 
+            @if($totalJoinees>0 && $getRemainingJoinees)
+            @if($totalJoinees == 1 )
+            @php
+            $currentYear = \Carbon\Carbon::now()->year;
+            $hireYear = \Carbon\Carbon::parse($getRemainingJoinees->hire_date)->year;
+            @endphp
+            @if($hireYear != $currentYear)
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#"
+                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                        title="Congratulations to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+       (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s)!"
+                        class="notification-head">
+                        Congratulations to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                        (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s)!
+                    </a>
+                </p>
+
+                @if($getRemainingJoinees->gender == 'MALE')
+                <p class="mb-0 notification-text-para">
+                    Please congratulate {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                </p>
+                @else
+                <p class="mb-0 notification-text-para">
+                    Please congratulate {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                </p>
+                @endif
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @else
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#"
+                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                        title="Welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }} (#{{ $getRemainingJoinees->emp_id }}) who has joined the company!"
+                        class="notification-head">
+                        Welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                        (#{{ $getRemainingJoinees->emp_id }}) who has joined the company!
+                    </a>
+                </p>
+
+                <p class="mb-0 notification-text-para">
+                    Please join us in welcoming {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) to the company, who has joined us on {{ \Carbon\Carbon::parse($getRemainingJoinees->hire_date)->format('d M, Y') }}
+                    .
+                </p>
+
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+
+            @endif
+            @else
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                        Congratulations to {{$totalJoinees}} members on completing their successful year(s)!
+                    </a></p>
+
+                <p class="mb-0 notification-text-para">Please congratulate them. </p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
             @endif
             @endif
 

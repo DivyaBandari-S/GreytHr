@@ -18,8 +18,11 @@ use App\Models\Notification;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Mail\PostCreatedNotification;
+
 use Illuminate\Http\Request;
 use App\Models\EmojiReaction;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Employee;
 use App\Models\Emoji;
 use Livewire\WithFileUploads;
@@ -656,12 +659,12 @@ public function loadaddComments()
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files with a max size of 2MB
         ]);
-
+    
         try {
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-
+    
             // Process the uploaded image file
             if ($this->file_path) {
                 // Validate file is an image
@@ -669,12 +672,12 @@ public function loadaddComments()
                     session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
                     return;
                 }
-
+    
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
             }
-
+    
             // Check if the file content is valid
             if ($fileContent === false) {
                 Log::error('Failed to read the uploaded file.', [
@@ -683,51 +686,72 @@ public function loadaddComments()
                 FlashMessageHelper::flashError('Failed to read the uploaded file.');
                 return;
             }
-
+    
             // Check if the file content is too large (16MB limit for MEDIUMBLOB)
             if (strlen($fileContent) > 16777215) {
                 FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
                 return;
             }
-
-            // Get the authenticated user
-            $user = Auth::user();
-
+    
             // Get the authenticated employee ID and their details
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+    
+            if (!$employeeDetails) {
+                FlashMessageHelper::flashError('Employee details not found.');
+                return;
+            }
+    
+            // Fetch the manager_id of the current employee
+            $managerId = $employeeDetails->manager_id;
+    
+            if (!$managerId) {
+                FlashMessageHelper::flashError('Manager information not found for the current employee.');
+                return;
+            }
+    
             // Check if the authenticated employee is a manager
             $isManager = DB::table('employee_details')
                 ->where('manager_id', $employeeId)
                 ->exists();
-
-            // If not a manager, set `emp_id` instead of `manager_id`
-            $postStatus = $isManager ? 'Closed' : 'Pending'; // Set to 'Closed' if the user is a manager
-            $managerId = $isManager ? $employeeId : null;
+    
+            $postStatus = $isManager ? 'Closed' : 'Pending';
             $empId = $isManager ? null : $employeeId;
-
+    
             // Retrieve the HR details if applicable
-            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
-
+            $hrDetails = Hr::where('hr_emp_id', $employeeDetails->hr_emp_id)->first();
+    
             // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' => $managerId, // Set manager_id only if the user is a manager
-                'emp_id' => $empId,          // Set emp_id only if the user is an employee
+                'manager_id' => $managerId, // Use the fetched manager_id
+                'emp_id' => $empId,
                 'category' => $this->category,
                 'description' => $this->description,
-                'file_path' => $fileContent, // Store binary data in the database
+                'file_path' => $fileContent,
                 'mime_type' => $mimeType,
                 'file_name' => $fileName,
                 'status' => $postStatus,
             ]);
-
+    
+            // Send email notifications
+            $managerDetails = EmployeeDetails::where('emp_id', $employeeDetails->manager_id)->first();
+            if ($managerDetails && $managerDetails->email) {
+                $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
+               
+                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+            }
+           // Optionally, send email to HR
+            if ($hrDetails && $hrDetails->email) {
+                $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
+                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+            }
+    
             // Reset form fields and display success message
             $this->reset(['category', 'description', 'file_path']);
-            FlashMessageHelper::flashSuccess ( 'Post created successfully!');
+            FlashMessageHelper::flashSuccess('Post created successfully!');
             $this->showFeedsDialog = false;
-
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
@@ -735,9 +759,10 @@ public function loadaddComments()
                 'employee_id' => $employeeId ?? 'N/A',
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            FlashMessageHelper::flashError ('An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    
 
 
 
