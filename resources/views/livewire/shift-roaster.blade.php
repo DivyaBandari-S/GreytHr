@@ -441,7 +441,11 @@
                 <tr>
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"data-toggle="tooltip" data-placement="top"
                     title="{{ ucwords(strtolower($emp->first_name)) }} {{ ucwords(strtolower($emp->last_name)) }}({{ $emp->emp_id }})">
-                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role)),}}{{ucwords(strtolower($emp->job_location))}}</span>
+                        {{ucwords(strtolower($emp->first_name))}}&nbsp;{{ucwords(strtolower($emp->last_name))}}<span class="text-muted">(#{{$emp->emp_id}})</span><br /><span class="text-muted" style="font-size:11px;">{{ucwords(strtolower($emp->job_role))}}
+                            @if(!empty($emp->job_location))
+                            <span>, {{ucwords(strtolower($emp->job_location))}}</span>
+                            @endif
+                        </span>
                     </td>
 
 
