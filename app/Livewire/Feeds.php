@@ -30,6 +30,8 @@ use App\Services\GoogleDriveService;
 use App\Models\Addcomment;
 use App\Models\Company;
 use App\Models\Hr;
+use App\Models\Kudos;
+use App\Models\KudosReactions;
 use Illuminate\Support\Facades\Session;
 use App\Models\Post;
 
@@ -349,6 +351,9 @@ class Feeds extends Component
 
     ];
 
+    public function validateField($field)
+    {
+
         $this->validateOnly($field, $this->rules);
     }
     public function validateKudos(){
@@ -360,9 +365,9 @@ class Feeds extends Component
         ]);
     } 
 
-    public function toggleEmojiPicker()
+    public function toggleKudosEmojiPicker()
     {
-        $this->showEmojiPicker = !$this->showEmojiPicker;
+        $this->showKudoEmojiPicker = !$this->showKudoEmojiPicker;
     }
 
 
