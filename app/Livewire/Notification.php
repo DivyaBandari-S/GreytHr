@@ -26,9 +26,13 @@ class Notification extends Component
     public $leavenotifications, $leavecancelnotifications;
     public $tasknotifications;
     public $successfulYears;
+    public $expEmpRecord;
+
     public $totalnotifications;
     public $totalnotificationscount;
     public $birthdayRecord;
+
+    public $totalExpEmp;
     public $manager_id;
     public $totalBirthdays;
     public $isYourBirthday = false;
@@ -40,6 +44,7 @@ class Notification extends Component
     public $totalJoinees;
     public $joiningTime;
 
+    public $getRemainingExpEmp;
     public $empIdForRegularisation;
 
     public $regularisationRejectNotifications;
@@ -374,14 +379,14 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->first();
-                }else{
+                } else {
                     $this->getRemainingExpEmp = EmployeeDetails::whereMonth('hire_date', $currentMonth)
-                    ->whereDay('hire_date', $currentDay)
-                    ->whereYear('hire_date', '!=', date('Y'))
-                    ->whereNotIn('employee_status', ['resigned', 'terminated'])
-                    ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
-                    ->select('employee_details.*')
-                    ->get();
+                        ->whereDay('hire_date', $currentDay)
+                        ->whereYear('hire_date', '!=', date('Y'))
+                        ->whereNotIn('employee_status', ['resigned', 'terminated'])
+                        ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                        ->select('employee_details.*')
+                        ->get();
                 }
                 //  dd( $this->totalBirthdays);
 
@@ -429,16 +434,15 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->first();
-                }else{
+                } else {
                     $this->getRemainingJoinees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
-                    ->whereDay('hire_date', $currentDay)
-                    ->whereYear('hire_date', '=', date('Y'))
-                    ->whereNotIn('employee_status', ['resigned', 'terminated'])
-                    ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
-                    ->select('employee_details.*')
-                    ->get();
+                        ->whereDay('hire_date', $currentDay)
+                        ->whereYear('hire_date', '=', date('Y'))
+                        ->whereNotIn('employee_status', ['resigned', 'terminated'])
+                        ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
+                        ->select('employee_details.*')
+                        ->get();
                 }
-
             }
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
@@ -470,21 +474,21 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
-            $this->regularisationNotifications=  DB::table('notifications')  
-            ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+            $this->regularisationNotifications =  DB::table('notifications')
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
 
-            ->where('notification_type', 'regularisationApply')
+                ->where('notification_type', 'regularisationApply')
                 ->where('is_read', 0)
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
-                $this->regularisationRejectNotifications=  DB::table('notifications')  
+            $this->regularisationRejectNotifications =  DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
-    
+
                 ->where('notification_type', 'regularisationReject')
-                    ->where('is_read', 0)
-                    ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
-                    ->get();    
-            
+                ->where('is_read', 0)
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
+                ->get();
+
             $this->leavenotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->where(function ($query) use ($loggedInEmpId) {
@@ -545,10 +549,10 @@ class Notification extends Component
 
 
             if ($this->totalBirthdays > 0 || $this->totalJoinees > 0 || $this->totalExpEmp > 0) {
-                $this->totalnotificationscount = $this->totalnotifications->count() 
-                                                + ($this->totalBirthdays > 0 ? 1 : 0) 
-                                                + ($this->totalJoinees > 0 ? 1 : 0) 
-                                                + ($this->totalExpEmp > 0 ? 1 : 0);
+                $this->totalnotificationscount = $this->totalnotifications->count()
+                    + ($this->totalBirthdays > 0 ? 1 : 0)
+                    + ($this->totalJoinees > 0 ? 1 : 0)
+                    + ($this->totalExpEmp > 0 ? 1 : 0);
             } else {
                 $this->totalnotificationscount = $this->totalnotifications->count();
             }
