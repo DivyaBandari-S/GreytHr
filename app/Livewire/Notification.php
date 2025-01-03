@@ -26,6 +26,8 @@ class Notification extends Component
     public $leavenotifications, $leavecancelnotifications;
     public $tasknotifications;
     public $successfulYears;
+    public $expEmpRecord;
+
     public $totalnotifications;
     public $totalnotificationscount;
     public $birthdayRecord;
@@ -42,6 +44,7 @@ class Notification extends Component
     public $totalJoinees;
     public $joiningTime;
 
+    public $getRemainingExpEmp;
     public $empIdForRegularisation;
 
     public $regularisationRejectNotifications;

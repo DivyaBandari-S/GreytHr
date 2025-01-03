@@ -30,6 +30,8 @@ use App\Services\GoogleDriveService;
 use App\Models\Addcomment;
 use App\Models\Company;
 use App\Models\Hr;
+use App\Models\Kudos;
+use App\Models\KudosReactions;
 use Illuminate\Support\Facades\Session;
 use App\Models\Post;
 
@@ -67,7 +69,7 @@ class Feeds extends Component
 
     public $comments = [];
 
-    public $sortType='newest';
+    public $sortType = 'newest';
     public $newComment = '';
     public $employeeDetails;
     public $status;
@@ -84,9 +86,9 @@ class Feeds extends Component
     public $message = '';
     public $isManager;
     public $flashMessage = '';
-      public $storedemojis;
-      public $showDialog = false;
-      public $showDialogEmoji=false;
+    public $storedemojis;
+    public $showDialog = false;
+    public $showDialogEmoji = false;
 
     public $showFeedsDialog = false;
     public $showKudosDialog = false;
@@ -94,20 +96,171 @@ class Feeds extends Component
     public $empCompanyLogoUrl;
 
     public $combinedData = [];
+
+    // In your Livewire Component
+    public $recognizeType = [];  // Array to store selected values
+    public $searchTerm = '';  // Store search term
+    public $dropdownOpen = false;  // Boolean flag to manage dropdown visibility
+    public $kudosId; // Store the kudos ID
+    public $kudoMessage; // Store the message content
+    public $reactions = []; // Store reactions for this kudos post
+    public $showKudoEmojiPicker = false; // Track if the emoji picker is visible
+    public $postType = 'appreciations';
+    public function updatePostType($value)
+    {
+        $this->postType = $value;  // Update postType when the select changes
+    }
+
+
+    // Array of options with the label and description
+    public $options = [
+        'Approachable' => 'You work well with others',
+        'Articulate' => 'You can express yourself well in front of groups.',
+        'Autonomous' => 'You are a self-starter with lots of initiative and agency.',
+        'Collaborator' => 'You are a teamwork champion and culture builder.',
+        'Competitive' => 'You thrive under pressure.',
+        'Creative' => 'You are the endless source of original ideas.',
+        'Devoted' => 'You are committed to the company\'s success.',
+        'Efficient' => 'You have a very quick turnaround time.',
+        'Enthusiastic' => 'You put all in every project.',
+        'Independent' => 'You need a little direction.',
+        'Innovator' => 'You are the visionary boundary-pusher.',
+        'Leader' => 'You set an example for an exemplary role model and empowerer.',
+        'Learner' => 'You can learn new things and put that learning to good use.',
+        'Motivator' => 'You are the true inspiration and change driver.',
+        'Open-minded' => 'You take constructive criticism well.',
+        'Opinionated' => 'You are comfortable voicing opinions.',
+        'Planning' => 'You can come up with a good plan for a project or initiative.',
+        'Problem Solver' => 'You can solve problems in the most elegant and effective manner.',
+        'Resourceful' => 'You use every tool at hand.',
+        'Strategist' => 'You have the planning mastery with clear vision.',
+        'Team Player' => 'You foster unity and team binding.',
+    ];
+    private $reactionEmojis = [
+        'thumbs_up' => '👍',
+        'heart' => '❤️',
+        'clap' => '👏',
+        'laugh' => '😂',
+        'surprised' => '😲',
+        'sad' => '😢',
+        'fire' => '🔥',
+        'star' => '⭐',
+        'party' => '🎉',
+        'thinking' => '🤔',
+        'love' => '😍',
+        'happy' => '😀',
+        'grin' => '😁',
+        'joy' => '😂',
+        'smile' => '😃',
+        'big_smile' => '😄',
+        'sweat_smile' => '😅',
+        'laughing' => '😆',
+        'angel' => '😇',
+        'devil' => '😈',
+        'wink' => '😉',
+        'blush' => '😊',
+        'tongue_out' => '😋',
+        'in_love' => '😍',
+        'relieved' => '😌',
+        'cool' => '😎',
+        'smirk' => '😏',
+        'neutral' => '😐',
+        'expressionless' => '😑',
+        'unamused' => '😒',
+        'pensive' => '😓',
+        'disappointed' => '😔',
+        'confused' => '😕',
+        'confounded' => '😖',
+        'kissing' => '😗',
+        'blowing_kiss' => '😘',
+        'kissing_heart' => '😙',
+        'kissing_smiling_eyes' => '😚',
+        'stuck_out_tongue' => '😛',
+        'stuck_out_tongue_winking_eye' => '😜',
+        'stuck_out_tongue_closed_eyes' => '😝',
+        'disappointed_relieved' => '😞',
+        'worried' => '😟',
+        'angry' => '😠',
+        'rage' => '😡',
+        'cry' => '😢',
+        'persevere' => '😣',
+        'angry_face' => '😤',
+        'disappointed_face' => '😥',
+        'frowning' => '😦',
+        'anguished' => '😧',
+        'fearful' => '😨',
+        'weary' => '😩',
+        'sleepy' => '😪',
+        'tired_face' => '😫',
+        'grimacing' => '😬',
+        'sob' => '😭',
+        'astonished' => '😮',
+        'hushed' => '😯',
+        'open_mouth' => '😲',
+        'flushed' => '😳',
+        'sleeping' => '😴',
+        'dizzy_face' => '😵',
+        'face_without_mouth' => '😶',
+        'mask' => '😷',
+        'raised_hand' => '👋',
+        'raised_back_of_hand' => '✋',
+        'hand' => '🖐',
+        'vulcan_salute' => '🖖',
+        'raised_hand_with_fingers_splayed' => '🤚',
+        'point_up' => '☝',
+        'point_up_2' => '👆',
+        'point_down' => '👇',
+        'point_left' => '👈',
+        'point_right' => '👉',
+        'middle_finger' => '🖕',
+        'fist_raised' => '✊',
+        'fist' => '👊',
+        'thumbs_up_reversed' => '👍',
+        'victory_hand' => '✌',
+        'ok_hand' => '👌',
+        'pinching_hand' => '🤏',
+    ];
+
+    public $recognizeOptions = [];
+
+    public function searchRecognizeValues()
+    {
+        if ($this->searchTerm) {
+            $filteredOptions = collect($this->options)
+                ->filter(function ($value, $key) {
+                    return strpos(strtolower($key), strtolower($this->searchTerm)) !== false;
+                })
+                ->toArray();
+            $this->recognizeOptions =   $filteredOptions;
+        } else {
+            $this->recognizeOptions = $this->options;
+        }
+    }
+
+    public function recognizeToggleDropdown()
+    {
+        $this->dropdownOpen = !$this->dropdownOpen;  // Toggle dropdown visibility
+    }
+
+    public function updatedSearchTerm()
+    {
+        // This method is triggered whenever the searchTerm changes, and Livewire will automatically refresh the view
+    }
+
     public function closeMessage()
     {
         $this->showMessage = false;
     }
     public function openPost($postId)
-{
-    $post = Post::find($postId);
+    {
+        $post = Post::find($postId);
 
-    if ($post) {
-        $post->update(['status' => 'Open']);
+        if ($post) {
+            $post->update(['status' => 'Open']);
+        }
+
+        return redirect()->to('/feeds'); // Redirect to the appropriate route
     }
-
-    return redirect()->to('/feeds'); // Redirect to the appropriate route
-}
 
     public function addFeeds()
     {
@@ -116,6 +269,61 @@ class Feeds extends Component
     public function addKudos()
     {
         $this->showKudosDialog = true;
+    }
+    public function close()
+    {
+        $this->showKudosDialog = false;
+    }
+    public $search1 = ''; // Property for the search field
+    public $employees1 = []; // Property to hold employee data
+    public $selectedEmployee = null;
+    public function selectEmployee($employeeId)
+    {
+
+        $this->selectedEmployee = EmployeeDetails::find($employeeId); // Find and store selected employee
+        $this->validateOnly('selectedEmployee');
+        $this->search1 = '';
+    }
+
+    public function removeSelectedEmployee()
+    {
+        $this->selectedEmployee = null; // Reset the selected employee
+        $this->search1 = '';  // Optionally clear the search input field
+    }
+
+
+    public function searchEmployees()
+    {
+
+        $loggedInId = auth()->guard('emp')->user()->emp_id;
+
+        // Fetch all employees excluding the logged-in one
+        $employees = EmployeeDetails::query()
+            ->where('emp_id', '!=', $loggedInId) // Exclude the logged-in employee's record
+            ->get(['first_name', 'last_name', 'emp_id']); // Fetch only the required fields
+
+        // Filter based on search input
+        if ($this->search1) {
+            $filteredEmployees = $employees->filter(function ($employee) {
+                return str_contains(strtolower($employee->first_name), strtolower($this->search1)) ||
+                    str_contains(strtolower($employee->last_name), strtolower($this->search1)) ||
+                    str_contains(strtolower($employee->emp_id), strtolower($this->search1));
+            });
+
+            // If search term is entered, update the employees list
+            $this->employees1 = collect($filteredEmployees);
+        } else {
+            // If no search term, set employees1 to an empty collection
+            $this->employees1 = collect();
+        }
+    }
+
+    public function removeItem($type)
+    {
+        $this->recognizeType = array_filter($this->recognizeType, function ($item) use ($type) {
+            return $item !== $type;
+        });
+        $this->recognizeType = array_values($this->recognizeType); // Reindex array
     }
 
     public function closeFeeds()
@@ -134,6 +342,7 @@ class Feeds extends Component
         'category' => 'required',
         'description' => 'required',
         'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
+
     ];
     protected $messages = [
         'category.required' => 'Category is required.',
@@ -142,16 +351,137 @@ class Feeds extends Component
 
     ];
 
-
-    public function toggleEmojiPicker()
+    public function validateField($field)
     {
-        $this->showEmojiPicker = !$this->showEmojiPicker;
+
+        $this->validateOnly($field, $this->rules);
+    }
+    public function validateKudos(){
+        $this->validate([
+           'message' => 'required|string|min:5',
+        'selectedEmployee' => 'required',
+         
+        
+        ]);
+    } 
+
+    public function toggleKudosEmojiPicker()
+    {
+        $this->showKudoEmojiPicker = !$this->showKudoEmojiPicker;
     }
 
 
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
+    }
+
+    public function resetFields()
+    {
+        $this->message = '';
+        $this->selectedEmployee = null;
+        $this->postType = '';
+        $this->recognizeType = [];
+        $this->reactions = [];
+    }
+
+    public function submitKudos()
+    {
+
+
+        // Debug logs
+        $validatedData = $this->validateKudos();
+       
+        Log::debug('Recognize Type:', $this->recognizeType);
+        Log::debug('Reactions:', $this->reactions);
+        $emojiReactions = [];
+        foreach ($this->reactions as $reactionKey) {
+            if (isset($this->reactionEmojis[$reactionKey])) {
+                $emojiReactions[] =  [
+                    'emoji' => $this->reactionEmojis[$reactionKey],  // The emoji character
+                    'employee_id' => Auth::user()->emp_id,  // The employee who reacted
+                    'created_at' => now(),  // Timestamp when the reaction was created
+                ]; // Get the emoji character
+            }
+        }
+
+        // Ensure recognizeType and reactions are properly encoded as JSON
+        $recognizeTypeJson = !empty($this->recognizeType) ? json_encode($this->recognizeType) : null;
+        $reactionsJson = !empty($emojiReactions) ? json_encode($emojiReactions) : null;
+
+
+
+        // Save Kudos entry
+        Kudos::create([
+            'employee_id' => Auth::user()->emp_id,  // Assuming the logged-in employee
+            'recipient_id' => $this->selectedEmployee->emp_id,
+            'message' => $this->message,
+            'recognize_type' => $recognizeTypeJson,  // Save the encoded JSON
+            'reactions' => $reactionsJson,  // Save the encoded JSON
+            'post_type' => $this->postType,  // Save the postType
+        ]);
+
+        // Reset form fields after submission
+        $this->resetFields();
+         FlashMessageHelper::flashSuccess('Kudos given successfully!');
+            $this->showKudosDialog = false;
+    }
+
+
+    public function toggleEmojiPicker()
+    {
+        $this->showEmojiPicker = !$this->showEmojiPicker;
+    }
+
+    public function addReaction($reaction)
+    {
+        if (!in_array($reaction, $this->reactions)) {
+            $this->reactions[] = $reaction;
+
+            // Save to kudos_reactions table
+            KudosReactions::create([
+                'employee_id' => Auth::user()->emp_id,
+                'reaction' => $reaction,
+            ]);
+        }
+
+        // Close the emoji picker after selection
+        $this->showKudoEmojiPicker = false;
+
+        // Update the kudos reactions in the kudos table
+        $this->updateKudosReactions();
+    }
+
+    private function updateKudosReactions()
+    {
+        // Encode reactions array as JSON
+        $encodedReactions = json_encode($this->reactions);
+
+        // Update the kudos table with the new reactions
+        Kudos::where('id', $this->kudosId)->update(['reactions' => $encodedReactions]);
+    }
+    public function getReactionEmojis()
+    {
+        return $this->reactionEmojis;
+    }
+
+    // Get emoji for a given reaction
+    public function getEmoji($reaction)
+    {
+        return $this->reactionEmojis[$reaction] ?? ''; // Return empty if not found
+    }
+    public function removeKudosReaction($reaction)
+    {
+        $this->reactions = array_filter($this->reactions, fn($item) => $item !== $reaction);
+        $this->reactions = array_values($this->reactions); // Reindex the array
+
+        // Remove from the kudos_reactions table
+        KudosReactions::where('employee_id', Auth::user()->emp_id)
+            ->where('reaction', $reaction)
+            ->delete();
+
+        // Update the kudos reactions in the kudos table
+        $this->updateKudosReactions();
     }
 
     public function mount()
@@ -188,12 +518,10 @@ class Feeds extends Component
                 $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
 
                 $this->loadComments();
-      $employeeId = Auth::guard('emp')->user()->emp_id;
-      $this->isManager = DB::table('employee_details')
-          ->where('manager_id', $employeeId)
-          ->exists();
-
-
+                $employeeId = Auth::guard('emp')->user()->emp_id;
+                $this->isManager = DB::table('employee_details')
+                    ->where('manager_id', $employeeId)
+                    ->exists();
             }
         } else {
             // If no parent company is found
@@ -259,9 +587,9 @@ class Feeds extends Component
         $today=now();
         $currentDate = $today->toDateString();
         $birthdayRecord = Notification::where('body', $currentDate)
-        ->where('assignee',$authCompanyId[0])
-        ->where('notification_type', 'birthday')
-        ->first();
+            ->where('assignee', $authCompanyId[0])
+            ->where('notification_type', 'birthday')
+            ->first();
         if ($birthdayRecord) {
             // Decode the JSON field into a PHP array
             $isBirthdayRead = json_decode($birthdayRecord->is_birthday_read, true);
@@ -329,7 +657,7 @@ class Feeds extends Component
 
 
         $this->showDialog = true;
-          // Fetch the latest emoji reactions for the specific employee
+        // Fetch the latest emoji reactions for the specific employee
 
     }
     public function openEmojiDialog($emp_id)
@@ -340,24 +668,25 @@ class Feeds extends Component
         $this->currentCardEmojis = Emoji::where('emp_id', $emp_id)->get();
 
 
- $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
+        $this->allEmojis = Emoji::where('emp_id', $emp_id)->get();
         $this->showDialogEmoji = true;
     }
     public function handleRadioChange($value)
-{
-    // Define the URLs based on the radio button value
-    $urls = [
-        'posts' => '/everyone',
-        'activities' => '/Feeds',
-        'post-requests'=>'/emp-post-requests'
-        // Add more mappings if necessary
-    ];
+    {
+        // Define the URLs based on the radio button value
+        $urls = [
+            'posts' => '/everyone',
+            'activities' => '/Feeds',
+            'kudos' => '/kudos',
+            'post-requests' => '/emp-post-requests'
+            // Add more mappings if necessary
+        ];
 
-    // Redirect to the correct URL
-    if (array_key_exists($value, $urls)) {
-        return redirect()->to($urls[$value]);
+        // Redirect to the correct URL
+        if (array_key_exists($value, $urls)) {
+            return redirect()->to($urls[$value]);
+        }
     }
-}
 
     public function closeEmojiDialog()
     {
@@ -372,13 +701,13 @@ class Feeds extends Component
         try {
             // Locate the emoji based on ID
             $emoji_reaction = EmojiReaction::find($emojiId);
-            
+
             if ($emoji_reaction && $emoji_reaction->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
                 $emoji_reaction->delete();
-    
+
                 // Dispatch a success message
                 FlashMessageHelper::flashSuccess('You have removed your reaction.');
-    
+
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
                 $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
@@ -395,13 +724,13 @@ class Feeds extends Component
         try {
             // Locate the emoji based on ID
             $emoji = Emoji::find($emojiId);
-            
+
             if ($emoji && $emoji->emp_id === auth()->user()->emp_id) { // Check if the emoji belongs to the logged-in user
                 $emoji->delete();
-    
+
                 // Dispatch a success message
                 FlashMessageHelper::flashSuccess('You have removed your reaction.');
-    
+
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
                 $this->dispatch('emojiRemoved', ['emojiId' => $emojiId]);
@@ -440,26 +769,24 @@ class Feeds extends Component
 
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            FlashMessageHelper::flashError( 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
 
         // Create the comment based on the authenticated role
         if ($employeeId) {
-        // Create emoji record
-        Emoji::create([
-            'card_id' => $emp_id,
-            'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'emoji' => $this->selectedEmoji ?? '',
-        ]);
-
-    }
+            // Create emoji record
+            Emoji::create([
+                'card_id' => $emp_id,
+                'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'emoji' => $this->selectedEmoji ?? '',
+            ]);
+        }
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->storedemojis = Emoji::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
     }
     public function createemoji($emp_id)
     {
@@ -485,23 +812,21 @@ class Feeds extends Component
 
         // Create the comment based on the authenticated role
         if ($employeeId) {
-        // Validate if needed
+            // Validate if needed
 
-        // Create emoji record
-        EmojiReaction::create([
-            'card_id' => $emp_id,
-            'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
-            'first_name' => $user->first_name,
-            'last_name' => $user->last_name,
-            'emoji_reaction' => $this->selectedEmojiReaction ?? '',
-        ]);
-    }
+            // Create emoji record
+            EmojiReaction::create([
+                'card_id' => $emp_id,
+                'emp_id' =>  $employeeId, // Assuming emp_id is available in the user object
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'emoji_reaction' => $this->selectedEmojiReaction ?? '',
+            ]);
+        }
 
         // Optionally, toggle emoji list visibility off
         $this->isEmojiListVisible = false;
         $this->emojis = EmojiReaction::whereIn('emp_id', $this->employees->pluck('emp_id'))->get();
-
-
     }
 
     public function getComments($sortType)
@@ -537,7 +862,7 @@ class Feeds extends Component
 
         // Ensure that either $employeeId or $hrId is set
         if (is_null($employeeId) && is_null($hrId)) {
-            FlashMessageHelper::flashError( 'Employee ID cannot be null.');
+            FlashMessageHelper::flashError('Employee ID cannot be null.');
             return;
         }
 
@@ -563,13 +888,11 @@ class Feeds extends Component
         $this->reset(['newComment']);
         $this->isSubmitting = false;
 
-        $this->comments = Comment::with('employee','hr')
+        $this->comments = Comment::with('employee', 'hr')
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-
-
     }
     public function createcomment($emp_id)
     {
@@ -595,7 +918,7 @@ class Feeds extends Component
 
         // Create the comment based on the authenticated role
         if ($employeeId) {
-           AddComment::create([
+            AddComment::create([
                 'card_id' => $emp_id,
                 'emp_id' => $employeeId,
 
@@ -616,15 +939,12 @@ class Feeds extends Component
         $this->isSubmitting = false;
 
 
-            $this->addcomments = Addcomment::with('employee')
+        $this->addcomments = Addcomment::with('employee')
             ->whereIn('emp_id', $this->employees->pluck('emp_id'))
             ->orderByDesc('created_at')
             ->get();
-
-
-
     }
-    protected $listeners = ['updateSortType','emojiRemoved' => 'handleEmojiRemoval'];
+    protected $listeners = ['updateSortType', 'emojiRemoved' => 'handleEmojiRemoval'];
     // Toggle dropdown visibility
     public function toggleDropdown()
     {
@@ -637,72 +957,66 @@ class Feeds extends Component
         $this->sortType = $sortType;
 
         $this->loadComments();
-
-
     }
 
     public function loadComments()
-{
-    // Fetch all comments initially
-    $commentsQuery = Comment::with('employee', 'hr')
-        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
-        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
+    {
+        // Fetch all comments initially
+        $commentsQuery = Comment::with('employee', 'hr')
+            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
 
-    // Fetch all comments
-    $allComments = $commentsQuery->get();
+        // Fetch all comments
+        $allComments = $commentsQuery->get();
 
-    // Group comments by card_id and filter card_ids with more than 2 comments
-    $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
-        ->filter(function ($comments) {
-            return $comments->count() > 2;
-        })
-        ->keys();
+        // Group comments by card_id and filter card_ids with more than 2 comments
+        $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
+            ->filter(function ($comments) {
+                return $comments->count() > 2;
+            })
+            ->keys();
 
-    // Fetch comments only for those card IDs
-    $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
+        // Fetch comments only for those card IDs
+        $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
 
-    // Sort the filtered comments based on the sortType
-    if ($this->sortType === 'interacted') {
-        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
-    } else {
-        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+        // Sort the filtered comments based on the sortType
+        if ($this->sortType === 'interacted') {
+            $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
+        } else {
+            $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+        }
+
+        $this->comments = $filteredCommentsQuery->get();
     }
+    public function loadaddComments()
+    {
+        // Fetch all comments initially
+        $commentsQuery = Comment::with('employee', 'hr')
+            ->whereIn('emp_id', $this->employees->pluck('emp_id'))
+            ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
 
-    $this->comments = $filteredCommentsQuery->get();
+        // Fetch all comments
+        $allComments = $commentsQuery->get();
 
+        // Group comments by card_id and filter card_ids with more than 2 comments
+        $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
+            ->filter(function ($comments) {
+                return $comments->count() > 2;
+            })
+            ->keys();
 
-}
-public function loadaddComments()
-{
-    // Fetch all comments initially
-    $commentsQuery = Comment::with('employee', 'hr')
-        ->whereIn('emp_id', $this->employees->pluck('emp_id'))
-        ->orWhereIn('hr_emp_id', $this->employees->pluck('emp_id'));
+        // Fetch comments only for those card IDs
+        $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
 
-    // Fetch all comments
-    $allComments = $commentsQuery->get();
+        // Sort the filtered comments based on the sortType
+        if ($this->sortType === 'interacted') {
+            $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
+        } else {
+            $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+        }
 
-    // Group comments by card_id and filter card_ids with more than 2 comments
-    $cardIdsWithMoreThanTwoComments = $allComments->groupBy('card_id')
-        ->filter(function ($comments) {
-            return $comments->count() > 2;
-        })
-        ->keys();
-
-    // Fetch comments only for those card IDs
-    $filteredCommentsQuery = $commentsQuery->whereIn('card_id', $cardIdsWithMoreThanTwoComments);
-
-    // Sort the filtered comments based on the sortType
-    if ($this->sortType === 'interacted') {
-        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('updated_at');
-    } else {
-        $filteredCommentsQuery = $filteredCommentsQuery->orderByDesc('created_at');
+        $this->addcomments  = $filteredCommentsQuery->get();
     }
-
-    $this->addcomments  = $filteredCommentsQuery->get();
-
-
-}
 
 
 
@@ -717,18 +1031,19 @@ public function loadaddComments()
             'description' => 'required|string',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
-    
+
         try {
             $fileContent = null;
             $mimeType = null;
             $fileName = null;
-    
+
+            // Process the uploaded image file
             if ($this->file_path) {
                 if (!in_array($this->file_path->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'])) {
                     session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
                     return;
                 }
-    
+
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
@@ -779,13 +1094,13 @@ public function loadaddComments()
             $managerDetails = EmployeeDetails::where('emp_id', $employeeDetails->manager_id)->first();
             if ($managerDetails && $managerDetails->email) {
                 $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
-               
-                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+
+                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails, $managerName));
             }
-           // Optionally, send email to HR
+            // Optionally, send email to HR
             if ($hrDetails && $hrDetails->email) {
                 $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
-                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails, $managerName));
             }
     
     
@@ -821,9 +1136,9 @@ public function loadaddComments()
 
         // Fetch comments for the current card
         $this->comments = Comment::with('employee', 'hr')
-        ->where('card_id', $empId)
-        ->orderByDesc('created_at')
-        ->get();
+            ->where('card_id', $empId)
+            ->orderByDesc('created_at')
+            ->get();
 
         $this->addcomments = Addcomment::where('card_id', $this->currentCardEmpId)->get();
         $this->storedemojis = Emoji::where('emp_id', $this->currentCardEmpId)->get();
@@ -848,30 +1163,26 @@ public function loadaddComments()
             $empCompanyId = auth()->guard('emp')->user()->company_id;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = DB::table('employee_details')
-            ->where('emp_id', $employeeId)
-            ->select('company_id') // Select only the company_id
-            ->first();
- 
+                ->where('emp_id', $employeeId)
+                ->select('company_id') // Select only the company_id
+                ->first();
+
             // Assuming you have a Company model with a 'company_logo' attribute
-              $companyIds = json_decode($employeeDetails->company_id);
+            $companyIds = json_decode($employeeDetails->company_id);
             $company = DB::table('companies')
-            ->where('company_id', $companyIds)
-            ->where('is_parent', 'yes')
-            ->first();
-         
+                ->where('company_id', $companyIds)
+                ->where('is_parent', 'yes')
+                ->first();
+
             // Return the company logo URL, or a default if company not found
             return $company ? $company->company_logo : asset('user.jpg');
         } elseif (auth()->guard('hr')->check()) {
             $empCompanyId = auth()->guard('hr')->user()->company_id;
- 
+
             // Assuming you have a Company model with a 'company_logo' attribute
             $company = Company::where('company_id', $empCompanyId)->first();
             return $company ? $company->company_logo : asset('user.jpg');
         }
- 
- 
- 
- 
     }
 
     public function render()
@@ -885,11 +1196,11 @@ public function loadaddComments()
         $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
         // $isManager = DB::table('employee_details')
-      //     ->where('manager_id', $employeeId)
-      //     ->exists();
-      $isManager = DB::table('employee_details')
-      ->where('manager_id', $employeeId)  // Assuming $employeeId is the manager's ID
-      ->get();
+        //     ->where('manager_id', $employeeId)
+        //     ->exists();
+        $isManager = DB::table('employee_details')
+            ->where('manager_id', $employeeId)  // Assuming $employeeId is the manager's ID
+            ->get();
 
         // Check if 'emp' guard is authenticated
         if (auth()->guard('emp')->check()) {
@@ -930,17 +1241,17 @@ public function loadaddComments()
         ]);
     }
 
-public function showEmployee($id)
-{
-    $employee = EmployeeDetails::find($id);
-    $comments = Comment::with(['employee', 'hr'])
-                        ->where('card_id', $employee->emp_id)
-                        ->orWhere('hr_emp_id', $employee->emp_id)
-                        ->orderBy('created_at', 'desc')
-                        ->get();
+    public function showEmployee($id)
+    {
+        $employee = EmployeeDetails::find($id);
+        $comments = Comment::with(['employee', 'hr'])
+            ->where('card_id', $employee->emp_id)
+            ->orWhere('hr_emp_id', $employee->emp_id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-    return view('yourview', compact('employee', 'comments'));
-}
+        return view('yourview', compact('employee', 'comments'));
+    }
 
     public function saveEmoji()
     {
@@ -966,8 +1277,10 @@ public function showEmployee($id)
                 $dateOfBirth = Carbon::parse($employee->personalInfo->date_of_birth);
 
                 // Check if the date of birth is within the current month and up to the current date
-                if ($dateOfBirth->month < $currentDate->month ||
-                    ($dateOfBirth->month === $currentDate->month && $dateOfBirth->day <= $currentDate->day)) {
+                if (
+                    $dateOfBirth->month < $currentDate->month ||
+                    ($dateOfBirth->month === $currentDate->month && $dateOfBirth->day <= $currentDate->day)
+                ) {
                     $combinedData[] = [
                         'date' => $dateOfBirth->format('m-d'), // Format date as needed
                         'type' => 'date_of_birth',
@@ -980,8 +1293,10 @@ public function showEmployee($id)
                 $hireDate = Carbon::parse($employee->hire_date);
 
                 // Check if the hire date is within the current month and up to the current date
-                if ($hireDate->month < $currentDate->month ||
-                    ($hireDate->month === $currentDate->month && $hireDate->day <= $currentDate->day)) {
+                if (
+                    $hireDate->month < $currentDate->month ||
+                    ($hireDate->month === $currentDate->month && $hireDate->day <= $currentDate->day)
+                ) {
                     $combinedData[] = [
                         'date' => $hireDate->format('m-d'),
                         'type' => 'hire_date',
@@ -998,5 +1313,4 @@ public function showEmployee($id)
 
         return $combinedData;
     }
-
 }

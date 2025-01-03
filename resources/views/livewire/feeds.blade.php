@@ -86,7 +86,7 @@
                                                             wire:model.lazy="postType"
                                                             class="Employee-select-leave placeholder-big"
                                                             style="border: none; margin-left: 10px;">
-                                                            <option value="appreciations">Appreciations</option>
+                                                            <option value="appreciations" selected>Appreciations</option>
                                                             <option value="buysellrent">Buy/Sell/Rent</option>
                                                             <option value="companynews">Company News</option>
                                                             <option value="events">Events</option>
@@ -121,7 +121,7 @@
                                                                 @endif
 
                                                                 <!-- Search input field -->
-                                                                <input wire:model.debounce="search1"
+                                                                <input wire:model.debounce="search1" wire:change="validateKudos"
                                                                     wire:input="searchEmployees" type="text"
                                                                     placeholder="">
 
@@ -262,7 +262,7 @@
                                                                 style="color: var(--requiredAlert);">*</span></label>
 
                                                         <!-- Full-width text area for the rich text editor -->
-                                                        <textarea id="message" wire:model="message" wire:keydown.debounce.500ms="validateField('message')" rows="4" class="w-100" placeholder=""></textarea>
+                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder=""></textarea>
                                                         @error('message')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -321,7 +321,7 @@
                             @endif
                         </div>
                         <div class="align-items-center col-md-2 createpost d-flex ms-auto">
-                            <button wire:click="addFeeds"
+                            <!-- <button wire:click="addFeeds"
                                 class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
                                 <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -336,7 +336,7 @@
                                     <div class="text-left text-xs ms-1 text-center" wire:click="addFeeds">Create Posts
                                     </div>
                                 </div>
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                     <div class=" mt-2 bg-white d-flex align-items-center ">
@@ -1292,9 +1292,12 @@ $cardCommentsCount = $commentsCollection->groupBy('card_id')->map(function ($com
                                         <textarea wire:model.lazy="newComment" placeholder="Post your comments here.." name="comment"
                                             class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
 </textarea>
-                                        <input type="submit" class=" addcomment"
-                                            value="Comment" wire:target="add_comment">
+                                        
                                     </div>
+                                    <button type="submit" class="addcomment" value="Comment"  wire:target="add_comment">
+    Comment
+</button>
+                                 
                                 </div>
                             </div>
                         </div>
@@ -1907,8 +1910,9 @@ data-interacted="{{ $data['updated_at'] ?? '' }}">
                         <textarea wire:model="newComment" placeholder="Post your comments here.." name="comment"
                             class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
 </textarea>
-                        <input type="submit" class=" addcomment" value="Comment"
-                            wire:target="add_comment">
+<button type="submit" class="addcomment" value="Comment"  wire:target="add_comment">
+    Comment
+</button>
                     </div>
                 </div>
             </div>
@@ -2507,9 +2511,12 @@ style="font-size: 10px;">Comment</a>
     <textarea wire:model="newComment" placeholder="Post your comments here.." name="comment"
         class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
 </textarea>
-    <input type="submit" class=" addcomment" value="Comment"
-        wire:target="addcomment">
+<button type="submit" class="addcomment" value="Comment"  wire:target="addcomment">
+    Comment
+</button>
 </div>
+
+
 </div>
 </div>
 </div>
@@ -3121,8 +3128,10 @@ $uniqueNames = [];
         <textarea wire:model="newComment" placeholder="Post your comments here.." name="comment"
             class="comment-box px-1.5x py-0.5x pb-3x text-secondary-600 border-secondary-200 placeholder-secondary-300 focus:border-primary-300 w-full rounded-sm border font-sans text-xs outline-none">
 </textarea>
-        <input type="submit" class=" addcomment" value="Comment"
-            wire:target="addcomment">
+<button type="submit" class="addcomment" value="Comment"  wire:target="addcomment">
+    Comment
+</button>
+      
     </div>
 </div>
 </div>

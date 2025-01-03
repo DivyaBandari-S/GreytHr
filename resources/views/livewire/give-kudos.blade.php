@@ -120,7 +120,7 @@
                                                             @endif
 
                                                             <!-- Search input field -->
-                                                            <input wire:model.debounce="search1"
+                                                            <input wire:model.debounce="search1" wire:change="validateKudos"
                                                                 wire:input="searchEmployees" type="text"
                                                                 placeholder="" @if($kudoId) disabled @endif>
 
@@ -257,7 +257,7 @@
                                                             style="color: var(--requiredAlert);">*</span></label>
 
                                                     <!-- Full-width text area for the rich text editor -->
-                                                    <textarea id="message" wire:model="message" wire:keydown.debounce.500ms="validateField('message')" rows="4" class="w-100" placeholder="" ></textarea>
+                                                    <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder="" ></textarea>
                                                     @error('message')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -329,23 +329,6 @@
                     </div>
                 </div>
 
-                <div class="align-items-center col-md-2 createpost d-flex ms-auto">
-                    <button wire:click="addFeeds"
-                        class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
-                        <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="text-left text-xs ms-1 text-center" wire:click="addFeeds">Create Posts</div>
-                        </div>
-                    </button>
-                </div>
             </div>
             <div class=" mt-2 bg-white d-flex align-items-center ">
                 <div class="d-flex ms-auto">
@@ -752,8 +735,10 @@
                                 wire:click="addKudos">Give Kudos</button>
                         </div>
                     @else
+                    
                         <div class="kudoseventsSection">
                             @foreach ($kudos as $kudo)
+                         
                                 <div class="col-12 col-md-8" style="margin-top: 10px;">
                                     <!-- Upcoming Birthdays List -->
                                     <div class="cards" style="display: flex; flex-direction: column;">
@@ -826,20 +811,21 @@
                                         </div>
                                         <div class="col-12 text-start">
                                             <div class="d-flex justify-content-start flex-wrap">
-                                                @foreach (json_decode($kudo->recognize_type) as $recognize)
-                                                    @php
-                                                        $colors = $this->getRecognitionColor($recognize);
-                                                    @endphp
-                                                    <div class="badge m-1"
-                                                        style="background-color: {{ $colors[0] }}; 
-                                                                   border: 1px solid {{ $colors[1] }}; 
-                                                                   color: {{ $colors[1] }}; 
-                                                                   padding: 5px 15px; 
-                                                                   font-size: 12px; 
-                                                                   border-radius: 20px; font-weight: 400;">
-                                                        {{ ucwords(strtolower($recognize)) }}
-                                                    </div>
-                                                @endforeach
+                                                @foreach (json_decode($kudo->recognize_type) ?: [] as $recognize)
+                                                @php
+                                                    $colors = $this->getRecognitionColor($recognize);
+                                                @endphp
+                                                <div class="badge m-1"
+                                                    style="background-color: {{ $colors[0] }}; 
+                                                           border: 1px solid {{ $colors[1] }}; 
+                                                           color: {{ $colors[1] }}; 
+                                                           padding: 5px 15px; 
+                                                           font-size: 12px; 
+                                                           border-radius: 20px; font-weight: 400;">
+                                                    {{ ucwords(strtolower($recognize)) }}
+                                                </div>
+                                            @endforeach
+                                            
                                             </div>
                                         </div>
 
