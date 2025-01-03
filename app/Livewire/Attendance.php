@@ -384,6 +384,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         ->get();
     Log::info("Leave requests retrieved: " . $leaveRequests->count());
 
+    
     $totalMinutes = 0;
     $workingDaysCount = 0;
 
@@ -410,12 +411,17 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($currentDate) {
             return $currentDate->between($leaveRequest->from_date, $leaveRequest->to_date);
         });
-
+        $isOnfullDayLeave =$this->isEmployeeFullDayLeaveOnDate($currentDate->toDateString(), $employeeId);   
+        $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($currentDate->toDateString(), $employeeId);
         Log::info("Date: " . $currentDate->toDateString() . ", Weekend: " . ($isWeekend ? 'Yes' : 'No') . 
                   ", Holiday: " . ($isHoliday ? 'Yes' : 'No') . ", On Leave: " . ($isOnLeave ? 'Yes' : 'No'));
 
-        if (!$isWeekend && !$isHoliday && !$isOnLeave) {
+        if (!$isWeekend && !$isHoliday && !$isOnLeave &&!$isOnfullDayLeave) {
             $workingDaysCount++;
+        }
+        elseif($isOnHalfDayLeave)
+        {
+            $workingDaysCount+=0.5;
         }
 
         $currentDate->addDay();
@@ -460,7 +466,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             $totalMinutes += $dayMinutes;
         }
-        Log::info("Date: $date, Day Minutes: $dayMinutes, Total Minutes So Far: $totalMinutes");
+        Log::info("Date: $date, Day Minutes: $dayMinutes, Total Minutes So Far: $totalMinutes,Working Days Count: $workingDaysCount");
     }
 
     if ($workingDaysCount > 0) {
@@ -836,49 +842,87 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     try {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
-                    ->where('leave_applications.leave_status', 2)
-                    ->where('from_session', 'Session 1')
-                    ->where('to_session', 'Session 1')
-                    ->exists();
+        Log::info('Checking half-day leave for employee.', [
+            'employee_id' => $employeeId,
+            'date' => $date,
+        ]);
 
-                    if ($sessionCheck) {
-                        // Case when both sessions are 'Session 1'
-                        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-                            ->where('leave_applications.leave_status', 2)
-                            ->where('from_session', 'Session 1')
-                            ->where('to_session', 'Session 1')
-                            ->where(function ($query) use ($date) {
-                                $query->whereDate('from_date', '<=', $date)
-                                    ->whereDate('to_date', '>=', $date);
-                            })
-                            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-                            ->exists();
-                    } else {
-                        // Case when sessions are not both 'Session 1'
-                        $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-                            ->where('leave_applications.leave_status', 2)
-                            ->where('from_session', 'Session 2')
-                            ->where('to_session', 'Session 2')
-                            ->where(function ($query) use ($date) {
-                                $query->whereDate('from_date', '<=', $date)
-                                    ->whereDate('to_date', '>=', $date);
-                            })
-                            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-                            ->exists();
-                    }
-                    return [
-                        'session' => $sessionCheck ? 'Session 1' : 'Session 2',
-                        'leaveRecord' => $leaveRecord,
-                    ];
-                        } catch (\Exception $e) {
-                            Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
-                            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
-                            return [
-                                'session' => null,
-                                'leaveRecord' => false,
-                            ]; // Return false to handle the error gracefully
-                        }
+        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_applications.leave_status', 2)
+            ->where('from_session', 'Session 1')
+            ->where('to_session', 'Session 1')
+            ->exists();
+
+        Log::info('Session Check Result:', [
+            'employee_id' => $employeeId,
+            'sessionCheck' => $sessionCheck ? 'Session 1' : 'Session 2'
+        ]);
+
+        
+        if ($sessionCheck) {
+            // Case when both sessions are 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+
+            Log::info('Leave Record for Session 1:', [
+                'employee_id' => $employeeId,
+                'date' => $date,
+                'leaveRecord' => $leaveRecord
+            ]);
+        }
+        
+         else {
+            // Case when sessions are not both 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>=', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+
+            Log::info('Leave Record for Session 2:', [
+                'employee_id' => $employeeId,
+                'date' => $date,
+                'leaveRecord' => $leaveRecord
+            ]);
+        }
+
+        Log::info('Final Leave Check Result:', [
+            'employee_id' => $employeeId,
+            'session' => $sessionCheck ? 'Session 1' : 'Session 2',
+            'leaveRecord' => $leaveRecord
+        ]);
+
+        return [
+            'session' => $sessionCheck ? 'Session 1' : 'Session 2',
+            'leaveRecord' => $leaveRecord,
+        ];
+    } catch (\Exception $e) {
+        Log::error('Error in isEmployeeHalfDayLeaveOnDate method:', [
+            'error_message' => $e->getMessage(),
+            'employee_id' => $employeeId,
+            'date' => $date
+        ]);
+
+        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+
+        return [
+            'session' => null,
+            'leaveRecord' => false,
+        ];
+    }
 }
 
     private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
@@ -1074,6 +1118,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         {
                             $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['leaveRecord'];
                             $isOnSecondSessionLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['session'];
+                            
                         }
                        
                         Log::info('Is On Half Day Leave:', ['isOnHalfDayLeave' => $isOnHalfDayLeave]);

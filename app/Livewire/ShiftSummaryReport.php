@@ -203,7 +203,7 @@ class ShiftSummaryReport extends Component
         try
         {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->orderBy('first_name')->get();
         if ($this->searching == 1) {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter
             $this->filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {
