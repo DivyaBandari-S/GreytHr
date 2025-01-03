@@ -10524,6 +10524,7 @@ input[type="date"] {
     height: 200px;
     overflow-y: scroll;
     z-index: 1000;
+    background-color: white;
 }
 
 .search-result-item {

@@ -86,7 +86,7 @@
                                                             wire:model.lazy="postType"
                                                             class="Employee-select-leave placeholder-big"
                                                             style="border: none; margin-left: 10px;">
-                                                            <option value="appreciations">Appreciations</option>
+                                                            <option value="appreciations" selected>Appreciations</option>
                                                             <option value="buysellrent">Buy/Sell/Rent</option>
                                                             <option value="companynews">Company News</option>
                                                             <option value="events">Events</option>
@@ -121,7 +121,7 @@
                                                                 @endif
 
                                                                 <!-- Search input field -->
-                                                                <input wire:model.debounce="search1"
+                                                                <input wire:model.debounce="search1" wire:change="validateKudos"
                                                                     wire:input="searchEmployees" type="text"
                                                                     placeholder="">
 
@@ -262,7 +262,7 @@
                                                                 style="color: var(--requiredAlert);">*</span></label>
 
                                                         <!-- Full-width text area for the rich text editor -->
-                                                        <textarea id="message" wire:model="message" wire:keydown.debounce.500ms="validateField('message')" rows="4" class="w-100" placeholder=""></textarea>
+                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder=""></textarea>
                                                         @error('message')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
