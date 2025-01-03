@@ -329,23 +329,6 @@
                     </div>
                 </div>
 
-                <div class="align-items-center col-md-2 createpost d-flex ms-auto">
-                    <button wire:click="addFeeds"
-                        class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
-                        <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                stroke-linecap="round" stroke-linejoin="round"
-                                class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
-                                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                <polyline points="13 2 13 9 20 9"></polyline>
-                            </svg>
-                        </div>
-                        <div class="row mt-1">
-                            <div class="text-left text-xs ms-1 text-center" wire:click="addFeeds">Create Posts</div>
-                        </div>
-                    </button>
-                </div>
             </div>
             <div class=" mt-2 bg-white d-flex align-items-center ">
                 <div class="d-flex ms-auto">

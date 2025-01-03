@@ -220,7 +220,7 @@ class GiveKudos extends Component
     {
         $this->message = '';
         $this->selectedEmployee = null;
-        $this->postType = '';
+        $this->postType = 'appreciations';
         $this->recognizeType = [];
         $this->reactions = [];
     }
