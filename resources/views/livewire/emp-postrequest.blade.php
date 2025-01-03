@@ -385,7 +385,7 @@
       
         </div>
         <div class="col-md-12">
-                <div id="eventsSection" class="eventsSection" style=" overflow-y: auto;">
+                <div id="eventsSection" class="eventsSection">
                     @if($isManager)
                         @if($posts->where('status', 'Pending')->isEmpty())
                             <img src="https://freesvg.org/img/request.png" alt="Empty Image" style="width: 250px; height: auto; display: block;">
@@ -394,15 +394,21 @@
                         @else
                         <div class="col-md-12 feeds-main-content">
                         @foreach($posts->where('status', 'Pending') as $post)
-                                <div class="col-md-9 bg-white " style="border-radius: 5px; border: 1px solid #ccc; height: auto; margin-top: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); ">
-                                    <div class="row mt-2">
-                                        <div class="col-12 col-md-4 text-center mb-1 mb-md-0">
-                                            <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
-                                        </div>
-                                        <div class="col-6 col-md-7 text-md-end mt-1" style="font-size: 12px;">
-                                            {{ $post->updated_at->diffForHumans() }}
-                                        </div>
-                                    </div>
+                                <div class="col-md-9 bg-white " style="border-radius: 5px; border: 1px solid #ccc; height: auto; margin-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); ">
+                      <div class="row mt-2 align-items-center">
+    <!-- Company Logo -->
+    <div class="col-12 col-md-4 text-center mb-2 mb-md-0">
+        <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" 
+             alt="Company Logo" 
+             class="img-fluid" 
+             style="max-width: 120px;">
+    </div>
+    <!-- Timestamp -->
+    <div class="col-12 col-md-7 text-md-end text-center mt-1" style="font-size: 12px;">
+        {{ $post->updated_at->diffForHumans() }}
+    </div>
+</div>
+
 
                                     <div class="row m-2">
                                         <div class="col-12 col-md-6" style="font-size: 12px;">
@@ -486,11 +492,6 @@
                  
 
 
-                    </div>
-            
-        </div>
-        </div>
-        </div>
     <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> -->
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -929,3 +930,9 @@
         });
     }
 </script>
+
+</div>
+            
+            </div>
+            </div>
+        
