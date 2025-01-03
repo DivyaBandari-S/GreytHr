@@ -15,7 +15,7 @@
 </div>
 <div class="shift-selector-container-who-is-in">
   <input type="text" class="shift-selector-who-is-in small-font" placeholder="Select Shifts"value="{{ $formattedSelectedShift }}" readonly>
-  <div class="arrow-who-is-in" style="cursor:pointer;" wire:click="openSelector"></div>
+  <div class="arrow-who-is-in"wire:click="openSelector"onpointerdown="event.stopPropagation();"></div>
 </div>
 @if($openshiftselectorforcheck==true)
 <div class="modal" tabindex="-1" role="dialog" style="display: block;">
