@@ -18,6 +18,8 @@ class Notification extends Model
         'leave_type',
         'is_birthday_read',
         'leave_status',
+        'regularisation_status',
+        'regularisation_entries',
         'applying_to',
         'cc_to',
         'receiver_id',

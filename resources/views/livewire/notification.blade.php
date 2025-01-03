@@ -12,7 +12,7 @@
             <i class='fas fa-comment-dots icon notifications-pointer '></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
-                  {{ $chatNotificationCount }}
+                {{ $chatNotificationCount }}
             </span>
             @endif
         </div>
@@ -148,6 +148,43 @@
                     @endif
             </div>
         </div>
+        @elseif($notification->notification_type=='regularisationApply')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                </p>
+
+              
+                    <p class="mb-0 notification-text-para">Applied for Attendance Regularisation request.</p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                   
+            </div>
+        </div>
+        @elseif($notification->notification_type=='regularisationReject')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                </p>
+
+              
+                    <p class="mb-0 notification-text-para">Rejected your Attendance Regularisation request.</p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                   
+            </div>
+        </div>
+
         @elseif($notification->notification_type=='leaveCancel')
         <div>
             <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
@@ -198,5 +235,6 @@
         @endforeach
         @endif
     </div>
+  
 </div>
 </div>

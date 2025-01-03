@@ -265,7 +265,7 @@ foreach ($employees2 as $employee) {
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->get();
+        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->orderBy('first_name')->get();
         if($this->searching==1)
         {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter

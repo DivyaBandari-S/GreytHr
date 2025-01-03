@@ -20,6 +20,8 @@ class Notification extends Component
     public $senderDetails;
     public $messagenotifications;
     public $leaveApproveNotification;
+
+    public $regularisationNotifications;
     public $leaveRejectNotification;
     public $leavenotifications, $leavecancelnotifications;
     public $tasknotifications;
@@ -32,14 +34,16 @@ class Notification extends Component
     public $getRemainingBirthday;
     public $birthdayTime;
 
+    public $empIdForRegularisation;
 
+    public $regularisationRejectNotifications;
     public function mount()
     {
         try {
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
             $CompanyId = Auth::user()->company_id[0];
-
+            
             $today = now();
             $currentDate = $today->toDateString();
             $currentMonth = $today->month;
@@ -200,6 +204,21 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
+            $this->regularisationNotifications=  DB::table('notifications')  
+            ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+
+            ->where('notification_type', 'regularisationApply')
+                ->where('is_read', 0)
+                ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
+                ->get();
+                $this->regularisationRejectNotifications=  DB::table('notifications')  
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+    
+                ->where('notification_type', 'regularisationReject')
+                    ->where('is_read', 0)
+                    ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.emp_id',  'notifications.leave_type as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
+                    ->get();    
+            
             $this->leavenotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->where(function ($query) use ($loggedInEmpId) {
@@ -232,7 +251,7 @@ class Notification extends Component
 
             // ->groupBy('emp_id');
 
-            $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification);
+            $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification)->merge($this->regularisationNotifications)->merge($this->regularisationRejectNotifications);
 
             $groupedNotifications = $allNotifications->groupBy(function ($item) {
                 return $item->emp_id . '-' . $item->notification_type;
