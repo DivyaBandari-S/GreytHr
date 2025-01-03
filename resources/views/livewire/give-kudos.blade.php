@@ -120,7 +120,7 @@
                                                             @endif
 
                                                             <!-- Search input field -->
-                                                            <input wire:model.debounce="search1"
+                                                            <input wire:model.debounce="search1" wire:change="validateKudos"
                                                                 wire:input="searchEmployees" type="text"
                                                                 placeholder="" @if($kudoId) disabled @endif>
 
@@ -257,7 +257,7 @@
                                                             style="color: var(--requiredAlert);">*</span></label>
 
                                                     <!-- Full-width text area for the rich text editor -->
-                                                    <textarea id="message" wire:model="message" wire:keydown.debounce.500ms="validateField('message')" rows="4" class="w-100" placeholder="" ></textarea>
+                                                    <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder="" ></textarea>
                                                     @error('message')
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
@@ -752,8 +752,10 @@
                                 wire:click="addKudos">Give Kudos</button>
                         </div>
                     @else
+                    
                         <div class="kudoseventsSection">
                             @foreach ($kudos as $kudo)
+                         
                                 <div class="col-12 col-md-8" style="margin-top: 10px;">
                                     <!-- Upcoming Birthdays List -->
                                     <div class="cards" style="display: flex; flex-direction: column;">
@@ -826,20 +828,21 @@
                                         </div>
                                         <div class="col-12 text-start">
                                             <div class="d-flex justify-content-start flex-wrap">
-                                                @foreach (json_decode($kudo->recognize_type) as $recognize)
-                                                    @php
-                                                        $colors = $this->getRecognitionColor($recognize);
-                                                    @endphp
-                                                    <div class="badge m-1"
-                                                        style="background-color: {{ $colors[0] }}; 
-                                                                   border: 1px solid {{ $colors[1] }}; 
-                                                                   color: {{ $colors[1] }}; 
-                                                                   padding: 5px 15px; 
-                                                                   font-size: 12px; 
-                                                                   border-radius: 20px; font-weight: 400;">
-                                                        {{ ucwords(strtolower($recognize)) }}
-                                                    </div>
-                                                @endforeach
+                                                @foreach (json_decode($kudo->recognize_type) ?: [] as $recognize)
+                                                @php
+                                                    $colors = $this->getRecognitionColor($recognize);
+                                                @endphp
+                                                <div class="badge m-1"
+                                                    style="background-color: {{ $colors[0] }}; 
+                                                           border: 1px solid {{ $colors[1] }}; 
+                                                           color: {{ $colors[1] }}; 
+                                                           padding: 5px 15px; 
+                                                           font-size: 12px; 
+                                                           border-radius: 20px; font-weight: 400;">
+                                                    {{ ucwords(strtolower($recognize)) }}
+                                                </div>
+                                            @endforeach
+                                            
                                             </div>
                                         </div>
 
