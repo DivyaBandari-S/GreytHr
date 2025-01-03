@@ -42,6 +42,7 @@ class Feeds extends Component
 
     use WithFileUploads;
    public $image;
+   public $posts;
    public $currentCardEmojis;
    public $card_id;
    public $file_path;
@@ -531,6 +532,63 @@ public function removeSelectedEmployee()
             // If no parent company is found
 
         }
+        $this->posts  = Post::where('status', 'Closed')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+   $this->empCompanyLogoUrl = $this->getEmpCompanyLogoUrl();
+
+   $user = Auth::user();
+
+   if ($user) {
+       $this->employeeDetails = $user->employeeDetails;
+   }
+   $employeeId = Auth::guard('emp')->user()->emp_id;
+   $this->isManager = DB::table('employee_details')
+       ->where('manager_id', $employeeId)
+       ->exists();
+  
+           // Fetch posts for the manager and their employees
+     
+               if ($this->isManager) {
+               // For managers: get their posts and their team's posts
+               $this->posts = Post::where('status', 'Closed')
+                   ->where(function ($query) use ($employeeId) {
+                       $query->where('manager_id', $employeeId) // Manager's own posts
+                             ->orWhereIn('emp_id', function ($subQuery) use ($employeeId) {
+                                 $subQuery->select('emp_id')
+                                           ->from('employee_details')
+                                           ->where('manager_id', $employeeId); // Team members' posts
+                             });
+                   })
+                   ->orderBy('updated_at', 'desc')
+                   ->get();
+           } else {
+               // For employees: get their posts and their manager's posts
+               $this->posts = Post::where('status', 'Closed')
+               ->where(function ($query) use ($employeeId) {
+                   $query->where('emp_id', $employeeId) // Employee's own posts
+                         ->orWhere('manager_id', function($subQuery) use ($employeeId) {
+                             $subQuery->select('manager_id')
+                                       ->from('employee_details')
+                                       ->where('emp_id', $employeeId); // Get the employee's manager's ID
+                         })
+                         ->orWhereIn('emp_id', function($subQuery) use ($employeeId) {
+                             // Get all employees under the same manager
+                             $subQuery->select('emp_id')
+                                       ->from('employee_details')
+                                       ->where('manager_id', function($innerQuery) use ($employeeId) {
+                                           $innerQuery->select('manager_id')
+                                                       ->from('employee_details')
+                                                       ->where('emp_id', $employeeId);
+                                       });
+                         });
+               })
+               ->orderBy('updated_at', 'desc')
+               ->get();
+           
+           
+       
         $today=now();
         $currentDate = $today->toDateString();
         $birthdayRecord = Notification::where('body', $currentDate)
@@ -553,6 +611,7 @@ public function removeSelectedEmployee()
             $birthdayRecord->save();
         }
 
+    }
 
     }
 
@@ -987,11 +1046,10 @@ public function loadaddComments()
     }
     public function submit()
     {
-        // Update validation to only allow image files
         $validatedData = $this->validate([
             'category' => 'required|string|max:255',
             'description' => 'required|string',
-            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files with a max size of 2MB
+            'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
     
         try {
@@ -999,9 +1057,7 @@ public function loadaddComments()
             $mimeType = null;
             $fileName = null;
     
-            // Process the uploaded image file
             if ($this->file_path) {
-                // Validate file is an image
                 if (!in_array($this->file_path->getMimeType(), ['image/jpeg', 'image/png', 'image/gif', 'image/svg+xml'])) {
                     session()->flash('error', 'Only image files (jpeg, png, gif, svg) are allowed.');
                     return;
@@ -1010,55 +1066,40 @@ public function loadaddComments()
                 $fileContent = file_get_contents($this->file_path->getRealPath());
                 $mimeType = $this->file_path->getMimeType();
                 $fileName = $this->file_path->getClientOriginalName();
+    
+                if ($fileContent === false || strlen($fileContent) > 16777215) {
+                    FlashMessageHelper::flashWarning('File size exceeds the allowed limit or could not be read.');
+                    return;
+                }
             }
     
-            // Check if the file content is valid
-            if ($fileContent === false) {
-                Log::error('Failed to read the uploaded file.', [
-                    'file_path' => $this->file_path->getRealPath(),
-                ]);
-                FlashMessageHelper::flashError('Failed to read the uploaded file.');
-                return;
-            }
-    
-            // Check if the file content is too large (16MB limit for MEDIUMBLOB)
-            if (strlen($fileContent) > 16777215) {
-                FlashMessageHelper::flashWarning('File size exceeds the allowed limit.');
-                return;
-            }
-    
-            // Get the authenticated employee ID and their details
+            $user = Auth::user();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+             // Fetch the manager_id of the current employee
+             $managerId = $employeeDetails->manager_id;
     
-            if (!$employeeDetails) {
-                FlashMessageHelper::flashError('Employee details not found.');
-                return;
-            }
+             if (!$managerId) {
+                 FlashMessageHelper::flashError('Manager information not found for the current employee.');
+                 return;
+             }
+     
+             // Check if the authenticated employee is a manager
+             $isManager = DB::table('employee_details')
+                 ->where('manager_id', $employeeId)
+                 ->exists();
+     
+             $postStatus = $isManager ? 'Closed' : 'Pending';
+             $managerId = $isManager ? $employeeId : null;
+             $empId = $isManager ? null : $employeeId;
     
-            // Fetch the manager_id of the current employee
-            $managerId = $employeeDetails->manager_id;
+           
     
-            if (!$managerId) {
-                FlashMessageHelper::flashError('Manager information not found for the current employee.');
-                return;
-            }
+            $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
     
-            // Check if the authenticated employee is a manager
-            $isManager = DB::table('employee_details')
-                ->where('manager_id', $employeeId)
-                ->exists();
-    
-            $postStatus = $isManager ? 'Closed' : 'Pending';
-            $empId = $isManager ? null : $employeeId;
-    
-            // Retrieve the HR details if applicable
-            $hrDetails = Hr::where('hr_emp_id', $employeeDetails->hr_emp_id)->first();
-    
-            // Create the post
             $post = Post::create([
                 'hr_emp_id' => $hrDetails->hr_emp_id ?? '-',
-                'manager_id' => $managerId, // Use the fetched manager_id
+                'manager_id' => $managerId,
                 'emp_id' => $empId,
                 'category' => $this->category,
                 'description' => $this->description,
@@ -1068,7 +1109,7 @@ public function loadaddComments()
                 'status' => $postStatus,
             ]);
     
-            // Send email notifications
+            // Send email notification to manager
             $managerDetails = EmployeeDetails::where('emp_id', $employeeDetails->manager_id)->first();
             if ($managerDetails && $managerDetails->email) {
                 $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
@@ -1081,21 +1122,24 @@ public function loadaddComments()
                 Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
             }
     
-            // Reset form fields and display success message
+    
+            // Reset form fields and redirect to posts page
             $this->reset(['category', 'description', 'file_path']);
             FlashMessageHelper::flashSuccess('Post created successfully!');
-            $this->showFeedsDialog = false;
+             // Update 'manager.posts' to the actual route name for the posts page
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            Log::error('Error creating request: ' . $e->getMessage(), [
+            Log::error('Error creating post: ' . $e->getMessage(), [
                 'employee_id' => $employeeId ?? 'N/A',
                 'file_path_length' => isset($fileContent) ? strlen($fileContent) : null,
             ]);
-            FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while creating the post. Please try again.');
         }
     }
+    
+    
     
 
 
