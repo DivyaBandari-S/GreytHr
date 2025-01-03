@@ -44,7 +44,7 @@ class Notification extends Component
     public $totalJoinees;
     public $joiningTime;
 
-    public $getRemainingExpEmp;l
+    public $getRemainingExpEmp;
     public $empIdForRegularisation;
 
     public $regularisationRejectNotifications;
