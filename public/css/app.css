@@ -2713,6 +2713,97 @@ td {
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
+.post-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+    padding: 20px;
+    border: 1px solid silver;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.post-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.category {
+    font-size: 13px;
+    color: #7a7a7a;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.updated-time {
+    font-size: 12px;
+    color: #b0b0b0;
+}
+
+/* Profile Section */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    /* Center the profile image and name */
+    margin-top: 15px;
+}
+
+.profile-image-wrapper {
+    margin-bottom: 10px; /* Add spacing between image and name */
+}
+
+.post-profile-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.profile-name-wrapper {
+   
+}
+
+.post-profile-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: #3b4452;
+    text-transform: capitalize;
+}
+
+/* Post Content */
+.post-content {
+    margin-top: 10px;
+}
+
+.description {
+    font-size: 12px;
+    color: #676767;
+ margin-top:10px;
+ margin-left: 10px;
+}
+
+.post-image {
+    max-width: 50%;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.company-logo {
+    max-width: 130px;
+    height: auto;
+}
+
 .emoji-drawer {
     display: grid;
 
@@ -2778,6 +2869,13 @@ td {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+}
+.kudoseventsSection {
+    display: flex;
+    flex-direction: column;
+    height: 358px;
+    overflow-y: scroll;
 }
 
 .feeds-main-content {
@@ -2794,6 +2892,7 @@ td {
     border: 1px solid #cfcaca;
     color: #3b4452;
     margin-top: 5px;
+    position: relative;
 }
 
 .feeds-left-menu {
@@ -2820,6 +2919,9 @@ td {
 .form-select {
 
     font-size: 0.75rem;
+}
+.transparent-backdrop {
+    background-color: rgba(0, 0, 0, 0.3); /* Adjust the opacity to your liking */
 }
 
 .catagory-select:hover {
@@ -10364,7 +10466,7 @@ input[type="date"] {
 
 .analytic-view-all-search-bar {
     display: flex;
-    padding: 20px 0px;
+    padding: 10px 0px;
     justify-content: space-between;
     /* Adjust spacing between items */
     align-items: center;
@@ -10374,23 +10476,411 @@ input[type="date"] {
     position: relative;
     display: flex;
     align-items: center;
+    width: 100%;
 }
 
 .analytic-view-all-search-bar input[type="text"] {
-    width: 200px;
-    padding: 6px 28px 6px 10px;
-    /* Adjust padding for right space */
+    width: 275px;
+    padding: 10px 10px 10px 45px;
     border: 1px solid #ccc;
-    border-radius: 18px;
+    border-radius: 26px;
+    /* position: relative; */
+    font-size: 16px;
+}
+
+.search-icon-search {
+    position: absolute;
+    right: 210px;
+    top: 35%;
+    color: #666;
+    font-size: 14px;
+}
+.search-icon-user {
+    position: absolute;
+    left: 20px;
+    color: #666;
+    font-size: 18px;
+}
+.search-results-container {
+    width: 275px;
+    position: absolute;
+    border: 1px solid grey;
+    border-radius: 10px;
+    height: 200px;
+    overflow-y: scroll;
+    z-index: 1000;
+}
+
+.search-result-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+}
+
+.initials-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4db3b3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.employee-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.full-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.employee-id {
+    font-size: 12px;
+    color: #777;
+}
+.selected-initials-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #4db3b3;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;
+    position: absolute;
+    left: 12px;
+}
+.selected-employee-details {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 50px;
+}
+.selected-initials-circle, .selected-employee-details {
+    z-index: 20; /* Ensure selected employee's initials and details stay on top */
+}
+
+
+
+.selected-full-name {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.selected-employee-id {
+    font-size: 12px;
+    color: #777;
+}
+/* Dropdown container to position it correctly */
+.dropdown-container {
+
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+    z-index: 2;
+}
+/* .input-wrapper{
+    position: relative;
+    width: 100%;
+    cursor: pointer;
+} */
+
+/* Input field */
+/* .form-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    cursor: pointer;
+} */
+
+/* Dropdown Content */
+.dropdown-content {
+    position: absolute;
+    top: 100%;  /* Position below the input */
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: block; /* Display the dropdown when it's open */
+    margin-top: 10px;
+    z-index: 2;
+}
+
+/* Search input inside dropdown */
+.search-input {
+    width: 95%;
+    padding: 10px;
+    margin: 10px 10px 5px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* Options container inside the dropdown */
+.options-container {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    height: 150px;
+    overflow-y: scroll;
+}
+
+/* Individual option item */
+.option-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 0;
+    cursor: pointer;
+}
+
+/* Checkbox and label container */
+.option-label {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+/* Title and description of each option */
+.option-title {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--main-heading-color);
+}
+
+.option-description {
+    font-size: 12px;
+    color: #777;
+}
+
+/* Style for checkbox */
+.option-item input[type="checkbox"] {
+    margin-right: 5px;
+}
+.no-results {
+    text-align: center;
+}
+
+.no-results-image {
+    width: 100px; /* Adjust image size */
+    height: auto;
+}
+
+.no-results-text {
+    font-size: 14px;
+    color: #888;
+}
+
+
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    display: inline-block;
+    min-height: 40px; /* Adjust based on your design */
+    overflow: hidden; /* Ensure no scrollbars */
+    box-sizing: border-box;
+}
+
+.selected-items-container {
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    max-width: 100%;
+    top: 3px;
+    pointer-events: none; /* Ensure the container doesn't interfere with input clicks */
+    overflow: hidden; /* Prevents overflow in the input */
+    width: calc(100% - 20px); 
+}
+
+.selected-item {
+    background-color: #eae9ed;
+    border-radius: 7px;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    overflow: hidden;
+    margin: 0px 2px 0px 4px;
+    font-size: 11px; /* Adjust font size as needed */
+    color: var(--main-heading-color);
+}
+
+.remove-item-btn {
+    background: none;
+    border: none;
+    color: #8d8787;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 8px;
+    font-size: 15px;
+}
+
+.remove-item-btn:hover {
+    color: darkred;
+}
+
+.reaction-btn {
+    font-size: 14px;
+    padding-left: 8px;
+    width: 40px;
+    cursor: pointer;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    display: flex
+;
+    align-items: center;
     position: relative;
 }
 
-.search-icon {
+.plus-icon {
+    margin-left: 5px;
     position: absolute;
-    right: 10px;
-    color: #666;
-    pointer-events: none;
+    top: -5px;
+    left: 21px;
 }
+
+.kudos-emoji-picker {
+    display: grid
+    ;
+        grid-template-columns: repeat(6, 1fr);
+        /* gap: 10px; */
+        position: absolute;
+        /* top: -183px; */
+        left: 0;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        /* padding: 10px; */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        height: 167px;
+        overflow-y: scroll;
+        bottom: 35px;
+}
+.reaction-emoji-picker {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        height: 167px;
+        width: 200px;
+        overflow-y: scroll;
+}
+
+.emoji-btn {
+    font-size: 18px;
+    padding: 3px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.emoji-btn:hover {
+    transform: scale(1.2); /* Slight scale effect on hover */
+}
+
+.reaction-section {
+    position: relative;
+}
+
+
+.selected-reaction {
+    margin-right: 10px;
+    font-size: 1.5rem;
+    position: relative;
+    font-size: 14px;
+    padding-left: 8px;
+    width: 45px;
+    cursor: pointer;
+    background: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    display: inline-block;
+
+}
+
+.remove-btn {
+    position: absolute;
+    top: -4px;
+    right: 2px;
+    background: none;
+    border: none;
+    /* color: grey; */
+    font-size: 19px;
+    cursor: pointer;
+}
+.reaction-circle {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: -10px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+}
+
+.reaction-circle:hover {
+    transform: scale(1.2); /* Scale the circle to 120% */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    background-color: #ffdf00; /* Change background color on hover */
+}
+.three-dots-btn {
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.kudos-options-container {
+    background-color: #fff;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    width: 120px;
+    z-index: 999;
+    height: 102px;
+    padding: 10px;
+}
+
+.kudos-options-container p{
+text-align: left;
+padding: 7px;
+cursor: pointer;
+}
+
+
+
+
+
+
+
+    
 .Employee-select-leave {
     font-weight: 500;
     font-size: var(--main-headings-font-size);

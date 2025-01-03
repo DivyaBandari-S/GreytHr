@@ -88,27 +88,27 @@ class EmployeeSwipesData extends Component
             $swipeData = [];
 
             // foreach ($managedEmployees as $employee) {
-                // $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+            // $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
 
-                // Fetch the first swipe log for each employee for today
-                // $employeeSwipeLog = DB::connection('sqlsrv')
-                //     ->table('DeviceLogs_' . now()->month . '_' . now()->year)
-                //     ->select('UserId', 'logDate', 'Direction')
-                //     ->where('UserId', $normalizedEmployeeId)
-                //     ->whereDate('logDate', $today)
-                //     ->orderBy('logDate')
-                //     ->first();
+            // Fetch the first swipe log for each employee for today
+            // $employeeSwipeLog = DB::connection('sqlsrv')
+            //     ->table('DeviceLogs_' . now()->month . '_' . now()->year)
+            //     ->select('UserId', 'logDate', 'Direction')
+            //     ->where('UserId', $normalizedEmployeeId)
+            //     ->whereDate('logDate', $today)
+            //     ->orderBy('logDate')
+            //     ->first();
 
-                // Add the employee and their swipe log (if any) to the results
-                // if ($employeeSwipeLog) {
-                //     $swipeData[] = [
-                //         'Employee ID' => $employee->emp_id,
-                //         'Employee Name' => ucfirst(strtolower($employee->first_name)) . ' ' . ucfirst(strtolower($employee->last_name)),
-                //         'Swipe Date' => Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y'),
-                //         'Swipe Time' => Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
-                //         'Direction' => $employeeSwipeLog->Direction,
-                //     ];
-                // }
+            // Add the employee and their swipe log (if any) to the results
+            // if ($employeeSwipeLog) {
+            //     $swipeData[] = [
+            //         'Employee ID' => $employee->emp_id,
+            //         'Employee Name' => ucfirst(strtolower($employee->first_name)) . ' ' . ucfirst(strtolower($employee->last_name)),
+            //         'Swipe Date' => Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y'),
+            //         'Swipe Time' => Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
+            //         'Direction' => $employeeSwipeLog->Direction,
+            //     ];
+            // }
             // }
 
             $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
@@ -135,57 +135,76 @@ class EmployeeSwipesData extends Component
     public function processSwipeLogs($managedEmployees, $today)
     {
         $swipeData = [];
-    $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
-        ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
-        ->get()
-        ->keyBy('emp_id');
 
-    $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
-        return str_replace('-', '', $id);
-    });
-
-    
-    $externalSwipeLogs = DB::connection('sqlsrv')
-        ->table('DeviceLogs_' . now()->month . '_' . now()->year)
-        ->select('UserId', 'logDate', 'Direction')
-        ->whereIn('UserId', $normalizedIds)
-        ->whereDate('logDate', $today)
-        ->get();
-
-    foreach ($managedEmployees as $employee) {
-        $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-        
-        // Check if there's a swipe record from the external database
-        $employeeSwipeLog = $externalSwipeLogs->firstWhere('UserId', $normalizedEmployeeId);
-
-        if (!$employeeSwipeLog && isset($todaySwipeRecords[$employee->emp_id])) {
-            // Use swipe record from local database if it exists
-            $employeeSwipeLog = $todaySwipeRecords[$employee->emp_id];
+        try {
+            $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+                ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                ->get()
+                ->keyBy('emp_id');
+        } catch (\Exception $e) {
+            // Handle exception related to local swipe records
+            // You could log this error or return an empty array
+            return [];
         }
 
-        if ($employeeSwipeLog) {
-            $swipeData[] = [
-                'employee' => $employee,
-                'swipe_log' => $employeeSwipeLog,
-            ];
+        $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
+            return str_replace('-', '', $id);
+        });
+
+        $tableName = 'DeviceLogs_' . 1 . '_' . 2024;
+
+        try {
+            // Check if the table exists
+            if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
+                $externalSwipeLogs = DB::connection('sqlsrv')
+                    ->table($tableName)
+                    ->select('UserId', 'logDate', 'Direction')
+                    ->whereIn('UserId', $normalizedIds)
+                    ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->subYear()->format('Y-m-d')])
+                    ->get();
+                // dd( $externalSwipeLogs);
+            } else {
+                $externalSwipeLogs = collect();
+            }
+        } catch (\Exception $e) {
+            // Handle exceptions related to external database query
+            // Log or handle the exception
+            $externalSwipeLogs = collect();  // Proceed with an empty collection
         }
+
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+            // Check if there's a swipe record from the external database
+            $employeeSwipeLog = $externalSwipeLogs->firstWhere('UserId', $normalizedEmployeeId);
+            if (!$employeeSwipeLog && isset($todaySwipeRecords[$employee->emp_id])) {
+                // Use swipe record from local database if it exists
+                $employeeSwipeLog = $todaySwipeRecords[$employee->emp_id];
+            }
+
+            if ($employeeSwipeLog) {
+                $swipeData[] = [
+                    'employee' => $employee,
+                    'swipe_log' => $employeeSwipeLog,
+                ];
+            }
+        }
+
+        return $swipeData;
     }
 
-    return $swipeData;
-    }
 
-    
+
     public function render()
     {
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
-    
+
         // Retrieve active employees managed by the user
         $managedEmployees = EmployeeDetails::where('manager_id', $userId)
             ->where('employee_status', 'active')
             ->get(); // Adjust the pagination number as needed
-    
+
         $this->employees = $this->processSwipeLogs($managedEmployees, $today); // Process and fetch employees' swipe logs
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
