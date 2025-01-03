@@ -12,7 +12,7 @@
             <i class='fas fa-comment-dots icon notifications-pointer '></i>
             @if ($chatNotificationCount > 0)
             <span class="badge">
-                  {{ $chatNotificationCount }}
+                {{ $chatNotificationCount }}
             </span>
             @endif
         </div>
@@ -25,9 +25,8 @@
         </div>
         <div class="notification-horizontal-line"></div>
         <div class="offcanvas-body">
-
-            @if($totalBirthdays>0)
-            @if($totalBirthdays==1)
+            @if($totalBirthdays>0 && $getRemainingBirthday)
+            @if($totalBirthdays == 1 )
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" title="{{ ucwords(strtolower($getRemainingBirthday->first_name)) }} {{ ucwords(strtolower($getRemainingBirthday->last_name)) }}
                             (#{{ $getRemainingBirthday->emp_id }}) is Celebrating birthday today" class="notification-head">
@@ -54,9 +53,98 @@
                     <p class="notify-time-para">{{$birthdayTime}}</p>
                 </div>
             </div>
+            @endif
+            @endif
 
+            <!-- //for experinced employees -->
+            @if($totalExpEmp>0 && $getRemainingExpEmp)
+            @if($totalExpEmp == 1 )
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#"
+                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                        title="Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}(#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s)!"
+                        class="notification-head">
+                        Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                        (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s)!
+                    </a>
+                </p>
+
+                @if($getRemainingExpEmp->gender == 'MALE')
+                <p class="mb-0 notification-text-para">
+                    Please congratulate {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                    (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                </p>
+                @else
+                <p class="mb-0 notification-text-para">
+                    Please congratulate {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                    (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                </p>
+                @endif
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @else
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                        Congratulations to {{$totalExpEmp}} members on completing their successful year(s)!
+                    </a></p>
+
+                <p class="mb-0 notification-text-para">Please congratulate them. </p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
             @endif
             @endif
+
+            <!-- //for newly joined employeess -->
+            @if($totalJoinees > 0 && $getRemainingJoinees)
+            @if($totalJoinees == 1 )
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#"
+                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                        title="Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }} (#{{ $getRemainingJoinees->emp_id }}) to the team!"
+                        class="notification-head">
+                        Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                        (#{{ $getRemainingJoinees->emp_id }}) to the team!
+                    </a>
+                </p>
+
+                @if($getRemainingJoinees->gender == 'MALE')
+                <p class="mb-0 notification-text-para">
+                    Let's give a warm welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) as he joins the team.
+                </p>
+                @else
+                <p class="mb-0 notification-text-para">
+                    Let's give a warm welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) as she joins the team.
+                </p>
+                @endif
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @else
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                        Welcome {{$totalJoinees}} new member(s) to the team!
+                    </a>
+                </p>
+
+                <p class="mb-0 notification-text-para">Let's give them all a warm welcome!</p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @endif
+            @endif
+
+
 
             @if($totalnotificationscount <= 0)
                 <div class="text-center mt-4">

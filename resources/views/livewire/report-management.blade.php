@@ -496,8 +496,17 @@
                                     Employee Number</th>
 
                             </tr>
-                            @if ($filteredEmployees->isNotEmpty())
-                                @foreach ($filteredEmployees as $emp)
+                            @php
+                            // Sorting alphabetically by first_name and then last_name
+                            $sortedEmployees = $this->filteredEmployees->sortBy(function ($employee) {
+                                return strtolower($employee->first_name . ' ' . $employee->last_name); // Combine first and last name for sorting
+                            });
+                        
+                           
+                        @endphp
+                        
+                            @if ($sortedEmployees->isNotEmpty())
+                                @foreach ($sortedEmployees as $emp)
                                     <tr style="border:1px solid #ccc;">
 
                                         <td

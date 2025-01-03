@@ -12,8 +12,6 @@
         <p>No employee details found.</p>
     @else
         <div class="px-4 " style="position: relative;">
-
-
             <div class="col-md-12  mb-3 mt-1">
                 <div class="row bg-white rounded border py-1 d-flex align-items-center">
                     <div class="d-flex mt-2 flex-row align-items-center row m-0">
@@ -86,7 +84,8 @@
                                                         <select id="postType"
                                                             wire:change="updatePostType($event.target.value)"
                                                             wire:model.lazy="postType"
-                                                            class="Employee-select-leave placeholder-big" style="border: none; margin-left: 10px;">
+                                                            class="Employee-select-leave placeholder-big"
+                                                            style="border: none; margin-left: 10px;">
                                                             <option value="appreciations">Appreciations</option>
                                                             <option value="buysellrent">Buy/Sell/Rent</option>
                                                             <option value="companynews">Company News</option>
@@ -100,63 +99,216 @@
                                                         </select>
                                                     </div>
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="search">Search Employee<span
+                                                        <label for="search1">Search Employee<span
                                                                 style="color: var(--requiredAlert);">*</span></label>
                                                         <div class="analytic-view-all-search-bar">
                                                             <div class="search-wrapper">
-                                                                <input wire:click="searchFilter" wire:input="searchFilter"
-                                                                    wire:model.debounce.500ms="search" type="text" placeholder="Search...">
-                                                                <i class="search-icon bx bx-search"></i>
+                                                                @if ($selectedEmployee)
+                                                                    <!-- Show the selected employee's initials and full name -->
+                                                                    <div class="selected-initials-circle">
+                                                                        {{ strtoupper(substr($selectedEmployee->first_name, 0, 1)) . strtoupper(substr($selectedEmployee->last_name, 0, 1)) }}
+                                                                    </div>
+                                                                    <div class="selected-employee-details">
+                                                                        <div class="selected-full-name">
+                                                                            {{ $selectedEmployee->first_name }}
+                                                                            {{ $selectedEmployee->last_name }}</div>
+                                                                        <div class="selected-employee-id">
+                                                                            #{{ $selectedEmployee->emp_id }}</div>
+                                                                    </div>
+                                                                @else
+                                                                    <!-- Default search icon -->
+                                                                    <i class="search-icon-user fas fa-user"></i>
+                                                                @endif
+
+                                                                <!-- Search input field -->
+                                                                <input wire:model.debounce="search1"
+                                                                    wire:input="searchEmployees" type="text"
+                                                                    placeholder="">
+
+                                                                @if ($selectedEmployee)
+                                                                    <i wire:click="removeSelectedEmployee"
+                                                                        wire:key="remove-selected-employee-{{ $selectedEmployee->emp_id }}"
+                                                                        class="search-icon-search fas fa-times"></i>
+                                                                @else
+                                                                    <i class="search-icon-search fas fa-search"></i>
+                                                                @endif
+
                                                             </div>
                                                         </div>
-                                                        @error('search')
+
+                                                        @if (!empty($search1))
+                                                            <div class="search-results-container">
+                                                                @foreach ($employees1 as $employee)
+                                                                    <div class="search-result-item"
+                                                                        wire:click="selectEmployee('{{ $employee->emp_id }}')">
+                                                                        <!-- Initials in a circle -->
+                                                                        <div class="initials-circle">
+                                                                            {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                                        </div>
+
+                                                                        <!-- Full name and employee ID -->
+                                                                        <div class="employee-details">
+                                                                            <div class="full-name">
+                                                                                {{ $employee->first_name }}
+                                                                                {{ $employee->last_name }}</div>
+                                                                            <div class="employee-id">
+                                                                                #{{ $employee->emp_id }}</div>
+                                                                        </div>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
+                                                        @error('selectedEmployee')
                                                             <span class="text-danger">{{ $message }}</span>
                                                         @enderror
                                                     </div>
+
                                                     <div class="form-group col-12 mb-2">
-                                                        <label for="to-date">Recognize Values</label>
-                                                        <select id="recognizeType"
-                                                            wire:change="recognizeType($event.target.value)"
-                                                            wire:model.lazy="recognizeType"
-                                                            class="form-select placeholder-small">
-                                                            <option value="all">All Transactions</option>
-                                                            <option value="granted">Granted</option>
-                                                            <option value="availed">Availed</option>
-                                                            <option value="lapsed">Lapsed</option>
-                                                            <option value="withdrawn">Withdrawn</option>
-                                                            <option value="rejected">Rejected</option>
+                                                        <label for="recognizeType" class="mb-2">Recognize
+                                                            Values</label>
+                                                        <div class="dropdown-container input-wrapper"
+>
+
+                                                          
+                                                            <input wire:model="recognizeType"
+                                                                class="form-select placeholder-small input-field"
+                                                                wire:click="recognizeToggleDropdown"
+                                                                placeholder="Select">
+
+                                                            <div class="selected-items-container">
+                                                                @foreach ($recognizeType as $type)
+                                                                    <div class="selected-item">
+                                                                        <span style="font-size: 11px;color: var(--main-heading-color);font-weight: 500;">{{ $type }}</span>
+                                                                        <button type="button"
+                                                                            wire:click="removeItem('{{ $type }}')"
+                                                                            class="remove-item-btn">x</button>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
 
 
-                                                            <!-- Add other leave types as needed -->
-                                                        </select>
+
+                                                            <!-- Dropdown Content -->
+                                                            @if ($dropdownOpen)
+                                                                <div class="dropdown-content"
+                                                                    style="position: absolute; top: 100%; width: 100%; z-index: 10;">
+
+                                                                    <!-- Search Field inside Dropdown -->
+                                                                    <input wire:model="searchTerm"
+                                                                        class="search-input"
+                                                                        wire:input="searchRecognizeValues"
+                                                                        placeholder="Search..." />
+
+                                                                    <!-- Options List -->
+                                                                    <div class="options-container">
+                                                                        @if (!empty($searchTerm))
+                                                                            @if (count($recognizeOptions) > 0)
+                                                                                <!-- Display the options if there are search results -->
+                                                                                @foreach ($recognizeOptions as $key => $value)
+                                                                                    <label class="option-item">
+                                                                                        <input type="checkbox"
+                                                                                            wire:model="recognizeType"
+                                                                                            value="{{ $key }}">
+                                                                                        <div class="option-label">
+                                                                                            <div class="option-title">
+                                                                                                {{ $key }}
+                                                                                            </div>
+                                                                                            <div
+                                                                                                class="option-description">
+                                                                                                {{ $value }}
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </label>
+                                                                                @endforeach
+                                                                            @else
+                                                                                <!-- No results found for the search -->
+                                                                                <div class="no-results">
+                                                                                    <img src="{{ asset('/images/norecognizedata.png') }}"
+                                                                                        alt="No results"
+                                                                                        class="no-results-image" />
+                                                                                    <p
+                                                                                        style="font-size: 14px; font-weight: 500; margin: 0px;">
+                                                                                        Uh oh!</p>
+                                                                                    <span
+                                                                                        class="no-results-text">Nothing
+                                                                                        to show here</span>
+                                                                                </div>
+                                                                            @endif
+                                                                        @else
+                                                                            <!-- Display all options when there is no search term -->
+                                                                            @foreach ($options as $key => $value)
+                                                                                <label class="option-item">
+                                                                                    <input type="checkbox"
+                                                                                        wire:model="recognizeType"
+                                                                                        value="{{ $key }}">
+                                                                                    <div class="option-label">
+                                                                                        <div class="option-title">
+                                                                                            {{ $key }}</div>
+                                                                                        <div
+                                                                                            class="option-description">
+                                                                                            {{ $value }}</div>
+                                                                                    </div>
+                                                                                </label>
+                                                                            @endforeach
+                                                                        @endif
+
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                    <div class="form-group col-md-6 mb-2">
-                                                        <label for="to-date">Employee
-                                                            Type</label>
-                                                        <select id="employeeType" wire:model="employeeType"
-                                                            class="form-select placeholder-small">
-                                                            <option value="active" selected>Current Employees</option>
-                                                            <option value="past">Past Employees</option>
-                                                        </select>
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="message" class="mb-2">Your message<span
+                                                                style="color: var(--requiredAlert);">*</span></label>
+
+                                                        <!-- Full-width text area for the rich text editor -->
+                                                        <textarea id="message" wire:model="message" wire:keydown.debounce.500ms="validateField('message')" rows="4" class="w-100" placeholder=""></textarea>
+                                                        @error('message')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                     </div>
-                                                    <div class="form-group col-md-6 mb-2">
-                                                        <label for="to-date">Sort
-                                                            Order</label>
-                                                        <select name="sortBy" wire:model="sortBy"
-                                                            wire:change="updateSortBy" id="sortBySelect"
-                                                            class="form-select placeholder-small">
-                                                            <option value="newest_first" selected>Employee Number
-                                                                (Newest First)
-                                                            </option>
-                                                            <option value="oldest_first">Employee Number (Oldest First)
-                                                            </option>
-                                                        </select>
+                                                    <div class="form-group col-12 mb-2">
+                                                        <label for="reactions" class="mb-2">Reactions</label>
+                                                        <div class="reaction-section">
+                                                            <!-- Default Emoji Button with Plus Icon -->
+                                                            <button type="button" wire:click="toggleKudosEmojiPicker" class="reaction-btn">
+                                                                😊 <span class="plus-icon">+</span>
+                                                            </button>
+                                                            
+                                                            <!-- Emoji Picker (Hidden by default) -->
+                                                            @if ($showKudoEmojiPicker)
+                                                                <div class="kudos-emoji-picker">
+                                                                    <!-- Emojis for reactions -->
+                                                                    @foreach ($this->getReactionEmojis() as $reaction => $emoji)
+                                                                        <button type="button" wire:click="addReaction('{{ $reaction }}')" class="emoji-btn">
+                                                                            {{ $emoji }}
+                                                                        </button>
+                                                                    @endforeach
+                                                                </div>
+                                                            @endif
+                                                    
+                                                            <!-- Display Selected Reactions -->
+                                                            <div class="selected-reactions mt-2">
+                                                                @foreach ($reactions as $reaction)
+                                                                    <span class="selected-reaction">
+                                                                        <!-- Display the emoji using the getEmoji method -->
+                                                                        {!! $this->getEmoji($reaction) !!}
+                                                                        <!-- Remove button (cross icon) for each selected reaction -->
+                                                                        <button wire:click="removeKudosReaction('{{ $reaction }}')" class="remove-btn">×</button>
+                                                                    </span>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    
+                            
+
                                                 </div>
                                                 <div class="modal-footer d-flex justify-content-center">
                                                     <button type="submit" class="submit-btn"
-                                                        wire:click="dayWiseLeaveTransactionReport">Give</button>
-                                                    <button type="button" class="cancel-btn" wire:click="resetFields"
+                                                        wire:click="submitKudos">Give</button>
+                                                    <button type="button" class="cancel-btn"
+                                                        wire:click="resetFields"
                                                         style="border:1px solid rgb(2,17,79);">Cancel</button>
                                                 </div>
 
@@ -323,6 +475,24 @@
                                 </div>
                                 <span class="custom-radio-button bg-blue"></span>
                                 <span class="custom-radio-content ">All Activities</span>
+                            </label>
+                        </div>
+
+                        <div class="posts">
+                            <label class="custom-radio-label">
+
+                                <input type="radio" id="radio-hr" name="radio" value="posts"
+                                    data-url="/kudos" wire:click="handleRadioChange('kudos')">
+
+                                <div class="feed-icon-container" style="margin-left: 10px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">
+
+                                        <circle cx="12" cy="8" r="7"></circle>
+                                        
+                                        <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                                </div>
+                                <span class="custom-radio-button bg-blue"></span>
+                                <span class="custom-radio-content ">Kudos</span>
                             </label>
                         </div>
 
@@ -3668,6 +3838,21 @@ style="display: flex; gap: 10px; align-items: center;">
         // Display the message
         alert(event.detail
             .message); // You can replace this with a nicer UI message (e.g., using a modal or toast)
+    });
+</script>
+<script>
+    document.addEventListener('livewire:load', function() {
+        tinymce.init({
+            selector: '#message',
+            menubar: false,
+            plugins: 'lists advlist',
+            toolbar: 'undo redo | bold italic underline | numlist bullist | alignleft aligncenter alignright',
+            setup: function(editor) {
+                editor.on('change', function() {
+                    @this.set('message', editor.getContent());
+                });
+            }
+        });
     });
 </script>
 

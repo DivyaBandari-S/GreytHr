@@ -4,6 +4,8 @@ namespace App\Livewire;
 
 use App\Models\Client;
 use App\Mail\TaskAssignedNotification;
+use App\Mail\TaskReopenedNotification;
+use App\Mail\TaskClosedNotification;
 use App\Models\ClientsEmployee;
 use App\Models\ClientsWithProjects;
 use App\Models\EmployeeDetails;
@@ -227,6 +229,8 @@ class Tasks extends Component
 
     protected $rules = [
         'newComment' => 'required|string|word_count:500|max:3000',
+        'description' => 'required|string|min:3',
+        'newDueDate' => 'required|date|after_or_equal:today', 
     ];
     protected $messages = [
         'newComment.required' => 'Comment is required.',
@@ -235,6 +239,11 @@ class Tasks extends Component
         'image.max' => 'Image size must not exceed 2MB.',
         'file_path.mimes' => 'File must be a document of type: pdf, xls, xlsx, doc, docx, txt, ppt, pptx, gif, jpg, jpeg, png.',
         'file_path.max' => 'Document size must not exceed 2MB.',
+        'description.required' => 'Description is required.',
+        'description.min' => 'Description must be at least 3 characters.',
+        'newDueDate' => 'DueDate is Required', 
+        'newDueDate.date' => 'Please enter a valid date for the Due Date.',
+    'newDueDate.after_or_equal' => 'The Due Date must be today or later.',
 
     ];
     public function boot()
@@ -251,6 +260,7 @@ class Tasks extends Component
 
     public function validateField($field)
     {
+        
 
         $this->validateOnly($field, $this->rules);
     }
@@ -404,50 +414,221 @@ class Tasks extends Component
     public function openForTasks($taskId)
     {
         $task = Task::find($taskId);
-
+    
         if ($task) {
+            // Update task status to "closed"
             $task->update(['status' => 11]);
+    
+            // Retrieve the assignee from the task (assuming assignee is stored in the format 'Name #(EmpId)')
+            preg_match('/#\((.*?)\)/', $task->assignee, $matches);
+            $assigneeEmpId = isset($matches[1]) ? $matches[1] : null;
+    
+            if ($assigneeEmpId) {
+                // Retrieve the assignee details using the emp_id
+                $assigneeDetails = EmployeeDetails::where('emp_id', $assigneeEmpId)->first();
+    
+                if ($assigneeDetails) {
+                    // Retrieve assignee's email
+                    $assigneeEmail = $assigneeDetails->email;
+    
+                    if (!empty($assigneeEmail)) {
+                        // Prepare task details for email
+                        $taskName = $task->task_name;
+                        $description = $task->description;
+                        $priority = $task->priority;
+                        $assignedByEmpId = $task->emp_id; // Assuming 'emp_id' field in task points to the assigned person
+                        $assignedByDetails = EmployeeDetails::where('emp_id', $assignedByEmpId)->first();
+        
+                        if ($assignedByDetails) {
+                            // Format the assignedBy name
+                            $assignedBy = $assignedByDetails->first_name . ' ' . $assignedByDetails->last_name;
+                        } else {
+                            $assignedBy = 'Unknown'; // In case the assignedBy is not found
+                        }
+                        $dueDate = $task->due_date; // Using task's due date
+                        $formattedAssignee = ucwords(strtolower(trim($task->assignee))); // Format assignee name
+    
+                        // Send notification email to assignee about task closure
+                        Mail::to($assigneeEmail)->send(new TaskClosedNotification(
+                            $taskName,
+                            $description,
+                            $dueDate,
+                            $priority,
+                            $assignedBy,
+                            $formattedAssignee
+                        ));
+    
+                        // Flash success message for email
+                        FlashMessageHelper::flashSuccess('Task closed successfully and notification email sent!');
+                    } else {
+                        // Log error if assignee email is empty
+                        Log::error('Assignee email is empty for emp_id: ' . $assigneeEmpId);
+                    }
+                } else {
+                    // Log error if assignee not found
+                    Log::error('Employee not found for emp_id: ' . $assigneeEmpId);
+                }
+            } else {
+                // Log error if emp_id was not found in the assignee field
+                Log::error('Employee ID not found in assignee field for task: ' . $task->task_name);
+            }
         }
-        FlashMessageHelper::flashSuccess('Task closed successfully!');
+    
+ 
         session()->flash('showAlert', true);
-        $this->activeTab = 'completed';
+        
+        // Reload tasks after update
         $this->loadTasks();
     }
-
+    
+public $showReopenDialog = false;
+public $newDueDate;
     public function closeForTasks($taskId)
     {
+        $this->taskId = $taskId;
+    $this->newDueDate = null; // Clear any existing due date
 
-        $task = Task::find($taskId);
+    // Show the modal
+        $this->showReopenDialog= true;
 
-        if ($task) {
-            $task->update([
-                'status' => 10,
-                'reopened_date' => now()
-            ]);
-        }
-        FlashMessageHelper::flashSuccess('Task has been Re-Opened.');
-        session()->flash('showAlert', true);
-        $this->activeTab = 'open';
-        $this->loadTasks();
+
+        // $task = Task::find($taskId);
+
+        // if ($task) {
+        //     $task->update([
+        //         'status' => 10,
+        //         'reopened_date' => now()
+        //     ]);
+        // }
+        // FlashMessageHelper::flashSuccess('Task has been Re-Opened.');
+        // session()->flash('showAlert', true);
+        // // $this->activeTab = 'open';
+        // $this->loadTasks();
     }
+    public function validateDueDate(){
+        $this->validate([
+            'newDueDate' => 'required|date|after_or_equal:today', 
+         
+        
+        ]);
+    } 
+    public function submitReopen()
+{
+  
+   
+  
+
+    // Perform validation
+    $this->validateDueDate();
+   
+   
+    // Find the task by ID
+    $task = Task::find($this->taskId);
+    
+   
+
+    if ($task && $this->newDueDate) {
+        // Update the task with the new due date
+        $task->update([
+            'due_date' => $this->newDueDate, // Update the due date
+            'status' => 10, // Assuming 10 is the "reopened" status
+            'reopened_date' => now() // Update the reopened date
+        ]);
+        
+        // Flash success message
+        FlashMessageHelper::flashSuccess('Task has been Re-Opened and due date updated.');
+        preg_match('/#\((.*?)\)/', $task->assignee, $matches);
+    $empId = isset($matches[1]) ? $matches[1] : null;
+
+
+    if ($empId) {
+        // Retrieve assignee details using the extracted emp_id
+        $assigneeDetails = EmployeeDetails::where('emp_id', $empId)->first();
+
+
+        // Check if assignee details are found
+        if ($assigneeDetails) {
+            // Extract assignee email
+            $assigneeEmail = $assigneeDetails->email;
+          
+            // Ensure the assignee email is valid
+            if (!empty($assigneeEmail)) {
+                // Prepare task details to send in email
+                $taskName = $task->task_name;
+                $description = $task->description;
+                $priority = $task->priority; // Assuming priority is set
+                $assignedByEmpId = $task->emp_id; // Assuming 'emp_id' field in task points to the assigned person
+                $assignedByDetails = EmployeeDetails::where('emp_id', $assignedByEmpId)->first();
+
+                if ($assignedByDetails) {
+                    // Format the assignedBy name
+                    $assignedBy = $assignedByDetails->first_name . ' ' . $assignedByDetails->last_name;
+                } else {
+                    $assignedBy = 'Unknown'; // In case the assignedBy is not found
+                }
+                $dueDate = $this->newDueDate; // Use the new due date
+
+                // Format assignee name and ID (if needed)
+                $formattedAssignee = ucwords(strtolower(trim($task->assignee)));
+
+                // Send notification email to assignee
+                Mail::to($assigneeEmail)->send(new TaskReopenedNotification(
+                    $taskName,
+                    $description,
+                    $dueDate,
+                    $priority,
+                    $assignedBy,
+                    $formattedAssignee
+                ));
+            }
+        }
+
+
+        // Close the modal
+        $this->closeReopen();
+
+        // Reload tasks if necessary
+        $this->loadTasks();
+    } else {
+        // Show error if no due date is entered
+        FlashMessageHelper::flashError('Please provide a valid due date.');
+    }
+}
+}
+
+// This method is called to close the modal
+public function closeReopen()
+{
+    $this->showReopenDialog = false;
+}
 
     public function autoValidate()
     {
         if ($this->validate_tasks) {
-            if (is_null($this->selectedPersonClients)) {
+           
+          
+            if (is_null($this->selectedPersonClients) || $this->selectedPersonClients->isEmpty()) {
+            
                 $this->validate([
                     'due_date' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'description' => 'required|min:3',
+                 
+                
                 ]);
             } else {
+                
                 $this->validate([
                     'due_date' => 'required',
                     'client_id' => 'required',
                     'project_name' => 'required',
                     'assignee' => 'required',
                     'task_name' => 'required',
+                    'description' => 'required|min:3',
+                    
                 ]);
+              
             }
         }
     }
@@ -458,12 +639,17 @@ class Tasks extends Component
 
     public function submit()
     {
-          
-            // $this->projectValidation();
+       
+      
+           
         try {
-            
+           
             $this->validate_tasks = true;
             $this->autoValidate();
+          
+            
+            
+         
             if (count($this->selectedPeopleForFollowers) > $this->maxFollowers) {
                 session()->flash('error', 'You can only select up to 5 followers.');
                 // FlashMessageHelper::flashError('You can only select up to 5 followers.');
@@ -499,6 +685,7 @@ class Tasks extends Component
             }
 
             $employeeId = auth()->guard('emp')->user()->emp_id;
+        
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -520,6 +707,7 @@ class Tasks extends Component
                 'mime_type' => $mimeType,
                 'status' => 10,
             ]);
+           
             // $this->showRecipients = false;
 
             // $this->selectedPeopleName=null;
@@ -633,7 +821,7 @@ class Tasks extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
         } catch (\Exception $e) {
-            // Log::error('Uploaded file error: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Uploaded file error: ' . $e->getMessage(), ['exception' => $e]);
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
