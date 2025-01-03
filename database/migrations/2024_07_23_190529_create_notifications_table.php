@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('assignee',100)->nullable();
             $table->json('is_birthday_read')->nullable();
             $table->string('leave_status',20)->default('Pending');
+            $table->string('regularisation_status',20)->default(5);
+            $table->json('regularisation_entries');
             $table->string('applying_to')->nullable();
             $table->json('cc_to')->nullable();
             $table->string('receiver_id',10)->nullable();

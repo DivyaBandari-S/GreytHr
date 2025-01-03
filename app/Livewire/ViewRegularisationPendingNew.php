@@ -9,10 +9,12 @@ use App\Mail\RegularisationCombinedMail;
 use App\Mail\RegularisationRejectionMail;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\Notification;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use App\Notifications\RegularisationApproved;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 use Livewire\Component;
@@ -296,6 +298,7 @@ class ViewRegularisationPendingNew extends Component
         
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
+        $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');
         if(empty($this->remarks))
         {
 
@@ -308,6 +311,17 @@ class ViewRegularisationPendingNew extends Component
         $item->rejected_date = $currentDateTime; 
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
+
+        Notification::create([
+            'emp_id' => $managerId,
+          
+            'regularisation_entries' => $item->regularisation_entries,
+            'notification_type'=>'regularisationReject',
+            'assignee'=>$item->emp_id,
+            'regularisation_status' => 3,
+           
+        ]);
+        Log::info('Regularisation Notification rejected successfully.');
 
         $this->countofregularisations--;
         $this->remarks='';
