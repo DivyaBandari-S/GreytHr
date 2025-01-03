@@ -384,7 +384,7 @@
             </div>
       
         </div>
-        <div class="col-md-9">
+        <div class="col-md-12">
                 <div id="eventsSection" class="eventsSection" style=" overflow-y: auto;">
                     @if($isManager)
                         @if($posts->where('status', 'Pending')->isEmpty())
@@ -392,8 +392,9 @@
                             <p class="text-feed">It feels empty here!</p>
                             <p class="text-xs">Your feed is still in making as there's no post requests to show.</p>
                         @else
-                            @foreach($posts->where('status', 'Pending') as $post)
-                                <div class="col-12 bg-white" style="border-radius: 5px; border: 1px solid #ccc; height: auto; margin-top: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); ">
+                        <div class="col-md-12 feeds-main-content">
+                        @foreach($posts->where('status', 'Pending') as $post)
+                                <div class="col-md-9 bg-white " style="border-radius: 5px; border: 1px solid #ccc; height: auto; margin-top: 5px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); ">
                                     <div class="row mt-2">
                                         <div class="col-12 col-md-4 text-center mb-1 mb-md-0">
                                             <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
@@ -404,23 +405,23 @@
                                     </div>
 
                                     <div class="row m-2">
-                                        <div class="col-12 col-md-5" style="font-size: 12px;">
+                                        <div class="col-12 col-md-6" style="font-size: 12px;">
                                             @if($post->employeeDetails)
                                                 Employee Name: {{ $post->employeeDetails->first_name }} {{ $post->employeeDetails->last_name }}
                                             @else
                                                 No employee details found for this post.
                                             @endif
                                         </div>
-                                        <div class="col-12 col-md-4" style="font-size: 12px;">
+                                        <div class="col-12 col-md-6" style="font-size: 12px;">
                                             Employee ID: {{ $post->emp_id }}
                                         </div>
                                     </div>
 
                                     <div class="row m-2">
-                                        <div class="col-12 col-md-5" style="font-size: 12px;">
+                                        <div class="col-12 col-md-6" style="font-size: 12px;">
                                             Category: {{ $post->category }}
                                         </div>
-                                        <div class="col-12 col-md-7" style="font-size: 12px;">
+                                        <div class="col-12 col-md-6" style="font-size: 12px;">
                                             Description: {{ $post->description }}
                                         </div>
                                     </div>
@@ -473,6 +474,8 @@
                                     @endif
                                 </div>
                             @endforeach
+                        </div>
+                        
                         @endif
                     @endif
                 </div>

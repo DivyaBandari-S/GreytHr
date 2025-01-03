@@ -742,14 +742,24 @@ public function loadaddComments()
             $user = Auth::user();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+             // Fetch the manager_id of the current employee
+             $managerId = $employeeDetails->manager_id;
     
-            $isManager = DB::table('employee_details')
-                ->where('manager_id', $employeeId)
-                ->exists();
+             if (!$managerId) {
+                 FlashMessageHelper::flashError('Manager information not found for the current employee.');
+                 return;
+             }
+     
+             // Check if the authenticated employee is a manager
+             $isManager = DB::table('employee_details')
+                 ->where('manager_id', $employeeId)
+                 ->exists();
+     
+             $postStatus = $isManager ? 'Closed' : 'Pending';
+             $managerId = $isManager ? $employeeId : null;
+             $empId = $isManager ? null : $employeeId;
     
-            $postStatus = $isManager ? 'Closed' : 'Pending';
-            $managerId = $isManager ? $employeeId : null;
-            $empId = $isManager ? null : $employeeId;
+           
     
             $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
     
@@ -782,7 +792,7 @@ public function loadaddComments()
             // Reset form fields and redirect to posts page
             $this->reset(['category', 'description', 'file_path']);
             FlashMessageHelper::flashSuccess('Post created successfully!');
-            return redirect()->route('manager.posts'); // Update 'manager.posts' to the actual route name for the posts page
+             // Update 'manager.posts' to the actual route name for the posts page
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
