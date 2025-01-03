@@ -2450,20 +2450,10 @@ $nameList = [];
             </span>
             <span class="emoji-option"
                 wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
-
-        </div>
-        <div class="emoji-row">
-            <span class="emoji-option"
-                wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
-            <span class="emoji-option"
-                wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
-            <span class="emoji-option"
+                <span class="emoji-option"
                 wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
-            <span class="emoji-option"
-                wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
-
-
         </div>
+      
 
 </form>
 </div>
@@ -3066,20 +3056,10 @@ $uniqueNames = [];
                 </span>
                 <span class="emoji-option"
                     wire:click="selectEmoji('&#128078','{{ $data['employee']->emp_id }}')">👎</span>
-
-            </div>
-            <div class="emoji-row">
-                <span class="emoji-option"
-                    wire:click="selectEmoji('&#129307','{{ $data['employee']->emp_id }}')">🤛</span>
-                <span class="emoji-option"
-                    wire:click="selectEmoji('&#9996','{{ $data['employee']->emp_id }}')">✌</span>
-                <span class="emoji-option"
+                    <span class="emoji-option"
                     wire:click="selectEmoji('&#128076','{{ $data['employee']->emp_id }}')">👌</span>
-                <span class="emoji-option"
-                    wire:click="selectEmoji('&#129295','{{ $data['employee']->emp_id }}')">🤏</span>
-
-
             </div>
+       
 
 </form>
 </div>
@@ -3718,11 +3698,7 @@ style="display: flex; gap: 10px; align-items: center;">
         alert('Employees do not have permission to create a post.');
     });
 </script>
-<script>
-    tinymce.init({
-        selector: '#myTextarea'
-    });
-</script>
+
 <script>
     document.addEventListener('click', function(event) {
         const dropdowns = document.querySelectorAll('.cus-button');
