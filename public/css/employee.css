@@ -647,6 +647,20 @@ main .btn-send:hover {
         width: calc(100% - 60px);
         transition: all 0.3s ease;
     }
+    .cardReport .bottom .content .name {
+        cursor: pointer;
+        font-size: 1rem;
+        color: #02114f;
+        font-weight: bold;
+    }
+    .managerOtherDetails{
+        font-size: 12px;
+        color: #02114f;
+    }
+    .emailNav{
+        font-size: 13px;
+        text-decoration: underline;
+    }
     /* nav .nav-link,
 	nav .divider {
 		display: block;
@@ -681,6 +695,18 @@ main .btn-send:hover {
         position: relative;
         width: calc(100% - 60px);
         transition: all 0.3s ease;
+    }
+    .cardReport{
+        height: 280px;
+    }
+    .cardReport .bottom .content {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        bottom: 3px;
+        left: 1.5rem;
+        right: 1.5rem;
+        height: 150px;
     }
     /* nav .nav-link,
 	nav .divider {
@@ -1054,6 +1080,36 @@ main .btn-send:hover {
         .box-info-content .info-row .value {
             margin-left: 15px;
         }
+        .cardReport .bottom .content .name {
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            margin-top: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #02114f;
+            font-weight: bold;
+        }
+        .managerOtherDetails{
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            color: #02114f;
+        }
+        .emailNav{
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 13px;
+            text-decoration: underline;
+        }
     }
 
     @media (max-width: 1100px) {
@@ -1083,6 +1139,36 @@ main .btn-send:hover {
         .sidebar {
             width: 60px;
             padding: 5px;
+        }
+        .cardReport .bottom .content .name {
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            margin-top: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #02114f;
+            font-weight: bold;
+        }
+        .managerOtherDetails{
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 12px;
+            color: #02114f;
+        }
+        .emailNav{
+            display: inline-block;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 13px;
+            text-decoration: underline;
         }
     }
 
@@ -1425,32 +1511,16 @@ main .btn-send:hover {
 }
 
 .cardReport .bottom .content .name {
-	display: inline-block;
-	max-width: 180px;
-	white-space: nowrap;
-    margin-top: 10px;
-	overflow: hidden;
-	text-overflow: ellipsis;
 	cursor: pointer;
     font-size: 1rem;
     color: #02114f;
     font-weight: bold;
 }
 .managerOtherDetails{
-    display: inline-block;
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-size: 12px;
     color: #02114f;
 }
 .emailNav{
-    display: inline-block;
-    max-width: 180px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     font-size: 13px;
     text-decoration: underline;
 }
