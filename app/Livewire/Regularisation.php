@@ -9,6 +9,7 @@ use App\Mail\RegularisationWithdrawalMail;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
+use App\Models\Notification;
 use App\Models\RegularisationDates;
 
 use App\Models\Regularisations;
@@ -756,6 +757,15 @@ public function nextMonth()
                 'regularisation_date' => null,
             ]);
             Log::info('Regularisation dates saved successfully.');
+            Notification::create([
+                'emp_id' => $emp_id,
+              
+                'regularisation_entries' => $regularisationEntriesJson,
+                'notification_type'=>'regularisationApply',
+                'regularisation_status' => 5,
+               
+            ]);
+            Log::info('Regularisation Notification saved successfully.');
     
             // Send email notification
             $details = [

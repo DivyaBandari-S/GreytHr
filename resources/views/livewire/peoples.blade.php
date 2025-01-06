@@ -501,6 +501,9 @@
                                 ->where('starred_status', 'starred')
                                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                                 ->first();
+                                $employeeStatus = optional($selectedPerson)->employee_status; // This field should hold values like 'Resigned', 'Terminated', etc.
+                              
+                              $isEmployeeInactive = in_array(strtolower($employeeStatus), ['resigned', 'terminated']);
                         @endphp
                         <div class="people-selectedperson-detail-container">
 
@@ -518,6 +521,9 @@
                                 </a>
 
                             </div>
+                            @if ($isEmployeeInactive)
+                            <p class="employee-status text-danger p-0 m-0" style="font-size: 14px;">{{ ucfirst($employeeStatus) }}</p>
+                        @endif
                             @php
                                 $jobTitle = optional($selectedPerson)->job_role;
                                 $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);
@@ -812,12 +818,19 @@
                                 ->where('starred_status', 'starred')
                                 ->where('emp_id', auth()->guard('emp')->user()->emp_id)
                                 ->first();
+                                $employeeStatus = optional($selectedMyTeamPerson)->employee_status; // This field should hold values like 'Resigned', 'Terminated', etc.
+                              
+                                $isEmployeeInactive = in_array(strtolower($employeeStatus), ['resigned', 'terminated']);
+                             
                         @endphp
+                        
                         <div class="people-selectedperson-detail-container">
                             <div class="d-flex align-items-center">
                                 <h1 class="people-selectedperson-name">
                                     {{ ucwords(strtolower(optional($selectedMyTeamPerson)->first_name)) }}
                                     {{ ucwords(strtolower(optional($selectedMyTeamPerson)->last_name)) }}</h1>
+                                  
+                        
                                 <a class="people-selectedperson-anchortag"
                                     wire:click="toggleStar('{{ optional($selectedMyTeamPerson)->emp_id }}')">
 
@@ -828,6 +841,9 @@
                                 </a>
 
                             </div>
+                            @if ($isEmployeeInactive)
+                            <p class="employee-status text-danger p-0 m-0" style="font-size: 14px;">{{ ucfirst($employeeStatus) }}</p>
+                        @endif
                             @php
                                 $jobTitle = optional($selectedMyTeamPerson)->job_role;
                                 $convertedTitle = preg_replace('/\bII\b/', 'I', $jobTitle);

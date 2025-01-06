@@ -165,6 +165,7 @@ class Everyone extends Component
     $urls = [
         'posts' => '/everyone',
         'activities' => '/Feeds',
+        'kudos' => '/kudos',
         'post-requests'=>'/emp-post-requests'
         // Add more mappings if necessary
     ];
@@ -218,14 +219,24 @@ class Everyone extends Component
             $user = Auth::user();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+             // Fetch the manager_id of the current employee
+             $managerId = $employeeDetails->manager_id;
     
-            $isManager = DB::table('employee_details')
-                ->where('manager_id', $employeeId)
-                ->exists();
+             if (!$managerId) {
+                 FlashMessageHelper::flashError('Manager information not found for the current employee.');
+                 return;
+             }
+     
+             // Check if the authenticated employee is a manager
+             $isManager = DB::table('employee_details')
+                 ->where('manager_id', $employeeId)
+                 ->exists();
+     
+             $postStatus = $isManager ? 'Closed' : 'Pending';
+             $managerId = $isManager ? $employeeId : null;
+             $empId = $isManager ? null : $employeeId;
     
-            $postStatus = $isManager ? 'Closed' : 'Pending';
-            $managerId = $isManager ? $employeeId : null;
-            $empId = $isManager ? null : $employeeId;
+           
     
             $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
     
@@ -242,16 +253,23 @@ class Everyone extends Component
             ]);
     
             // Send email notification to manager
-            if ($managerId) {
-                $managerDetails = EmployeeDetails::where('emp_id', $managerId)->first();
-                if ($managerDetails && $managerDetails->email) {
-                    Mail::to($managerDetails->email)->send(new \App\Mail\PostCreatedNotification($post, $employeeDetails));
-                }
+            $managerDetails = EmployeeDetails::where('emp_id', $employeeDetails->manager_id)->first();
+            if ($managerDetails && $managerDetails->email) {
+                $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
+               
+                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+            }
+           // Optionally, send email to HR
+            if ($hrDetails && $hrDetails->email) {
+                $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
+                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
             }
     
+    
+            // Reset form fields and redirect to posts page
             $this->reset(['category', 'description', 'file_path']);
             FlashMessageHelper::flashSuccess('Post created successfully!');
-            $this->showFeedsDialog = false;
+             // Update 'manager.posts' to the actual route name for the posts page
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
@@ -263,6 +281,7 @@ class Everyone extends Component
             FlashMessageHelper::flashError('An error occurred while creating the post. Please try again.');
         }
     }
+    
     
     
     

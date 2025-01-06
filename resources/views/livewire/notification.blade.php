@@ -56,34 +56,29 @@
             @endif
             @endif
 
-            @if($totalJoinees>0 && $getRemainingJoinees)
-            @if($totalJoinees == 1 )
-            @php
-            $currentYear = \Carbon\Carbon::now()->year;
-            $hireYear = \Carbon\Carbon::parse($getRemainingJoinees->hire_date)->year;
-            @endphp
-            @if($hireYear != $currentYear)
+            <!-- //for experinced employees -->
+            @if($totalExpEmp>0 && $getRemainingExpEmp)
+            @if($totalExpEmp == 1 )
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para">
                     <a href="#"
                         onclick="window.location.href='{{ url('/Feeds'); }}'"
-                        title="Congratulations to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-       (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s)!"
+                        title="Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}(#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s)!"
                         class="notification-head">
-                        Congratulations to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-                        (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s)!
+                        Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                        (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s)!
                     </a>
                 </p>
 
-                @if($getRemainingJoinees->gender == 'MALE')
+                @if($getRemainingExpEmp->gender == 'MALE')
                 <p class="mb-0 notification-text-para">
-                    Please congratulate {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-                    (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                    Please congratulate {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                    (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
                 </p>
                 @else
                 <p class="mb-0 notification-text-para">
-                    Please congratulate {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-                    (#{{ $getRemainingJoinees->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
+                    Please congratulate {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
+                    (#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s) in the company.
                 </p>
                 @endif
                 <div class="notify-time">
@@ -92,32 +87,8 @@
             </div>
             @else
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
-                <p class="mb-0 notification-text-para">
-                    <a href="#"
-                        onclick="window.location.href='{{ url('/Feeds'); }}'"
-                        title="Welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }} (#{{ $getRemainingJoinees->emp_id }}) who has joined the company!"
-                        class="notification-head">
-                        Welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-                        (#{{ $getRemainingJoinees->emp_id }}) who has joined the company!
-                    </a>
-                </p>
-
-                <p class="mb-0 notification-text-para">
-                    Please join us in welcoming {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
-                    (#{{ $getRemainingJoinees->emp_id }}) to the company, who has joined us on {{ \Carbon\Carbon::parse($getRemainingJoinees->hire_date)->format('d M, Y') }}
-                    .
-                </p>
-
-                <div class="notify-time">
-                    <p class="notify-time-para">{{$joiningTime}}</p>
-                </div>
-            </div>
-
-            @endif
-            @else
-            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
-                        Congratulations to {{$totalJoinees}} members on completing their successful year(s)!
+                        Congratulations to {{$totalExpEmp}} members on completing their successful year(s)!
                     </a></p>
 
                 <p class="mb-0 notification-text-para">Please congratulate them. </p>
@@ -127,6 +98,53 @@
             </div>
             @endif
             @endif
+
+            <!-- //for newly joined employeess -->
+            @if($totalJoinees > 0 && $getRemainingJoinees)
+            @if($totalJoinees == 1 )
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#"
+                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                        title="Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }} (#{{ $getRemainingJoinees->emp_id }}) to the team!"
+                        class="notification-head">
+                        Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                        (#{{ $getRemainingJoinees->emp_id }}) to the team!
+                    </a>
+                </p>
+
+                @if($getRemainingJoinees->gender == 'MALE')
+                <p class="mb-0 notification-text-para">
+                    Let's give a warm welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) as he joins the team.
+                </p>
+                @else
+                <p class="mb-0 notification-text-para">
+                    Let's give a warm welcome to {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
+                    (#{{ $getRemainingJoinees->emp_id }}) as she joins the team.
+                </p>
+                @endif
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @else
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para">
+                    <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                        Welcome {{$totalJoinees}} new member(s) to the team!
+                    </a>
+                </p>
+
+                <p class="mb-0 notification-text-para">Let's give them all a warm welcome!</p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$joiningTime}}</p>
+                </div>
+            </div>
+            @endif
+            @endif
+
+
 
             @if($totalnotificationscount <= 0)
                 <div class="text-center mt-4">
@@ -218,6 +236,43 @@
                     @endif
             </div>
         </div>
+        @elseif($notification->notification_type=='regularisationApply')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                </p>
+
+              
+                    <p class="mb-0 notification-text-para">Applied for Attendance Regularisation request.</p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                   
+            </div>
+        </div>
+        @elseif($notification->notification_type=='regularisationReject')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                </p>
+
+              
+                    <p class="mb-0 notification-text-para">Rejected your Attendance Regularisation request.</p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                   
+            </div>
+        </div>
+
         @elseif($notification->notification_type=='leaveCancel')
         <div>
             <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
@@ -268,5 +323,6 @@
         @endforeach
         @endif
     </div>
+  
 </div>
 </div>

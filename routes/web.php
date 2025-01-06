@@ -101,6 +101,7 @@ use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
 use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
+use App\Livewire\GiveKudos;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\MarriageLeaveBalance;
 use App\Livewire\MaternityLeaveBalance;
@@ -285,6 +286,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Everyone::class)->name('events');
     Route::get('/everyone', Everyone::class)->name('everyone');
+    Route::get('/kudos', GiveKudos::class)->name('kudos');
     Route::get('/emp-post-requests', EmpPostrequest::class)->name('emp-post-requests');
 
     //People module

@@ -319,7 +319,7 @@ class AttendanceMusterReport extends Component
 
     public function render()
     {
-        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->get();
+        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->orderBy('first_name')->get();
         if($this->searching==1)
         {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter
