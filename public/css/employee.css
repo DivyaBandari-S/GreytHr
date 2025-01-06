@@ -1074,6 +1074,9 @@ main .btn-send:hover {
         .sidebar-list-contacts.hidden {
             display: none;
         }
+        #listCOntactDiv.hidden {
+            display: none;
+        }
         .sidebar-list-contacts .item {
             cursor: pointer;
         }
@@ -1174,7 +1177,15 @@ main .btn-send:hover {
         flex: 1;
         padding: 10px;
         overflow: auto;
-        height: calc(100vh - 143px);
+        height: calc(100vh - 194px);
+    }
+    .profile-mail-id {
+        padding: 3px 8px;
+        font-size: 12px;
+        border-radius: 10px;
+        background-color: #007bff12;
+        border: 1px solid;
+        cursor: pointer;
     }
 
     .chat-footer {

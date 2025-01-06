@@ -173,7 +173,7 @@
 
 /* Starting of home module (Kumar Asapu,Archana Goud,Divya Bandari,Pranita Priyadarshi & Siva)*/
 .showTimer {
-    padding: 5px 15px;
+    padding: 5px 10px;
     border: 1px solid rgb(2, 17, 79);
     border-radius: 5px;
     background: #fff;
@@ -3572,12 +3572,19 @@ input[type="radio"] {
     /* background-color: #b0d8df; */
     border-radius: 10px;
     transition: transform 0.3s ease-in-out;
-    background-image: radial-gradient(circle at 40% 91%, rgba(251, 251, 251, 0.04) 0%, rgba(251, 251, 251, 0.04) 50%, rgba(229, 229, 229, 0.04) 50%, rgba(229, 229, 229, 0.04) 100%), radial-gradient(circle at 66% 97%, rgba(36, 36, 36, 0.04) 0%, rgba(36, 36, 36, 0.04) 50%, rgba(46, 46, 46, 0.04) 50%, rgba(46, 46, 46, 0.04) 100%), radial-gradient(circle at 86% 7%, rgba(40, 40, 40, 0.04) 0%, rgba(40, 40, 40, 0.04) 50%, rgba(200, 200, 200, 0.04) 50%, rgba(200, 200, 200, 0.04) 100%), radial-gradient(circle at 15% 16%, rgba(99, 99, 99, 0.04) 0%, rgba(99, 99, 99, 0.04) 50%, rgba(45, 45, 45, 0.04) 50%, rgba(45, 45, 45, 0.04) 100%), radial-gradient(circle at 75% 99%, rgba(243, 243, 243, 0.04) 0%, rgba(243, 243, 243, 0.04) 50%, rgba(37, 37, 37, 0.04) 50%, rgba(37, 37, 37, 0.04) 100%), linear-gradient(90deg, rgb(34, 222, 237), rgb(135, 89, 215));
+    background-image:
+        linear-gradient(45deg, rgba(176, 216, 223, 0.4) 0%, rgba(176, 216, 223, 0.4) 32%, rgba(151, 201, 206, 0.4) 32%, rgba(151, 201, 206, 0.4) 100%),
+        linear-gradient(0deg, rgba(139, 188, 193, 0.4) 0%, rgba(139, 188, 193, 0.4) 40%, rgba(96, 164, 169, 0.4) 40%, rgba(96, 164, 169, 0.4) 100%),
+        linear-gradient(157.5deg, rgba(135, 177, 183, 0.4) 0%, rgba(135, 177, 183, 0.4) 52%, rgba(184, 223, 228, 0.4) 52%, rgba(184, 223, 228, 0.4) 100%),
+        linear-gradient(157.5deg, rgba(190, 232, 237, 0.4) 0%, rgba(190, 232, 237, 0.4) 11%, rgba(120, 192, 198, 0.4) 11%, rgba(120, 192, 198, 0.4) 100%),
+        linear-gradient(90deg, #b0d8df, #7faab2);
+
+    /* background-image: radial-gradient(circle at 40% 91%, rgba(251, 251, 251, 0.04) 0%, rgba(251, 251, 251, 0.04) 50%, rgba(229, 229, 229, 0.04) 50%, rgba(229, 229, 229, 0.04) 100%), radial-gradient(circle at 66% 97%, rgba(36, 36, 36, 0.04) 0%, rgba(36, 36, 36, 0.04) 50%, rgba(46, 46, 46, 0.04) 50%, rgba(46, 46, 46, 0.04) 100%), radial-gradient(circle at 86% 7%, rgba(40, 40, 40, 0.04) 0%, rgba(40, 40, 40, 0.04) 50%, rgba(200, 200, 200, 0.04) 50%, rgba(200, 200, 200, 0.04) 100%), radial-gradient(circle at 15% 16%, rgba(99, 99, 99, 0.04) 0%, rgba(99, 99, 99, 0.04) 50%, rgba(45, 45, 45, 0.04) 50%, rgba(45, 45, 45, 0.04) 100%), radial-gradient(circle at 75% 99%, rgba(243, 243, 243, 0.04) 0%, rgba(243, 243, 243, 0.04) 50%, rgba(37, 37, 37, 0.04) 50%, rgba(37, 37, 37, 0.04) 100%), linear-gradient(90deg, rgb(34, 222, 237), rgb(135, 89, 215)); */
 }
 
 .bigCircle {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 70px;
     border-radius: 50%;
     background-color: #fde5c1;
     /* background-color: orange; */
