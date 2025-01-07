@@ -118,9 +118,10 @@
                     alt="Profile Picture" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
             </div>
             <div class='profile'>
-                <h6 class="mb-0 text-solid">{{ $receiverInstance->first_name ?? '' }}
+
+                <h6 class="mb-0 text-solid"><i class="fa-solid fa-arrow-left-long" onclick="closeChatScreen()"></i> {{ $receiverInstance->first_name ?? '' }}
                     {{ $receiverInstance->last_name ?? '' }}</h6>
-                <small class="text-primary">{{ $receiverInstance->email ?? '' }}</small>
+                <small class="text-primary profile-mail-id">{{ $receiverInstance->email ?? '' }}</small>
             </div>
             <div class="ms-auto">
                 {{-- <button class="btn btn-sm btn-outline-primary" title="Start Video Call">
@@ -183,7 +184,7 @@
                                         Your browser does not support the video tag.
                                     </video>
                                 @elseif (in_array($extension, ['pdf', 'docx', 'txt', 'xlsx']))
-                                    <div class="file-container text-center" style="width: 100px;height: 100px; margin-left: 96px; margin-top: -65px;">
+                                    <div class="file-container text-center" style="width: 100px;height: 100px; margin-left: 96px;">
                                         <a href="{{ asset('storage/' . $path) }}" target="_blank">
                                             <i class="fas fa-file fa-3x"></i>
                                             <p>{{ strtoupper($extension) }} File</p>
@@ -199,8 +200,7 @@
                                 @endif
                             @endforeach
                             <div class="message-footer">
-                                <span class="timestamp">{{ $message->created_at->format('h:i A') }}</span>
-                                <span class="message-status">
+                                <span class="timestamp">{{ $message->created_at->format('h:i A') }}
                                     @if ($message->read == 0)
                                         <i class="fa-solid fa-check"></i>
                                     @else

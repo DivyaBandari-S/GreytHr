@@ -903,54 +903,58 @@ $cardCommentsCount = $commentsCollection
 
                                                     </div>
 
-                                                    <div class="col-md-2 p-0" style="margin-left:5px;">
-                                                        @php
-                                                            $currentCardEmojis = $emojis->where(
-                                                                'card_id',
-                                                                $data['employee']->emp_id,
-                                                            );
-                                                            $emojisCount = $currentCardEmojis->count();
-                                                            $lastTwoEmojis = $currentCardEmojis
-                                                                ->slice(max($emojisCount - 2, 0))
-                                                                ->reverse();
-                                                            $uniqueNames = [];
-                                                            $allEmojis = $currentCardEmojis->reverse();
-                                                        @endphp
+                    <div class="col-md-2 p-0" style="margin-left:5px;">
+                        @php
+                            $currentCardEmojis = $emojis->where(
+                                'card_id',
+                                $data['employee']->emp_id,
+                            );
+                            $emojisCount = $currentCardEmojis->count();
+                            $lastTwoEmojis = $currentCardEmojis
+                                ->slice(max($emojisCount - 3, 0))
+                                ->reverse();
+                            $uniqueNames = [];
+                            $backgroundColors = ['#87CEEB', '#ffb6c1', '#eebf7b'];
 
-                                                        @if ($currentCardEmojis && $emojisCount > 0)
-                                                            <div style="white-space: nowrap;">
-                                                                @foreach ($lastTwoEmojis as $index => $emoji_reaction)
-                                                                    <span
-                                                                        style="font-size: 16px;margin-left:-7px;">{{ $emoji_reaction->emoji_reaction }}</span>
-                                                                    @if (!$loop->last)
-                                                                    @endif
-                                                                @endforeach
+                            $allEmojis = $currentCardEmojis->reverse();
+                        @endphp
 
-                                                                @foreach ($lastTwoEmojis as $index => $emoji)
-                                                                    @php
-                                                                        $fullName =
-                                                                            ucwords(strtolower($emoji->first_name)) .
-                                                                            ' ' .
-                                                                            ucwords(strtolower($emoji->last_name));
-                                                                    @endphp
-                                                                    @if (!in_array($fullName, $uniqueNames))
-                                                                        @if (!$loop->first)
-                                                                            <span>,</span>
-                                                                        @endif
-                                                                        <span style="font-size: 8px;">
-                                                                            {{ $fullName }}</span>
-                                                                        @php $uniqueNames[] = $fullName; @endphp
-                                                                    @endif
-                                                                @endforeach
-                                                                @if (count($uniqueNames) > 0)
-                                                                    <span style="font-size:8px">reacted</span>
-                                                                @endif
 
-                                                                @if ($emojisCount > 1)
-                                                                    <span
-                                                                        style="cursor: pointer; color: blue; font-size: 10px;"
-                                                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }}
-                                                                        more</span>
+                        @if ($currentCardEmojis && $emojisCount > 0)
+                        <div style="display: flex; align-items: center; white-space: nowrap; position: relative;">
+    @foreach ($lastTwoEmojis as $index => $emoji_reaction)
+        <div class="reaction-circle" 
+             style="width: 25px; height: 24px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
+             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+             position: relative; margin-left: -8px;">
+            <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
+        </div>
+    @endforeach
+                            
+
+                                @foreach ($lastTwoEmojis as $index => $emoji)
+                                    @php
+                                        $fullName =
+                                            ucwords(strtolower($emoji->first_name)) .
+                                            ' ' .
+                                            ucwords(strtolower($emoji->last_name));
+                                    @endphp
+                                    @if (!in_array($fullName, $uniqueNames))
+                                        @if (!$loop->first)
+                                            <span>,</span>
+                                        @endif
+                                        <span style="font-size: 10px;color:blue;margin-left:5px">
+                                            {{ $fullName }}</span>
+                                        @php $uniqueNames[] = $fullName; @endphp
+                                    @endif
+                                @endforeach
+                          
+
+                                @if ($emojisCount > 1)
+                                    <span
+                                        style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
+                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">and{{ $emojisCount - 1 }}
+                                        others reacted</span>
 
                                                                     @if ($showDialogEmoji && $emp_id == $data['employee']->emp_id)
                                                                         <div class="modal fade show" tabindex="-1"
@@ -1038,12 +1042,19 @@ $cardCommentsCount = $commentsCollection
                                                                                 </div>
                                                                             </div>
 
-                                                                        </div>
-                                                                        <div
-                                                                            class="modal-backdrop fade show blurred-backdrop">
-                                                                        </div>
-                                                                    @endif
-                                                                @endif
+                                        </div>
+                                        <div
+                                            class="modal-backdrop fade show blurred-backdrop">
+                                        </div>
+                                    @endif
+                                    <span
+                                        style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
+                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">
+                                         reacted</span>
+
+                                    @else
+
+                                @endif
 
                                                             </div>
                                                         @endif
@@ -1560,26 +1571,28 @@ $birthdayCardId = $data['employee']->emp_id; // assuming this is your birthday c
                                             </div>
                                         </div>
 
-                                    </div>
-                                    <div class="col-md-2 p-0" style="margin-left:5px;">
-                                        @php
-                                            $currentCardEmojis = $emojis->where('emp_id', $data['employee']->emp_id);
-                                            $emojisCount = $currentCardEmojis->count();
-                                            $lastTwoEmojis = $currentCardEmojis
-                                                ->slice(max($emojisCount - 2, 0))
-                                                ->reverse();
-                                            $uniqueNames = [];
-                                            $allEmojis = $currentCardEmojis->reverse();
-                                        @endphp
-                                        @if ($currentCardEmojis && $emojisCount > 0)
-                                            <div style="white-space: nowrap;">
-                                                @foreach ($lastTwoEmojis as $index => $emoji_reaction)
-                                                    <span
-                                                        style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
-                                                    @if (!$loop->last)
-                                                        <span>,</span>
-                                                    @endif
-                                                @endforeach
+    </div>
+    <div class="col-md-2 p-0" style="margin-left:5px;">
+        @php
+            $currentCardEmojis = $emojis->where('emp_id', $data['employee']->emp_id);
+            $emojisCount = $currentCardEmojis->count();
+            $lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 3, 0))->reverse();
+            $uniqueNames = [];
+            $allEmojis = $currentCardEmojis->reverse();
+            $backgroundColors = ['#87CEEB', '#ffb6c1', '#eebf7b'];
+
+        @endphp
+        @if ($currentCardEmojis && $emojisCount > 0)
+        <div style="display: flex; align-items: center; white-space: nowrap; position: relative;">
+    @foreach ($lastTwoEmojis as $index => $emoji_reaction)
+        <div class="reaction-circle" 
+             style="width: 25px; height: 24px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
+             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+             position: relative; margin-left: -8px;">
+            <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
+        </div>
+    @endforeach
+                 
 
                                                 @foreach ($lastTwoEmojis as $index => $emoji)
                                                     @php
@@ -1600,10 +1613,10 @@ $birthdayCardId = $data['employee']->emp_id; // assuming this is your birthday c
                                                     <span style="font-size:8px">reacted</span>
                                                 @endif
 
-                                                @if ($emojisCount > 1)
-                                                    <span style="cursor: pointer; color: blue; font-size: 10px;"
-                                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">+{{ $emojisCount - 1 }}
-                                                        more</span>
+                @if ($emojisCount > 1)
+                    <span style="cursor: pointer; color: blue; font-size: 10px;margin-left:10px"
+                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">and {{ $emojisCount - 1 }}
+                        others reacted</span>
 
                                                     @if ($showDialogEmoji && $emp_id == $data['employee']->emp_id)
                                                         <div class="modal fade show" tabindex="-1" role="dialog"
@@ -1682,18 +1695,21 @@ $birthdayCardId = $data['employee']->emp_id; // assuming this is your birthday c
                                                                 </div>
                                                             </div>
 
-                                                        </div>
-                                                        <div class="modal-backdrop fade show blurred-backdrop"></div>
-                                                    @endif
-                                                @endif
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="w-90" style="border-top: 1px solid #E8E5E4; margin: 10px;"></div>
-                                    <div class="row" style="display: flex;">
-                                        <div class="col-md-5" style="display: flex;">
-                                            <form
-                                                wire:submit.prevent="createemoji('{{ $data['employee']->emp_id }}')">
+                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                    @endif
+                    @else
+                    <span style="cursor: pointer; color: blue; font-size: 10px;margin-left:10px"
+                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">
+                         reacted</span>
+                @endif
+            </div>
+        @endif
+    </div>
+    <div class="w-90" style="border-top: 1px solid #E8E5E4; margin: 10px;"></div>
+    <div class="row" style="display: flex;">
+        <div class="col-md-5" style="display: flex;">
+            <form wire:submit.prevent="createemoji('{{ $data['employee']->emp_id }}')">
 
                                                 @csrf
                                                 <div class="emoji-container">
@@ -2185,57 +2201,70 @@ $birthdayCardId = $data['employee']->emp_id; // assuming this is your birthday c
 
             </div>
 
-            <div class="col-md-2 p-0" style="margin-left: 9px;">
-                @php
-                    $currentCardEmojis = $storedemojis->where('card_id', $data['employee']->emp_id);
-                    $emojisCount = $currentCardEmojis->count();
-                    $lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 2, 0))->reverse();
-                    $allEmojis = $currentCardEmojis->reverse(); // This will get all emojis in reverse order
-                    $uniqueNames = [];
-                @endphp
+<div class="col-md-2 p-0" style="margin-left: 9px;">
+@php
+$currentCardEmojis = $storedemojis->where('card_id', $data['employee']->emp_id);
+$emojisCount = $currentCardEmojis->count();
+$lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 3, 0))->reverse();
+$allEmojis = $currentCardEmojis->reverse(); // This will get all emojis in reverse order
+ // Define background colors for the emojis
+ $backgroundColors = ['#87CEEB', '#ffb6c1', '#eebf7b'];
+    $uniqueNames = [];
+@endphp
 
-                @if ($emojisCount > 0)
-                    <div style="white-space: nowrap;">
-                        {{-- Display the last two emojis --}}
-                        @foreach ($lastTwoEmojis as $emoji)
-                            <span style="font-size: 16px; margin-left: -10px;">{{ $emoji->emoji }}</span>
-                        @endforeach
+@if ($emojisCount > 0)
 
-                        {{-- Display the names of people who reacted --}}
-                        @php
-                            $uniqueNames = [];
-                            $nameList = [];
-                        @endphp
-                        @foreach ($lastTwoEmojis as $emoji)
-                            @php
-                                $fullName =
-                                    ucwords(strtolower($emoji->first_name)) .
-                                    ' ' .
-                                    ucwords(strtolower($emoji->last_name));
-                            @endphp
-                            @if (!in_array($fullName, $uniqueNames))
-                                @if (!$loop->first)
-                                    <span>,</span>
-                                @endif
-                                <span style="font-size: 8px;">{{ $fullName }}</span>
-                                @php
-                                    $uniqueNames[] = $fullName;
-                                    $nameList[] = $fullName;
-                                @endphp
-                            @endif
-                        @endforeach
+{{-- Display the last two emojis --}}
+<div style="display: flex; align-items: center; white-space: nowrap; position: relative;">
+    @foreach ($lastTwoEmojis as $index => $emoji)
+        <div class="reaction-circle" 
+             style="width: 25px; height: 24px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
+             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+             position: relative; margin-right:-8px ;">
+            <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
+        </div>
+    @endforeach
 
-                        @if (count($uniqueNames) > 0)
-                            <span style="font-size: 8px;">reacted</span>
-                        @endif
 
-                        {{-- Show +more if there are more than 2 emojis --}}
-                        @if ($emojisCount > 1)
-                            <span style="cursor: pointer; color: blue; font-size: 10px;"
-                                wire:click="openDialog('{{ $data['employee']->emp_id }}')">
-                                +{{ $emojisCount - 1 }} more
-                            </span>
-                        @endif
+
+{{-- Display the names of people who reacted --}}
+@php
+$uniqueNames = [];
+$nameList = [];
+@endphp
+@foreach ($lastTwoEmojis as $emoji)
+@php
+    $fullName =
+        ucwords(strtolower($emoji->first_name)) .
+        ' ' .
+        ucwords(strtolower($emoji->last_name));
+@endphp
+@if (!in_array($fullName, $uniqueNames))
+    @if (!$loop->first)
+        <span>,</span>
+    @endif
+    <span style="font-size: 10px;color: blue;margin-left:10px">{{ $fullName }}</span>
+    @php
+        $uniqueNames[] = $fullName;
+        $nameList[] = $fullName;
+    @endphp
+@endif
+@endforeach
+
+
+
+{{-- Show +more if there are more than 2 emojis --}}
+@if ($emojisCount > 1)
+<span style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
+    wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+    and {{ $emojisCount - 1 }} others reacted
+</span>
+@else
+<span style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
+    wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+     reacted
+</span>
+@endif
 
                         {{-- Show the last name(s) of people who reacted and their count --}}
                         @if (count($uniqueNames) > 1)
@@ -2787,56 +2816,64 @@ $hireCardId = $data['employee']->emp_id; // assuming this is your birthday card'
 
                 </div>
 
-                <div class="col-md-2 p-0" style="margin-left:5px;">
-                    @php
-                        $currentCardEmojis = $emojis->where('card_id', $data['employee']->emp_id);
-                        $emojisCount = $currentCardEmojis->count();
-                        $lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 2, 0))->reverse();
-                        $allEmojis = $currentCardEmojis->reverse();
-                        $uniqueNames = [];
-                    @endphp
-                    @if ($emojisCount > 0)
-                        <div style="white-space: nowrap;">
-                            {{-- Display the last two emojis --}}
-                            @foreach ($lastTwoEmojis as $emoji)
-                                <span style="font-size: 16px; margin-left: -10px;">{{ $emoji->emoji }}</span>
-                            @endforeach
+<div class="col-md-2 p-0" style="margin-left:5px;">
+@php
+$currentCardEmojis = $emojis->where('card_id', $data['employee']->emp_id);
+$emojisCount = $currentCardEmojis->count();
+$lastTwoEmojis = $currentCardEmojis->slice(max($emojisCount - 3, 0))->reverse();
+$allEmojis = $currentCardEmojis->reverse();
+$backgroundColors = ['#87CEEB', '#ffb6c1', '#eebf7b'];
+$uniqueNames = [];
+@endphp
+@if ($emojisCount > 0)
+<div style="display: flex; align-items: center; white-space: nowrap; position: relative;">
+    @foreach ($lastTwoEmojis as $index => $emoji)
+        <div class="reaction-circle" 
+             style="width: 25px; height: 24px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
+             border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+             position: relative; margin-right: -8px">
+            <span style="font-size: 16px;">{{ $emoji->emoji }}</span>
+        </div>
+    @endforeach
 
-                            {{-- Display the names of people who reacted --}}
-                            @php
-                                $uniqueNames = [];
-                                $nameList = [];
-                            @endphp
-                            @foreach ($lastTwoEmojis as $emoji)
-                                @php
-                                    $fullName =
-                                        ucwords(strtolower($emoji->first_name)) .
-                                        ' ' .
-                                        ucwords(strtolower($emoji->last_name));
-                                @endphp
-                                @if (!in_array($fullName, $uniqueNames))
-                                    @if (!$loop->first)
-                                        <span>,</span>
-                                    @endif
-                                    <span style="font-size: 8px;">{{ $fullName }}</span>
-                                    @php
-                                        $uniqueNames[] = $fullName;
-                                        $nameList[] = $fullName;
-                                    @endphp
-                                @endif
-                            @endforeach
+{{-- Display the names of people who reacted --}}
+@php
+    $uniqueNames = [];
+    $nameList = [];
+@endphp
+@foreach ($lastTwoEmojis as $emoji)
+    @php
+        $fullName =
+            ucwords(strtolower($emoji->first_name)) .
+            ' ' .
+            ucwords(strtolower($emoji->last_name));
+    @endphp
+    @if (!in_array($fullName, $uniqueNames))
+        @if (!$loop->first)
+            <span>,</span>
+        @endif
+        <span style="font-size: 10px;color:blue;margin-left:10px">{{ $fullName }} </span>
+        @php
+            $uniqueNames[] = $fullName;
+            $nameList[] = $fullName;
+        @endphp
+    @endif
+@endforeach
 
-                            @if (count($uniqueNames) > 0)
-                                <span style="font-size: 8px;">reacted</span>
-                            @endif
 
-                            {{-- Show +more if there are more than 2 emojis --}}
-                            @if ($emojisCount > 1)
-                                <span style="cursor: pointer; color: blue; font-size: 10px;"
-                                    wire:click="openDialog('{{ $data['employee']->emp_id }}')">
-                                    +{{ $emojisCount - 1 }} more
-                                </span>
-                            @endif
+
+{{-- Show +more if there are more than 2 emojis --}}
+@if ($emojisCount > 1)
+    <span style="cursor: pointer; color: blue; font-size: 10px;nargin-left:5px"
+        wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+        and {{ $emojisCount - 1 }} others reacted 
+    </span>
+    @else
+<span style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
+    wire:click="openDialog('{{ $data['employee']->emp_id }}')">
+     reacted
+</span>
+@endif
 
                             {{-- Show the last name(s) of people who reacted and their count --}}
                             @if (count($uniqueNames) > 1)
