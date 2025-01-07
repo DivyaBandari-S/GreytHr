@@ -160,7 +160,7 @@
                         @elseif($loginEmpManagerDetails === null)
                             <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
                         @else
-                            <img src="{{ asset('/images/user.jpge') }}" alt="">
+                            <img src="{{ asset('/images/user.jpg') }}" alt="">
                         @endif
                     </div>
 

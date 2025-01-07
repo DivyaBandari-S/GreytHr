@@ -57,12 +57,11 @@
             @endif
 
             <!-- //for experinced employees -->
-            @if($totalExpEmp>0 && $getRemainingExpEmp)
+            @if($totalExpEmp>0 && $getRemainingExpEmp && $getRemainingExpID)
             @if($totalExpEmp == 1 )
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para">
-                    <a href="#"
-                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                    <a href="#" wire:click="getNotification({{ $getRemainingExpID->first()->id }})"
                         title="Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}(#{{ $getRemainingExpEmp->emp_id }}) on completing {{ $successfulYears }} successful year(s)!"
                         class="notification-head">
                         Congratulations to {{ ucwords(strtolower($getRemainingExpEmp->first_name)) }} {{ ucwords(strtolower($getRemainingExpEmp->last_name)) }}
@@ -87,9 +86,11 @@
             </div>
             @else
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
-                <p class="mb-0 notification-text-para"> <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                <p class="mb-0 notification-text-para">
+                    <a href="#" wire:click="getNotification({{ json_encode($getRemainingJoineesID->pluck('id')->toArray()) }})" class="notification-head">
                         Congratulations to {{$totalExpEmp}} members on completing their successful year(s)!
-                    </a></p>
+                    </a>
+                </p>
 
                 <p class="mb-0 notification-text-para">Please congratulate them. </p>
                 <div class="notify-time">
@@ -100,12 +101,11 @@
             @endif
 
             <!-- //for newly joined employeess -->
-            @if($totalJoinees > 0 && $getRemainingJoinees)
+            @if($totalJoinees > 0 && $getRemainingJoinees && $getRemainingJoineesID)
             @if($totalJoinees == 1 )
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para">
-                    <a href="#"
-                        onclick="window.location.href='{{ url('/Feeds'); }}'"
+                    <a href="#" wire:click="getNotification({{ $getRemainingJoineesID->first()->id }})"
                         title="Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }} (#{{ $getRemainingJoinees->emp_id }}) to the team!"
                         class="notification-head">
                         Welcome {{ ucwords(strtolower($getRemainingJoinees->first_name)) }} {{ ucwords(strtolower($getRemainingJoinees->last_name)) }}
@@ -131,7 +131,7 @@
             @else
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para">
-                    <a href="#" onclick="window.location.href='{{ url('/Feeds');}}'" class="notification-head">
+                    <a href="#" wire:click="getNotification({{ json_encode($getRemainingJoineesID->pluck('id')->toArray()) }})" class="notification-head">
                         Welcome {{$totalJoinees}} new member(s) to the team!
                     </a>
                 </p>
@@ -170,6 +170,43 @@
                     @endif
             </div>
         </div>
+        @elseif($notification->notification_type=='task-Reopen')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para"> <a href="#" class="notification-head" wire:click.prevent="reduceTaskCount('{{ $notification->emp_id }}')">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a></p>
+                @if($notification->details_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> Has Re-Opened {{$notification->details_count}} tasks to you.
+                    @elseif($notification->details_count>10)
+                    <p class="mb-0 notification-text-para"> Has Re-Opened 10+ tasks to you.</p>
+                    @else
+                    <p class="mb-0 notification-text-para">Has Re-Opened task to you. </p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                    @endif
+            </div>
+        </div>
+        @elseif($notification->notification_type=='task-Closed')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
+                <p class="mb-0 notification-text-para"> <a href="#" class="notification-head" wire:click.prevent="reduceTaskCount('{{ $notification->emp_id }}')">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a></p>
+                @if($notification->details_count>1 && $notification->details_count<=10 ) <p class="mb-0 notification-text-para"> Has Closed {{$notification->details_count}} tasks.
+                    @elseif($notification->details_count>10)
+                    <p class="mb-0 notification-text-para"> Has Closed 10+ tasks.</p>
+                    @else
+                    <p class="mb-0 notification-text-para">Has Closed the task. </p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                    @endif
+            </div>
+        </div>
+
         @elseif($notification->notification_type=='leave')
         <div>
             <div class="border rounded bg-white p-2 mb-2 leave-request-container" title="{{ $notification->leave_type }}">
@@ -246,12 +283,12 @@
                     </a>
                 </p>
 
-              
-                    <p class="mb-0 notification-text-para">Applied for Attendance Regularisation request.</p>
-                    <div class="notify-time">
-                        <p class="notify-time-para">{{$notification->notify_time}}</p>
-                    </div>
-                   
+
+                <p class="mb-0 notification-text-para">Applied for Attendance Regularisation request.</p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$notification->notify_time}}</p>
+                </div>
+
             </div>
         </div>
         @elseif($notification->notification_type=='regularisationReject')
@@ -264,12 +301,12 @@
                     </a>
                 </p>
 
-              
-                    <p class="mb-0 notification-text-para">Rejected your Attendance Regularisation request.</p>
-                    <div class="notify-time">
-                        <p class="notify-time-para">{{$notification->notify_time}}</p>
-                    </div>
-                   
+
+                <p class="mb-0 notification-text-para">Rejected your Attendance Regularisation request.</p>
+                <div class="notify-time">
+                    <p class="notify-time-para">{{$notification->notify_time}}</p>
+                </div>
+
             </div>
         </div>
 
@@ -323,6 +360,6 @@
         @endforeach
         @endif
     </div>
-  
+
 </div>
 </div>
