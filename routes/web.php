@@ -20,6 +20,7 @@ use App\Livewire\EmpLogin;
 use App\Livewire\EmployeesReview;
 use App\Livewire\Everyone;
 use App\Livewire\Feeds;
+use App\Livewire\FeedBack;
 use App\Livewire\Catalog;
 
 use App\Http\Controllers\GoogleDriveController;
@@ -291,7 +292,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
-
+    Route::get('/feedback', FeedBack::class)->name('feedback');
 
     //Helpdesk module
 
