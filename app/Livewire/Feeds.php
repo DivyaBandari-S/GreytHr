@@ -240,6 +240,7 @@ class Feeds extends Component
     public function recognizeToggleDropdown()
     {
         $this->dropdownOpen = !$this->dropdownOpen;  // Toggle dropdown visibility
+        $this->searchTerm='';
     }
 
     public function updatedSearchTerm()
@@ -1304,7 +1305,9 @@ class Feeds extends Component
                     ];
                 }
             }
+            
         }
+    
 
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {

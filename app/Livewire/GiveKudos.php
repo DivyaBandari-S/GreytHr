@@ -90,6 +90,7 @@ class GiveKudos extends Component
     public function recognizeToggleDropdown()
     {
         $this->dropdownOpen = !$this->dropdownOpen;  // Toggle dropdown visibility
+        $this->searchTerm="";
     }
     public function addKudos()
     {
@@ -201,6 +202,7 @@ class GiveKudos extends Component
             $this->employees1 = collect();
         }
     }
+
 
     public function removeItem($type)
     {
@@ -362,25 +364,25 @@ class GiveKudos extends Component
         $colors = [
             'Approachable' => ['#fcead9', '#e67e22'], // Orange: light (#ff7f00), dark border/text (#e67e22)
             'Articulate' => ['#eaf5ec', '#298332'], // Green
-            'Autonomous' => ['#007bff', '#0056b3'], // Blue
-            'Collaborator' => ['#f1c40f', '#f39c12'], // Yellow
-            'Competitive' => ['#e74c3c', '#c0392b'], // Red
-            'Creative' => ['#8e44ad', '#6c3483'], // Purple
-            'Devoted' => ['#16a085', '#1abc9c'], // Teal
-            'Efficient' => ['#2ecc71', '#27ae60'], // Light Green
-            'Enthusiastic' => ['#f39c12', '#e67e22'], // Amber
-            'Independent' => ['#3498db', '#2980b9'], // Light Blue
-            'Innovator' => ['#9b59b6', '#8e44ad'], // Violet
-            'Leader' => ['#34495e', '#2c3e50'], // Dark Gray
-            'Learner' => ['#1abc9c', '#16a085'], // Turquoise
-            'Motivator' => ['#d35400', '#e67e22'], // Orange
-            'Open-minded' => ['#95a5a6', '#7f8c8d'], // Gray
-            'Opinionated' => ['#e67e22', '#d35400'], // Orange
-            'Planning' => ['#2980b9', '#1f618d'], // Blue
-            'Problem Solver' => ['#2c3e50', '#34495e'], // Dark Blue
-            'Resourceful' => ['#16a085', '#1abc9c'], // Teal
-            'Strategist' => ['#8e44ad', '#6c3483'], // Purple
-            'Team Player' => ['#f39c12', '#e67e22'], // Amber
+            'Autonomous' => ['#c8daed', '#0056b3'], // Blue
+            'Collaborator' => ['#eddfa9 ', '#f39c12'], // Yellow
+            'Competitive' => ['#f0cdc9', '#c0392b'], // Red
+            'Creative' => ['#dfc6ea', '#6c3483'], // Purple
+            'Devoted' => ['#c8e8e1', '#1abc9c'], // Teal
+            'Efficient' => ['#c2f2d6', '#27ae60'], // Light Green
+            'Enthusiastic' => ['#f9edd9', '#e67e22'], // Amber
+            'Independent' => ['#d3e4f0', '#2980b9'], // Light Blue
+            'Innovator' => ['#ede2f1', '#8e44ad'], // Violet
+            'Leader' => ['#dfeaf5', '#2c3e50'], // Dark Gray
+            'Learner' => ['#dcf8f2', '#16a085'], // Turquoise
+            'Motivator' => ['#f6ece5', '#e67e22'], // Orange
+            'Open-minded' => ['#dfe6e6', '#7f8c8d'], // Gray
+            'Opinionated' => ['#f5ebe2', '#d35400'], // Orange
+            'Planning' => ['#e8f1f8', '#1f618d'], // Blue
+            'Problem Solver' => ['#dae7f4', '#34495e'], // Dark Blue
+            'Resourceful' => ['#dbf1ed', '#1abc9c'], // Teal
+            'Strategist' => ['#ecd7f5', '#6c3483'], // Purple
+            'Team Player' => ['#f6e5c9', '#e67e22'], // Amber
         ];
 
         // Return the background and border/text color based on the recognition type
@@ -392,7 +394,9 @@ class GiveKudos extends Component
 
         // Toggle the visibility of the emoji picker for the clicked kudo
         $this->mount();
+        
         $this->showKudoEmojiPicker[$kudoId] = !$this->showKudoEmojiPicker[$kudoId];
+       
     }
     public function addReaction($reaction)
     {
@@ -513,53 +517,73 @@ class GiveKudos extends Component
 
     public function addReaction1($reactionKey, $kudoId)
     {
-
         // Ensure the reaction key exists in the $reactionEmojis array
         if (!array_key_exists($reactionKey, $this->reactionEmojis)) {
             session()->flash('error', 'Invalid reaction!');
             return;
         }
-
+    
         // Get the emoji corresponding to the reaction key
         $emoji = $this->reactionEmojis[$reactionKey];
-
+    
         // Fetch the kudo record by kudoId
         $kudo = Kudos::find($kudoId);
-
+    
         // Check if the kudo exists
         if (!$kudo) {
             session()->flash('error', 'Kudo not found!');
             return;
         }
-
+    
         // Decode the existing reactions from JSON to an array
         $reactions = json_decode($kudo->reactions, true) ?? [];
-
-        // Create the new reaction with the emoji value (not the key)
-        $newReaction = [
-            'emoji' => $emoji,  // The emoji character (not the key)
-            'employee_id' => Auth::user()->emp_id,  // The employee who reacted
-            'created_at' => now(),  // Timestamp when the reaction was created
-        ];
-
-        // Add the new reaction to the reactions array
-        $reactions[] = $newReaction;
-
+    
+        // Find the reaction for the current user (if any)
+        $userReactions = array_filter($reactions, function($reaction) {
+            return $reaction['employee_id'] === Auth::user()->emp_id;
+        });
+    
+        // If there are multiple reactions by the same user, get the most recent one
+        if (!empty($userReactions)) {
+            // Sort the user's reactions by 'created_at' in descending order (most recent first)
+            usort($userReactions, function($a, $b) {
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+    
+            // The most recent reaction will now be the first element in the sorted array
+            $mostRecentReaction = $userReactions[0];
+    
+            // Find the index of the most recent reaction in the original $reactions array
+            $existingReactionKey = array_search($mostRecentReaction, $reactions);
+    
+            // Update the most recent reaction
+            $reactions[$existingReactionKey]['emoji'] = $emoji; // Update the emoji
+            $reactions[$existingReactionKey]['updated_at'] = now(); // Optionally, update the timestamp
+        } else {
+            // If no previous reaction, create a new reaction
+            $newReaction = [
+                'emoji' => $emoji,  // The emoji character (not the key)
+                'employee_id' => Auth::user()->emp_id,  // The employee who reacted
+                'created_at' => now(),  // Timestamp when the reaction was created
+            ];
+            $reactions[] = $newReaction; // Add the new reaction to the array
+        }
+    
         // Encode the reactions array back to JSON
         $reactionsJson = json_encode($reactions);
-
+    
         // Update the kudo record with the new reactions JSON
         $kudo->update([
             'reactions' => $reactionsJson,
         ]);
-
+    
         // Close the emoji picker after selection
         $this->showKudoEmojiPicker[$kudoId] = false;
         $this->mount();
-
-        session()->flash('message', 'Reaction added successfully!');
+    
+        session()->flash('message', 'Reaction added/updated successfully!');
     }
-
+    
     public function getReactionEmojis()
     {
         return $this->reactionEmojis;
