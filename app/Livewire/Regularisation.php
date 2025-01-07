@@ -16,6 +16,7 @@ use App\Models\Regularisations;
 use App\Models\SwipeRecord;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
@@ -117,6 +118,7 @@ class Regularisation extends Component
 
     public $monthinFormat;
 
+    public $employeeShiftDetails;
     public $employeeEmail;
     public $todayMonth;
 
@@ -141,6 +143,14 @@ class Regularisation extends Component
             ->where('year',  $this->year )
             ->get();
            
+            $this->employeeShiftDetails = DB::table('employee_details')
+            ->join('company_shifts', function($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                     ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+            })
+            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
+            ->first();
             // $this->updateCurrentMonthYear();
             $this->currentDate = now();
             $this->generateCalendar();
