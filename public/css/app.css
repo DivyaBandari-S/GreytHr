@@ -10716,16 +10716,17 @@ input[type="date"] {
 }
 
 .selected-items-container {
-    position: absolute;
+    /* position: absolute; */
     display: flex;
     flex-wrap: wrap;
     gap: 5px;
     align-items: center;
     max-width: 100%;
-    top: 3px;
-    pointer-events: none; /* Ensure the container doesn't interfere with input clicks */
+    /* top: 3px; */
+    /* pointer-events: none;  */
     overflow: hidden; /* Prevents overflow in the input */
-    width: calc(100% - 20px); 
+    /* width: calc(100% - 20px);  */
+    margin-top: 15px;
 }
 
 .selected-item {
