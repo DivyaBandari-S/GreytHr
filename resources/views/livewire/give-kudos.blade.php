@@ -168,21 +168,11 @@
                                                     <div class="dropdown-container input-wrapper">
 
 
-                                                        <input wire:model="recognizeType"
+                                                        <input 
                                                             class="form-select placeholder-small input-field"
                                                             wire:click="recognizeToggleDropdown" placeholder="Select">
 
-                                                        <div class="selected-items-container">
-                                                            @foreach ($recognizeType as $type)
-                                                                <div class="selected-item">
-                                                                    <span
-                                                                        style="font-size: 11px;color: var(--main-heading-color);font-weight: 500;">{{ $type }}</span>
-                                                                    <button type="button"
-                                                                        wire:click="removeItem('{{ $type }}')"
-                                                                        class="remove-item-btn">x</button>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
+                                                        
 
 
 
@@ -250,6 +240,17 @@
                                                                 </div>
                                                             </div>
                                                         @endif
+                                                    </div>
+                                                    <div class="selected-items-container">
+                                                        @foreach ($recognizeType as $type)
+                                                            <div class="selected-item">
+                                                                <span
+                                                                    style="font-size: 11px;color: var(--main-heading-color);font-weight: 500;">{{ $type }}</span>
+                                                                <button type="button"
+                                                                    wire:click="removeItem('{{ $type }}')"
+                                                                    class="remove-item-btn">x</button>
+                                                            </div>
+                                                        @endforeach
                                                     </div>
                                                 </div>
                                                 <div class="form-group col-12 mb-2">

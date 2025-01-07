@@ -31,7 +31,7 @@ class Notification extends Component
     public $totalnotifications;
     public $totalnotificationscount;
     public $birthdayRecord;
-
+    public $getRemainingExpID;
     public $totalExpEmp;
     public $manager_id;
     public $totalBirthdays;
@@ -48,6 +48,7 @@ class Notification extends Component
     public $empIdForRegularisation;
 
     public $regularisationRejectNotifications;
+    public $getRemainingJoineesID;
     public function mount()
     {
         try {
@@ -56,6 +57,7 @@ class Notification extends Component
             $CompanyId = Auth::user()->company_id[0];
             $this->getExpEmpList();
             $this->getNewlyJoinedEmpList();
+            $this->fetchNotifications();
             $today = now();
             $currentDate = $today->toDateString();
             $currentMonth = $today->month;
@@ -127,6 +129,83 @@ class Notification extends Component
             throw $e;
         }
     }
+
+    public function getNotification($ids)
+    {
+        try {
+            $loggedInEmpId = auth()->user()->emp_id;
+
+            // Check if $ids is an array (multiple IDs)
+            if (is_array($ids)) {
+                // Process each notification ID in the array
+                foreach ($ids as $id) {
+                    $findID = ModelsNotification::find($id);
+                    // Check if the notification exists
+                    if (!$findID) {
+                        continue; // Skip if the notification is not found
+                    }
+
+                    // Decode the 'is_birthday_read' field (assumed to be a JSON string)
+                    $isBirthdayRead = json_decode($findID->is_birthday_read, true);
+
+                    // Check if the 'is_birthday_read' field is decoded properly
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        continue; // Skip this notification if there's an error decoding
+                    }
+
+                    // Check if the emp_id exists in the 'is_birthday_read' array
+                    if (array_key_exists($loggedInEmpId, $isBirthdayRead)) {
+                        // Check if the value is 0, then remove the entry
+                        if ($isBirthdayRead[$loggedInEmpId] == 0) {
+                            // Remove the entry from the array
+                            unset($isBirthdayRead[$loggedInEmpId]);
+
+                            // Save the updated 'is_birthday_read' field back to the database
+                            $findID->is_birthday_read = json_encode($isBirthdayRead); // Encode back to JSON
+                            $findID->save(); // Save the updated data
+                        }
+                    }
+                }
+            } else {
+                // Handle single ID case (previously implemented logic)
+                $findID = ModelsNotification::find($ids);
+
+                // Check if the notification exists
+                if (!$findID) {
+                    return redirect()->route('Feeds')->with('error', 'Notification not found.');
+                }
+
+                // Decode the 'is_birthday_read' field (assumed to be a JSON string)
+                $isBirthdayRead = json_decode($findID->is_birthday_read, true);
+
+                // Check if the 'is_birthday_read' field is decoded properly
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return redirect()->route('Feeds')->with('error', 'Error decoding notification data.');
+                }
+
+                // Check if the emp_id exists in the 'is_birthday_read' array
+                if (array_key_exists($loggedInEmpId, $isBirthdayRead)) {
+                    // Check if the value is 0, then remove the entry
+                    if ($isBirthdayRead[$loggedInEmpId] == 0) {
+                        // Remove the entry from the array
+                        unset($isBirthdayRead[$loggedInEmpId]);
+
+                        // Save the updated 'is_birthday_read' field back to the database
+                        $findID->is_birthday_read = json_encode($isBirthdayRead); // Encode back to JSON
+                        $findID->save(); // Save the updated data
+                    }
+                }
+            }
+
+            // After handling, redirect to the feeds route
+            return redirect()->route('Feeds');
+        } catch (\Exception $e) {
+            // Catch any exception and redirect with an error message
+            return redirect()->route('Feeds')->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
+
+
 
     public function getExpEmpList()
     {
@@ -370,6 +449,13 @@ class Notification extends Component
                             ->where('employee_details.emp_id', '!=', $loggedInEmpId)
                             ->first();
                         $this->successfulYears = now()->year - Carbon::parse($this->getRemainingExpEmp->hire_date)->year;
+                        // Check if data exists
+                        if ($this->getRemainingExpEmp) {
+                            // If data exists, join with the notification table and filter by emp_id
+                            $this->getRemainingExpID = ModelsNotification::where('emp_id', $this->getRemainingExpEmp->emp_id)
+                                ->where('notification_type', 'Experience') // Filter by 'Experience' notification type
+                                ->get();
+                        }
                     }
                 } elseif ($this->totalExpEmp == 1) {
                     $this->getRemainingExpEmp = EmployeeDetails::whereMonth('hire_date', $currentMonth)
@@ -379,6 +465,12 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->first();
+                    if ($this->getRemainingExpEmp) {
+                        // If data exists, join with the notification table and filter by emp_id
+                        $this->getRemainingExpID = ModelsNotification::where('emp_id', $this->getRemainingExpEmp->emp_id)
+                            ->where('notification_type', 'Experience') // Filter by 'new join' notification type
+                            ->get();
+                    }
                 } else {
                     $this->getRemainingExpEmp = EmployeeDetails::whereMonth('hire_date', $currentMonth)
                         ->whereDay('hire_date', $currentDay)
@@ -387,9 +479,17 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->get();
-                }
-                //  dd( $this->totalBirthdays);
+                    $this->getRemainingExpID = collect();  // Initialize an empty collection to hold the notifications
 
+                    foreach ($this->getRemainingExpEmp as $data) {
+                        // If data exists, join with the notification table and filter by emp_id
+                        $notifications = ModelsNotification::where('emp_id', $data->emp_id)
+                            ->where('notification_type', 'Experience') // Filter by 'new join' notification type
+                            ->get();
+                        // Merge the notifications into the main collection
+                        $this->getRemainingExpID = $this->getRemainingExpID->merge($notifications);
+                    }
+                }
             }
 
 
@@ -425,8 +525,16 @@ class Notification extends Component
                             ->select('employee_details.*')
                             ->where('employee_details.emp_id', '!=', $loggedInEmpId)
                             ->first();
+                        // Check if data exists
+                        if ($this->getRemainingJoinees) {
+                            // If data exists, join with the notification table and filter by emp_id
+                            $this->getRemainingJoineesID = ModelsNotification::where('emp_id', $this->getRemainingJoinees->emp_id)
+                                ->where('notification_type', 'new join') // Filter by 'new join' notification type
+                                ->get();
+                        }
                     }
                 } elseif ($this->totalJoinees == 1) {
+                    // First, retrieve the remaining joinees based on the initial criteria
                     $this->getRemainingJoinees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
                         ->whereDay('hire_date', $currentDay)
                         ->whereYear('hire_date', '=', date('Y'))
@@ -434,6 +542,17 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->first();
+
+                    // Check if data exists
+                    if ($this->getRemainingJoinees) {
+                        // If data exists, join with the notification table and filter by emp_id
+                        $this->getRemainingJoineesID = ModelsNotification::where('emp_id', $this->getRemainingJoinees->emp_id)
+                            ->where('notification_type', 'new join') // Filter by 'new join' notification type
+                            ->get();
+                    }
+
+                    // // Check the result
+                    // dd($this->getRemainingJoineesID->first()->id);
                 } else {
                     $this->getRemainingJoinees = EmployeeDetails::whereMonth('hire_date', $currentMonth)
                         ->whereDay('hire_date', $currentDay)
@@ -442,6 +561,17 @@ class Notification extends Component
                         ->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(?))", [$CompanyId])
                         ->select('employee_details.*')
                         ->get();
+                    // Check if data exists
+                    $this->getRemainingJoineesID = collect();  // Initialize an empty collection to hold the notifications
+
+                    foreach ($this->getRemainingJoinees as $data) {
+                        // If data exists, join with the notification table and filter by emp_id
+                        $notifications = ModelsNotification::where('emp_id', $data->emp_id)
+                            ->where('notification_type', 'new join') // Filter by 'new join' notification type
+                            ->get();
+                        // Merge the notifications into the main collection
+                        $this->getRemainingJoineesID = $this->getRemainingJoineesID->merge($notifications);
+                    }
                 }
             }
 
@@ -514,7 +644,6 @@ class Notification extends Component
             $this->tasknotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$loggedInEmpId])
-                ->where('notification_type', 'task')
                 ->where('is_read', 0)
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name as detail', 'notifications.emp_id', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
@@ -630,6 +759,8 @@ class Notification extends Component
             'joiningTime' => $this->joiningTime,
             'totalExpEmp' => $this->totalExpEmp,
             'getRemainingExpEmp' => $this->getRemainingExpEmp,
+            'getRemainingJoineesID' => $this->getRemainingJoineesID,
+            'getRemainingExpID' => $this->getRemainingExpID,
         ]);
     }
 }

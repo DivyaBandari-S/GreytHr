@@ -20,6 +20,7 @@ use App\Livewire\EmpLogin;
 use App\Livewire\EmployeesReview;
 use App\Livewire\Everyone;
 use App\Livewire\Feeds;
+use App\Livewire\FeedBack;
 use App\Livewire\Catalog;
 
 use App\Http\Controllers\GoogleDriveController;
@@ -291,7 +292,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
-
+    Route::get('/feedback', FeedBack::class)->name('feedback');
 
     //Helpdesk module
 
@@ -557,7 +558,7 @@ Route::get('/test-odbc-dir', function () {
         $dbh = new PDO($dsn, $username, $password);
 
         // Define your table name and user ID
-        $tableName = 'DeviceLogs_1_2024'; // Replace with your actual table name
+        $tableName = 'DeviceLogs_1_2025'; // Replace with your actual table name
         $normalizedUserId = 'XSS0480'; // Replace with your actual user ID
         $today = now()->subYear()->toDateString();// Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
 

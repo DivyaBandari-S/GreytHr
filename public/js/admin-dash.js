@@ -302,16 +302,17 @@ var options = {
 // chart.render();
 
 // // chat screen js
-// $("#contacts .item").click(function () {
-//     $(this).parents("#contacts").addClass("hidden");
-//     $("#content-chart").addClass("active");
-// });
+function openChatScreen () {
+    // $(this).parents("#contacts").addClass("hidden");
+    $("#content-chart").addClass("active");
+    $("#listCOntactDiv").addClass("hidden");
+};
 
-// $("#back").click(function (e) {
-//     e.preventDefault();
-//     $("#contacts").removeClass("hidden");
-//     $("#content-chart").removeClass("active");
-// });
+function closeChatScreen (e) {
+    // e.preventDefault();
+    $("#listCOntactDiv").removeClass("hidden");
+    $("#content-chart").removeClass("active");
+};
 
 // function openMsgDiv() {
 //     $("#chatScreen").show();
