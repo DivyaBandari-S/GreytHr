@@ -150,8 +150,14 @@ class EmployeeSwipesData extends Component
         $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
             return str_replace('-', '', $id);
         });
-
-        $tableName = 'DeviceLogs_' . 1 . '_' . 2024;
+        $currentDate = Carbon::today();
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+        $authUser = Auth::user();
+        $userId = $authUser->emp_id;
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // dd($tableName);
 
         try {
             // Check if the table exists
@@ -162,7 +168,7 @@ class EmployeeSwipesData extends Component
                     ->whereIn('UserId', $normalizedIds)
                     ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->subYear()->format('Y-m-d')])
                     ->get();
-                // dd( $externalSwipeLogs);
+            dd( $externalSwipeLogs);
             } else {
                 $externalSwipeLogs = collect();
             }
