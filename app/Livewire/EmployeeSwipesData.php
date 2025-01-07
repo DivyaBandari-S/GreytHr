@@ -150,8 +150,15 @@ class EmployeeSwipesData extends Component
         $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
             return str_replace('-', '', $id);
         });
+        $currentDate = Carbon::today();
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+        $authUser = Auth::user();
+        $userId = $authUser->emp_id;
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        // dd($tableName);
 
-        $tableName = 'DeviceLogs_' . 1 . '_' . 2024;
         try {
             // Check if the table exists
 

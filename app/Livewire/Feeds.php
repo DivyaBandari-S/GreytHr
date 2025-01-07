@@ -240,6 +240,7 @@ class Feeds extends Component
     public function recognizeToggleDropdown()
     {
         $this->dropdownOpen = !$this->dropdownOpen;  // Toggle dropdown visibility
+        $this->searchTerm='';
     }
 
     public function updatedSearchTerm()
@@ -706,7 +707,7 @@ class Feeds extends Component
                 $emoji_reaction->delete();
 
                 // Dispatch a success message
-                FlashMessageHelper::flashSuccess('You have removed your reaction.');
+                FlashMessageHelper::flashSuccess(' Reaction removed Successfully .');
 
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
@@ -729,7 +730,7 @@ class Feeds extends Component
                 $emoji->delete();
 
                 // Dispatch a success message
-                FlashMessageHelper::flashSuccess('You have removed your reaction.');
+                FlashMessageHelper::flashSuccess('Reaction removed Successfully');
 
                 // Remove the deleted emoji from $allEmojis
                 $this->allEmojis = collect($this->allEmojis)->reject(fn($item) => $item->id === $emojiId);
@@ -1304,7 +1305,9 @@ class Feeds extends Component
                     ];
                 }
             }
+            
         }
+    
 
         // Sort the combined data by date in descending order
         usort($combinedData, function ($a, $b) {
