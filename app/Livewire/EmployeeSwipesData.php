@@ -152,17 +152,17 @@ class EmployeeSwipesData extends Component
         });
 
         $tableName = 'DeviceLogs_' . 1 . '_' . 2024;
-
         try {
             // Check if the table exists
+
             if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
+
                 $externalSwipeLogs = DB::connection('sqlsrv')
                     ->table($tableName)
                     ->select('UserId', 'logDate', 'Direction')
                     ->whereIn('UserId', $normalizedIds)
                     ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->subYear()->format('Y-m-d')])
                     ->get();
-                // dd( $externalSwipeLogs);
             } else {
                 $externalSwipeLogs = collect();
             }
@@ -196,6 +196,7 @@ class EmployeeSwipesData extends Component
 
     public function render()
     {
+
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
