@@ -36,7 +36,7 @@ class AttendenceMasterDataNew extends Component
     public $searching=1;
     public  $holiday;
 
-    public $selectedYear='2024'; 
+    public $selectedYear; 
     public $notFound;
 
 
@@ -64,7 +64,7 @@ class AttendenceMasterDataNew extends Component
         $this->todayyear = date('Y');
         $this->todaymonth=date('n');
         $this->todaymonthinformat=date('F');
-        
+        $this->selectedYear=date('Y');
     }
     public function openlegend()
     {

@@ -2275,21 +2275,21 @@ color: #fff;
                                 <tr>
 
                                     <td class="attendance-info-table-data">
-                                        @if($changeDate==1)
+                                        @if($changeDate==1&&!empty($this->first_in_time))
                                         {{$this->first_in_time}}
                                         @else
                                         -
                                         @endif
                                     </td>
                                     <td class="attendance-info-table-data">
-                                        @if($changeDate==1)
+                                        @if($changeDate==1&&!empty($this->last_out_time))
                                         {{$this->last_out_time}}
                                         @else
                                         -
                                         @endif
                                     </td>
                                     <td class="attendance-info-table-data">
-                                       @if($changeDate==1&& $this->first_in_time > $shiftStartTime)
+                                       @if($changeDate==1&&!empty($this->first_in_time)&& $this->first_in_time > $shiftStartTime)
                                        @php
                                                
 
@@ -2313,7 +2313,7 @@ color: #fff;
                                         
                                     </td>
                                     <td class="attendance-info-table-data">
-                                       @if($changeDate==1&& $this->last_out_time!='-'&& $this->last_out_time < $shiftEndTime)
+                                       @if($changeDate==1 &&!empty($this->last_out_time)&& $this->last_out_time < $shiftEndTime)
                                        @php
                                                
 
