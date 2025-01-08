@@ -417,62 +417,95 @@
 @foreach($posts as $post)
     <div class="col-12 col-md-8 mt-2" id="post-{{ $post->id }}">
         <div class="post-card">
-            <!-- Post Header -->
-            <div class="post-header">
-                <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" class="company-logo">
-                <div class="category">{{ $post->category }}</div>
-                <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
-            </div>
-
-            <!-- Profile Section -->
-            <div class="profile-info">
-                @php
+            <div class="row">
+        <div class="col-12 col-md-2 text-start mb-2 mb-md-0">
+        @php
                     $employee = $post->employeeDetails;
                     $manager = $post->managerDetails;
                 @endphp
+                  @if($employee)
+                  @if(!empty($employee->image))
+            <img src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                                <!-- Employee's Initials -->
+                                                <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
 
-                @if($employee)
-                <div class="column" style="display:flex">
-                <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$employee->image ?? ''}}" alt="Employee Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
-                    {{ $post->description }}
-                </div>
-                </div>
-                    <!-- Profile Image -->
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-7 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $post->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                               
+
+                                            </div>
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
              
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</p>
-                    </div>
-                @elseif($manager)
-                <div class="column" style="display:flex">
-                    <!-- Profile Image -->
-                    <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$manager->image ?? ''}}" alt="Manager Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
+                                            @elseif($manager)
+                                            @if(!empty($manager->image))
+            <img src="data:image/jpeg;base64,{{$manager->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                            <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($manager->first_name, 0, 1)) . strtoupper(substr($manager->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-6 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $manager->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                            </div>
+                                            <div class="col-md-4 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
+            <!-- Post He
+             ader -->
+               <div class="description">
                     {{ $post->description }}
                 </div>
+          @endif
+        
+          </div>
 
-                </div>
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</p>
-                    </div>
-                @endif
-            </div>
+            <!-- Profile Section -->
+        
 
             <!-- Post Content -->
             <div class="post-content">
-                <!-- Post Description -->
-             
-                <!-- Post Image -->
-                @if($post->image_url)
-                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image">
-                @endif
-            </div>
+    <!-- Post Description -->
+
+    <!-- Post Image -->
+    @if($post->image_url)
+        <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" 
+             style="cursor: pointer;" 
+             data-bs-toggle="modal" 
+             data-bs-target="#imageModal">
+    @endif
+</div>
+
+
+
         </div>
     </div>
 @endforeach
@@ -495,10 +528,21 @@
 </div>
                 </div>
                 </div>
+
                 </div>
+                
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> 
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-
+<script>
+    // Ensure modal appears correctly and doesn't blink
+    const imageModal = document.getElementById('imageModal');
+    imageModal.addEventListener('show.bs.modal', function () {
+        // Add a small timeout to ensure smooth transition
+        setTimeout(() => {
+            imageModal.style.display = 'block';
+        }, 10);
+    });
+</script>
 @push('scripts')
 <script>
     Livewire.on('updateSortType', sortType => {
