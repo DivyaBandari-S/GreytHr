@@ -360,7 +360,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         ->whereDate('created_at', '<=', $endDate)
         ->orderBy('created_at', 'asc') // Ensure records are ordered by date and time
         ->get();
-
+        
 // Group by date and fetch the first IN and last OUT for each date
         $dailyRecords = $records->groupBy(function ($record) {
         return Carbon::parse($record->created_at)->toDateString();
@@ -419,17 +419,35 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return $currentDate->between($leaveRequest->from_date, $leaveRequest->to_date);
         });
         $isOnfullDayLeave =$this->isEmployeeFullDayLeaveOnDate($currentDate->toDateString(), $employeeId);   
-        $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($currentDate->toDateString(), $employeeId);
+        $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($currentDate->toDateString(), $employeeId)['sessionCheck'];
         Log::info("Date: " . $currentDate->toDateString() . ", Weekend: " . ($isWeekend ? 'Yes' : 'No') . 
                   ", Holiday: " . ($isHoliday ? 'Yes' : 'No') . ", On Leave: " . ($isOnLeave ? 'Yes' : 'No'));
 
-        if (!$isWeekend && !$isHoliday && !$isOnLeave &&!$isOnfullDayLeave) {
-            $workingDaysCount++;
-        }
-        elseif($isOnHalfDayLeave)
-        {
-            $workingDaysCount+=0.5;
-        }
+                  if (!$isWeekend && !$isHoliday && !$isOnLeave && !$isOnfullDayLeave) {
+                    $workingDaysCount++;
+                    Log::info('Full working day counted', [
+                        'isWeekend' => $isWeekend,
+                        'isHoliday' => $isHoliday,
+                        'isOnLeave' => $isOnLeave,
+                        'isOnfullDayLeave' => $isOnfullDayLeave,
+                        'workingDaysCount' => $workingDaysCount
+                    ]);
+                } elseif ($isOnHalfDayLeave || (!$isWeekend && !$isHoliday && !$isOnLeave)) {
+                    $workingDaysCount += 0.5;
+                    Log::info('Half working day counted', [
+                        'isOnHalfDayLeave' => $isOnHalfDayLeave,
+                        'workingDaysCount' => $workingDaysCount
+                    ]);
+                } else {
+                    Log::info('No working day counted', [
+                        'isWeekend' => $isWeekend,
+                        'isHoliday' => $isHoliday,
+                        'isOnLeave' => $isOnLeave,
+                        'isOnfullDayLeave' => $isOnfullDayLeave,
+                        'isOnHalfDayLeave' => $isOnHalfDayLeave,
+                        'workingDaysCount' => $workingDaysCount
+                    ]);
+                }
 
         $currentDate->addDay();
     }
@@ -936,6 +954,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         return [
             'session' => $sessionArray,
             'leaveRecord' => $leaveRecord,
+            'sessionCheck' => ($session1Check xor $session2Check) ? true : false,
+
         ];
     } catch (\Exception $e) {
         Log::error('Error in isEmployeeHalfDayLeaveOnDate method:', [
