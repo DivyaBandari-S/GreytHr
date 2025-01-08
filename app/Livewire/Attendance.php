@@ -1279,9 +1279,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
                                     $hours = floor($timeDifference / 60);
                                     $minutes = $timeDifference % 60;
-                                    if ($timeDifference < 240) {
+                                    if ($timeDifference == 0) {
                                         $isAbsentFor = true;
-                                    } elseif ($timeDifference >= 240 && $timeDifference < 480) {
+                                    } elseif ($timeDifference < 270) {
                                         // Between 4 hours and 8 hours, mark as half-day present
                                         $isHalfDayPresent = true;
                                     }
@@ -2578,7 +2578,12 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
                     $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
                     
-                } else {
+                }elseif( !in_array($this->currentDate2, ['Saturday', 'Sunday']))
+                {
+                    $this->first_in_time = null;
+                    $this->last_out_time = null;   
+                }
+                 else {
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
                 
