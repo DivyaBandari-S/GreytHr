@@ -1,0 +1,897 @@
+[2025-01-08 16:59:46] local.INFO: Stored session ID: wLQqTNZFdcuWVwo10aLe2GvIlwdp0FVJLkVb9ZpH  
+[2025-01-08 16:59:46] local.INFO: Existing session ID: None  
+[2025-01-08 16:59:46] local.INFO: Session updated {"user_id":"XSS-0479","session_id":"wLQqTNZFdcuWVwo10aLe2GvIlwdp0FVJLkVb9ZpH","device_type":"Desktop","location":"New Haven, United States"} 
+[2025-01-08 16:59:46] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Attendance HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9
+
+Cache-Control:             max-age=0
+
+Connection:                keep-alive
+
+Cookie:                    XSRF-TOKEN=eyJpdiI6IkJzbVFwR2wzUjBGWTluUFhuRm11WWc9PSIsInZhbHVlIjoiNE5TNjlFRklrTXNEMnhtTUswQU40RGMydTNqMUR4bUlleXFoRTI0eVVGT2tkVzFhM2w5VDJDd2MyRExNWkliakI0VTI1NHV5T2ZGTVFOWmR2Q1ZsdFdKZkp3cjBjNXpEVlhsMWM1MXNzRk1TalRWMHU0RGRMNnR5RUlLYWtwL1IiLCJtYWMiOiIwNGJkODhiMDk1ZDM1ZjM4YzI5NDE1M2NjZjZjOWFhMmQwZDczYzM5NjQwNDRlZDhiY2MxYjc1Njg1YmY3YjdjIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6Ikd2T2MvWHNweVNBUkN2a25aZXpuQ2c9PSIsInZhbHVlIjoiVHJKcytlMWNTZElOay9wTXdCaUpmQ3FVRm1ZcDhtRHFDU3MzcE9qYm5HK2ZqZml6ZEsyeWhkRjZDUkUwcnpuRHJndENkM0JGcTVGa0ZVT05kRFFLbm5XQ280Y1c2NmJQbWFNbHkweC9tKzdpSnJ0T3RSU0dldUF2eDNyT2FuemkiLCJtYWMiOiI3YTZlNWMwNDY4ZThiN2RhY2Y2NzJlNTI1MDgxODc3YWQyMDNhNDM2MWZlMjM3ZmFjMjVlMDlhMTVlZDRhYjNlIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/
+
+Sec-Ch-Ua:                 \"Google Chrome\";v=\"131\", \"Chromium\";v=\"131\", \"Not_A Brand\";v=\"24\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Sec-Fetch-User:            ?1
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+
+Cookie: XSRF-TOKEN=vyva6miMffvESGfv9xKFgSXFguJNaniGgtCehmd7; laravel_session=wLQqTNZFdcuWVwo10aLe2GvIlwdp0FVJLkVb9ZpH
+
+
+
+"}} 
+[2025-01-08 16:59:46] local.INFO: Start Date: 2025-01-01, End Date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-01, IsHoliday: Yes, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-02, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-03, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-04, IsHoliday: No, IsWeekend: Yes, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-05, IsHoliday: No, IsWeekend: Yes, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-06, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-07, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Total Late Swipes: 0  
+[2025-01-08 16:59:46] local.INFO: Total First In Count: 0, Late Swipe Count: 0  
+[2025-01-08 16:59:46] local.INFO: Average First In Time: N/A  
+[2025-01-08 16:59:46] local.INFO: early out method called  
+[2025-01-08 16:59:46] local.INFO: Start Date: 2025-01-01, End Date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-01, IsHoliday: Yes, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-02, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-03, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-04, IsHoliday: No, IsWeekend: Yes, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-05, IsHoliday: No, IsWeekend: Yes, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-06, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-07, IsHoliday: No, IsWeekend: No, IsOnLeave: No, IsPresent: No  
+[2025-01-08 16:59:46] local.INFO: Starting leave calculation from 2025-01-01 to 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Skipping holiday: 2025-01-01  
+[2025-01-08 16:59:46] local.INFO: Checking date: 2025-01-02  
+[2025-01-08 16:59:46] local.INFO: Is on leave: No  
+[2025-01-08 16:59:46] local.INFO: Checking date: 2025-01-03  
+[2025-01-08 16:59:46] local.INFO: Is on leave: No  
+[2025-01-08 16:59:46] local.INFO: Skipping weekend: 2025-01-04  
+[2025-01-08 16:59:46] local.INFO: Skipping weekend: 2025-01-05  
+[2025-01-08 16:59:46] local.INFO: Checking date: 2025-01-06  
+[2025-01-08 16:59:46] local.INFO: Is on leave: No  
+[2025-01-08 16:59:46] local.INFO: Checking date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Is on leave: No  
+[2025-01-08 16:59:46] local.INFO: Total leave count (excluding weekends and holidays): 0  
+[2025-01-08 16:59:46] local.INFO: Calculating total number of absents between: 2025-01-01 and 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-01  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-02  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateWorkHrsForAbsentEmployees method  
+[2025-01-08 16:59:46] local.INFO: IN Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.INFO: OUT Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.WARNING: Swipe records missing for date: {"date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: Is employee absent on 2025-01-02? Yes  
+[2025-01-08 16:59:46] local.INFO: Absent days count incremented to: 1  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-03  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateWorkHrsForAbsentEmployees method  
+[2025-01-08 16:59:46] local.INFO: IN Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.INFO: OUT Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.WARNING: Swipe records missing for date: {"date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: Is employee absent on 2025-01-03? Yes  
+[2025-01-08 16:59:46] local.INFO: Absent days count incremented to: 2  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-04  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-05  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-06  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateWorkHrsForAbsentEmployees method  
+[2025-01-08 16:59:46] local.INFO: IN Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.INFO: OUT Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.WARNING: Swipe records missing for date: {"date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: Is employee absent on 2025-01-06? Yes  
+[2025-01-08 16:59:46] local.INFO: Absent days count incremented to: 3  
+[2025-01-08 16:59:46] local.INFO: Checking for absence on: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateWorkHrsForAbsentEmployees method  
+[2025-01-08 16:59:46] local.INFO: IN Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.INFO: OUT Swipe Record: {"data":null} 
+[2025-01-08 16:59:46] local.WARNING: Swipe records missing for date: {"date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: Is employee absent on 2025-01-07? Yes  
+[2025-01-08 16:59:46] local.INFO: Absent days count incremented to: 4  
+[2025-01-08 16:59:46] local.INFO: Total number of absent days: 4  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateAverageWorkHoursAndPercentage for: 2025-01-01 00:00:00 and 2025-01-07 00:00:00  
+[2025-01-08 16:59:46] local.INFO: Starting calculation for Employee ID: XSS-0479  
+[2025-01-08 16:59:46] local.INFO: Swipe records retrieved: []  
+[2025-01-08 16:59:46] local.INFO: Leave requests retrieved: 0  
+[2025-01-08 16:59:46] local.INFO: Is Current Month: Yes  
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-01  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-01, Weekend: No, Holiday: Yes, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":true,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":0} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-02  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-02, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":1} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-03  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-03, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-04  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-04, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-05  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-05, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-06  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-06, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":3} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-07, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":4} 
+[2025-01-08 16:59:46] local.INFO: Total Working Days Count: 4  
+[2025-01-08 16:59:46] local.INFO: Average Work Hours: 00:00  
+[2025-01-08 16:59:46] local.INFO: Welcome to generateCalendar method  
+[2025-01-08 16:59:46] local.INFO: Employee ID: {"employeeId":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: First Day of Month: {"firstDay":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: Days in Month: {"daysInMonth":31} 
+[2025-01-08 16:59:46] local.INFO: Today: {"today":"2025-01-08"} 
+[2025-01-08 16:59:46] local.INFO: Public Holidays for Current Month: {"publicHolidays":{"Illuminate\\Database\\Eloquent\\Collection":[{"id":69,"emp_id":null,"day":"Wednesday","date":"2025-01-01","month":"January","year":"2025","festivals":"New Year","created_at":null,"updated_at":null}]}} 
+[2025-01-08 16:59:46] local.INFO: First Day of Week: {"firstDayOfWeek":3} 
+[2025-01-08 16:59:46] local.INFO: Start of Previous Month: {"startOfPreviousMonth":"2024-12-01"} 
+[2025-01-08 16:59:46] local.INFO: Public Holidays for Previous Month: {"publicHolidaysPreviousMonth":{"Illuminate\\Database\\Eloquent\\Collection":[{"id":52,"emp_id":null,"day":"Wednesday","date":"2024-12-25","month":"December","year":"2024","festivals":"Christmas Day","created_at":"2024-01-03T03:08:25.000000Z","updated_at":"2024-01-03T03:08:25.000000Z"}]}} 
+[2025-01-08 16:59:46] local.INFO: Previous Month Day: {"previousMonthDays":"2024-12-29"} 
+[2025-01-08 16:59:46] local.INFO: Previous Month Day: {"previousMonthDays":"2024-12-30"} 
+[2025-01-08 16:59:46] local.INFO: Previous Month Day: {"previousMonthDays":"2024-12-31"} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":true} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-01","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-02","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-03","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-04","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-05","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-06","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-07","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-08"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-08"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-08"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-08","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-09"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-09"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-09"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-09","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-10"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-10"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-10"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-10","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-11"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-11"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-11"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-11","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-12"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-12"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-12"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-12","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-13"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-13"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-13"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-13","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-14"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-14"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-14"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-14","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-15"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-15"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-15"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-15","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-16"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-16"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-16"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-16","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-17"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-17"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-17"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-17","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-18"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-18"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-18"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-18","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-19"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-19"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-19"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-19","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-20"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-20"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-20"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-20","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-21"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-21"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-21"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-21","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-22"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-22"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-22"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-22","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-23"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-23"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-23"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-23","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-24"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-24"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-24"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-24","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-25"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-25"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-25"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-25","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-26"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-26"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-26"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-26","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-27"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-27"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-27"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-27","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-28"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-28"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-28"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-28","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-29"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-29"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-29"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-29","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-30"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-30"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-30"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-30","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Processing Date: {"date":"2025-01-31"} 
+[2025-01-08 16:59:46] local.INFO: Is Public Holiday: {"isPublicHoliday":false} 
+[2025-01-08 16:59:46] local.INFO: Is Regularised: {"isRegularised":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Leave: {"isOnLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Is On Full Day Leave: {"isonFullDayLeave":false} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-31"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-31"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Is On Half Day Leave: {"isOnHalfDayLeave":null} 
+[2025-01-08 16:59:46] local.INFO: Is On Second Session Leave: {"session2leave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Single leave session detected {"date":"2025-01-31","employeeId":"XSS-0479","isOnSecondSessionLeave":[[]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type {"leaveType":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 1 {"leaveTypeForSession1":null} 
+[2025-01-08 16:59:46] local.INFO: Leave Type for Session 2 {"leaveTypeForSession2":null} 
+[2025-01-08 16:59:46] local.INFO: Generated Calendar: {"calendar":[[{"day":29,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":false,"isPreviousMonth":true,"isRegularised":false,"backgroundColor":"","status":"","leavestatusforsession1":null,"leavestatusforsession2":null,"onHalfDayLeave":"","onFullDayLeave":"","onleave":"","halfdaypresent":"","session2leave":null},{"day":30,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":false,"isPreviousMonth":true,"isRegularised":false,"backgroundColor":"","status":"","leavestatusforsession1":null,"leavestatusforsession2":null,"onHalfDayLeave":"","onFullDayLeave":"","onleave":"","halfdaypresent":"","session2leave":null},{"day":31,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":false,"isPreviousMonth":true,"isRegularised":false,"backgroundColor":"","status":"","leavestatusforsession1":null,"leavestatusforsession2":null,"onHalfDayLeave":"","onFullDayLeave":"","onleave":"","halfdaypresent":"","session2leave":null},{"day":1,"isToday":false,"isPublicHoliday":true,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"background-color: IRIS;","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":2,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":3,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":4,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]}],[{"day":5,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":6,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":7,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":8,"isToday":true,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":9,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":10,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":11,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]}],[{"day":12,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":13,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":14,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":15,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":16,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":17,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":18,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]}],[{"day":19,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":20,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":21,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":22,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":23,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":24,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":25,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]}],[{"day":26,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":27,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":28,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":29,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":30,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":31,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":true,"isRegularised":false,"isPreviousMonth":false,"backgroundColor":"","onleave":false,"onHalfDayLeave":null,"onFullDayLeave":false,"status":"A","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":null,"session2leave":[[]]},{"day":1,"isToday":false,"isPublicHoliday":false,"isCurrentMonth":false,"isRegularised":false,"isNextMonth":true,"backgroundColor":"","onleave":false,"onHalfDayLeave":false,"status":"","leavestatusforsession1":null,"leavestatusforsession2":null,"halfdaypresent":"","onFullDayLeave":"","session2leave":null}]]} 
+[2025-01-08 16:59:46] local.INFO: Leave Type added to array: {"currentLeaveTypes":[]} 
+[2025-01-08 16:59:46] local.INFO: Initial dates: {"date":"2025-01","currentMonthStart":"2025-01-01","currentMonthEnd":"2025-01-31","previousMonthDate":"2024-12"} 
+[2025-01-08 16:59:46] local.INFO: Current month end adjusted to today: {"currentMonthEnd":"2025-01-08"} 
+[2025-01-08 16:59:46] local.INFO: Previous month dates: {"previousMonthStart":"2024-12-01","previousMonthEnd":"2024-12-31"} 
+[2025-01-08 16:59:46] local.INFO: Calling calculateAverageWorkHoursAndPercentage for current and previous months {"currentMonthStart":"2025-01-01","currentMonthEnd":"2025-01-08","previousMonthStart":"2024-12-01","previousMonthEnd":"2024-12-31"} 
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateAverageWorkHoursAndPercentage for: 2025-01-01 and 2025-01-08  
+[2025-01-08 16:59:46] local.INFO: Starting calculation for Employee ID: XSS-0479  
+[2025-01-08 16:59:46] local.INFO: Swipe records retrieved: []  
+[2025-01-08 16:59:46] local.INFO: Leave requests retrieved: 0  
+[2025-01-08 16:59:46] local.INFO: Is Current Month: Yes  
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-01  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-01, Weekend: No, Holiday: Yes, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":true,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":0} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-02  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-02, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":1} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-03  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-03, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-04  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-04, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-05  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-05, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-06  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-06, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":3} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-07, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":4} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-08  
+[2025-01-08 16:59:46] local.INFO: Skipping current date as it's today.  
+[2025-01-08 16:59:46] local.INFO: Total Working Days Count: 4  
+[2025-01-08 16:59:46] local.INFO: Average Work Hours: 00:00  
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateAverageWorkHoursAndPercentage for: 2024-12-01 and 2024-12-31  
+[2025-01-08 16:59:46] local.INFO: Starting calculation for Employee ID: XSS-0479  
+[2025-01-08 16:59:46] local.INFO: Swipe records retrieved: [{"id":683,"emp_id":"XSS-0479","swipe_time":"10:00","in_or_out":"IN","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"},{"id":684,"emp_id":"XSS-0479","swipe_time":"19:00","in_or_out":"OUT","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"}]  
+[2025-01-08 16:59:46] local.INFO: Leave requests retrieved: 3  
+[2025-01-08 16:59:46] local.INFO: Is Current Month: No  
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-01  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-01, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":0} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-02  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-02, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":1} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-03  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-03, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-04  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-04"} 
+[2025-01-08 16:59:46] local.INFO: Session Check Result: {"employee_id":"XSS-0479","sessionCheck":"Session 1"} 
+[2025-01-08 16:59:46] local.INFO: Leave Record for Session 1: {"employee_id":"XSS-0479","date":"2024-12-04","leaveRecord":true} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-04, Weekend: No, Holiday: No, On Leave: Yes  
+[2025-01-08 16:59:46] local.INFO: Half working day counted {"isOnHalfDayLeave":true,"workingDaysCount":2.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-05  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-05, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":3.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-06  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-06, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":4.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-07  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-07, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":4.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-08  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-08"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-08, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":4.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-09  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-09"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-09, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":5.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-10  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-10"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-10, Weekend: No, Holiday: No, On Leave: Yes  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":true,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":5.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-11  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-11"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-11, Weekend: No, Holiday: No, On Leave: Yes  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":true,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":5.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-12  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-12"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-12, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":6.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-13  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-13"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-13, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":7.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-14  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-14"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-14, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":7.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-15  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-15"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-15, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":7.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-16  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-16"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-16, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":8.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-17  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-17"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-17, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":9.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-18  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-18"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-18, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":10.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-19  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-19"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-19, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":11.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-20  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-20"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-20, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":12.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-21  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-21"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-21, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":12.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-22  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-22"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-22, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":12.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-23  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-23"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-23, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":13.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-24  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-24"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-24, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":14.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-25  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-25"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-25, Weekend: No, Holiday: Yes, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":true,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":14.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-26  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-26"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-26, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":15.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-27  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-27"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-27, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":16.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-28  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-28"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-28, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":16.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-29  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-29"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-29, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":16.5} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-30  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-30"} 
+[2025-01-08 16:59:46] local.INFO: Session Check Result: {"employee_id":"XSS-0479","sessionCheck":"Session 2"} 
+[2025-01-08 16:59:46] local.INFO: Leave Record for Session 2: {"employee_id":"XSS-0479","date":"2024-12-30","leaveRecord":true} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-30, Weekend: No, Holiday: No, On Leave: Yes  
+[2025-01-08 16:59:46] local.INFO: Half working day counted {"isOnHalfDayLeave":true,"workingDaysCount":17.0} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2024-12-31  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2024-12-31"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-31, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":18.0} 
+[2025-01-08 16:59:46] local.INFO: Total Working Days Count: 18  
+[2025-01-08 16:59:46] local.INFO: Processing swipe data for date: 2024-12-05  
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-05, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: {"first_in":{"id":683,"emp_id":"XSS-0479","swipe_time":"10:00","in_or_out":"IN","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"},"last_out":{"id":684,"emp_id":"XSS-0479","swipe_time":"19:00","in_or_out":"OUT","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"}}  
+[2025-01-08 16:59:46] local.INFO: Processing swipe record: {"id":683,"emp_id":"XSS-0479","swipe_time":"10:00","in_or_out":"IN","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"}  
+[2025-01-08 16:59:46] local.INFO: IN Time: 2025-01-08 10:00:00  
+[2025-01-08 16:59:46] local.INFO: Processing swipe record: {"id":684,"emp_id":"XSS-0479","swipe_time":"19:00","in_or_out":"OUT","is_regularized":1,"sign_in_device":null,"created_at":"2024-12-04T18:30:00.000000Z","updated_at":"2024-12-16T11:09:45.000000Z"}  
+[2025-01-08 16:59:46] local.INFO: OUT Time: 2025-01-08 19:00:00, Minutes Worked: 540  
+[2025-01-08 16:59:46] local.INFO: Date: 2024-12-05, Day Minutes: 540, Total Minutes So Far: 540,Working Days Count: 18  
+[2025-01-08 16:59:46] local.INFO: Average Work Hours: 00:30  
+[2025-01-08 16:59:46] local.INFO: Average work hours: {"avgWorkHoursCurrentMonth":"00:00","avgWorkHoursPreviousMonth":"00:30"} 
+[2025-01-08 16:59:46] local.INFO: Total minutes: {"currentMonthTotalMinutes":0,"previousMonthTotalMinutes":30} 
+[2025-01-08 16:59:46] local.INFO: Difference in minutes: {"differenceInMinutes":-30} 
+[2025-01-08 16:59:46] local.INFO: Final difference: {"hoursDifference":0,"minutesDifference":-30,"percentageDifference":-100} 
+[2025-01-08 16:59:46] local.INFO: Welcome to calculateAverageWorkHoursAndPercentage for: 2025-01-01 and 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Starting calculation for Employee ID: XSS-0479  
+[2025-01-08 16:59:46] local.INFO: Swipe records retrieved: []  
+[2025-01-08 16:59:46] local.INFO: Leave requests retrieved: 0  
+[2025-01-08 16:59:46] local.INFO: Is Current Month: Yes  
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-01  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-01"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-01, Weekend: No, Holiday: Yes, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":false,"isHoliday":true,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":0} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-02  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-02"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-02, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":1} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-03  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-03"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-03, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-04  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-04"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-04, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-05  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-05"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-05, Weekend: Yes, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: No working day counted {"isWeekend":true,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"isOnHalfDayLeave":false,"workingDaysCount":2} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-06  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-06"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-06, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":3} 
+[2025-01-08 16:59:46] local.INFO: Processing date: 2025-01-07  
+[2025-01-08 16:59:46] local.INFO: Checking half-day leave for employee. {"employee_id":"XSS-0479","date":"2025-01-07"} 
+[2025-01-08 16:59:46] local.INFO: No session found for the employee: {"employee_id":"XSS-0479"} 
+[2025-01-08 16:59:46] local.INFO: Date: 2025-01-07, Weekend: No, Holiday: No, On Leave: No  
+[2025-01-08 16:59:46] local.INFO: Full working day counted {"isWeekend":false,"isHoliday":false,"isOnLeave":false,"isOnfullDayLeave":false,"workingDaysCount":4} 
+[2025-01-08 16:59:46] local.INFO: Total Working Days Count: 4  
+[2025-01-08 16:59:46] local.INFO: Average Work Hours: 00:00  
