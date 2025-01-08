@@ -425,7 +425,10 @@
                                     <div class="col-12 col-md-6" style="font-size: 12px;">
                                         Category: {{ $post->category }}
                                     </div>
-                                    <div class="col-12 col-md-6" style="font-size: 12px;">
+                                 
+                                </div>
+                                <div class="row m-2">
+                                <div class="col-11 " style="font-size: 12px;">
                                         Description: {{ $post->description }}
                                     </div>
                                 </div>
