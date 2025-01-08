@@ -55,6 +55,9 @@ class Attendance extends Component
     public $currentDate;
     public $date1;
 
+    public $shiftStartTime;
+
+    public $shiftEndTime;
     public $avgSignInTime;
 
 
@@ -647,7 +650,10 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
             ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
             ->first();
-            while ($currentDate->lte($endDate)) {
+
+            $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
+            $this->shiftEndTime=Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+            while ($currentDate->lte($endDate)) { 
                 $dateString = $currentDate->toDateString();
 
                 // Get "IN" and "OUT" times for the current date
@@ -1217,6 +1223,21 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         if ($leaveType && !in_array($leaveType, $this->leaveTypes)) {
                             $this->leaveTypes[] = $leaveType;
                         }
+                        // Get leave types for session 1 and session 2
+                        $leaveTypeForSession1 = $this->getLeaveTypeForSession1($date->toDateString(), $employeeId);
+                        Log::info('Leave Type for Session 1', ['leaveTypeForSession1' => $leaveTypeForSession1]);
+
+                        $leaveTypeForSession2 = $this->getLeaveTypeForSession2($date->toDateString(), $employeeId);
+                        Log::info('Leave Type for Session 2', ['leaveTypeForSession2' => $leaveTypeForSession2]);
+
+                        // Add session leave types to leaveTypes array if they are not already present
+                        if ($leaveTypeForSession1 && !in_array($leaveTypeForSession1, $this->leaveTypes)) {
+                            $this->leaveTypes[] = $leaveTypeForSession1;
+                        }
+
+                        if ($leaveTypeForSession2 && !in_array($leaveTypeForSession2, $this->leaveTypes)) {
+                            $this->leaveTypes[] = $leaveTypeForSession2;
+                        }
                        
                         $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
                         if (!$isOnLeave && !$isHoliday && !$date->isWeekend()) {
@@ -1518,7 +1539,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             $this->dateToCheck = $date1;
 
-            if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+            if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')  ) {
 
                 $this->changeDate = 1;
             }
@@ -2521,6 +2542,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $this->currentDate2recordout = '-';
 
                 }
+                
                 if ($this->isEmployeeRegularisedOnDate($this->currentDate2) == true) {
 
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->where('is_regularized', 1)->first();
@@ -2547,7 +2569,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     }
                     $this->first_in_time_for_date = $firstInTime;
                     $this->last_out_time_for_date = $lastOutTime;
-                    $this->lateInTime='Late In';
+                 
                     $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
