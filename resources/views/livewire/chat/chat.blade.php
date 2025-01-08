@@ -1,9 +1,11 @@
 <div class="container-fluid my-1" id='chartScreen'>
-    <div class="wrapper-canvas bg-white">
+    <div class="wrapper-canvas bg-white" style="height: 93vh">
         {{-- chat side bar --}}
         <livewire:chat.chat-side-bar />
         {{-- chat list --}}
-        <livewire:chat.chat-list />
+        <!-- <section id="listCOntactDiv"> -->
+        <livewire:chat.chat-list id="listCOntactDiv" />
+        <!-- </section> -->
         <div class="box-info-content" id="content-chart">
             {{-- chat body --}}
             <livewire:chat.chat-box />

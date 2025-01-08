@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="align-items-center col-md-2 createpost d-flex ms-auto">
-                        <button wire:click="addFeeds" class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
+                        <!-- <button wire:click="addFeeds" class="ms-auto btn-post flex flex-col justify-center items-center group w-20 p-1 rounded-md border border-purple-200">
                             <div class="w-6 h-6 rounded bg-purple-200 flex justify-center items-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file stroke-current group-hover:text-purple-600 stroke-1 text-purple-400">
                                     <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
@@ -57,7 +57,7 @@
                             <div class="row mt-1">
                                 <div class="text-left text-xs ms-1 text-center" wire:click="addFeeds">Create Posts</div>
                             </div>
-                        </button>
+                        </button> -->
                     </div>
                 </div>
                 <div class=" mt-2 bg-white d-flex align-items-center ">
@@ -177,6 +177,23 @@
                             </div>
                             <span class="custom-radio-button bg-blue"></span>
                             <span class="custom-radio-content ">All Activities</span>
+                        </label>
+                    </div>
+                    <div class="posts">
+                        <label class="custom-radio-label">
+
+                            <input type="radio" id="radio-hr" name="radio" value="posts"
+                                data-url="/kudos" wire:click="handleRadioChange('kudos')">
+
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">
+
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Kudos</span>
                         </label>
                     </div>
 
@@ -370,7 +387,7 @@
 
                 </div>
             </div>
-            <div class="col-md-9 m-0 feeds-main-content">
+            <div class="col-md-9 m-0 ">
             <div class="row">
             <div class="col-md-5" style=" justify-content: flex-start;display:flex">
                             <div style="width: 2px; height: 40px; background-color: #97E8DF; margin-right: 10px;"></div>
@@ -394,98 +411,114 @@
                             <!-- Form content here -->
                             @endif
                     @else
-                    @foreach($posts as $post)
-                        <div class="col-12 col-md-8" style="margin-top: 10px;margin-left:-60px">
-                            <!-- Upcoming Birthdays List -->
-                            <div class="cards">
-                                <div class="row mt-2">
-                                    <div class="col-12 col-md-4 text-center mb-2 mb-md-0">
-                                        <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" style="width: 100%; max-width: 120px;">
-                                    </div>
-                                    <div class="col-6 col-md-4 text-center" style="font-size: 12px;">
-                                        {{ $post->category }}
-                                    </div>
-                                    <div class="col-6  col-md-4 text-md-end" style="font-size: 12px;">
-                                        {{ $post->updated_at->diffForHumans() }}
-                                    </div>
-                                </div>
-                                <div class="row m-0 mt-3 align-items-center">
-                                    @php
-                                    $employee = $post->employeeDetails;
-                                    $manager = $post->managerDetails;
-                                    @endphp
-
-                                    {{-- Display Employee Details --}}
-                                    @if($employee)
-                                    <div class="col-3 text-center">
-                                        @if($employee->image && $employee->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image">
-                                        @else
-                                        @if($employee->gender == "Male")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                        @elseif($employee->gender == "Female")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                        @else
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                        @endif
-                                        @endif
-                                    </div>
-                                    <div class="col-9">
-                                        <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                                            {{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}
-                                        </p>
-                                    </div>
-                                    @else($manager)
-                                    <div class="col-3 text-center">
-                                        @if($manager->image && $manager->image !== 'null')
-                                        <img class="rounded-circle" height="50" width="50" src="data:image/jpeg;base64,{{$manager->image}}" alt="Manager Image">
-                                        @else
-                                        @if($manager->gender == "Male")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-                                        @elseif($manager->gender == "Female")
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-                                        @else
-                                        <img class="rounded-circle" height="50" width="50" src="{{ asset('images/user.jpg') }}" alt="Default Image">
-                                        @endif
-                                        @endif
-                                    </div>
-                                    <div class="col-9">
-                                        <p class="m-0" style="margin-left: 20px; font-size: 14px;">
-                                            {{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}
-                                        </p>
-                                    </div>
-                                    @endif
-                                </div>
-
-
-                                <div class="row m-0 mb-3">
-                                    <div class="col-6 text-start mt-3">
-                                        <img src="{{ $post->image_url ?? ''}}" class="img-fluid" style="max-width: 70px; max-height: 70px;border-radius:5px">
-                                    </div>
-                                    <div class="col-6 m-auto text-start mt-3">
-                                        <p style="font-size: 14px; margin-top: 10px; font-weight: 100; color: #677A8E;">
-                                            {{ $post->description }}
-                                        </p>
-                                    </div>
-                                </div>
-                                <confirmation-modal class="confirmation-modal">
-                                    <gt-popup-modal label="modal" size="sm" class="hydrated">
-                                        <div class="body-content">
-                                            <div slot="modal-body">
-                                                <!-- Content for modal body -->
+     
+<!-- Post Container -->
+<div id="post-container " class="feeds-main-content">
+@foreach($posts as $post)
+    <div class="col-12 col-md-8 mt-2" id="post-{{ $post->id }}">
+        <div class="post-card">
+            <div class="row">
+        <div class="col-12 col-md-2 text-start mb-2 mb-md-0">
+        @php
+                    $employee = $post->employeeDetails;
+                    $manager = $post->managerDetails;
+                @endphp
+                  @if($employee)
+                  @if(!empty($employee->image))
+            <img src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                                <!-- Employee's Initials -->
+                                                <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
                                             </div>
-                                        </div>
-                                        <div slot="modal-footer">
-                                            <div class="flex justify-end">
-                                                <gt-button shade="secondary" name="Cancel" class="mr-2x hydrated"></gt-button>
-                                                <gt-button shade="primary" name="Confirm" class="hydrated"></gt-button>
+
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-7 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $post->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                               
+
                                             </div>
-                                        </div>
-                                    </gt-popup-modal>
-                                </confirmation-modal>
-                            </div>
-                        </div>
-                        @endforeach
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
+             
+                                            @elseif($manager)
+                                            @if(!empty($manager->image))
+            <img src="data:image/jpeg;base64,{{$manager->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                            <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($manager->first_name, 0, 1)) . strtoupper(substr($manager->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-6 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $manager->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                            </div>
+                                            <div class="col-md-4 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
+            <!-- Post He
+             ader -->
+               <div class="description">
+                    {{ $post->description }}
+                </div>
+          @endif
+        
+          </div>
+
+            <!-- Profile Section -->
+        
+
+            <!-- Post Content -->
+            <div class="post-content">
+    <!-- Post Description -->
+
+    <!-- Post Image -->
+    @if($post->image_url)
+        <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" 
+             style="cursor: pointer;" 
+             data-bs-toggle="modal" 
+             data-bs-target="#imageModal">
+    @endif
+</div>
+
+
+
+        </div>
+    </div>
+@endforeach
+
+
+
+
+
+
+</div>
+
+
+
 
 
 
@@ -495,10 +528,21 @@
 </div>
                 </div>
                 </div>
+
                 </div>
+                
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> 
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-
+<script>
+    // Ensure modal appears correctly and doesn't blink
+    const imageModal = document.getElementById('imageModal');
+    imageModal.addEventListener('show.bs.modal', function () {
+        // Add a small timeout to ensure smooth transition
+        setTimeout(() => {
+            imageModal.style.display = 'block';
+        }, 10);
+    });
+</script>
 @push('scripts')
 <script>
     Livewire.on('updateSortType', sortType => {

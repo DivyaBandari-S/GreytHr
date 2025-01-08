@@ -20,6 +20,7 @@ use App\Livewire\EmpLogin;
 use App\Livewire\EmployeesReview;
 use App\Livewire\Everyone;
 use App\Livewire\Feeds;
+use App\Livewire\FeedBack;
 use App\Livewire\Catalog;
 
 use App\Http\Controllers\GoogleDriveController;
@@ -101,6 +102,7 @@ use App\Livewire\GrantLeaveBalance;
 use App\Livewire\ImageUpload;
 use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
+use App\Livewire\GiveKudos;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\MarriageLeaveBalance;
 use App\Livewire\MaternityLeaveBalance;
@@ -285,11 +287,12 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Everyone::class)->name('events');
     Route::get('/everyone', Everyone::class)->name('everyone');
+    Route::get('/kudos', GiveKudos::class)->name('kudos');
     Route::get('/emp-post-requests', EmpPostrequest::class)->name('emp-post-requests');
 
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
-
+    Route::get('/feedback', FeedBack::class)->name('feedback');
 
     //Helpdesk module
 
@@ -300,7 +303,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/catalog', Catalog::class)->name('catalog');
     Route::get('/incident', IncidentRequests::class)->name('incident');
     Route::get('/incidentRequests', [IncidentRequests::class])->name('incidentRequest');
-    Route::get('/serviceRequests', [IncidentRequests::class ])->name('serviceRequest');
+    Route::get('/serviceRequests', [IncidentRequests::class])->name('serviceRequest');
     Route::get('/itrequest', [HelpDesk::class])->name('itrequest');
     Route::get('/serviceRequests', IncidentRequests::class)->name('serviceRequests');
     // Related salary module and ITdeclaration Document center
@@ -498,22 +501,20 @@ Route::get('/clear', function () {
 
 Route::get('/test-odbc', function () {
     try {
-        // Hard-coded DSN, username, and password
-        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
+        // Updated DSN for SQL Server
+        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 
         // Create a new PDO instance
-        $dbh = new PDO("odbc:{$dsn}", $username, $password);
-
-        // Optionally, you can perform a query to further test the connection
-        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
+        $dbh = new PDO($dsn, $username, $password);
 
         return "Connection successful!";
     } catch (\PDOException $e) {
         return "Connection failed: " . $e->getMessage();
     }
 });
+
 
 
 Route::get('/test-odbc-env', function () {
@@ -536,36 +537,52 @@ Route::get('/test-odbc-env', function () {
 });
 
 
+Route::get('/test-sqlsrv', function () {
+    try {
+        $connection = DB::connection('sqlsrv')->getPdo();
+        return "Connected successfully to the SQL Server database!";
+    } catch (\Exception $e) {
+        return "Connection failed: " . $e->getMessage();
+    }
+});
 
 
 Route::get('/test-odbc-dir', function () {
     try {
-        // Hard-coded ODBC DSN, username, and password
-        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
+        // Hard-coded DSN, username, and password for ODBC connection
+        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 
         // Create a new PDO instance
-        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+        $dbh = new PDO($dsn, $username, $password);
 
         // Define your table name and user ID
-        $tableName = 'DeviceLogs_8_2024'; // Replace with your actual table name
-        $normalizedUserId = 'XSS0488'; // Replace with your actual user ID
-        $today = now()->toDateString(); // Get today's date in 'Y-m-d' format
+        $tableName = 'DeviceLogs_1_2025'; // Replace with your actual table name
+        $normalizedUserId = 'XSS0480'; // Replace with your actual user ID
+        $today = now()->subYear()->toDateString();// Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
 
         // Fetch data using raw PDO query
-        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
+        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction
+                               FROM {$tableName}
+                               WHERE UserId = ?
+                               AND CONVERT(DATE, logDate) = ?
+                               ORDER BY logDate");
         $stmt->execute([$normalizedUserId, $today]);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Output the data for debugging
+        // Debugging: Output the raw data fetched
         dd($data);
 
+        // If the data is fetched successfully
         return "Data fetched successfully!";
     } catch (\PDOException $e) {
+        // Catch errors and display the error message
         return "Error: " . $e->getMessage();
     }
 });
+
+
 
 Route::get('/down', function () {
     Artisan::call('down');
@@ -655,5 +672,3 @@ Route::get('/storage-link', function () {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
-
-

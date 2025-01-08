@@ -9,7 +9,7 @@
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-12 col-md-9 mb-3">
+            <div class="col-12 col-md-8 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content  row p-0 m-0">
                         <div class="col-md-4 p-0 ps-3 pt-4">
@@ -31,12 +31,12 @@
 
                             <div class="mb-4 homeBaneerCard row m-0">
 
-                                <div class="col-md-6 pe-0">
+                                <div class="col-md-5 pe-0">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
                                     <div class="d-flex"
-                                        style="font-size: 14px;
+                                        style="font-size: 12px;
                                         margin-top: 3em;
                                         position: relative;
                                         font-weight: 600; margin-left: 5px;"
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 ps-0 pt-2 text-end">
+                                <div class="col-md-7 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
                                             // Fetch shift times
@@ -94,38 +94,40 @@
 
                                     </p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
-                                </div>
-                                <div class="locationGlobe mt-4 row m-0">
-                                    <div class="col-1 p-0">
-                                        <i class="fa-solid fa-location-dot" id="openMapIcon"
-                                            style="color: red;cursor: pointer; font-size: 14px;"></i>
-                                    </div>
-                                    <div class="col-11 p-0">
-                                        @if (
-                                            !empty($formattedAddress['village']) ||
-                                                !empty($formattedAddress['county']) ||
-                                                !empty($formattedAddress['city']) ||
-                                                !empty($formattedAddress['country']) ||
-                                                !empty($formattedAddress['postcode']))
-                                            {{-- Display the formatted address if any of the fields are not empty --}}
-                                            <p class="mb-1">
-                                                {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
-                                                {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
-                                                {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
-                                                {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
-                                                {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
-                                            </p>
-                                        @elseif(!empty($country) || !empty($city))
-                                            {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
-                                            <p class="mb-1">{{ $city }}, {{ $country }}</p>
-                                        @else
-                                            {{-- Display a default message if everything is empty --}}
-                                            <p class="mb-1">Address not available</p>
-                                        @endif
+                                    <div class="locationGlobe m-0 mt-4 pe-0 mb-2 row">
+
+                                        <div class="col-11 p-0" style="text-align: end;">
+                                            @if (
+                                                !empty($formattedAddress['village']) ||
+                                                    !empty($formattedAddress['county']) ||
+                                                    !empty($formattedAddress['city']) ||
+                                                    !empty($formattedAddress['country']) ||
+                                                    !empty($formattedAddress['postcode']))
+                                                {{-- Display the formatted address if any of the fields are not empty --}}
+                                                <p class="mb-1">
+                                                    {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
+                                                    {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
+                                                    {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
+                                                    {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
+                                                    {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
+                                                </p>
+                                            @elseif(!empty($country) || !empty($city))
+                                                {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
+                                                <p class="mb-1">{{ $city }}, {{ $country }}</p>
+                                            @else
+                                                {{-- Display a default message if everything is empty --}}
+                                                <p class="mb-1">Address not available</p>
+                                            @endif
+
+                                        </div>
+                                        <div class="col-1 p-0" style="text-align: end;">
+                                            <i class="fa-solid fa-location-dot" id="openMapIcon"
+                                                style="color: red;cursor: pointer; font-size: 14px;"></i>
+                                        </div>
 
                                     </div>
-
                                 </div>
+
                                 <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                     <button id="signButton" class="signInButton" wire:click="toggleSignState">
@@ -146,7 +148,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-4">
                 <div class="cardReport">
                     <button class="mail">
                         <span class="rounded-pill home-reportTo"> Reports To </span>
@@ -158,7 +160,7 @@
                         @elseif($loginEmpManagerDetails === null)
                             <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
                         @else
-                            <img src="{{ asset('/images/user.jpge') }}" alt="">
+                            <img src="{{ asset('/images/user.jpg') }}" alt="">
                         @endif
                     </div>
 
@@ -1139,21 +1141,9 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {
-            {
-                $grossPay
-            }
-        }; // Dynamic data from Laravel
-        var deductions = {
-            {
-                $deductions
-            }
-        }; // Dynamic data from Laravel
-        var netPay = {
-            {
-                $netPay
-            }
-        }; // Dynamic data from Laravel
+        var grossPay = {{ $grossPay }};   // Correct data injection
+        var deductions = {{ $deductions }};   // Correct data injection
+        var netPay = {{ $netPay }};
 
         // Total of netPay and deductions should equal grossPay
         if (grossPay !== (netPay + deductions)) {

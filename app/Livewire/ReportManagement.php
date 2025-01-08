@@ -998,6 +998,7 @@ class ReportManagement extends Component
                     ->whereIn('emp_id', $this->leaveBalance)
                     ->select('emp_id', 'first_name', 'last_name')
                     ->get();
+                 
 
 
 
@@ -1913,6 +1914,7 @@ class ReportManagement extends Component
                     stripos($employee->city, $nameFilter) !== false ||
                     stripos($employee->state, $nameFilter) !== false;
             });
+          
 
 
             if ($this->filteredEmployees->isEmpty()) {

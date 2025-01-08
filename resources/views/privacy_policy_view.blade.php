@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-    <title>HR Xpert</title>
+    <title>hr xpert</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 
@@ -27,13 +27,13 @@
 
         <!-- For Prior version, please click here -->
         <p class="privacyContent">
-            At HR-Expert Software Pvt. Ltd., our subsidiaries and affiliated companies ('we' or 'us' or 'our', "The Company", "HR-Expert", "HR-Expert mobile application", "Service", "Site", "Product"), we collect and process personal information ("Customer Data"). We are committed to protecting your privacy. This Privacy Policy sets forth HR-Expert's policy with respect to the Personal Data and other information that is collected from visitors ("you", "your", "visitors") to the Site.
+            At hr xpert Software Pvt. Ltd., our subsidiaries and affiliated companies ('we' or 'us' or 'our', "The Company", "hr xpert", "hr xpert mobile application", "Service", "Site", "Product"), we collect and process personal information ("Customer Data"). We are committed to protecting your privacy. This Privacy Policy sets forth hr xpert's policy with respect to the Personal Data and other information that is collected from visitors ("you", "your", "visitors") to the Site.
         </p>
         <p class="privacyContent">
             Please note that your use of the Site and any of our Services is subject to our Terms of Service which you may access at the homepage. Our Privacy Policy and <span class="privacycontentlinks"> <a  class="privacycontentlinks"  href="/Terms&Services">Terms of Service</a></span> are integral to your use of our Site. Your continued use of the Site will constitute your acceptance of the Terms of Service and this Privacy Policy.
         </p>
         <p class="privacyheadings">Scope of the Privacy Policy</p>
-        <p class="privacyContent"> The Privacy Policy applies to HR-Expert's clients (individuals or entities who have subscribed to our services and have agreed to those applicable Terms of our Service for the subscription) "Customers" and individuals or entities who have gained access to this Service through our Customers. If you are a user of our Services as an employee of Our Customer, we recommend you clarify your queries with your employer.
+        <p class="privacyContent"> The Privacy Policy applies to hr xpert's clients (individuals or entities who have subscribed to our services and have agreed to those applicable Terms of our Service for the subscription) "Customers" and individuals or entities who have gained access to this Service through our Customers. If you are a user of our Services as an employee of Our Customer, we recommend you clarify your queries with your employer.
         </p>
         <p class="privacyheadings">Information that we collect</p>
         <p class="privacyContent">Customers use the Service to host data and information of their organization, and among others, its employees or the people they work with ("Customer Data").From a GDPR (General Data Protection Regulation) perspective, we will be classified as a "Processor" and Customer would be a "Controller".</p>
@@ -57,7 +57,7 @@
 
             <p class="privacyContent">
                 <label class="privacyLabelContent">Cookies</label>
-                - When you visit HR-Xpert, we send one or more cookies - a small file containing a string of characters - to your computer / mobile device that uniquely identifies your browser. We use cookies primarily for user authentication but may also use them to improve the quality of our service by storing user preferences and tracking user trends.
+                - When you visit hr xpert, we send one or more cookies - a small file containing a string of characters - to your computer / mobile device that uniquely identifies your browser. We use cookies primarily for user authentication but may also use them to improve the quality of our service by storing user preferences and tracking user trends.
             </p>
             <p class="privacyContent">
                 The data automatically collected from cookies and web beacons may include information from your Web browser (such as browser type and browser language) and details of your visits to our Website, including traffic data, location data and logs, page views, length of visit and website navigation paths as well as information about your computer and internet connection, including your IP address and how you interact with our Product. We collect and store this data in order to help us improve our Website, the Product and the user experience with our Website and Product.
@@ -68,12 +68,12 @@
 
             <p class="privacyContent">
                 <label class="privacyLabelContent">Log information</label>
-                - In addition to the above, when you access HR-Xpert services, our servers automatically record and store information that a browser typically sends whenever you visit a website. These server logs may include information such as your web request, Internet Protocol address, browser type, browser language, browser settings, the date and time of your request, device model, the device identifier (or "UDID"), query logs, product usage logs, usage pattern through cookies and one or more cookies that may uniquely identify your browser.
+                - In addition to the above, when you access hr xpert services, our servers automatically record and store information that a browser typically sends whenever you visit a website. These server logs may include information such as your web request, Internet Protocol address, browser type, browser language, browser settings, the date and time of your request, device model, the device identifier (or "UDID"), query logs, product usage logs, usage pattern through cookies and one or more cookies that may uniquely identify your browser.
             </p>
             <p class="privacyContent">We also collect clicks, scrolls, conversion and drop-off on our Service.</p>
             <p class="privacyContent">
                 <label class="privacyLabelContent">Location Information:</label>
-                If you are using Our Services through HR-Xpert mobile app or web app as an employee of Our Customer, we will capture your geolocation for marking your attendance and timekeeping purposes. If you are using our mobile app your employer may enable GPS to capture geo-location for time keeping purposes.We will require access to your device camera to mark your attendance by facial recognition / selfie recognition to provide the subscribed Services. We may require your mobile device storage access to facilitate seamless data management. This includes the capability to save, retrieve, and upload various forms of data, such as files, photos, and documents, ensuring your experience remains efficient and data-rich. The legal basis for processing this information is Our contractual obligation with your employer (Our Customer) to perform the attendance marking and other subscribed Services.
+                If you are using Our Services through hr xpert mobile app or web app as an employee of Our Customer, we will capture your geolocation for marking your attendance and timekeeping purposes. If you are using our mobile app your employer may enable GPS to capture geo-location for time keeping purposes.We will require access to your device camera to mark your attendance by facial recognition / selfie recognition to provide the subscribed Services. We may require your mobile device storage access to facilitate seamless data management. This includes the capability to save, retrieve, and upload various forms of data, such as files, photos, and documents, ensuring your experience remains efficient and data-rich. The legal basis for processing this information is Our contractual obligation with your employer (Our Customer) to perform the attendance marking and other subscribed Services.
             </p>
             <p class="privacyContent">
                 <label class="privacyLabelContent">Analytics Information</label>
@@ -88,7 +88,7 @@
         <div class="row">
             <p class="privacyheadings">How we use your information</p>
             <p class="privacyContent">
-                HR-Xpert will not review, share, distribute, or reference any such Customer Data except as provided in the Terms of Service, this Privacy Policy, or as may be required by law.
+                hr xpert will not review, share, distribute, or reference any such Customer Data except as provided in the Terms of Service, this Privacy Policy, or as may be required by law.
             </p>
             <p class="privacyContent">
                 Individual records of Customer Data may be viewed or accessed only for the purpose of resolving a problem, support issues, responding to Customer instructions or suspected violation of the Terms of Service, or as may be required by law.
@@ -99,7 +99,7 @@
 
             </p>
             <p class="privacyContent">
-                We may also use Customer Data to contact you and to tell you about services, updates, promotions and events which we believe will be of interest to you. For example, we may use information to contact you to further discuss your interest in HR-Xpert, the Service, and to send you information regarding the Company and its partners, such as information about promotions or events.
+                We may also use Customer Data to contact you and to tell you about services, updates, promotions and events which we believe will be of interest to you. For example, we may use information to contact you to further discuss your interest in hr xpert, the Service, and to send you information regarding the Company and its partners, such as information about promotions or events.
 
             </p>
             <p class="privacyContent">
@@ -140,7 +140,7 @@
 
             <div class="row">
                 <p class="privacyheadings">Information Sharing</p>
-                <p class="privacyContent">HR-Xpert only shares Customer Data with other companies or individuals outside of HR-Xpert in the following limited circumstances:</p>
+                <p class="privacyContent">hr xpert only shares Customer Data with other companies or individuals outside of hr xpert in the following limited circumstances:</p>
 
                 <li>
                     <span class="privacyContent">
@@ -161,7 +161,7 @@
                 <li>
                     <span class="privacyContent">
                         <label class="privacyLabelContent">Legal Requirements: </label>
-                        We may provide this information when we have a good faith belief that access, use, preservation or disclosure of such information is reasonably necessary to (a) satisfy any applicable law, regulation, legal process or enforceable governmental request, (b) enforce applicable Terms of Service, including investigation of potential violations thereof, (c) detect, prevent, or otherwise address fraud, security or technical issues, or (d) protect against imminent harm to the rights, property or safety of HR-Xpert, its users or the public as required or permitted by law.
+                        We may provide this information when we have a good faith belief that access, use, preservation or disclosure of such information is reasonably necessary to (a) satisfy any applicable law, regulation, legal process or enforceable governmental request, (b) enforce applicable Terms of Service, including investigation of potential violations thereof, (c) detect, prevent, or otherwise address fraud, security or technical issues, or (d) protect against imminent harm to the rights, property or safety of hr xpert, its users or the public as required or permitted by law.
 
                     </span>
                 </li>
@@ -170,7 +170,7 @@
                 <li>
                     <span class="privacyContent">
                         <label class="privacyLabelContent">Business Transfers: </label>
-                        If HR-Xpert becomes involved in a merger, acquisition, or any form of sale of some or all of its assets, then the Client Data may become part of that transferred asset.
+                        If hr xpert becomes involved in a merger, acquisition, or any form of sale of some or all of its assets, then the Client Data may become part of that transferred asset.
                     </span>
                 </li>
 
@@ -187,7 +187,7 @@
             <div class="row">
                 <p class="privacyheadings">Links to third Party site</p>
                 <p class="privacyContent">
-                HR-Xpert's Services may contain hyperlinks to websites owned and operated by third parties. These third-party websites have their own privacy policies and we encourage you to review them. We do not accept any responsibility or liability for the privacy practices of such third-party websites and your use of such websites is at your own risk.
+                hr xpert's Services may contain hyperlinks to websites owned and operated by third parties. These third-party websites have their own privacy policies and we encourage you to review them. We do not accept any responsibility or liability for the privacy practices of such third-party websites and your use of such websites is at your own risk.
                 </p>
             </div>
             <div class="row">
@@ -198,7 +198,7 @@
                 Any visitor who provides information through the Site represents that they are 18 years of age or older. We do not knowingly collect information from anyone under the age of 18. Our Site and Service are not designed for users under 18. If you are under 18 years, please do not access or use this Site.
                 </p>
                 <p class="privacyContent">
-                If you have reason to believe that a child under the age of 18 has provided Personal Data to HR-Xpert through the Service, please contact us, and we will take appropriate steps to delete that information from our Service.                </p>
+                If you have reason to believe that a child under the age of 18 has provided Personal Data to hr xpert through the Service, please contact us, and we will take appropriate steps to delete that information from our Service.                </p>
             </div>
             <div class="row">
                 <p class="privacyheadings">
@@ -209,18 +209,18 @@
                 </p>
                 <p  class="privacyContent">From the perspective of GDPR, we are the Processor and not the Controller of the Customer Data. Customer is responsible for complying with any applicable regulations or laws prior to or during the period of storing Customer Data in the Service.</p>
                 <p  class="privacyContent">As the Processor of Client Data on behalf of our Customers, we follow Customer's instructions with respect to the Customer Data to the extent consistent with the functionality of our Service.</p>
-                <p  class="privacyContent">We may work with our Customers to help them provide notice to their employees concerning the purpose for which Personal Data is processed by HR-Xpert. We provide Customers with an extensive range of capabilities including from role-based access control, extensive audit logs, data encryption and from tools to communicate corporate policies, These capabilities enable Customer to access, rectify and restrict processing of Customer Data.</p>
-                <p  class="privacyContent">Any request directed to us, regarding - access to, wishing to correct, update, modify or delete Customer Data or wanting us to stop contacting you, will be directed to the customer and we will assist the customer in fulfilling any obligation to respond to these requests. As indicated above, our Customers have extensive capabilities built into the Service to complete these activities on their own. Beyond this, If the customer requests HR-Xpert assistance to comply with data protection regulations, HR-Xpert will respond to their request within 30 business days.</p>
+                <p  class="privacyContent">We may work with our Customers to help them provide notice to their employees concerning the purpose for which Personal Data is processed by hr xpert. We provide Customers with an extensive range of capabilities including from role-based access control, extensive audit logs, data encryption and from tools to communicate corporate policies, These capabilities enable Customer to access, rectify and restrict processing of Customer Data.</p>
+                <p  class="privacyContent">Any request directed to us, regarding - access to, wishing to correct, update, modify or delete Customer Data or wanting us to stop contacting you, will be directed to the customer and we will assist the customer in fulfilling any obligation to respond to these requests. As indicated above, our Customers have extensive capabilities built into the Service to complete these activities on their own. Beyond this, If the customer requests hr xpert assistance to comply with data protection regulations, hr xpert will respond to their request within 30 business days.</p>
             </div>
             <div class="row">
                 <p class="privacyheadings">Retention of Data</p>
-                <p class="privacyContent">Customer data will be retained as long as Customer has a valid subscription agreement with HR-Xpert. After expiry of the Subscription Agreement, unless otherwise agreed upon with Customer, the data will be retained on our Servers for a period of 3 months after expiry / termination of the Subscription Agreement, post which it will be deleted.</p>
+                <p class="privacyContent">Customer data will be retained as long as Customer has a valid subscription agreement with hr xpert. After expiry of the Subscription Agreement, unless otherwise agreed upon with Customer, the data will be retained on our Servers for a period of 3 months after expiry / termination of the Subscription Agreement, post which it will be deleted.</p>
                 <p class="privacyContent">Data from the Backups will be removed within 30 days from the date the Customer Data is deleted from our Servers.</p>
                 <p class="privacyContent">In case Customer has not fulfilled their obligations under the Terms of Service or in case of any disputes, we will retain Customer Data as necessary to comply with our legal obligations, for litigation/defense purposes, maintain accurate financial and other records, resolve disputes and enforce our agreements.</p>
             </div>
             <div class="row">
             <p class="privacyheadings">Changes to this Policy</p>
-            <p class="privacyContent">HR-Xpert regularly reviews its compliance with this Privacy Policy. We reserve the right to change or update the Privacy Policy at any time, and will notify users of the Service by posting such changed or updated Privacy Policy on this page prior to the change becoming effective. Under certain circumstances, we may also elect to notify you of changes or updates to the Privacy Policy by additional means, such as by posting a notice on the homepage of the Service or by sending you an email.</p>
+            <p class="privacyContent">hr xpert regularly reviews its compliance with this Privacy Policy. We reserve the right to change or update the Privacy Policy at any time, and will notify users of the Service by posting such changed or updated Privacy Policy on this page prior to the change becoming effective. Under certain circumstances, we may also elect to notify you of changes or updates to the Privacy Policy by additional means, such as by posting a notice on the homepage of the Service or by sending you an email.</p>
             <p class="privacyContent">Any changes or updates will be effective from the time of posting to the Site and will be reflected by the Effective Date. Continued use of the Site following any changes shall indicate your acknowledgement of such changes and agreement to the Privacy Policy and any future revisions. We encourage you to periodically review this page for the latest information on our Privacy Policy.</p>
             </div>
 
@@ -228,7 +228,7 @@
                 <p class="privacyheadings">How to Contact Us</p>
                 <p class="privacyContent">If you have any questions or complaints about this Privacy Policy or how we collect or process your personal information or would like us modify, correct or erase any Personal Data or would like us to stop communicating with you, please contact us at info@s6.payg-india.com. You may also contact us by mail at:</p>
                 <p class="privacyContent">Privacy Matters</p>
-                <p class="privacyContent">c/o HR-Expert Software Pvt. Ltd.</p>
+                <p class="privacyContent">c/o hr xpert Software Pvt. Ltd.</p>
                 <p class="privacyContent">3rd floor, Kapil Kavuri Hub, Nanakaramguda,</p>
                 <p class="privacyContent">Financial District, </p>
                 <p class="privacyContent">Hyderabad -500032 ,</p>
@@ -246,7 +246,7 @@
 
             </div>
             <div style="margin-left: auto;">
-           <p class="privacyContent" style="margin: 0px;"> Copyright © 2018 HR-Xpert Software Pvt. Ltd. All rights reserved.</p>
+           <p class="privacyContent" style="margin: 0px;"> Copyright © 2018 hr xpert Software Pvt. Ltd. All rights reserved.</p>
             </div>
             </div>
         </div>

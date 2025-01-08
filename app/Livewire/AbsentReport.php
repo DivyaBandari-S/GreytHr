@@ -262,7 +262,7 @@ class AbsentReport extends Component
     {
 
 
-        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->orderBy('first_name')->get();
         $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.status', 'approved')
             ->whereIn('leave_applications.emp_id', $this->employees->pluck('emp_id'))

@@ -7,7 +7,7 @@
 
     <h1>Regularization Withdrawal Mail</h1>
     <p>Your regularization request has been withdrawn for the following dates.</p>
-    {{$details['regularisationRequests']}}    
+   
     <div style="margin-bottom: 20px;">
         <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse:collapse;">
             <thead>

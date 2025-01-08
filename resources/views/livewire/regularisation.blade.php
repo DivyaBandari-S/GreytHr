@@ -1105,20 +1105,20 @@
 
                             @if(!empty($employee['image']) && ($employee['image'] !== 'null'))
                             <div class="employee-profile-image-container">
-                                <img class="rounded-circle" height="35px" width="35px" src="{{ 'data:image/jpeg;base64,' . base64_encode($employee['image'])}}">
+                                <img class="rounded-circle" height="35px" width="35px"src="data:image/jpeg;base64,{{($employee['image'])}}">
                             </div>
                             @else
                             @if($employee['gender'] === "Male")
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                <img src="{{ asset('images/male-default.png') }}" class="employee-profile-image-placeholders rounded-circle" height="33" width="33">
                             </div>
                             @elseif($employee['gender'] === "Female")
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="33" width="33">
+                                <img src="{{ asset('images/female-default.jpg') }}" class="employee-profile-image-placeholders rounded-circle" height="33" width="33">
                             </div>
                             @else
                             <div class="employee-profile-image-container">
-                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholder rounded-circle" height="35px" width="35px">
+                                <img src="{{ asset('images/user.jpg') }}" class="employee-profile-image-placeholders rounded-circle" height="35px" width="35px">
                             </div>
                             @endif
                             @endif
@@ -1131,10 +1131,11 @@
                             </div>
                         </div>
                         @endforeach
-
+                       
 
 
                     </div>
+                    <button type="button" class="btn-close position-absolute" style="top: 12px; right: 5px;" wire:click="removeContainerBox"></button>
                 </div>
                 @endif
                 <input type="text" placeholder="Enter Remarks" wire:model="remarks" class="remarks-input">
@@ -1173,11 +1174,15 @@
                             </div>
                             <div class="col-5 pb-1 pt-1">
                                 <p class="shift-time-for-regularisation text-overflow mb-1 disabled">
-                                    10:00 am to 07:00 pm<span><i class="fas fa-caret-down"></i></span></p>
+                                      {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i a')}} to {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i a')}}
+                                    <span style="pointer-events: none;">
+                                          <i class="fas fa-caret-down" style="opacity: 0.5; cursor: default;"></i>
+                                    </span>
+                                </p>
 
                             </div>
-                            <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;" wire:click="deleteStoredArray({{ $index }})">
-                                <i class="fa fa-times"></i>
+                            <div style="position: absolute; top: 5px; display:flex;justify-content:end; cursor: pointer;font-size:20px;color:#7f8fa4;">
+                                <i class="fa fa-times"wire:click="deleteStoredArray({{ $index }})"></i>
                             </div>
                         </div>
 
@@ -1199,7 +1204,7 @@
 
                                         <td style="border: none;">
 
-                                            <input type="text" placeholder="10:00" class="time-input text-5"
+                                            <input type="text" placeholder="{{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i')}}" class="time-input text-5"
                                                 wire:model.lazy="shift_times.{{ $index }}.from"
                                                 style="text-align: center;width: 70px;" maxlength="5" oninput="validateFromTime(this)" />
 
@@ -1212,7 +1217,7 @@
                                         </td>
                                         <td style="border: none;">
 
-                                            <input type="text" placeholder="19:00" class="time-input text-5"
+                                            <input type="text" placeholder="{{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}}" class="time-input text-5"
                                                 wire:model.lazy="shift_times.{{ $index }}.to"
                                                 style="text-align: center;width: 70px;" maxlength="5" oninput="validateToTime(this)" />
 

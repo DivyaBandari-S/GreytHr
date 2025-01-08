@@ -9,10 +9,12 @@ use App\Mail\RegularisationCombinedMail;
 use App\Mail\RegularisationRejectionMail;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
+use App\Models\Notification;
 use App\Models\RegularisationDates;
 use App\Models\SwipeRecord;
 use App\Notifications\RegularisationApproved;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 use Livewire\Component;
@@ -167,9 +169,10 @@ class ViewRegularisationPendingNew extends Component
   
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
-       
+        $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');
         $employeeId=$item->emp_id;
         $employee=EmployeeDetails::find($employeeId);
+        
         $item->status=2;
         if(empty($this->remarks))
         {
@@ -187,16 +190,10 @@ class ViewRegularisationPendingNew extends Component
             
         }
         $item->approved_date = $currentDateTime;
-        if($this->auto_approve==true)
-        {
-            $item->approved_by='auto_approved'; 
-        }
-        else
-        {
-            $item->approved_by=$this->user->first_name . ' ' . $this->user->last_name;
-        }
+        
         
         $item->save();
+      
         $regularisationEntries = json_decode($item['regularisation_entries'], true);
         $count_of_regularisations=count($regularisationEntries);
         
@@ -250,10 +247,21 @@ class ViewRegularisationPendingNew extends Component
                 SwipeRecord::whereDate('created_at', $date)->where('is_regularized',NULL)->delete();
             }
         }
+        
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeApproveModal();
         FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
+        Notification::create([
+            'emp_id' => $managerId,
+          
+            'regularisation_entries' => $item->regularisation_entries,
+            'notification_type'=>'regularisationApprove',
+            'assignee'=>$item->emp_id,
+            'regularisation_status' => 2,
+           
+        ]);
+        Log::info('Regularisation Notification approved successfully.');
         $this->showAlert=true;
     
         
@@ -296,6 +304,7 @@ class ViewRegularisationPendingNew extends Component
         
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
+        $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');
         if(empty($this->remarks))
         {
 
@@ -308,6 +317,17 @@ class ViewRegularisationPendingNew extends Component
         $item->rejected_date = $currentDateTime; 
         $item->rejected_by=$this->user->first_name . ' ' . $this->user->last_name;
         $item->save();
+
+        Notification::create([
+            'emp_id' => $managerId,
+          
+            'regularisation_entries' => $item->regularisation_entries,
+            'notification_type'=>'regularisationReject',
+            'assignee'=>$item->emp_id,
+            'regularisation_status' => 3,
+           
+        ]);
+        Log::info('Regularisation Notification rejected successfully.');
 
         $this->countofregularisations--;
         $this->remarks='';

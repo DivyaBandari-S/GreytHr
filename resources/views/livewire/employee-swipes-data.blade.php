@@ -4,13 +4,13 @@
         <div>
             <div class="employee-swipes-fields d-flex align-items-center">
                 <div class="dropdown-container1-employee-swipes">
-                    <label for="start_date" style="color: #666;font-size:12px;">Start Date<span style="color: red;">*</span>:</label><br />
-                    <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="checkDates">
+                    <label for="start_date" style="color: #666;font-size:12px;">Select Date<span style="color: red;">*</span>:</label><br />
+                    <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate">
                 </div>
-                <div class="dropdown-container1-employee-swipes">
+                <!-- <div class="dropdown-container1-employee-swipes">
                     <label for="end_date" style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br />
                     <input type="date" style="font-size: 12px;" id="end_date" wire:model="endDate" wire:change="checkDates">
-                </div>
+                </div> -->
                 <div class="dropdown-container1-employee-swipes-for-date-type">
                     <label for="dateType" style="color: #666;font-size:12px;">Date Type<span style="color: red;">*</span>:</label><br />
                     <button class="dropdown-btn1" style="font-size: 12px;">Swipe Date</button>
@@ -66,9 +66,9 @@
                     </thead>
                     <div>
                     <tbody>
-                  
-                         
-                   
+
+
+
     <!-- Display the filtered collection or any other content -->
                       @if(count($SignedInEmployees))
                         @foreach($SignedInEmployees as $swipe)
@@ -76,7 +76,7 @@
                        @if(!empty($swipe['employee']))
                        <tr class="employee-swipes-table-container">
                               <td  class="employee-swipes-name-and-id">
-                              <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox">
+                                   <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox">
                                         <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"data-toggle="tooltip"
                                         data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
                                                {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
@@ -86,27 +86,31 @@
                                                 <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
                                             </td>
                                             @if(isset($swipe['swipe_log']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
-                                            @elseif(isset($swipe['swipe_log2']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log2']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log2']->created_at)->format('jS F Y')}}</span></td>
-                                            @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log1']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log1']->created_at)->format('jS F Y')}}</span></td>
+                                              @if(!empty($swipe['swipe_log']->logDate))
+                                                 <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
+                                              @else   
+                                              <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->created_at)->format('jS F Y')}}</span></td>
+                                              @endif
+                                            
                                             @endif
-                                            <td class="employee-swipes-swipe-details-for-signed-employees">10:00 am to 19:00 pm</td>
+                                            <td class="employee-swipes-swipe-details-for-signed-employees">{{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}</td>
                                             @if(isset($swipe['swipe_log']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log']->Direction}}</td>
-                                            @elseif(isset($swipe['swipe_log2']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log2']->in_or_out}}</td>
-                                            @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log1']->in_or_out}}</td>
+                                               @if (!empty($swipe['swipe_log']->Direction))
+                                                  <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log']->Direction}}</td>  
+                                               @else   
+                                               <td class="employee-swipes-swipe-details-for-signed-employees" style="text-transform:uppercase;">{{$swipe['swipe_log']->in_or_out}}</td>
+                                               @endif
+                                             
+
                                             @endif
 
                                             @if(isset($swipe['swipe_log']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
-                                            @elseif(isset($swipe['swipe_log2']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log2']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date"> {{\Carbon\Carbon::parse($swipe['swipe_log2']->created_at)->format('jS F Y')}}</span></td>
-                                            @elseif(isset($swipe['swipe_log1']))
-                                            <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log1']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date"> {{\Carbon\Carbon::parse($swipe['swipe_log1']->created_at)->format('jS F Y')}}</span></td>
+                                             @if(!empty($swipe['swipe_log']->logDate))
+                                                <td class="employee-swipes-swipe-details-for-signed-employees"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->logDate)->format('jS F Y') }}</span></td>
+                                             @else   
+                                                <td class="employee-swipes-swipe-details-for-signed-employees"> {{$swipe['swipe_log']->swipe_time}}<br /> <span class="text-muted employee-swipes-swipe-date">  <span class="text-muted employee-swipes-swipe-date"> {{ \Carbon\Carbon::parse($swipe['swipe_log']->created_at)->format('jS F Y')}}</span></td>
+                                             @endif
+                                           
                                             @endif
                                             <td class="empty-text">-</td>
                                             <td class="empty-text">-</td>

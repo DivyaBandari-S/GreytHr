@@ -417,7 +417,7 @@
             <button class="submit-btn"wire:click="downloadExcel"style="margin:13px;">
                 <i class="fa fa-download" aria-hidden="true"></i>
             </button>
-            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border" style="width:40%;margin:11px;font-size:12px;" name="year" wire:model="selectedYear" wire:change="updateselectedYear">
+            <select class="dropdown-for-shift-roster-download-and-dropdown bg-white rounded border"name="year" wire:model="selectedYear" wire:change="updateselectedYear">
                 <option value="{{$todayyear-1}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear-1}}</option>
                 <option value="{{$todayyear}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear}}</option>
                 <option value="{{$todayyear+1}}"style="font-size:12px;">{{$todaymonthinformat}} {{$todayyear+1}}</option>
@@ -673,7 +673,7 @@
             $currentYear = intval($attendanceYear);
             } else {
             // Set a default value if $attendanceYear is not set
-            $currentYear = 2024;
+            $currentYear = date('Y');
             }
 
             // Total number of days in the current month

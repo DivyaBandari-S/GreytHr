@@ -5,7 +5,7 @@
             <div class="loader">
                 <div></div>
             </div>
-            
+
         </div>
     </div>
 
@@ -125,8 +125,23 @@
                                                 {{ ucfirst($record->task_name) }}
                                             </td>
                                             <td class="task-open-table-4-td">
-                                                {{ ucwords(strtolower($record->emp->first_name)) }}
-                                                {{ ucwords(strtolower($record->emp->last_name)) }}
+                                              
+                                                @php
+                                                    $loggedInEmpName =
+                                                        ucwords(strtolower(auth()->user()->first_name)) .
+                                                        ' ' .
+                                                        ucwords(strtolower(auth()->user()->last_name));
+                                                    $recordEmpName =
+                                                        ucwords(strtolower($record->emp->first_name)) .
+                                                        ' ' .
+                                                        ucwords(strtolower($record->emp->last_name));
+                                                @endphp
+
+                                                @if ($loggedInEmpName === $recordEmpName)
+                                                    me
+                                                @else
+                                                    {{ $recordEmpName }}
+                                                @endif
 
                                             </td>
                                             <td class="task-open-table-5-td">
@@ -157,7 +172,7 @@
                                                     data-target="#exampleModalCenter">Comment</button>
                                                 <button wire:click="openForTasks('{{ $record->id }}')"
                                                     class="cancel-btn task-open-close-button">Close</button>
-                                          
+
                                             </td>
                                         </tr>
                                         <tr>
@@ -197,7 +212,7 @@
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td class="task-accordion-open-table-5-td">
-                                                                 
+
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
                                                                             <a href="#" class="anchorTagDetails"
@@ -339,8 +354,22 @@
                                             </td>
 
                                             <td class="task-closed-table-4-td">
-                                                {{ ucwords(strtolower($record->emp->first_name)) }}
-                                                {{ ucwords(strtolower($record->emp->last_name)) }}
+                                                @php
+                                                    $loggedInEmpName =
+                                                        ucwords(strtolower(auth()->user()->first_name)) .
+                                                        ' ' .
+                                                        ucwords(strtolower(auth()->user()->last_name));
+                                                    $recordEmpName =
+                                                        ucwords(strtolower($record->emp->first_name)) .
+                                                        ' ' .
+                                                        ucwords(strtolower($record->emp->last_name));
+                                                @endphp
+
+                                                @if ($loggedInEmpName === $recordEmpName)
+                                                    me
+                                                @else
+                                                    {{ $recordEmpName }}
+                                                @endif
                                             </td>
 
                                             <td class="task-closed-table-5-td">
@@ -415,7 +444,7 @@
                                                                     {{ ucfirst($record->description ?? '-') }}
                                                                 </td>
                                                                 <td class="task-accordion-closed-table-5-td">
-                                                                    
+
                                                                     @if (!empty($record->file_path) && $record->file_path !== 'null')
                                                                         @if (strpos($record->mime_type, 'image') !== false)
                                                                             <a href="#" class="anchorTagDetails"
@@ -449,6 +478,43 @@
 
             </div>
         @endif
+        @if ($showReopenDialog)
+        <div class="modal d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Re-Open the Task</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group mb-2">
+                            <label style="margin-bottom: 10px;">Due Date <span class="text-danger">*</span></label>
+                            <br>
+                           
+                            <input type="date" wire:model="newDueDate" wire:change="validateDueDate" style="    width: 50%;
+    font-size: 0.75rem;
+    padding: 5px;
+    outline: none;
+    border: 1px solid #ccc;
+    border-radius: 5px;"
+                                class="placeholder-small task-duedate-input" min="<?= date('Y-m-d') ?>"
+                                value="<?= date('Y-m-d') ?>" required>
+    
+                          
+                        </div>
+                        @error('newDueDate')
+                        <span class="text-danger">{{ $message }}</span>
+                    @enderror
+                    </div>
+                    <div class="modal-footer d-flex justify-content-center">
+                        <button type="button" class="submit-btn"
+                            wire:click.prevent="submitReopen">Submit</button>
+                        <button type="button" class="cancel-btn1" wire:click="closeReopen">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
         @if ($showDialog)
             <div class="modal d-block" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -799,11 +865,15 @@
                                         rows="4"></input>
                                 </div>
                                 <!-- Description -->
-                                <div class="form-group">
-                                    <label for="description" class="task-description-label">Description</label>
+                                <div class="form-group mb-2">
+                                    <label for="description" class="task-description-label">Description<span
+                                            class="text-danger">*</span></label>
                                     <br>
-                                    <textarea wire:change="autoValidate" wire:model="description" class="placeholder-small task-description-textarea"
+                                    <textarea wire:input="autoValidate" wire:model="description" class="placeholder-small task-description-textarea"
                                         placeholder="Add description" rows="4"></textarea>
+                                    @error('description')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
                                 </div>
 
                                 <!-- File Input -->

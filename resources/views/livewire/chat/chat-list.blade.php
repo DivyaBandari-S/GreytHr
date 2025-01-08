@@ -26,7 +26,8 @@
                     $otherUser = $isSender ? $conversation?->receiver : $conversation?->sender;
                     $lastMessage = $conversation?->messages()?->latest()?->first();
                 @endphp
-                <div class="item {{ $selectedUserId === ($otherUser?->emp_id ?? '') ? 'selected' : '' }}">
+                <div onclick="openChatScreen()"
+                    class="item {{ $selectedUserId === ($otherUser?->emp_id ?? '') ? 'selected' : '' }}">
                     <div class="avatar-chart">
                         <img src="{{ $otherUser?->image
                             ? 'data:image/jpeg;base64,' . $otherUser->image
@@ -65,9 +66,9 @@
         </div>
     </div>
 </div>
-{{-- <script>
+<script>
     document.getElementById('searchField').setAttribute('autocomplete', 'off');
-    document.getElementById('searchField').addEventListener('focus', function () {
+    document.getElementById('searchField').addEventListener('focus', function() {
         this.value = ''; // Clear any prefilled value
     });
-</script> --}}
+</script>
