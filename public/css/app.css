@@ -7294,9 +7294,18 @@ select .yearSelect {
 
 .delegate-cell {
     border: 1px solid #8d939d;
-    font-size: 8px;
+    font-size: 10px;
+    text-align: left;
+    padding: 5px;
+}
+.delegate-cell-header {
+    border: 1px solid #8d939d;
+    font-size: 11px;
     text-align: center;
     padding: 5px;
+}
+.fa-trash, .fa-edit{
+    cursor: pointer;
 }
 
 .delegate-row {
