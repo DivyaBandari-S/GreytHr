@@ -476,16 +476,15 @@
                                                     {{ ucwords(strtolower( $post->category)) }}</p>
                                                 <!-- Post Type -->
                                             </div>
-                                            <div class="col-md-4 text-left">
+                                            <div class="col-md-3 text-left">
                                             <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
                                             </div>
             <!-- Post He
              ader -->
-               <div class="description">
+          @endif
+          <div class="description">
                     {{ $post->description }}
                 </div>
-          @endif
-        
           </div>
 
             <!-- Profile Section -->
@@ -493,19 +492,13 @@
 
             <!-- Post Content -->
             <div class="post-content">
-    <!-- Post Description -->
-
-    <!-- Post Image -->
-    @if($post->image_url)
-        <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" 
-             style="cursor: pointer;" 
-             data-bs-toggle="modal" 
-             data-bs-target="#imageModal">
-    @endif
-</div>
-
-
-
+                <!-- Post Description -->
+             
+                <!-- Post Image -->
+                @if($post->image_url)
+                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" style="height:100px;width:100px">
+                @endif
+            </div>
         </div>
     </div>
 @endforeach
@@ -528,21 +521,10 @@
 </div>
                 </div>
                 </div>
-
                 </div>
-                
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script> 
 <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
-<script>
-    // Ensure modal appears correctly and doesn't blink
-    const imageModal = document.getElementById('imageModal');
-    imageModal.addEventListener('show.bs.modal', function () {
-        // Add a small timeout to ensure smooth transition
-        setTimeout(() => {
-            imageModal.style.display = 'block';
-        }, 10);
-    });
-</script>
+
 @push('scripts')
 <script>
     Livewire.on('updateSortType', sortType => {
