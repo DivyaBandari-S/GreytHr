@@ -36,7 +36,7 @@ class AttendenceMasterDataNew extends Component
     public $searching=1;
     public  $holiday;
 
-    public $selectedYear='2024'; 
+    public $selectedYear; 
     public $notFound;
 
 
@@ -64,7 +64,7 @@ class AttendenceMasterDataNew extends Component
         $this->todayyear = date('Y');
         $this->todaymonth=date('n');
         $this->todaymonthinformat=date('F');
-        
+        $this->selectedYear=date('Y');
     }
     public function openlegend()
     {
@@ -322,7 +322,7 @@ class AttendenceMasterDataNew extends Component
             })
             ->toArray();
         
-            
+       
             $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
             ->where('leave_applications.leave_status', 2) // Filter by leave_status = 3 instead of status = 'approved'

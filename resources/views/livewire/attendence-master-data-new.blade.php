@@ -673,7 +673,7 @@
             $currentYear = intval($attendanceYear);
             } else {
             // Set a default value if $attendanceYear is not set
-            $currentYear = 2024;
+            $currentYear = date('Y');
             }
 
             // Total number of days in the current month

@@ -1174,7 +1174,7 @@
                             </div>
                             <div class="col-5 pb-1 pt-1">
                                 <p class="shift-time-for-regularisation text-overflow mb-1 disabled">
-                                    10:00 am to 07:00 pm 
+                                      {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i a')}} to {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i a')}}
                                     <span style="pointer-events: none;">
                                           <i class="fas fa-caret-down" style="opacity: 0.5; cursor: default;"></i>
                                     </span>
@@ -1204,7 +1204,7 @@
 
                                         <td style="border: none;">
 
-                                            <input type="text" placeholder="10:00" class="time-input text-5"
+                                            <input type="text" placeholder="{{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i')}}" class="time-input text-5"
                                                 wire:model.lazy="shift_times.{{ $index }}.from"
                                                 style="text-align: center;width: 70px;" maxlength="5" oninput="validateFromTime(this)" />
 
@@ -1217,7 +1217,7 @@
                                         </td>
                                         <td style="border: none;">
 
-                                            <input type="text" placeholder="19:00" class="time-input text-5"
+                                            <input type="text" placeholder="{{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}}" class="time-input text-5"
                                                 wire:model.lazy="shift_times.{{ $index }}.to"
                                                 style="text-align: center;width: 70px;" maxlength="5" oninput="validateToTime(this)" />
 
