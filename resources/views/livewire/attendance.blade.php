@@ -2258,7 +2258,8 @@ color: #fff;
                                 <tr>
                                     <th class="attendance-info-table-head">First&nbsp;In</th>
                                     <th class="attendance-info-table-head">Last&nbsp;Out</th>
-                               
+                                    <th class="attendance-info-table-head">Late&nbsp;In</th>
+                                    <th class="attendance-info-table-head">Early&nbsp;Out</th>
                                     <th class="attendance-info-table-head">Total&nbsp;Work&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Break&nbsp;Hrs</th>
                                     <th class="attendance-info-table-head">Actual&nbsp;Work&nbsp;Hrs</th>
@@ -2287,7 +2288,51 @@ color: #fff;
                                         -
                                         @endif
                                     </td>
-                                    
+                                    <td class="attendance-info-table-data">
+                                       @if($changeDate==1&& $this->first_in_time > $shiftStartTime)
+                                       @php
+                                               
+
+                                                // Parse times in HH:MM format
+                                                $shiftStartTime = \Carbon\Carbon::parse($shiftStartTime);
+                                                $firstInTime = \Carbon\Carbon::parse($this->first_in_time);
+                                                $lastOutTime = \Carbon\Carbon::parse($this->last_out_time);
+                                                $shiftEndTime = \Carbon\Carbon::parse($shiftEndTime);
+                                                // Check if first_in_time is greater than shiftStartTime
+                                                $diffInMinutes1 = $shiftEndTime->diffInMinutes($lastOutTime);
+                                                    $diffInMinutes = $firstInTime->diffInMinutes($shiftStartTime);
+                                                    $lateInhours = floor($diffInMinutes / 60);
+                                                    $lateInminutes = $diffInMinutes % 60;
+                                                
+                                            @endphp
+                                            
+                                            {{ sprintf('%02d', $lateInhours) }}:{{ sprintf('%02d', $lateInminutes) }}
+                                       @else
+                                          -
+                                       @endif
+                                        
+                                    </td>
+                                    <td class="attendance-info-table-data">
+                                       @if($changeDate==1&& $this->last_out_time!='-'&& $this->last_out_time < $shiftEndTime)
+                                       @php
+                                               
+
+                                               // Parse times in HH:MM format
+                                               
+                                               $lastOutTime = \Carbon\Carbon::parse($this->last_out_time);
+                                               $shiftEndTime = \Carbon\Carbon::parse($shiftEndTime);
+                                               // Check if first_in_time is greater than shiftStartTime
+                                               $diffInMinutes1 = $shiftEndTime->diffInMinutes($lastOutTime);
+                                                  
+                                                   $earlyOuthours = floor($diffInMinutes1 / 60);
+                                                   $earlyOutminutes = $diffInMinutes1 % 60;
+                                               
+                                           @endphp
+                                            {{ sprintf('%02d', $earlyOuthours) }}:{{ sprintf('%02d', $earlyOutminutes) }}
+                                       @else
+                                          -
+                                       @endif
+                                    </td>
                                     <td>
                                         @if($this->first_in_time!=$this->last_out_time)
                                         {{str_pad($this->hours, 2, '0', STR_PAD_LEFT)}}:{{str_pad($this->minutesFormatted,2,'0',STR_PAD_LEFT)}}
