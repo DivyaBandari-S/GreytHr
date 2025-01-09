@@ -901,7 +901,7 @@ $cardCommentsCount = $commentsCollection->groupBy('card_id')->map(function ($com
         <div class="reaction-circle" 
              style="width: 25px; height: 22px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
              border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-             position: relative; margin-left: -8px;">
+             position: relative; margin-left: -px;">
             <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
         </div>
     @endforeach
@@ -915,7 +915,7 @@ $lastEmoji = $lastTwoEmojis->last(); // Get the last reacted emoji
     @php
         $fullName = ucwords(strtolower($lastEmoji->first_name)) . ' ' . ucwords(strtolower($lastEmoji->last_name));
     @endphp
-    <span style="font-size: 10px; color: blue; margin-left: 5px;">
+    <span style="font-size: 10px; color: blue; margin-left: 10px;">
         {{ $fullName }}
     </span>
 @endif
@@ -925,7 +925,7 @@ $lastEmoji = $lastTwoEmojis->last(); // Get the last reacted emoji
                                 @if ($emojisCount > 1)
                                     <span
                                         style="cursor: pointer; color: blue; font-size: 10px;margin-left:5px"
-                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">and{{ $emojisCount - 1 }}
+                                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">and {{ $emojisCount - 1 }}
                                         others reacted</span>
 
                                     @if ($showDialogEmoji && $emp_id == $data['employee']->emp_id)
@@ -1547,7 +1547,7 @@ data-interacted="{{ $data['updated_at'] ?? '' }}">
         <div class="reaction-circle" 
              style="width: 25px; height: 22px; background-color: {{ $backgroundColors[$index % count($backgroundColors)] }};
              border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-             position: relative; margin-left: -8px;">
+             position: relative; margin-left: px;">
             <span style="font-size: 16px;">{{ $emoji_reaction->emoji_reaction }}</span>
         </div>
     @endforeach
@@ -1561,7 +1561,7 @@ $lastEmoji = $lastTwoEmojis->last(); // Get the last reacted emoji
     @php
         $fullName = ucwords(strtolower($lastEmoji->first_name)) . ' ' . ucwords(strtolower($lastEmoji->last_name));
     @endphp
-    <span style="font-size: 10px; color: blue; margin-left: 5px;">
+    <span style="font-size: 10px; color: blue; margin-left: 10px;">
         {{ $fullName }}
     </span>
 @endif
@@ -1572,7 +1572,7 @@ $lastEmoji = $lastTwoEmojis->last(); // Get the last reacted emoji
 
                 @if ($emojisCount > 1)
                     <span style="cursor: pointer; color: blue; font-size: 10px;margin-left:10px"
-                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')">and {{ $emojisCount - 1 }}
+                        wire:click="openEmojiDialog('{{ $data['employee']->emp_id }}')"> and {{ $emojisCount - 1 }}
                         others reacted</span>
 
                     @if ($showDialogEmoji && $emp_id == $data['employee']->emp_id)
