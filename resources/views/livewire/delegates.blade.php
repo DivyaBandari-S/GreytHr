@@ -9,7 +9,7 @@
         </div>
     </div>
     <div class="row">
-        @foreach($employees as $employee)
+
         <div class="col-md-12">
             <h5 style="color: orange; margin-top: 30px; margin-left: 20px;"><b>WorkFlow Delegates</b></h5>
         </div>
@@ -124,13 +124,13 @@
                     <div class="form-group">
                         <label class="form-label" style="font-size:10px;margin-top:5px">From Date</label>
 
-                        <input type="date" name="fromDate" style="color: black;font-size:10px;width:200px" class="form-control" style="width: 280px" wire:model.lazy="fromDate">
+                        <input type="date" name="fromDate" style="color: black;font-size:10px;width:200px" class="form-control" style="width: 280px" wire:model.lazy="fromDate" min="{{ $isedit && $fromDate ? \Carbon\Carbon::parse($fromDate)->toDateString() : \Carbon\Carbon::today()->toDateString() }}">
                         @error('fromDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group">
                         <label class="form-label" style="font-size:10px;margin-top:5px">To Date</label>
 
-                        <input type="date" style="color: black;font-size:10px;width:200px" name="toDate" class="form-control" style="width: 280px" wire:model.lazy="toDate">
+                        <input type="date" style="color: black;font-size:10px;width:200px" name="toDate" class="form-control" style="width: 280px" wire:model.lazy="toDate" min="{{ $isedit && $toDate ? \Carbon\Carbon::parse($toDate)->toDateString() : \Carbon\Carbon::today()->toDateString() }}">
                         @error('toDate') <span class="text-danger">{{ $message }}</span> @enderror
                     </div>
                     <div class="form-group" style="margin-top:5px">
@@ -155,7 +155,6 @@
         </div>
         @endif
 
-        @endforeach
     </div>
 
     @if ($showalertmodel)
