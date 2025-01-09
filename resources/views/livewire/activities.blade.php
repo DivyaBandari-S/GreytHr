@@ -179,6 +179,23 @@
                             <span class="custom-radio-content ">All Activities</span>
                         </label>
                     </div>
+                    <div class="posts">
+                        <label class="custom-radio-label">
+
+                            <input type="radio" id="radio-hr" name="radio" value="posts"
+                                data-url="/kudos" wire:click="handleRadioChange('kudos')">
+
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">
+
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Kudos</span>
+                        </label>
+                    </div>
 
 
                     <div class="posts">
@@ -400,52 +417,78 @@
 @foreach($posts as $post)
     <div class="col-12 col-md-8 mt-2" id="post-{{ $post->id }}">
         <div class="post-card">
-            <!-- Post Header -->
-            <div class="post-header">
-                <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" class="company-logo">
-                <div class="category">{{ $post->category }}</div>
-                <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
-            </div>
-
-            <!-- Profile Section -->
-            <div class="profile-info">
-                @php
+            <div class="row">
+        <div class="col-12 col-md-2 text-start mb-2 mb-md-0">
+        @php
                     $employee = $post->employeeDetails;
                     $manager = $post->managerDetails;
                 @endphp
+                  @if($employee)
+                  @if(!empty($employee->image))
+            <img src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                                <!-- Employee's Initials -->
+                                                <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
 
-                @if($employee)
-                <div class="column" style="display:flex">
-                <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$employee->image ?? ''}}" alt="Employee Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
-                    {{ $post->description }}
-                </div>
-                </div>
-                    <!-- Profile Image -->
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-7 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $post->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                               
+
+                                            </div>
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
              
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</p>
-                    </div>
-                @elseif($manager)
-                <div class="column" style="display:flex">
-                    <!-- Profile Image -->
-                    <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$manager->image ?? ''}}" alt="Manager Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
+                                            @elseif($manager)
+                                            @if(!empty($manager->image))
+            <img src="data:image/jpeg;base64,{{$manager->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                            <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($manager->first_name, 0, 1)) . strtoupper(substr($manager->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
+
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-6 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $manager->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                            </div>
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
+            <!-- Post He
+             ader -->
+          @endif
+          <div class="description">
                     {{ $post->description }}
                 </div>
+          </div>
 
-                </div>
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</p>
-                    </div>
-                @endif
-            </div>
+            <!-- Profile Section -->
+        
 
             <!-- Post Content -->
             <div class="post-content">
@@ -453,7 +496,7 @@
              
                 <!-- Post Image -->
                 @if($post->image_url)
-                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image">
+                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" style="height:100px;width:100px">
                 @endif
             </div>
         </div>
