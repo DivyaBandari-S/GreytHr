@@ -54,8 +54,8 @@ class EmployeeSwipesData extends Component
                                     ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
                             })
                             ->select(
-                                'employee_details.*', 
-                                'company_shifts.shift_start_time', 
+                                'employee_details.*',
+                                'company_shifts.shift_start_time',
                                 'company_shifts.shift_end_time'
                             )
                             ->get();
@@ -74,12 +74,12 @@ class EmployeeSwipesData extends Component
         }
     }
 
-  
 
-    
+
+
     public function updateDate()
     {
-        
+
         $this->startDate=$this->startDate;
     }
 
@@ -141,13 +141,13 @@ class EmployeeSwipesData extends Component
         // This method will be called whenever the selected radio button changes
         // $value will contain the value of the selected shift ('GS', 'AS', or 'ES')
         Log::info('Selected Shift: ' . $value);
-    
+
         // You can handle the selected value here
-       
+
             $this->selectedShift= $value;
             // $this->formattedSelectedShift='General Shift';
-    
-       
+
+
     }
     public function searchEmployee()
     {
@@ -164,7 +164,7 @@ class EmployeeSwipesData extends Component
                 $todaySwipeRecords = SwipeRecord::whereDate('created_at', $this->startDate)
                 ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
                 ->get()
-                ->keyBy('emp_id'); 
+                ->keyBy('emp_id');
             }
             else
             {
@@ -173,7 +173,7 @@ class EmployeeSwipesData extends Component
                 ->get()
                 ->keyBy('emp_id');
             }
-            
+
         } catch (\Exception $e) {
             // Handle exception related to local swipe records
             // You could log this error or return an empty array
@@ -200,14 +200,14 @@ class EmployeeSwipesData extends Component
 
                 if($this->startDate)
                 {
-                    
+
                     $externalSwipeLogs = DB::connection('sqlsrv')
                     ->table($tableName)
                     ->select('UserId', 'logDate', 'Direction')
                     ->whereIn('UserId', $normalizedIds)
                     ->whereRaw("CONVERT(DATE, logDate) = ?", $this->startDate)
                     ->get();
-               
+
                 }
                 else
                 {
@@ -217,10 +217,10 @@ class EmployeeSwipesData extends Component
                     ->whereIn('UserId', $normalizedIds)
                     ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->format('Y-m-d')])
                     ->get();
-               
+
 
                 }
-                  
+
             } else {
                    $externalSwipeLogs = collect();
             }
@@ -234,7 +234,7 @@ class EmployeeSwipesData extends Component
             $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
             // Check if there's a swipe record from the external database
             $employeeSwipeLog = $externalSwipeLogs->firstWhere('UserId', $normalizedEmployeeId);
-            
+
             if (!$employeeSwipeLog && isset($todaySwipeRecords[$employee->emp_id])) {
                 // Use swipe record from local database if it exists
                 $employeeSwipeLog = $todaySwipeRecords[$employee->emp_id];
@@ -247,7 +247,7 @@ class EmployeeSwipesData extends Component
                 ];
             }
         }
-      
+
         return $swipeData;
     }
 
@@ -274,8 +274,8 @@ class EmployeeSwipesData extends Component
                     ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
             })
             ->select(
-                'employee_details.*', 
-                'company_shifts.shift_start_time', 
+                'employee_details.*',
+                'company_shifts.shift_start_time',
                 'company_shifts.shift_end_time'
             )
             ->get();
@@ -290,13 +290,13 @@ class EmployeeSwipesData extends Component
                 'startDate' => $this->startDate
             ]);
 
-            $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate); 
+            $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
         } else {
             Log::info('Processing swipe logs with today\'s date', [
                 'today' => $today
             ]);
 
-            $this->employees = $this->processSwipeLogs($managedEmployees, $today); 
+            $this->employees = $this->processSwipeLogs($managedEmployees, $today);
         }
 
         // Log completion
