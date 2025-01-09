@@ -1469,7 +1469,43 @@ wire:click="removeReaction('{{ $emoji['employee_id'] }}', '{{ $emoji['emoji'] }}
     </script>
 @endpush
 
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 
+<!-- Quill.js JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+
+
+
+
+
+
+<script>
+    function execCmd(command) {
+        document.execCommand(command, false, null);
+    }
+
+    function updateDescription(content) {
+        @this.set('description', content); // Update Livewire description property
+    }
+    function insertVideo() {
+    const url = prompt('Enter YouTube Video URL:');
+    if (url) {
+        // Match standard YouTube or shortened URLs
+        const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+            const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+            const iframe = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:50%; height:200px;"></iframe>`;
+            document.execCommand('insertHTML', false, iframe);
+        } else {
+            alert('Invalid YouTube URL. Please use a valid link.');
+        }
+    }
+}
+
+
+
+</script>
 <script>
     function filterDropdowns() {
         var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;

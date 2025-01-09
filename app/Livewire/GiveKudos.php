@@ -202,7 +202,17 @@ class GiveKudos extends Component
             $this->employees1 = collect();
         }
     }
+    protected $listeners = ['updateDescription'];
 
+    // Method to update the description when the event is triggered
+    public function updateDescription($description)
+    {
+        // Log received description for debugging
+        Log::info('Description received in Livewire:', ['description' => $description]);
+
+        // Update the Livewire description property
+        $this->description = $description;
+    }
 
     public function removeItem($type)
     {
