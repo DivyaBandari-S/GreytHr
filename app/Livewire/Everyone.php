@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\PostCreatedNotification;
 use App\Models\Company;
 use App\Models\Post;
 use Livewire\Component;
@@ -46,10 +47,12 @@ class Everyone extends Component
         'description.required' => 'Description is required.',
        
     ];
+    public $showImageDialog=false;
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
     }
+  
     public function openPost($postId)
     {
         $post = Post::find($postId);
@@ -190,8 +193,8 @@ class Everyone extends Component
     public function submit()
     {
         $validatedData = $this->validate([
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
+            'category' => 'required|string',
+            'description' => 'required|string|min:150',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
     
