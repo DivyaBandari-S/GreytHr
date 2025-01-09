@@ -945,7 +945,7 @@ class Feeds extends Component
             ->orderByDesc('created_at')
             ->get();
     }
-    protected $listeners = ['updateSortType', 'emojiRemoved' => 'handleEmojiRemoval'];
+    protected $listeners = ['updateSortType', 'emojiRemoved' => 'handleEmojiRemoval','updateDescription'];
     // Toggle dropdown visibility
     public function toggleDropdown()
     {
@@ -1262,7 +1262,16 @@ class Feeds extends Component
             $this->selectedEmoji = null; // Clear selected emoji after saving
         }
     }
+   
+    // Method to update the description when the event is triggered
+    public function updateDescription($description)
+    {
+        // Log received description for debugging
+        Log::info('Description received in Livewire:', ['description' => $description]);
 
+        // Update the Livewire description property
+        $this->description = $description;
+    }
     private function combineAndSortData($employees)
     {
 

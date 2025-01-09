@@ -3,10 +3,11 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\PostCreatedNotification;
 use Livewire\Component;
 use App\Models\Company;
 use App\Models\Post;
-
+use Illuminate\Support\Facades\Mail;
 use Livewire\WithFileUploads;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;
@@ -210,6 +211,17 @@ class EmpPostrequest extends Component
         $this->message = 'File uploaded successfully!';
     }
 
+    protected $listeners = ['updateDescription'];
+
+    // Method to update the description when the event is triggered
+    public function updateDescription($description)
+    {
+        // Log received description for debugging
+        Log::info('Description received in Livewire:', ['description' => $description]);
+
+        // Update the Livewire description property
+        $this->description = $description;
+    }
 
     public function submit()
     {
