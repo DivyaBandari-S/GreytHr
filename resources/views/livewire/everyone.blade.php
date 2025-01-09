@@ -1,39 +1,5 @@
 <div>
-<style>
-#quill-editor {
-    height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px; /* Ensuring there's space inside the editor */
-    background-color: #fff; /* Ensuring the background is white */
-}
 
-.ql-toolbar {
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 6px;
-}
-
-.ql-container {
-    min-height: 150px;
-}
-
-.ql-editor {
-    min-height: 150px; /* Ensuring the editor area has a min-height */
-    outline: none; /* Prevent outline issues */
-    padding: 10px;
-}
-#editor {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-family: 'Segoe UI Emoji', Arial, sans-serif;
-        }
-        .emoji-picker {
-            z-index: 1000 !important;
-        }
-</style>
 
 
   <div wire:loading
