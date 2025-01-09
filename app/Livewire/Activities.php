@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\PostCreatedNotification;
 use Livewire\Component;
 use App\Models\Comment;
 use App\Models\Company;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Models\EmojiReaction;
 use App\Models\Employee;
 use App\Models\Emoji;
+use Illuminate\Support\Facades\Mail;
 use App\Models\Hr;
 use App\Models\Post;
 use Illuminate\Support\Facades\Session;
@@ -201,6 +203,19 @@ class Activities extends Component
         }
     }
  
+
+    // Listener for the emitted event
+    protected $listeners = ['updateDescription'];
+
+    // Method to update the description when the event is triggered
+    public function updateDescription($description)
+    {
+        // Log received description for debugging
+        Log::info('Description received in Livewire:', ['description' => $description]);
+
+        // Update the Livewire description property
+        $this->description = $description;
+    }
     public function submit()
     {
         $validatedData = $this->validate([

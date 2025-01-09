@@ -27,7 +27,7 @@
     <p>A new post has been created by {{ $employeeDetails->first_name }} {{ $employeeDetails->last_name }}</p>
 
     <p class="headings"><b>Category: </b><span class="value">{{ $post->category }}</span></p>
-    <p class="headings"><b>Description:</b> <span class="value">{{ $post->description }}</span> </p>
+    <p class="headings"><b>Description:</b> <span class="value">  {!! $post->description !!}</span> </p>
 
 
     <p>Thank you</p>
