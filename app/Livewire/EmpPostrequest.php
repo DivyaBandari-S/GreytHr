@@ -3,10 +3,11 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\PostCreatedNotification;
 use Livewire\Component;
 use App\Models\Company;
 use App\Models\Post;
-
+use Illuminate\Support\Facades\Mail;
 use Livewire\WithFileUploads;
 use App\Models\EmployeeDetails;
 use App\Models\Hr;

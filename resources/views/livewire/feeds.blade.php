@@ -387,7 +387,7 @@
                     </button>
                     <button type="button" onclick="execCmd('insertOrderedList')">  <i class="fas fa-list-ol"></i></button>
                     <button type="button" onclick="insertVideo()">🎥</button>
-                    <button type="button" onclick="document.getElementById('fileInput').click()">📁</button>
+
                 </span>
             </div>
         </div>
