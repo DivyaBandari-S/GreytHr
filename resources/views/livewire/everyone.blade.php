@@ -1,5 +1,8 @@
 <div>
-    <div wire:loading
+
+
+
+  <div wire:loading
         wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction,removeEmojiReaction,addEmoji,selectEmoji">
         <div class="loader-overlay">
             <div class="loader">
@@ -62,99 +65,114 @@
                 </div>
                 <div class=" mt-2 bg-white d-flex align-items-center ">
                     <div class="d-flex ms-auto">
-                        @if($showFeedsDialog)
-                        <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header d-flex justify-content-between align-items-center">
-                                        <p class="mb-0">Create a post</p>
-                                        <span class="img d-flex align-items-end">
-                                            <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
-                                        </span>
-                                    </div>
+                    @if($showFeedsDialog)
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <p class="mb-0">Create a Post</p>
+                <span class="img d-flex align-items-end">
+                    <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
+                </span>
+            </div>
 
+            <div>
+            <form wire:submit.prevent="submit" enctype="multipart/form-data">
+    <div class="modal-body" style="padding: 20px; width: 80%;"> 
 
+        <!-- Category Selection -->
+        <div class="form-group mb-15">
+            <label for="category">You are posting in:</label>
+            <select wire:model.lazy="category" class="form-select" id="category">
+                <option value="" hidden>Select Category</option>
+                <option value="Appreciations">Appreciations</option>
+                <option value="Companynews">Company News</option>
+                <option value="Events">Events</option>
+                <option value="Everyone">Everyone</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="US">US</option>
+            </select>
+            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
 
-                                    @if(Session::has('error'))
-                                    <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert"
-                                        style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
-                                        {{ Session::get('error') }}
-                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
-                                    </div>
-                                    @endif
-                                    <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                                        <div class="modal-body" style="padding: 20px;width: 80%;">
-                                            <!-- Category Selection -->
-                                            <div class="form-group mb-15">
-                                                <label for="category">You are posting in:</label>
-                                                <select wire:model.lazy="category" class="form-select" id="category">
-                                                    <option value="" hidden>Select Category</option>
-                                                    <option value="Appreciations">Appreciations</option>
-
-                                                    <option value="Companynews">Company News</option>
-                                                    <option value="Events">Events</option>
-                                                    <option value="Everyone">Everyone</option>
-                                                    <option value="Hyderabad">Hyderabad</option>
-                                                    <option value="US">US</option>
-                                                </select>
-                                                @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-
-                                            <!-- Description Input -->
-                                            <div class="form-group mt-3">
-                                                <label for="content">Write something here:</label>
-
-                                                <textarea
-                                                    id="myTextarea"
-                                                    wire:model.lazy="description"
-                                                    class="form-control"
-                                                    rows="2"
-                                                    style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-top: 5px;"
-                                                    placeholder="Enter your description here...">
-    </textarea>
-                                                @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                            </div>
-                                            <!-- File Input -->
-                                            <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
-                                                role="alert"></div>
-                                            <!-- File Upload -->
-                                            <div class="form-group mt-3">
-                                                <label for="file_path">Upload Attachment:</label>
-                                                <div style="text-align: start;">
-
-
-                                                    <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" onchange="handleImageChange()">
-                                                    @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-
-                                                    <!-- Success Message -->
-
-
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Submit & Cancel Buttons -->
-                                        <div class="modal-footer border-top">
-                                            <div class="d-flex justify-content-center w-100">
-                                                <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
-                                                <button wire:click="closeFeeds" type="button" class="cancel-btn1 ms-2">Cancel</button>
-                                            </div>
-                                        </div>
-                                    </form>
-
-
-
-
-
-                                </div>
+        <!-- Quill Editor -->
+        <div class="row mt-3">
+            <label for="description">Write something here:</label>
+        </div>
+        <div id="quill-toolbar-container" style="margin-top:10px;background:#F7F7F7">
+            <div id="quill-toolbar" class="ql-toolbar ql-snow">
+                <span class="ql-formats">
+                    <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="execCmd('strikeThrough')"><s>S</s></button>
+                    <button type="button" onclick="execCmd('insertUnorderedList')" style="display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button type="button" onclick="execCmd('insertOrderedList')">  <i class="fas fa-list-ol"></i></button>
+                    <button type="button" onclick="insertVideo()">🎥</button>
+                  
+                </span>
+            </div>
+        </div>
+        <!-- Content Editable div with wire:ignore -->
+        <div 
+                                id="richTextEditor" 
+                                contenteditable="true"
+                                wire:ignore
+                                class="form-control" 
+                                style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; min-height: 150px; background-color: #fff;"
+                                oninput="updateDescription(this.innerHTML)">
+                                {!! $description !!}
                             </div>
-                        </div>
+
+
+
+        @error('description') 
+            <span class="text-danger">{{ $message }}</span> 
+        @enderror
+        <div class="form-group mt-3">
+            <label for="file_path">Upload Attachment:</label>
+            <div style="text-align: start;">
+                <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top: 5px">
+                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+        </div>
+
+    </div>
+    
+
+
+   
+    <!-- Submit & Cancel Buttons -->
+    <div class="modal-footer border-top">
+        <div class="d-flex justify-content-center w-100">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="button" wire:click="closeFeeds" class="cancel-btn1 ms-2">Cancel</button>
+        </div>
+    </div>
+</form>
 
 
 
 
-                        <div class="modal-backdrop fade show"></div>
-                        @endif
+    <!-- Success Message -->
+    @if (session()->has('message'))
+        <div class="alert alert-success mt-3">{{ session('message') }}</div>
+    @endif
+</div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+@endif
+
+
+
+
+
+
+
                     </div>
                 </div>
             </div>
@@ -484,8 +502,8 @@
                                         <!-- Post He
              ader -->
           @endif
-          <div class="description">
-                    {{ $post->description }}
+          <div class="description">    
+          {!! $post->description !!}
                 </div>
           </div>
 
@@ -868,99 +886,68 @@
     });
 </script>
 
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+<!-- Quill.js JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+
+
+
+
+
+
 <script>
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.cus-button');
-        dropdowns.forEach(function(dropdown) {
-            if (!dropdown.contains(event.target)) {
-                const dropdownContent = dropdown.nextElementSibling;
-                dropdownContent.style.display = 'none';
-            }
-        });
-    });
+    function execCmd(command) {
+        document.execCommand(command, false, null);
+    }
 
-    function toggleDropdown(dropdownId, arrowId) {
-        const dropdownContent = document.getElementById(dropdownId);
-        const arrowSvg = document.getElementById(arrowId);
-
-        if (dropdownContent.style.display === 'block') {
-            dropdownContent.style.display = 'none';
-            arrowSvg.classList.remove('arrow-rotate');
+    function updateDescription(content) {
+        @this.set('description', content); // Update Livewire description property
+    }
+    function insertVideo() {
+    const url = prompt('Enter YouTube Video URL:');
+    if (url) {
+        // Match standard YouTube or shortened URLs
+        const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+            const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+            const iframe = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:50%; height:200px;"></iframe>`;
+            document.execCommand('insertHTML', false, iframe);
         } else {
-            dropdownContent.style.display = 'block';
-            arrowSvg.classList.add('arrow-rotate');
+            alert('Invalid YouTube URL. Please use a valid link.');
         }
     }
-    document.querySelectorAll('.custom-radio-label a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Ensure no preventDefault() call is here unless necessary for custom handling
-        });
-    });
-</script>
-@push('scripts')
-<script src="dist/emoji-popover.umd.js"></script>
-<link rel="stylesheet" href="dist/style.css" />
+}
 
+
+
+</script>
 <script>
-    document.addEventListener('livewire:load', function() {
-        const el = new EmojiPopover({
-            button: '.picker',
-            targetElement: '.emoji-picker',
-            emojiList: [{
-                    value: '🤣',
-                    label: 'laugh and cry'
-                },
-                // Add more emoji objects here
-            ]
+        const button = document.querySelector('#emoji-picker-button');
+        const editor = document.querySelector('#editor');
+        const picker = new EmojiButton();
+
+        // Initialize Picker
+        picker.on('emoji', emoji => {
+            console.log('Selected emoji:', emoji); // Debugging log
+            editor.focus(); // Ensure focus on the editor
+            document.execCommand('insertHTML', false, emoji);
         });
 
-        el.onSelect(l => {
-            document.querySelector(".emoji-picker").value += l;
+        // Toggle Picker
+        button.addEventListener('click', () => {
+            picker.togglePicker(button);
+            console.log('Picker toggled'); // Debugging log
         });
 
-        // Toggle the emoji picker popover manually
-        document.querySelector('.picker').addEventListener('click', function() {
-            el.toggle();
-        });
-    });
-</script>
-@endpush
+        console.log('Picker initialized!'); // Debugging log
+    </script>
 
 
-<script>
-    function filterDropdowns() {
-        var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
-        input = document.getElementById('filterSearch');
-        filter = input.value.toUpperCase();
-
-        // Select all dropdown content elements
-        dropdownContents = [
-            document.getElementById('dropdownContent1'),
-            document.getElementById('dropdownContent2'),
-            document.getElementById('dropdownContent3')
-        ];
-
-        // Loop through each dropdown content
-        dropdownContents.forEach(function(dropdownContent) {
-            menuItems = dropdownContent.getElementsByTagName('a');
-            hasMatch = false; // Reset match flag
-
-            // Loop through all menu items and hide/show based on the filter
-            for (j = 0; j < menuItems.length; j++) {
-                a = menuItems[j];
-                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    a.style.display = ""; // Show matching item
-                    hasMatch = true; // Found a match
-                } else {
-                    a.style.display = "none"; // Hide non-matching item
-                }
-            }
-
-            // Show dropdown if there's at least one matching item
-            dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
-        });
-    }
-</script>
 
 
-</div>
+
+                
+             
+                </div>
