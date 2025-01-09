@@ -2,23 +2,29 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
+use App\Mail\DelegateAddedNotification;
 use App\Models\Delegate;
 use App\Models\EmployeeDetails;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class Delegates extends Component
 {
     use WithFileUploads;
 
     public $searchTerm = '';
-    public $workflow;
+    public $workflow = '';
+    public $selectedWorkflow = '';
     public $fromDate;
     public $toDate;
-    public $delegate;
+    public $delegate = '';
     public $employeeDetails;
     public $isNames = false;
     public $record;
@@ -37,8 +43,14 @@ class Delegates extends Component
     public $selectedPeople = [];
     public $records;
     public $peopleFound = true;
-    public $isRotated = false;
+    public $showform = false;
+    public $isedit = false;
+    public $showalertmodel = false;
     public $file_path;
+    public $deleteid;
+    public $editid;
+    public $loginemp_id;
+
     public $retrievedData = [];
 
     protected $rules = [
@@ -48,72 +60,57 @@ class Delegates extends Component
         'delegate' => 'required',
     ];
 
+    public $messages = [
+        'workflow' => 'Please select Workflow.',
+        'fromDate' => 'From Date is required',
+        'toDate' => 'To Date is required',
+        'delegate' => 'Please select Delegatee.',
+    ];
+
     public function updated($propertyName)
     {
         $this->validateOnly($propertyName);
     }
-
-    public function filter()
+    public function showForm()
     {
-        $companyId = Auth::user()->company_id;
-        $trimmedSearchTerm = trim($this->searchTerm);
-
-        $this->filteredPeoples = EmployeeDetails::where('company_id', $companyId)
-            ->where(function ($query) use ($trimmedSearchTerm) {
-                $query->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $trimmedSearchTerm . '%')
-                    ->orWhere('emp_id', 'like', '%' . $trimmedSearchTerm . '%');
-            })
-            ->get();
-
-        $this->peopleFound = $this->filteredPeoples->count() > 0;
+        $this->showform = true;
     }
-
-    public function closePeoples()
+    public function hideForm()
     {
-        $this->isRotated = false;
+        $this->showform = false;
+        $this->resetForm();
+        $this->resetErrorBag();
     }
-
-    public function NamesSearch()
+    public function showAlertModel($id)
     {
-        $this->isNames = true;
-        $this->selectedPeopleNames = [];
-        $this->delegate = '';
+
+        $this->deleteid = $id;
+        $this->showalertmodel = true;
     }
-
-    public function toggleRotation()
+    public function delete()
     {
-        $this->isRotated = true;
-        $this->selectedPeopleNames = [];
-        $this->delegate = '';
+        $delegate = Delegate::findorfail($this->deleteid);
+        $delegate->status = 0;
+        $delegate->save();
+        FlashMessageHelper::flashSuccess('Workflow Delegate Deleted Successfully!');
+        $this->showalertmodel = false;
+        return redirect()->to('/delegates');
     }
-
-    public function selectPerson($personId)
+    public function cancel()
     {
-        $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-
-        if ($selectedPerson) {
-            $name = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-
-            if (in_array($personId, $this->selectedPeople)) {
-                $this->selectedPeopleNames[] = $name;
-            } else {
-                $this->selectedPeopleNames = array_diff($this->selectedPeopleNames, [$name]);
-            }
-            $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
-        }
+        $this->showalertmodel = false;
     }
-
-    public function updatedSelectedPeople()
+    public function editform($id)
     {
-        $this->selectedPeopleNames = [];
-        foreach ($this->selectedPeople as $personId) {
-            $selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-            if ($selectedPerson) {
-                $this->selectedPeopleNames[] = ucwords(strtolower($selectedPerson->first_name)) . ' ' . ucwords(strtolower($selectedPerson->last_name)) . ' #(' . $selectedPerson->emp_id . ')';
-            }
-        }
-        sort($this->selectedPeopleNames);
-        $this->delegate = implode(', ', array_unique($this->selectedPeopleNames));
+        $this->isedit = true;
+        $this->editid = $id;
+        $delegate = Delegate::findorfail($this->editid);
+
+        $this->workflow = $delegate->workflow;
+        $this->fromDate = $delegate->from_date;
+        $this->toDate = $delegate->to_date;
+        $this->delegate = $delegate->delegate;
+        $this->showform = true;
     }
 
     public function submitForm()
@@ -122,26 +119,96 @@ class Delegates extends Component
 
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
+            $startOfMonth = now()->startOfMonth();
+            $endOfMonth = now()->endOfMonth();
+
+            $totalDaysDelegated = Delegate::where('emp_id', $employeeId)
+                ->where('status', 1)
+                ->where(function ($query) use ($startOfMonth, $endOfMonth) {
+                    $query->whereBetween('from_date', [$startOfMonth, $endOfMonth])
+                        ->orWhereBetween('to_date', [$startOfMonth, $endOfMonth]);
+                })
+                ->get()
+                ->sum(function ($delegate) use ($startOfMonth, $endOfMonth) {
+                    $fromDate = Carbon::parse($delegate->from_date)->max($startOfMonth);
+                    $toDate = Carbon::parse($delegate->to_date)->min($endOfMonth);
+                    return $toDate->diffInDays($fromDate) + 1; // Include the day itself
+                });
+
+            $fromDate = Carbon::parse($this->fromDate);
+            $toDate = Carbon::parse($this->toDate);
+            // Calculate the number of days in the new request
+            $newDaysRequested = $toDate->diffInDays($fromDate) + 1;
+
+            // Validate against the maximum limit
+            if (($totalDaysDelegated + $newDaysRequested) > 5) {
+                FlashMessageHelper::flashError('You can only delegate up to 5 days per month.');
+                return;
+            }
 
             // Retrieve existing delegate data if needed
             $this->retrievedData = Delegate::where('emp_id', $employeeId)->first();
 
-            // Create a new record in the database
-            Delegate::create([
-                'emp_id' => $employeeId,
-                'workflow' => $this->workflow,
-                'from_date' => $this->fromDate,
-                'to_date' => $this->toDate,
-                'delegate' => $this->delegate,
-            ]);
+            if (!$this->isedit) {
+
+                $delegateDetails = EmployeeDetails::where('emp_id', $this->delegate)->first();
+                Delegate::create([
+                    'emp_id' => $employeeId,
+                    'workflow' => $this->workflow,
+                    'from_date' => $this->fromDate,
+                    'to_date' => $this->toDate,
+                    'delegate' => $this->delegate,
+                ]);
+
+                Notification::create([
+                    'emp_id' => $employeeId,
+                    'notification_type' => 'delegate',
+                    // 'leave_type' => $this->leave_type,
+                    // 'leave_reason' => $this->reason,
+                    'assignee' => $this->delegate,
+                ]);
+
+                if ($delegateDetails->email) {
+
+                    $delegateName = ucwords(strtolower($delegateDetails->first_name)) . ' ' . ucwords(strtolower($delegateDetails->last_name)) . ' #( ' . $delegateDetails->emp_id . ')';
+                    $addedBy = ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' #( ' . $this->employeeDetails->emp_id . ')';
+                    Mail::to($delegateDetails->email)->send(new DelegateAddedNotification(
+                        $addedBy,
+                        $this->workflow,
+                        $this->fromDate,
+                        $this->toDate,
+                        $delegateName,
+                        true
+                    ));
+                }
+
+                FlashMessageHelper::flashSuccess('Workflow Delegate Added Successfully!');
+            } else {
+                $delegate = Delegate::findorfail($this->editid);
+                $delegate->workflow = $this->workflow;
+                $delegate->from_date = $this->fromDate;
+                $delegate->to_date = $this->toDate;
+                $delegate->delegate = $this->delegate;
+                $delegate->save();
+                FlashMessageHelper::flashSuccess('Workflow Delegate Updated Successfully!');
+            }
 
             // Clear the form inputs
             $this->resetForm();
             return redirect()->to('/delegates');
-
         } catch (\Exception $e) {
             Log::error('Database error: ' . $e->getMessage());
         }
+    }
+    public function mount()
+    {
+
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        DB::table('notifications')
+            ->where('notification_type', 'delegate')
+            ->where('assignee', $employeeId)
+            ->delete();
     }
 
     private function resetForm()
@@ -150,34 +217,41 @@ class Delegates extends Component
         $this->fromDate = ''; // Reset from date
         $this->toDate = '';   // Reset to date
         $this->delegate = ''; // Reset delegate
-        $this->selectedPeople = []; // Reset selected people
+
     }
+
+    public function getDelegates()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $query = Delegate::where(function ($query) use ($employeeId) {
+            $query->where('emp_id', $employeeId)
+                ->orWhere('delegate', 'like', "%$employeeId%");
+        });
+        $query->where('status', 1);
+        if ($this->selectedWorkflow != '') {
+            $query->where('workflow', $this->selectedWorkflow);
+        }
+        $this->retrievedData = $query->orderBy('created_at', 'desc')->get();
+    }
+
 
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-
+        $this->loginemp_id = $employeeId;
         // Fetch records where emp_id or delegate contains the logged-in user's emp_id
-        $this->retrievedData = Delegate::where(function ($query) use ($employeeId) {
-            $query->where('emp_id', $employeeId)
-                  ->orWhere('delegate', 'like', "%$employeeId%");
-        })->orderBy('created_at', 'desc')->get();
+        $this->getDelegates();
 
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->get();
+
         $companyId = auth()->guard('emp')->user()->company_id;
-        $this->peoples = EmployeeDetails::whereJsonContains('company_id', $companyId)->get();
+        $this->peoples = EmployeeDetails::where('status', 1)->where('emp_id', '!=', $employeeId)->whereJsonContains('company_id', $companyId)->select('first_name', 'last_name', 'emp_id')->get();
 
-        $peopleData = $this->filteredPeoples ? $this->filteredPeoples : $this->peoples;
-        $peopleData = $peopleData->sortBy(function ($person) {
-            return strtolower($person->first_name);
-        });
 
         $this->record = Delegate::all();
 
         return view('livewire.delegates', [
             'employees' => $this->employeeDetails,
             'retrievedData' => $this->retrievedData,
-            'peopleData' => $peopleData,
             'records' => $this->record
         ]);
     }

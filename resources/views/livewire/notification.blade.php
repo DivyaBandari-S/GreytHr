@@ -354,9 +354,29 @@
                     <p class="notify-time-para">{{$notification->notify_time}}</p>
                 </div>
         </div>
+        @elseif($notification->notification_type=='delegate')
+        <div>
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container" >
+                <p class="mb-0 notification-text">
+                    <a href="#" class="notification-head" onclick="window.location.href='{{ url('/delegates');}}'">
+                        {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
+                        (#{{ $notification->emp_id }})
+                    </a>
+                </p>
 
+                @if($notification->details_count>1 && $notification->details_count<=10 )
+                    <p class="mb-0 notification-text-para"> Added {{$notification->details_count}} Workflow delegates.</p>
+                    @elseif($notification->details_count>10)
+                    <p class="mb-0 notification-text-para"> Added 10+ Workflow delegates.</p>
+                    @else
+                    <p class="mb-0 notification-text-para">Added Workflow delegate.</p>
+                    <div class="notify-time">
+                        <p class="notify-time-para">{{$notification->notify_time}}</p>
+                    </div>
+                    @endif
+            </div>
+        </div>
         @endif
-
         @endforeach
         @endif
     </div>

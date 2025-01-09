@@ -382,6 +382,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     // Get leave requests for the employee within the date range
     $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
         ->where('leave_applications.leave_status', 2)
+        ->where('leave_applications.from_session', 'Session 1')
+        ->where('leave_applications.to_session','Session 2')
         ->where(function ($query) use ($startDate, $endDate) {
             $query->whereDate('from_date', '<=', $endDate)
                   ->whereDate('to_date', '>=', $startDate);
@@ -423,16 +425,17 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         Log::info("Date: " . $currentDate->toDateString() . ", Weekend: " . ($isWeekend ? 'Yes' : 'No') . 
                   ", Holiday: " . ($isHoliday ? 'Yes' : 'No') . ", On Leave: " . ($isOnLeave ? 'Yes' : 'No'));
 
-                  if (!$isWeekend && !$isHoliday && !$isOnLeave && !$isOnfullDayLeave) {
+                  if (!$isWeekend && !$isHoliday && !$isOnLeave && !$isOnfullDayLeave && !$isOnHalfDayLeave) {
                     $workingDaysCount++;
                     Log::info('Full working day counted', [
                         'isWeekend' => $isWeekend,
                         'isHoliday' => $isHoliday,
                         'isOnLeave' => $isOnLeave,
                         'isOnfullDayLeave' => $isOnfullDayLeave,
+                        'isOnHalfDayLeave' => $isOnHalfDayLeave,
                         'workingDaysCount' => $workingDaysCount
                     ]);
-                } elseif ($isOnHalfDayLeave || (!$isWeekend && !$isHoliday && !$isOnLeave)) {
+                } elseif ($isOnHalfDayLeave && !$isWeekend && !$isHoliday && !$isOnLeave) {
                     $workingDaysCount += 0.5;
                     Log::info('Half working day counted', [
                         'isOnHalfDayLeave' => $isOnHalfDayLeave,
@@ -871,6 +874,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $sessionArray=[];
         $leaveRecord=null;
+        $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date, $employeeId);
         Log::info('Checking half-day leave for employee.', [
             'employee_id' => $employeeId,
             'date' => $date,
@@ -945,7 +949,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             Log::info('Leave Record for Session 2:', [
                 'employee_id' => $employeeId,
                 'date' => $date,
-                'leaveRecord' => $leaveRecord
+                'leaveRecord' => $leaveRecord,
+                'sessionCheck' => ($session1Check xor $session2Check xor !$isBeforeToDate) ? true : false,
             ]);
         }
 
@@ -954,7 +959,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         return [
             'session' => $sessionArray,
             'leaveRecord' => $leaveRecord,
-            'sessionCheck' => ($session1Check xor $session2Check) ? true : false,
+            'sessionCheck' => (($session1Check xor $session2Check) xor $isBeforeToDate) ? true : false,
 
         ];
     } catch (\Exception $e) {
