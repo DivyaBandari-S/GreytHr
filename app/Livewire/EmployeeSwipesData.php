@@ -248,6 +248,7 @@ class EmployeeSwipesData extends Component
             }
         }
 
+
         return $swipeData;
     }
 
