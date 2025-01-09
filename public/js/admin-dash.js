@@ -345,11 +345,30 @@ function closeChatScreen (e) {
 document.addEventListener("DOMContentLoaded", function () {
     if (
         window.location.pathname === "/chat" ||
-        window.location.pathname === "/chat/"
+        window.location.pathname === "/chat/" ||
+         window.location.pathname === "/users"
     ) {
         document.body.id = "userPage";
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname; // Get the current path
+    const menuLinks = document.querySelectorAll(".sidebar .menus a"); // Select all menu links
+
+    menuLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+
+        if (currentPath === linkHref) {
+            link.classList.add("active");
+            link.classList.add("active-side-dropdown");
+        } else {
+            link.classList.remove("active");
+            link.classList.remove("active-side-dropdown");
+        }
+    });
+});
+
 
 // document.addEventListener("DOMContentLoaded", () => {
 //     const emojiPicker = document.getElementById("emojiPicker");
