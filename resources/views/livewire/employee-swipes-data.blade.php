@@ -5,7 +5,7 @@
             <div class="employee-swipes-fields d-flex align-items-center">
                 <div class="dropdown-container1-employee-swipes">
                     <label for="start_date" style="color: #666;font-size:12px;">Select Date<span style="color: red;">*</span>:</label><br />
-                    <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate">
+                    <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate"  max="{{ now()->toDateString() }}">
                 </div>
                 <!-- <div class="dropdown-container1-employee-swipes">
                     <label for="end_date" style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br />
