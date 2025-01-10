@@ -82,6 +82,7 @@ use App\Livewire\TeamOnLeaveChart;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
 use App\Livewire\Chat\EmployeeList;
+use App\Livewire\Chat\ChatCalendar;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -300,7 +301,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/catalog', Catalog::class)->name('catalog');
     Route::get('/incident', IncidentRequests::class)->name('incident');
     Route::get('/incidentRequests', [IncidentRequests::class])->name('incidentRequest');
-    Route::get('/serviceRequests', [IncidentRequests::class])->name('serviceRequest');
+    Route::get('/serviceRequests', [IncidentRequests::class ])->name('serviceRequest');
     Route::get('/itrequest', [HelpDesk::class])->name('itrequest');
     Route::get('/serviceRequests', IncidentRequests::class)->name('serviceRequests');
     // Related salary module and ITdeclaration Document center
@@ -361,6 +362,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
+    Route::get('/calendar', ChatCalendar::class)->name('calendar');
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
@@ -499,7 +501,7 @@ Route::get('/clear', function () {
 Route::get('/test-odbc', function () {
     try {
         // Hard-coded DSN, username, and password
-        $dsn = 'Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 
@@ -515,39 +517,57 @@ Route::get('/test-odbc', function () {
     }
 });
 
-Route::get('/test-srv', function () {
+
+Route::get('/test-odbc-env', function () {
     try {
-        $pdo = DB::connection('sqlsrv')->getPdo();
-        if ($pdo) {
-            return "Connected successfully!";
-        }
-    } catch (\Exception $e) {
-        return "Error: " . $e->getMessage();
+        // Fetch details from .env file
+        $dsn = env('DB_ODBC_DSN');
+        $username = env('DB_ODBC_USERNAME');
+        $password = env('DB_ODBC_PASSWORD');
+
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
+
+        // Optionally, you can perform a query to further test the connection
+        // $result = $dbh->query("SELECT TOP 1 * FROM YourTableName")->fetchAll(PDO::FETCH_ASSOC);
+
+        return "Connection successful!";
+    } catch (\PDOException $e) {
+        return "Connection failed: " . $e->getMessage();
     }
 });
 
+
+
+
 Route::get('/test-odbc-dir', function () {
     try {
-        $dsn = 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
-        $username = 'essl';
-        $password = 'essl';
+        // Hard-coded ODBC DSN, username, and password
+        $dsn = 'Driver={SQL Server};Server=59.144.92.154,1433;Database=eSSL;';
+        $username = 'essl'; // Replace with your actual username
+        $password = 'essl'; // Replace with your actual password
 
-        $dbh = new PDO($dsn, $username, $password);
+        // Create a new PDO instance
+        $dbh = new PDO("odbc:{$dsn}", $username, $password);
 
-        $tableName = 'DeviceLogs_12_2024';
-        $normalizedUserId = 'XSS0480';
-        $today = now()->toDateString();
+        // Define your table name and user ID
+        $tableName = 'DeviceLogs_8_2024'; // Replace with your actual table name
+        $normalizedUserId = 'XSS0488'; // Replace with your actual user ID
+        $today = now()->toDateString(); // Get today's date in 'Y-m-d' format
 
-        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? ORDER BY logDate");
-        $stmt->execute([$normalizedUserId]);
+        // Fetch data using raw PDO query
+        $stmt = $dbh->prepare("SELECT UserId, logDate, Direction FROM {$tableName} WHERE UserId = ? AND CAST(logDate AS DATE) = ? ORDER BY logDate");
+        $stmt->execute([$normalizedUserId, $today]);
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        // Output the data for debugging
         dd($data);
+
+        return "Data fetched successfully!";
     } catch (\PDOException $e) {
         return "Error: " . $e->getMessage();
     }
 });
-
 
 Route::get('/down', function () {
     Artisan::call('down');
@@ -637,3 +657,5 @@ Route::get('/storage-link', function () {
         return response()->json(['error' => $e->getMessage()], 500);
     }
 });
+
+
