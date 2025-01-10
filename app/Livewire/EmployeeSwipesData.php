@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
+use PDO;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class EmployeeSwipesData extends Component
@@ -48,17 +49,17 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                            ->where('employee_status', 'active')
-                            ->join('company_shifts', function ($join) {
-                                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-                            })
-                            ->select(
-                                'employee_details.*',
-                                'company_shifts.shift_start_time',
-                                'company_shifts.shift_end_time'
-                            )
-                            ->get();
+                ->where('employee_status', 'active')
+                ->join('company_shifts', function ($join) {
+                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                })
+                ->select(
+                    'employee_details.*',
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->get();
 
             // Check if the user swiped today
             $userSwipesToday = SwipeRecord::where('emp_id', $authUser->emp_id)
@@ -80,7 +81,7 @@ class EmployeeSwipesData extends Component
     public function updateDate()
     {
 
-        $this->startDate=$this->startDate;
+        $this->startDate = $this->startDate;
     }
 
     public function downloadFileforSwipes()
@@ -144,8 +145,8 @@ class EmployeeSwipesData extends Component
 
         // You can handle the selected value here
 
-            $this->selectedShift= $value;
-            // $this->formattedSelectedShift='General Shift';
+        $this->selectedShift = $value;
+        // $this->formattedSelectedShift='General Shift';
 
 
     }
@@ -153,27 +154,22 @@ class EmployeeSwipesData extends Component
     {
         $this->searching = 1;
     }
-
     public function processSwipeLogs($managedEmployees, $today)
     {
         $swipeData = [];
 
         try {
-            if($this->startDate)
-            {
+            if ($this->startDate) {
                 $todaySwipeRecords = SwipeRecord::whereDate('created_at', $this->startDate)
-                ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
-                ->get()
-                ->keyBy('emp_id');
-            }
-            else
-            {
+                    ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                    ->get()
+                    ->keyBy('emp_id');
+            } else {
                 $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
-                ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
-                ->get()
-                ->keyBy('emp_id');
+                    ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                    ->get()
+                    ->keyBy('emp_id');
             }
-
         } catch (\Exception $e) {
             // Handle exception related to local swipe records
             // You could log this error or return an empty array
@@ -198,31 +194,24 @@ class EmployeeSwipesData extends Component
             if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
 
 
-                if($this->startDate)
-                {
+                if ($this->startDate) {
 
                     $externalSwipeLogs = DB::connection('sqlsrv')
-                    ->table($tableName)
-                    ->select('UserId', 'logDate', 'Direction')
-                    ->whereIn('UserId', $normalizedIds)
-                    ->whereRaw("CONVERT(DATE, logDate) = ?", $this->startDate)
-                    ->get();
-
-                }
-                else
-                {
+                        ->table($tableName)
+                        ->select('UserId', 'logDate', 'Direction')
+                        ->whereIn('UserId', $normalizedIds)
+                        ->whereRaw("CONVERT(DATE, logDate) = ?", $this->startDate)
+                        ->get();
+                } else {
                     $externalSwipeLogs = DB::connection('sqlsrv')
-                    ->table($tableName)
-                    ->select('UserId', 'logDate', 'Direction')
-                    ->whereIn('UserId', $normalizedIds)
-                    ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->format('Y-m-d')])
-                    ->get();
-
-
+                        ->table($tableName)
+                        ->select('UserId', 'logDate', 'Direction')
+                        ->whereIn('UserId', $normalizedIds)
+                        ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->format('Y-m-d')])
+                        ->get();
                 }
-
             } else {
-                   $externalSwipeLogs = collect();
+                $externalSwipeLogs = collect();
             }
         } catch (\Exception $e) {
             // Handle exceptions related to external database query
@@ -248,10 +237,8 @@ class EmployeeSwipesData extends Component
             }
         }
 
-
         return $swipeData;
     }
-
 
 
     public function render()
