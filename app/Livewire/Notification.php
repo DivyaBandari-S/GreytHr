@@ -19,6 +19,7 @@ class Notification extends Component
     public $matchingLeaveRequests;
     public $senderDetails;
     public $messagenotifications;
+    public $delegatenotifications;
     public $leaveApproveNotification;
 
     public $regularisationNotifications;
@@ -648,9 +649,17 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name as detail', 'notifications.emp_id', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
+                $this->delegatenotifications= DB::table('notifications')
+                ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
+                ->where('assignee', $loggedInEmpId)
+                ->where('notification_type', 'delegate')
+                ->where('message_read_at', null)
+                ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
+                ->get();
+
             // ->groupBy('emp_id');
 
-            $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification)->merge($this->regularisationNotifications)->merge($this->regularisationRejectNotifications);
+            $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification)->merge($this->regularisationNotifications)->merge($this->regularisationRejectNotifications)->merge($this->delegatenotifications);
 
             $groupedNotifications = $allNotifications->groupBy(function ($item) {
                 return $item->emp_id . '-' . $item->notification_type;

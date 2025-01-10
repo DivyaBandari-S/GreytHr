@@ -30,6 +30,9 @@ class EmployeeSwipesData extends Component
     public $employees;
     public $startDate;
     public $endDate;
+
+    public $selectedShift;
+    public $employeeShiftDetails;
     public $selectedSwipeTime;
     public $search = '';
     public $searching = 0;
@@ -45,8 +48,17 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->where('employee_status', 'active')
-                ->get();
+                            ->where('employee_status', 'active')
+                            ->join('company_shifts', function ($join) {
+                                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                            })
+                            ->select(
+                                'employee_details.*', 
+                                'company_shifts.shift_start_time', 
+                                'company_shifts.shift_end_time'
+                            )
+                            ->get();
 
             // Check if the user swiped today
             $userSwipesToday = SwipeRecord::where('emp_id', $authUser->emp_id)
@@ -62,16 +74,13 @@ class EmployeeSwipesData extends Component
         }
     }
 
-    public function updatedStartDate()
-    {
-        // Check the selected dates after updating start date
-        $this->checkDates();
-    }
+  
 
-    public function updatedEndDate()
+    
+    public function updateDate()
     {
-        // Check the selected dates after updating end date
-        $this->checkDates();
+        
+        $this->startDate=$this->startDate;
     }
 
     public function downloadFileforSwipes()
@@ -127,6 +136,19 @@ class EmployeeSwipesData extends Component
         }
     }
 
+    public function updatedSelectedShift($value)
+    {
+        // This method will be called whenever the selected radio button changes
+        // $value will contain the value of the selected shift ('GS', 'AS', or 'ES')
+        Log::info('Selected Shift: ' . $value);
+    
+        // You can handle the selected value here
+       
+            $this->selectedShift= $value;
+            // $this->formattedSelectedShift='General Shift';
+    
+       
+    }
     public function searchEmployee()
     {
         $this->searching = 1;
@@ -137,10 +159,21 @@ class EmployeeSwipesData extends Component
         $swipeData = [];
 
         try {
-            $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+            if($this->startDate)
+            {
+                $todaySwipeRecords = SwipeRecord::whereDate('created_at', $this->startDate)
+                ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                ->get()
+                ->keyBy('emp_id'); 
+            }
+            else
+            {
+                $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
                 ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
                 ->get()
                 ->keyBy('emp_id');
+            }
+            
         } catch (\Exception $e) {
             // Handle exception related to local swipe records
             // You could log this error or return an empty array
@@ -164,14 +197,32 @@ class EmployeeSwipesData extends Component
 
             if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
 
-                $externalSwipeLogs = DB::connection('sqlsrv')
+
+                if($this->startDate)
+                {
+                    
+                    $externalSwipeLogs = DB::connection('sqlsrv')
                     ->table($tableName)
                     ->select('UserId', 'logDate', 'Direction')
                     ->whereIn('UserId', $normalizedIds)
-                    ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->subYear()->format('Y-m-d')])
+                    ->whereRaw("CONVERT(DATE, logDate) = ?", $this->startDate)
                     ->get();
+               
+                }
+                else
+                {
+                    $externalSwipeLogs = DB::connection('sqlsrv')
+                    ->table($tableName)
+                    ->select('UserId', 'logDate', 'Direction')
+                    ->whereIn('UserId', $normalizedIds)
+                    ->whereRaw("CONVERT(DATE, logDate) = ?", [now()->format('Y-m-d')])
+                    ->get();
+               
+
+                }
+                  
             } else {
-                $externalSwipeLogs = collect();
+                   $externalSwipeLogs = collect();
             }
         } catch (\Exception $e) {
             // Handle exceptions related to external database query
@@ -183,6 +234,7 @@ class EmployeeSwipesData extends Component
             $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
             // Check if there's a swipe record from the external database
             $employeeSwipeLog = $externalSwipeLogs->firstWhere('UserId', $normalizedEmployeeId);
+            
             if (!$employeeSwipeLog && isset($todaySwipeRecords[$employee->emp_id])) {
                 // Use swipe record from local database if it exists
                 $employeeSwipeLog = $todaySwipeRecords[$employee->emp_id];
@@ -195,7 +247,7 @@ class EmployeeSwipesData extends Component
                 ];
             }
         }
-
+       
         return $swipeData;
     }
 
@@ -208,12 +260,50 @@ class EmployeeSwipesData extends Component
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
 
+        // Log user information
+        Log::info('Swipe Log Process Started', [
+            'userId' => $userId,
+            'today' => $today,
+        ]);
+
         // Retrieve active employees managed by the user
         $managedEmployees = EmployeeDetails::where('manager_id', $userId)
             ->where('employee_status', 'active')
-            ->get(); // Adjust the pagination number as needed
+            ->join('company_shifts', function ($join) {
+                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+            })
+            ->select(
+                'employee_details.*', 
+                'company_shifts.shift_start_time', 
+                'company_shifts.shift_end_time'
+            )
+            ->get();
 
-        $this->employees = $this->processSwipeLogs($managedEmployees, $today); // Process and fetch employees' swipe logs
+        // Log the number of managed employees
+        Log::info('Managed Employees Retrieved', [
+            'total_employees' => $managedEmployees->count()
+        ]);
+
+        if ($this->startDate) {
+            Log::info('Processing swipe logs with startDate', [
+                'startDate' => $this->startDate
+            ]);
+
+            $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate); 
+        } else {
+            Log::info('Processing swipe logs with today\'s date', [
+                'today' => $today
+            ]);
+
+            $this->employees = $this->processSwipeLogs($managedEmployees, $today); 
+        }
+
+        // Log completion
+        Log::info('Swipe Log Process Completed', [
+            'processed_employees_count' => count($this->employees ?? [])
+        ]);
+        // Process and fetch employees' swipe logs
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
         ]);

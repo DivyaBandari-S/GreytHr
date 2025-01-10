@@ -1,4 +1,41 @@
 <div>
+<style>
+#quill-editor {
+    height: 200px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 10px; /* Ensuring there's space inside the editor */
+    background-color: #fff; /* Ensuring the background is white */
+}
+
+.ql-toolbar {
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 6px;
+}
+
+.ql-container {
+    min-height: 150px;
+}
+
+.ql-editor {
+    min-height: 150px; /* Ensuring the editor area has a min-height */
+    outline: none; /* Prevent outline issues */
+    padding: 10px;
+}
+#editor {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-family: 'Segoe UI Emoji', Arial, sans-serif;
+        }
+        .emoji-picker {
+            z-index: 1000 !important;
+        }
+</style>
+
+
   <div wire:loading
         wire:target="addFeeds,submit,file_path,openEmojiDialog,openDialog,closeEmojiDialog,handleRadioChange,updateSortType,closeFeeds,removeReaction,removeEmojiReaction,addEmoji,selectEmoji">
         <div class="loader-overlay">
@@ -63,98 +100,113 @@
                 <div class=" mt-2 bg-white d-flex align-items-center ">
                     <div class="d-flex ms-auto">
                     @if($showFeedsDialog)
-                <div class="modal" tabindex="-1" role="dialog" style="display: block; ">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header d-flex justify-content-between align-items-center">
-                                <p class="mb-0">Create a post</p>
-                                <span class="img d-flex align-items-end">
-                                    <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
-                                </span>
+<div class="modal" tabindex="-1" role="dialog" style="display: block;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between align-items-center">
+                <p class="mb-0">Create a Post</p>
+                <span class="img d-flex align-items-end">
+                    <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
+                </span>
+            </div>
+
+            <div>
+            <form wire:submit.prevent="submit" enctype="multipart/form-data">
+    <div class="modal-body" style="padding: 20px; width: 80%;"> 
+
+        <!-- Category Selection -->
+        <div class="form-group mb-15">
+            <label for="category">You are posting in:</label>
+            <select wire:model.lazy="category" class="form-select" id="category">
+                <option value="" hidden>Select Category</option>
+                <option value="Appreciations">Appreciations</option>
+                <option value="Companynews">Company News</option>
+                <option value="Events">Events</option>
+                <option value="Everyone">Everyone</option>
+                <option value="Hyderabad">Hyderabad</option>
+                <option value="US">US</option>
+            </select>
+            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
+        </div>
+
+        <!-- Quill Editor -->
+        <div class="row mt-3">
+            <label for="description">Write something here:</label>
+        </div>
+        <div id="quill-toolbar-container" style="margin-top:10px;background:#F7F7F7">
+            <div id="quill-toolbar" class="ql-toolbar ql-snow">
+                <span class="ql-formats">
+                    <button type="button" onclick="execCmd('bold')"><b>B</b></button>
+                    <button type="button" onclick="execCmd('italic')"><i>I</i></button>
+                    <button type="button" onclick="execCmd('underline')"><u>U</u></button>
+                    <button type="button" onclick="execCmd('strikeThrough')"><s>S</s></button>
+                    <button type="button" onclick="execCmd('insertUnorderedList')" style="display: inline-flex; align-items: center; gap: 5px;">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button type="button" onclick="execCmd('insertOrderedList')">  <i class="fas fa-list-ol"></i></button>
+                    <button type="button" onclick="insertVideo()">🎥</button>
+                  
+                </span>
+            </div>
+        </div>
+        <!-- Content Editable div with wire:ignore -->
+        <div 
+                                id="richTextEditor" 
+                                contenteditable="true"
+                                wire:ignore
+                                class="form-control" 
+                                style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; min-height: 150px; background-color: #fff;"
+                                oninput="updateDescription(this.innerHTML)">
+                                {!! $description !!}
                             </div>
 
 
 
-                            @if(Session::has('error'))
-                            <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center justify-content-center" role="alert"
-                                style="font-size: 0.875rem; width: 90%; margin: 10px auto; padding: 10px; border-radius:4px; background-color: #f8d7da; color: #721c24;">
-                                {{ Session::get('error') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="margin-left: 10px;margin-top:-5px"></button>
-                            </div>
-                            @endif
-                            <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                                <div class="modal-body" style="padding: 20px;width: 80%;">
-                                    <!-- Category Selection -->
-                                    <div class="form-group mb-15" >
-                                        <label for="category">You are posting in:</label>
-                                        <select wire:model.lazy="category" class="form-select" id="category">
-                                            <option value="" hidden>Select Category</option>
-                                            <option value="Appreciations">Appreciations</option>
-                                         
-                                            <option value="Companynews">Company News</option>
-                                            <option value="Events">Events</option>
-                                            <option value="Everyone">Everyone</option>
-                                            <option value="Hyderabad">Hyderabad</option>
-                                            <option value="US">US</option>
-                                        </select>
-                                        @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
+        @error('description') 
+            <span class="text-danger">{{ $message }}</span> 
+        @enderror
+        <div class="form-group mt-3">
+            <label for="file_path">Upload Attachment:</label>
+            <div style="text-align: start;">
+                <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top: 5px">
+                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+            </div>
+        </div>
 
-                                    <!-- Description Input -->
-                                    <div class="form-group mt-3">
-                                        <label for="content">Write something here:</label>
-
-                                        <textarea 
-       id="myTextarea"
-        wire:model.lazy="description" 
-        class="form-control" 
-        rows="2" 
-        style="border: 1px solid #ccc; border-radius: 4px; padding: 10px; font-size: 0.875rem; resize: vertical; width: 100%; margin-top: 5px;" 
-        placeholder="Enter your description here...">
-    </textarea>
-                                        @error('description') <span class="text-danger">{{ $message }}</span> @enderror
-                                    </div>
-                                    <!-- File Input -->
-                                    <div id="flash-message-container" style="display: none;margin-top:10px" class="alert alert-success"
-                                        role="alert"></div>
-                                    <!-- File Upload -->
-                                    <div class="form-group mt-3">
-                                        <label for="file_path">Upload Attachment:</label>
-                                        <div style="text-align: start;">
+    </div>
+    
 
 
-                                            <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top:5px" onchange="handleImageChange()">
-                                            @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
+   
+    <!-- Submit & Cancel Buttons -->
+    <div class="modal-footer border-top">
+        <div class="d-flex justify-content-center w-100">
+            <button type="submit" class="submit-btn">Submit</button>
+            <button type="button" wire:click="closeFeeds" class="cancel-btn1 ms-2">Cancel</button>
+        </div>
+    </div>
+</form>
 
-                                            <!-- Success Message -->
 
 
-                                        </div>
-                                    </div>
-                                </div>
 
-                                <!-- Submit & Cancel Buttons -->
-                                <div class="modal-footer border-top">
-                                    <div class="d-flex justify-content-center w-100">
-                                        <button type="submit" wire:target="file_path" wire:loading.attr="disabled" class="submit-btn">Submit</button>
-                                        <button wire:click="closeFeeds" type="button" class="cancel-btn1 ms-2">Cancel</button>
-                                    </div>
-                                </div>
-                            </form>
+    <!-- Success Message -->
+    @if (session()->has('message'))
+        <div class="alert alert-success mt-3">{{ session('message') }}</div>
+    @endif
+</div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+@endif
 
 
 
 
 
-                        </div>
-                    </div>
-                </div>
 
 
-
-
-                <div class="modal-backdrop fade show"></div>
-                @endif
                     </div>
                 </div>
             </div>
@@ -177,6 +229,23 @@
                             </div>
                             <span class="custom-radio-button bg-blue"></span>
                             <span class="custom-radio-content ">All Activities</span>
+                        </label>
+                    </div>
+                    <div class="posts">
+                        <label class="custom-radio-label">
+
+                            <input type="radio" id="radio-hr" name="radio" value="posts"
+                                data-url="/kudos" wire:click="handleRadioChange('kudos')">
+
+                            <div class="feed-icon-container" style="margin-left: 10px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">
+
+                                    <circle cx="12" cy="8" r="7"></circle>
+                                    
+                                    <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+                            </div>
+                            <span class="custom-radio-button bg-blue"></span>
+                            <span class="custom-radio-content ">Kudos</span>
                         </label>
                     </div>
 
@@ -400,52 +469,78 @@
 @foreach($posts as $post)
     <div class="col-12 col-md-8 mt-2" id="post-{{ $post->id }}">
         <div class="post-card">
-            <!-- Post Header -->
-            <div class="post-header">
-                <img src="data:image/jpeg;base64,{{ $empCompanyLogoUrl }}" alt="Company Logo" class="company-logo">
-                <div class="category">{{ $post->category }}</div>
-                <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
-            </div>
-
-            <!-- Profile Section -->
-            <div class="profile-info">
-                @php
+            <div class="row">
+        <div class="col-12 col-md-2 text-start mb-2 mb-md-0">
+        @php
                     $employee = $post->employeeDetails;
                     $manager = $post->managerDetails;
                 @endphp
+                  @if($employee)
+                  @if(!empty($employee->image))
+            <img src="data:image/jpeg;base64,{{$employee->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                                <!-- Employee's Initials -->
+                                                <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
 
-                @if($employee)
-                <div class="column" style="display:flex">
-                <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$employee->image ?? ''}}" alt="Employee Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
-                    {{ $post->description }}
-                </div>
-                </div>
-                    <!-- Profile Image -->
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-7 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $post->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                               
+
+                                            </div>
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
              
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($employee->first_name . ' ' . $employee->last_name)) }}</p>
-                    </div>
-                @elseif($manager)
-                <div class="column" style="display:flex">
-                    <!-- Profile Image -->
-                    <div class="profile-image-wrapper">
-                        <img src="data:image/jpeg;base64,{{$manager->image ?? ''}}" alt="Manager Image" class="post-profile-img">
-                    </div>
-                    <div class="description">
-                    {{ $post->description }}
-                </div>
+                                            @elseif($manager)
+                                            @if(!empty($manager->image))
+            <img src="data:image/jpeg;base64,{{$manager->image}}" alt="Employee Image" class="post-profile-img">
+        @else
+                                            <div class="rounded-circle"
+                                                    style="width: 45px; height: 45px; background-color: #e986ea;color: white; display: flex; align-items: center; justify-content: center; font-size: 14px;">
+                                                    {{ strtoupper(substr($manager->first_name, 0, 1)) . strtoupper(substr($manager->last_name, 0, 1)) }}
+                                                </div>
+                                                @endif
+                                            </div>
 
+                                            <!-- Second Column: Full Name, Employee ID, and Group (Post Type) -->
+                                            <div class="col-6 col-md-6 text-start"
+                                                style="font-size: 12px; margin-left: -14px;">
+                                                <!-- Adjust padding-left for spacing -->
+                                                <p class="p-0 m-0">
+                                                    <strong>{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</strong>
+                                                </p>
+                                                <p class="p-0 m-0"><span>#{{ $manager->emp_id }}</span></p>
+                                                <p class="p-0 m-0">Group:
+                                                    {{ ucwords(strtolower( $post->category)) }}</p>
+                                                <!-- Post Type -->
+                                            </div>
+                                            <div class="col-md-3 text-left">
+                                            <div class="updated-time">{{ $post->updated_at->diffForHumans() }}</div>
+                                            </div>
+            <!-- Post He
+             ader -->
+          @endif
+          <div class="description">    
+          {!! $post->description !!}
                 </div>
-                    <!-- Profile Name -->
-                    <div class="profile-name-wrapper">
-                        <p class="post-profile-name">{{ ucwords(strtolower($manager->first_name . ' ' . $manager->last_name)) }}</p>
-                    </div>
-                @endif
-            </div>
+          </div>
+
+            <!-- Profile Section -->
+        
 
             <!-- Post Content -->
             <div class="post-content">
@@ -453,7 +548,7 @@
              
                 <!-- Post Image -->
                 @if($post->image_url)
-                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image">
+                    <img src="{{ $post->image_url }}" alt="Post Image" class="post-image" style="height:100px;width:100px">
                 @endif
             </div>
         </div>
@@ -823,99 +918,68 @@
     });
 </script>
 
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+
+<!-- Quill.js JS -->
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+
+
+
+
+
+
 <script>
-    document.addEventListener('click', function(event) {
-        const dropdowns = document.querySelectorAll('.cus-button');
-        dropdowns.forEach(function(dropdown) {
-            if (!dropdown.contains(event.target)) {
-                const dropdownContent = dropdown.nextElementSibling;
-                dropdownContent.style.display = 'none';
-            }
-        });
-    });
+    function execCmd(command) {
+        document.execCommand(command, false, null);
+    }
 
-    function toggleDropdown(dropdownId, arrowId) {
-        const dropdownContent = document.getElementById(dropdownId);
-        const arrowSvg = document.getElementById(arrowId);
-
-        if (dropdownContent.style.display === 'block') {
-            dropdownContent.style.display = 'none';
-            arrowSvg.classList.remove('arrow-rotate');
+    function updateDescription(content) {
+        @this.set('description', content); // Update Livewire description property
+    }
+    function insertVideo() {
+    const url = prompt('Enter YouTube Video URL:');
+    if (url) {
+        // Match standard YouTube or shortened URLs
+        const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+        if (match && match[1]) {
+            const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+            const iframe = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:50%; height:200px;"></iframe>`;
+            document.execCommand('insertHTML', false, iframe);
         } else {
-            dropdownContent.style.display = 'block';
-            arrowSvg.classList.add('arrow-rotate');
+            alert('Invalid YouTube URL. Please use a valid link.');
         }
     }
-    document.querySelectorAll('.custom-radio-label a').forEach(link => {
-        link.addEventListener('click', function(e) {
-            // Ensure no preventDefault() call is here unless necessary for custom handling
-        });
-    });
-</script>
-@push('scripts')
-<script src="dist/emoji-popover.umd.js"></script>
-<link rel="stylesheet" href="dist/style.css" />
+}
 
+
+
+</script>
 <script>
-    document.addEventListener('livewire:load', function() {
-        const el = new EmojiPopover({
-            button: '.picker',
-            targetElement: '.emoji-picker',
-            emojiList: [{
-                    value: '🤣',
-                    label: 'laugh and cry'
-                },
-                // Add more emoji objects here
-            ]
+        const button = document.querySelector('#emoji-picker-button');
+        const editor = document.querySelector('#editor');
+        const picker = new EmojiButton();
+
+        // Initialize Picker
+        picker.on('emoji', emoji => {
+            console.log('Selected emoji:', emoji); // Debugging log
+            editor.focus(); // Ensure focus on the editor
+            document.execCommand('insertHTML', false, emoji);
         });
 
-        el.onSelect(l => {
-            document.querySelector(".emoji-picker").value += l;
+        // Toggle Picker
+        button.addEventListener('click', () => {
+            picker.togglePicker(button);
+            console.log('Picker toggled'); // Debugging log
         });
 
-        // Toggle the emoji picker popover manually
-        document.querySelector('.picker').addEventListener('click', function() {
-            el.toggle();
-        });
-    });
-</script>
-@endpush
+        console.log('Picker initialized!'); // Debugging log
+    </script>
 
 
-<script>
-    function filterDropdowns() {
-        var input, filter, dropdownContents, dropdownContent, menuItems, a, i, j, hasMatch;
-        input = document.getElementById('filterSearch');
-        filter = input.value.toUpperCase();
 
-        // Select all dropdown content elements
-        dropdownContents = [
-            document.getElementById('dropdownContent1'),
-            document.getElementById('dropdownContent2'),
-            document.getElementById('dropdownContent3')
-        ];
 
-        // Loop through each dropdown content
-        dropdownContents.forEach(function(dropdownContent) {
-            menuItems = dropdownContent.getElementsByTagName('a');
-            hasMatch = false; // Reset match flag
 
-            // Loop through all menu items and hide/show based on the filter
-            for (j = 0; j < menuItems.length; j++) {
-                a = menuItems[j];
-                if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                    a.style.display = ""; // Show matching item
-                    hasMatch = true; // Found a match
-                } else {
-                    a.style.display = "none"; // Hide non-matching item
-                }
-            }
-
-            // Show dropdown if there's at least one matching item
-            dropdownContent.style.display = hasMatch ? "block" : "none"; // Show or hide based on match
-        });
-    }
-</script>
                 
              
                 </div>

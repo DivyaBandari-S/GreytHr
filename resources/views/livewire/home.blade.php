@@ -9,7 +9,7 @@
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-12 col-md-9 mb-3">
+            <div class="col-12 col-md-8 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content  row p-0 m-0">
                         <div class="col-md-4 p-0 ps-3 pt-4">
@@ -31,7 +31,7 @@
 
                             <div class="mb-4 homeBaneerCard row m-0">
 
-                                <div class="col-md-6 pe-0">
+                                <div class="col-md-5 pe-0">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-6 ps-0 pt-2 text-end">
+                                <div class="col-md-7 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
                                             // Fetch shift times
@@ -148,7 +148,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-3">
+            <div class="col-12 col-md-4">
                 <div class="cardReport">
                     <button class="mail">
                         <span class="rounded-pill home-reportTo"> Reports To </span>

@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Mail\PostCreatedNotification;
 use App\Models\Company;
 use App\Models\Post;
 use Livewire\Component;
@@ -28,7 +29,7 @@ class Everyone extends Component
     public $category;
     public $isManager;
     public $employeeId;
-    public $description;
+    
     public $attachment;
     public $employeeDetails;
     public $message = '';
@@ -46,10 +47,12 @@ class Everyone extends Component
         'description.required' => 'Description is required.',
        
     ];
+    public $showImageDialog=false;
     public function addFeeds()
     {
         $this->showFeedsDialog = true;
     }
+  
     public function openPost($postId)
     {
         $post = Post::find($postId);
@@ -60,6 +63,22 @@ class Everyone extends Component
     
         return redirect()->to('/feeds'); // Redirect to the appropriate route
     }
+    public $description;
+
+    // Listener for the emitted event
+    protected $listeners = ['updateDescription'];
+
+    // Method to update the description when the event is triggered
+    public function updateDescription($description)
+    {
+        // Log received description for debugging
+        Log::info('Description received in Livewire:', ['description' => $description]);
+
+        // Update the Livewire description property
+        $this->description = $description;
+    }
+
+
     
     public function mount()
     {
@@ -190,8 +209,8 @@ class Everyone extends Component
     public function submit()
     {
         $validatedData = $this->validate([
-            'category' => 'required|string|max:255',
-            'description' => 'required|string',
+            'category' => 'required|string',
+            'description' => 'required|string|min:150',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
     
@@ -219,24 +238,23 @@ class Everyone extends Component
             $user = Auth::user();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-             // Fetch the manager_id of the current employee
-             $managerId = $employeeDetails->manager_id;
     
-             if (!$managerId) {
-                 FlashMessageHelper::flashError('Manager information not found for the current employee.');
-                 return;
-             }
-     
-             // Check if the authenticated employee is a manager
-             $isManager = DB::table('employee_details')
-                 ->where('manager_id', $employeeId)
-                 ->exists();
-     
-             $postStatus = $isManager ? 'Closed' : 'Pending';
-             $managerId = $isManager ? $employeeId : null;
-             $empId = $isManager ? null : $employeeId;
+            // Fetch the manager_id of the current employee
+            $managerId = $employeeDetails->manager_id;
     
-           
+            if (!$managerId) {
+                FlashMessageHelper::flashError('Manager information not found for the current employee.');
+                return;
+            }
+    
+            // Check if the authenticated employee is a manager
+            $isManager = DB::table('employee_details')
+                ->where('manager_id', $employeeId)
+                ->exists();
+    
+            $postStatus = $isManager ? 'Closed' : 'Pending';
+            $managerId = $isManager ? $employeeId : null;
+            $empId = $isManager ? null : $employeeId;
     
             $hrDetails = Hr::where('hr_emp_id', $user->hr_emp_id)->first();
     
@@ -252,24 +270,26 @@ class Everyone extends Component
                 'status' => $postStatus,
             ]);
     
+            // Log the description for debugging
+            Log::info('Description:', ['description' => $this->description]);
+            Log::info("Post data stored:", $validatedData);
             // Send email notification to manager
             $managerDetails = EmployeeDetails::where('emp_id', $employeeDetails->manager_id)->first();
             if ($managerDetails && $managerDetails->email) {
                 $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
-               
-                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+                Mail::to($managerDetails->email)->send(new PostCreatedNotification($post, $employeeDetails, $managerName));
             }
-           // Optionally, send email to HR
+    
+            // Optionally, send email to HR
             if ($hrDetails && $hrDetails->email) {
                 $managerName = $managerDetails->first_name . ' ' . $managerDetails->last_name;
-                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails,$managerName));
+                Mail::to($hrDetails->email)->send(new PostCreatedNotification($post, $employeeDetails, $managerName));
             }
     
-    
             // Reset form fields and redirect to posts page
-            $this->reset(['category', 'description', 'file_path']);
+            $this->reset(['category', 'file_path']);
             FlashMessageHelper::flashSuccess('Post created successfully!');
-             // Update 'manager.posts' to the actual route name for the posts page
+            // Update 'manager.posts' to the actual route name for the posts page
     
         } catch (\Illuminate\Validation\ValidationException $e) {
             $this->setErrorBag($e->validator->getMessageBag());
@@ -281,6 +301,7 @@ class Everyone extends Component
             FlashMessageHelper::flashError('An error occurred while creating the post. Please try again.');
         }
     }
+    
     
     
     

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('from_date');
             $table->date('to_date');
             $table->string('delegate');
+            $table->tinyInteger('status')->default(1);
             $table->timestamps();
         });
     }
