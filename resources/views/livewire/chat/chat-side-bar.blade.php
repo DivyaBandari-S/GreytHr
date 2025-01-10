@@ -3,11 +3,11 @@
         <img src="images/images/logo.svg" alt="">
     </a> -->
     <div class="menus">
-        <!-- <a href="#">
+        <a href="/">
             <span class="material-icons">
                 home
             </span>
-        </a> -->
+        </a>
         <a href="/chat">
             <span class="material-icons">
                 question_answer
@@ -43,7 +43,7 @@
 
             <span class="dot"></span>
         </a> -->
-        <a href="#">
+        <a href="/calendar">
             <span class="material-icons">
                 event_note
             </span>
@@ -51,7 +51,7 @@
 
             <!-- <span class="dot"></span> -->
         </a>
-        <a id="settings-link" href="#" onclick="openSetting()">
+        <a id="settings-link" href="/Settings">
             <span class="material-icons">
                 settings
             </span>
