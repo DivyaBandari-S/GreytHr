@@ -1704,7 +1704,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $isOnFullDayLeave=$this->isEmployeeFullDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id);
                 $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id)['sessionCheck'];
                 $isOnHalfDayLeaveforDifferentSessions=$this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
-                if(!$isOnLeave&&!$isOnFullDayLeave&&!$isOnHalfDayLeaveforDifferentSessions||($isOnHalfDayLeave==true))
+                if(!$isOnLeave && !$isOnFullDayLeave && $isOnHalfDayLeave && !$isOnHalfDayLeaveforDifferentSessions)
                 {
                     $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
                     $totalWorkHrs =$this->calculateWorkHrsForAbsentEmployees($date->format('Y-m-d'));
@@ -1718,21 +1718,13 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     }
                 
                     Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
-                    if ($isOnHalfDayLeave==true || ($totalMinutes == 0)||$totalWorkHrs==null) {
-                        $absentDays+=0.5;
-                        // Log the increment of absent days
-                        Log::info('Absent days count incremented to: ' . $absentDays);
-                    }
-                    elseif ($isAbsent || ($totalMinutes == 0)||$totalWorkHrs==null) {
+                   if ($isAbsent || ($totalMinutes == 0)||$totalWorkHrs==null) {
                         $absentDays++;
                         // Log the increment of absent days
                         Log::info('Absent days count incremented to: ' . $absentDays);
                     }
-                    elseif(($totalMinutes < 270))
-                    {
-                        $absentDays+=0.5;
-                        Log::info('Absent days count incremented to: ' . $absentDays);
-                    }
+
+                    
                     
 
 
