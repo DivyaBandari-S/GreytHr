@@ -2240,7 +2240,14 @@ input[type="date"]::before {
 
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
-
+.button-container-for-employee-swipes {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    margin:10px;
+    /* margin-right: 250px; */
+    /* Adjust as needed for alignment */
+}
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
@@ -2517,7 +2524,7 @@ td {
 .employee-swipes-emp-id {
     font-size: 10px;
     margin-left: 6px;
-    padding-left: 11px;
+   
 }
 
 .employee-swipes-swipe-details-for-signed-employees {
