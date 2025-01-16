@@ -2,34 +2,97 @@
 
 namespace App\Livewire;
 
+use App\Models\EmployeeDetails;
 use Livewire\Component;
 
 class FeedBack extends Component
 {
-    public $activeTab = 'recieved';
     public $searchEmployee = '';
-    public $message = '';
+    public $personalizedMessage = '';
+    public $feedbackType;
+    public $isRequestModalOpen = false; // Controls Request Feedback modal
+    public $isGiveModalOpen = false;    // Controls Give Feedback modal
+    public $selectedEmployee = null; // To store the selected employee
+    public $searchTerm = '';
+    public $employees = []; // This will hold the search results
+    protected $rules = [
+        'searchEmployee' => 'required|string|max:255',
+        'personalizedMessage' => 'required|string',
+    ];
 
-    public function setActiveTab($tab)
+    public function openRequestModal()
     {
-        $this->activeTab = $tab;
+        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->isRequestModalOpen = true;
     }
 
-    public function submitFeedback()
+    public function openGiveModal()
     {
-        // Validate input
-        $this->validate([
-            'searchEmployee' => 'required',
-            'message' => 'required',
-        ]);
+        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->isGiveModalOpen = true;
+    }
 
-        // Process feedback submission (e.g., save to database)
-        // Feedback::create(['employee' => $this->searchEmployee, 'message' => $this->message]);
+    public function closeModal()
+    {
+        $this->isRequestModalOpen = false;
+        $this->isGiveModalOpen = false;
+    }
 
-        // Reset fields and close modal
-        $this->reset(['searchEmployee', 'message']);
-        $this->dispatchBrowserEvent('close-modal', ['modalId' => 'requestFeedbackModal']);
-        session()->flash('success', 'Feedback submitted successfully!');
+
+
+    // This method will run whenever the search input is updated
+    public function updatedSearchEmployee()
+    {
+        // Search query: looking for matches by name or emp_id
+        $this->employees = EmployeeDetails::where('emp_id', 'like', '%' . $this->searchEmployee . '%')
+            ->orWhere('first_name', 'like', '%' . $this->searchEmployee . '%')
+            ->orWhere('last_name', 'like', '%' . $this->searchEmployee . '%')
+            ->get();
+    }
+
+    // This method will set the selected employee
+    public function selectEmployee($employeeId)
+    {
+        $this->selectedEmployee = EmployeeDetails::find($employeeId);
+        $this->searchEmployee = $this->selectedEmployee->first_name; // Optionally, show the selected name in the input field
+        $this->employees = []; // Clear the search results
+    }
+    public function clearSelectedEmployee()
+    {
+        $this->selectedEmployee = null;
+        $this->searchTerm = '';
+    }
+
+    public function saveRequestFeedback()
+    {
+        $this->validate();
+
+        // Save logic for request feedback
+        // Example: Save to the database
+        // RequestFeedback::create([
+        //     'employee' => $this->searchEmployee,
+        //     'message' => $this->personalizedMessage,
+        // ]);
+
+        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->isRequestModalOpen = false;
+        session()->flash('message', 'Request Feedback submitted successfully!');
+    }
+
+    public function saveGiveFeedback()
+    {
+        $this->validate();
+
+        // Save logic for give feedback
+        // Example: Save to the database
+        // GiveFeedback::create([
+        //     'employee' => $this->searchEmployee,
+        //     'message' => $this->personalizedMessage,
+        // ]);
+
+        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->isGiveModalOpen = false;
+        session()->flash('message', 'Give Feedback submitted successfully!');
     }
 
     public function render()
