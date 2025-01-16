@@ -1,4 +1,12 @@
 <div>
+<div class="position-absolute" wire:loading
+        wire:target="dateClicked,openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .date-range-container12-attendance-info {
             margin-right: 62px;
@@ -1393,7 +1401,8 @@ color: #fff;
 
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
-                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton">My Regularisations</a>
+                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton"wire:click="redirectToRegularisation">My Regularisations</a>
+                  
             </div>
         </div>
 
@@ -1504,12 +1513,12 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
-                    <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
+                    <a href="#" class="attendanceperiod" wire:click="openattendanceperiodModal">
                         Insights
                     </a>
                 </div>
             </div>
-            @if ($öpenattendanceperiod==true)
+            @if ($openattendanceperiod==true)
             
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
@@ -1520,8 +1529,8 @@ color: #fff;
 
                             </p>
 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
-                                <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
+                            <button type="button" class="close" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
+                              <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1532,12 +1541,12 @@ color: #fff;
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="start_date_for_insights" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="fromDate" wire:model="startDateForInsights" value="{{ $start_date_for_insights }}" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
                                         Date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="toDate" value="{{ $to_date }}" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
                             <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
@@ -2207,8 +2216,10 @@ color: #fff;
             </div>
             @endif
             @if($defaultfaCalendar==0)
-            @livewire('attendance-table')
-
+            @livewire('attendance-table', [
+        'startDateForInsights' => $startDateForInsights, 
+        'toDate' => $toDate
+    ], key($startDateForInsights . $toDate))
             @endif
             <div class="col-md-5 custom-scrollbar-for-right-side-container">
                 @if($defaultfaCalendar==1)
