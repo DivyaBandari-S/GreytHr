@@ -557,7 +557,7 @@
                 </div>
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="mb-0">
-                        <i class="fas fa-calendar-day" style="color: #778899;"></i>
+                      <img src="{{ asset('images/half-day-working-status.png') }}" height="20" width="20">
                     </p>
                     <p class="m-1 legend-text">Half Day</p>
                 </div>
@@ -915,14 +915,15 @@
                                 $inTime = \Carbon\Carbon::parse($inRecord->swipe_time);
                                 $outTime = \Carbon\Carbon::parse($outRecord->swipe_time);
                                 $differenceInMinutes = $inTime->diffInMinutes($outTime);
-
+                                
 
                                 // Format the difference as "HH:MM"
                                 //$hours = str_pad($difference->h, 2, '0', STR_PAD_LEFT);
                                 //$minutes = str_pad($difference->i, 2, '0', STR_PAD_LEFT);
                             @endphp
                              @if($differenceInMinutes <= 270)
-                               <i class="fas fa-calendar-day" style="color: #778899;"title="Half Day"></i>
+                             <img src="{{ asset('images/half-day-working-status.png') }}" title="Half Day" height="20" width="20">
+                               
                              @elseif($differenceInMinutes > 270)
                                <p style=" color:#666;font-weight:500;"title="Present">P </p>
                              @endif

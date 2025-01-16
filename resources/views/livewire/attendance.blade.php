@@ -2167,7 +2167,7 @@ color: #fff;
                         </div>
                         <div class="col-md-3 mb-2 pe-0" style="display: flex">
                             <p class="mb-0">
-                                <i class="fas fa-calendar-day"></i>
+                              <img src="{{ asset('images/half-day-working-status.png') }}"  height="20" width="20">
                             </p>
                             <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
                         </div>
