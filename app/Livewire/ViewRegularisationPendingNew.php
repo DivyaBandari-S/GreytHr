@@ -166,7 +166,6 @@ class ViewRegularisationPendingNew extends Component
     }
     public function approve($id)
     {
-  
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');

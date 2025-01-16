@@ -1,4 +1,12 @@
 <div>
+<div class="position-absolute" wire:loading
+        wire:target="updateDate,downloadFileforSwipes">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
 <style>
     .my-button {
             margin: 0px;
@@ -52,6 +60,7 @@
             border-color: rgb(2, 17, 79);
             /* Change text color to white when clicked */
         }
+        
 </style>
     <body>
         <div>
@@ -59,6 +68,7 @@
                 <div class="dropdown-container1-employee-swipes">
                     <label for="start_date" style="color: #666;font-size:12px;">Select Date<span style="color: red;">*</span>:</label><br />
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate"  max="{{ now()->toDateString() }}">
+                      
                 </div>
                 <!-- <div class="dropdown-container1-employee-swipes">
                         <label for="end_date" style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br />

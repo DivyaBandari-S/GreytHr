@@ -1376,134 +1376,7 @@ color: #fff;
     $totalexcessHoursWorked=0;
     $totalexcessMinutesWorked=0;
     @endphp
-     @if ($öpenattendanceperiod==true)
-            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-                <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
-                    <div class="modal-content attendance-period">
-                        <div class="modal-header" style="background-color: rgb(2, 17, 79); height: 50px;display: flex; justify-content: space-between; align-items: center;">
-                            <p class="modal-title attendance-period-header" style="color:white;">
-                                {{$modalTitle}}
-                            </p>
-
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
-                                <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-row" style="display: flex; justify-content: center;">
-                                <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
-                                    <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
-                                        Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="start_date_for_insights" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
-                                </div>
-                                <div class="form-group col-md-3 col-sm-6">
-                                    <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
-                                        Date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
-                                </div>
-                            </div>
-                            <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
-
-                            <div class="table-responsive">
-
-
-                                <table class="attendence-period-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="insights-for-attendance-period-avg-working-hours">Avg. Work Hrs</th>
-                                            <th class="insights-for-attendance-period-avg-working-hours">Avg. Actual Work Hrs</th>
-                                            <th class="insights-for-attendance-period">Penalty Days</th>
-                                            <th class="insights-for-attendance-period">Late In</th>
-                                            <th class="insights-for-attendance-period">Early Out</th>
-                                            <th class="insights-for-attendance-period">Leave Taken</th>
-                                            <th class="insights-for-attendance-period">Absent Days</th>
-                                            <th class="insights-for-attendance-period">Exception Days</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td class="insights-for-attendance-period-avg-working-hours">
-                                                      <section class="text-center">
-                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
-                                                                        <div>
-                                                                                    @if($avgWorkHoursPreviousMonth==0)
-                                                                                        <span class="text-success ng-star-inserted" style="font-size:10px;">
-                                                                                                    </span>
-                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;">
-                                                                                                    </span>
-                                                                                    
-                                                                                    @elseif($percentageinworkhrsforattendance>0)
-                                                                                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
-                                                                                                    </span>
-                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                                                                                    </span>
-                                                                                        @elseif($percentageinworkhrsforattendance<0)
-                                                                                            <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
-                                                                                                </span>
-                                                                                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                                                                                </span> 
-                                                                                            @endif
-                                     
-                                                                                   </div>
-
-                                                     </section>
-                                            </td>
-                                            <td class="insights-for-attendance-period-avg-working-hours">
-
-                                            <section class="text-center">
-                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHrsForCurrentMonth}}</p>
-                                                                        <div>
-                                                                                    @if($avgWorkHoursPreviousMonth==0)
-                                                                                        <span class="text-success ng-star-inserted" style="font-size:10px;">
-                                                                                                    </span>
-                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;">
-                                                                                                    </span>
-                                                                                    
-                                                                                    @elseif($percentageinworkhrsforattendance>0)
-                                                                                                    <span class="text-success ng-star-inserted" style="font-size:10px;"> +{{intval($percentageinworkhrsforattendance)}}%
-                                                                                                    </span>
-                                                                                                    <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                                                                                    </span>
-                                                                                        @elseif($percentageinworkhrsforattendance<0)
-                                                                                            <span class="text-danger ng-star-inserted" style="font-size:10px;"> {{intval($percentageinworkhrsforattendance)}}%
-                                                                                                </span>
-                                                                                                <span class="text-muted" style="font-size:10px;margin-left:0px;"> From {{ \Carbon\Carbon::createFromDate($year, $month, 1)->subMonth()->format('F') }}
-                                                                                                </span> 
-                                                                                            @endif
-                                     
-                                                                                   </div>
-
-                                                     </section>
-                                            </td>
-                                            <td class="insights-for-attendance-period">0</td>
-                                            <td class="insights-for-attendance-period">{{$totalLateInSwipes}}</td>
-                                            <td class="insights-for-attendance-period">{{$totalnumberofEarlyOut}}</td>
-                                            <td class="insights-for-attendance-period">{{$totalnumberofLeaves}}</td>
-                                            <td class="insights-for-attendance-period">{{$totalnumberofAbsents}}</td>
-                                            <td class="insights-for-attendance-period">-</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                            </div>
-
-                            <div class="row m-0 mt-3 average-first-and-last-time">
-                                <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted}}</span></p>
-                                </div>
-                                <div class="col-md-3 col-sm-6 p-0">
-                                    <p style="font-size:12px;color:#778899;">Avg Last Out Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$totalDurationFormatted1}}</span></p>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal-backdrop fade show blurred-backdrop"></div>
-        @endif
+    
     <div class="date-filters p-0 row d-flex align-items-center mb-2">
         <div class="col-md-3 m-0">
             <div class="fromDatefield d-flex align-items-center gap-2">
@@ -1657,10 +1530,7 @@ color: #fff;
            ;}}">{{\Carbon\Carbon::createFromFormat('H:i:s', $employeeShiftDetails->shift_start_time)->format('H:i A') }} to {{\Carbon\Carbon::createFromFormat('H:i:s', $employeeShiftDetails->shift_end_time)->format('H:i A') }} </td>
 
                         @if($distinctDates->has($dateKeyForLookup))
-                        <td style="font-weight:normal;font-size:12px;padding-top:16px; background-color: 
-           {{!$isWeekend && !$holidayNote && !$isOnLeave && (isset($totalWorkedMinutes) && ($totalWorkedMinutes > 240 && $totalWorkedMinutes < 480))?
-               'white':'none'
-           ;}}">
+                        <td style="font-weight:normal;font-size:12px;padding-top:16px; ">
                             @if($isDate&&!$isWeekend&&!$isOnLeave&&!$holidayNote)
                             {{ date('H:i', strtotime($record['first_in_time'])) }}
                             @else
