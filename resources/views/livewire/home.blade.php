@@ -9,7 +9,7 @@
     </div>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
-            <div class="col-12 col-md-8 mb-3">
+            <div class="col-12 col-md-9 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content  row p-0 m-0">
                         <div class="col-md-4 p-0 ps-3 pt-4">
@@ -31,7 +31,7 @@
 
                             <div class="mb-4 homeBaneerCard row m-0">
 
-                                <div class="col-md-5 pe-0">
+                                <div class="col-md-6 pe-0">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
                                     </div>
@@ -57,7 +57,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-7 ps-0 pt-2 text-end">
+                                <div class="col-md-6 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
                                             // Fetch shift times
@@ -148,7 +148,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-3">
                 <div class="cardReport">
                     <button class="mail">
                         <span class="rounded-pill home-reportTo"> Reports To </span>
@@ -551,6 +551,9 @@
                     </div>
                 </a>
             </div>
+
+            
+
         </div>
         <div class="col-md-5 mb-4 ">
             @if ($ismanager)
@@ -697,7 +700,7 @@
                     </a>
                 </div>
             @endif
-            <div class="payslip-card">
+            <div class="payslip-card mb-4">
                 <div class="px-3 py-2">
                     <p class="payslip-card-title">Payslip</p>
 
@@ -767,6 +770,65 @@
                         </div>
                     </a>
                 </div>
+            </div>
+
+            <div class="payslip-card mb-4">
+                <p class="payslip-card-title">Praise</p>
+                <!-- <p class="payslip-small-desc">
+                    Kindly click on the Arrow button to apply a leave.
+                </p> -->
+
+                <div class="container mt-4 p-0">
+                    <div class="timeline">
+                        <!-- Work Anniversary -->
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-primary text-white">
+                                <i class="bi bi-currency-rupee"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="fs12">Money Maker Medal</h6>
+                                <p class="timeline-date">Jan 24, 2020</p>
+                            </div>
+                        </div>
+
+                        <!-- Pay Increase -->
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-warning text-dark">
+                                <i class="bi bi-watch"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="fs12">Relentless Cogwheel</h6>
+                                <p class="timeline-date">Jan 24, 2020</p>
+                            </div>
+                        </div>
+
+                        <!-- Praise -->
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-danger text-white">
+                                <i class="bi bi-puzzle-fill"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="fs12">Problem Solver</h6>
+                                <p class="timeline-date">Jan 24, 2020</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-icon bg-primary text-white">
+                                <i class="bi bi-fire"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h6 class="fs12">Torch Bearer</h6>
+                                <p class="timeline-date">Jan 24, 2020</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
             </div>
 
         </div>
