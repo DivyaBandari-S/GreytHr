@@ -154,6 +154,7 @@ class AttendenceMasterDataNew extends Component
         $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth1)
             ->whereYear('swipe_records.created_at', $AttendanceYear)
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)')
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
@@ -161,6 +162,7 @@ class AttendenceMasterDataNew extends Component
             ->get()
             ->keyBy('emp_id')
             ->toArray();
+        
 
         Log::info('Swipe record counts fetched', ['distinctDatesMapCount' => $distinctDatesMapCount]);
 
@@ -314,6 +316,7 @@ class AttendenceMasterDataNew extends Component
         $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
             ->whereMonth('created_at', $currentMonth1) // December
             ->whereYear('created_at', $this->selectedYear) // December
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->selectRaw('DISTINCT emp_id, DATE(created_at) as distinct_date ')
             ->get()
             ->groupBy('emp_id')
@@ -357,6 +360,7 @@ class AttendenceMasterDataNew extends Component
             $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth)
             ->whereYear('swipe_records.created_at', $this->selectedYear)
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') // Exclude Sunday (1) and Saturday (7)
             ->whereNotIn(DB::raw('DATE(swipe_records.created_at)'), $holidays) // Exclude holidays
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
@@ -373,7 +377,7 @@ class AttendenceMasterDataNew extends Component
             })
             ->keyBy('emp_id')
             ->toArray();
-       
+            
                     
         
         
