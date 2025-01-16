@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('feed_back_models', function (Blueprint $table) {
             $table->id();
+            $table->string('feedback_type');
+            $table->string('emp_id');
+            $table->text('message');
+            $table->string('feedback_by');
             $table->timestamps();
         });
     }
