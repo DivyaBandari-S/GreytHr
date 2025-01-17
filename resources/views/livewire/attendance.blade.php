@@ -1684,10 +1684,10 @@ color: #fff;
                                     <div>
 
                                        @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend)
-                                                <div style="background-color:#edfaed;margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#edfaed' : ($day['halfdaypresentforsession2'] ? '#fcf0f0' : '') }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
                                                          <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
-                                                        <span class="text-secondary"title="Present">P</span>
+                                                        <span style="color:   {{ $day['halfdaypresentforsession1'] ? '#7f8fa4' : ($day['halfdaypresentforsession2'] ? '#f66' : '') }}"title="{{ $day['halfdaypresentforsession1'] ? 'Present' : ($day['halfdaypresentforsession2'] ? 'Absent' : '') }}">{{ $day['halfdaypresentforsession1'] ? 'P' : ($day['halfdaypresentforsession2'] ? 'A' : '') }}</span>
                                                         
                                                 </div>
                                                 
@@ -1850,7 +1850,7 @@ color: #fff;
 
                                         @elseif($day['status']=='HP'&&!$day['isToday'])
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;">
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};;margin: -3px;">
                                             <!-- Render your grey circle -->
                                             @if ($isWeekend&&$isCurrentMonth)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
@@ -1899,8 +1899,8 @@ color: #fff;
 
                                                 @if($day['status']=='HP')
                                                 
-                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:#f66;padding-left: 39px;margin-top: -5px;"title="Absent">
-                                                    A
+                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:{{ $day['halfdaypresentforsession1'] ? '#f66' : ($day['halfdaypresentforsession2'] ? '#7f8fa4' : '') }};padding-left: 39px;margin-top: -5px;"title="{{ $day['halfdaypresentforsession1'] ? 'Absent' : ($day['halfdaypresentforsession2'] ? 'Present' : '') }}">
+                                                     {{ $day['halfdaypresentforsession1'] ? 'A' : ($day['halfdaypresentforsession2'] ? 'P' : '') }}
                                                 </span>
                                                 @endif
                                                 
@@ -1921,7 +1921,7 @@ color: #fff;
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($day['status']=='HP')
-                                                <div style="background-color:#fcf0f0;">
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                         <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
                                                     </span>
@@ -2165,18 +2165,26 @@ color: #fff;
                             </p>
                             <p class="m-1 pb-2 attendance-legend-text">Holiday</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex;margin-left:-10px">
                             <p class="mb-0">
-                              <img src="{{ asset('images/half-day-working-status.png') }}"  height="20" width="20">
+                              <img src="{{ asset('images/half-day-session1-present.png') }}"  height="20" width="20">
                             </p>
-                            <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
+                            <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 1)</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-battery-empty"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
-                        </div>
+                        <div class="d-flex" style="gap: 10px;"> 
+                            <div class="col-md-3 mb-2" style="display: flex;margin-left:-2px">
+                                <p class="mb-0">
+                                <img src="{{ asset('images/half-day-session2-present.png') }}"  height="20" width="20">
+                                </p>
+                                <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 2)</p>
+                            </div>
+                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                                <p class="mb-0">
+                                    <i class="fas fa-battery-empty"></i>
+                                </p>
+                                <p class="m-1 attendance-legend-text">IT Maintanance</p>
+                            </div>
+                          </div>   
                     </div>
                     @if(count($leaveTypes)>0)
                     <div class="row m-0 mb-3">
