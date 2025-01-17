@@ -35,6 +35,7 @@ class Attendance extends Component
 
     public $city;
 
+    public $employeeShiftDetailsForCalendar;
     public $postal_code;
     public $totalWorkingPercentage;
     public $minutesFormatted;
@@ -1128,6 +1129,14 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $this->leaveTypes=[];
             $leavestatusforsession1=null;
             $leavestatusforsession2=null;
+            $this->employeeShiftDetailsForCalendar = DB::table('employee_details')
+            ->join('company_shifts', function($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                     ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+            })
+            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
+            ->first();
             Log::info('Welcome to generateCalendar method');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             Log::info('Employee ID:', ['employeeId' => $employeeId]);
@@ -1188,7 +1197,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'onHalfDayLeave'=>'',
                             'onFullDayLeave'=>'',
                             'onleave' => '',
-                            'halfdaypresent'=>'',
+                            'halfdaypresentforsession1'=>false,
+                            'halfdaypresentforsession2'=>false,
                             'session2leave'=>null,
 
                         ];
@@ -1199,6 +1209,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         $isOnSecondSessionLeave=[];
                         $isAbsentFor = false;
                         $isHalfDayPresent = false;
+                        $isHalfDayPresentForSession1 = false;
+                        $isHalfDayPresentForSession2 = false;
                         $leaveTypeForSession1=null;
                         $leaveTypeForSession2=null;
                         $halfdaypresent=null;
@@ -1313,15 +1325,46 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                 if ($inSwipeTime && $outSwipeTime) {
                                     $inTime = Carbon::parse($inSwipeTime->swipe_time);
                                     $outTime = Carbon::parse($outSwipeTime->swipe_time);
-
+ 
+                                
+                                    $shiftStartTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_start_time);
+                                    $shiftEndTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_end_time);
+                                    $startTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                        $shiftStartTimeForCalendar->hour,
+                                        $shiftStartTimeForCalendar->minute,
+                                        $shiftStartTimeForCalendar->second
+                                    );
+                                    // 10:00 AM
+                $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30);                    
+                $endTimeForSession1 = Carbon::createFromTime(
+                                        $shiftEndTimeForSession1->hour,
+                                        $shiftEndTimeForSession1->minute,
+                                        $shiftEndTimeForSession1->second
+                                    );
+                $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);                      
+                $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
+                $endTimeForSession2 = Carbon::createFromTime(
+                        $shiftEndTimeForCalendar->hour,
+                        $shiftEndTimeForCalendar->minute,
+                        $shiftEndTimeForCalendar->second
+                    );
                                     $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
                                     $hours = floor($timeDifference / 60);
                                     $minutes = $timeDifference % 60;
                                     if ($timeDifference == 0) {
                                         $isAbsentFor = true;
                                     } elseif ($timeDifference < 270) {
-                                        // Between 4 hours and 8 hours, mark as half-day present
                                         $isHalfDayPresent = true;
+                                        if($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1))
+                                        {
+                                            $isHalfDayPresentForSession1 = true;
+                                        }
+                                        elseif($inTime->gte($startTimeForSession2) && $outTime->lte($endTimeForSession2))
+                                        {
+                                            $isHalfDayPresentForSession2 = true;
+                                        }
+                                        // Between 4 hours and 8 hours, mark as half-day present
+                                        
                                     }
 
                                     Log::info('Time difference for Date: ' . $date->toDateString() . ' is ' . sprintf('%02d', $hours) . ':' . sprintf('%02d', $minutes));
@@ -1527,6 +1570,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'status' => $status,
                             'leavestatusforsession1'=>$leavestatusforsession1,
                             'leavestatusforsession2'=>$leavestatusforsession2,
+                            'halfdaypresentforsession1'=>$isHalfDayPresentForSession1,
+                            'halfdaypresentforsession2'=>$isHalfDayPresentForSession2,
                             'halfdaypresent'=>$halfdaypresent,
                             'session2leave'=>$isOnSecondSessionLeave,
 
@@ -1547,6 +1592,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'status' => '',
                             'leavestatusforsession1'=>null,
                             'leavestatusforsession2'=>null,
+                            'halfdaypresentforsession1'=>false,
+                            'halfdaypresentforsession2'=>false,
                             'halfdaypresent'=>'',
                             'onFullDayLeave'=>'',
                             'session2leave'=>null,

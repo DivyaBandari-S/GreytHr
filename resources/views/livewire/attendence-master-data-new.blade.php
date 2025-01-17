@@ -854,6 +854,18 @@
                         if ($distinctDate === $fullDate) {
 
                         $present=1;
+                        $employeeShiftDetails = \DB::table('employee_details')
+                                        ->join('company_shifts', function ($join) {
+                                            $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                                                ->whereJsonContains('employee_details.company_id', \DB::raw('JSON_QUOTE(company_shifts.company_id)'));
+                                        })
+                                        ->select(
+                                            'employee_details.*',
+                                            'company_shifts.shift_start_time',
+                                            'company_shifts.shift_end_time'
+                                        )
+                                        ->where('employee_details.emp_id', $e->emp_id) // Replace with the desired employee ID
+                                        ->first();
                         $inRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','IN')->where('emp_id',$e->emp_id)->first();
                         $outRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','OUT')->where('emp_id',$e->emp_id)->orderByDesc('created_at')->first();
                          
@@ -905,7 +917,9 @@
                         <p style=" color:#666;font-weight:500;"title="Leave">L</p>
                         @elseif($present==1&&!empty($outRecord))
                            @php
-                                
+                                $shiftStartTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time);
+                                $shiftEndTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time);
+
 
                                 // Format swipe times to "H:i"
                                 $formattedInTime = \Carbon\Carbon::parse($inRecord->swipe_time)->format('H:i');
@@ -914,6 +928,25 @@
                                 // Calculate time difference
                                 $inTime = \Carbon\Carbon::parse($inRecord->swipe_time);
                                 $outTime = \Carbon\Carbon::parse($outRecord->swipe_time);
+                                $startTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                                        $shiftStartTime->hour,
+                                                        $shiftStartTime->minute,
+                                                        $shiftStartTime->second
+                                                    );
+                                                    // 10:00 AM
+                                $shiftEndTimeForSession1 = $shiftStartTime->copy()->addHours(4)->addMinutes(30);                    
+                                $endTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                                        $shiftEndTimeForSession1->hour,
+                                                        $shiftEndTimeForSession1->minute,
+                                                        $shiftEndTimeForSession1->second
+                                                    );
+                                $shiftStartTimeForSession2 = $shiftStartTime->copy()->addHours(4)->addMinutes(31);                      
+                                $startTimeForSession2 = \Carbon\Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
+                                $endTimeForSession2 = \Carbon\Carbon::createFromTime(
+                                        $shiftEndTime->hour,
+                                        $shiftEndTime->minute,
+                                        $shiftEndTime->second
+                                    );
                                 $differenceInMinutes = $inTime->diffInMinutes($outTime);
                                 
 
@@ -922,8 +955,12 @@
                                 //$minutes = str_pad($difference->i, 2, '0', STR_PAD_LEFT);
                             @endphp
                              @if($differenceInMinutes <= 270)
-                             <img src="{{ asset('images/half-day-working-status.png') }}" title="Half Day" height="20" width="20">
-                               
+                              @if($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1))
+
+                                <img src="{{ asset('images/half-day-session1-present.png') }}" title="Half Day For Session-1" height="20" width="20">
+                              @elseif($inTime->gte($startTimeForSession2) && $outTime->lte($endTimeForSession2))
+                                <img src="{{ asset('images/half-day-session2-present.png') }}" title="Half Day For Session-2" height="20" width="20">
+                              @endif
                              @elseif($differenceInMinutes > 270)
                                <p style=" color:#666;font-weight:500;"title="Present">P </p>
                              @endif
