@@ -1,4 +1,12 @@
 <div>
+<div class="position-absolute" wire:loading
+        wire:target="dateClicked,openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .date-range-container12-attendance-info {
             margin-right: 62px;
@@ -1393,7 +1401,8 @@ color: #fff;
 
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
-                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton">My Regularisations</a>
+                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton"wire:click="redirectToRegularisation">My Regularisations</a>
+                  
             </div>
         </div>
 
@@ -1504,12 +1513,12 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
-                    <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
+                    <a href="#" class="attendanceperiod" wire:click="openattendanceperiodModal">
                         Insights
                     </a>
                 </div>
             </div>
-            @if ($öpenattendanceperiod==true)
+            @if ($openattendanceperiod==true)
             
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
@@ -1520,8 +1529,8 @@ color: #fff;
 
                             </p>
 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
-                                <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
+                            <button type="button" class="close" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
+                              <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1532,12 +1541,12 @@ color: #fff;
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="start_date_for_insights" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="fromDate" wire:model="startDateForInsights" value="{{ $start_date_for_insights }}" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
                                         Date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="toDate" value="{{ $to_date }}" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
                             <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
@@ -1675,10 +1684,10 @@ color: #fff;
                                     <div>
 
                                        @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend)
-                                                <div style="background-color:#edfaed;margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#edfaed' : ($day['halfdaypresentforsession2'] ? '#fcf0f0' : '') }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
                                                          <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
-                                                        <span class="text-secondary"title="Present">P</span>
+                                                        <span style="color:   {{ $day['halfdaypresentforsession1'] ? '#7f8fa4' : ($day['halfdaypresentforsession2'] ? '#f66' : '') }}"title="{{ $day['halfdaypresentforsession1'] ? 'Present' : ($day['halfdaypresentforsession2'] ? 'Absent' : '') }}">{{ $day['halfdaypresentforsession1'] ? 'P' : ($day['halfdaypresentforsession2'] ? 'A' : '') }}</span>
                                                         
                                                 </div>
                                                 
@@ -1841,7 +1850,7 @@ color: #fff;
 
                                         @elseif($day['status']=='HP'&&!$day['isToday'])
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;">
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};;margin: -3px;">
                                             <!-- Render your grey circle -->
                                             @if ($isWeekend&&$isCurrentMonth)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
@@ -1890,8 +1899,8 @@ color: #fff;
 
                                                 @if($day['status']=='HP')
                                                 
-                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:#f66;padding-left: 39px;margin-top: -5px;"title="Absent">
-                                                    A
+                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:{{ $day['halfdaypresentforsession1'] ? '#f66' : ($day['halfdaypresentforsession2'] ? '#7f8fa4' : '') }};padding-left: 39px;margin-top: -5px;"title="{{ $day['halfdaypresentforsession1'] ? 'Absent' : ($day['halfdaypresentforsession2'] ? 'Present' : '') }}">
+                                                     {{ $day['halfdaypresentforsession1'] ? 'A' : ($day['halfdaypresentforsession2'] ? 'P' : '') }}
                                                 </span>
                                                 @endif
                                                 
@@ -1912,7 +1921,7 @@ color: #fff;
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @elseif($day['status']=='HP')
-                                                <div style="background-color:#fcf0f0;">
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                         <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
                                                     </span>
@@ -2156,18 +2165,26 @@ color: #fff;
                             </p>
                             <p class="m-1 pb-2 attendance-legend-text">Holiday</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex;margin-left:-10px">
                             <p class="mb-0">
-                                <i class="fas fa-calendar-day"></i>
+                              <img src="{{ asset('images/half-day-session1-present.png') }}"  height="20" width="20">
                             </p>
-                            <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
+                            <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 1)</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-battery-empty"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
-                        </div>
+                        <div class="d-flex" style="gap: 10px;"> 
+                            <div class="col-md-3 mb-2" style="display: flex;margin-left:-2px">
+                                <p class="mb-0">
+                                <img src="{{ asset('images/half-day-session2-present.png') }}"  height="20" width="20">
+                                </p>
+                                <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 2)</p>
+                            </div>
+                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                                <p class="mb-0">
+                                    <i class="fas fa-battery-empty"></i>
+                                </p>
+                                <p class="m-1 attendance-legend-text">IT Maintanance</p>
+                            </div>
+                          </div>   
                     </div>
                     @if(count($leaveTypes)>0)
                     <div class="row m-0 mb-3">
@@ -2207,8 +2224,10 @@ color: #fff;
             </div>
             @endif
             @if($defaultfaCalendar==0)
-            @livewire('attendance-table')
-
+            @livewire('attendance-table', [
+        'startDateForInsights' => $startDateForInsights, 
+        'toDate' => $toDate
+    ], key($startDateForInsights . $toDate))
             @endif
             <div class="col-md-5 custom-scrollbar-for-right-side-container">
                 @if($defaultfaCalendar==1)

@@ -166,7 +166,6 @@ class ViewRegularisationPendingNew extends Component
     }
     public function approve($id)
     {
-  
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');
@@ -196,7 +195,8 @@ class ViewRegularisationPendingNew extends Component
       
         $regularisationEntries = json_decode($item['regularisation_entries'], true);
         $count_of_regularisations=count($regularisationEntries);
-        
+        $this->closeApproveModal();
+        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');  
         if (!empty($regularisationEntries) && is_array($regularisationEntries)) {
             
             for($i=0;$i<$count_of_regularisations;$i++) {
@@ -250,8 +250,7 @@ class ViewRegularisationPendingNew extends Component
         
         $this->countofregularisations--;
         $this->remarks='';
-        $this->closeApproveModal();
-        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
+      
         Notification::create([
             'emp_id' => $managerId,
           

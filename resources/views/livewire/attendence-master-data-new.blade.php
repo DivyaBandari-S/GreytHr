@@ -557,7 +557,7 @@
                 </div>
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="mb-0">
-                        <i class="fas fa-calendar-day" style="color: #778899;"></i>
+                      <img src="{{ asset('images/half-day-working-status.png') }}" height="20" width="20">
                     </p>
                     <p class="m-1 legend-text">Half Day</p>
                 </div>
@@ -604,9 +604,50 @@
                     $found = false;
                     @endphp
                     @foreach($DistinctDatesMapCount as $empId=>$d1)
+                    
+
+                    @foreach ($DistinctDatesMap as $empId => $distinctDates)
+
+
+                        @if($empId==$e->emp_id)
+
+                            @php
+                            $decreaseincount=0;
+                            foreach ($distinctDates as $distinctDate) {
+
+                            // Extract date part from created_at and distinctDate
+
+                            $createdAtDate = date('Y-m-d', strtotime($e->created_at));
+
+
+                            // Your logic for each distinct date
+                            if ($distinctDate === $fullDate) {
+
+                            
+                            $inRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','IN')->where('emp_id',$e->emp_id)->first();
+                            $outRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','OUT')->where('emp_id',$e->emp_id)->orderByDesc('created_at')->first();
+                            $formattedInTime = Carbon::parse($inRecord->swipe_time)->format('H:i');
+                            $formattedOutTime = Carbon::parse($outRecord->swipe_time)->format('H:i');
+                            $inTime = Carbon::parse($inRecord->swipe_time);
+                            $outTime = Carbon::parse($outRecord->swipe_time);
+                            $differenceInMinutes = $inTime->diffInMinutes($outTime);
+                                if($outRecord==null)
+                                {
+                                   $decreaseincount+=1;
+                                }
+                                elseif($differenceInMinutes <= 270)
+                                {
+                                    $decreaseincount+=0.5;
+                                }
+                            }
+                            }
+                            @endphp
+
+                        @endif
+                    @endforeach
                     @if($empId ==$emp->emp_id)
 
-                    <td>{{$d1['date_count']}}</td>
+                    <td>{{$d1['date_count']}}and{{$decreaseincount}}</td>
                     @php
                     $found = true;
                     @endphp
@@ -634,10 +675,65 @@
 
                     @endphp
                     @foreach($DistinctDatesMapCount as $empId=>$d1)
+                       
+                    
 
                     @if($empId ==$emp->emp_id)
 
-                    <td>{{$d1['date_count']}}</td>
+                    @foreach ($DistinctDatesMap as $empId => $distinctDates)
+ 
+ 
+                        @if($empId==$emp->emp_id)
+ 
+                        @php
+                        
+                         $decreaseincount=0;
+                        foreach ($distinctDates as $distinctDate) {
+                            Illuminate\Support\Facades\Log::info("Processing distinct date: {$distinctDate} for employee ID: {$emp->emp_id}");
+                        // Extract date part from created_at and distinctDate
+ 
+                        
+ 
+ 
+                        // Your logic for each distinct date
+                        
+ 
+                       
+                        $inRecord=App\Models\SwipeRecord::whereDate('created_at',$distinctDate)->where('in_or_out','IN')->where('emp_id',$emp->emp_id)->first();
+                        $outRecord=App\Models\SwipeRecord::whereDate('created_at',$distinctDate)->where('in_or_out','OUT')->where('emp_id',$emp->emp_id)->orderByDesc('created_at')->first();
+                        Illuminate\Support\Facades\Log::info("IN Record:", ['inRecord' => $inRecord]);
+                        Illuminate\Support\Facades\Log::info("OUT Record:", ['outRecord' => $outRecord]);
+                        if($outRecord==null)
+                                    {
+                                        Illuminate\Support\Facades\Log::warning("OUT record is null for date: {$distinctDate}, increasing decreaseincount by 1");
+                                        $decreaseincount+=1;
+                                    }
+                                    else
+                                    {
+                                        $formattedInTime = \Carbon\Carbon::parse($inRecord->swipe_time)->format('H:i');
+                                        $formattedOutTime = \Carbon\Carbon::parse($outRecord->swipe_time)->format('H:i');
+                                        $inTime = \Carbon\Carbon::parse($inRecord->swipe_time);
+                                        $outTime = \Carbon\Carbon::parse($outRecord->swipe_time);
+                                        $differenceInMinutes = $inTime->diffInMinutes($outTime);
+                                        Illuminate\Support\Facades\Log::info("Formatted IN Time: {$formattedInTime}, OUT Time: {$formattedOutTime}");
+                                        Illuminate\Support\Facades\Log::info("Time Difference in Minutes: {$differenceInMinutes}");
+                                        if($differenceInMinutes <= 270)
+                                        {
+                                            Illuminate\Support\Facades\Log::info("Time difference is less than or equal to 270 minutes. Increasing decreaseincount by 0.5");
+                                            $decreaseincount+=0.5;
+                                        }
+                                       
+                                    }
+                         
+                        }
+                        Illuminate\Support\Facades\Log::info("Final decreaseincount for employee ID {$emp->emp_id}: {$decreaseincount}");
+                        @endphp
+ 
+                        @endif
+                        @endforeach
+ 
+ 
+                    <td>{{ $d1['date_count'] - $decreaseincount }} </td>
                     @php
                     $found = true;
                     @endphp
@@ -758,7 +854,21 @@
                         if ($distinctDate === $fullDate) {
 
                         $present=1;
-
+                        $employeeShiftDetails = \DB::table('employee_details')
+                                        ->join('company_shifts', function ($join) {
+                                            $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                                                ->whereJsonContains('employee_details.company_id', \DB::raw('JSON_QUOTE(company_shifts.company_id)'));
+                                        })
+                                        ->select(
+                                            'employee_details.*',
+                                            'company_shifts.shift_start_time',
+                                            'company_shifts.shift_end_time'
+                                        )
+                                        ->where('employee_details.emp_id', $e->emp_id) // Replace with the desired employee ID
+                                        ->first();
+                        $inRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','IN')->where('emp_id',$e->emp_id)->first();
+                        $outRecord=App\Models\SwipeRecord::whereDate('created_at',$fullDate)->where('in_or_out','OUT')->where('emp_id',$e->emp_id)->orderByDesc('created_at')->first();
+                         
                         }
                         }
                         @endphp
@@ -799,19 +909,65 @@
                         @endforeach
 
                         @if ($dayName === 'Sat' || $dayName === 'Sun')
-                        <p style="color:#666;font-weight:500;">O</p>
+                        <p style="color:#666;font-weight:500;"title="Off Day">O</p>
 
                         @elseif($isHoliday==1)
-                        <p style=" color:#666;font-weight:500;">H</p>
+                        <p style=" color:#666;font-weight:500;"title="Holiday">H</p>
                         @elseif($leaveTake==1)
-                        <p style=" color:#666;font-weight:500;">L</p>
-                        @elseif($present==1)
-                        <p style=" color:#666;font-weight:500;">P</p>
+                        <p style=" color:#666;font-weight:500;"title="Leave">L</p>
+                        @elseif($present==1&&!empty($outRecord))
+                           @php
+                                $shiftStartTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time);
+                                $shiftEndTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time);
 
 
+                                // Format swipe times to "H:i"
+                                $formattedInTime = \Carbon\Carbon::parse($inRecord->swipe_time)->format('H:i');
+                                $formattedOutTime = \Carbon\Carbon::parse($outRecord->swipe_time)->format('H:i');
+
+                                // Calculate time difference
+                                $inTime = \Carbon\Carbon::parse($inRecord->swipe_time);
+                                $outTime = \Carbon\Carbon::parse($outRecord->swipe_time);
+                                $startTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                                        $shiftStartTime->hour,
+                                                        $shiftStartTime->minute,
+                                                        $shiftStartTime->second
+                                                    );
+                                                    // 10:00 AM
+                                $shiftEndTimeForSession1 = $shiftStartTime->copy()->addHours(4)->addMinutes(30);                    
+                                $endTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                                        $shiftEndTimeForSession1->hour,
+                                                        $shiftEndTimeForSession1->minute,
+                                                        $shiftEndTimeForSession1->second
+                                                    );
+                                $shiftStartTimeForSession2 = $shiftStartTime->copy()->addHours(4)->addMinutes(31);                      
+                                $startTimeForSession2 = \Carbon\Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
+                                $endTimeForSession2 = \Carbon\Carbon::createFromTime(
+                                        $shiftEndTime->hour,
+                                        $shiftEndTime->minute,
+                                        $shiftEndTime->second
+                                    );
+                                $differenceInMinutes = $inTime->diffInMinutes($outTime);
+                                
+
+                                // Format the difference as "HH:MM"
+                                //$hours = str_pad($difference->h, 2, '0', STR_PAD_LEFT);
+                                //$minutes = str_pad($difference->i, 2, '0', STR_PAD_LEFT);
+                            @endphp
+                             @if($differenceInMinutes <= 270)
+                              @if($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1))
+
+                                <img src="{{ asset('images/half-day-session1-present.png') }}" title="Half Day For Session-1" height="20" width="20">
+                              @elseif($inTime->gte($startTimeForSession2) && $outTime->lte($endTimeForSession2))
+                                <img src="{{ asset('images/half-day-session2-present.png') }}" title="Half Day For Session-2" height="20" width="20">
+                              @endif
+                             @elseif($differenceInMinutes > 270)
+                               <p style=" color:#666;font-weight:500;"title="Present">P </p>
+                             @endif
+                         
                         @else
 
-                        <p style=" color: #f66;font-weight:500;">A</p>
+                        <p style=" color: #f66;font-weight:500;"title="Absent">A</p>
                         @endif
 
                         </td>
