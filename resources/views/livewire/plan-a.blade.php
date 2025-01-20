@@ -4,17 +4,17 @@
         <div _ngcontent-whw-c468="" class="itd-plan-details ng-star-inserted">
             <div _ngcontent-whw-c468="" class="itd-plan-details-alert ng-star-inserted">
                 <alert _ngcontent-whw-c468="" type="info" dismissible="true">
-                    <div role="alert" class="alert alert-info alert-dismissible ng-star-inserted row m-0 pe-3">
+                    <div role="alert" class="alert alert-info alert-dismissible ng-star-inserted row m-0 pe-3 ps-2">
 
                         <!---->
                         <div class="col-8">
-                            <i _ngcontent-whw-c468="" class="alert-icon fa fa-fw fa-warning"></i>
+                            <i _ngcontent-whw-c468="" class="alert-icon fa fa-fw fa-warning me-2"></i>
                             <span _ngcontent-whw-c468="" class="alert-text" style="font-size:12px"> Please note, you're
                                 only calculating your taxes. This is not a submission. </span>
                         </div>
                         <div class="col text-end">
-                            <button type="button" aria-label="Close" class="close ng-star-inserted">
-                                <span aria-hidden="true">×</span>
+                            <button type="button" aria-label="Close" class="btn btn-close" style="padding: 15px 15px; top: 8px; right: 8px;">
+                                <!-- <span aria-hidden="true"></span> -->
                                 <span class="sr-only">Close</span>
                             </button>
                         </div>
@@ -45,18 +45,18 @@
             </div>
             @foreach($employees as $employee )
             <div _ngcontent-whw-c468="" class="itd-plan-details-content ng-star-inserted">
-                <div _ngcontent-whw-c468="" class="row m-0">
+                <div _ngcontent-whw-c468="" class="row">
                     <!-- Card 1 -->
                     <div class="col-md-4" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                            <img src="https://calisthenicsacademy.co/wp-content/uploads/2015/11/number-8-no-lines.png"
+                            <img src="images/deduction-img/80c.png"
                                 style="width:80px;" class="mb-3 mt-3 m-auto">
                             <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Sec 80C
                             </p>
 
                             <p class="mb-2">Total Value: {{ $total }}/1,50,000</p>
 
-                            <a class="declaration-link" style="margin-bottom: 3.4em;" wire:click="addSec80">Add to declaration</a>
+                            <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addSec80">Add to declaration</a>
                         </div>
                         @if($showSec80CDialog)
 
@@ -237,12 +237,12 @@
                     </div>
                     <div class="col-md-4" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="margin-top:20px;background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                            <img src="https://completed.com/images/accurate.png"
+                            <img src="images/deduction-img/deduction.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
                             <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C"
                                 style="font-size:12px">Other Chapter VI-A Deductions</p>
                             <p class="mb-2">Total Value: {{ $totaldeductions }}/1,50,000</p>
-                            <a class="declaration-link" wire:click="addshowVIDeductions" style="margin-bottom: 6.2em;">Add to declaration</a>
+                            <a class="declaration-link" wire:click="addshowVIDeductions" style="margin-bottom: 2em;">Add to declaration</a>
                         </div>
                         @if($showVIDeductions)
 
@@ -500,13 +500,13 @@
                     </div>
                     <div class="col-md-4" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                            <img src="https://www.creditloan.com/media/final-definitive-guide-how-to-maximize-the-value-of-your-credit-cards-personal-loans-68.png"
+                            <img src="images/deduction-img/80d.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
                             <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Medical
                                 (Sec 80D)
 
                             </p>
-                            <a class="declaration-link" style="margin-bottom: 5em;" wire:click="addMedical">Add to declaration</a>
+                            <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addMedical">Add to declaration</a>
                         </div>
                         @if($showMedicalDialog)
 
@@ -637,15 +637,15 @@
 
             </div>
             <div _ngcontent-whw-c468="" class="itd-plan-details-content ng-star-inserted">
-                <div _ngcontent-whw-c468="" class="row m-0">
+                <div _ngcontent-whw-c468="" class="row">
                     <!-- Card 1 -->
                     <div class="col-md-4" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                            <img src="https://d2zcpk7yfyf2dq.cloudfront.net/milaap/image/upload/v1493815112/production/entity_details/milaap_page/1892/Fund_1493815111.png"
+                            <img src="images/deduction-img/house.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
                             <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">
                                 Income/loss from House Property</p>
-                            <a class="declaration-link" style="margin-bottom: 1.6em;" wire:click="addIncome">Add to declaration</a>
+                            <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addIncome">Add to declaration</a>
                         </div>
 
                         @if($showIncomeDialog)
@@ -773,9 +773,9 @@
                 </div>
                 <div class="col-md-4" style="margin-top:20px;">
                     <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                        <img src="https://completed.com/images/accurate.png" style="width:80px;" class="mt-3 mb-3 m-auto">
+                        <img src="images/deduction-img/wage.png" style="width:80px;" class="mt-3 mb-3 m-auto">
                         <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Other Income </p>
-                        <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addshowOtherIncome">Add to declaration</a>
+                        <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addshowOtherIncome">Add to declaration</a>
                     </div>
 
                     @if($showOtherIncome)
@@ -883,13 +883,13 @@
                 </div>
                 <div class="col-md-4" style="margin-top:20px;">
                     <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                        <img src="https://www.creditloan.com/media/final-definitive-guide-how-to-maximize-the-value-of-your-credit-cards-personal-loans-68.png"
+                        <img src="images/deduction-img/salary.png"
                             style="width:80px;" class="mt-3 mb-3 m-auto">
                         <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Salary
                             Allowance
 
                         </p>
-                        <a class="declaration-link mb-2" wire:click="addSalayAllowance">Add to declaration</a>
+                        <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addSalayAllowance">Add to declaration</a>
                     </div>
 
                     @if($showSalayAllowance)
@@ -1003,7 +1003,7 @@
 </itd-plan-details>
 <!---->
 </div>
-<div class="bg-white m-2 p-3 row text-end">
+<div class="bg-white mt-3 mx-0 p-3 row text-end">
     <div>
 
         <button class="btn btn-outline-primary">

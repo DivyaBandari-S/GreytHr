@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="nav-given" role="tabpanel" aria-labelledby="nav-given-tab" tabindex="0">
+        <div class="tab-pane fade" id="given-tab-pane" role="tabpanel" aria-labelledby="given-tab" tabindex="0">
             <div class="m-0 pt-4 row text-center">
                 <img src="images/given.png" class="m-auto" style="width: 10em" />
                 <h5>Seeking Advice?</h5>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="nav-pending" role="tabpanel" aria-labelledby="nav-pending-tab" tabindex="0">
+        <div class="tab-pane fade" id="pending-tab-pane" role="tabpanel" aria-labelledby="pending-tab" tabindex="0">
             <div class="m-0 pt-4 row text-center">
                 <img src="images/pending-request.png" class="m-auto" style="width: 10em" />
                 <h5>See feedback requests and responses here</h5>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="nav-drafts" role="tabpanel" aria-labelledby="nav-drafts-tab" tabindex="0">
+        <div class="tab-pane fade" id="drafts-tab-pane" role="tabpanel" aria-labelledby="drafts-tab" tabindex="0">
             <div class="m-0 pt-4 row text-center">
                 <img src="images/drafts.png" class="m-auto" style="width: 10em" />
                 <h5>Draft your feedback</h5>
