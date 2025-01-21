@@ -83,6 +83,7 @@ use App\Livewire\TeamOnLeaveChart;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
 use App\Livewire\Chat\EmployeeList;
+use App\Livewire\Chat\ChatCalendar;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -366,6 +367,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
+    Route::get('/calendar', ChatCalendar::class)->name('calendar');
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });

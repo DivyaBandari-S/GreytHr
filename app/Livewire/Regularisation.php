@@ -708,6 +708,10 @@ public function nextMonth()
             // You might want to inform the user about the error or take other appropriate actions
         }
     }
+    public function redirectToAttendance()
+    {
+        return redirect('/Attendance');
+    }
     //This function will store regularisation details in the database
     public function storearraydates()
     {
@@ -818,6 +822,10 @@ public function applyButton()
         FlashMessageHelper::flashError('An error occurred while applying.');
         
     }
+}
+public function redirectToRegularisation()
+{
+    return redirect('/regularisation');
 }
 //This function will show the page where we can see the pending regularisation details
 public function pendingButton()

@@ -70,17 +70,18 @@
                 <ul class="side-dropdown">
 
                     <li><a href="/Attendance">Attendance Info</a></li>
+                    <li>
+                        <a href="/employee-swipes-data">
+                            <span>Employee Swipes</span>
+                        </a>
+                    </li>
                     @if ($managerId)
                     <li>
                         <a href="/whoisinchart">
                         <span>Who is in</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="/employee-swipes-data">
-                            <span>Employee Swipes</span>
-                        </a>
-                    </li>
+                  
                     <li>
                         <a href="/attendance-muster-data">
                             <span>Attendance Muster</span>
@@ -92,6 +93,7 @@
                         </a>
                     </li>
                     @endif
+
                 </ul>
             </li>
             <li><a href="/document"><i class='fas fa-folder icon'></i>Document Center</a></li>

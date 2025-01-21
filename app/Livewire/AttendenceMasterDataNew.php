@@ -154,6 +154,7 @@ class AttendenceMasterDataNew extends Component
         $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth1)
             ->whereYear('swipe_records.created_at', $AttendanceYear)
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)')
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->selectRaw('swipe_records.emp_id, COUNT(DISTINCT DATE(swipe_records.created_at)) as date_count, employee_details.first_name, employee_details.last_name')
@@ -161,12 +162,14 @@ class AttendenceMasterDataNew extends Component
             ->get()
             ->keyBy('emp_id')
             ->toArray();
+        
 
         Log::info('Swipe record counts fetched', ['distinctDatesMapCount' => $distinctDatesMapCount]);
 
         $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
             ->whereMonth('created_at', $currentMonth1)
             ->whereYear('created_at', $this->selectedYear)
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->selectRaw('DISTINCT emp_id, DATE(created_at) as distinct_date')
             ->get()
             ->groupBy('emp_id')
@@ -196,9 +199,42 @@ class AttendenceMasterDataNew extends Component
         foreach ($employees as $employee) {
             $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
 
+            
             $dateCount = $distinctDatesMapCount[$employee['emp_id']]['date_count'] ?? 0;
             Log::debug("Date count for employee {$employee['emp_id']}: $dateCount");
-
+            for ($j = 1; $j <= $daysInMonth; $j++) {
+            foreach ($distinctDatesMap as $empId => $dates) {
+                $currentDate = "$AttendanceYear-" . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($j, 2, '0', STR_PAD_LEFT);
+                if ($employee['emp_id'] == $empId && in_array($currentDate, $dates)) {
+                    $inRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','IN')->where('emp_id',$employee['emp_id'])->first();
+                    $outRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','OUT')->where('emp_id',$employee['emp_id'])->orderByDesc('created_at')->first();
+                 
+                    if($outRecord==null)
+                    {
+                       
+                        $dateCount-=1;
+                    }
+                    else
+                    {
+                        $formattedInTime = Carbon::parse($inRecord->swipe_time)->format('H:i');
+                        $formattedOutTime = Carbon::parse($outRecord->swipe_time)->format('H:i');
+                        $inTime = Carbon::parse($inRecord->swipe_time);
+                        $outTime = Carbon::parse($outRecord->swipe_time);
+                        $differenceInMinutes = $inTime->diffInMinutes($outTime);
+                        if($differenceInMinutes <= 270)
+                        {
+                            $dateCount-=0.5;
+                            
+                        }
+                        
+                        
+                    }
+                   
+                    
+                    break;
+                }
+            }
+            }
             $rowData[] = $dateCount;
 
             for ($i = 1; $i <= $daysInMonth; $i++) {
@@ -211,10 +247,39 @@ class AttendenceMasterDataNew extends Component
                         $rowData[] = 'O';
                     }  else {
                         $dateExists = false;
+                        $halfdateExists=false;
                         $leaveExists = false;
+                       
                         foreach ($distinctDatesMap as $empId => $dates) {
                             if ($employee['emp_id'] == $empId && in_array($currentDate, $dates)) {
-                                $dateExists = true;
+                                $inRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','IN')->where('emp_id',$employee['emp_id'])->first();
+                                $outRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','OUT')->where('emp_id',$employee['emp_id'])->orderByDesc('created_at')->first();
+                             
+                                if($outRecord==null)
+                                {
+                                    $dateExists=false;
+                                    $dateCount-=1;
+                                }
+                                else
+                                {
+                                    $formattedInTime = Carbon::parse($inRecord->swipe_time)->format('H:i');
+                                    $formattedOutTime = Carbon::parse($outRecord->swipe_time)->format('H:i');
+                                    $inTime = Carbon::parse($inRecord->swipe_time);
+                                    $outTime = Carbon::parse($outRecord->swipe_time);
+                                    $differenceInMinutes = $inTime->diffInMinutes($outTime);
+                                    if($differenceInMinutes <= 270)
+                                    {
+                                        $halfdateExists=true;
+                                        
+                                    }
+                                    elseif($differenceInMinutes > 270)
+                                    {
+                                        $dateExists=true;
+                                    }
+                                    
+                                }
+                               
+                                
                                 break;
                             }
                         }
@@ -230,7 +295,12 @@ class AttendenceMasterDataNew extends Component
                         }
                         if ($leaveExists) {
                             $rowData[] = 'L';
-                        } else {
+                        } 
+                        elseif($halfdateExists)
+                        {
+                            $rowData[] = 'HP';
+                        }
+                        else {
                             $rowData[] = $dateExists ? 'P' : 'A'; 
                         }
                     }
@@ -314,6 +384,7 @@ class AttendenceMasterDataNew extends Component
         $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
             ->whereMonth('created_at', $currentMonth1) // December
             ->whereYear('created_at', $this->selectedYear) // December
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->selectRaw('DISTINCT emp_id, DATE(created_at) as distinct_date ')
             ->get()
             ->groupBy('emp_id')
@@ -357,6 +428,7 @@ class AttendenceMasterDataNew extends Component
             $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth)
             ->whereYear('swipe_records.created_at', $this->selectedYear)
+            ->whereDate('swipe_records.created_at', '<', Carbon::today())
             ->whereRaw('DAYOFWEEK(swipe_records.created_at) NOT IN (1, 7)') // Exclude Sunday (1) and Saturday (7)
             ->whereNotIn(DB::raw('DATE(swipe_records.created_at)'), $holidays) // Exclude holidays
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
@@ -373,7 +445,7 @@ class AttendenceMasterDataNew extends Component
             })
             ->keyBy('emp_id')
             ->toArray();
-       
+            
                     
         
         
