@@ -1198,23 +1198,11 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {
-            {
-                $grossPay
-            }
-        }; // Correct data injection
-        var deductions = {
-            {
-                $deductions
-            }
-        }; // Correct data injection
-        var netPay = {
-            {
-                $netPay
-            }
-        };
+        var grossPay = {{ $grossPay  }}; // Correct data injection
+        var deductions = {{$deductions}}; // Correct data injection
+        var netPay = {{$netPay}};
 
-        // Total of netPay and deductions should equal grossPay
+        // Total of netPay and deduction~s should equal grossPay
         if (grossPay !== (netPay + deductions)) {
             console.error('The sum of net pay and deductions does not match the gross pay.');
         }

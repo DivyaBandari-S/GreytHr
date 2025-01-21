@@ -3,17 +3,21 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
+use Illuminate\Support\Carbon as SupportCarbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class Investment extends Component
 {
     public $showDetails = true;
-    public $selectedItem = 'Section 80C';
+    public $selectedItem = 'Overview';
     public $financialYears;
     public $employeeDetails;
     public $selectedFinancialYear;
+    public $Fin_Year;
+
     public $show_family_details = false;
 
     // family details
@@ -56,6 +60,29 @@ class Investment extends Component
     }
 
 
+    public function downloadPdf()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+
+        // Generate PDF using the fetched data
+        $pdf = Pdf::loadView('download-form12bb-pdf', [
+            'employees' =>  $this->employeeDetails,
+            'financial_year'=>$this->Fin_Year
+        ]);
+
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'Form_12BB_and_POI_Report.pdf');
+    }
+
+    public function SelectedFinancialYear()
+    {
+        $selectedYear = json_decode($this->selectedFinancialYear, true);
+
+        $this->Fin_Year = Carbon::parse($selectedYear['start_date'])->format('Y') . '-' .
+           Carbon::parse($selectedYear['end_date'])->format('Y');
+    }
 
 
     public function mount()
@@ -89,6 +116,9 @@ class Investment extends Component
 
         // Set the default selected financial year
         $this->selectedFinancialYear = $this->financialYears[0]['start_date'] . '|' . $this->financialYears[0]['end_date'];
+        $this->Fin_Year = Carbon::parse($this->financialYears[0]['start_date'])->format('Y') . '-' .
+        Carbon::parse($this->financialYears[0]['end_date'])->format('Y');
+        
     }
     public function showFamilyDetails()
     {
