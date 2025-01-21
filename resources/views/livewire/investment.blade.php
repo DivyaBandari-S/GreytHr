@@ -246,7 +246,7 @@
             resize: none;
         }
 
-        .modal {
+        .modal-family {
             position: fixed;
             top: 0;
             left: 0;
@@ -256,22 +256,50 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            z-index: 100;
+            border-radius: 8px;
+            overflow-y: auto;
+            padding: 20px;
         }
 
-        .modal-content {
+        .modal-content-family {
             background: white;
             /* padding: 20px; */
             border-radius: 8px;
-            width: 60%;
+            width: 700px;
+            max-height: 500px;
+
+        }
+
+        .table-responsive {
+            overflow-x: auto;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 10px 20px;
+            border-radius: 8px 8px 0px 0px;
 
         }
+
+        .modal-body {
+            padding: 10px;
+            max-height: 300px;
+            overflow-x: hidden;
+            width: 100%;
+
+
+            overflow-y: scroll;
+        }
+
+        .modal-footer {
+            padding: 10px;
+            gap: 10px;
+        }
+
+
 
         .close-btn {
             background: none;
@@ -280,18 +308,30 @@
             cursor: pointer;
             color: white;
         }
-        .member-remove-btn{
+
+        .member-remove-btn {
             border: none;
             background-color: white;
         }
-        .form-add-buttons, .form-save-buttons{
-            border:none;
+
+        .form-add-buttons,
+        .form-save-buttons {
+            border: none;
             font-size: 15px;
-            padding: 5px;
+            padding: 5px 10px;
             background-color: rgb(2, 17, 79);
-            color:white;
+            color: white;
             border-radius: 5px;
             font-weight: 500;
+
+        }
+
+        @media (max-width: 576px) {
+            .modal-content-family {
+                width: 100%;
+
+            }
+
 
         }
     </style>
@@ -300,7 +340,7 @@
             <a href="javascript:void(0)" onclick="openSidePage()" style="cursor: pointer;font-size:13px">POI Timeline</a>
             <select name="financial_year" id="financial_year" class="form-select" wire:model="selectedFinancialYear" wire:change='SelectedFinancialYear' style=" width: fit-content;">
                 @foreach ($financialYears as $year)
-                <option value="{{ $year['start_date'] }}|{{ $year['end_date'] }}">
+                <option value="{{ json_encode($year) }}">
                     {{ \Carbon\Carbon::parse($year['start_date'])->format('Y') }} - {{ \Carbon\Carbon::parse($year['end_date'])->format('Y') }}
                 </option>
                 @endforeach
@@ -310,7 +350,7 @@
             <div id="sidePage" class="side-page">
                 <div class="side-page-header">
                     <h2>Review History</h2>
-                    <span onclick="closeSidePage()" class="close-btn">&times;</span>
+                    <span onclick="closeSidePage()" class="close-btn" style="color: black;">&times;</span>
                 </div>
                 <div class="side-page-content">
                     <h6>Application Timeline</h6>
@@ -383,8 +423,8 @@
 
             <div id="content-2023-2024">
 
-                <div class=" d-flex" style="gap: 10px;">
-                    <div class="col-md-2 p-0">
+                <div class="row ">
+                    <div class="col-sm-2 col-12 col-md-2 p-0">
                         <div class="text-muted" style="height: fit-content;">
                             <p class="m-0" style="font-size: 13px;color:#aba7a7">POI COMPONENTS</p>
                         </div>
@@ -418,9 +458,9 @@
                     </div>
 
                     @if($selectedItem=='Overview')
-                    <div class="col-md-10">
+                    <div class="col-sm-10 col-12 col-md-10">
                         <div class="d-flex mt-4 " style="justify-content:end ;align-items:center">
-                            <a href="/downloadform" id="pdfLink2023_4" class="pdf-download text-align-end" download style=" display: inline-block;font-size:14px">Download Form 12BB</a>
+                            <a href="#" id="pdfLink2023_4" class="pdf-download text-align-end" wire:click="downloadPdf" style=" display: inline-block;font-size:14px">Download Form 12BB</a>
                         </div>
                         <div class="mt-2 ml-6 bg-white" style="border-radius:5px;border:1px solid silver;">
                             <div class="d-flex" style="flex-direction:column; border-top:none;align-items:center;padding:10px">
@@ -481,52 +521,55 @@
                             </select>
                             <a href="#" id="pdfLink2023_4" class="pdf-download text-align-end" wire:click="showFamilyDetails" style=" display: inline-block;font-size:14px">Family Details</a>
                             @if($show_family_details )
-                            <div class="modal">
-                                <div class="modal-content">
+                            <div class="modal-family">
+
+                                <div class="modal-content-family">
                                     <div class="modal-header">
                                         <h6 >Family Details</h6>
                                         <button class="close-btn" wire:click="hideFamilyDetails">×</button>
                                     </div>
                                     <div class="modal-body">
-                                        <table style="width: 100%;border:1px solid silver">
-                                            <thead style="background-color:#e9f7ff;width:100%">
-                                                <tr style="gap: 10px;padding:5px">
-                                                    <th style="padding: 5px;" >Name</th>
-                                                    <th style="padding: 5px;">Relationship</th>
-                                                    <th style="padding: 5px;">DOB</th>
-                                                    <th style="padding: 5px;">Dependent</th>
-                                                    <th style="padding: 5px;">Remove</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($familyMembers as $index => $member)
-                                                <tr>
-                                                    <td>
-                                                        <input type="text" class="form-control" wire:model="familyMembers.{{ $index }}.name">
-                                                    </td>
-                                                    <td>
-                                                        <select wire:model="familyMembers.{{ $index }}.relationship" class="form-select">
-                                                            <option value="Self">Self</option>
-                                                            <option value="Father">Father</option>
-                                                            <option value="Mother">Mother</option>
-                                                            <option value="Spouse">Spouse</option>
-                                                        </select>
-                                                    </td>
-                                                    <td>
-                                                        <input class="form-control" type="date" wire:model="familyMembers.{{ $index }}.dob">
-                                                    </td>
-                                                    <td>
-                                                        <input  class="form-check-input" type="checkbox" wire:model="familyMembers.{{ $index }}.dependent"> Yes
-                                                    </td>
-                                                    <td>
-                                                        <button class="member-remove-btn" wire:click="removeFamilyMember({{ $index }})">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                        <div class="table-responsive">
+                                            <table style="width: 100%;border:1px solid silver;min-width: 600px; overflow-y: hidden;">
+                                                <thead style="background-color:#e9f7ff;width:100%">
+                                                    <tr style="gap: 10px;padding:5px">
+                                                        <th style="padding: 5px;">Name</th>
+                                                        <th style="padding: 5px;">Relationship</th>
+                                                        <th style="padding: 5px;">DOB</th>
+                                                        <th style="padding: 5px;">Dependent</th>
+                                                        <th style="padding: 5px;">Remove</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($familyMembers as $index => $member)
+                                                    <tr>
+                                                        <td>
+                                                            <input type="text" class="form-control" wire:model="familyMembers.{{ $index }}.name">
+                                                        </td>
+                                                        <td>
+                                                            <select wire:model="familyMembers.{{ $index }}.relationship" class="form-select">
+                                                                <option value="Self">Self</option>
+                                                                <option value="Father">Father</option>
+                                                                <option value="Mother">Mother</option>
+                                                                <option value="Spouse">Spouse</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-control" type="date" wire:model="familyMembers.{{ $index }}.dob">
+                                                        </td>
+                                                        <td>
+                                                            <input class="form-check-input" type="checkbox" wire:model="familyMembers.{{ $index }}.dependent"> Yes
+                                                        </td>
+                                                        <td>
+                                                            <button class="member-remove-btn" wire:click="removeFamilyMember({{ $index }})">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button class="form-add-buttons" wire:click="addFamilyMember">Add Member</button>
