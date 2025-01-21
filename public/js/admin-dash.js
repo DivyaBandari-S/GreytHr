@@ -21,7 +21,6 @@ allDropdown.forEach((item) => {
     });
 });
 
-
 // function setActiveLink(link, targetUrl) {
 // 	var currentUrl = window.location.pathname;
 
@@ -76,9 +75,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const quill = new Quill('#editor', {
-        theme: 'snow'
-      });
+    const quill = new Quill("#editor", {
+        theme: "snow",
+    });
 });
 
 // SIDEBAR COLLAPSE
@@ -307,17 +306,17 @@ var options = {
 // chart.render();
 
 // // chat screen js
-function openChatScreen () {
+function openChatScreen() {
     // $(this).parents("#contacts").addClass("hidden");
     $("#content-chart").addClass("active");
     $("#listCOntactDiv").addClass("hidden");
-};
+}
 
-function closeChatScreen (e) {
+function closeChatScreen(e) {
     // e.preventDefault();
     $("#listCOntactDiv").removeClass("hidden");
     $("#content-chart").removeClass("active");
-};
+}
 
 // function openMsgDiv() {
 //     $("#chatScreen").show();
@@ -376,7 +375,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-
 document.addEventListener("DOMContentLoaded", function () {
     const currentPath = window.location.pathname; // Get the current path
     const menuLinks = document.querySelectorAll(".sidebar .menus a"); // Select all menu links
@@ -394,6 +392,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
+function openAIAssist() {
+    $(".reqModal").addClass("modal-lg");
+    $(".reqForm").addClass("col-md-7").removeClass("col-md-12");
+    $(".reqAssist").addClass("d-block").removeClass("d-none");
+}
 
 // document.addEventListener("DOMContentLoaded", () => {
 //     const emojiPicker = document.getElementById("emojiPicker");
@@ -444,5 +447,3 @@ document.addEventListener("DOMContentLoaded", function () {
 //             ? "block"
 //             : "none";
 // }
-
-

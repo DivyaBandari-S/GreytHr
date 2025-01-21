@@ -3,134 +3,214 @@
         <button class="btn btn-primary me-3" wire:click="openRequestModal">Request Feedback</button>
         <button class="btn btn-primary me-3" wire:click="openGiveModal">Give Feedback</button>
     </div>
-    <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <button class="nav-link active" id="nav-recieved-tab" data-bs-toggle="tab" data-bs-target="#nav-recieved"
-                type="button" role="tab" aria-controls="nav-recieved" aria-selected="true">Recieved</button>
-            <button class="nav-link" id="nav-given-tab" data-bs-toggle="tab" data-bs-target="#nav-given" type="button"
-                role="tab" aria-controls="nav-given" aria-selected="false">Given</button>
-            <button class="nav-link" id="nav-pending-tab" data-bs-toggle="tab" data-bs-target="#nav-pending"
-                type="button" role="tab" aria-controls="nav-pending" aria-selected="false">Pending Request</button>
-            <button class="nav-link" id="nav-drafts-tab" data-bs-toggle="tab" data-bs-target="#nav-drafts"
-                type="button" role="tab" aria-controls="nav-drafts" aria-selected="false">Drafts</button>
-        </div>
-    </nav>
-    <div class="tab-content bg-white pb-5" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-recieved" role="tabpanel" aria-labelledby="nav-recieved-tab"
-            tabindex="0">
-            <div class="m-0 pt-4 row text-center">
-                <img src="images/recieved-feed.png" class="m-auto" style="width: 10em" />
-                <h5>Seeking Advice?</h5>
-                <p>Let's gather a new outlook from ypur coworkers</p>
-                <div>
-                    <button class="btn btn-primary" wire:click="openRequestModal">Request Feedback</button>
-                </div>
+    <div>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link {{ $activeTab === 'received' ? 'active' : '' }}"
+                    wire:click="loadTabData('received')">Received</button>
+
+                <button class="nav-link {{ $activeTab === 'given' ? 'active' : '' }}"
+                    wire:click="loadTabData('given')">Given</button>
+
+                <button class="nav-link {{ $activeTab === 'pending' ? 'active' : '' }}"
+                    wire:click="loadTabData('pending')">Pending</button>
+
+                <button class="nav-link {{ $activeTab === 'drafts' ? 'active' : '' }}"
+                    wire:click="loadTabData('drafts')">Drafts</button>
+            </div>
+        </nav>
+
+        <div class="tab-content bg-white pb-5" id="nav-tabContent">
+            <div class="tab-pane fade show active" role="tabpanel">
+                @if ($feedbacks->count() > 0)
+                    <div class="p-4" style="max-height: 400px; overflow-y: auto;"> <!-- Scrollable Container -->
+                        @foreach ($feedbacks as $feedback)
+                            <div class="border p-3 mb-3 rounded shadow-sm">
+                                <div class="d-flex align-items-start">
+                                    <!-- User Avatar -->
+                                    <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
+                                        style="width: 40px; height: 40px; font-weight: bold;">
+                                        {{ strtoupper(substr($feedback->feedbackFromEmployee->first_name ?? 'A', 0, 1)) }}
+                                    </div>
+
+                                    <div class="ms-3 w-100">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <strong>
+                                                    {{ $feedback->feedbackFromEmployee->first_name ?? 'Unknown' }}
+                                                    {{ $feedback->feedbackFromEmployee->last_name ?? '' }}
+                                                </strong>
+                                                <small class="text-muted">#{{ $feedback->feedback_from }}</small>
+                                            </div>
+                                            <div>
+                                                @if ($activeTab === 'pending' && $feedback->is_declined)
+                                                    <span class="badge bg-danger">Declined</span>
+                                                @endif
+                                                <small class="text-muted">{{ $feedback->created_at->diffForHumans() }}</small>
+                                            </div>
+                                        </div>
+
+                                        <p class="mt-2">
+                                            @if ($activeTab === 'received' || $activeTab === 'pending')
+                                                <small class="text-muted">Feedback request to you</small>
+                                            @else
+                                                <small class="text-muted">Feedback given</small>
+                                            @endif
+                                        </p>
+
+                                        <p class="mb-2">{{ $feedback->feedback_message }}</p>
+
+                                        @if ($activeTab === 'pending')
+                                            <button class="btn btn-sm btn-success">Accept</button>
+                                            <button class="btn btn-sm btn-danger">Decline</button>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="m-0 pt-4 row text-center">
+                        <img src="{{ asset('images/' . $activeTab . '.png') }}" class="m-auto" style="width: 10em" />
+                        <h5>No {{ ucfirst($activeTab) }} Feedback</h5>
+                        <p>
+                            @if ($activeTab === 'received')
+                                Let's gather a new outlook from your coworkers.
+                            @elseif($activeTab === 'given')
+                                Share your valuable feedback with your colleagues.
+                            @elseif($activeTab === 'pending')
+                                Your requests and feedback requests from peers will appear here. Once feedback is shared, it will move to received or given sections.
+                            @elseif($activeTab === 'drafts')
+                                Capture your thoughts on feedback and find it later.
+                            @endif
+                        </p>
+                        <div>
+                            <button class="btn btn-primary"
+                                wire:click="{{ $activeTab === 'given' || $activeTab === 'drafts' ? 'openGiveModal' : 'openRequestModal' }}">
+                                {{ $activeTab === 'given' || $activeTab === 'drafts' ? 'Give Feedback' : 'Request Feedback' }}
+                            </button>
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
-        <div class="tab-pane fade" id="given-tab-pane" role="tabpanel" aria-labelledby="given-tab" tabindex="0">
-            <div class="m-0 pt-4 row text-center">
-                <img src="images/given.png" class="m-auto" style="width: 10em" />
-                <h5>Seeking Advice?</h5>
-                <p>Let's gather a new outlook from your co-workers</p>
-                <div>
-                    <button class="btn btn-primary" wire:click="openGiveModal">Give Feedback</button>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="pending-tab-pane" role="tabpanel" aria-labelledby="pending-tab" tabindex="0">
-            <div class="m-0 pt-4 row text-center">
-                <img src="images/pending-request.png" class="m-auto" style="width: 10em" />
-                <h5>See feedback requests and responses here</h5>
-                <p>Your requests and feedback requests from peers will appear here. Once feedback is shared, it will
-                    moved to recived or given sections</p>
-                <div>
-                    <button class="btn btn-primary" wire:click="openRequestModal">Request Feedback</button>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="drafts-tab-pane" role="tabpanel" aria-labelledby="drafts-tab" tabindex="0">
-            <div class="m-0 pt-4 row text-center">
-                <img src="images/drafts.png" class="m-auto" style="width: 10em" />
-                <h5>Draft your feedback</h5>
-                <p>Capture your thoughts on feedback and find it later</p>
-                <div>
-                    <button class="btn btn-primary"wire:click="openGiveModal">Give Feedback</button>
-                </div>
-            </div>
-        </div>
+
+
     </div>
+
+
+
 
     <!-- Modal -->
     <!-- Request Feedback Modal -->
     @if ($isRequestModalOpen)
         <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog">
+            <div class="modal-dialog reqModal">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Request Feedback</h1>
                         <button type="button" class="btn-close" wire:click="closeModal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="saveRequestFeedback">
-                            <div class="mb-3">
-                                <label class="form-label">Search Employee <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" wire:model.live="searchEmployee"
-                                    placeholder="Search by name or employee ID">
+                        <div class="row m-0">
+                            <div class="col-md-12 reqForm">
+                                <form wire:submit.prevent="saveFeedback">
+                                    <div class="mb-3">
+                                        <label class="form-label">Search Employee <span
+                                                class="text-danger">*</span></label>
 
-                                @error('searchEmployee')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-
-                                <!-- Display the search results as a dropdown -->
-                                @if (count($employees) > 0)
-                                    <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
-                                        @foreach ($employees as $employee)
-                                            <li class="list-group-item d-flex align-items-center"
-                                                style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px;"
-                                                wire:click="selectEmployee('{{ $employee->emp_id }}')">
-                                                <div
-                                                    style="
-                                    background-color: #f5c391;
-                                    color: white;
-                                    font-weight: bold;
-                                    text-align: center;
-                                    width: 40px;
-                                    height: 40px;
-                                    border-radius: 50%;
-                                    display: flex;
-                                    justify-content: center;
-                                    align-items: center;
-                                    margin-right: 10px;
-                                ">
-                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                        <!-- If an employee is selected, show a structured display -->
+                                        @if ($selectedEmployee)
+                                            <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                                style="background: #f8f9fa;">
+                                                <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                                    style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                                    {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
                                                 </div>
-                                                <div>
-                                                    <div style="font-weight: bold;">{{ $employee->first_name }}
-                                                        {{ $employee->last_name }}</div>
+                                                <div class="ms-2">
+                                                    <strong>{{ $selectedEmployee['first_name'] }}
+                                                        {{ $selectedEmployee['last_name'] }}</strong>
                                                     <div style="color: #5e6e8f; font-size: 14px;">
-                                                        #{{ $employee->emp_id }}</div>
+                                                        #{{ $selectedEmployee['emp_id'] }}</div>
                                                 </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @elseif(strlen($searchEmployee) > 0)
-                                    <p>No employees found</p>
-                                @endif
+                                                <button type="button" class="btn btn-sm btn-danger ms-auto"
+                                                    wire:click="clearSelectedEmployee">×</button>
+                                            </div>
+                                        @else
+                                            <!-- Show input field when no employee is selected -->
+                                            <input type="text" class="form-control" wire:model.live="searchEmployee"
+                                                placeholder="Search by name or employee ID">
+                                        @endif
+
+                                        @error('selectedEmployee')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+
+                                        <!-- Display the search results as a dropdown -->
+                                        @if (count($employees) > 0)
+                                            <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
+                                                @foreach ($employees as $employee)
+                                                    <li class="list-group-item d-flex align-items-center mb-1"
+                                                        style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px;"
+                                                        wire:click="selectEmployee('{{ $employee->emp_id }}')">
+                                                        <div
+                                                            style="background-color: #f5c391; color: white; font-weight: bold;
+                                                                    text-align: center; width: 40px; height: 40px; border-radius: 50%;
+                                                                    display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+                                                            {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                        </div>
+                                                        <div>
+                                                            <div style="font-weight: bold;">{{ $employee->first_name }}
+                                                                {{ $employee->last_name }}</div>
+                                                            <div style="color: #5e6e8f; font-size: 14px;">
+                                                                #{{ $employee->emp_id }}</div>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @elseif(strlen($searchEmployee) > 0)
+                                            <p>No employees found</p>
+                                        @endif
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Personalized Message <span
+                                                class="text-danger">*</span></label>
+                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
+                                        @error('feedbackMessage')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="row m-0 text-end">
+                                        <p class="p-0">
+                                            <span class="aiChip" onclick="openAIAssist()">
+                                                <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
+                                                hrXpertAI
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            wire:click="closeModal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div class="mb-3">
-                                <label class="form-label">Personalized Message <span
-                                        class="text-danger">*</span></label>
-                                <textarea id="requestRichText" class="form-control" wire:model.lazy="personalizedMessage"></textarea>
-                                @error('personalizedMessage')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
+                            <div class="col-md-5 reqAssist d-none">
+                                <div class="row m-0" style="border: 1px solid #02114f; border-radius: 10px;">
+                                    <p class="textAI mb-0">
+                                        <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                        hrXpertAI Assistant
+                                    </p>
+                                    <div class="m-0 pb-4 row text-center">
+                                        <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                        <p class="fs-6 fw-bold">Ready to asisst</p>
+                                        <p>Write something to see suggestions</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    wire:click="closeModal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </form>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -140,77 +220,115 @@
     <!-- Give Feedback Modal -->
     @if ($isGiveModalOpen)
         <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog">
+            <div class="modal-dialog reqModal">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5">Give Feedback</h1>
+                        <h1 class="modal-title fs-5">Request Feedback</h1>
                         <button type="button" class="btn-close" wire:click="closeModal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form wire:submit.prevent="saveGiveFeedback">
-                            <div class="mb-3">
-                                <label class="form-label">Search Employee <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" wire:model.live="searchEmployee"
-                                    placeholder="Search by name or employee ID">
+                        <div class="row m-0">
+                            <div class="col-md-12 reqForm">
+                                <form wire:submit.prevent="saveFeedback">
+                                    <div class="mb-3">
+                                        <label class="form-label">Search Employee <span
+                                                class="text-danger">*</span></label>
 
-                                @error('searchEmployee')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-
-                                <!-- Display the search results as a dropdown -->
-                                @if (count($employees) > 0)
-                                    <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
-                                        @foreach ($employees as $employee)
-                                            <li class="list-group-item d-flex align-items-center"
-                                                style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px;"
-                                                wire:click="selectEmployee('{{ $employee->emp_id }}')">
-                                                <div
-                                                    style="
-                                            background-color: #f5c391;
-                                            color: white;
-                                            font-weight: bold;
-                                            text-align: center;
-                                            width: 40px;
-                                            height: 40px;
-                                            border-radius: 50%;
-                                            display: flex;
-                                            justify-content: center;
-                                            align-items: center;
-                                            margin-right: 10px;
-                                        ">
-                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                        <!-- If an employee is selected, show a structured display -->
+                                        @if ($selectedEmployee)
+                                            <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                                style="background: #f8f9fa;">
+                                                <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                                    style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                                    {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
                                                 </div>
-                                                <div>
-                                                    <div style="font-weight: bold;">{{ $employee->first_name }}
-                                                        {{ $employee->last_name }}</div>
+                                                <div class="ms-2">
+                                                    <strong>{{ $selectedEmployee['first_name'] }}
+                                                        {{ $selectedEmployee['last_name'] }}</strong>
                                                     <div style="color: #5e6e8f; font-size: 14px;">
-                                                        #{{ $employee->emp_id }}</div>
+                                                        #{{ $selectedEmployee['emp_id'] }}</div>
                                                 </div>
-                                            </li>
-                                        @endforeach
-                                    </ul>
-                                @elseif(strlen($searchEmployee) > 0)
-                                    <p>No employees found</p>
-                                @endif
-                            </div>
+                                                <button type="button" class="btn btn-sm btn-danger ms-auto"
+                                                    wire:click="clearSelectedEmployee">×</button>
+                                            </div>
+                                        @else
+                                            <!-- Show input field when no employee is selected -->
+                                            <input type="text" class="form-control"
+                                                wire:model.live="searchEmployee"
+                                                placeholder="Search by name or employee ID">
+                                        @endif
 
-                            <div class="mb-3">
-                                <label class="form-label">Personalized Message <span
-                                        class="text-danger">*</span></label>
-                                <div id="giveRichText" class="form-control" style="height: 150px;"></div>
-                                <input type="hidden" wire:model.lazy="personalizedMessage" id="hiddenGiveRichText">
-                                @error('personalizedMessage')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
+                                        @error('selectedEmployee')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
 
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary"
-                                    wire:click="closeModal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <!-- Display the search results as a dropdown -->
+                                        @if (count($employees) > 0)
+                                            <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
+                                                @foreach ($employees as $employee)
+                                                    <li class="list-group-item d-flex align-items-center mb-1"
+                                                        style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px;"
+                                                        wire:click="selectEmployee('{{ $employee->emp_id }}')">
+                                                        <div
+                                                            style="background-color: #f5c391; color: white; font-weight: bold;
+                                                                text-align: center; width: 40px; height: 40px; border-radius: 50%;
+                                                                display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+                                                            {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                        </div>
+                                                        <div>
+                                                            <div style="font-weight: bold;">
+                                                                {{ $employee->first_name }}
+                                                                {{ $employee->last_name }}</div>
+                                                            <div style="color: #5e6e8f; font-size: 14px;">
+                                                                #{{ $employee->emp_id }}</div>
+                                                        </div>
+                                                    </li>
+                                                @endforeach
+                                            </ul>
+                                        @elseif(strlen($searchEmployee) > 0)
+                                            <p>No employees found</p>
+                                        @endif
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Personalized Message <span
+                                                class="text-danger">*</span></label>
+                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
+                                        @error('feedbackMessage')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="row m-0 text-end">
+                                        <p class="p-0">
+                                            <span class="aiChip" onclick="openAIAssist()">
+                                                <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
+                                                hrXpertAI
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            wire:click="closeModal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                            <div class="col-md-5 reqAssist d-none">
+                                <div class="row m-0" style="border: 1px solid #02114f; border-radius: 10px;">
+                                    <p class="textAI mb-0">
+                                        <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                        hrXpertAI Assistant
+                                    </p>
+                                    <div class="m-0 pb-4 row text-center">
+                                        <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                        <p class="fs-6 fw-bold">Ready to asisst</p>
+                                        <p>Write something to see suggestions</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
