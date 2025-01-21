@@ -2,101 +2,164 @@
 
 namespace App\Livewire;
 
+use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class FeedBack extends Component
 {
     public $searchEmployee = '';
-    public $personalizedMessage = '';
+    public $feedbackMessage = '';
     public $feedbackType;
-    public $isRequestModalOpen = false; // Controls Request Feedback modal
-    public $isGiveModalOpen = false;    // Controls Give Feedback modal
-    public $selectedEmployee = null; // To store the selected employee
-    public $searchTerm = '';
-    public $employees = []; // This will hold the search results
+    public $isRequestModalOpen = false;
+    public $isGiveModalOpen = false;
+    public $selectedEmployee = null;
+    public $employees = [];
+    public $activeTab = 'received';
+    public $feedbacks = [];
+    public $userId;
+
     protected $rules = [
-        'searchEmployee' => 'required|string|max:255',
-        'personalizedMessage' => 'required|string',
+        'selectedEmployee' => 'required|array',
+        'selectedEmployee.emp_id' => 'required',
+        'feedbackMessage' => 'required|string|min:2',
+        'feedbackType' => 'required|in:request,give',
     ];
+
+    public function mount()
+    {
+        $this->loadTabData($this->activeTab);
+    }
 
     public function openRequestModal()
     {
-        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->resetFields();
+        $this->feedbackType = 'request';
         $this->isRequestModalOpen = true;
     }
 
     public function openGiveModal()
     {
-        $this->reset(['searchEmployee', 'personalizedMessage']);
+        $this->resetFields();
+        $this->feedbackType = 'give';
         $this->isGiveModalOpen = true;
+    }
+
+    public function resetFields()
+    {
+        $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType']);
     }
 
     public function closeModal()
     {
+        $this->resetFields();
         $this->isRequestModalOpen = false;
         $this->isGiveModalOpen = false;
     }
 
-
-
-    // This method will run whenever the search input is updated
     public function updatedSearchEmployee()
     {
-        // Search query: looking for matches by name or emp_id
-        $this->employees = EmployeeDetails::where('emp_id', 'like', '%' . $this->searchEmployee . '%')
-            ->orWhere('first_name', 'like', '%' . $this->searchEmployee . '%')
-            ->orWhere('last_name', 'like', '%' . $this->searchEmployee . '%')
+        $this->employees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
+            ->where(function ($query) {
+                $query->where('emp_id', 'like', "%{$this->searchEmployee}%")
+                    ->orWhere('first_name', 'like', "%{$this->searchEmployee}%")
+                    ->orWhere('last_name', 'like', "%{$this->searchEmployee}%");
+            })
+            ->orderBy('first_name', 'asc')
+            ->limit(10)
             ->get();
     }
 
-    // This method will set the selected employee
     public function selectEmployee($employeeId)
     {
-        $this->selectedEmployee = EmployeeDetails::find($employeeId);
-        $this->searchEmployee = $this->selectedEmployee->first_name; // Optionally, show the selected name in the input field
-        $this->employees = []; // Clear the search results
+        $employee = collect($this->employees)->firstWhere('emp_id', $employeeId);
+        if ($employee) {
+            $this->selectedEmployee = [
+                'emp_id' => $employee['emp_id'],
+                'first_name' => $employee['first_name'],
+                'last_name' => $employee['last_name'],
+            ];
+        }
+        $this->reset(['searchEmployee', 'employees']);
     }
+
     public function clearSelectedEmployee()
     {
         $this->selectedEmployee = null;
-        $this->searchTerm = '';
     }
 
-    public function saveRequestFeedback()
+    public function saveFeedback()
     {
         $this->validate();
 
-        // Save logic for request feedback
-        // Example: Save to the database
-        // RequestFeedback::create([
-        //     'employee' => $this->searchEmployee,
-        //     'message' => $this->personalizedMessage,
-        // ]);
+        if (!$this->selectedEmployee) {
+            session()->flash('error', 'Please select a valid employee.');
+            return;
+        }
 
-        $this->reset(['searchEmployee', 'personalizedMessage']);
-        $this->isRequestModalOpen = false;
-        session()->flash('message', 'Request Feedback submitted successfully!');
+        FeedBackModel::create([
+            'feedback_type' => $this->feedbackType,
+            'feedback_to' => $this->selectedEmployee['emp_id'],
+            'feedback_from' => auth()->user()->emp_id,
+            'feedback_message' => $this->feedbackMessage,
+        ]);
+
+        session()->flash('message', 'Feedback submitted successfully!');
+        $this->closeModal();
+        $this->loadTabData($this->activeTab); // Refresh tab data
     }
 
-    public function saveGiveFeedback()
+    public function loadTabData($tab)
     {
-        $this->validate();
+        $this->activeTab = $tab;
+        $this->feedbacks = []; // Reset feedbacks when changing tabs
 
-        // Save logic for give feedback
-        // Example: Save to the database
-        // GiveFeedback::create([
-        //     'employee' => $this->searchEmployee,
-        //     'message' => $this->personalizedMessage,
-        // ]);
+        $empId = auth()->user()->emp_id;
 
-        $this->reset(['searchEmployee', 'personalizedMessage']);
-        $this->isGiveModalOpen = false;
-        session()->flash('message', 'Give Feedback submitted successfully!');
+        $query = FeedBackModel::where('status', 1);
+
+        switch ($this->activeTab) {
+            case 'received':
+                $query->where(function ($q) use ($empId) {
+                    $q->where('feedback_to', $empId)
+                        ->where('feedback_type', 'request')
+                        ->where('is_accepted', true)
+                        ->orWhere(function ($q2) use ($empId) {
+                            $q2->where('feedback_to', $empId)
+                                ->where('feedback_type', 'give'); // Directly received feedback
+                        });
+                });
+                break;
+
+            case 'given':
+                $query->where('feedback_from', $empId)
+                    ->where('feedback_type', 'give'); // Feedback voluntarily given
+                break;
+
+            case 'pending':
+                $query->where('feedback_to', $empId)
+                    ->where('feedback_type', 'request')
+                    ->where('is_accepted', false)
+                    ->where('is_declined', false); // Show only unaccepted & not declined requests
+                break;
+
+            case 'drafts':
+                $query->where('feedback_from', $empId)
+                    ->where('is_draft', true)
+                    ->where('feedback_type', 'give');
+                break;
+        }
+
+        // Order results by latest timestamp
+        $this->feedbacks = $query->orderBy('created_at', 'desc')->get();
     }
+
 
     public function render()
     {
-        return view('livewire.feed-back');
+        return view('livewire.feed-back', [
+            'feedbacks' => $this->feedbacks,
+        ]);
     }
 }
