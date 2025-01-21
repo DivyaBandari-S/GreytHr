@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
+        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees,downloadPdf">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -749,8 +749,9 @@
                         </div>
 
                         <div class="show-salary">
-                            <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                                download>Download PDF</a>
+                            @if($monthOfSal)
+                            <p style="cursor: pointer;width:fit-content" wire:click="downloadPdf('{{$monthOfSal}}')" >Download PDF</p>
+                            @endif
                             <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
                                 {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
                             </a>

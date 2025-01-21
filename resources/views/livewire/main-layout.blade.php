@@ -44,6 +44,7 @@
                     <li><a href="/itstatement">IT Statement</a></li>
                     <li><a href="/formdeclaration">IT Declaration</a></li>
                     <li><a href="/reimbursement">Reimbursement</a></li>
+                    <li><a href="/loans_and_advances">Loans and Advances</a></li>
                     <li><a href="/investment">Proof of Investment</a></li>
                     <li><a href="/salary-revision">Salary Revision</a></li>
                 </ul>
@@ -137,7 +138,7 @@
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
                         @elseif($loginEmployeeProfile->gender=='FEMALE')
                         <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
-                        @else
+            ~            @else
                         <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
                         @endif
                         @endif
