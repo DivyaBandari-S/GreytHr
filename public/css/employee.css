@@ -657,6 +657,7 @@ main .btn-send:hover {
         font-size: 12px;
         display: inline-block;
         max-width: 140px;
+        max-width: 140px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -665,6 +666,7 @@ main .btn-send:hover {
     .emailNav{
         font-size: 13px;
         display: inline-block;
+        max-width: 140px;
         max-width: 140px;
         white-space: nowrap;
         overflow: hidden;
@@ -714,6 +716,7 @@ main .btn-send:hover {
         display: flex;
         flex-direction: column;
         bottom: 3px;
+        left: 1.5rem;
         left: 1.5rem;
         right: 1.5rem;
         height: 150px;
@@ -1166,6 +1169,7 @@ main .btn-send:hover {
             font-size: 12px;
             display: inline-block;
             max-width: 140px;
+            max-width: 140px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1174,6 +1178,7 @@ main .btn-send:hover {
         .emailNav{
             font-size: 13px;
             display: inline-block;
+            max-width: 140px;
             max-width: 140px;
             white-space: nowrap;
             overflow: hidden;
@@ -1516,6 +1521,7 @@ main .btn-send:hover {
     position: absolute;
     bottom: 3px;
     left: 1.5rem;
+    left: 1.5rem;
     right: 1.5rem;
     height: 125px;
 }
@@ -1529,6 +1535,7 @@ main .btn-send:hover {
 .managerOtherDetails{
     font-size: 12px;
     display: inline-block;
+    max-width: 160px;
     max-width: 160px;
     white-space: nowrap;
     overflow: hidden;

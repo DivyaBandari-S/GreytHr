@@ -67,25 +67,27 @@ class AttendanceTable extends Component
     public $city='-';
 
     public $employee_shift_type;
-    public $öpenattendanceperiod = false;
+    
     public $postal_code='-';
 
+    
     public $employeeShiftDetails;
     protected $listeners = [
-        'update',
+        'updateDates'
     ];
 
     protected $rules = [
         'fromDate' => 'required|date',
         'toDate' => 'required|date|after_or_equal:fromDate', // Ensuring toDate is after or equal to fromDate
     ];
-    public function mount()
+    public function mount($startDateForInsights, $toDate)
     {
         // First initialize
         $this->year = Carbon::now()->format('Y');
-        $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
-
-        $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        // $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
+         $this->start=$startDateForInsights;
+        // $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        $this->end=$toDate;
         $this->fromDate=$this->start;
         $this->toDate=$this->end;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
@@ -105,21 +107,29 @@ class AttendanceTable extends Component
     ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
     ->first();
     }
+    public function updatedStart($value)
+    {
+        $this->emit('updatedStart', $value);
+    }
+
+    public function updatedEnd($value)
+    {
+        $this->emit('updatedEnd', $value);
+    }
+    
   
     public function updatefromDate()
     {
         $this->fromDate=$this->fromDate;
         $this->checkUpdateDate();
     }
-    public function öpenattendanceperiodModal()
+   
+    public function updateDates($startDateForInsights, $toDate)
     {
-
-        $this->öpenattendanceperiod = true;
+        $this->start = $startDateForInsights;
+        $this->end = $toDate;
     }
-    public function closeattendanceperiodModal()
-    {
-        $this->öpenattendanceperiod = false;
-    }
+    
     public function updatetoDate()
     {
         $this->toDate=$this->toDate;
@@ -403,12 +413,7 @@ class AttendanceTable extends Component
     {
         $this->legend=!$this->legend;
     }
-    public function update($start, $end) 
-    {
-        $this->year = carbon::parse($start)->format('Y');
-        $this->start = $start;
-        $this->end = $end;
-    }
+    
 
     public function changeYear()
     {
