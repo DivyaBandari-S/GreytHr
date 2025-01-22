@@ -166,63 +166,7 @@
 
                     <div class="bottom">
                         <div class="content">
-                            @if ($loginEmpManagerDetails)
-                            <span class="name"
-                                title="{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}">
-                                {{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
-                                {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
-                                <br>
-                                <span class="about-me">
-                                    @php
-                                    $jobTitle = $loginEmpManagerDetails
-                                    ? $loginEmpManagerDetails->job_role
-                                    : ''; // Empty string instead of 'N/A'
-                                    // Replace specific titles with desired formats
-                                    $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
-                                    $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
-                                    $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
-                                    $convertedTitle = preg_replace('/\bIII\b/i', 'III', $convertedTitle);
-
-                                    // Capitalize the first letter of each word, while keeping 'II' intact
-                                    $convertedTitle = preg_replace_callback(
-                                    '/\b([a-z])([a-z]*)/i',
-                                    function ($matches) {
-                                    return strtoupper($matches[1]) . strtolower($matches[2]);
-                                    },
-                                    $convertedTitle,
-                                    );
-
-                                    // Ensure 'II' and 'HR' stay capitalized after the callback
-                                    $convertedTitle = str_replace(
-                                    [' Ii', ' Hr', ' IIi', 'Iii'],
-                                    [' II', ' HR', ' III'],
-                                    $convertedTitle,
-                                    );
-                                    @endphp
-
-                                    {{ $convertedTitle }}
-                                </span>
-                            </span>
-                            @else
-                            <span class="normalText">HR will assign a reporting manager soon</span>
-                            @endif
-                            <!-- Display email if it is not null -->
-                            @if (isset($loginEmpManagerDetails->email) && !empty($loginEmpManagerDetails->email))
-                            <span class="managerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">
-                                <a class="emailNav"
-                                    href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
-                            </span>
-                            @else
-                            <span class="managerOtherDetails"></span>
-                            @endif
-
-                            <!-- Display mobile number if it is not null -->
-                            @if ($loginEmpManagerDetails)
-                            <span class="managerOtherDetails">Mobile :
-                                {{ $loginEmpManagerDetails->emergency_contact }}</span>
-                            @else
-                            <span></span>
-                            @endif
+                         checking conflicts
 
                         </div>
 
