@@ -169,6 +169,7 @@
                             @if ($loginEmpManagerDetails)
                                 <span class="name"
                                     title="{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}">
+                                    <i class="bi bi-person-fill"></i>
                                     {{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
                                     {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
                                     <br>
@@ -200,7 +201,7 @@
                                             );
                                         @endphp
 
-                                        {{ $convertedTitle }}
+                                        <i class="bi bi-person-badge-fill me-1"></i>{{ $convertedTitle }}
                                     </span>
                                 </span>
                             @else
@@ -209,6 +210,7 @@
                             <!-- Display email if it is not null -->
                             @if (isset($loginEmpManagerDetails->email) && !empty($loginEmpManagerDetails->email))
                                 <span class="managerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">
+                                <i class="bi bi-envelope-at-fill me-1"></i>
                                     <a class="emailNav"
                                         href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
                                 </span>
@@ -218,7 +220,8 @@
 
                             <!-- Display mobile number if it is not null -->
                             @if ($loginEmpManagerDetails)
-                                <span class="managerOtherDetails">Mobile :
+                                <span class="managerOtherDetails">
+                                    <i class="bi bi-telephone-fill me-1"></i>
                                     {{ $loginEmpManagerDetails->emergency_contact }}</span>
                                     @else
                                     <span></span>
