@@ -13,11 +13,20 @@ return new class extends Migration
     {
         Schema::create('feed_back_models', function (Blueprint $table) {
             $table->id();
-            $table->string('feedback_type');
-            $table->string('emp_id');
-            $table->text('message');
-            $table->string('feedback_by');
+            $table->enum('feedback_type', ['request', 'give']); // Type of feedback
+            $table->string('feedback_to', 10); // User receiving feedback
+            $table->string('feedback_from', 10); // User giving feedback
+            $table->text('feedback_message');
+            $table->boolean('is_draft')->default(false);
+            $table->tinyInteger('status')->default(1);
+            $table->boolean('is_accepted')->default(false);
+            $table->boolean('is_declined')->default(false);
+            $table->text('replay_feedback_message')->nullable();
             $table->timestamps();
+
+            // Foreign keys (assuming referencing users table)
+            $table->foreign('feedback_to')->references('emp_id')->on('employee_details')->onDelete('cascade');
+            $table->foreign('feedback_from')->references('emp_id')->on('employee_details')->onDelete('cascade');
         });
     }
 
