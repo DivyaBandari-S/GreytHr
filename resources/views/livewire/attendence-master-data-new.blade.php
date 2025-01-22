@@ -393,6 +393,10 @@
     $isFilter=1;
     $isHoliday=0;
     $leaveTake=0;
+    $leaveTakeforSession1=0;
+    $leaveTakeforSession2=0;
+    $leaveTakeforSession22=0;
+    $leaveTypeForSession22=null;
     $currentMonth=date('n');
     if(isset($attendanceYear) && $attendanceYear !== null) {
     $currentYear = intval($attendanceYear);
@@ -555,18 +559,26 @@
                     </p>
                     <p class="m-1 legend-text">Holiday</p>
                 </div>
-                <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                <div class="col-md-3 mb-2 pe-0" style="display: flex;margin-left:-10px">
                     <p class="mb-0">
-                      <img src="{{ asset('images/half-day-working-status.png') }}" height="20" width="20">
+                        <img src="{{ asset('images/half-day-session1-present.png') }}"  height="20" width="20">
                     </p>
-                    <p class="m-1 legend-text">Half Day</p>
+                    <p class="m-1  pb-2 legend-text">Half Day(Session 1)</p>
                 </div>
+            <div class="d-flex" style="gap: 10px;">   
+            <div class="col-md-3 mb-2" style="display: flex;margin-left:-2px">
+                                <p class="mb-0">
+                                <img src="{{ asset('images/half-day-session2-present.png') }}"  height="20" width="20">
+                                </p>
+                                <p class="m-1  pb-2 legend-text">Half Day(Session 2)</p>
+                            </div>
                 <div class="col-md-3 mb-2 pe-0" style="display: flex">
                     <p class="mb-0">
                         <i class="fas fa-battery-empty" style="color: #778899;"></i>
                     </p>
                     <p class="m-1  legend-text">IT Maintanance</p>
                 </div>
+            </div>    
             </div>
         </div>
     </div>
@@ -668,7 +680,11 @@
 
                     <td style="max-width: 200px;font-weight:400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"data-toggle="tooltip" data-placement="top"
                     title="{{ ucwords(strtolower($emp->first_name)) }} {{ ucwords(strtolower($emp->last_name)) }}({{ $emp->emp_id }})">
-                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role),}}{{ucfirst($emp->job_location)}}</span>
+                        {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}<span class="text-muted">(#{{ $emp->emp_id }})</span><br /><span class="text-muted" style="font-size:11px;">{{ucfirst($emp->job_role)}}
+                            @if(!empty($emp->job_location))
+                              <span>, {{ucwords(strtolower($emp->job_location))}}</span>
+                            @endif
+                        </span>
                     </td>
                     @php
                     $found = false;
@@ -887,6 +903,12 @@
                             if($date == $fullDate)
                             {
                             $leaveTake=1;
+                            $leaveType=App\Models\LeaveRequest::where('emp_id',$e->emp_id)->whereDate('from_date', '<=', $date)
+                                        ->whereDate('to_date', '>=', $date)
+                                        ->where('leave_status',2)
+                                        ->where('from_session','Session 1')
+                                        ->where('to_session','Session 2')
+                                        ->value('leave_type');
 
                             }
                             }
@@ -896,6 +918,83 @@
                         @endif
 
                         @endforeach
+                        @foreach($ApprovedLeaveRequestsForSession1 as $empId => $leaveDetails)
+                        @if($empId==$e->emp_id)
+                        <p>
+                            @php
+                            foreach ($leaveDetails['dates'] as $key=>$date)
+                            {
+                                    if($date == $fullDate)
+                                    {
+                                        if (count($leaveDetails['dates']) > 1 && $key != array_key_last($leaveDetails['dates'])) {
+                                                $leaveTake = 1; // For last iteration when count > 1
+                                                $leaveType=App\Models\LeaveRequest::where('emp_id',$e->emp_id)->whereDate('from_date', '<=', $date)
+                                                    ->whereDate('to_date', '>=', $date)
+                                                    ->where('leave_status',2)
+                                                    ->where('leave_applications.from_session','Session 1')
+                                                    ->where('leave_applications.to_session','Session 1')
+                                                    ->value('leave_type');
+
+                                         
+                                        } else {
+                                               $leaveTakeforSession1 = 1; // For other iterations
+                                               $leaveTypeforSession1=App\Models\LeaveRequest::where('emp_id',$e->emp_id)->whereDate('from_date', '<=', $date)
+                                                    ->whereDate('to_date', '>=', $date)
+                                                    ->where('leave_status',2)
+                                                    ->where('leave_applications.from_session','Session 1')
+                                                    ->where('leave_applications.to_session','Session 1')
+                                                    ->value('leave_type');
+                                        }
+                                    
+
+                                    }
+                            }
+                            @endphp
+                        </p>
+
+                        @endif
+                        @endforeach
+                        @foreach($ApprovedLeaveRequestsForSession2 as $empId => $leaveDetails)
+                        @if($empId==$e->emp_id)
+                        <p>
+                            @php
+                            foreach ($leaveDetails['dates'] as $key=>$date)
+                            {
+                                if($date == $fullDate)
+                                    {
+                                        if ((count($leaveDetails['dates']) > 1 && $key === array_key_first($leaveDetails['dates']))||(count($leaveDetails['dates']) == 1)) {
+                                               $leaveTakeforSession2 = 1; // For other iterations
+                                               $leaveTypeforSession2=App\Models\LeaveRequest::where('emp_id',$e->emp_id)->whereDate('from_date', '<=', $date)
+                                                    ->whereDate('to_date', '>=', $date)
+                                                    ->where('leave_status',2)
+                                                    ->where('leave_applications.from_session','Session 2')
+                                                    ->where('leave_applications.to_session','Session 2')
+                                                    ->value('leave_type');
+                                              
+                                         
+                                        } else {
+
+                                                 $leaveTake= 1; // For last iteration when count > 1
+                                                $leaveType=App\Models\LeaveRequest::where('emp_id',$e->emp_id)->whereDate('from_date', '<=', $date)
+                                                    ->whereDate('to_date', '>=', $date)
+                                                    ->where('leave_status',2)
+                                                    ->where('leave_applications.from_session','Session 2')
+                                                    ->where('leave_applications.to_session','Session 2')
+                                                    ->value('leave_type');
+
+                                               
+                                        }
+                                    
+
+                                    }
+                                    
+                            }
+                            @endphp
+                        </p>
+
+                        @endif
+                        @endforeach
+
                         @foreach($Holiday as $h)
 
                         @if($h==$fullDate)
@@ -914,7 +1013,101 @@
                         @elseif($isHoliday==1)
                         <p style=" color:#666;font-weight:500;"title="Holiday">H</p>
                         @elseif($leaveTake==1)
-                        <p style=" color:#666;font-weight:500;"title="Leave">L</p>
+            
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveType = $leaveAbbreviations[$leaveType] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+ 
+                        <p style=" color:#666;font-weight:500;"title="{{$abbreviationforLeaveType}}">{{$abbreviationforLeaveType}}</p>
+                        
+                        @elseif($leaveTakeforSession1==1&&$present==1)
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveTypeforSession1 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+ 
+                        <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and Present">{{$abbreviationforLeaveTypeforSession1}}:P</p>
+                        @elseif($leaveTakeforSession2==1&&$present==1)
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+                        <p style=" color:#666;font-weight:500;"title="Present and {{$leaveTypeforSession2}}">P:{{$abbreviationforLeaveTypeforSession2}}</p>
+                        @elseif($leaveTakeforSession2==1&&$leaveTakeforSession1==1)
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveTypeforSession1 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
+                                            $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+                        <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}}:{{$leaveTypeforSession2}}">{{$abbreviationforLeaveTypeforSession1}}:{{$abbreviationforLeaveTypeforSession2}}</p>
+                       
+                        @elseif($leaveTakeforSession1==1)
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+                        <p style=" color:#666;font-weight:500;"title="{{$abbreviationforLeaveTypeforSession2}} and absent">{{$abbreviationforLeaveTypeforSession2}}:A</p>
+                        @elseif($leaveTakeforSession2==1)
+                        @php
+                                            $leaveAbbreviations = [
+                                                'Loss Of Pay' => 'LOP',
+                                                'Casual Leave' => 'CL',
+                                                'Sick Leave' => 'SL',
+                                                'Casual Leave Probation'=>'CLP',
+                                                'Marriage Leave'=>'ML',
+                                                'Paternity Leave'=>'PL',
+                                                'Maternity Leave'=>'ML',
+                                            ];
+
+                                            $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
+                                 @endphp
+                        <p style=" color:#666;font-weight:500;"title="Absent and {{$abbreviationforLeaveTypeforSession2}}">A:{{$abbreviationforLeaveTypeforSession2}}</p>
                         @elseif($present==1&&!empty($outRecord))
                            @php
                                 $shiftStartTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time);
@@ -976,6 +1169,9 @@
                         $present=0;
                         $isHoliday=0;
                         $leaveTake=0;
+                        $leaveTakeforSession1=0;
+                        $leaveTakeforSession2=0;
+                        $leaveTakeforSession22=0;
 
                         @endphp
 
