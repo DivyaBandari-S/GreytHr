@@ -356,10 +356,7 @@
     <div id="incomeContainer3" class="income-container3" style="display: none;">
         <div class="row">
             <div class="col-md-12 mt-2 ml-2 text-center bg-white  justify-content-center ">
-
                 <p class="pt-2" style="height:40px;background:white; font-size: 13px;">No data to display !!!</p>
-
-
             </div>
         </div>
     </div>
@@ -441,18 +438,76 @@
             <span class="totalamount">₹</span>
         </div>
     </div>
+    <div id="incomeContainer6" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Items</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Amount</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">TOTAL INCOME</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;text-align: left;">INCOME TAX</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+            </tbody>
+            <tr>
+                <td style="padding: 10px;text-align: left;">PROFESSIONAL TAX</td>
+                <td style="padding: 10px; text-align: right;">0.00</td>
+            </tr>
+            <tr>
+                <td style="padding: 10px;text-align: left;">PROVIDENT FUND</td>
+                <td style="padding: 10px; text-align: right;">0.00</td>
+            </tr>
+        </table>
+
+    </div>
     <div class="row bg-white  mt-1 ">
         <div class="col-md-12  m-l-2 d-flex cards simple-cards" style=" border-radius:2px;border:1px solid silver;">
             <span class="card-main-text  mx-4">H. Income After Exemption(E - F + G)</span>
             <p class="totalamount">₹</p>
         </div>
     </div>
+
     <div class="row bg-white ml-2 mt-1 ">
         <div id="expandButton7" class="col-md-12 bg-white d-flex text-center cards">
             <span class="card-main-text"><span class="mx-2 toggleIcon" style="width: 10px; display: inline-block;">+</span>I. Less Deduction under Section 16</span>
             <span class="click_text">click to view breakdown </span>
-            <span class="totalamount">₹</span>
+            <span class="totalamount">₹ 75,000.00</span>
         </div>
+    </div>
+    <div id="incomeContainer7" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Items</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Amount</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">TAX ON EMPLOYMENT : SEC 16(III)</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;text-align: left;">STANDARD DEDUCTION : SEC 16(IA)</td>
+                    <td style="padding: 10px; text-align: right;">75,000.00</td>
+                </tr>
+            </tbody>
+
+        </table>
+
     </div>
     <div class="row bg-white  mt-1 ">
         <div class="col-md-12  m-l-2 d-flex cards simple-cards" style=" border-radius:2px;border:1px solid silver;">
@@ -482,6 +537,13 @@
             <span class="totalamount">₹</span>
         </div>
     </div>
+    <div id="incomeContainer9" class="income-container3" style="display: none;">
+        <div class="row">
+            <div class="col-md-12 mt-2 ml-2 text-center bg-white  justify-content-center ">
+                <p class="pt-2" style="height:40px;background:white; font-size: 13px;">No data to display !!!</p>
+            </div>
+        </div>
+    </div>
     <div class="row bg-white  mt-1 ">
         <div class="col-md-12  m-l-2 d-flex cards simple-cards" style=" border-radius:2px;border:1px solid silver;">
             <span class="card-main-text  mx-4">N. Taxable Income (L - M)</span>
@@ -496,6 +558,32 @@
             <span class="totalamount">₹</span>
         </div>
     </div>
+    <div id="incomeContainer10" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Raw Tax</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Surcharge</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Health & Edu.Cess</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Total</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
     <div class="row bg-white ml-2 mt-1 ">
         <div id="expandButton11" class="col-md-12 bg-white d-flex text-center cards">
             <span class="card-main-text"><span class="mx-2 toggleIcon" style="width: 10px; display: inline-block;">+</span>
@@ -504,14 +592,88 @@
             <span class="totalamount">₹</span>
         </div>
     </div>
-    <div class="row bg-white ml-2 mt-1 ">
+    <div id="incomeContainer11" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Item</th>
+                    <th  style="text-align: right; padding: 10px; font-size:11px ;font-weight:500">Raw Tax</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Surcharge</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Health & Edu.Cess</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Total</th>
+                </tr>
 
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">Deduction Through Payroll</td>
+                    <td style="padding: 10px;text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;text-align: left;">Direct TDS</td>
+                    <td style="padding: 10px;text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+                <tr>
+                    <td style="padding: 10px;text-align: left;">Previous Employment</td>
+                    <td style="padding: 10px;text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+                <tr style="background-color: #dfe8ee ;">
+                    <td style="padding: 10px;text-align: left;">Total</td>
+                    <td style="padding: 10px;text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+    <div class="row bg-white ml-2 mt-1 ">
         <div id="expandButton12" class="col-md-12 bg-white d-flex text-center cards">
             <span class="card-main-text"><span class="mx-2 toggleIcon" style="width: 10px; display: inline-block;">+</span>
                 Q. Balance Payable</span>
             <span class="click_text">click to view breakdown </span>
             <span class="totalamount">₹</span>
         </div>
+    </div>
+    <div id="incomeContainer12" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Raw Tax</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Surcharge</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Health & Edu.Cess</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Total</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 
 
@@ -523,6 +685,35 @@
             <span class="click_text">click to view breakdown </span>
             <span class="totalamount">₹</span>
         </div>
+    </div>
+    <div id="incomeContainer13" class="income-container5 row" style="display: none;">
+        <table  class="mt-1" style="width: 100%; border-collapse: collapse; font-family: Arial, sans-serif;border:1px solid silver">
+            <thead>
+                <!-- First Header Row -->
+                <tr style="background-color: #c3daf3;">
+                    <th colspan="4" style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">(i) Monthly tax</th>
+                </tr>
+                <tr style="background-color: #c3daf3;">
+                    <th  style="text-align: left; padding: 10px; font-size:11px ;font-weight:500">Raw Tax</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Surcharge</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Health & Edu.Cess</th>
+                    <th style="text-align: right; padding: 10px;font-size:11px ;font-weight:500">Total</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                <!-- Body Rows -->
+                <tr>
+                    <td style="padding: 10px;text-align: left;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                    <td style="padding: 10px; text-align: right;">0.00</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
     </div>
 </div>
 @endif
@@ -553,6 +744,11 @@
     toggleVisibility('expandButton7', 'incomeContainer7');
     toggleVisibility('expandButton8', 'incomeContainer8');
     toggleVisibility('expandButton9', 'incomeContainer9');
+    toggleVisibility('expandButton10', 'incomeContainer10');
+    toggleVisibility('expandButton11', 'incomeContainer11');
+    toggleVisibility('expandButton12', 'incomeContainer12');
+    toggleVisibility('expandButton13', 'incomeContainer13');
+
 
     document.getElementById('expandIncome').addEventListener('click', function() {
         let incomeRows = document.querySelectorAll('.income-rows');

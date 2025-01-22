@@ -398,6 +398,8 @@ class AttendenceMasterDataNew extends Component
             ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
             ->where('leave_applications.leave_status', 2) // Filter by leave_status = 3 instead of status = 'approved'
             ->whereIn('leave_applications.emp_id', $employeeIds)
+            ->where('leave_applications.from_session', 'Session 1')
+            ->where('leave_applications.to_session', 'Session 2')
             ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth . '-01') // Dynamically set year and month
             ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth . '-31') // Dynamically set year and month
             ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
@@ -425,6 +427,86 @@ class AttendenceMasterDataNew extends Component
                 }
             }
 
+            $approvedLeaveRequestsForSession1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
+            ->where('leave_applications.leave_status', 2) // Filter by leave_status = 3 instead of status = 'approved'
+            ->whereIn('leave_applications.emp_id', $employeeIds)
+            ->where('leave_applications.from_session', 'Session 1')
+            ->where('leave_applications.to_session', 'Session 1')
+            ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth . '-01') // Dynamically set year and month
+            ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth . '-31') // Dynamically set year and month
+            ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
+            ->mapWithKeys(function ($leaveRequestforSession1) {
+                Log::info('Processing leave request', [
+                    'emp_id' => $leaveRequestforSession1->emp_id,
+                    'from_date' => $leaveRequestforSession1->from_date,
+                    'to_date' => $leaveRequestforSession1->to_date,
+                    'status_name' => $leaveRequestforSession1->status_name,
+                ]);
+        
+                $fromDate = \Carbon\Carbon::parse($leaveRequestforSession1->from_date);
+                $toDate = \Carbon\Carbon::parse($leaveRequestforSession1->to_date);
+                $number_of_days = $fromDate->diffInDays($toDate) + 1;
+        
+                Log::info('Calculated number of days', [
+                    'emp_id' => $leaveRequestforSession1->emp_id,
+                    'number_of_days' => $number_of_days,
+                ]);
+        
+                $dates = [];
+                for ($i = 0; $i < $number_of_days; $i++) {
+                    $currentDate = $fromDate->copy()->addDays($i)->toDateString();
+                    $dates[] = $currentDate;
+                    Log::info('Generated date for leave', [
+                        'emp_id' => $leaveRequestforSession1->emp_id,
+                        'currentDate' => $currentDate,
+                    ]);
+                }
+        
+                return [
+                    $leaveRequestforSession1->emp_id => [
+                        'emp_id' => $leaveRequestforSession1->emp_id,
+                        'dates' => $dates,
+                        'status_name' => $leaveRequestforSession1->status_name, // Include status_name in the output
+                    ],
+                ];
+            });
+        
+        Log::info('Final approvedLeaveRequestsForSession1', ['data' => $approvedLeaveRequestsForSession1]);
+          
+            $approvedLeaveRequestsForSession2 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+            ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
+            ->where('leave_applications.leave_status', 2) // Filter by leave_status = 3 instead of status = 'approved'
+            ->whereIn('leave_applications.emp_id', $employeeIds)
+            ->where('leave_applications.from_session','Session 2')
+            ->where('leave_applications.to_session','Session 2')
+            ->whereDate('from_date', '>=', $this->selectedYear . '-' . $currentMonth . '-01') // Dynamically set year and month
+            ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth . '-31') // Dynamically set year and month
+            ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
+            ->mapWithKeys(function ($leaveRequestforSession2) {
+                $fromDate = \Carbon\Carbon::parse($leaveRequestforSession2->from_date);
+                $toDate = \Carbon\Carbon::parse($leaveRequestforSession2->to_date);
+                $number_of_days = $fromDate->diffInDays($toDate) + 1;
+                $dates = [];
+                for ($i = 0; $i < $number_of_days; $i++) {
+                    $dates[] = $fromDate->copy()->addDays($i)->toDateString();
+                }
+                return [
+                    $leaveRequestforSession2->emp_id => [
+                        'emp_id' => $leaveRequestforSession2->emp_id,
+                        'dates' => $dates,
+                        'status_name' => $leaveRequestforSession2->status_name, // Include status_name in the output
+                    ],
+                ];
+            }); 
+          
+            $leaveDatesForSession2 = [];
+            foreach ($approvedLeaveRequestsForSession2 as $emp_id => $leaveRequest) {
+                foreach ($leaveRequest['dates'] as $date) {
+                    $leaveDatesForSession2[$emp_id][] = $date;
+                }
+            }
+           
             $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth)
             ->whereYear('swipe_records.created_at', $this->selectedYear)
@@ -454,7 +536,7 @@ class AttendenceMasterDataNew extends Component
 
            
    
-            return view('livewire.attendence-master-data-new',['Employees'=>$filteredEmployees,'EmployeesCount'=>$employeescount,'DistinctDatesMap'=>$distinctDatesMap,'DistinctDatesMapCount'=>$distinctDatesMapCount,'Holiday'=> $this->holiday,'ApprovedLeaveRequests1'=>$approvedLeaveRequests1,'SelectedYear'=>$this->selectedYear ]);
+            return view('livewire.attendence-master-data-new',['Employees'=>$filteredEmployees,'EmployeesCount'=>$employeescount,'DistinctDatesMap'=>$distinctDatesMap,'DistinctDatesMapCount'=>$distinctDatesMapCount,'Holiday'=> $this->holiday,'ApprovedLeaveRequests1'=>$approvedLeaveRequests1,'ApprovedLeaveRequestsForSession1'=>$approvedLeaveRequestsForSession1,'ApprovedLeaveRequestsForSession2'=>$approvedLeaveRequestsForSession2,'SelectedYear'=>$this->selectedYear ]);
     
     }
 }

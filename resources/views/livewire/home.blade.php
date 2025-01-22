@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
+        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees,downloadPdf">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -8,13 +8,13 @@
         </div>
     </div>
     <div class="content">
-    <div class="row m-0 p-0 mb-3">
+        <div class="row m-0 p-0 mb-3">
             <div class="col-12 col-md-8 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content  row p-0 m-0">
                         <div class="col-md-4 p-0 ps-3 pt-4">
                             @if ($greetingText)
-                                <p class="morning-city">{{ $greetingText }}</p>
+                            <p class="morning-city">{{ $greetingText }}</p>
                             @endif
                             <p class="morning-city" style="padding-top: 2.5em;">Welcome<br>
                                 {{ ucwords(strtolower($loginEmployee->first_name)) }}
@@ -60,34 +60,34 @@
                                 <div class="col-md-7 ps-0 pt-2 text-end">
                                     <p class="normalText mt-2">
                                         @php
-                                            // Fetch shift times
-                                            if ($this->employeeShiftDetails) {
-                                                $EmployeeStartshiftTime = $this->employeeShiftDetails->shift_start_time;
-                                                $EmployeeEndshiftTime = $this->employeeShiftDetails->shift_end_time;
-                                            } else {
-                                                // Handle the case when no data is found, e.g., set default values or show a message
-                                                $EmployeeStartshiftTime = null;
-                                                $EmployeeEndshiftTime = null;
-                                            }
+                                        // Fetch shift times
+                                        if ($this->employeeShiftDetails) {
+                                        $EmployeeStartshiftTime = $this->employeeShiftDetails->shift_start_time;
+                                        $EmployeeEndshiftTime = $this->employeeShiftDetails->shift_end_time;
+                                        } else {
+                                        // Handle the case when no data is found, e.g., set default values or show a message
+                                        $EmployeeStartshiftTime = null;
+                                        $EmployeeEndshiftTime = null;
+                                        }
 
-                                            // Default times
+                                        // Default times
 
-                                            if ($EmployeeStartshiftTime === null && $EmployeeEndshiftTime === null) {
-                                                $formattedShiftMessage = 'Shift not assigned yet';
-                                            } else {
-                                                // Format the times if they are not null
-                                                $formattedStartShiftTime = (new DateTime(
-                                                    $EmployeeStartshiftTime,
-                                                ))->format('H:i a');
-                                                $formattedEndShiftTime = (new DateTime($EmployeeEndshiftTime))->format(
-                                                    'H:i a',
-                                                );
-                                                $formattedShiftMessage =
-                                                    $formattedStartShiftTime .
-                                                    ' to ' .
-                                                    $formattedEndShiftTime .
-                                                    ' Shift';
-                                            }
+                                        if ($EmployeeStartshiftTime === null && $EmployeeEndshiftTime === null) {
+                                        $formattedShiftMessage = 'Shift not assigned yet';
+                                        } else {
+                                        // Format the times if they are not null
+                                        $formattedStartShiftTime = (new DateTime(
+                                        $EmployeeStartshiftTime,
+                                        ))->format('H:i a');
+                                        $formattedEndShiftTime = (new DateTime($EmployeeEndshiftTime))->format(
+                                        'H:i a',
+                                        );
+                                        $formattedShiftMessage =
+                                        $formattedStartShiftTime .
+                                        ' to ' .
+                                        $formattedEndShiftTime .
+                                        ' Shift';
+                                        }
 
                                         @endphp
                                         {{ substr($currentDay, 0, 3) }} | {{ $formattedShiftMessage }}
@@ -98,25 +98,25 @@
 
                                         <div class="col-11 p-0" style="text-align: end;">
                                             @if (
-                                                !empty($formattedAddress['village']) ||
-                                                    !empty($formattedAddress['county']) ||
-                                                    !empty($formattedAddress['city']) ||
-                                                    !empty($formattedAddress['country']) ||
-                                                    !empty($formattedAddress['postcode']))
-                                                {{-- Display the formatted address if any of the fields are not empty --}}
-                                                <p class="mb-1">
-                                                    {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
-                                                    {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
-                                                    {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
-                                                    {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
-                                                    {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
-                                                </p>
+                                            !empty($formattedAddress['village']) ||
+                                            !empty($formattedAddress['county']) ||
+                                            !empty($formattedAddress['city']) ||
+                                            !empty($formattedAddress['country']) ||
+                                            !empty($formattedAddress['postcode']))
+                                            {{-- Display the formatted address if any of the fields are not empty --}}
+                                            <p class="mb-1">
+                                                {{ !empty($formattedAddress['village']) ? $formattedAddress['village'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['county']) ? $formattedAddress['county'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['city']) ? $formattedAddress['city'] . ', ' : '' }}
+                                                {{ !empty($formattedAddress['country']) ? $formattedAddress['country'] . '-' : '' }}
+                                                {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
+                                            </p>
                                             @elseif(!empty($country) || !empty($city))
-                                                {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
-                                                <p class="mb-1">{{ $city }}, {{ $country }}</p>
+                                            {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
+                                            <p class="mb-1">{{ $city }}, {{ $country }}</p>
                                             @else
-                                                {{-- Display a default message if everything is empty --}}
-                                                <p class="mb-1">Address not available</p>
+                                            {{-- Display a default message if everything is empty --}}
+                                            <p class="mb-1">Address not available</p>
                                             @endif
 
                                         </div>
@@ -132,13 +132,13 @@
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                     <button id="signButton" class="signInButton" wire:click="toggleSignState">
                                         @if ($swipes)
-                                            @if ($swipes->in_or_out === 'OUT')
-                                                Sign In
-                                            @else
-                                                Sign Out
-                                            @endif
+                                        @if ($swipes->in_or_out === 'OUT')
+                                        Sign In
                                         @else
-                                            Sign In
+                                        Sign Out
+                                        @endif
+                                        @else
+                                        Sign In
                                         @endif
                                     </button>
                                 </div>
@@ -156,76 +156,17 @@
 
                     <div class="profile-pic">
                         @if ($loginEmpManagerDetails && $loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
-                            <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
+                        <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
                         @elseif($loginEmpManagerDetails === null)
-                            <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
+                        <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
                         @else
-                            <img src="{{ asset('/images/user.jpg') }}" alt="">
+                        <img src="{{ asset('/images/user.jpg') }}" alt="">
                         @endif
                     </div>
 
                     <div class="bottom">
                         <div class="content">
-                            @if ($loginEmpManagerDetails)
-                                <span class="name"
-                                    title="{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}">
-                                    <i class="bi bi-person-fill"></i>
-                                    {{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
-                                    {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
-                                    <br>
-                                    <span class="about-me">
-                                        @php
-                                            $jobTitle = $loginEmpManagerDetails
-                                                ? $loginEmpManagerDetails->job_role
-                                                : ''; // Empty string instead of 'N/A'
-                                            // Replace specific titles with desired formats
-                                            $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
-                                            $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
-                                            $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
-                                            $convertedTitle = preg_replace('/\bIII\b/i', 'III', $convertedTitle);
-
-                                            // Capitalize the first letter of each word, while keeping 'II' intact
-                                            $convertedTitle = preg_replace_callback(
-                                                '/\b([a-z])([a-z]*)/i',
-                                                function ($matches) {
-                                                    return strtoupper($matches[1]) . strtolower($matches[2]);
-                                                },
-                                                $convertedTitle,
-                                            );
-
-                                            // Ensure 'II' and 'HR' stay capitalized after the callback
-                                            $convertedTitle = str_replace(
-                                                [' Ii', ' Hr', ' IIi', 'Iii'],
-                                                [' II', ' HR', ' III'],
-                                                $convertedTitle,
-                                            );
-                                        @endphp
-
-                                        <i class="bi bi-person-badge-fill me-1"></i>{{ $convertedTitle }}
-                                    </span>
-                                </span>
-                            @else
-                                <span class="normalText">HR will assign a reporting manager soon</span>
-                            @endif
-                            <!-- Display email if it is not null -->
-                            @if (isset($loginEmpManagerDetails->email) && !empty($loginEmpManagerDetails->email))
-                                <span class="managerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">
-                                <i class="bi bi-envelope-at-fill me-1"></i>
-                                    <a class="emailNav"
-                                        href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
-                                </span>
-                            @else
-                                <span class="managerOtherDetails"></span>
-                            @endif
-
-                            <!-- Display mobile number if it is not null -->
-                            @if ($loginEmpManagerDetails)
-                                <span class="managerOtherDetails">
-                                    <i class="bi bi-telephone-fill me-1"></i>
-                                    {{ $loginEmpManagerDetails->emergency_contact }}</span>
-                                    @else
-                                    <span></span>
-                            @endif
+                         checking conflicts
 
                         </div>
 
@@ -602,17 +543,7 @@
                 </a>
             </div>
 
-            <div class="payslip-card mb-3">
-                <p class="payslip-card-title">POI</p>
-                <p class="payslip-small-desc">
-                    Hold on! You can submit your Proof of Investments (POI) once released.
-                </p>
-                <a href="#">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-            </div>
+
         </div>
         <div class="col-md-5 mb-4 ">
             @if ($ismanager)
@@ -808,13 +739,14 @@
                         </div>
                     </div>
 
-                    <div class="show-salary">
-                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                            download>Download PDF</a>
-                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
-                        </a>
-                    </div>
+                        <div class="show-salary">
+                            @if($monthOfSal)
+                            <p style="cursor: pointer;width:fit-content" wire:click="downloadPdf('{{$monthOfSal}}')" >Download PDF</p>
+                            @endif
+                            <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                                {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
+                            </a>
+                        </div>
                     @else
                     <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
                         <p class=" payslip-small-desc ">No salary details are available.</p>
@@ -828,7 +760,17 @@
                     </a>
                 </div>
             </div>
-
+            <div class="payslip-card mb-3">
+                <p class="payslip-card-title">POI</p>
+                <p class="payslip-small-desc">
+                    Hold on! You can submit your Proof of Investments (POI) once released.
+                </p>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
+            </div>
 
 
         </div>
@@ -1200,23 +1142,11 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {
-            {
-                $grossPay
-            }
-        }; // Correct data injection
-        var deductions = {
-            {
-                $deductions
-            }
-        }; // Correct data injection
-        var netPay = {
-            {
-                $netPay
-            }
-        };
+        var grossPay = {{ $grossPay  }}; // Correct data injection
+        var deductions = {{$deductions}}; // Correct data injection
+        var netPay = {{$netPay}};
 
-        // Total of netPay and deductions should equal grossPay
+        // Total of netPay and deduction~s should equal grossPay
         if (grossPay !== (netPay + deductions)) {
             console.error('The sum of net pay and deductions does not match the gross pay.');
         }
