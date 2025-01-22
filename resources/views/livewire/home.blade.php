@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees,downloadPdf">
+        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -166,7 +166,66 @@
 
                     <div class="bottom">
                         <div class="content">
-                         checking conflicts
+                            @if ($loginEmpManagerDetails)
+                            <span class="name"
+                                title="{{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }} {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}">
+                                <i class="bi bi-person-fill"></i>
+                                {{ ucwords(strtolower($loginEmpManagerDetails->first_name)) }}
+                                {{ ucwords(strtolower($loginEmpManagerDetails->last_name)) }}
+                                <br>
+                                <span class="about-me">
+                                    @php
+                                    $jobTitle = $loginEmpManagerDetails
+                                    ? $loginEmpManagerDetails->job_role
+                                    : ''; // Empty string instead of 'N/A'
+                                    // Replace specific titles with desired formats
+                                    $convertedTitle = preg_replace('/\bHR\b/i', 'HR', $jobTitle);
+                                    $convertedTitle = preg_replace('/\bI\b/i', 'I', $convertedTitle);
+                                    $convertedTitle = preg_replace('/\bII\b/i', 'II', $convertedTitle);
+                                    $convertedTitle = preg_replace('/\bIII\b/i', 'III', $convertedTitle);
+
+                                    // Capitalize the first letter of each word, while keeping 'II' intact
+                                    $convertedTitle = preg_replace_callback(
+                                    '/\b([a-z])([a-z]*)/i',
+                                    function ($matches) {
+                                    return strtoupper($matches[1]) . strtolower($matches[2]);
+                                    },
+                                    $convertedTitle,
+                                    );
+
+                                    // Ensure 'II' and 'HR' stay capitalized after the callback
+                                    $convertedTitle = str_replace(
+                                    [' Ii', ' Hr', ' IIi', 'Iii'],
+                                    [' II', ' HR', ' III'],
+                                    $convertedTitle,
+                                    );
+                                    @endphp
+
+                                    <i class="bi bi-person-badge-fill me-1"></i>{{ $convertedTitle }}
+                                </span>
+                            </span>
+                            @else
+                            <span class="normalText">HR will assign a reporting manager soon</span>
+                            @endif
+                            <!-- Display email if it is not null -->
+                            @if (isset($loginEmpManagerDetails->email) && !empty($loginEmpManagerDetails->email))
+                            <span class="managerOtherDetails" title="Email: {{ $loginEmpManagerDetails->email }}">
+                                <i class="bi bi-envelope-at-fill me-1"></i>
+                                <a class="emailNav"
+                                    href="mailto:{{ $loginEmpManagerDetails->email }}">{{ $loginEmpManagerDetails->email }}</a>
+                            </span>
+                            @else
+                            <span class="managerOtherDetails"></span>
+                            @endif
+
+                            <!-- Display mobile number if it is not null -->
+                            @if ($loginEmpManagerDetails)
+                            <span class="managerOtherDetails">
+                                <i class="bi bi-telephone-fill me-1"></i>
+                                {{ $loginEmpManagerDetails->emergency_contact }}</span>
+                            @else
+                            <span></span>
+                            @endif
 
                         </div>
 
@@ -739,14 +798,13 @@
                         </div>
                     </div>
 
-                        <div class="show-salary">
-                            @if($monthOfSal)
-                            <p style="cursor: pointer;width:fit-content" wire:click="downloadPdf('{{$monthOfSal}}')" >Download PDF</p>
-                            @endif
-                            <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                                {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
-                            </a>
-                        </div>
+                    <div class="show-salary">
+                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
+                            download>Download PDF</a>
+                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
+                        </a>
+                    </div>
                     @else
                     <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
                         <p class=" payslip-small-desc ">No salary details are available.</p>
@@ -760,6 +818,8 @@
                     </a>
                 </div>
             </div>
+
+
             <div class="payslip-card mb-3">
                 <p class="payslip-card-title">POI</p>
                 <p class="payslip-small-desc">
@@ -771,8 +831,6 @@
                     </div>
                 </a>
             </div>
-
-
         </div>
         <!-- TEAM ON LEAVE -->
         <div class="col-md-4  mb-4 ">
@@ -1142,11 +1200,23 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {{ $grossPay  }}; // Correct data injection
-        var deductions = {{$deductions}}; // Correct data injection
-        var netPay = {{$netPay}};
+        var grossPay = {
+            {
+                $grossPay
+            }
+        }; // Correct data injection
+        var deductions = {
+            {
+                $deductions
+            }
+        }; // Correct data injection
+        var netPay = {
+            {
+                $netPay
+            }
+        };
 
-        // Total of netPay and deduction~s should equal grossPay
+        // Total of netPay and deductions should equal grossPay
         if (grossPay !== (netPay + deductions)) {
             console.error('The sum of net pay and deductions does not match the gross pay.');
         }
