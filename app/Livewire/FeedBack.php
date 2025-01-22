@@ -132,9 +132,10 @@ class FeedBack extends Component
                     $q->where('feedback_to', $empId)
                         ->where('feedback_type', 'request')
                         ->where('is_accepted', true)
+                        ->orWhere('is_declined', true) // Explicitly include declined feedback
                         ->orWhere(function ($q2) use ($empId) {
                             $q2->where('feedback_to', $empId)
-                                ->where('feedback_type', 'give'); // Directly received feedback
+                                ->where('feedback_type', 'give'); // Direct feedback received
                         });
                 })
                     ->orWhere(function ($q) use ($empId) {
@@ -146,7 +147,7 @@ class FeedBack extends Component
             case 'given':
                 $query->where('feedback_from', $empId)
                     ->where('feedback_type', 'give')
-                    ->where('is_draft', false); // Feedback voluntarily given
+                    ->where('is_draft', false);
                 break;
 
             case 'pending':
@@ -164,11 +165,11 @@ class FeedBack extends Component
         }
 
         // Order results by latest timestamp
-        // Order by `created_at` (original feedback) and `updated_at` (reply)
         $this->feedbacks = $query->orderByRaw('created_at desc')
             ->orderByRaw('updated_at desc')
             ->get();
     }
+
 
 
     public function openReplyModal($feedbackId)
