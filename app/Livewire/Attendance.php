@@ -1088,7 +1088,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 ->where('from_session', 'Session 1')
                 ->where('to_session', 'Session 1')
                 ->exists();
-
+        
         if ($sessionCheck) {
             // Case when both sessions are 'Session 1'
             $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
@@ -1101,6 +1101,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 })
                 ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
                 ->exists();
+                
         } else {
             // Case when sessions are not both 'Session 1'
             $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
@@ -1113,6 +1114,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 })
                 ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
                 ->exists();
+              
         }
         return $leaveRecord;
     } catch (\Exception $e) {
@@ -1227,7 +1229,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                           
                         $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date->toDateString(), $employeeId);
                         Log::info('Is On Full Day Leave:', ['isonFullDayLeave' => $isBeforeToDate]);
-                        if($isBeforeToDate==true)
+                        if($isBeforeToDate)
                         {
                             $isOnHalfDayLeave=false;
                             $isOnSecondSessionLeave[] = [];
@@ -1292,8 +1294,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
                         if (!$isOnLeave && !$isHoliday && !$date->isWeekend()) {
                             $isPresentOnDate = $this->isEmployeePresentOnDate($date);
-
-                            if ($isPresentOnDate) {
+                            $isEmployeeRegularisedOnDate = $this->isEmployeeRegularisedOnDate($date);
+                            if ($isPresentOnDate||$isEmployeeRegularisedOnDate) {
                                 Log::info('Employee Present On Date: ' . $date->toDateString());
 
                                 // Fetch both IN and OUT records together to minimize queries
@@ -1307,9 +1309,21 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     ->whereIn('in_or_out', ['OUT'])
                                     ->orderByDesc('created_at')
                                     ->get();    
-
-                                $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
-                                $outSwipeTime = $swipeoutRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
+                                if($isEmployeeRegularisedOnDate)
+                                {
+                                    $inSwipeTime = SwipeRecord::where('emp_id',$employeeId)->where('in_or_out','IN')->where('is_regularized',1)->whereDate('created_at',$date->toDateString())->first();
+                                    $outSwipeTime = SwipeRecord::where('emp_id', $employeeId)
+                                                    ->where('in_or_out', 'OUT')
+                                                    ->where('is_regularized', 1)
+                                                    ->whereDate('created_at', $date->toDateString())
+                                                    ->first() ?? $inSwipeTime;
+                                }
+                                else
+                                {
+                                    $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
+                                    $outSwipeTime = $swipeoutRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
+                                }
+                                
 
                                 if ($inSwipeTime) {
                                     Log::info('Swipe In Time for Date: ' . $date->toDateString() . ' is ' . $inSwipeTime->swipe_time);
@@ -1326,14 +1340,20 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     $inTime = Carbon::parse($inSwipeTime->swipe_time);
                                     $outTime = Carbon::parse($outSwipeTime->swipe_time);
  
-                                
+                                    Log::info('Parsed inTime and outTime', ['inTime' => $inTime, 'outTime' => $outTime]);
                                     $shiftStartTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_start_time);
                                     $shiftEndTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_end_time);
+                                    Log::info('Shift times parsed', [
+                                        'shiftStartTimeForCalendar' => $shiftStartTimeForCalendar,
+                                        'shiftEndTimeForCalendar' => $shiftEndTimeForCalendar
+                                    ]);
+                                    
                                     $startTimeForSession1 = \Carbon\Carbon::createFromTime(
                                         $shiftStartTimeForCalendar->hour,
                                         $shiftStartTimeForCalendar->minute,
                                         $shiftStartTimeForCalendar->second
                                     );
+                                    Log::info('Start time for Session 1', ['startTimeForSession1' => $startTimeForSession1]);
                                     // 10:00 AM
                 $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30);                    
                 $endTimeForSession1 = Carbon::createFromTime(
@@ -1341,6 +1361,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                         $shiftEndTimeForSession1->minute,
                                         $shiftEndTimeForSession1->second
                                     );
+                                    Log::info('End time for Session 1', ['endTimeForSession1' => $endTimeForSession1]);
                 $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);                      
                 $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
                 $endTimeForSession2 = Carbon::createFromTime(
@@ -1348,20 +1369,32 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         $shiftEndTimeForCalendar->minute,
                         $shiftEndTimeForCalendar->second
                     );
+                    Log::info('Session 2 times', [
+                        'startTimeForSession2' => $startTimeForSession2,
+                        'endTimeForSession2' => $endTimeForSession2
+                    ]);
+                    
                                     $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
+                                    Log::info('Time difference calculated', ['timeDifference' => $timeDifference]);
+
                                     $hours = floor($timeDifference / 60);
                                     $minutes = $timeDifference % 60;
+                                    Log::info('Time difference in hours and minutes', ['hours' => $hours, 'minutes' => $minutes]);
                                     if ($timeDifference == 0) {
                                         $isAbsentFor = true;
+                                        Log::info('Marked as absent');
                                     } elseif ($timeDifference < 270) {
                                         $isHalfDayPresent = true;
+                                        Log::info('Marked as half-day present');
                                         if($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1))
                                         {
                                             $isHalfDayPresentForSession1 = true;
+                                            Log::info('Marked as half-day present for Session 1');
                                         }
-                                        elseif($inTime->gte($startTimeForSession2) && $outTime->lte($endTimeForSession2))
+                                        else
                                         {
                                             $isHalfDayPresentForSession2 = true;
+                                            Log::info('Marked as half-day present for Session 2');
                                         }
                                         // Between 4 hours and 8 hours, mark as half-day present
                                         
@@ -1372,6 +1405,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                 elseif($inSwipeTime==null)
                                 {
                                     $isAbsentFor = false;
+                                    Log::info('Absent For is for date'.$date->toDateString().':'.$isAbsentFor);
                                 }
                             } else {
                                 $inSwipeTime = null;
@@ -1681,18 +1715,30 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     private function calculateWorkHrsForAbsentEmployees($date)
 {
     Log::info('Welcome to calculateWorkHrsForAbsentEmployees method');
-    // Fetch IN swipe record
-    $inSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+   
+    $isEmployeeRegularisedOnDate = $this->isEmployeeRegularisedOnDate($date);
+    if($isEmployeeRegularisedOnDate)
+    {
+        $inSwipeRecord = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','IN')->where('is_regularized',1)->whereDate('created_at',$date)->first();
+        $outSwipeRecord = SwipeRecord::where('emp_id',auth()->guard('emp')->user()->emp_id)->where('in_or_out','OUT')->where('is_regularized',1)->whereDate('created_at',$date)->first();
+    }
+    else
+    {
+        $inSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
         ->where('in_or_out', 'IN')
         ->whereDate('created_at', $date)
         ->first();
 
     // Fetch OUT swipe record
-    $outSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-        ->where('in_or_out', 'OUT')
-        ->whereDate('created_at', $date)
-        ->orderByDesc('created_at')
-        ->first();
+        $outSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->where('in_or_out', 'OUT')
+            ->whereDate('created_at', $date)
+            ->orderByDesc('created_at')
+            ->first();
+
+    }
+    // Fetch IN swipe record
+    
 
     // Log fetched swipe records
     Log::info('IN Swipe Record:', ['data' => $inSwipeRecord]);
@@ -1785,15 +1831,16 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                        
                     }
                 
-                    Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
+                    Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . (($isAbsent||$totalWorkHrs==null||$totalMinutes == 0) ? 'Yes' : 'No'));
                    if ($isAbsent || ($totalMinutes == 0)||$totalWorkHrs==null) {
                         $absentDays++;
-                        // Log the increment of absent days
+                        // Log the increm   ent of absent days
                         Log::info('Absent days count incremented to: ' . $absentDays);
                     }
                     elseif($totalMinutes < 270)
                     {
                         $absentDays+=0.5;
+                        Log::info('Absent days count incremented to: ' . $absentDays);
                     }
 
                     

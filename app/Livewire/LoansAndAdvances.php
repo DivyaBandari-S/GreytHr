@@ -3,19 +3,18 @@
 namespace App\Livewire;
 
 use App\Models\EmployeeDetails;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class Reimbursement extends Component
+class LoansAndAdvances extends Component
 {
     public $financialYears;
     public $employeeDetails;
     public $selectedFinancialYear;
-
     public function render()
     {
-        return view('livewire.reimbursement');
+        return view('livewire.loans-and-advances');
     }
     public function mount(){
         $employeeId = Auth::user()->emp_id;
@@ -50,3 +49,4 @@ class Reimbursement extends Component
 
     }
 }
+

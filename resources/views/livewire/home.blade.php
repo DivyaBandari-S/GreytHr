@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
+        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees,downloadPdf">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -795,13 +795,14 @@
                         </div>
                     </div>
 
-                    <div class="show-salary">
-                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                            download>Download PDF</a>
-                        <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
-                            {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
-                        </a>
-                    </div>
+                        <div class="show-salary">
+                            @if($monthOfSal)
+                            <p style="cursor: pointer;width:fit-content" wire:click="downloadPdf('{{$monthOfSal}}')" >Download PDF</p>
+                            @endif
+                            <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
+                                {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
+                            </a>
+                        </div>
                     @else
                     <div class="d-flex justify-content-center align-items-center" style="height: 200px;">
                         <p class=" payslip-small-desc ">No salary details are available.</p>
@@ -1197,23 +1198,11 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {
-            {
-                $grossPay
-            }
-        }; // Correct data injection
-        var deductions = {
-            {
-                $deductions
-            }
-        }; // Correct data injection
-        var netPay = {
-            {
-                $netPay
-            }
-        };
+        var grossPay = {{ $grossPay  }}; // Correct data injection
+        var deductions = {{$deductions}}; // Correct data injection
+        var netPay = {{$netPay}};
 
-        // Total of netPay and deductions should equal grossPay
+        // Total of netPay and deduction~s should equal grossPay
         if (grossPay !== (netPay + deductions)) {
             console.error('The sum of net pay and deductions does not match the gross pay.');
         }

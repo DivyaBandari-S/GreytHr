@@ -361,6 +361,9 @@ class AttendanceTable extends Component
 
             return LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_applications.leave_status', 2)
+            ->where('leave_applications.from_session', 'Session 1')
+            ->where('leave_applications.to_session', 'Session 2')
+            
             ->where(function ($query) use ($date) {
                 $query->whereDate('from_date', '<=', $date)
                     ->whereDate('to_date', '>=', $date);
@@ -445,6 +448,31 @@ class AttendanceTable extends Component
     {
         $this->moveCaretLeftSession2 = !$this->moveCaretLeftSession2;
     }
+    private function isEmployeePresentOnDate($date)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $intime=SwipeRecord::where('emp_id', $employeeId)->where('in_or_out','IN')->whereDate('created_at', $date)->exists();    
+
+
+            return $intime;
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    private function isEmployeeRegularisedOnDate($date)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularized', 1)->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
     public function render()
     {
         $this->todaysDate = date('Y-m-d');
@@ -455,11 +483,12 @@ class AttendanceTable extends Component
         $currentYear = date('Y');
         $this->holiday = HolidayCalendar::pluck('date')
             ->toArray();
-
+        
         $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
         $groupedDates = $swipeRecords->groupBy(function ($record) {
             return Carbon::parse($record->created_at)->format('Y-m-d');
         });
+       
         $this->distinctDates = $groupedDates->mapWithKeys(function ($records, $key) {
             $inRecord = $records->where('in_or_out', 'IN')->first();
             $outRecord = $records->where('in_or_out', 'OUT')->last();
@@ -473,6 +502,7 @@ class AttendanceTable extends Component
                 ]
             ];
         });
+        
         return view('livewire.attendance-table');
     }
 }
