@@ -1472,6 +1472,7 @@ color: #fff;
                 $dayName = $date->format('D');
                 $isWeekend = ($dayName == 'Sat' || $dayName == 'Sun');
                 $isPresent = $distinctDates->has($dateKeyForLookup);
+                $isRegularised = $this->isEmployeeRegularisedOnDate($date->toDateString());
                 $isOnLeave=$this->isEmployeeLeaveOnDate($date,$employeeIdForTable);
                 $isOnFullDayLeave=$this->isEmployeeFullDayLeaveOnDate($date->toDateString(),$employeeIdForTable)['fullsessionCheck'];
                 $isOnFullDayLeaveType=$this->isEmployeeFullDayLeaveOnDate($date->toDateString(),$employeeIdForTable)['leaveRecordType'];
@@ -1487,25 +1488,28 @@ color: #fff;
                     return \Carbon\Carbon::parse($record->created_at)->toDateString() === $dateKeyForLookup;
                     });
 
-                    if ($distinctDates->has($dateKeyForLookup)) {
+                   if($distinctDates->has($dateKeyForLookup)||$isRegularised)
+                   {
                     $record = $distinctDates[$dateKeyForLookup];
                     $standardHours = 9;
                     $standardMinutes = 0;
-                    $firstInTimestamp = strtotime($record['first_in_time']);
-                    $lastOutTimestamp = strtotime($record['last_out_time']);
-
+                   
+                        $firstInTimestamp = strtotime($record['first_in_time']);
+                        $lastOutTimestamp = strtotime($record['last_out_time']);
+                    
+                    
                     $standardWorkingMinutes = ($standardHours * 60) + $standardMinutes;
                     $differenceInSeconds = $lastOutTimestamp - $firstInTimestamp;
                     $totalSecondsWorked += $differenceInSeconds;
                     $hours = floor($differenceInSeconds / 3600);
                     $minutes = floor(($differenceInSeconds % 3600) / 60);
                     $totalWorkedMinutes = ($hours * 60) + $minutes;
-
+                    $checkRecord=!empty($firstInTimestamp)||!empty($lastOutTimestamp);
                     }
                     
                     @endphp
                    
-                    <tr style="border-bottom: 1px solid #cbd5e1;background-color: {{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave || ($isOnFullDayLeave == true) ? 'rgb(252, 242, 255)' : ($isPresent ? '#edfaed' : '#fcf0f0')))) : '#fcf0f0'}};">
+                    <tr style="border-bottom: 1px solid #cbd5e1; background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}};">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1; ">
                             <p style="white-space:nowrap;">
                                 {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
@@ -1566,7 +1570,7 @@ color: #fff;
                         <td style="font-weight:normal;font-size:12px;padding-top:16px; ">00:00</td>
                         @endif
 
-                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($isOnLeave ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')))) : 'black'}};>
+                        <td style="margin-left:10px; margin-top:20px; font-size:12px;color: {{ $isDate ? ($isWeekend ? 'black' : ($holidayNote ? 'black' : ($isOnLeave||$isOnFullDayLeave ? 'black' : ($distinctDates->has($dateKeyForLookup) ? 'black' : '#ff6666')))) : 'black'}};">
                             @if($isDate)
                             @if($isWeekend)
                             O
@@ -1661,25 +1665,49 @@ color: #fff;
                                </span>
                                @php $leaveCount++; @endphp
                             @elseif($isOnHalfDayLeave==true)
-                                
+                              
+                            @if($isPresent)
                                @if($isOnHalfDayLeaveType=='Casual Leave')
-                                  CL
+                                  CL:P
                                 @elseif($isOnHalfDayLeaveType=='Casual Leave Probation')
-                                  CLP  
+                                  CLP:P
                                 @elseif($isOnHalfDayLeaveType=='Loss Of Pay')
-                                  LOP 
+                                  LOP:P
                                 @elseif($isOnHalfDayLeaveType=='Marriage Leave')
-                                  ML 
+                                  ML:P
                                 @elseif($isOnHalfDayLeaveType=='Paternity Leave')
-                                  PL   
+                                  PL:P  
                                 @elseif($isOnHalfDayLeaveType=='Maternity Leave')
-                                  MTL
+                                  MTL:P
                                 @elseif($isOnHalfDayLeaveType=='Sick Leave')
-                                  SL  
+                                  SL:P 
                                 @endif                
-                                @php $leaveCount+=0.5; @endphp
-                            
-                            
+                                @php 
+                                  $leaveCount+=0.5;
+                                  $presentCount+=0.5;
+                                @endphp
+                            @else
+                               @if($isOnHalfDayLeaveType=='Casual Leave')
+                                  CL:<span style="color:#f66;">A</span>
+                                @elseif($isOnHalfDayLeaveType=='Casual Leave Probation')
+                                  CLP:<span style="color:#f66;">A</span>
+                                @elseif($isOnHalfDayLeaveType=='Loss Of Pay')
+                                  LOP:<span style="color:#f66;">A</span>
+                                @elseif($isOnHalfDayLeaveType=='Marriage Leave')
+                                  ML:<span style="color:#f66;">A</span>
+                                @elseif($isOnHalfDayLeaveType=='Paternity Leave')
+                                  PL:<span style="color:#f66;">A</span> 
+                                @elseif($isOnHalfDayLeaveType=='Maternity Leave')
+                                  MTL:<span style="color:#f66;">A</span>
+                                @elseif($isOnHalfDayLeaveType=='Sick Leave')
+                                  SL:<span style="color:#f66;">A</span> 
+                                @endif                
+                                @php 
+                                  $leaveCount+=0.5;
+                                  $absentCount+=0.5;
+                                @endphp
+
+                            @endif
                            
                             
                             @elseif($isOnLeave)
@@ -1699,26 +1727,24 @@ color: #fff;
                                  SL
                               @endif
                             @php $leaveCount++; @endphp
-                            @elseif($totalWorkedMinutes <240)
-
-                               <span style="color:#f66;">A</span>
-                              
-                                  @php
-                                    $absentCount++;
-                                  @endphp  
-                            @elseif($totalWorkedMinutes < 270 && $totalWorkedMinutes != 0)
+                            
+                            @elseif($totalWorkedMinutes < 270 && $totalWorkedMinutes > 0 )
                             
                                P:<span style="color:#f66;">A</span>
                                @php 
                                  $presentCount+=0.5;
-                                 $absentCount+=0.5
+                                 $absentCount+=0.5;
                                @endphp
-                            @elseif($distinctDates->has($dateKeyForLookup))
+                            @elseif($distinctDates->has($dateKeyForLookup) && $totalWorkedMinutes > 270)
                             P
                             @php $presentCount++; @endphp
+                           
                             @else
-                            A
-                            @php $absentCount++; @endphp
+                               <span style="color:#f66;">A</span>
+                               @php 
+                                 
+                                 $absentCount++;
+                               @endphp  
                             @endif
                             @else
                             -
@@ -1829,6 +1855,7 @@ color: #fff;
                                 @endif
                                 @php
                                 $holidayNote=false;
+                                $totalWorkedMinutes=0;
                                 @endphp
 
                     </tr>
@@ -2155,17 +2182,25 @@ color: #fff;
                 </p>
                 <p class="m-1 attendance-legend-text">Holiday</p>
             </div>
-            <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                <p class="mb-0">
-                   <img src="{{ asset('images/half-day-working-status.png') }}" title="Half Day" height="20" width="20">
-                </p>
-                <p class="m-1 attendance-legend-text">Half Day</p>
+            <div class="col-md-3 mb-2 pe-0" style="display: flex;margin-left:-10px">
+                    <p class="mb-0">
+                        <img src="{{ asset('images/half-day-session1-present.png') }}"  height="20" width="20">
+                    </p>
+                    <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 1)</p>
             </div>
+            <div class="d-flex" style="gap: 10px;"> 
+            <div class="col-md-3 mb-2" style="display: flex;margin-left:-2px">
+                                <p class="mb-0">
+                                <img src="{{ asset('images/half-day-session2-present.png') }}"  height="20" width="20">
+                                </p>
+                                <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 2)</p>
+                            </div>
             <div class="col-md-3 mb-2 pe-0" style="display: flex">
                 <p class="mb-0">
                     <i class="fas fa-battery-empty"></i>
                 </p>
                 <p class="m-1 attendance-legend-text">IT Maintanance</p>
+            </div>
             </div>
         </div>
         <div class="row m-0 mb-3">

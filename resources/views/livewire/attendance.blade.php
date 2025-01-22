@@ -1694,7 +1694,7 @@ color: #fff;
 
                                        @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend)  
                                           <div style="background-color:{{ $day['onHalfDayLeave'] == true 
-                                                                                                                ? ((($day['session2leave']== [["Session 1"]])||$day['session2leave']== [["Session 1","Session 2"]]) ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
+                                                                                                                ? ((($day['session2leave']== [["Session 1"]])||$day['session2leave']== [["Session 1","Session 2"]]) ? 'rgb(252, 242, 255)' :(($day['halfdaypresent'] == 'HP'||$day['halfdaypresent'] == 'P') ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
                                                                                                             }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
@@ -1723,7 +1723,7 @@ color: #fff;
                                                         @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP')
                                                              <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
                                                         @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='P')
-                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
+                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-right:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
                                                         @endif     
                                                </div>   
                                        @else
@@ -1744,7 +1744,7 @@ color: #fff;
 
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 14px; background-color: {{ $day['onHalfDayLeave'] == true 
-                                                                                                                ? ((($day['session2leave']== [["Session 2"]])||($day['session2leave']== [["Session 1","Session 2"]])) ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
+                                                                                                                ? ((($day['session2leave']== [["Session 2"]])||($day['session2leave']== [["Session 1","Session 2"]])) ? 'rgb(252, 242, 255)' :(($day['halfdaypresent'] == 'HP'||$day['halfdaypresent'] == 'P') ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
                                                                                                             }};">
                                             <!-- Render your grey circle -->
@@ -1835,8 +1835,8 @@ color: #fff;
                                                 
                                                 @elseif($isCurrentMonth)
                                                 @if($day['isRegularised']==true)
-                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 70px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:{{( $day['session2leave']== [["Session 1"]]||$day['session2leave']==[["Session 2"]])? '-8px' : '5px'}};font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @else
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">

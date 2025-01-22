@@ -4,23 +4,21 @@
         <button class="btn btn-primary me-3" wire:click="openGiveModal">Give Feedback</button>
     </div>
     <div>
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button class="nav-link {{ $activeTab === 'received' ? 'active' : '' }}"
-                    wire:click="loadTabData('received')">Received</button>
-
-                <button class="nav-link {{ $activeTab === 'given' ? 'active' : '' }}"
-                    wire:click="loadTabData('given')">Given</button>
-
-                <button class="nav-link {{ $activeTab === 'pending' ? 'active' : '' }}"
-                    wire:click="loadTabData('pending')">Pending</button>
-
-                <button class="nav-link {{ $activeTab === 'drafts' ? 'active' : '' }}"
-                    wire:click="loadTabData('drafts')">Drafts</button>
-            </div>
-        </nav>
-
-        <div class="tab-content bg-white pb-5" id="nav-tabContent">
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button wire:click="loadTabData('received')" class="nav-link {{ $activeTab === 'received' ? 'active' : '' }}">Received</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button wire:click="loadTabData('given')" class="nav-link {{ $activeTab === 'given' ? 'active' : '' }}">Given</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button wire:click="loadTabData('pending')" class="nav-link {{ $activeTab === 'pending' ? 'active' : '' }}">Pending</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button wire:click="loadTabData('drafts')" class="nav-link {{ $activeTab === 'drafts' ? 'active' : '' }}">Drafts</button>
+            </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" role="tabpanel">
                 @if ($feedbacks->count() > 0)
                     <div class="p-4" style="max-height: 400px; overflow-y: auto;"> <!-- Scrollable Container -->
@@ -52,7 +50,7 @@
                                             </div>
                                         </div>
 
-                                        <p class="mt-2">
+                                        <p>
                                             @if ($activeTab === 'received' || $activeTab === 'pending')
                                                 <small class="text-muted">Feedback request to you</small>
                                             @else
@@ -106,6 +104,12 @@
                                         @endif
                                     </div>
                                 </div>
+                                <p class="feedBackMsg">{{ $feedback->feedback_message }}</p>
+
+                                @if ($activeTab === 'pending')
+                                    <button class="btn btn-sm btn-success">Accept</button>
+                                    <button class="btn btn-sm btn-danger fs12">Decline</button>
+                                @endif
                             </div>
                         @endforeach
                     </div>
@@ -219,6 +223,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
+                                                <div id="persMsg"></div>
                                         <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
@@ -479,3 +484,10 @@
 
 </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function (event) {
+        var quill = new Quill('#persMsg', {
+            theme: 'snow'
+        });
+    });
+</script>

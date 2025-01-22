@@ -105,6 +105,7 @@ use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\GiveKudos;
 use App\Livewire\LeaveBalancesChart;
+use App\Livewire\LoansAndAdvances;
 use App\Livewire\MarriageLeaveBalance;
 use App\Livewire\MaternityLeaveBalance;
 use App\Livewire\OrganisationChart;
@@ -320,6 +321,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
+    Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');

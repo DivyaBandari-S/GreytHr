@@ -74,10 +74,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-
-    const quill = new Quill("#editor", {
-        theme: "snow",
-    });
 });
 
 // SIDEBAR COLLAPSE
