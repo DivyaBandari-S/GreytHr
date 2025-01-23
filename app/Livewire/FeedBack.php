@@ -6,6 +6,8 @@ use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Mail\FeedbackNotificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class FeedBack extends Component
 {
@@ -19,7 +21,14 @@ class FeedBack extends Component
     public $activeTab = 'received';
     public $feedbacks = [];
     public $userId;
-
+    public $originalFeedbackText;
+    public $replyText;
+    public $feedbackId;
+    public $isReplyModalOpen = false;
+    public $isEditModalVisible = false;
+    public $updatedFeedbackMessage;
+    public $selectedFeedbackId;
+    public $employeeName;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -98,16 +107,27 @@ class FeedBack extends Component
             return;
         }
 
-        FeedBackModel::create([
+        // Create the feedback
+        $feedback = FeedBackModel::create([
             'feedback_type' => $this->feedbackType,
             'feedback_to' => $this->selectedEmployee['emp_id'],
             'feedback_from' => auth()->user()->emp_id,
             'feedback_message' => $this->feedbackMessage,
         ]);
 
+        // Determine the email subject based on the feedback type
+        $subject = $this->feedbackType === 'request' ? 'New Feedback Request' : 'New Feedback Given';
+
+        // Send the feedback notification email
+        $receiver = $feedback->feedbackToEmployee; // Get the receiver's employee data
+        Mail::to($receiver->email)->send(new FeedbackNotificationMail($feedback, $subject));
+
+        // Flash message and close modal
         session()->flash('message', 'Feedback submitted successfully!');
         $this->closeModal();
-        $this->loadTabData($this->activeTab); // Refresh tab data
+
+        // Refresh tab data
+        $this->loadTabData($this->activeTab);
     }
 
     public function loadTabData($tab)
@@ -125,16 +145,24 @@ class FeedBack extends Component
                     $q->where('feedback_to', $empId)
                         ->where('feedback_type', 'request')
                         ->where('is_accepted', true)
+                        ->orWhere('is_declined', true) // Explicitly include declined feedback
                         ->orWhere(function ($q2) use ($empId) {
                             $q2->where('feedback_to', $empId)
-                                ->where('feedback_type', 'give'); // Directly received feedback
+                                ->where('feedback_type', 'give')
+                                ->where('is_draft', false); // Exclude draft feedbacks
                         });
-                });
+                })
+                    ->orWhere(function ($q) use ($empId) {
+                        $q->where('feedback_from', $empId)
+                            ->whereNotNull('replay_feedback_message');
+                    });
                 break;
+
 
             case 'given':
                 $query->where('feedback_from', $empId)
-                    ->where('feedback_type', 'give'); // Feedback voluntarily given
+                    ->where('feedback_type', 'give')
+                    ->where('is_draft', false);
                 break;
 
             case 'pending':
@@ -152,7 +180,214 @@ class FeedBack extends Component
         }
 
         // Order results by latest timestamp
-        $this->feedbacks = $query->orderBy('created_at', 'desc')->get();
+        $this->feedbacks = $query->orderByRaw('created_at desc')
+            ->orderByRaw('updated_at desc')
+            ->get();
+    }
+
+
+
+    public function openReplyModal($feedbackId)
+    {
+        $feedback = FeedBackModel::find($feedbackId);
+
+        if (!$feedback) {
+            session()->flash('error', 'Feedback not found.');
+            return;
+        }
+
+        // Set pre-filled values
+        $this->feedbackId = $feedbackId;
+        $this->selectedEmployee = $feedback->feedbackFromEmployee; // Assuming a relation with Employee
+        $this->originalFeedbackText = $feedback->feedback_message;
+        $this->replyText = ''; // Clear previous reply
+
+        // Open modal
+        $this->isReplyModalOpen = true;
+    }
+
+    public function closeReplyModal()
+    {
+        $this->isReplyModalOpen = false;
+    }
+
+    public function submitReply()
+    {
+        $feedback = FeedBackModel::find($this->feedbackId);
+
+        if (!$feedback) {
+            session()->flash('error', 'Feedback not found.');
+            return;
+        }
+
+        // Save the reply
+        $feedback->update([
+            'is_accepted' => true,
+            'replay_feedback_message' => $this->replyText,
+            'updated_at' => now(),
+        ]);
+
+        // Close modal
+        $this->isReplyModalOpen = false;
+
+        session()->flash('success', 'Feedback replied successfully.');
+        // Refresh feedback list
+        $this->loadTabData($this->activeTab);
+    }
+
+
+    public function declineFeedback($feedbackId)
+    {
+        $feedback = FeedbackModel::find($feedbackId);
+        if (!$feedback) {
+            session()->flash('error', 'Feedback not found.');
+            return;
+        }
+
+        // Mark as declined
+        $feedback->update(['is_declined' => true]);
+
+        session()->flash('success', 'Feedback declined successfully.');
+        // Refresh feedback list
+        $this->loadTabData($this->activeTab);
+    }
+
+    public function editGiveFeedback($feedbackId)
+    {
+        // Find the feedback record
+        $feedback = FeedbackModel::find($feedbackId);
+
+        if ($feedback && $feedback->feedback_from == auth()->id()) {
+            // If the logged-in user is the sender (feedback_from), allow editing
+            $this->selectedFeedbackId = $feedback->id;
+            $this->selectedEmployee = $feedback->feedbackToEmployee;
+            $this->updatedFeedbackMessage = $feedback->feedback_message;
+            $this->isEditModalVisible = true;
+        } else {
+            // Handle the case where the user is not the sender
+            session()->flash('error', 'You are not authorized to edit this feedback.');
+        }
+    }
+
+    // Update feedback action with inline validation
+    public function updateGiveFeedback()
+    {
+        // Inline validation for the updated feedback message
+        $this->validate([
+            'updatedFeedbackMessage' => 'required|string|min:5',
+        ]);
+
+        // Find the feedback and update the message
+        $feedback = FeedbackModel::find($this->selectedFeedbackId);
+        if ($feedback) {
+            // Only update if the feedback message is different
+            if ($this->updatedFeedbackMessage != $feedback->feedback_message) {
+                $feedback->update(['feedback_message' => $this->updatedFeedbackMessage]);
+                session()->flash('message', 'Feedback updated successfully!');
+            } else {
+                session()->flash('message', 'No changes detected to save.');
+            }
+            $this->isEditModalVisible = false; // Close the modal after update
+        }
+        // Refresh the feedback list to reflect changes
+        $this->loadTabData($this->activeTab);
+    }
+
+
+    public function deleteGiveFeedback($feedbackId)
+    {
+        // Find the feedback record
+        $feedback = FeedbackModel::find($feedbackId);
+
+        if ($feedback && $feedback->feedback_from == auth()->id()) {
+            // If the logged-in user is the sender (feedback_from), allow deletion
+            $feedback->update(['status' => 0]); // Soft delete by updating status to 0
+            session()->flash('message', 'Feedback deleted successfully!');
+        } else {
+            // Handle the case where the user is not the sender
+            session()->flash('error', 'You are not authorized to delete this feedback.');
+        }
+
+        // Refresh the feedback list to reflect changes
+        $this->loadTabData($this->activeTab);
+    }
+
+    public function saveAsGivenDraft()
+    {
+        // Validate feedback data before saving
+        $this->validate([
+            'selectedEmployee' => 'required|array',
+            'selectedEmployee.emp_id' => 'required',
+            'feedbackMessage' => 'required|string|min:2',
+        ]);
+
+        // Check if employee is selected
+        if (!$this->selectedEmployee) {
+            session()->flash('error', 'Please select a valid employee.');
+            return;
+        }
+
+        // Check if feedback already exists as draft
+        $existingFeedback = FeedBackModel::where('feedback_from', auth()->user()->emp_id)
+            ->where('feedback_to', $this->selectedEmployee['emp_id'])
+            ->where('feedback_type', 'give')
+            ->where('is_draft', true)
+            ->first();
+
+        // If feedback already exists, update it
+        if ($existingFeedback) {
+            $existingFeedback->update([
+                'feedback_message' => $this->feedbackMessage,
+                'is_draft' => true, // Ensure it's marked as draft
+            ]);
+            session()->flash('message', 'Draft feedback updated successfully!');
+        } else {
+            // Otherwise, create new draft feedback
+            FeedBackModel::create([
+                'feedback_type' => 'give',
+                'feedback_from' => auth()->user()->emp_id,
+                'feedback_to' => $this->selectedEmployee['emp_id'],
+                'feedback_message' => $this->feedbackMessage,
+                'is_draft' => true, // Mark it as draft
+            ]);
+            session()->flash('message', 'Draft feedback saved successfully!');
+        }
+
+        // Close the modal and reset fields
+        $this->closeModal();
+        $this->resetFields();
+
+        // Refresh the feedback list
+        $this->loadTabData($this->activeTab);
+    }
+
+
+    public function withDrawnGivenFeedback($feedbackId)
+    {
+        // Find the feedback by ID
+        $feedback = FeedBackModel::find($feedbackId);
+
+        // Check if feedback exists and if the logged-in user is the one who created the feedback
+        if (!$feedback) {
+            session()->flash('error', 'Feedback not found.');
+            return;
+        }
+
+        if ($feedback->feedback_from != auth()->user()->emp_id) {
+            session()->flash('error', 'You are not authorized to withdraw this feedback.');
+            return;
+        }
+
+        // Update the feedback to mark it as not a draft
+        $feedback->update([
+            'is_draft' => false, // Set is_draft to false indicating the draft is withdrawn
+        ]);
+
+        // Provide success message
+        session()->flash('message', 'Draft feedback withdrawn and finalized successfully!');
+
+        // Refresh the feedback list
+        $this->loadTabData($this->activeTab);
     }
 
 
