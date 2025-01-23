@@ -6,6 +6,8 @@ use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use App\Mail\FeedbackNotificationMail;
+use Illuminate\Support\Facades\Mail;
 
 class FeedBack extends Component
 {
@@ -105,16 +107,27 @@ class FeedBack extends Component
             return;
         }
 
-        FeedBackModel::create([
+        // Create the feedback
+        $feedback = FeedBackModel::create([
             'feedback_type' => $this->feedbackType,
             'feedback_to' => $this->selectedEmployee['emp_id'],
             'feedback_from' => auth()->user()->emp_id,
             'feedback_message' => $this->feedbackMessage,
         ]);
 
+        // Determine the email subject based on the feedback type
+        $subject = $this->feedbackType === 'request' ? 'New Feedback Request' : 'New Feedback Given';
+
+        // Send the feedback notification email
+        $receiver = $feedback->feedbackToEmployee; // Get the receiver's employee data
+        Mail::to($receiver->email)->send(new FeedbackNotificationMail($feedback, $subject));
+
+        // Flash message and close modal
         session()->flash('message', 'Feedback submitted successfully!');
         $this->closeModal();
-        $this->loadTabData($this->activeTab); // Refresh tab data
+
+        // Refresh tab data
+        $this->loadTabData($this->activeTab);
     }
 
     public function loadTabData($tab)
@@ -135,14 +148,16 @@ class FeedBack extends Component
                         ->orWhere('is_declined', true) // Explicitly include declined feedback
                         ->orWhere(function ($q2) use ($empId) {
                             $q2->where('feedback_to', $empId)
-                                ->where('feedback_type', 'give'); // Direct feedback received
+                                ->where('feedback_type', 'give')
+                                ->where('is_draft', false); // Exclude draft feedbacks
                         });
                 })
                     ->orWhere(function ($q) use ($empId) {
                         $q->where('feedback_from', $empId)
-                            ->whereNotNull('replay_feedback_message'); // Include feedback replies
+                            ->whereNotNull('replay_feedback_message');
                     });
                 break;
+
 
             case 'given':
                 $query->where('feedback_from', $empId)
