@@ -2524,7 +2524,7 @@ td {
 .employee-swipes-emp-id {
     font-size: 10px;
     margin-left: 6px;
-   
+
 }
 
 .employee-swipes-swipe-details-for-signed-employees {
@@ -2785,7 +2785,7 @@ td {
 }
 
 .profile-name-wrapper {
-   
+
 }
 
 .post-profile-name {
@@ -2967,7 +2967,7 @@ td {
     border: 1px solid rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
- 
+
     padding: 4px 10px;
     width: 60px;
     height: 20px;
@@ -7428,18 +7428,20 @@ select .yearSelect {
     font-family: "Montserrat", sans-serif;
 }
 
-.delegate-header {
+.delegate-cell-header {
     background-color: rgb(2, 17, 79);
     color: white;
     height: 40px;
+    font-size: 12px;
     text-align: center;
+    padding: 2px;
 }
 
 .delegate-cell {
     border: 1px solid #8d939d;
-    font-size: 8px;
+    font-size: 9px;
     text-align: center;
-    padding: 5px;
+    padding: 2px 3px;
 }
 
 .delegate-row {
@@ -10025,7 +10027,7 @@ peoples module styles started */
         border: 1px solid #ccc;
     }
 
-   
+
     .approved-leave {
         display: flex;
         flex-direction: column;
@@ -10161,7 +10163,7 @@ peoples module styles started */
     .dropdown-for-shift-roster-download-and-dropdown
     {
         width: 48%;
-      
+
     }
     .shift-roster-download-and-dropdown-for-attendance-muster
     {
@@ -10176,8 +10178,8 @@ peoples module styles started */
     .arrow-who-is-in
     {
         cursor: pointer;
-        
-        
+
+
     }
 }
 @media (max-width: 920px) {
@@ -10850,7 +10852,7 @@ input[type="date"] {
         background: white;
         border: 1px solid #ccc;
         border-radius: 8px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         height: 167px;
         width: 200px;
         overflow-y: scroll;
