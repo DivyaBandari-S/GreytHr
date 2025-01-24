@@ -1,7 +1,9 @@
 <div class="bg-white">
     <div class="text-end pt-3">
-        <button class="btn btn-primary me-3" wire:click="openRequestModal">Request Feedback</button>
-        <button class="btn btn-primary me-3" wire:click="openGiveModal">Give Feedback</button>
+        <button class="btn btn-primary btn-sm mb-2 me-3" wire:click="openRequestModal"
+            style="background-color: #02114f;">Request Feedback</button>
+        <button class="btn btn-primary btn-sm mb-2 me-3" wire:click="openGiveModal" style="background-color: #02114f;">Give
+            Feedback</button>
     </div>
     <div>
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -24,125 +26,143 @@
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" role="tabpanel">
-                @if ($feedbacks->count() > 0)
-                    <div class="p-4" style="max-height: 400px; overflow-y: auto;"> <!-- Scrollable Container -->
-                        @foreach ($feedbacks as $feedback)
-                        <div class="border p-3 mb-3 rounded shadow-sm">
-                            <div class="d-flex align-items-start">
-                                <!-- Determine if auth user is the receiver -->
-                                @php
-                                    $isReceiver = $feedback->feedback_to == auth()->id();
-                                    $displayUser = $isReceiver ? $feedback->feedbackFromEmployee : $feedback->feedbackToEmployee;
-                                @endphp
+                <div class="row m-0">
+                    <div class="col-md-8 p-0">
+                        @if ($feedbacks->count() > 0)
+                            <div class="p-4" style="max-height: 400px; overflow-y: auto;">
+                                @foreach ($feedbacks as $feedback)
+                                    <div class="border p-3 mb-3 rounded shadow-sm">
+                                        <div class="d-flex align-items-start">
+                                            <!-- Determine if auth user is the receiver -->
+                                            @php
+                                                $isReceiver = $feedback->feedback_to == auth()->id();
+                                                $displayUser = $isReceiver
+                                                    ? $feedback->feedbackFromEmployee
+                                                    : $feedback->feedbackToEmployee;
+                                            @endphp
 
-                                <!-- User Avatar (Show sender if auth is receiver, else show receiver) -->
-                                <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
-                                    style="width: 40px; height: 40px; font-weight: bold;">
-                                    {{ strtoupper(substr($displayUser->first_name ?? 'A', 0, 1)) }}
-                                </div>
+                                            <!-- User Avatar (Show sender if auth is receiver, else show receiver) -->
+                                            <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
+                                                style="width: 40px; height: 36px; font-weight: bold;">
+                                                {{ strtoupper(substr($displayUser->first_name ?? 'A', 0, 1)) }}
+                                            </div>
 
-                                <div class="ms-3 w-100">
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <!-- Show the correct user's details -->
-                                            <strong>
-                                                {{ $displayUser->first_name ?? 'Unknown' }}
-                                                {{ $displayUser->last_name ?? '' }}
-                                            </strong>
-                                            <small class="text-muted">#{{ $displayUser->emp_id }}</small>
-                                        </div>
+                                            <div class="ms-3 w-100">
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="fs12">
+                                                        <!-- Show the correct user's details -->
+                                                        <strong>
+                                                            {{ $displayUser->first_name ?? 'Unknown' }}
+                                                            {{ $displayUser->last_name ?? '' }}
+                                                        </strong>
+                                                        <small class="text-muted">#{{ $displayUser->emp_id }}</small>
+                                                    </div>
 
-                                        <div>
-                                            @if ($feedback->is_declined)
-                                                <span class="badge bg-danger">Declined</span>
-                                            @endif
-                                            <small class="text-muted">{{ $feedback->created_at->diffForHumans() }}</small>
+                                                    <div class="fs12">
+                                                        @if ($feedback->is_declined)
+                                                            <span class="badge bg-danger">Declined</span>
+                                                        @endif
+                                                        <small
+                                                            class="text-muted">{{ $feedback->created_at->diffForHumans() }}</small>
+                                                        @if ($feedback->feedback_from == auth()->id() && $feedback->feedback_type === 'give')
+                                                            <div class="btn-group dropcust">
+                                                                <button type="button"
+                                                                    class="btn dropdown-toggle btn-sm"
+                                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                                </button>
+                                                                <ul class="dropdown-menu dropdown-menu-end fs12">
+                                                                    <!-- Dropdown menu links -->
+                                                                    <li><a class="dropdown-item" href="#"
+                                                                            wire:click="editGiveFeedback({{ $feedback->id }})">Edit
+                                                                            Feedback</a></li>
+                                                                    <li><a class="dropdown-item" href="#"
+                                                                            wire:click="confirmDelete({{ $feedback->id }})">Delete
+                                                                            Feedback</a></li>
+                                                                    @if ($feedback->is_draft)
+                                                                        <li><a class="dropdown-item" href="#"
+                                                                                wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
+                                                                                Feedback</a></li>
+                                                                    @endif
+                                                                </ul>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+
+                                                </div>
+
+                                                <p class="fs12">
+                                                    @if ($isReceiver)
+                                                        <small class="text-muted">Feedback request from
+                                                            {{ $displayUser->first_name ?? 'Unknown' }}</small>
+                                                    @else
+                                                        <small class="text-muted">Feedback given to
+                                                            {{ $displayUser->first_name ?? 'Unknown' }}</small>
+                                                    @endif
+                                                </p>
+
+                                                <p class="feedBackMsg fs12">{{ $feedback->feedback_message }}</p>
+
+                                                @if ($feedback->is_accepted)
+                                                    <div class="reply-box fs12">
+                                                        <p class="feedBackMsg"><strong>Reply:</strong>
+                                                            {{ $feedback->replay_feedback_message }}</p>
+                                                        <p class="feedBackMsg"><strong>Replied At:</strong>
+                                                            {{ $feedback->updated_at->diffForHumans() }}</p>
+                                                    </div>
+                                                @endif
+
+                                                @if ($isReceiver && $activeTab === 'pending')
+                                                    <button class="btn btn-sm btn-success"
+                                                        wire:click="openReplyModal({{ $feedback->id }})">
+                                                        Reply
+                                                    </button>
+
+                                                    <button class="btn btn-sm btn-danger fs12"
+                                                        wire:click="declineFeedback({{ $feedback->id }})">
+                                                        Decline
+                                                    </button>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
+                                @endforeach
 
-                                    <p>
-                                        @if ($isReceiver)
-                                            <small class="text-muted">Feedback request from {{ $displayUser->first_name ?? 'Unknown' }}</small>
-                                        @else
-                                            <small class="text-muted">Feedback given to {{ $displayUser->first_name ?? 'Unknown' }}</small>
-                                        @endif
-                                    </p>
-
-                                    <p class="feedBackMsg">{{ $feedback->feedback_message }}</p>
-
-                                    @if ($feedback->is_accepted)
-                                        <div class="reply-box">
-                                            <p class="feedBackMsg"><strong>Reply:</strong> {{ $feedback->replay_feedback_message }}</p>
-                                            <p class="feedBackMsg"><strong>Replied At:</strong>
-                                                {{ $feedback->updated_at->diffForHumans() }}</p>
-                                        </div>
+                            </div>
+                        @else
+                            <div class="m-0 pt-4 row text-center">
+                                <img src="{{ asset('images/' . $activeTab . '.png') }}" class="m-auto"
+                                    style="width: 10em" />
+                                <h5>No {{ ucfirst($activeTab) }} Feedback</h5>
+                                <p>
+                                    @if ($activeTab === 'received')
+                                        Let's gather a new outlook from your coworkers.
+                                    @elseif($activeTab === 'given')
+                                        Share your valuable feedback with your colleagues.
+                                    @elseif($activeTab === 'pending')
+                                        Your requests and feedback requests from peers will appear here. Once feedback
+                                        is
+                                        shared, it will move to received or given sections.
+                                    @elseif($activeTab === 'drafts')
+                                        Capture your thoughts on feedback and find it later.
                                     @endif
-
-                                    @if ($isReceiver && $activeTab === 'pending')
-                                        <button class="btn btn-sm btn-success"
-                                            wire:click="openReplyModal({{ $feedback->id }})">
-                                            Reply
-                                        </button>
-
-                                        <button class="btn btn-sm btn-danger"
-                                            wire:click="declineFeedback({{ $feedback->id }})">
-                                            Decline
-                                        </button>
-                                    @endif
-
-                                    {{-- @if (!$isReceiver && $feedback->feedback_from == auth()->id())
-                                        <!-- Three Vertical Dots Menu -->
-                                        <div class="dropdown float-end">
-                                            <button class="btn btn-link dropdown-toggle" type="button"
-                                                id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="fas fa-ellipsis-v"></i> <!-- Three Vertical Dots -->
-                                            </button>
-                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <li><a class="dropdown-item" href="#"
-                                                        wire:click="editGiveFeedback({{ $feedback->id }})">Edit
-                                                        Feedback</a></li>
-                                                <li><a class="dropdown-item" href="#"
-                                                        wire:click="deleteGiveFeedback({{ $feedback->id }})">Delete
-                                                        Feedback</a></li>
-                                                @if ($feedback->is_draft)
-                                                    <li><a class="dropdown-item" href="#"
-                                                            wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
-                                                            Feedback</a></li>
-                                                @endif
-                                            </ul>
-                                        </div>
-                                    @endif --}}
+                                </p>
+                                <div>
+                                    <button class="btn btn-primary" style="background-color: #02114f;"
+                                        wire:click="{{ $activeTab === 'given' || $activeTab === 'drafts' ? 'openGiveModal' : 'openRequestModal' }}">
+                                        {{ $activeTab === 'given' || $activeTab === 'drafts' ? 'Give Feedback' : 'Request Feedback' }}
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                        @endif
+                    </div>
+                    <div class="col-md-4 text-center border-start border-1 ps-3"
+                        wire:key="feedback-section-{{ $activeTab }}">
+                        <img src="{{ asset('images/' . $feedbackImage) }}" class="mb-1 mt-5" style="width: 10em" />
+                        <p class="fs12 fw-bold" wire:key="empty-text-{{ $activeTab }}">{{ $feedbackEmptyText }}</p>
+                    </div>
+                </div>
 
-                    </div>
-                @else
-                    <div class="m-0 pt-4 row text-center">
-                        <img src="{{ asset('images/' . $activeTab . '.png') }}" class="m-auto" style="width: 10em" />
-                        <h5>No {{ ucfirst($activeTab) }} Feedback</h5>
-                        <p>
-                            @if ($activeTab === 'received')
-                                Let's gather a new outlook from your coworkers.
-                            @elseif($activeTab === 'given')
-                                Share your valuable feedback with your colleagues.
-                            @elseif($activeTab === 'pending')
-                                Your requests and feedback requests from peers will appear here. Once feedback is
-                                shared, it will move to received or given sections.
-                            @elseif($activeTab === 'drafts')
-                                Capture your thoughts on feedback and find it later.
-                            @endif
-                        </p>
-                        <div>
-                            <button class="btn btn-primary"
-                                wire:click="{{ $activeTab === 'given' || $activeTab === 'drafts' ? 'openGiveModal' : 'openRequestModal' }}">
-                                {{ $activeTab === 'given' || $activeTab === 'drafts' ? 'Give Feedback' : 'Request Feedback' }}
-                            </button>
-                        </div>
-                    </div>
-                @endif
             </div>
         </div>
 
@@ -185,8 +205,9 @@
                                                     <div style="color: #5e6e8f; font-size: 14px;">
                                                         #{{ $selectedEmployee['emp_id'] }}</div>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-danger ms-auto"
-                                                    wire:click="clearSelectedEmployee">×</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
+                                                    wire:click="clearSelectedEmployee"><i
+                                                        class="bi bi-dash"></i></button>
                                             </div>
                                         @else
                                             <!-- Show input field when no employee is selected -->
@@ -230,7 +251,8 @@
                                     <div class="mb-3">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <div id="persMsg"></div>
+                                        {{-- <div id="requestRichText"></div> --}}
+                                        {{-- <div id="requestRichText" wire:model.lazy="feedbackMessage"></div> --}}
                                         <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
@@ -247,7 +269,8 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             wire:click="closeModal">Close</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="background-color: #02114f;">Save changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -304,8 +327,9 @@
                                                     <div style="color: #5e6e8f; font-size: 14px;">
                                                         #{{ $selectedEmployee['emp_id'] }}</div>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-danger ms-auto"
-                                                    wire:click="clearSelectedEmployee">×</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
+                                                    wire:click="clearSelectedEmployee"><i
+                                                        class="bi bi-dash"></i></button>
                                             </div>
                                         @else
                                             <!-- Show input field when no employee is selected -->
@@ -365,9 +389,10 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             wire:click="closeModal">Close</button>
-                                        <button type="button" class="btn btn-secondary"
+                                        <button type="button" class="btn btn-warning"
                                             wire:click="saveAsGivenDraft">Save as Draft</button>
-                                        <button type="submit" class="btn btn-primary">Save changes</button>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="background-color: #02114f;">Save changes</button>
                                     </div>
                                 </form>
                             </div>
@@ -443,7 +468,8 @@
     @endif
     <!-- Edit Feedback Modal -->
     @if ($isEditModalVisible)
-        <div class="modal fade show" style="display: block;" tabindex="-1" id="editFeedbackModal">
+        <div class="modal fade show d-block" tabindex="-1" id="editFeedbackModal"
+            style="background: rgba(0, 0, 0, 0.5);">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -479,22 +505,60 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary"
+                        <button type="button" class="btn btn-secondary btn-sm"
                             wire:click="$set('isEditModalVisible', false)">Cancel</button>
-                        <button type="button" class="btn btn-primary" wire:click="updateGiveFeedback">Save
-                            changes</button>
+                        @if ($feedback->id && $feedback->is_draft)
+                            <button type="button" class="btn btn-warning btn-sm"
+                                wire:click="updateGiveFeedback">Save as
+                                Draft</button>
+                            <button type="button" class="btn btn-primary btn-sm" style="background-color: #02114f;"
+                                wire:click="updateDraftGiveFeedback">Save
+                                changes</button>
+                        @else
+                            <button type="button" class="btn btn-primary btn-sm" style="background-color: #02114f;"
+                                wire:click="updateGiveFeedback">Save
+                                changes</button>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
     @endif
 
+    <!-- Delete Confirmation Modal -->
+    @if ($showDeleteModal)
+        <div class="modal fade show d-block" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Delete</h5>
+                        <button type="button" class="btn-close"
+                            wire:click="$set('showDeleteModal', false)"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete this feedback?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm"
+                            wire:click="$set('showDeleteModal', false)">Cancel</button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            wire:click="deleteGiveFeedback">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show"></div>
+    @endif
+
+
+
 </div>
 </div>
 <script>
     document.addEventListener("DOMContentLoaded", function(event) {
-        var quill = new Quill('#persMsg', {
+        var quill = new Quill('#requestRichText', {
             theme: 'snow'
         });
     });
+</script>
 </script>

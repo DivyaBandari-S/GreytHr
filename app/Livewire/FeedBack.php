@@ -29,6 +29,10 @@ class FeedBack extends Component
     public $updatedFeedbackMessage;
     public $selectedFeedbackId;
     public $employeeName;
+    public $feedbackIdToDelete;
+    public $showDeleteModal = false; // Boolean to control modal visibility
+    public $feedbackImage;
+    public $feedbackEmptyText;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -65,11 +69,15 @@ class FeedBack extends Component
         $this->resetFields();
         $this->isRequestModalOpen = false;
         $this->isGiveModalOpen = false;
+        $this->isReplyModalOpen = false;
     }
 
     public function updatedSearchEmployee()
     {
+        $authEmpId = auth()->user()->emp_id; // Get the authenticated user's employee ID
+
         $this->employees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
+            ->where('emp_id', '!=', $authEmpId) // Exclude the authenticated user
             ->where(function ($query) {
                 $query->where('emp_id', 'like', "%{$this->searchEmployee}%")
                     ->orWhere('first_name', 'like', "%{$this->searchEmployee}%")
@@ -79,6 +87,7 @@ class FeedBack extends Component
             ->limit(10)
             ->get();
     }
+
 
     public function selectEmployee($employeeId)
     {
@@ -156,6 +165,8 @@ class FeedBack extends Component
                         $q->where('feedback_from', $empId)
                             ->whereNotNull('replay_feedback_message');
                     });
+                $this->feedbackImage = 'request_feedback.jpg';
+                $this->feedbackEmptyText = 'See what your coworkers have to say!';
                 break;
 
 
@@ -163,6 +174,8 @@ class FeedBack extends Component
                 $query->where('feedback_from', $empId)
                     ->where('feedback_type', 'give')
                     ->where('is_draft', false);
+                $this->feedbackImage = 'give_feedback.jpg';
+                $this->feedbackEmptyText = 'Empower Your Peers with 1:1 Feedback';
                 break;
 
             case 'pending':
@@ -170,12 +183,16 @@ class FeedBack extends Component
                     ->where('feedback_type', 'request')
                     ->where('is_accepted', false)
                     ->where('is_declined', false); // Show only unaccepted & not declined requests
+                $this->feedbackImage = 'pending_feedback.jpg';
+                $this->feedbackEmptyText = 'Waiting for feedback from your peers.';
                 break;
 
             case 'drafts':
                 $query->where('feedback_from', $empId)
                     ->where('is_draft', true)
                     ->where('feedback_type', 'give');
+                $this->feedbackImage = 'draft_feedback.jpg';
+                $this->feedbackEmptyText = 'Save feedback for later.';
                 break;
         }
 
@@ -183,6 +200,7 @@ class FeedBack extends Component
         $this->feedbacks = $query->orderByRaw('created_at desc')
             ->orderByRaw('updated_at desc')
             ->get();
+        $this->dispatch('tabChanged'); // Emit event to force update
     }
 
 
@@ -293,22 +311,27 @@ class FeedBack extends Component
         $this->loadTabData($this->activeTab);
     }
 
-
-    public function deleteGiveFeedback($feedbackId)
+    // Open the delete confirmation modal
+    public function confirmDelete($feedbackId)
     {
-        // Find the feedback record
-        $feedback = FeedbackModel::find($feedbackId);
+        $this->feedbackIdToDelete = $feedbackId;
+        $this->showDeleteModal = true; // Show modal
+    }
+
+    // Perform the deletion
+    public function deleteGiveFeedback()
+    {
+        $feedback = FeedbackModel::find($this->feedbackIdToDelete);
 
         if ($feedback && $feedback->feedback_from == auth()->id()) {
-            // If the logged-in user is the sender (feedback_from), allow deletion
-            $feedback->update(['status' => 0]); // Soft delete by updating status to 0
+            $feedback->update(['status' => 0]); // Soft delete
             session()->flash('message', 'Feedback deleted successfully!');
         } else {
-            // Handle the case where the user is not the sender
             session()->flash('error', 'You are not authorized to delete this feedback.');
         }
 
-        // Refresh the feedback list to reflect changes
+        // Close the modal and refresh data
+        $this->showDeleteModal = false;
         $this->loadTabData($this->activeTab);
     }
 
@@ -387,6 +410,28 @@ class FeedBack extends Component
         session()->flash('message', 'Draft feedback withdrawn and finalized successfully!');
 
         // Refresh the feedback list
+        $this->loadTabData($this->activeTab);
+    }
+    public function updateDraftGiveFeedback()
+    {
+        // Inline validation for the updated feedback message
+        $this->validate([
+            'updatedFeedbackMessage' => 'required|string|min:5',
+        ]);
+
+        // Find the feedback and update the message
+        $feedback = FeedbackModel::find($this->selectedFeedbackId);
+        if ($feedback->is_draft) {
+            $feedback->update([
+                'feedback_message' => $this->updatedFeedbackMessage,
+                'is_draft' => false, // Mark draft as final feedback
+            ]);
+
+
+            session()->flash('message', 'Draft feedback updated successfully and marked as final!');
+        }
+
+        $this->isEditModalVisible = false;
         $this->loadTabData($this->activeTab);
     }
 
