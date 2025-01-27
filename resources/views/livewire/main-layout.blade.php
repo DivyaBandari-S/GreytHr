@@ -26,7 +26,13 @@
                     @endif
                 </ul>
             </li>
-            <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
+            <li><a href="#"><i class='fas fa-rss icon'></i> Feeds</a></li>
+            <li>
+                <a href="#"><i class='fas fa-briefcase icon'></i>My Worklife <i class='fa fa-chevron-right icon-right'></i></a>
+                <ul class="side-dropdown">
+                    <li><a href="#">Feedback</a></li>
+                </ul>
+            </li>
             <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>
             <!-- <li class="divider" data-text="main">Main</li> -->
             <li>
@@ -66,7 +72,7 @@
                 </ul>
             </li>
             <li>
-                <a href="#"class="{{ request()->is('regularisation') ? 'active-bg1223' : '' }}"><i class='fas fa-clock icon {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i> Attendance <i class='fa fa-chevron-right icon-right {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i></a>
+                <a href="#" class="{{ request()->is('regularisation') ? 'active-bg1223' : '' }}"><i class='fas fa-clock icon {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i> Attendance <i class='fa fa-chevron-right icon-right {{ request()->is('regularisation') ? 'icon-active' : '' }}'></i></a>
                 <ul class="side-dropdown">
 
                     <li><a href="/Attendance">Attendance Info</a></li>
@@ -78,10 +84,10 @@
                     @if ($managerId)
                     <li>
                         <a href="/whoisinchart">
-                        <span>Who is in</span>
+                            <span>Who is in</span>
                         </a>
                     </li>
-                  
+
                     <li>
                         <a href="/attendance-muster-data">
                             <span>Attendance Muster</span>
@@ -109,7 +115,7 @@
             @if ($managerId)
             <li>
                 <a href="/reports">
-                    <i class="fas fa-file-alt icon" ></i> Reports
+                    <i class="fas fa-file-alt icon"></i> Reports
                 </a>
             </li>
             @endif
@@ -130,7 +136,7 @@
                 </div>
                 <span class="divider m-auto me-2"></span>
                 <div class="profile m-auto me-2">
-                    <div class="d-flex brandLogoDiv" >
+                    <div class="d-flex brandLogoDiv">
                         @livewire('company-logo')
 
                         @if($loginEmployeeProfile->image !== null && $loginEmployeeProfile->image != "null" && $loginEmployeeProfile->image != "Null" && $loginEmployeeProfile->image != "")
@@ -140,7 +146,7 @@
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
                         @elseif($loginEmployeeProfile->gender=='FEMALE')
                         <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
-            ~            @else
+                        ~ @else
                         <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
                         @endif
                         @endif
