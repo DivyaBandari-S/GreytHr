@@ -12,7 +12,7 @@
     </div>
     <div class="p-3">
         <div class="col">
-            <a href="#" style="text-decoration: none !important;color: blue !important;font-size: 14px;font-weight: 500;padding: 7px;border-bottom:2px solid blue;">Overview</a>
+            <a href="#" style="text-decoration: none !important;color: blue !important;font-size: 14px;font-weight: 500;padding: 7px;border-bottom:2px solid blue;">My Loans</a>
         </div>
     </div>
     <script>

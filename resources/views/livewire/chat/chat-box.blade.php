@@ -176,7 +176,7 @@
                                 @endphp
  
                                 @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                    <img src="{{ asset('storage/' . $path) }}" alt="media"
+                                    <img src="{{ asset('storage/' . $path) }}" alt="media" class="py-3"
                                         style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
                                 @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
                                     <video width="320" height="240" controls>
@@ -229,7 +229,7 @@
                                 @endphp
  
                                 @if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp']))
-                                    <img src="{{ asset('storage/' . $path) }}" alt="media"
+                                    <img src="{{ asset('storage/' . $path) }}" alt="media" class="py-3"
                                         style="width: 100px; height: 100px; object-fit: cover; border-radius: 5px;">
                                 @elseif (in_array($extension, ['mp4', 'mov', 'avi', 'mkv']))
                                     <video width="320" height="240" controls>
