@@ -26,14 +26,14 @@
     <div class="content">
 
         <p>Hi <strong>{{ $delegateName }}</strong>,</p>
-        <p>You have been assigned as a delegate for the workflow: {$workflow}.</p>
+        <p>You have been assigned as a delegate for the workflow: {{$workflow}}.</p>
         <p>Below are the workflow details:</p>
 
         <ul>
             <li><strong>Workflow:</strong> {{($workflow)}}</li>
-            <li><strong>Assigned By: </strong> {{ $addedBy }}</li>
-            <li><strong>From Date: </strong> {{ $fromDate }}</li>
-            <li><strong>To Date: </strong> {{$toDate}}</li>
+            <li><strong>Assigned By: </strong> {{$addedBy}}</li>
+            <li><strong>From Date: </strong>{{\Carbon\Carbon::parse($fromDate)->format('d M, Y')}}</li>
+            <li><strong>To Date: </strong>{{\Carbon\Carbon::parse($toDate)->format('d M, Y') }}</li>
         </ul>
 
 
