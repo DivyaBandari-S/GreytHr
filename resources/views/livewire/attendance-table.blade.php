@@ -1455,7 +1455,7 @@ color: #fff;
                     @endif
 
                 </tr>
-
+                
                 @php
                 use Carbon\Carbon;
 
@@ -1464,7 +1464,7 @@ color: #fff;
                 $currentMonthRep = $fromDate->format('M');
                 $currentYear = $fromDate->year;
                 @endphp
-                
+                @if ($fromDate->greaterThan($employeeHireDate) && $toDate->greaterThan($employeeHireDate))
                 @for ($date = $fromDate; $date->lte($toDate); $date->addDay())
                 @php
                 $dateKey = $date->format('d M Y');
@@ -1860,7 +1860,14 @@ color: #fff;
 
                     </tr>
                     @endfor
-                    
+                    @else
+
+                       <tr style="background-color:#fff;">
+                            <td colspan="12"style="text-align: center; font-size: 14px; font-weight: bold; color: black;">
+                                No data to display.
+                            </td>
+                       </tr>
+                    @endif
                     
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
                         <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
