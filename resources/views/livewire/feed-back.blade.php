@@ -30,6 +30,12 @@
                     <div class="col-md-8 p-0">
                         @if ($feedbacks->count() > 0)
                             <div class="p-4" style="max-height: 400px; overflow-y: auto;">
+                                <div class="mb-3 d-flex">
+                                    <div class="col-auto">
+                                        <input type="text" class="form-control" placeholder="Search feedback..."
+                                            wire:model.live="searchFeedback">
+                                    </div>
+                                </div>
                                 @foreach ($feedbacks as $feedback)
                                     <div class="border p-3 mb-3 rounded shadow-sm">
                                         <div class="d-flex align-items-start">
@@ -165,14 +171,7 @@
 
             </div>
         </div>
-
-
-
     </div>
-
-
-
-
     <!-- Modal -->
     <!-- Request Feedback Modal -->
     @if ($isRequestModalOpen)
@@ -181,7 +180,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Request Feedback</h1>
-                        <button type="button" class="btn-close" wire:click="closeModal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" wire:click="closeModal"
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row m-0">

@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Mail\FeedbackNotificationMail;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class FeedBack extends Component
@@ -33,6 +36,7 @@ class FeedBack extends Component
     public $showDeleteModal = false; // Boolean to control modal visibility
     public $feedbackImage;
     public $feedbackEmptyText;
+    public $searchFeedback;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -143,6 +147,7 @@ class FeedBack extends Component
     {
         $this->activeTab = $tab;
         $this->feedbacks = []; // Reset feedbacks when changing tabs
+        $this->searchFeedback = '';
 
         $empId = auth()->user()->emp_id;
 
@@ -433,6 +438,30 @@ class FeedBack extends Component
 
         $this->isEditModalVisible = false;
         $this->loadTabData($this->activeTab);
+    }
+
+    public function updatedSearchFeedback()
+    {
+        $this->getFilteredFeedbacks();
+    }
+
+    public function getFilteredFeedbacks()
+    {
+        try {
+            $this->feedbacks = FeedBackModel::when($this->searchFeedback, function ($query) {
+                $query->whereHas('feedbackFromEmployee', function ($q) {
+                    $q->where('first_name', 'like', "%{$this->searchFeedback}%")
+                        ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
+                })
+                    ->orWhereHas('feedbackToEmployee', function ($q) {
+                        $q->where('first_name', 'like', "%{$this->searchFeedback}%")
+                            ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
+                    });
+            })->latest()->get();
+        } catch (QueryException $e) {
+            Log::error("Error fetching feedbacks: " . $e->getMessage());
+            $this->feedbacks = collect(); // Safe fallback
+        }
     }
 
 
