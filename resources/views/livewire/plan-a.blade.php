@@ -1,4 +1,80 @@
 <div class="router-container pb-15 container-fluid">
+    <style>
+        .table-headings {
+            margin: 0px;
+            background-color: #e9edf1;
+            font-size: 14px;
+            color: #7f8fa4;
+            font-weight: 400;
+            padding: 5px 10px;
+        }
+
+        .modal-inputs {
+            width: 200px;
+
+        }
+
+        .modal-labels {
+            font-size: 13px;
+            color: #7f8fa4;
+            font-weight: 500;
+        }
+
+        .label-inputs {
+            padding: 10px;
+        }
+
+        .total-declaration {
+            color: #7f8fa4;
+        }
+
+        .declaration-buttons {
+            background-color: rgb(2, 17, 79);
+            border: none;
+            padding: 5px 10px;
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            border-radius: 3px;
+        }
+
+        .declaration-clear {
+            font-size: 15px;
+            font-weight: 500;
+            text-decoration: none;
+            color: rgb(2, 17, 79);
+            cursor: pointer;
+        }
+
+        .declaration-clear:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .remove-house {
+            display: none;
+            font-size: 13px;
+            padding: 0px;
+            border: none;
+        }
+
+        .nav-link {
+            padding: 5px;
+            gap: 15px;
+            width: 100px;
+        }
+
+        .nav-item:hover .remove-house {
+            display: inline-block;
+            font-size: 13px;
+            padding: 0px;
+        }
+
+        .nav-item:hover .nav-link {
+            padding: 5px;
+            text-decoration: underline;
+        }
+    </style>
     <router-outlet></router-outlet>
     <itd-plan-details _nghost-whw-c468="" class="ng-star-inserted">
         <div _ngcontent-whw-c468="" class="itd-plan-details ng-star-inserted">
@@ -47,7 +123,7 @@
             <div _ngcontent-whw-c468="" class="itd-plan-details-content ng-star-inserted">
                 <div _ngcontent-whw-c468="" class="row">
                     <!-- Card 1 -->
-                    <div class="col-md-4" style="margin-top:20px;">
+                    <div class="col-md-3" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
                             <img src="images/deduction-img/80c.png"
                                 style="width:80px;" class="mb-3 mt-3 m-auto">
@@ -235,7 +311,7 @@
                         @endif
 
                     </div>
-                    <div class="col-md-4" style="margin-top:20px;">
+                    <div class="col-md-3" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="margin-top:20px;background:white;border:1px solid silver;border-radius:5px;font-size:12px">
                             <img src="images/deduction-img/deduction.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
@@ -498,7 +574,111 @@
 
                         @endif
                     </div>
-                    <div class="col-md-4" style="margin-top:20px;">
+                    <div class="col-md-3" style="margin-top:20px;">
+                        <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
+                            <img src="images/it-declaration-home.png"
+                                style="width:80px;" class="mb-3 mt-3 m-auto">
+                            <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">House Rent Allowance
+                            </p>
+                            <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addMedicalSec80">Add to declaration</a>
+                        </div>
+                        @if($showMedicalSec80CDialog)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;font-size:12px">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" style="font-size:12px">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">House Rent Allowance</h1>
+                                        <button wire:click="closeMedicalSec80" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="modal-body" style="max-height: auto;">
+                                        <ul class="nav nav-tabs">
+                                            @foreach ($houses as $index => $house)
+                                            <div class="nav-item">
+                                                <li class=" nav-link d-flex {{ $selectedHouseIndex === $index ? 'active' : '' }}" style="font-size: 13px;">
+                                                    <!-- House Tab Button -->
+                                                    <button style="border: none;background-color:white !important;"
+                                                        wire:click="selectHouse({{ $index }})">
+                                                        House {{ $index + 1 }}
+                                                    </button>
+
+                                                    <!-- Remove House Button -->
+                                                    <button class="btn btn-sm remove-house "
+                                                        style="top: 5px; right: 5px;"
+                                                        wire:click="removeHouse({{ $index }})">
+                                                        x
+                                                    </button>
+                                                </li>
+                                            </div>
+                                            @endforeach
+                                            <a style="margin-left: auto;" href="#" wire:click="addHouse">+ Add New House</a>
+                                        </ul>
+
+
+                                        <!-- Body Content for Selected House -->
+                                        <div class="tab-content mt-3">
+                                            <div class="tab-pane fade show active">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-md-6">
+                                                                <label for="from-{{ $selectedHouseIndex }}" class="form-label">From <span class="text-danger">*</span></label>
+                                                                <select id="from-{{ $selectedHouseIndex }}" wire:model="houses.{{ $selectedHouseIndex }}.from" class="form-select">
+                                                                    <option value="Apr 2024">Apr 2024</option>
+                                                                    <option value="May 2024">May 2024</option>
+                                                                    <option value="Jun 2024">Jun 2024</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label for="to-{{ $selectedHouseIndex }}" class="form-label">To <span class="text-danger">*</span></label>
+                                                                <select id="to-{{ $selectedHouseIndex }}" wire:model="houses.{{ $selectedHouseIndex }}.to" class="form-select">
+                                                                    <option value="Mar 2025">Mar 2025</option>
+                                                                    <option value="Apr 2025">Apr 2025</option>
+                                                                    <option value="May 2025">May 2025</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-md-6">
+                                                                <label for="monthly-rent-{{ $selectedHouseIndex }}" class="form-label">Monthly Rent Amount <span class="text-danger">*</span></label>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text">₹</span>
+                                                                    <input type="number" id="monthly-rent-{{ $selectedHouseIndex }}" wire:model="houses.{{ $selectedHouseIndex }}.monthly_rent" class="form-control" placeholder="Enter amount">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label class="form-label">Annual Rent Amount ₹:</label>
+                                                                <div>{{ is_numeric($houses[$selectedHouseIndex]['monthly_rent']) ? (int)$houses[$selectedHouseIndex]['monthly_rent'] * 12 : 0 }}</div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="row mt-3">
+                                                            <div class="col-md-12">
+                                                                <label for="address-{{ $selectedHouseIndex }}" class="form-label">Full Address</label>
+                                                                <textarea id="address-{{ $selectedHouseIndex }}" wire:model="houses.{{ $selectedHouseIndex }}.address" class="form-control" rows="2" placeholder="Enter full address"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="modal-footer d-flex text-center " style="max-height: auto;justify-content:center;gap:10px">
+                                        <button class="declaration-buttons">Save</button>
+                                        <a class="declaration-clear">Clear Form</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+
+                        @endif
+                    </div>
+
+                    <div class="col-md-3" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
                             <img src="images/deduction-img/80d.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
@@ -626,9 +806,7 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="modal-backdrop fade show blurred-backdrop"></div>
-
                     @endif
 
 
@@ -639,21 +817,18 @@
             <div _ngcontent-whw-c468="" class="itd-plan-details-content ng-star-inserted">
                 <div _ngcontent-whw-c468="" class="row">
                     <!-- Card 1 -->
-                    <div class="col-md-4" style="margin-top:20px;">
+                    <div class="col-md-3" style="margin-top:20px;">
                         <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
                             <img src="images/deduction-img/house.png"
                                 style="width:80px;" class="mt-3 mb-3 m-auto">
                             <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">
                                 Income/loss from House Property</p>
-                            <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addIncome">Add to declaration</a>
+                            <a class="declaration-link" style="margin-bottom: 2.5em;" wire:click="addIncome">Add to declaration</a>
                         </div>
 
                         @if($showIncomeDialog)
-
                         <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-
                             <div class="modal-dialog modal-dialog-centered" role="document">
-
                                 <div class="modal-content" style="width: 800px">
                                     <div class="modal-header"
                                         style="background-color:#D4D2D2 ;height: 60px; width: 800px">
@@ -759,259 +934,288 @@
                             </div>
                             </form>
                         </div>
-
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                        @endif
 
                     </div>
-
-                    <div class="modal-backdrop fade show blurred-backdrop"></div>
-
-                    @endif
-
-
-
-
-                </div>
-                <div class="col-md-4" style="margin-top:20px;">
-                    <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                        <img src="images/deduction-img/wage.png" style="width:80px;" class="mt-3 mb-3 m-auto">
-                        <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Other Income </p>
-                        <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addshowOtherIncome">Add to declaration</a>
-                    </div>
-
-                    @if($showOtherIncome)
-
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-
-                            <div class="modal-content" style="width: 800px">
-                                <div class="modal-header" style="background-color: #D4D2D2; height: 60px; width: 800px">
-                                    <h5 style="padding: 5px;  font-size: 15px;" class="modal-title"><b>Other Income</b>
-                                    </h5>
-                                    <button wire:click="closeshowOtherIncome" type="button" class="close"
-                                        data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true" style="color: black;">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body" style="max-height: auto;">
-                                    <div class="container"
-                                        style="height: 60px; border: 1px solid silver; border-radius: 7px;width:700px;display:flex">
-                                        <div class="row" style="display: flex;width:200px;margin-top:10px">
-                                            <p style="width:300px;font-size:14px;">Total declared in (₹)</p>
-                                        </div>
-
-
-                                    </div>
-                                    <!-- Begin the form outside the .form-group div -->
-                                    <form wire:submit.prevent="submit">
-                                        <div class="form-group">
-                                            <div class="column" style="display:flex">
-
-                                                <div class="row" style="margin-top:20px">
-                                                    <div class="container"
-                                                        style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver">
-                                                        Other Income 1
-                                                    </div>
-                                                    <div class="column" style="display:flex">
-                                                        <div class="row">
-                                                            <label for="income"
-                                                                style="font-size:14px">Particulars</label>
-                                                            <input type="text" wire:model="fields.income" id="income"
-                                                                class="form-control" placeholder="Enter income type"
-                                                                style="width:300px;font-size:14px;margin-left:10px">
-
-                                                        </div>
-
-                                                        <div class="row">
-                                                            <label for="Lender’s"
-                                                                style="font-size:14px;margin-left:10px">Declared
-                                                                Amount</label>
-                                                            <input type="text" wire:model="fields.Lender’s"
-                                                                id="Lender’s" class="form-control"
-                                                                placeholder="Enter amount "
-                                                                style="width:300px;font-size:14px;margin-left:10px">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container"
-                                                style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver;margin-top:5px;margin-left:-10px">
-                                                Other Income 2
-                                            </div>
-                                            <div class="column" style="display:flex">
-                                                <div class="row">
-                                                    <label for="income" style="font-size:14px">Particulars</label>
-                                                    <input type="text" wire:model="fields.income" id="income"
-                                                        class="form-control" placeholder="Enter Income Type"
-                                                        style="width:300px;font-size:14px;margin-left:10px">
-
-                                                </div>
-
-                                                <div class="row">
-                                                    <label for="Lender’s"
-                                                        style="font-size:14px;margin-left:10px">Declared Amount</label>
-                                                    <input type="text" wire:model="fields.Lender’s" id="Lender’s"
-                                                        class="form-control" placeholder="Enter amount"
-                                                        style="width:300px;font-size:14px;margin-left:10px">
-                                                </div>
-                                            </div>
-
-
-
-                                        </div>
-                                </div>
-                                <div class="row" style="margin-top: -10px;">
-                                    <div class="col-1">
-                                        <button type="submit" class="custom-button submit-button"
-                                            style="background:green;border:1px solid silver;border-radius:5px;color:white;margin-left:10px;width:80px;">Submit</button>
-                                    </div>
-                                    <div class="col-2" style="margin-left: 10%;">
-                                        <button wire:click="closeshowOtherIncome" class="custom-button cancel-button"
-                                            style="background:red;border:1px solid silver;border-radius:5px;color:white;margin-left:10px">Cancel</button>
-                                    </div>
-                                </div>
-                                </form>
-                            </div>
-
-
+                    <div class="col-md-3" style="margin-top:20px;">
+                        <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
+                            <img src="images/deduction-img/wage.png" style="width:80px;" class="mt-3 mb-3 m-auto">
+                            <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Other Income </p>
+                            <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addshowOtherIncome">Add to declaration</a>
                         </div>
-                    </div>
-
-                    <div class="modal-backdrop fade show blurred-backdrop"></div>
-
-                    @endif
-                </div>
-                <div class="col-md-4" style="margin-top:20px;">
-                    <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
-                        <img src="images/deduction-img/salary.png"
-                            style="width:80px;" class="mt-3 mb-3 m-auto">
-                        <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Salary
-                            Allowance
-
-                        </p>
-                        <a class="declaration-link" style="margin-bottom: 2em;" wire:click="addSalayAllowance">Add to declaration</a>
-                    </div>
-
-                    @if($showSalayAllowance)
-
-                    <div class="modal" tabindex="-1" role="dialog" style="display: block;">
-
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-
-                            <div class="modal-content" style="width: 800px">
-                                <div class="modal-header" style="background-color: #D4D2D2; height: 60px; width: 800px">
-                                    <h5 style="padding: 5px;  font-size: 15px;" class="modal-title"><b>Salary
-                                            Allowance</b></h5>
-                                    <button wire:click="closeSalayAllowance" type="button" class="close"
-                                        data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body" style="max-height: auto;">
-                                    <div class="container"
-                                        style="height: 60px; border: 1px solid silver; border-radius: 7px;width:700px;display:flex">
-                                        <div class="row" style="display: flex;width:200px;margin-top:10px">
-                                            <p style="width:300px;font-size:14px;">Total declared in (₹)</p>
-                                        </div>
-
-
+                        @if($showOtherIncome)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content" style="width: 800px">
+                                    <div class="modal-header" style="background-color: #D4D2D2; height: 60px; width: 800px">
+                                        <h5 style="padding: 5px;  font-size: 15px;" class="modal-title"><b>Other Income</b>
+                                        </h5>
+                                        <button wire:click="closeshowOtherIncome" type="button" class="close"
+                                            data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true" style="color: black;">×</span>
+                                        </button>
                                     </div>
-                                    <!-- Begin the form outside the .form-group div -->
-                                    <form wire:submit.prevent="submit">
-                                        <div class="form-group">
-                                            <div class="column" style="display:flex">
+                                    <div class="modal-body" style="max-height: auto;">
+                                        <div class="container"
+                                            style="height: 60px; border: 1px solid silver; border-radius: 7px;width:700px;display:flex">
+                                            <div class="row" style="display: flex;width:200px;margin-top:10px">
+                                                <p style="width:300px;font-size:14px;">Total declared in (₹)</p>
+                                            </div>
+                                        </div>
+                                        <!-- Begin the form outside the .form-group div -->
+                                        <form wire:submit.prevent="submit">
+                                            <div class="form-group">
+                                                <div class="column" style="display:flex">
 
-                                                <div class="row" style="margin-top:20px">
-                                                    <div class="container"
-                                                        style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver">
-                                                        Other Income 1
-                                                    </div>
-                                                    <div class="column" style="display:flex">
-                                                        <div class="row">
-                                                            <label for="income"
-                                                                style="font-size:14px">Particulars</label>
-                                                            <input type="text" wire:model="fields.income" id="income"
-                                                                class="form-control" placeholder="Enter income type"
-                                                                style="width:300px;font-size:14px;margin-left:10px">
-
+                                                    <div class="row" style="margin-top:20px">
+                                                        <div class="container"
+                                                            style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver">
+                                                            Other Income 1
                                                         </div>
+                                                        <div class="column" style="display:flex">
+                                                            <div class="row">
+                                                                <label for="income"
+                                                                    style="font-size:14px">Particulars</label>
+                                                                <input type="text" wire:model="fields.income" id="income"
+                                                                    class="form-control" placeholder="Enter income type"
+                                                                    style="width:300px;font-size:14px;margin-left:10px">
 
-                                                        <div class="row">
-                                                            <label for="Lender’s"
-                                                                style="font-size:14px;margin-left:10px">Declared
-                                                                Amount</label>
-                                                            <input type="text" wire:model="fields.Lender’s"
-                                                                id="Lender’s" class="form-control"
-                                                                placeholder="Enter amount "
-                                                                style="width:300px;font-size:14px;margin-left:10px">
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <label for="Lender’s"
+                                                                    style="font-size:14px;margin-left:10px">Declared
+                                                                    Amount</label>
+                                                                <input type="text" wire:model="fields.Lender’s"
+                                                                    id="Lender’s" class="form-control"
+                                                                    placeholder="Enter amount "
+                                                                    style="width:300px;font-size:14px;margin-left:10px">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div class="container"
+                                                    style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver;margin-top:5px;margin-left:-10px">
+                                                    Other Income 2
+                                                </div>
+                                                <div class="column" style="display:flex">
+                                                    <div class="row">
+                                                        <label for="income" style="font-size:14px">Particulars</label>
+                                                        <input type="text" wire:model="fields.income" id="income"
+                                                            class="form-control" placeholder="Enter Income Type"
+                                                            style="width:300px;font-size:14px;margin-left:10px">
 
-                                            <div class="column" style="display:flex">
-                                                <div class="row">
-                                                    <label for="income" style="font-size:14px">LTA</label>
-                                                    <input type="text" wire:model="fields.income" id="income"
-                                                        class="form-control" placeholder="Enter Income Type"
-                                                        style="width:300px;font-size:14px;margin-left:10px">
-                                                    <p>Max limit in ₹:99,99,99,999.00</p>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <label for="Lender’s"
+                                                            style="font-size:14px;margin-left:10px">Declared Amount</label>
+                                                        <input type="text" wire:model="fields.Lender’s" id="Lender’s"
+                                                            class="form-control" placeholder="Enter amount"
+                                                            style="width:300px;font-size:14px;margin-left:10px">
+                                                    </div>
                                                 </div>
 
 
+
                                             </div>
-
-
-
+                                    </div>
+                                    <div class="row" style="margin-top: -10px;">
+                                        <div class="col-1">
+                                            <button type="submit" class="custom-button submit-button"
+                                                style="background:green;border:1px solid silver;border-radius:5px;color:white;margin-left:10px;width:80px;">Submit</button>
                                         </div>
-                                </div>
-                                <div class="row" style="margin-top: -10px;">
-                                    <div class="col-1">
-                                        <button type="submit" class="custom-button submit-button"
-                                            style="background:green;border:1px solid silver;border-radius:5px;color:white;margin-left:10px;width:80px">Submit</button>
+                                        <div class="col-2" style="margin-left: 10%;">
+                                            <button wire:click="closeshowOtherIncome" class="custom-button cancel-button"
+                                                style="background:red;border:1px solid silver;border-radius:5px;color:white;margin-left:10px">Cancel</button>
+                                        </div>
                                     </div>
-                                    <div class="col-2" style="margin-left:10%">
-                                        <button wire:click="closeSalayAllowance" class="custom-button cancel-button"
-                                            style="background:red;border:1px solid silver;border-radius:5px;color:white;margin-left:120x;width:80px">Cancel</button>
-                                    </div>
+                                    </form>
                                 </div>
-                                </form>
+
+
                             </div>
-
-
                         </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                        @endif
                     </div>
 
+                    <div class="col-md-3" style="margin-top:20px;">
+                        <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
+                            <img src="images/deduction-img/salary.png"
+                                style="width:80px;" class="mt-3 mb-3 m-auto">
+                            <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">Salary
+                                Allowance
 
-                    <div class="modal-backdrop fade show blurred-backdrop"></div>
+                            </p>
+                            <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addSalayAllowance">Add to declaration</a>
+                        </div>
+                        @if($showSalayAllowance)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content" style="width: 800px">
+                                    <div class="modal-header" style="background-color: #D4D2D2; height: 60px; width: 800px">
+                                        <h5 style="padding: 5px;  font-size: 15px;" class="modal-title"><b>Salary
+                                                Allowance</b></h5>
+                                        <button wire:click="closeSalayAllowance" type="button" class="close"
+                                            data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body" style="max-height: auto;">
+                                        <div class="container"
+                                            style="height: 60px; border: 1px solid silver; border-radius: 7px;width:700px;display:flex">
+                                            <div class="row" style="display: flex;width:200px;margin-top:10px">
+                                                <p style="width:300px;font-size:14px;">Total declared in (₹)</p>
+                                            </div>
 
-                    @endif
+
+                                        </div>
+                                        <!-- Begin the form outside the .form-group div -->
+                                        <form wire:submit.prevent="submit">
+                                            <div class="form-group">
+                                                <div class="column" style="display:flex">
+
+                                                    <div class="row" style="margin-top:20px">
+                                                        <div class="container"
+                                                            style="height:30px;background:#D9D9D9;width:780px;border:1px solid silver">
+                                                            Other Income 1
+                                                        </div>
+                                                        <div class="column" style="display:flex">
+                                                            <div class="row">
+                                                                <label for="income"
+                                                                    style="font-size:14px">Particulars</label>
+                                                                <input type="text" wire:model="fields.income" id="income"
+                                                                    class="form-control" placeholder="Enter income type"
+                                                                    style="width:300px;font-size:14px;margin-left:10px">
+
+                                                            </div>
+
+                                                            <div class="row">
+                                                                <label for="Lender’s"
+                                                                    style="font-size:14px;margin-left:10px">Declared
+                                                                    Amount</label>
+                                                                <input type="text" wire:model="fields.Lender’s"
+                                                                    id="Lender’s" class="form-control"
+                                                                    placeholder="Enter amount "
+                                                                    style="width:300px;font-size:14px;margin-left:10px">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="column" style="display:flex">
+                                                    <div class="row">
+                                                        <label for="income" style="font-size:14px">LTA</label>
+                                                        <input type="text" wire:model="fields.income" id="income"
+                                                            class="form-control" placeholder="Enter Income Type"
+                                                            style="width:300px;font-size:14px;margin-left:10px">
+                                                        <p>Max limit in ₹:99,99,99,999.00</p>
+                                                    </div>
+
+
+                                                </div>
+
+
+
+                                            </div>
+                                    </div>
+                                    <div class="row" style="margin-top: -10px;">
+                                        <div class="col-1">
+                                            <button type="submit" class="custom-button submit-button"
+                                                style="background:green;border:1px solid silver;border-radius:5px;color:white;margin-left:10px;width:80px">Submit</button>
+                                        </div>
+                                        <div class="col-2" style="margin-left:10%">
+                                            <button wire:click="closeSalayAllowance" class="custom-button cancel-button"
+                                                style="background:red;border:1px solid silver;border-radius:5px;color:white;margin-left:120x;width:80px">Cancel</button>
+                                        </div>
+                                    </div>
+                                    </form>
+                                </div>
+
+
+                            </div>
+                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                        @endif
+                    </div>
+                    <div class="col-md-3" style="margin-top:20px;">
+                        <div class="row m-0 text-center" style="background:white;border:1px solid silver;border-radius:5px;font-size:12px">
+                            <img src="images/it-declaration-deductions.png" style="width:80px;" class="mt-3 mb-3 m-auto">
+                            <p _ngcontent-whw-c467="" class="text-black mb-2" title="Sec 80C">TCS/TDS Deduction </p>
+                            <a class="declaration-link" style="margin-bottom: 4em;" wire:click="addTcsTdsDeductions">Add to declaration</a>
+                        </div>
+                        @if($showTcsTdsDeductions)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;font-size:12px">
+                            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                                <div class="modal-content" style="font-size:12px">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="exampleModalToggleLabel">TCS/TDS Deduction</h1>
+                                        <button wire:click="closeTcsTdsDeductions" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body" style="max-height:auto ;">
+                                        <div class="row " style="border: 1px solid silver;border-radius:3px;margin:10px">
+                                            <div class=" text-right" style="width: fit-content; border-right:1px solid silver;padding:10px">
+                                                <span class="total-declaration">Total declared in ₹ </span>
+                                                <p class=" text-end m-0" style="font-weight: bold;">- </p>
+                                            </div>
+                                            <p class="table-headings">TCS Deduction</p>
+                                            <div class="label-inputs">
+                                                <label for="5_years_fixed_deposit" class="modal-labels">Declared Amount</label>
+
+                                                <input type="text" wire:model=""
+                                                    name="fields.5_years_fixed_deposit"
+                                                    id="5_years_fixed_deposit" class="form-control modal-inputs"
+                                                    placeholder="₹ Enter amount">
+                                            </div>
+                                            <p class="table-headings">TDS Deduction</p>
+                                            <div class="label-inputs">
+                                                <label for="5_years_fixed_deposit" class="modal-labels">Declared Amount</label>
+
+                                                <input type="text" wire:model=""
+                                                    name="fields.5_years_fixed_deposit"
+                                                    id="5_years_fixed_deposit" class="form-control modal-inputs"
+                                                    placeholder="₹ Enter amount">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer d-flex text-center " style="max-height: auto;justify-content:center;gap:10px">
+                                        <button class="declaration-buttons">Save</button>
+                                        <a class="declaration-clear">Clear Form</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-backdrop fade show blurred-backdrop"></div>
+                        @endif
+                    </div>
                 </div>
                 <!-- Card 2 -->
-
-
                 <!-- Add more cards here as needed -->
 
             </div>
+            @endforeach
         </div>
-        @endforeach
+
 
         <!---->
         <!---->
         <!---->
-</div>
-</itd-plan-details>
-<!---->
-</div>
-<div class="bg-white mt-3 mx-0 p-3 row text-end">
-    <div>
 
-        <button class="btn btn-outline-primary">
-            <a href="/itstatement">View IT Calculation</a>
-        </button>
+    </itd-plan-details>
+    <!---->
+    <div class="bg-white mt-3 mx-0 p-3 row text-end">
+        <div>
+
+            <button class="btn btn-outline-primary">
+                <a href="/itstatement">View IT Calculation</a>
+            </button>
+        </div>
+
     </div>
-
 </div>
+
 <script>
     // Get the modal and buttons
     var modal = document.getElementById("myModal");

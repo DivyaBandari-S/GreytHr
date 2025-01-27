@@ -564,7 +564,7 @@ Route::get('/test-odbc-dir', function () {
         // Define your table name and user ID
         $tableName = 'DeviceLogs_1_2025'; // Replace with your actual table name
         $normalizedUserId = 'XSS0480'; // Replace with your actual user ID
-        $today = now()->subYear()->toDateString();// Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
+        $today = now()->subYear()->toDateString(); // Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
 
         // Fetch data using raw PDO query
         $stmt = $dbh->prepare("SELECT UserId, logDate, Direction

@@ -38,7 +38,7 @@
                 <button id="show-delegate-form-button" class="btn btn-primary" style="width: 120px; border-radius: 5px; font-size: 12px;background: rgb(2, 17, 79); color: white;" wire:click='showForm'>Add Delegates</button>
             </div>
         </div>
-        <div class="col-md-8 mb-2">
+        <div class="col-md-9 mb-2">
             <div class="bg-white" style="height: 300px; border: 1px solid rgb(2, 17, 79); border-radius: 5px; max-height: 400px; overflow-y: auto;">
                 <table class="delegate-table" style="width: 100%; border-collapse: collapse;justify-content:space-between">
                     <thead>
@@ -53,18 +53,21 @@
                     </thead>
                     <tbody>
                         @foreach ($retrievedData ?? [] as $data)
-                        <tr class="delegate-row" style="justify-content:space-between">
+                        <tr class="delegate-row" style="justify-content:space-between;{{ $editid === $data->id ? 'background-color: yellow;' : '' }}">
                             <td class="delegate-cell">
-                                {{ $data->first_name }} {{ $data->last_name }} ({{ $data->emp_id }})
+                            @php
+                            $createdBy = \App\Models\Delegate::getEmployeeName($data->emp_id );
+                            @endphp
+                               {{$createdBy}}
                             </td>
                             <td class="delegate-cell">
                                 {{ $data->workflow }}
                             </td>
                             <td class="delegate-cell">
-                                {{ date('d M Y', strtotime($data->from_date)) }}
+                                {{ date('d M, Y', strtotime($data->from_date)) }}
                             </td>
                             <td class="delegate-cell">
-                                {{ date('d M Y', strtotime($data->to_date)) }}
+                                {{ date('d M, Y', strtotime($data->to_date)) }}
                             </td>
                             @php
                             $updatedBy = \App\Models\Delegate::getEmployeeName($data->delegate);
@@ -97,9 +100,9 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-4 mb-2">
+        <div class="col-md-3 mb-2">
             @if($showform)
-            <div class=" ">
+            <div class="">
                 <div>
                     <form wire:submit="submitForm" style="margin-left:10px;font-size:10px;">
                         <div class="form-group">
@@ -137,13 +140,13 @@
                         <div class="form-group">
                             <label class="form-label" style="font-size:10px;margin-top:5px">To Date</label>
 
-                            <input type="date" style="color: black;font-size:10px;width:200px" name="toDate" class="form-control" style="width: 280px" wire:model.lazy="toDate" min="{{ $isedit && $toDate ? \Carbon\Carbon::parse($toDate)->toDateString() : \Carbon\Carbon::today()->toDateString() }}">
+                            <input type="date" style="color: black;font-size:10px;width:200px" name="toDate" class="form-control" style="width: 280px" wire:model.lazy="toDate" min="{{ $isedit && $fromDate ? \Carbon\Carbon::parse($fromDate)->toDateString() : \Carbon\Carbon::today()->toDateString() }}">
                             @error('toDate') <span class="text-danger">{{ $message }}</span> @enderror
                         </div>
                         <div class="form-group" style="margin-top:5px">
 
                             <label class="form-label" style="font-size:10px;margin-top:5px">Delegatee</label>
-                            <select class="form-select" style="width: 200px; color: black;font-size:10px" wire:model.lazy="delegate">
+                            <select class="form-select" style="width: 200px; color: black;font-size:10px;text-transform: capitalize;" wire:model.lazy="delegate">
                                 <option style="color: black;font-size:10px;text-transform:capitalize" value="">Select delegatee</option>
                                 @foreach($peoples as $employees)
                                 <option style="color: black;font-size:10px;text-transform:capitalize" value="{{$employees->emp_id}}">{{$employees->first_name}} {{$employees->last_name}} #{{$employees->emp_id}}</option>

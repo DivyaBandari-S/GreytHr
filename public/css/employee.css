@@ -1535,8 +1535,7 @@ main .btn-send:hover {
 .managerOtherDetails{
     font-size: 12px;
     display: inline-block;
-    max-width: 160px;
-    max-width: 160px;
+    max-width: 244px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1850,4 +1849,8 @@ main .btn-send:hover {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     padding: 10px;
+  }
+  .feedBackMsg {
+    border-left: 2px solid orange;
+    padding-left: 10px;
   }

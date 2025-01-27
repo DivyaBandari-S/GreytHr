@@ -595,7 +595,7 @@ class Notification extends Component
                 ->where('message_read_at', null)
                 ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
-            // dd($this->leaveApproveNotification);
+
 
             $this->leaveRejectNotification = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
@@ -645,6 +645,7 @@ class Notification extends Component
             $this->tasknotifications = DB::table('notifications')
                 ->join('employee_details', 'notifications.emp_id', '=', 'employee_details.emp_id')
                 ->whereRaw("SUBSTRING_INDEX(SUBSTRING_INDEX(notifications.assignee, '(', -1), ')', 1) = ?", [$loggedInEmpId])
+                ->where('notification_type', 'task')
                 ->where('is_read', 0)
                 ->select('employee_details.first_name', 'employee_details.last_name', 'notifications.task_name as detail', 'notifications.emp_id', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
@@ -657,13 +658,15 @@ class Notification extends Component
                 ->select('employee_details.first_name', 'employee_details.last_name',  'notifications.emp_id',  'notifications.body as detail', 'notifications.notification_type', 'notifications.created_at', 'notifications.chatting_id', 'notifications.leave_type')
                 ->get();
 
+
             // ->groupBy('emp_id');
-
+// dd($this->tasknotifications);
             $allNotifications = $this->messagenotifications->merge($this->leavenotifications)->merge($this->tasknotifications)->merge($this->leavecancelnotifications)->merge($this->leaveApproveNotification)->merge($this->leaveRejectNotification)->merge($this->regularisationNotifications)->merge($this->regularisationRejectNotifications)->merge($this->delegatenotifications);
-
+// dd( $allNotifications);
             $groupedNotifications = $allNotifications->groupBy(function ($item) {
                 return $item->emp_id . '-' . $item->notification_type;
             });
+            // dd($groupedNotifications);
             $this->totalnotifications = $groupedNotifications->map(function ($items, $key) {
                 $firstItem = $items->first();
                 $detailsArray = $items->pluck('detail')->toArray();
@@ -695,7 +698,7 @@ class Notification extends Component
                 $this->totalnotificationscount = $this->totalnotifications->count();
             }
 
-
+// dd(  $this->totalnotifications);
 
             $this->chatNotificationCount = DB::table('notifications')
                 ->where('receiver_id', $loggedInEmpId)
