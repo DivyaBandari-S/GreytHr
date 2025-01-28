@@ -183,9 +183,10 @@
                                     @endforeach
                                 @else
                                     <!-- No Matching Results -->
-                                    <div class="text-center">
-                                        <h5>No matching feedback found</h5>
-                                        <p>Try searching with a different keyword.</p>
+                                    <div class="m-0 pt-4 row text-center">
+                                        <img src="{{ asset('images/' . $activeTab . '.png') }}" class="m-auto"
+                                            style="width: 10em" />
+                                        <h5>No Matching Feedbacks with the Employee</h5>
                                     </div>
                                 @endif
                             </div>
