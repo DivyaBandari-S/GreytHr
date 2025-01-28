@@ -1455,7 +1455,7 @@ color: #fff;
                     @endif
 
                 </tr>
-
+                
                 @php
                 use Carbon\Carbon;
 
@@ -1860,6 +1860,9 @@ color: #fff;
 
                     </tr>
                     @endfor
+                   
+
+                      
                     
                     
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">

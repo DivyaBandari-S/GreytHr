@@ -127,7 +127,7 @@ class EmployeeSwipesData extends Component
         }
 
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
-
+        
     }
     public function processWebSignInLogs()
     {
@@ -329,6 +329,7 @@ class EmployeeSwipesData extends Component
             } else {
                 $externalSwipeLogs = collect();
             }
+           
         } catch (\Exception $e) {
             // Handle exceptions related to external database query
             // Log or handle the exception
@@ -350,7 +351,7 @@ class EmployeeSwipesData extends Component
                 ];
             }
         }
-
+    
         return $swipeCardData;
     }
 
@@ -359,7 +360,7 @@ class EmployeeSwipesData extends Component
 
     public function render()
     {
-        $this->viewWebsignInButton();
+        $this->viewDoorSwipeButton();
 
         // $today = now()->toDateString();
         // $authUser = Auth::user();

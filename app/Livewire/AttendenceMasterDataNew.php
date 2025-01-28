@@ -128,7 +128,7 @@ class AttendenceMasterDataNew extends Component
             ->select('emp_id', 'first_name', 'last_name')
             ->where('employee_status', 'active')
             ->get();
-
+        
         Log::info('Employees fetched', ['employees' => $employees]);
 
         $currentMonth = date('F');
@@ -289,6 +289,19 @@ class AttendenceMasterDataNew extends Component
                                 $toDate = Carbon::parse($leaveRequest->to_date);
                                 if ($currentDate >= $fromDate->format('Y-m-d') && $currentDate <= $toDate->format('Y-m-d')) {
                                     $leaveExists = true;
+                                    $leaveType = LeaveRequest::where('emp_id', $employee['emp_id'])
+                                                ->where('from_date', '>=', $currentDate)
+                                                ->where('to_date', '<=', $currentDate)
+                                                ->value('leave_type');
+                                                $leaveAbbreviation = match ($leaveType) {
+                                                    'Loss of Pay' => 'LOP',
+                                                    'Casual Leave' => 'CL',
+                                                    'Sick Leave' => 'SL',
+                                                    'Marriage Leave' => 'ML',
+                                                    'Maternity Leave' => 'MTL',
+                                                    'Paternity Leave' => 'PL',
+                                                    default => 'L', // Optional: handle cases where leave_type doesn't match
+                                                };            
                                     break;
                                 }
                             }
