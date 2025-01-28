@@ -134,6 +134,7 @@
                          <div>
                                    <tbody>
                                      @if($isApply==1&&$defaultApply==1)
+                                      
                                          @if(count($SignedInEmployees))
                                             @foreach($SignedInEmployees as $swipe)
                                                   @foreach($swipe['swipe_log'] as $log)
@@ -174,6 +175,7 @@
                                             <td colspan="12" class="text-center">Employee Swipe Data Not found</td>
                                         @endif
                                      @elseif($isPending==1&&$defaultApply==0)
+                                   
                                         @if(count($SignedInEmployees))
                                             @foreach($SignedInEmployees as $swipe)
                                             @foreach($swipe['swipe_log'] as $index => $log)
