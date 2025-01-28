@@ -4,9 +4,12 @@ namespace App\Livewire;
 
 use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use App\Mail\FeedbackNotificationMail;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class FeedBack extends Component
@@ -33,6 +36,10 @@ class FeedBack extends Component
     public $showDeleteModal = false; // Boolean to control modal visibility
     public $feedbackImage;
     public $feedbackEmptyText;
+    public $searchFeedback;
+    public $filteredFeedbacks = [];
+    public $filteredEmployees = [];
+    public $filteredEmp = null;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -76,6 +83,12 @@ class FeedBack extends Component
     {
         $authEmpId = auth()->user()->emp_id; // Get the authenticated user's employee ID
 
+        if (empty($this->searchEmployee)) {
+            // If searchEmployee is empty, return no results
+            $this->employees = collect();
+            return;
+        }
+
         $this->employees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
             ->where('emp_id', '!=', $authEmpId) // Exclude the authenticated user
             ->where(function ($query) {
@@ -84,20 +97,23 @@ class FeedBack extends Component
                     ->orWhere('last_name', 'like', "%{$this->searchEmployee}%");
             })
             ->orderBy('first_name', 'asc')
-            ->limit(10)
+            ->limit(2)
             ->get();
     }
+
 
 
     public function selectEmployee($employeeId)
     {
         $employee = collect($this->employees)->firstWhere('emp_id', $employeeId);
         if ($employee) {
-            $this->selectedEmployee = [
-                'emp_id' => $employee['emp_id'],
-                'first_name' => $employee['first_name'],
-                'last_name' => $employee['last_name'],
-            ];
+            // $this->selectedEmployee = [
+            //     'emp_id' => $employee['emp_id'],
+            //     'first_name' => $employee['first_name'],
+            //     'last_name' => $employee['last_name'],
+            // ];
+            $this->selectedEmployee = $employee;
+            // dd( $this->selectedEmployee->emp_id);
         }
         $this->reset(['searchEmployee', 'employees']);
     }
@@ -119,7 +135,7 @@ class FeedBack extends Component
         // Create the feedback
         $feedback = FeedBackModel::create([
             'feedback_type' => $this->feedbackType,
-            'feedback_to' => $this->selectedEmployee['emp_id'],
+            'feedback_to' => $this->selectedEmployee->emp_id,
             'feedback_from' => auth()->user()->emp_id,
             'feedback_message' => $this->feedbackMessage,
         ]);
@@ -139,68 +155,166 @@ class FeedBack extends Component
         $this->loadTabData($this->activeTab);
     }
 
+
+
     public function loadTabData($tab)
     {
         $this->activeTab = $tab;
-        $this->feedbacks = []; // Reset feedbacks when changing tabs
+        $this->feedbacks = [];
+        $this->filteredFeedbacks = [];
+        $this->reset(['searchFeedback', 'filteredEmp']);
 
         $empId = auth()->user()->emp_id;
-
         $query = FeedBackModel::where('status', 1);
 
+        // Tab-based filtering
         switch ($this->activeTab) {
             case 'received':
                 $query->where(function ($q) use ($empId) {
                     $q->where('feedback_to', $empId)
                         ->where('feedback_type', 'request')
                         ->where('is_accepted', true)
-                        ->orWhere('is_declined', true) // Explicitly include declined feedback
+                        ->orWhere('is_declined', true)
                         ->orWhere(function ($q2) use ($empId) {
                             $q2->where('feedback_to', $empId)
                                 ->where('feedback_type', 'give')
-                                ->where('is_draft', false); // Exclude draft feedbacks
+                                ->where('is_draft', false);
                         });
-                })
-                    ->orWhere(function ($q) use ($empId) {
-                        $q->where('feedback_from', $empId)
-                            ->whereNotNull('replay_feedback_message');
-                    });
-                $this->feedbackImage = 'request_feedback.jpg';
-                $this->feedbackEmptyText = 'See what your coworkers have to say!';
+                })->orWhere(function ($q) use ($empId) {
+                    $q->where('feedback_from', $empId)
+                        ->whereNotNull('replay_feedback_message');
+                });
+                $this->setFeedbackMetadata('request_feedback.jpg', 'See what your coworkers have to say!');
                 break;
-
 
             case 'given':
                 $query->where('feedback_from', $empId)
                     ->where('feedback_type', 'give')
                     ->where('is_draft', false);
-                $this->feedbackImage = 'give_feedback.jpg';
-                $this->feedbackEmptyText = 'Empower Your Peers with 1:1 Feedback';
+                $this->setFeedbackMetadata('give_feedback.jpg', 'Empower Your Peers with 1:1 Feedback');
                 break;
 
             case 'pending':
                 $query->where('feedback_to', $empId)
                     ->where('feedback_type', 'request')
                     ->where('is_accepted', false)
-                    ->where('is_declined', false); // Show only unaccepted & not declined requests
-                $this->feedbackImage = 'pending_feedback.jpg';
-                $this->feedbackEmptyText = 'Waiting for feedback from your peers.';
+                    ->where('is_declined', false);
+                $this->setFeedbackMetadata('pending_feedback.jpg', 'Waiting for feedback from your peers.');
                 break;
 
             case 'drafts':
                 $query->where('feedback_from', $empId)
                     ->where('is_draft', true)
                     ->where('feedback_type', 'give');
-                $this->feedbackImage = 'draft_feedback.jpg';
-                $this->feedbackEmptyText = 'Save feedback for later.';
+                $this->setFeedbackMetadata('draft_feedback.jpg', 'Save feedback for later.');
                 break;
         }
 
-        // Order results by latest timestamp
-        $this->feedbacks = $query->orderByRaw('created_at desc')
-            ->orderByRaw('updated_at desc')
+        // Fetch data
+        $this->feedbacks = $query->latest()->get();
+        $this->filteredFeedbacks = $this->feedbacks;
+
+        $this->dispatch('tabChanged');
+    }
+
+    private function setFeedbackMetadata($image, $emptyText)
+    {
+        $this->feedbackImage = $image;
+        $this->feedbackEmptyText = $emptyText;
+    }
+
+    // Filter employees based on search input
+    public function updatedSearchFeedback()
+    {
+        $authEmpId = auth()->user()->emp_id;
+
+        $this->filteredEmployees = empty($this->searchFeedback) ? collect() :
+            EmployeeDetails::select('emp_id', 'first_name', 'last_name')
+            ->where('emp_id', '!=', $authEmpId)
+            ->where(function ($query) {
+                $query->where('emp_id', 'like', "%{$this->searchFeedback}%")
+                    ->orWhere('first_name', 'like', "%{$this->searchFeedback}%")
+                    ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
+            })
+            ->orderBy('first_name', 'asc')
+            ->limit(2)
             ->get();
-        $this->dispatch('tabChanged'); // Emit event to force update
+    }
+
+    // Filter feedback by selected employee
+    public function filterFeedbackByEmp($employeeId)
+    {
+        $this->filteredEmp = collect($this->filteredEmployees)->firstWhere('emp_id', $employeeId);
+        $this->applyFeedbackFilter();
+        $this->reset(['searchFeedback', 'filteredEmployees']);
+    }
+
+    // Apply filters based on selected employee & tab
+    private function applyFeedbackFilter()
+    {
+        $query = FeedbackModel::query();
+        $empId = auth()->id();
+
+        if ($this->filteredEmp) {
+            $filteredEmpId = $this->filteredEmp->emp_id;
+
+            $query->where(function ($q) use ($filteredEmpId, $empId) {
+                $q->where('feedback_from', $filteredEmpId)
+                    ->where('feedback_to', $empId)
+                    ->orWhere(function ($q2) use ($filteredEmpId, $empId) {
+                        $q2->where('feedback_from', $empId)
+                            ->where('feedback_to', $filteredEmpId);
+                    });
+            });
+        }
+
+        switch ($this->activeTab) {
+            case 'received':
+                $query->where(function ($q) use ($empId) {
+                    $q->where('feedback_to', $empId)
+                        ->where('feedback_type', 'request')
+                        ->where(function ($q2) {
+                            $q2->where('is_accepted', true)
+                                ->orWhere('is_declined', true);
+                        })
+                        ->orWhere(function ($q3) use ($empId) {
+                            $q3->where('feedback_to', $empId)
+                                ->where('feedback_type', 'give')
+                                ->where('is_draft', false);
+                        });
+                })
+                    ->orWhere(function ($q) use ($empId) {
+                        $q->where('feedback_from', $empId)
+                            ->whereNotNull('replay_feedback_message');
+                    });
+                break;
+
+            case 'given':
+                $query->where('feedback_from', $empId)
+                    ->where('feedback_type', 'give')
+                    ->where('is_draft', false);
+                break;
+
+            case 'pending':
+                $query->where('is_accepted', false)
+                    ->where('is_declined', false)
+                    ->where('feedback_type', 'request');
+                break;
+
+            case 'drafts':
+                $query->where('is_draft', true)
+                    ->where('feedback_type', 'give');
+                break;
+        }
+
+        $this->filteredFeedbacks = $query->with(['feedbackFromEmployee', 'feedbackToEmployee'])->get();
+    }
+
+    public function clearFilterEmp()
+    {
+        $this->filteredEmp = null;
+        $this->applyFeedbackFilter();
+        $this->loadTabData($this->activeTab);
     }
 
 
@@ -436,10 +550,9 @@ class FeedBack extends Component
     }
 
 
+
     public function render()
     {
-        return view('livewire.feed-back', [
-            'feedbacks' => $this->feedbacks,
-        ]);
+        return view('livewire.feed-back');
     }
 }
