@@ -85,6 +85,7 @@ class EmployeeSwipesData extends Component
 
     public function viewDoorSwipeButton()
     {
+        Log::info('Welcome to viewDoorSwipeButton method');
         $this->isApply = 1;
         $this->isPending = 0;
         $this->defaultApply = 1;
@@ -104,7 +105,9 @@ class EmployeeSwipesData extends Component
                     ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
             })
             ->select(
-                'employee_details.*',
+                'employee_details.first_name',
+                'employee_details.emp_id',
+                'employee_details.last_name',
                 'company_shifts.shift_start_time',
                 'company_shifts.shift_end_time'
             )
@@ -119,7 +122,9 @@ class EmployeeSwipesData extends Component
                     ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
             })
             ->select(
-                'employee_details.*',
+                'employee_details.first_name',
+                'employee_details.emp_id',
+                'employee_details.last_name',
                 'company_shifts.shift_start_time',
                 'company_shifts.shift_end_time'
             )
@@ -127,6 +132,12 @@ class EmployeeSwipesData extends Component
         }
 
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
+        Log::info('isApply: ' . $this->isApply);
+        Log::info('isPending: ' . $this->isPending);
+        Log::info('defaultApply: ' . $this->defaultApply);
+    
+        // Debugging: Log the output of processWebSignInLogs
+        Log::info('Employees: ', ['employees' => $this->employees]);
         
     }
     public function processWebSignInLogs()
@@ -195,11 +206,17 @@ class EmployeeSwipesData extends Component
 
     public function viewWebsignInButton()
     {
-
+        Log::info('Welcome to viewWebsignInButton method');
         $this->isApply = 0;
         $this->isPending = 1;
         $this->defaultApply = 0;
         $this->employees = $this->processWebSignInLogs();
+        Log::info('isApply: ' . $this->isApply);
+        Log::info('isPending: ' . $this->isPending);
+        Log::info('defaultApply: ' . $this->defaultApply);
+    
+        // Debugging: Log the output of processWebSignInLogs
+        Log::info('Employees: ', ['employees' => $this->employees]);
 
     }
 
@@ -360,56 +377,19 @@ class EmployeeSwipesData extends Component
 
     public function render()
     {
-        $this->viewDoorSwipeButton();
+        if($this->isApply==1&&$this->isPending==0&&$this->defaultApply==1)
+        {
+            $this->viewDoorSwipeButton();
+        }
+        elseif($this->isApply==0&&$this->isPending==1&&$this->defaultApply==0)
+        {
+            $this->viewWebsignInButton();
+        }
+       
 
-        // $today = now()->toDateString();
-        // $authUser = Auth::user();
-        // $userId = $authUser->emp_id;
+       
 
-        // // Log user information
-        // Log::info('Swipe Log Process Started', [
-        //     'userId' => $userId,
-        //     'today' => $today,
-        // ]);
-
-        // Retrieve active employees managed by the user
-        // $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-        //     ->where('employee_status', 'active')
-        //     ->join('company_shifts', function ($join) {
-        //         $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-        //             ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-        //     })
-        //     ->select(
-        //         'employee_details.*',
-        //         'company_shifts.shift_start_time',
-        //         'company_shifts.shift_end_time'
-        //     )
-        //     ->get();
-
-        // Log the number of managed employees
-        // Log::info('Managed Employees Retrieved', [
-        //     'total_employees' => $managedEmployees->count()
-        // ]);
-
-        // if ($this->startDate) {
-        //     Log::info('Processing swipe logs with startDate', [
-        //         'startDate' => $this->startDate
-        //     ]);
-
-        //     $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
-        // } else {
-        //     Log::info('Processing swipe logs with today\'s date', [
-        //         'today' => $today
-        //     ]);
-
-        //     $this->employees = $this->processSwipeLogs($managedEmployees, $today);
-        // }
-
-        // // Log completion
-        // Log::info('Swipe Log Process Completed', [
-        //     'processed_employees_count' => count($this->employees ?? [])
-        // ]);
-        // Process and fetch employees' swipe logs
+        
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
         ]);
