@@ -32,6 +32,10 @@ class EmployeeSwipesData extends Component
     public $startDate;
     public $endDate;
 
+    
+
+
+    
     public $isPending=0;
 
     public $isApply=1;
@@ -380,18 +384,21 @@ class EmployeeSwipesData extends Component
         if($this->isApply==1&&$this->isPending==0&&$this->defaultApply==1)
         {
             $this->viewDoorSwipeButton();
+            
         }
         elseif($this->isApply==0&&$this->isPending==1&&$this->defaultApply==0)
         {
             $this->viewWebsignInButton();
         }
        
-
+        // Determine the SignedInEmployees based on conditions
+    
        
 
         
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
+            
         ]);
     }
 }
