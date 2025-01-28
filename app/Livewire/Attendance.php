@@ -133,6 +133,8 @@ class Attendance extends Component
     public $view_table_in;
 
     public $count;
+
+    public $employeeHireDate;
     public $view_table_out;
     public $employeeDetails;
     public $changeDate = 0;
@@ -640,7 +642,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         // Output results
 
         try {
-            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type')->first();
+            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type','hire_date')->first();
+            $this->employeeHireDate=$this->employee->hire_date;
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
             $this->start_date_for_insights=Carbon::now()->startOfMonth()->format('Y-m-d');
             $this->to_date=Carbon::now()->subDay()->toDateString();

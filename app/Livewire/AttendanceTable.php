@@ -68,6 +68,7 @@ class AttendanceTable extends Component
 
     public $employee_shift_type;
     
+    public $employeeHireDate;
     public $postal_code='-';
 
     
@@ -91,6 +92,7 @@ class AttendanceTable extends Component
         $this->fromDate=$this->start;
         $this->toDate=$this->end;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
+        $this->employeeHireDate=$this->employeeDetails->hire_date;
         $ip = request()->ip();
         $location = GeoIP::getLocation($ip);
         $lat = $location['lat'];

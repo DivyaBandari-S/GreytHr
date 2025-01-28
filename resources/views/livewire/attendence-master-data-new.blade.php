@@ -1028,7 +1028,7 @@
                                             $abbreviationforLeaveType = $leaveAbbreviations[$leaveType] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
  
-                        <p style=" color:#666;font-weight:500;"title="{{$abbreviationforLeaveType}}">{{$abbreviationforLeaveType}}</p>
+                        <p style=" color:#666;font-weight:500;"title="{{$leaveType}}">{{$abbreviationforLeaveType}}</p>
                         
                         @elseif($leaveTakeforSession1==1&&$present==1)
                         @php
@@ -1076,7 +1076,7 @@
                                             $abbreviationforLeaveTypeforSession1 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
-                        <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}}:{{$leaveTypeforSession2}}">{{$abbreviationforLeaveTypeforSession1}}:{{$abbreviationforLeaveTypeforSession2}}</p>
+                        <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and {{$leaveTypeforSession2}}">{{$abbreviationforLeaveTypeforSession1}}:{{$abbreviationforLeaveTypeforSession2}}</p>
                        
                         @elseif($leaveTakeforSession1==1)
                         @php
@@ -1092,7 +1092,7 @@
 
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
-                        <p style=" color:#666;font-weight:500;"title="{{$abbreviationforLeaveTypeforSession2}} and absent">{{$abbreviationforLeaveTypeforSession2}}:A</p>
+                        <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and absent">{{$abbreviationforLeaveTypeforSession2}}:A</p>
                         @elseif($leaveTakeforSession2==1)
                         @php
                                             $leaveAbbreviations = [
@@ -1107,7 +1107,7 @@
 
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
-                        <p style=" color:#666;font-weight:500;"title="Absent and {{$abbreviationforLeaveTypeforSession2}}">A:{{$abbreviationforLeaveTypeforSession2}}</p>
+                        <p style=" color:#666;font-weight:500;"title="Absent and {{$leaveTypeforSession2}}">A:{{$abbreviationforLeaveTypeforSession2}}</p>
                         @elseif($present==1&&!empty($outRecord))
                            @php
                                 $shiftStartTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time);
