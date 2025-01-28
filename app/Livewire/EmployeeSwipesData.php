@@ -351,7 +351,7 @@ class EmployeeSwipesData extends Component
                 ];
             }
         }
-    
+       
         return $swipeCardData;
     }
 
