@@ -37,6 +37,9 @@ class FeedBack extends Component
     public $feedbackImage;
     public $feedbackEmptyText;
     public $searchFeedback;
+    public $filteredFeedbacks = [];
+    public $filteredEmployees = [];
+    public $filteredEmp = null;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -80,6 +83,12 @@ class FeedBack extends Component
     {
         $authEmpId = auth()->user()->emp_id; // Get the authenticated user's employee ID
 
+        if (empty($this->searchEmployee)) {
+            // If searchEmployee is empty, return no results
+            $this->employees = collect();
+            return;
+        }
+
         $this->employees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
             ->where('emp_id', '!=', $authEmpId) // Exclude the authenticated user
             ->where(function ($query) {
@@ -88,20 +97,23 @@ class FeedBack extends Component
                     ->orWhere('last_name', 'like', "%{$this->searchEmployee}%");
             })
             ->orderBy('first_name', 'asc')
-            ->limit(10)
+            ->limit(2)
             ->get();
     }
+
 
 
     public function selectEmployee($employeeId)
     {
         $employee = collect($this->employees)->firstWhere('emp_id', $employeeId);
         if ($employee) {
-            $this->selectedEmployee = [
-                'emp_id' => $employee['emp_id'],
-                'first_name' => $employee['first_name'],
-                'last_name' => $employee['last_name'],
-            ];
+            // $this->selectedEmployee = [
+            //     'emp_id' => $employee['emp_id'],
+            //     'first_name' => $employee['first_name'],
+            //     'last_name' => $employee['last_name'],
+            // ];
+            $this->selectedEmployee = $employee;
+            // dd( $this->selectedEmployee->emp_id);
         }
         $this->reset(['searchEmployee', 'employees']);
     }
@@ -123,7 +135,7 @@ class FeedBack extends Component
         // Create the feedback
         $feedback = FeedBackModel::create([
             'feedback_type' => $this->feedbackType,
-            'feedback_to' => $this->selectedEmployee['emp_id'],
+            'feedback_to' => $this->selectedEmployee->emp_id,
             'feedback_from' => auth()->user()->emp_id,
             'feedback_message' => $this->feedbackMessage,
         ]);
@@ -143,16 +155,21 @@ class FeedBack extends Component
         $this->loadTabData($this->activeTab);
     }
 
+
+
     public function loadTabData($tab)
     {
         $this->activeTab = $tab;
         $this->feedbacks = []; // Reset feedbacks when changing tabs
-        $this->searchFeedback = '';
+        $this->filteredFeedbacks = [];
+        $this->reset(['searchFeedback', 'filteredEmp']);
 
         $empId = auth()->user()->emp_id;
 
+        // Initialize query for feedback
         $query = FeedBackModel::where('status', 1);
 
+        // Apply filters based on selected tab
         switch ($this->activeTab) {
             case 'received':
                 $query->where(function ($q) use ($empId) {
@@ -173,7 +190,6 @@ class FeedBack extends Component
                 $this->feedbackImage = 'request_feedback.jpg';
                 $this->feedbackEmptyText = 'See what your coworkers have to say!';
                 break;
-
 
             case 'given':
                 $query->where('feedback_from', $empId)
@@ -200,15 +216,60 @@ class FeedBack extends Component
                 $this->feedbackEmptyText = 'Save feedback for later.';
                 break;
         }
-
         // Order results by latest timestamp
-        $this->feedbacks = $query->orderByRaw('created_at desc')
-            ->orderByRaw('updated_at desc')
+        $this->feedbacks = $query->orderByDesc('created_at')
+            ->orderByDesc('updated_at')
             ->get();
-        $this->dispatch('tabChanged'); // Emit event to force update
+
+        // Set filteredFeedbacks to the results
+        $this->filteredFeedbacks = $this->feedbacks;
+
+        // Emit the event to force update the tab UI
+        $this->dispatch('tabChanged');
     }
 
 
+    // Filter employees based on search input
+    public function updatedSearchFeedback()
+    {
+        $authEmpId = auth()->user()->emp_id; // Get the authenticated user's employee ID
+
+        if (empty($this->searchFeedback)) {
+            // If searchEmployee is empty, return no results
+            $this->filteredEmployees = collect();
+            return;
+        }
+
+        $this->filteredEmployees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
+            ->where('emp_id', '!=', $authEmpId) // Exclude the authenticated user
+            ->where(function ($query) {
+                $query->where('emp_id', 'like', "%{$this->searchFeedback}%")
+                    ->orWhere('first_name', 'like', "%{$this->searchFeedback}%")
+                    ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
+            })
+            ->orderBy('first_name', 'asc')
+            ->limit(2)
+            ->get();
+    }
+
+    public function filterFeedbackByEmp($employeeId)
+    {
+        $employee = collect($this->filteredEmployees)->firstWhere('emp_id', $employeeId);
+        if ($employee) {
+            // $this->selectedEmployee = [
+            //     'emp_id' => $employee['emp_id'],
+            //     'first_name' => $employee['first_name'],
+            //     'last_name' => $employee['last_name'],
+            // ];
+            $this->filteredEmp = $employee;
+        }
+        $this->reset(['searchFeedback', 'filteredEmployees']);
+    }
+
+    public function clearFilterEmp()
+    {
+        $this->filteredEmp = null;
+    }
 
     public function openReplyModal($feedbackId)
     {
@@ -440,35 +501,10 @@ class FeedBack extends Component
         $this->loadTabData($this->activeTab);
     }
 
-    public function updatedSearchFeedback()
-    {
-        $this->getFilteredFeedbacks();
-    }
-
-    public function getFilteredFeedbacks()
-    {
-        try {
-            $this->feedbacks = FeedBackModel::when($this->searchFeedback, function ($query) {
-                $query->whereHas('feedbackFromEmployee', function ($q) {
-                    $q->where('first_name', 'like', "%{$this->searchFeedback}%")
-                        ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
-                })
-                    ->orWhereHas('feedbackToEmployee', function ($q) {
-                        $q->where('first_name', 'like', "%{$this->searchFeedback}%")
-                            ->orWhere('last_name', 'like', "%{$this->searchFeedback}%");
-                    });
-            })->latest()->get();
-        } catch (QueryException $e) {
-            Log::error("Error fetching feedbacks: " . $e->getMessage());
-            $this->feedbacks = collect(); // Safe fallback
-        }
-    }
 
 
     public function render()
     {
-        return view('livewire.feed-back', [
-            'feedbacks' => $this->feedbacks,
-        ]);
+        return view('livewire.feed-back');
     }
 }

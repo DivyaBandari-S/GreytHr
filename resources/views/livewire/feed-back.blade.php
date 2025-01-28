@@ -30,110 +30,164 @@
                     <div class="col-md-8 p-0">
                         @if ($feedbacks->count() > 0)
                             <div class="p-4" style="max-height: 400px; overflow-y: auto;">
-                                <div class="mb-3 d-flex">
-                                    <div class="col-auto">
-                                        <input type="text" class="form-control" placeholder="Search feedback..."
-                                            wire:model.live="searchFeedback">
-                                    </div>
-                                </div>
-                                @foreach ($feedbacks as $feedback)
-                                    <div class="border p-3 mb-3 rounded shadow-sm">
-                                        <div class="d-flex align-items-start">
-                                            <!-- Determine if auth user is the receiver -->
-                                            @php
-                                                $isReceiver = $feedback->feedback_to == auth()->id();
-                                                $displayUser = $isReceiver
-                                                    ? $feedback->feedbackFromEmployee
-                                                    : $feedback->feedbackToEmployee;
-                                            @endphp
 
-                                            <!-- User Avatar (Show sender if auth is receiver, else show receiver) -->
-                                            <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
-                                                style="width: 40px; height: 36px; font-weight: bold;">
-                                                {{ strtoupper(substr($displayUser->first_name ?? 'A', 0, 1)) }}
+                                <div class="mb-3">
+                                    <!-- If an employee is selected, show a structured display -->
+                                    @if ($filteredEmp)
+                                        <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                            style="background: #f8f9fa; width: 45%;">
+                                            <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                                style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                                {{ strtoupper(substr($filteredEmp['first_name'], 0, 1)) }}{{ strtoupper(substr($filteredEmp['last_name'], 0, 1)) }}
                                             </div>
-
-                                            <div class="ms-3 w-100">
-                                                <div class="d-flex justify-content-between">
-                                                    <div class="fs12">
-                                                        <!-- Show the correct user's details -->
-                                                        <strong>
-                                                            {{ $displayUser->first_name ?? 'Unknown' }}
-                                                            {{ $displayUser->last_name ?? '' }}
-                                                        </strong>
-                                                        <small class="text-muted">#{{ $displayUser->emp_id }}</small>
+                                            <div class="ms-2">
+                                                <strong>{{ $filteredEmp['first_name'] }}
+                                                    {{ $filteredEmp['last_name'] }}</strong>
+                                                <div style="color: #5e6e8f; font-size: 14px;">
+                                                    #{{ $filteredEmp['emp_id'] }}</div>
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
+                                                wire:click="clearFilterEmp"><i class="bi bi-dash"></i></button>
+                                        </div>
+                                    @else
+                                        <!-- Show input field when no employee is selected -->
+                                        <input type="text" class="form-control" wire:model.live="searchFeedback"
+                                            placeholder="Search feedback..." style="width: 45%">
+                                    @endif
+                                    <!-- Display the search results as a dropdown -->
+                                    @if (count($filteredEmployees) > 0)
+                                        <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
+                                            @foreach ($filteredEmployees as $employee)
+                                                <li class="list-group-item d-flex align-items-center mb-1"
+                                                    style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px; width: 45%;"
+                                                    wire:click="filterFeedbackByEmp('{{ $employee->emp_id }}')">
+                                                    <div
+                                                        style="background-color: #f5c391; color: white; font-weight: bold;
+                                                                text-align: center; width: 40px; height: 40px; border-radius: 50%;
+                                                                display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+                                                        {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
                                                     </div>
-
-                                                    <div class="fs12">
-                                                        @if ($feedback->is_declined)
-                                                            <span class="badge bg-danger">Declined</span>
-                                                        @endif
-                                                        <small
-                                                            class="text-muted">{{ $feedback->created_at->diffForHumans() }}</small>
-                                                        @if ($feedback->feedback_from == auth()->id() && $feedback->feedback_type === 'give')
-                                                            <div class="btn-group dropcust">
-                                                                <button type="button"
-                                                                    class="btn dropdown-toggle btn-sm"
-                                                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                                                    <i class="bi bi-three-dots-vertical"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu dropdown-menu-end fs12">
-                                                                    <!-- Dropdown menu links -->
-                                                                    <li><a class="dropdown-item" href="#"
-                                                                            wire:click="editGiveFeedback({{ $feedback->id }})">Edit
-                                                                            Feedback</a></li>
-                                                                    <li><a class="dropdown-item" href="#"
-                                                                            wire:click="confirmDelete({{ $feedback->id }})">Delete
-                                                                            Feedback</a></li>
-                                                                    @if ($feedback->is_draft)
-                                                                        <li><a class="dropdown-item" href="#"
-                                                                                wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
-                                                                                Feedback</a></li>
-                                                                    @endif
-                                                                </ul>
-                                                            </div>
-                                                        @endif
+                                                    <div>
+                                                        <div style="font-weight: bold;">
+                                                            {{ $employee->first_name }}
+                                                            {{ $employee->last_name }}</div>
+                                                        <div style="color: #5e6e8f; font-size: 14px;">
+                                                            #{{ $employee->emp_id }}</div>
                                                     </div>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    @elseif(strlen($searchFeedback) > 0)
+                                        <p>No employees found</p>
+                                    @endif
+                                </div>
 
+                                @if ($filteredFeedbacks->count() > 0)
+                                    @foreach ($filteredFeedbacks as $feedback)
+                                        <div class="border p-3 mb-3 rounded shadow-sm">
+                                            <div class="d-flex align-items-start">
+                                                <!-- Determine if auth user is the receiver -->
+                                                @php
+                                                    $isReceiver = $feedback->feedback_to == auth()->id();
+                                                    $displayUser = $isReceiver
+                                                        ? $feedback->feedbackFromEmployee
+                                                        : $feedback->feedbackToEmployee;
+                                                @endphp
+
+                                                <!-- User Avatar (Show sender if auth is receiver, else show receiver) -->
+                                                <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center"
+                                                    style="width: 40px; height: 36px; font-weight: bold;">
+                                                    {{ strtoupper(substr($displayUser->first_name ?? 'A', 0, 1)) }}
                                                 </div>
 
-                                                <p class="fs12">
-                                                    @if ($isReceiver)
-                                                        <small class="text-muted">Feedback request from
-                                                            {{ $displayUser->first_name ?? 'Unknown' }}</small>
-                                                    @else
-                                                        <small class="text-muted">Feedback given to
-                                                            {{ $displayUser->first_name ?? 'Unknown' }}</small>
-                                                    @endif
-                                                </p>
+                                                <div class="ms-3 w-100">
+                                                    <div class="d-flex justify-content-between">
+                                                        <div class="fs12">
+                                                            <!-- Show the correct user's details -->
+                                                            <strong>
+                                                                {{ $displayUser->first_name ?? 'Unknown' }}
+                                                                {{ $displayUser->last_name ?? '' }}
+                                                            </strong>
+                                                            <small
+                                                                class="text-muted">#{{ $displayUser->emp_id }}</small>
+                                                        </div>
 
-                                                <p class="feedBackMsg fs12">{{ $feedback->feedback_message }}</p>
+                                                        <div class="fs12">
+                                                            @if ($feedback->is_declined)
+                                                                <span class="badge bg-danger">Declined</span>
+                                                            @endif
+                                                            <small
+                                                                class="text-muted">{{ $feedback->created_at->diffForHumans() }}</small>
+                                                            @if ($feedback->feedback_from == auth()->id() && $feedback->feedback_type === 'give')
+                                                                <div class="btn-group dropcust">
+                                                                    <button type="button"
+                                                                        class="btn dropdown-toggle btn-sm"
+                                                                        data-bs-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="bi bi-three-dots-vertical"></i>
+                                                                    </button>
+                                                                    <ul class="dropdown-menu dropdown-menu-end fs12">
+                                                                        <!-- Dropdown menu links -->
+                                                                        <li><a class="dropdown-item" href="#"
+                                                                                wire:click="editGiveFeedback({{ $feedback->id }})">Edit
+                                                                                Feedback</a></li>
+                                                                        <li><a class="dropdown-item" href="#"
+                                                                                wire:click="confirmDelete({{ $feedback->id }})">Delete
+                                                                                Feedback</a></li>
+                                                                        @if ($feedback->is_draft)
+                                                                            <li><a class="dropdown-item" href="#"
+                                                                                    wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
+                                                                                    Feedback</a></li>
+                                                                        @endif
+                                                                    </ul>
+                                                                </div>
+                                                            @endif
+                                                        </div>
 
-                                                @if ($feedback->is_accepted)
-                                                    <div class="reply-box fs12">
-                                                        <p class="feedBackMsg"><strong>Reply:</strong>
-                                                            {{ $feedback->replay_feedback_message }}</p>
-                                                        <p class="feedBackMsg"><strong>Replied At:</strong>
-                                                            {{ $feedback->updated_at->diffForHumans() }}</p>
                                                     </div>
-                                                @endif
 
-                                                @if ($isReceiver && $activeTab === 'pending')
-                                                    <button class="btn btn-sm btn-success"
-                                                        wire:click="openReplyModal({{ $feedback->id }})">
-                                                        Reply
-                                                    </button>
+                                                    <p class="fs12">
+                                                        @if ($isReceiver)
+                                                            <small class="text-muted">Feedback request from
+                                                                {{ $displayUser->first_name ?? 'Unknown' }}</small>
+                                                        @else
+                                                            <small class="text-muted">Feedback given to
+                                                                {{ $displayUser->first_name ?? 'Unknown' }}</small>
+                                                        @endif
+                                                    </p>
 
-                                                    <button class="btn btn-sm btn-danger fs12"
-                                                        wire:click="declineFeedback({{ $feedback->id }})">
-                                                        Decline
-                                                    </button>
-                                                @endif
+                                                    <p class="feedBackMsg fs12">{{ $feedback->feedback_message }}</p>
+
+                                                    @if ($feedback->is_accepted)
+                                                        <div class="reply-box fs12">
+                                                            <p class="feedBackMsg"><strong>Reply:</strong>
+                                                                {{ $feedback->replay_feedback_message }}</p>
+                                                            <p class="feedBackMsg"><strong>Replied At:</strong>
+                                                                {{ $feedback->updated_at->diffForHumans() }}</p>
+                                                        </div>
+                                                    @endif
+
+                                                    @if ($isReceiver && $activeTab === 'pending')
+                                                        <button class="btn btn-sm btn-success"
+                                                            wire:click="openReplyModal({{ $feedback->id }})">
+                                                            Reply
+                                                        </button>
+
+                                                        <button class="btn btn-sm btn-danger fs12"
+                                                            wire:click="declineFeedback({{ $feedback->id }})">
+                                                            Decline
+                                                        </button>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
+                                    @endforeach
+                                @else
+                                    <!-- No Matching Results -->
+                                    <div class="text-center">
+                                        <h5>No matching feedback found</h5>
+                                        <p>Try searching with a different keyword.</p>
                                     </div>
-                                @endforeach
-
+                                @endif
                             </div>
                         @else
                             <div class="m-0 pt-4 row text-center">
@@ -165,13 +219,21 @@
                     <div class="col-md-4 text-center border-start border-1 ps-3"
                         wire:key="feedback-section-{{ $activeTab }}">
                         <img src="{{ asset('images/' . $feedbackImage) }}" class="mb-1 mt-5" style="width: 10em" />
-                        <p class="fs12 fw-bold" wire:key="empty-text-{{ $activeTab }}">{{ $feedbackEmptyText }}</p>
+                        <p class="fs12 fw-bold" wire:key="empty-text-{{ $activeTab }}">{{ $feedbackEmptyText }}
+                        </p>
                     </div>
                 </div>
 
             </div>
         </div>
+
+
+
     </div>
+
+
+
+
     <!-- Modal -->
     <!-- Request Feedback Modal -->
     @if ($isRequestModalOpen)
