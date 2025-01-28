@@ -360,7 +360,7 @@ class EmployeeSwipesData extends Component
 
     public function render()
     {
-        $this->viewWebsignInButton();
+        $this->viewDoorSwipeButton();
 
         // $today = now()->toDateString();
         // $authUser = Auth::user();

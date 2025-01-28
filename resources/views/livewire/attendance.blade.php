@@ -1687,7 +1687,7 @@ color: #fff;
                                        @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#edfaed' : ($day['halfdaypresentforsession2'] ? '#fcf0f0' : '') }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
-                                                         <span style="position: absolute; left: 2px;top:2px;">hii{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                         <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
                                                         <span style="color:   {{ $day['halfdaypresentforsession1'] ? '#7f8fa4' : ($day['halfdaypresentforsession2'] ? '#f66' : '') }}"title="{{ $day['halfdaypresentforsession1'] ? 'Present' : ($day['halfdaypresentforsession2'] ? 'Absent' : '') }}">{{ $day['halfdaypresentforsession1'] ? 'P' : ($day['halfdaypresentforsession2'] ? 'A' : '') }}</span>
                                                         
                                                 </div>
@@ -1699,7 +1699,7 @@ color: #fff;
                                                                                                                 : '#ffffff'
                                                                                                             }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
-                                                        <span style="position: absolute; left: 2px;top:2px;">hello{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                        <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
                                                         @if(($day['status'] == 'CLP'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'CLP'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
                                                         @elseif(($day['status'] == 'SL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'SL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
@@ -1731,7 +1731,7 @@ color: #fff;
                                                 <div>
                                                         @if ($day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                         <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
-                                                            heyy{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                                            {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                                         </div>
                                                         @else
                                                          
