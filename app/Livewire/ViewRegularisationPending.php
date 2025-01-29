@@ -5,8 +5,6 @@ namespace App\Livewire;
 use App\Mail\ManagerNotificationMail;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
-use App\Models\RegularisationNew;
-use App\Models\RegularisationNew1;
 use App\Models\SwipeRecord;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
