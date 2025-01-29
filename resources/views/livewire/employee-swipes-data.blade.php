@@ -140,6 +140,8 @@
                                                  @foreach($swipe['swipe_log'] as $log)
                                                      <tr>
                                                             <td class="employee-swipes-name-and-id">
+                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button"wire:model="selectedEmployeeId"
+               wire:change="handleEmployeeSelection" />
                                                                 <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
                                                                         data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
                                                                         {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
@@ -180,6 +182,8 @@
                                                     <tr>
                                                         <!-- Employee Details -->
                                                         <td>
+                                                            <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ $log->swipe_time }}-{{ $log->in_or_out }}" class="radio-button"wire:model="selectedWebEmployeeId"
+                                                            wire:change="handleEmployeeWebSelection" />
                                                             <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
                                                                 data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
                                                                 {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
@@ -241,23 +245,33 @@
                     </div>
                 </div>
                 <div class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border">
+                    
                     <div class="green-section-employee-swipes p-2">
                         <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">
                         <h6>Swipe-in Time</h6>
-                        @if($swipeLogTime)
-                        <p>{{$swipeLogTime}}</p>
-                        @else
-                        <p>Not Swiped Yet</p>
-                        @endif
+                        @if($swipeTime)
+                          <p>{{$swipeTime}}</p>
+                        @elseif($doorSwipeTime) 
+                          <p>{{$doorSwipeTime}}</p>
+                        @else 
+                          <p>Not Swiped Yet</p>
+                        @endif  
+                       
                     </div>
                     <h2 class="swipe-details-who-is-in p-2">Swipe Details</h2>
                     <hr class="swipe-details-who-is-in-horizontal-row">
                     <div class="p-2">
                         <p class="swipe-deatils-title">Device Name</p>
-                        <p class="swipe-details-description">{{$this->status}}</p>
+                        <p class="swipe-details-description">{{$webDeviceName}}</p>
                         <p class="swipe-deatils-title">Access Card</p>
-                        <p class="swipe-details-description">-</p>
+                        <p class="swipe-details-description">
+                            @if (!empty($accessCardDetails))
+                                {{$accessCardDetails}}
+                            @else
+                                -
+                            @endif
+                        </p>
                         <p class="swipe-deatils-title">Door/Address</p>
 
                         <p class="swipe-details-description">-</p>
@@ -265,7 +279,15 @@
                         <p class="swipe-deatils-title">Remarks</p>
                         <p class="swipe-details-description">-</p>
                         <p class="swipe-deatils-title">Device ID</p>
-                        <p class="swipe-details-description">-</p>
+                        <p class="swipe-details-description">
+                            @if (!empty($deviceId))
+                                {{$deviceId}}
+                            @elseif(!empty($webDeviceId))
+                                {{$webDeviceId}}
+                            @else
+                                -
+                            @endif
+                        </p>
                         <p class="swipe-deatils-title">Location Details</p>
                         <p class="swipe-details-description">-</p>
 

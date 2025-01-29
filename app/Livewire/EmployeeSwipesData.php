@@ -30,14 +30,26 @@ class EmployeeSwipesData extends Component
 {
     public $employees;
     public $startDate;
+
+    public $doorSwipeTime;
+    public $accessCardDetails;
     public $endDate;
 
     
 
 
+
+    public $selectedWebEmployeeId;
+    public $deviceId;
+    public $selectedEmployeeId;
     
+    public $webSwipeDirection;
+    public $swipeTime;
+    public $employeeId;
     public $isPending=0;
 
+    public $webDeviceId;
+    public $webDeviceName;
     public $isApply=1;
     public $selectedShift;
     public $employeeShiftDetails;
@@ -93,6 +105,12 @@ class EmployeeSwipesData extends Component
         $this->isApply = 1;
         $this->isPending = 0;
         $this->defaultApply = 1;
+    
+        $this->swipeTime = null;
+        $this->webSwipeDirection=null;
+        $this->webDeviceName=null;
+        $this->webDeviceId=null;
+       
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
@@ -214,6 +232,8 @@ class EmployeeSwipesData extends Component
         $this->isApply = 0;
         $this->isPending = 1;
         $this->defaultApply = 0;
+        $this->accessCardDetails=null;
+        $this->deviceId=null;
         $this->employees = $this->processWebSignInLogs();
         Log::info('isApply: ' . $this->isApply);
         Log::info('isPending: ' . $this->isPending);
@@ -224,12 +244,55 @@ class EmployeeSwipesData extends Component
 
     }
 
+    public function handleEmployeeSelection()
+    {
+        $parts = explode('-', $this->selectedEmployeeId);
+        
+        
+        $this->doorSwipeTime=$parts[3];
+        $this->selectedEmployeeId = $parts[0].'-'.$parts[1];
+        $currentDate = Carbon::today();
+        $month = $currentDate->format('n');
+        $year = $currentDate->format('Y');
+        $normalizedId=str_replace('-', '', $this->selectedEmployeeId);
+        // Construct the table name for SQL Server
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        $this->accessCardDetails = DB::connection('sqlsrv')
+                    ->table(table: $tableName)
+                    ->where('UserId', $normalizedId)
+                  
+                    ->value('UserId');
+        $this->deviceId=  DB::connection('sqlsrv')
+        ->table(table: $tableName)
+        ->where('UserId', $normalizedId)
+      
+        ->value('DeviceId');           
+        
+    }
     public function updateDate()
     {
 
         $this->startDate = $this->startDate;
     }
 
+    public function handleEmployeeWebSelection()
+    {
+      
+        // $this->selectedWebEmployeeId=$this->selectedWebEmployeeId;
+        $parts = explode('-', $this->selectedWebEmployeeId);
+        
+        $this->selectedWebEmployeeId = $parts[0].'-'.$parts[1];
+        $this->swipeTime = $parts[3];
+        $this->webSwipeDirection=$parts[4];
+        $this->webDeviceName=SwipeRecord::where('emp_id',$this->selectedWebEmployeeId)->where('in_or_out',$this->webSwipeDirection)->where('swipe_time',$this->swipeTime)->whereDate('created_at',$this->startDate)->value('device_name');
+        $this->webDeviceId=SwipeRecord::where('emp_id',$this->selectedWebEmployeeId)->where('in_or_out',$this->webSwipeDirection)->where('swipe_time',$this->swipeTime)->whereDate('created_at',$this->startDate)->value('device_id');
+       
+        // Construct the table name for SQL Server
+      
+        
+        // $this->webDeviceId=  SwipeRecord::where('')         
+        
+    }
     public function downloadFileforSwipes()
     {
         try {
@@ -237,40 +300,59 @@ class EmployeeSwipesData extends Component
             $authUser = Auth::user();
             $userId = $authUser->emp_id;
 
-            // $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-            //     ->where('employee_status', 'active')
-            //     ->get();
+            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+                ->where('employee_status', 'active')
+                ->get();
 
             $swipeData = [];
 
-            // foreach ($managedEmployees as $employee) {
-            // $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
 
-            // Fetch the first swipe log for each employee for today
-            // $employeeSwipeLog = DB::connection('sqlsrv')
-            //     ->table('DeviceLogs_' . now()->month . '_' . now()->year)
-            //     ->select('UserId', 'logDate', 'Direction')
-            //     ->where('UserId', $normalizedEmployeeId)
-            //     ->whereDate('logDate', $today)
-            //     ->orderBy('logDate')
-            //     ->first();
+            if ($this->isApply == 1 && $this->isPending == 0 && $this->defaultApply == 1) {
+                $title = 'First Door Swipe Data';
+                $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
+                $employeesInExcel = $this->processSwipeLogs($managedEmployees, $this->startDate);
+                foreach ($employeesInExcel as $employee) {
+                    foreach($employee['swipe_log'] as $log)
+                    {
+                            $swipeData[] = [
+                                            $employee['employee']->emp_id,
+                                            ucwords(strtolower($employee['employee']->first_name)).' '.ucwords(strtolower($employee['employee']->last_name)),
+                                            Carbon::parse($log->logDate)->format('jS F Y') ,
+                                            Carbon::parse($log->logDate)->format('H:i:s'),
+                                            $log->Direction,
+                                        ];
+                    }
+                    
+                    
+                }
+                
+            } elseif ($this->isApply == 0 && $this->isPending == 1 && $this->defaultApply == 0) {
+                $title = 'Web Sign In Data';
+                $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Web Sign In Data'];
+                $employeesInExcel = $this->processWebSignInLogs();
+                foreach ($employeesInExcel as $employee) {
+                    foreach($employee['swipe_log'] as $log)
+                    {
+                            $swipeData[] = [
+                                            $employee['employee']->emp_id,
+                                            ucwords(strtolower($employee['employee']->first_name)).' '.ucwords(strtolower($employee['employee']->last_name)),
+                                            Carbon::parse($log->created_at)->format('jS F Y') ,
+                                            Carbon::parse($log->swipe_time)->format('H:i:s'),
+                                            $log->in_or_out,
+                                        ];
+                    }
+                    
+                    
+                }
+                
+            } 
+            
 
-            // Add the employee and their swipe log (if any) to the results
-            // if ($employeeSwipeLog) {
-            //     $swipeData[] = [
-            //         'Employee ID' => $employee->emp_id,
-            //         'Employee Name' => ucfirst(strtolower($employee->first_name)) . ' ' . ucfirst(strtolower($employee->last_name)),
-            //         'Swipe Date' => Carbon::parse($employeeSwipeLog->logDate)->format('d-M-Y'),
-            //         'Swipe Time' => Carbon::parse($employeeSwipeLog->logDate)->format('h:i A'),
-            //         'Direction' => $employeeSwipeLog->Direction,
-            //     ];
-            // }
-            // }
-
-            $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
+           
             $filePath = storage_path('app/todays_present_employees.xlsx');
 
             SimpleExcelWriter::create($filePath)
+                ->addRow([$title])
                 ->addRow($headerColumns)
                 ->addRows($swipeData)
                 ->close();
