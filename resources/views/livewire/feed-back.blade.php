@@ -29,59 +29,59 @@
                 <div class="row m-0">
                     <div class="col-md-8 p-0">
                         @if ($feedbacks->count() > 0)
-                            <div class="p-4" style="max-height: 400px; overflow-y: auto;">
 
-                                <div class="mb-3">
-                                    <!-- If an employee is selected, show a structured display -->
-                                    @if ($filteredEmp)
-                                        <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
-                                            style="background: #f8f9fa; width: 45%;">
-                                            <div class="initials-circle text-white d-flex justify-content-center align-items-center"
-                                                style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
-                                                {{ strtoupper(substr($filteredEmp['first_name'], 0, 1)) }}{{ strtoupper(substr($filteredEmp['last_name'], 0, 1)) }}
-                                            </div>
-                                            <div class="ms-2">
-                                                <strong>{{ $filteredEmp['first_name'] }}
-                                                    {{ $filteredEmp['last_name'] }}</strong>
-                                                <div style="color: #5e6e8f; font-size: 14px;">
-                                                    #{{ $filteredEmp['emp_id'] }}</div>
-                                            </div>
-                                            <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
-                                                wire:click="clearFilterEmp"><i class="bi bi-dash"></i></button>
+
+                            <div class="p-3" style="margin-left:5px">
+                                <!-- If an employee is selected, show a structured display -->
+                                @if ($filteredEmp)
+                                    <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                        style="background: #f8f9fa; width: 45%;">
+                                        <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                            style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                            {{ strtoupper(substr($filteredEmp['first_name'], 0, 1)) }}{{ strtoupper(substr($filteredEmp['last_name'], 0, 1)) }}
                                         </div>
-                                    @else
-                                        <!-- Show input field when no employee is selected -->
-                                        <input type="text" class="form-control" wire:model.live="searchFeedback"
-                                            placeholder="Search feedback..." style="width: 45%">
-                                    @endif
-                                    <!-- Display the search results as a dropdown -->
-                                    @if (count($filteredEmployees) > 0)
-                                        <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
-                                            @foreach ($filteredEmployees as $employee)
-                                                <li class="list-group-item d-flex align-items-center mb-1"
-                                                    style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px; width: 45%;"
-                                                    wire:click="filterFeedbackByEmp('{{ $employee->emp_id }}')">
-                                                    <div
-                                                        style="background-color: #f5c391; color: white; font-weight: bold;
+                                        <div class="ms-2">
+                                            <strong>{{ $filteredEmp['first_name'] }}
+                                                {{ $filteredEmp['last_name'] }}</strong>
+                                            <div style="color: #5e6e8f; font-size: 14px;">
+                                                #{{ $filteredEmp['emp_id'] }}</div>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
+                                            wire:click="clearFilterEmp"><i class="bi bi-dash"></i></button>
+                                    </div>
+                                @else
+                                    <!-- Show input field when no employee is selected -->
+                                    <input type="text" class="form-control" wire:model.live="searchFeedback"
+                                        placeholder="Search feedback..." style="width: 45%">
+                                @endif
+                                <!-- Display the search results as a dropdown -->
+                                @if (count($filteredEmployees) > 0)
+                                    <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
+                                        @foreach ($filteredEmployees as $employee)
+                                            <li class="list-group-item d-flex align-items-center mb-1"
+                                                style="cursor: pointer; border-radius: 8px; border: 1px solid #e3e3e3; padding: 10px; width: 45%;"
+                                                wire:click="filterFeedbackByEmp('{{ $employee->emp_id }}')">
+                                                <div
+                                                    style="background-color: #f5c391; color: white; font-weight: bold;
                                                                 text-align: center; width: 40px; height: 40px; border-radius: 50%;
                                                                 display: flex; justify-content: center; align-items: center; margin-right: 10px;">
-                                                        {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
-                                                    </div>
-                                                    <div>
-                                                        <div style="font-weight: bold;">
-                                                            {{ $employee->first_name }}
-                                                            {{ $employee->last_name }}</div>
-                                                        <div style="color: #5e6e8f; font-size: 14px;">
-                                                            #{{ $employee->emp_id }}</div>
-                                                    </div>
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    @elseif(strlen($searchFeedback) > 0)
-                                        <p>No employees found</p>
-                                    @endif
-                                </div>
-
+                                                    {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                </div>
+                                                <div>
+                                                    <div style="font-weight: bold;">
+                                                        {{ $employee->first_name }}
+                                                        {{ $employee->last_name }}</div>
+                                                    <div style="color: #5e6e8f; font-size: 14px;">
+                                                        #{{ $employee->emp_id }}</div>
+                                                </div>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @elseif(strlen($searchFeedback) > 0)
+                                    <p>No employees found</p>
+                                @endif
+                            </div>
+                            <div class="p-3" style="max-height: 300px; overflow-y: auto;">
                                 @if ($filteredFeedbacks->count() > 0)
                                     @foreach ($filteredFeedbacks as $feedback)
                                         <div class="border p-3 mb-3 rounded shadow-sm">
@@ -276,6 +276,7 @@
                                             <!-- Show input field when no employee is selected -->
                                             <input type="text" class="form-control"
                                                 wire:model.live="searchEmployee"
+                                                wire:keydown="clearValidationMessages('selectedEmployee')"
                                                 placeholder="Search by name or employee ID">
                                         @endif
 
@@ -316,7 +317,8 @@
                                                 class="text-danger">*</span></label>
                                         {{-- <div id="requestRichText"></div> --}}
                                         {{-- <div id="requestRichText" wire:model.lazy="feedbackMessage"></div> --}}
-                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
+                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"
+                                            wire:keydown="clearValidationMessages('feedbackMessage')"></textarea>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -398,6 +400,7 @@
                                             <!-- Show input field when no employee is selected -->
                                             <input type="text" class="form-control"
                                                 wire:model.live="searchEmployee"
+                                                wire:keydown="clearValidationMessages('selectedEmployee')"
                                                 placeholder="Search by name or employee ID">
                                         @endif
 
@@ -436,7 +439,8 @@
                                     <div class="mb-4">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"></textarea>
+                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"
+                                            wire:keydown="clearValidationMessages('feedbackMessage')"></textarea>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -517,7 +521,11 @@
                         <!-- Reply Textarea -->
                         <div class="form-group">
                             <label>Your Reply</label>
-                            <textarea class="form-control" rows="3" wire:model="replyText" placeholder="Type your reply..."></textarea>
+                            <textarea class="form-control" rows="3" wire:model="replyText"
+                                wire:keydown="clearValidationMessages('replyText')" placeholder="Type your reply..."></textarea>
+                            @error('replyText')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
@@ -537,7 +545,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Feedback for {{ $employeeName }}</h5>
-                        <button type="button" class="btn-close" wire:click="$set('isEditModalVisible', false)"
+                        <button type="button" class="btn-close" wire:click="closeEditFeedbackModal"
                             data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
@@ -561,7 +569,7 @@
                         <!-- Editable Feedback Message -->
                         <div class="mb-3">
                             <label class="form-label">Personalized Message <span class="text-danger">*</span></label>
-                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4">{{ $updatedFeedbackMessage }}</textarea>
+                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4" wire:keydown="clearValidationMessages('updatedFeedbackMessage')">{{ $updatedFeedbackMessage }}</textarea>
                             @error('updatedFeedbackMessage')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -569,7 +577,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm"
-                            wire:click="$set('isEditModalVisible', false)">Cancel</button>
+                            wire:click="closeEditFeedbackModal">Cancel</button>
                         @if ($feedback->id && $feedback->is_draft)
                             <button type="button" class="btn btn-warning btn-sm"
                                 wire:click="updateGiveFeedback">Save as

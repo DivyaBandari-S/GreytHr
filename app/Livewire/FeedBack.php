@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\FeedBackModel;
 use App\Models\EmployeeDetails;
 use Illuminate\Database\QueryException;
@@ -70,9 +71,14 @@ class FeedBack extends Component
     {
         $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType']);
     }
+    public function clearValidationMessages($field)
+    {
+        $this->resetValidation($field);  // Clears validation for a specific field
+    }
 
     public function closeModal()
     {
+        $this->resetErrorBag(); // Reset the validation errors
         $this->resetFields();
         $this->isRequestModalOpen = false;
         $this->isGiveModalOpen = false;
@@ -126,34 +132,46 @@ class FeedBack extends Component
     public function saveFeedback()
     {
         $this->validate();
+        try {
 
-        if (!$this->selectedEmployee) {
-            session()->flash('error', 'Please select a valid employee.');
-            return;
+            // Ensure an employee is selected
+            if (!$this->selectedEmployee || !isset($this->selectedEmployee->emp_id)) {
+                session()->flash('error', 'Please select a valid employee.');
+                return;
+            }
+
+            // Create the feedback record
+            $feedback = FeedBackModel::create([
+                'feedback_type' => $this->feedbackType,
+                'feedback_to' => $this->selectedEmployee->emp_id,
+                'feedback_from' => auth()->user()->emp_id,
+                'feedback_message' => $this->feedbackMessage,
+            ]);
+
+            // Determine the email subject based on feedback type
+            $subject = $this->feedbackType === 'request' ? 'New Feedback Request' : 'New Feedback Given';
+
+            // Ensure the receiver exists before sending email
+            if ($feedback->feedbackToEmployee && isset($feedback->feedbackToEmployee->email)) {
+                Mail::to($feedback->feedbackToEmployee->email)->send(new FeedbackNotificationMail($feedback, $subject));
+            } else {
+                FlashMessageHelper::flashWarning('Feedback submitted, but email could not be sent.');
+            }
+
+            // Flash message and close modal
+            FlashMessageHelper::flashSuccess('Feedback submitted successfully!');
+            $this->closeModal();
+
+            // Refresh tab data
+            $this->loadTabData($this->activeTab);
+        } catch (\Exception $e) {
+            // Log the error and display a user-friendly message
+            Log::error('Feedback Submission Error: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
         }
-
-        // Create the feedback
-        $feedback = FeedBackModel::create([
-            'feedback_type' => $this->feedbackType,
-            'feedback_to' => $this->selectedEmployee->emp_id,
-            'feedback_from' => auth()->user()->emp_id,
-            'feedback_message' => $this->feedbackMessage,
-        ]);
-
-        // Determine the email subject based on the feedback type
-        $subject = $this->feedbackType === 'request' ? 'New Feedback Request' : 'New Feedback Given';
-
-        // Send the feedback notification email
-        $receiver = $feedback->feedbackToEmployee; // Get the receiver's employee data
-        Mail::to($receiver->email)->send(new FeedbackNotificationMail($feedback, $subject));
-
-        // Flash message and close modal
-        session()->flash('message', 'Feedback submitted successfully!');
-        $this->closeModal();
-
-        // Refresh tab data
-        $this->loadTabData($this->activeTab);
     }
+
+
 
 
 
@@ -377,15 +395,22 @@ class FeedBack extends Component
 
     public function closeReplyModal()
     {
+        $this->resetErrorBag(); // Reset the validation errors
+        $this->resetFields();
         $this->isReplyModalOpen = false;
     }
 
     public function submitReply()
     {
+        // Validate the reply text to ensure it's not empty
+        $this->validate([
+            'replyText' => 'required|string|min:3', // Adjust max length as needed
+        ]);
+
         $feedback = FeedBackModel::find($this->feedbackId);
 
         if (!$feedback) {
-            session()->flash('error', 'Feedback not found.');
+            FlashMessageHelper::flashError('Feedback not found.');
             return;
         }
 
@@ -399,7 +424,7 @@ class FeedBack extends Component
         // Close modal
         $this->isReplyModalOpen = false;
 
-        session()->flash('success', 'Feedback replied successfully.');
+        FlashMessageHelper::flashSuccess('Feedback replied successfully.');
         // Refresh feedback list
         $this->loadTabData($this->activeTab);
     }
@@ -409,14 +434,14 @@ class FeedBack extends Component
     {
         $feedback = FeedbackModel::find($feedbackId);
         if (!$feedback) {
-            session()->flash('error', 'Feedback not found.');
+            FlashMessageHelper::flashError('Feedback not found.');
             return;
         }
 
         // Mark as declined
         $feedback->update(['is_declined' => true]);
 
-        session()->flash('success', 'Feedback declined successfully.');
+        FlashMessageHelper::flashSuccess('Feedback declined successfully.');
         // Refresh feedback list
         $this->loadTabData($this->activeTab);
     }
@@ -434,7 +459,7 @@ class FeedBack extends Component
             $this->isEditModalVisible = true;
         } else {
             // Handle the case where the user is not the sender
-            session()->flash('error', 'You are not authorized to edit this feedback.');
+            FlashMessageHelper::flashError('You are not authorized to edit this feedback.');
         }
     }
 
@@ -442,8 +467,13 @@ class FeedBack extends Component
     public function updateGiveFeedback()
     {
         // Inline validation for the updated feedback message
+        // Validate with custom error messages
         $this->validate([
             'updatedFeedbackMessage' => 'required|string|min:5',
+        ], [
+            'updatedFeedbackMessage.required' => 'The feedback message is required.',
+            'updatedFeedbackMessage.string' => 'The feedback message must be a valid string.',
+            'updatedFeedbackMessage.min' => 'The feedback message must be at least 5 characters long.',
         ]);
 
         // Find the feedback and update the message
@@ -452,9 +482,9 @@ class FeedBack extends Component
             // Only update if the feedback message is different
             if ($this->updatedFeedbackMessage != $feedback->feedback_message) {
                 $feedback->update(['feedback_message' => $this->updatedFeedbackMessage]);
-                session()->flash('message', 'Feedback updated successfully!');
+                FlashMessageHelper::flashSuccess('Feedback updated successfully!');
             } else {
-                session()->flash('message', 'No changes detected to save.');
+                FlashMessageHelper::flashInfo('No changes detected to save.');
             }
             $this->isEditModalVisible = false; // Close the modal after update
         }
@@ -476,9 +506,9 @@ class FeedBack extends Component
 
         if ($feedback && $feedback->feedback_from == auth()->id()) {
             $feedback->update(['status' => 0]); // Soft delete
-            session()->flash('message', 'Feedback deleted successfully!');
+            FlashMessageHelper::flashSuccess('Feedback deleted successfully!');
         } else {
-            session()->flash('error', 'You are not authorized to delete this feedback.');
+            FlashMessageHelper::flashError('You are not authorized to delete this feedback.');
         }
 
         // Close the modal and refresh data
@@ -497,7 +527,7 @@ class FeedBack extends Component
 
         // Check if employee is selected
         if (!$this->selectedEmployee) {
-            session()->flash('error', 'Please select a valid employee.');
+            FlashMessageHelper::flashError('Please select a valid employee.');
             return;
         }
 
@@ -514,7 +544,7 @@ class FeedBack extends Component
                 'feedback_message' => $this->feedbackMessage,
                 'is_draft' => true, // Ensure it's marked as draft
             ]);
-            session()->flash('message', 'Draft feedback updated successfully!');
+            FlashMessageHelper::flashSuccess('Draft feedback updated successfully!');
         } else {
             // Otherwise, create new draft feedback
             FeedBackModel::create([
@@ -524,7 +554,7 @@ class FeedBack extends Component
                 'feedback_message' => $this->feedbackMessage,
                 'is_draft' => true, // Mark it as draft
             ]);
-            session()->flash('message', 'Draft feedback saved successfully!');
+            FlashMessageHelper::flashSuccess('Draft feedback saved successfully!');
         }
 
         // Close the modal and reset fields
@@ -543,12 +573,12 @@ class FeedBack extends Component
 
         // Check if feedback exists and if the logged-in user is the one who created the feedback
         if (!$feedback) {
-            session()->flash('error', 'Feedback not found.');
+            FlashMessageHelper::flashError('Feedback not found.');
             return;
         }
 
         if ($feedback->feedback_from != auth()->user()->emp_id) {
-            session()->flash('error', 'You are not authorized to withdraw this feedback.');
+            FlashMessageHelper::flashError('You are not authorized to withdraw this feedback.');
             return;
         }
 
@@ -558,7 +588,7 @@ class FeedBack extends Component
         ]);
 
         // Provide success message
-        session()->flash('message', 'Draft feedback withdrawn and finalized successfully!');
+        FlashMessageHelper::flashSuccess('Draft feedback withdrawn and finalized successfully!');
 
         // Refresh the feedback list
         $this->loadTabData($this->activeTab);
@@ -579,14 +609,19 @@ class FeedBack extends Component
             ]);
 
 
-            session()->flash('message', 'Draft feedback updated successfully and marked as final!');
+            FlashMessageHelper::flashSuccess('Draft feedback updated successfully and marked as final!');
         }
 
         $this->isEditModalVisible = false;
         $this->loadTabData($this->activeTab);
     }
 
-
+    public function closeEditFeedbackModal()
+    {
+        $this->resetErrorBag(); // Reset the validation errors
+        $this->resetFields();
+        $this->isEditModalVisible = false;
+    }
 
     public function render()
     {
