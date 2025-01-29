@@ -30,7 +30,7 @@
             <li>
                 <a href="#"><i class='fas fa-briefcase icon'></i>My Worklife <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
-                    <li><a href="#">Feedback</a></li>
+                    <li><a href="{{route('feedback')}}">Feedback</a></li>
                 </ul>
             </li>
             <li><a href="/PeoplesList"><i class='fas fa-users icon'></i> People</a></li>

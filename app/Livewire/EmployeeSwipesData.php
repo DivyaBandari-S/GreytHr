@@ -32,10 +32,14 @@ class EmployeeSwipesData extends Component
     public $startDate;
     public $endDate;
 
-    
 
 
-    
+
+
+
+
+
+
     public $isPending=0;
 
     public $isApply=1;
@@ -136,13 +140,14 @@ class EmployeeSwipesData extends Component
         }
 
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
+
         Log::info('isApply: ' . $this->isApply);
         Log::info('isPending: ' . $this->isPending);
         Log::info('defaultApply: ' . $this->defaultApply);
-    
+
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
-        
+
     }
     public function processWebSignInLogs()
     {
@@ -218,7 +223,7 @@ class EmployeeSwipesData extends Component
         Log::info('isApply: ' . $this->isApply);
         Log::info('isPending: ' . $this->isPending);
         Log::info('defaultApply: ' . $this->defaultApply);
-    
+
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
 
@@ -350,7 +355,7 @@ class EmployeeSwipesData extends Component
             } else {
                 $externalSwipeLogs = collect();
             }
-           
+
         } catch (\Exception $e) {
             // Handle exceptions related to external database query
             // Log or handle the exception
@@ -372,7 +377,8 @@ class EmployeeSwipesData extends Component
                 ];
             }
         }
-       
+
+
         return $swipeCardData;
     }
 
@@ -384,21 +390,21 @@ class EmployeeSwipesData extends Component
         if($this->isApply==1&&$this->isPending==0&&$this->defaultApply==1)
         {
             $this->viewDoorSwipeButton();
-            
+
         }
         elseif($this->isApply==0&&$this->isPending==1&&$this->defaultApply==0)
         {
             $this->viewWebsignInButton();
         }
-       
-        // Determine the SignedInEmployees based on conditions
-    
-       
 
-        
+        // Determine the SignedInEmployees based on conditions
+
+
+
+
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
-            
+
         ]);
     }
 }
