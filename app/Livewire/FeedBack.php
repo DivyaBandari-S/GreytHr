@@ -254,40 +254,71 @@ class FeedBack extends Component
     {
         $query = FeedbackModel::query();
         $empId = auth()->id();
+        $filteredEmpId = $this->filteredEmp ? $this->filteredEmp->emp_id : null;
 
-        if ($this->filteredEmp) {
-            $filteredEmpId = $this->filteredEmp->emp_id;
-
+        if ($filteredEmpId) {
+            // Ensure both IDs match bidirectionally
             $query->where(function ($q) use ($filteredEmpId, $empId) {
-                $q->where('feedback_from', $filteredEmpId)
-                    ->where('feedback_to', $empId)
-                    ->orWhere(function ($q2) use ($filteredEmpId, $empId) {
-                        $q2->where('feedback_from', $empId)
-                            ->where('feedback_to', $filteredEmpId);
-                    });
+                $q->where([
+                    ['feedback_from', '=', $empId],
+                    ['feedback_to', '=', $filteredEmpId],
+                ])->orWhere([
+                    ['feedback_from', '=', $filteredEmpId],
+                    ['feedback_to', '=', $empId],
+                ]);
             });
         }
 
         switch ($this->activeTab) {
             case 'received':
                 $query->where(function ($q) use ($empId) {
+                    // Ensure feedback is either accepted, declined, or a non-draft feedback that was given
                     $q->where('feedback_to', $empId)
                         ->where('feedback_type', 'request')
-                        ->where(function ($q2) {
-                            $q2->where('is_accepted', true)
-                                ->orWhere('is_declined', true);
-                        })
-                        ->orWhere(function ($q3) use ($empId) {
-                            $q3->where('feedback_to', $empId)
+                        ->where('is_accepted', true)
+                        ->orWhere('is_declined', true)
+                        ->orWhere(function ($q2) use ($empId) {
+                            $q2->where('feedback_to', $empId)
                                 ->where('feedback_type', 'give')
-                                ->where('is_draft', false);
+                                ->where('is_draft', false); // Exclude drafts
                         });
-                })
-                    ->orWhere(function ($q) use ($empId) {
-                        $q->where('feedback_from', $empId)
-                            ->whereNotNull('replay_feedback_message');
+                });
+
+                // Ensure bidirectional match for feedbacks, exclude drafts and pending feedbacks
+                if ($filteredEmpId) {
+                    $query->orWhere(function ($q) use ($empId, $filteredEmpId) {
+                        $q->where([
+                            ['feedback_from', '=', $filteredEmpId],
+                            ['feedback_to', '=', $empId],
+                        ])
+                            ->where('is_draft', false) // Exclude drafts
+                            ->where(function ($q2) {
+                                // Ensure the feedback is either accepted or declined
+                                $q2->where('is_accepted', true)
+                                    ->orWhere('is_declined', true);
+                            });
                     });
+
+                    $query->orWhere(function ($q) use ($empId, $filteredEmpId) {
+                        $q->where([
+                            ['feedback_from', '=', $empId],
+                            ['feedback_to', '=', $filteredEmpId],
+                        ])
+                            ->whereNotNull('replay_feedback_message')
+                            ->where('is_draft', false); // Exclude drafts
+                    });
+                }
+
+                // Ensure no pending feedbacks (where both is_accepted and is_declined are false)
+                $query->where(function ($q) {
+                    $q->where('is_accepted', true)
+                        ->orWhere('is_declined', true);
+                });
+
+                // Exclude drafts
+                $query->where('is_draft', false);
                 break;
+
 
             case 'given':
                 $query->where('feedback_from', $empId)
@@ -302,13 +333,19 @@ class FeedBack extends Component
                 break;
 
             case 'drafts':
-                $query->where('is_draft', true)
+                $query->where('feedback_from', $empId)
+                    ->where('is_draft', true)
                     ->where('feedback_type', 'give');
                 break;
         }
 
-        $this->filteredFeedbacks = $query->with(['feedbackFromEmployee', 'feedbackToEmployee'])->get();
+        $this->filteredFeedbacks = $query->with(['feedbackFromEmployee', 'feedbackToEmployee'])->latest()->get();
     }
+
+
+
+
+
 
     public function clearFilterEmp()
     {
