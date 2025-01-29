@@ -191,17 +191,15 @@ class FeedBack extends Component
                 $query->where(function ($q) use ($empId) {
                     $q->where('feedback_to', $empId)
                         ->where('feedback_type', 'request')
-                        ->where('is_accepted', true)
-                        ->orWhere('is_declined', true)
-                        ->orWhere(function ($q2) use ($empId) {
-                            $q2->where('feedback_to', $empId)
-                                ->where('feedback_type', 'give')
-                                ->where('is_draft', false);
+                        ->where(function ($q2) {
+                            $q2->where('is_accepted', true)
+                                ->orWhere('is_declined', true);
                         });
                 })->orWhere(function ($q) use ($empId) {
                     $q->where('feedback_from', $empId)
                         ->whereNotNull('replay_feedback_message');
                 });
+
                 $this->setFeedbackMetadata('request_feedback.jpg', 'See what your coworkers have to say!');
                 break;
 
@@ -420,7 +418,19 @@ class FeedBack extends Component
             'replay_feedback_message' => $this->replyText,
             'updated_at' => now(),
         ]);
+        // Get sender's email (feedback_from)
+        $sender = $feedback->feedbackFromEmployee; // Assuming relation is defined
 
+        if ($sender && isset($sender->email)) {
+            try {
+                // Send an email notification to the sender
+                $subject = 'Reply to Your ' . ucfirst($feedback->feedback_type) . ' Feedback';
+                Mail::to($sender->email)->send(new FeedbackNotificationMail($feedback, $subject));
+            } catch (\Exception $e) {
+                Log::error('Email Sending Failed: ' . $e->getMessage());
+                FlashMessageHelper::flashWarning('Reply saved, but email notification could not be sent.');
+            }
+        }
         // Close modal
         $this->isReplyModalOpen = false;
 
