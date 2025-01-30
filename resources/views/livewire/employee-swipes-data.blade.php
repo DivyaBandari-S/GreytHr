@@ -177,8 +177,8 @@
                                                         @foreach($swipe['swipe_log'] as $index => $log)
                                                                 <tr>
                                                                 <td class="employee-swipes-name-and-id">
-                                                                                <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
-                        wire:change="handleEmployeeSelection" />
+                                                                                <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ $log->swipe_time }}-{{ $log->in_or_out }}" class="radio-button custom-radio-class"wire:model="selectedWebEmployeeId"
+                        wire:change="handleEmployeeWebSelection" />
                                                                             <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
                                                                                     data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
                                                                                     {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
