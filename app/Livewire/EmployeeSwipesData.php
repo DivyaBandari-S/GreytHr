@@ -312,6 +312,7 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+                ->orWhere('emp_id',$userId)
                 ->where('employee_status', 'active')
                 ->get();
 
