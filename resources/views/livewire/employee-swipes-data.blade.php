@@ -73,10 +73,7 @@
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate"  max="{{ now()->toDateString() }}">
                       
                 </div>
-                <!-- <div class="dropdown-container1-employee-swipes">
-                        <label for="end_date" style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br />
-                       <input type="date" style="font-size: 12px;" id="end_date" wire:model="endDate" wire:change="checkDates">
-                </div> -->
+               
                 
                 <div class="dropdown-container1-employee-swipes-for-search-employee">
                     <label for="dateType" style="color: #666;font-size:12px;">Employee Search</label><br />
@@ -117,126 +114,132 @@
            <div class="bg-white border rounded">
              <div class="table-responsive bg-white rounded p-0 m-0">
                 <table class="employee-swipes-table  bg-white" style="width: 100%;padding-right:10px;">
-                    <thead>
-                        <tr>
-                            <th>Employee&nbsp;Name</th>
-                            <th>Swipe&nbsp;Time&nbsp;&&nbsp;Date</th>
-                            <th>Shift</th>
-                            <th>In/Out</th>
-                            <th>Received&nbsp;On</th>
-                            <th>Door/Address</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                       
-                                     @if($isApply==1&&$defaultApply==1)
-                                      
-                                         @if(count($SignedInEmployees)>0)
-                                            @foreach ($SignedInEmployees as $swipe)
-                                                 @foreach($swipe['swipe_log'] as $log)
-                                                     <tr>
-                                                            <td class="employee-swipes-name-and-id">
-                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
-               wire:change="handleEmployeeSelection" />
-                                                                <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
-                                                                        data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
-                                                                        {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
-                                                                </span>
-                                                                <br />
-                                                                <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
-                                                            </td>
-                                                            <td>
-                                                                    {{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}<br />
-                                                                    <span class="text-muted employee-swipes-swipe-date">
-                                                                        {{ \Carbon\Carbon::parse($log->logDate)->format('jS F Y') }}
-                                                                    </span>
-                                                            </td>
-                                                            <td style="white-space:nowrap;">{{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}</td>
-                                                            <td style="text-transform:uppercase;">{{$log->Direction}}</td>
-                                                            <td> {{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"style="white-space:nowrap;"> {{ \Carbon\Carbon::parse($log->logDate)->format('jS F Y') }}</span></td>
-                                                            <td style="white-space:nowrap;">
-                                                                    @if ($log->Direction === 'in')
-                                                                        Door Swipe In
-                                                                    @else
-                                                                        Door Swipe Out
-                                                                    @endif
-                                                            </td>
-                                                            <td class="text-center">-</td>
-                                                     </tr>
-                                                 @endforeach    
-                                            @endforeach
-                                               
+                                        <thead>
+                                            <tr>
+                                                <th>Employee&nbsp;Name</th>
+                                                <th>Swipe&nbsp;Time&nbsp;&&nbsp;Date</th>
+                                                <th>Shift</th>
+                                                <th>In/Out</th>
+                                                <th>Received&nbsp;On</th>
+                                                <th>Door/Address</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                
+                                                @if($isApply==1&&$defaultApply==1)
+                                                
+                                                    @if(count($SignedInEmployees)>0)
+                                                        @foreach ($SignedInEmployees as $swipe)
+                                                            @foreach($swipe['swipe_log'] as $index =>$log)
+                                                                <tr>
+                                                                        <td class="employee-swipes-name-and-id">
+                                                                                <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
+                        wire:change="handleEmployeeSelection" />
+                                                                            <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
+                                                                                    data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
+                                                                                    {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
+                                                                            </span>
+                                                                            <br />
+                                                                            <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
+                                                                        </td>
+                                                                        <td>
+                                                                                {{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}<br />
+                                                                                <span class="text-muted employee-swipes-swipe-date">
+                                                                                    {{ \Carbon\Carbon::parse($log->logDate)->format('jS F Y') }}
+                                                                                </span>
+                                                                        </td>
+                                                                        <td style="white-space:nowrap;">{{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }} to {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}</td>
+                                                                        <td style="text-transform:uppercase;">{{$log->Direction}}</td>
+                                                                        <td> {{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}<br /> <span class="text-muted employee-swipes-swipe-date"style="white-space:nowrap;"> {{ \Carbon\Carbon::parse($log->logDate)->format('jS F Y') }}</span></td>
+                                                                        <td style="white-space:nowrap;">
+                                                                                @if ($log->Direction === 'in')
+                                                                                    Door Swipe In
+                                                                                @else
+                                                                                    Door Swipe Out
+                                                                                @endif
+                                                                        </td>
+                                                                        <td class="text-center">-</td>
+                                                                </tr>
+                                                            @endforeach    
+                                                        @endforeach
+                                                        
 
-                                        @else
-                                            <td colspan="12" class="text-center">Employee Swipe Data Not found</td>
-                                        @endif
-                                     @elseif($isPending==1&&$defaultApply==0)
-                                   
-                                        @if(count($SignedInEmployees))
-                                            @foreach($SignedInEmployees as $swipe)
-                                            @foreach($swipe['swipe_log'] as $index => $log)
+                                                    @else
+                                                       <tr>
+                                                           <td colspan="12" class="text-center">Employee Swipe Data Not found</td>
+                                                       </tr>    
+                                                    @endif
+                                                @elseif($isPending==1&&$defaultApply==0)
+                                            
+                                                    @if(count($SignedInEmployees))
+                                                        @foreach($SignedInEmployees as $swipe)
+                                                        @foreach($swipe['swipe_log'] as $index => $log)
+                                                                <tr>
+                                                                <td class="employee-swipes-name-and-id">
+                                                                                <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ $log->swipe_time }}-{{ $log->in_or_out }}" class="radio-button custom-radio-class"wire:model="selectedWebEmployeeId"
+                        wire:change="handleEmployeeWebSelection" />
+                                                                            <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
+                                                                                    data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
+                                                                                    {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
+                                                                            </span>
+                                                                            <br />
+                                                                            <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
+                                                                        </td>
+                                                                
+                                                                    <!-- Swipe Log Details -->
+                                                                    <td>
+                                                                        {{ $log->swipe_time }}<br />
+                                                                        <span class="text-muted employee-swipes-swipe-date">
+                                                                            {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
+                                                                        </span>
+                                                                        
+                                                                    </td>
+
+                                                                    <!-- Shift Details -->
+                                                                    <td style="white-space:nowrap;">
+                                                                        {{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }} 
+                                                                        to 
+                                                                        {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}
+                                                                    </td>
+
+                                                                    <!-- Sign In/Out Type -->
+                                                                    <td>
+                                                                        @if ($log->in_or_out === 'IN')
+                                                                            IN
+                                                                        @else
+                                                                            OUT
+                                                                        @endif
+                                                                    </td>
+                                                                    <td>
+                                                                        {{ $log->swipe_time }}<br />
+                                                                        <span class="text-muted employee-swipes-swipe-date">
+                                                                            {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
+                                                                        </span>
+                                                                        
+                                                                    </td>
+                                                                    <td style="white-space:nowrap;">
+                                                                            @if ($log->in_or_out === 'IN')
+                                                                                Web Sign In
+                                                                            @elseif ($log->in_or_out === 'OUT')
+                                                                                Web Sign Out
+                                                                            @endif
+                                                                    </td>
+                                                                    <td class="text-center">-</td>
+                                                                </tr>
+                                                            @endforeach  
+                                                        @endforeach 
+                                                    @else
                                                     <tr>
-                                                    <td class="employee-swipes-name-and-id">
-                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
-               wire:change="handleEmployeeSelection" />
-                                                                <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
-                                                                        data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
-                                                                        {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
-                                                                </span>
-                                                                <br />
-                                                                <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
-                                                            </td>
-                                                      
-                                                        <!-- Swipe Log Details -->
-                                                        <td>
-                                                             {{ $log->swipe_time }}<br />
-                                                             <span class="text-muted employee-swipes-swipe-date">
-                                                                {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
-                                                             </span>
-                                                            
-                                                        </td>
+                                                      <td colspan="12"class="text-center">Employee Swipe Record Not found</td>
+                                                    </tr>  
+                                                    @endif  
+                                                
+                                                
+                                                @endif
 
-                                                        <!-- Shift Details -->
-                                                        <td style="white-space:nowrap;">
-                                                            {{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }} 
-                                                            to 
-                                                            {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}
-                                                        </td>
-
-                                                        <!-- Sign In/Out Type -->
-                                                        <td>
-                                                            @if ($log->in_or_out === 'IN')
-                                                                IN
-                                                            @else
-                                                                OUT
-                                                            @endif
-                                                        </td>
-                                                        <td>
-                                                             {{ $log->swipe_time }}<br />
-                                                             <span class="text-muted employee-swipes-swipe-date">
-                                                                {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
-                                                             </span>
-                                                            
-                                                        </td>
-                                                        <td style="white-space:nowrap;">
-                                                                @if ($log->in_or_out === 'IN')
-                                                                    Web Sign In
-                                                                @elseif ($log->in_or_out === 'OUT')
-                                                                    Web Sign Out
-                                                                @endif
-                                                        </td>
-                                                        <td class="text-center">-</td>
-                                                    </tr>
-                                                @endforeach  
-                                            @endforeach 
-                                        @else
-                                           <td colspan="12"class="text-center">Employee Swipe Record Not found</td>
-                                        @endif   
-                                     @endif
-
-                                    </tbody>
-                            </table>
+                                                </tbody>
+                                        </table>
                         </div>
                     </div>
                 </div>

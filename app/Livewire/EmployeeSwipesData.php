@@ -276,7 +276,7 @@ class EmployeeSwipesData extends Component
         // $this->selectedWebEmployeeId=$this->selectedWebEmployeeId;
         $parts = explode('-', $this->selectedWebEmployeeId);
 
-        $this->selectedWebEmployeeId = $parts[0] . '-' . $parts[1];
+        $this->selectedWebEmployeeId = $parts[0].'-'.$parts[1];
         $this->swipeTime = $parts[3];
         $this->webSwipeDirection = $parts[4];
         $this->webDeviceName = SwipeRecord::where('emp_id', $this->selectedWebEmployeeId)->where('in_or_out', $this->webSwipeDirection)->where('swipe_time', $this->swipeTime)->whereDate('created_at', $this->startDate)->value('device_name');
@@ -296,6 +296,7 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+                ->orWhere('emp_id',$userId)
                 ->where('employee_status', 'active')
                 ->orWhere('emp_id', $userId)
                 ->get();
