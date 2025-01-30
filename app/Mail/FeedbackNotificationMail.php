@@ -42,13 +42,14 @@ class FeedbackNotificationMail extends Mailable
         return new Content(
             view: 'emails.feedback_notification',
             with: [
-                'feedbackMessage' => $this->feedback->feedback_message ?? '',
-                'feedbackFrom' => optional($this->feedback->feedbackFromEmployee)->first_name . ' ' . optional($this->feedback->feedbackFromEmployee)->last_name ?? 'Unknown',
-                'feedbackTo' => optional($this->feedback->feedbackToEmployee)->first_name . ' ' . optional($this->feedback->feedbackToEmployee)->last_name ?? 'Unknown',
-                'feedbackTime' => $this->feedback->created_at ? $this->feedback->created_at->format('d M Y, H:i A') : '',
+                'feedbackMessage' => $this->feedback->feedback_message,
+                'feedbackFrom' => ($this->feedback->feedbackFromEmployee->first_name . ' ' . $this->feedback->feedbackFromEmployee->last_name) ?? 'Unknown',
+                'feedbackTo' => ($this->feedback->feedbackToEmployee->first_name . ' ' . $this->feedback->feedbackToEmployee->last_name) ?? 'Unknown',
+                'feedbackTime' => $this->feedback->created_at->format('d M Y, H:i A'),
                 'feedbackStatus' => $this->subjectText,
-                'feedbackType' => ucfirst($this->feedback->feedback_type ?? ''), // Capitalizing first letter
-                'replayFeedbackMessage' => $this->feedback->replay_feedback_message ?? '', // Include reply message if exists
+                'feedbackType' => $this->feedback->feedback_type,
+                'receiverName' => ($this->feedback->feedbackToEmployee->first_name . ' ' . $this->feedback->feedbackToEmployee->last_name) ?? 'Unknown',
+                'receiverId' => $this->feedback->feedbackToEmployee->emp_id ?? 'N/A', // Assuming `emp_id` is the ID
             ]
         );
     }

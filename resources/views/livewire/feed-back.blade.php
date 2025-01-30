@@ -315,10 +315,11 @@
                                     <div class="mb-3">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        {{-- <div id="requestRichText"></div> --}}
-                                        {{-- <div id="requestRichText" wire:model.lazy="feedbackMessage"></div> --}}
-                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"
-                                            wire:keydown="clearValidationMessages('feedbackMessage')"></textarea>
+                                        <!-- Hidden Input Field for Livewire Binding -->
+                                        <input id="requestRichText" type="hidden" wire:model.live="feedbackMessage">
+
+                                        <!-- Trix Editor (with wire:ignore) -->
+                                        <trix-editor input="requestRichText" wire:ignore></trix-editor>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -569,7 +570,8 @@
                         <!-- Editable Feedback Message -->
                         <div class="mb-3">
                             <label class="form-label">Personalized Message <span class="text-danger">*</span></label>
-                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4" wire:keydown="clearValidationMessages('updatedFeedbackMessage')">{{ $updatedFeedbackMessage }}</textarea>
+                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4"
+                                wire:keydown="clearValidationMessages('updatedFeedbackMessage')">{{ $updatedFeedbackMessage }}</textarea>
                             @error('updatedFeedbackMessage')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -625,11 +627,3 @@
 
 </div>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function(event) {
-        var quill = new Quill('#requestRichText', {
-            theme: 'snow'
-        });
-    });
-</script>
-</script>
