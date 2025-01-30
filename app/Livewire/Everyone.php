@@ -112,31 +112,34 @@ class Everyone extends Component
                                                 ->where('manager_id', $employeeId); // Team members' posts
                                   });
                         })
+                        ->orWhereNull('emp_id') 
                         ->orderBy('updated_at', 'desc')
                         ->get();
                 } else {
-                    // For employees: get their posts and their manager's posts
-                    $this->posts = Post::where('status', 'Closed')
-                    ->where(function ($query) use ($employeeId) {
-                        $query->where('emp_id', $employeeId) // Employee's own posts
-                              ->orWhere('manager_id', function($subQuery) use ($employeeId) {
-                                  $subQuery->select('manager_id')
-                                            ->from('employee_details')
-                                            ->where('emp_id', $employeeId); // Get the employee's manager's ID
-                              })
-                              ->orWhereIn('emp_id', function($subQuery) use ($employeeId) {
-                                  // Get all employees under the same manager
-                                  $subQuery->select('emp_id')
-                                            ->from('employee_details')
-                                            ->where('manager_id', function($innerQuery) use ($employeeId) {
-                                                $innerQuery->select('manager_id')
-                                                            ->from('employee_details')
-                                                            ->where('emp_id', $employeeId);
-                                            });
-                              });
-                    })
-                    ->orderBy('updated_at', 'desc')
-                    ->get();
+                   // For employees: get their posts, their manager's posts, and HR posts
+$this->posts = Post::where('status', 'Closed')
+->where(function ($query) use ($employeeId) {
+    $query->where('emp_id', $employeeId) // Employee's own posts
+          ->orWhere('manager_id', function ($subQuery) use ($employeeId) {
+              $subQuery->select('manager_id')
+                       ->from('employee_details')
+                       ->where('emp_id', $employeeId); // Get the employee's manager's ID
+          })
+          ->orWhereIn('emp_id', function ($subQuery) use ($employeeId) {
+              // Get all employees under the same manager
+              $subQuery->select('emp_id')
+                       ->from('employee_details')
+                       ->where('manager_id', function ($innerQuery) use ($employeeId) {
+                           $innerQuery->select('manager_id')
+                                      ->from('employee_details')
+                                      ->where('emp_id', $employeeId);
+                       });
+          });
+})
+->orWhereNull('emp_id') 
+->orderBy('updated_at', 'desc')
+->get();
+
                 
                 }
             
@@ -210,7 +213,7 @@ class Everyone extends Component
     {
         $validatedData = $this->validate([
             'category' => 'required|string',
-            'description' => 'required|string|min:150',
+            'description' => 'required|string|min:100',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
     

@@ -1,0 +1,40 @@
+[2025-01-30 17:04:38] local.INFO: Stored session ID: ADajGsPddHfcqWKZDwY7jl4cLBZ2zem6UrwjcT0M  
+[2025-01-30 17:04:38] local.INFO: Existing session ID: None  
+[2025-01-30 17:04:38] local.INFO: Session updated {"user_id":"XSS-0307","session_id":"ADajGsPddHfcqWKZDwY7jl4cLBZ2zem6UrwjcT0M","device_type":"Desktop","location":"New Haven, United States"} 
+[2025-01-30 17:04:38] local.INFO: Before next request call {"request":{"Illuminate\\Http\\Request":"GET /Feeds HTTP/1.1
+
+Accept:                    text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+
+Accept-Encoding:           gzip, deflate, br, zstd
+
+Accept-Language:           en-US,en;q=0.9,en-IN;q=0.8
+
+Connection:                keep-alive
+
+Cookie:                    _ga=GA1.1.901073796.1736755291; _ga_69MPZE94D5=GS1.1.1736929501.2.0.1736929505.0.0.0; XSRF-TOKEN=eyJpdiI6Ik9YRlV2SHRTeEVFZnB3TjVhdytDbkE9PSIsInZhbHVlIjoiRXBPdEhUN2cwZWJwaUx6Ri9ZMFA5Vm90YXJuczY5OG5mQUtmMUYwY1VFOGdzSzkvZTVVc1lQMk1zTVBkZVZteEVZczFIdytYRnhaay84S2tQZ3VxWWFqYTB4WGE3UUx6VEVNcjZpOUc2U1Z3aGdLRG5ZUkZDMjVsWGxua3gyWUwiLCJtYWMiOiJiOThkMjliNDk3OTIwMGZmYjljMmNjMmMzYzVjZjdmMDFmMWRhNGI2MDA2ODc2NGIxZDVhOGZiMDhiMjVjYTRiIiwidGFnIjoiIn0%3D; laravel_session=eyJpdiI6IjAvTFZWNXJNYWoxWlFaM05IQmVJS2c9PSIsInZhbHVlIjoiaTk2RUpCTVJkd3hRblpiRGkxTjZRVlRRM2czSm8reHZRbGxsVmpRMXVOUjMwZE9zOGZkb0xpaTZBc2x0NG5uaWdkVGN6alVsMFFqZVhWQUYzd05pdWF2MGFTdDRjMVBRYi9IK0piek9ha3E2TSt0NS9uM1dOOUJ2T2djT0p0d28iLCJtYWMiOiJkYzU5ODg0MzU3M2Q5ODYwYzcxOGQ5NjVkNjdlNjRjMjI3ZTc0NDRiMDJkZjk3ZGQ1YmY0OGUxZjkxMTU1NGFiIiwidGFnIjoiIn0%3D
+
+Host:                      127.0.0.1:8000
+
+Referer:                   http://127.0.0.1:8000/everyone
+
+Sec-Ch-Ua:                 \"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Microsoft Edge\";v=\"132\"
+
+Sec-Ch-Ua-Mobile:          ?0
+
+Sec-Ch-Ua-Platform:        \"Windows\"
+
+Sec-Fetch-Dest:            document
+
+Sec-Fetch-Mode:            navigate
+
+Sec-Fetch-Site:            same-origin
+
+Upgrade-Insecure-Requests: 1
+
+User-Agent:                Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36 Edg/132.0.0.0
+
+Cookie: _ga=; _ga_69MPZE94D5=; XSRF-TOKEN=zne2ryInViRhZNIVeceVdaUZXKyz8rQjpj7dgsps; laravel_session=ADajGsPddHfcqWKZDwY7jl4cLBZ2zem6UrwjcT0M
+
+
+
+"}} 

@@ -564,13 +564,13 @@
                             <ul class="d-flex flex-column m-0 p-0">
                                 <a class="menu-item" href="/Feeds">All Feeds</a>
 
-                                <a class="menu-item" href="/events">Every One</a>
+                                <a class="menu-item" href="/everyone">Every One</a>
 
                                 <a class="menu-item" href="/Feeds">Events</a>
 
-                                <a class="menu-item" href="/events">Company News</a>
+                                <a class="menu-item" href="/everyone">Company News</a>
 
-                                <a class="menu-item" href="/events">Appreciation</a>
+                                <a class="menu-item" href="/everyone">Appreciation</a>
 
 
 
@@ -600,58 +600,58 @@
                                 <a class="menu-item" style="font-weight: 700;">India</a>
 
 
-                                <a class="menu-item" href="/events">Adilabad</a>
+                                <a class="menu-item" href="/everyone">Adilabad</a>
 
 
 
 
 
-                                <a class="menu-item" href="/events">Doddaballapur</a>
+                                <a class="menu-item" href="/everyone">Doddaballapur</a>
 
 
-                                <a class="menu-item" href="/events">Guntur</a>
+                                <a class="menu-item" href="/everyone">Guntur</a>
 
-                                <a class="menu-item" href="/events">Hoskote</a>
+                                <a class="menu-item" href="/everyone">Hoskote</a>
 
-                                <a class="menu-item" href="/events">Hyderabad</a>
+                                <a class="menu-item" href="/everyone">Hyderabad</a>
 
-                                <a class="menu-item" href="/events">Mandya
+                                <a class="menu-item" href="/everyone">Mandya
                                 </a>
 
-                                <a class="menu-item" href="/events">Mangalore
+                                <a class="menu-item" href="/everyone">Mangalore
                                 </a>
 
-                                <a class="menu-item" href="/events">Mumbai
+                                <a class="menu-item" href="/everyone">Mumbai
                                 </a>
 
 
-                                <a class="menu-item" href="/events">Mysore
+                                <a class="menu-item" href="/everyone">Mysore
                                 </a>
 
-                                <a class="menu-item" href="/events">Pune
+                                <a class="menu-item" href="/everyone">Pune
                                 </a>
 
-                                <a class="menu-item" href="/events">Sirsi
+                                <a class="menu-item" href="/everyone">Sirsi
                                 </a>
 
-                                <a class="menu-item" href="/events">Thumkur
+                                <a class="menu-item" href="/everyone">Thumkur
                                 </a>
 
-                                <a class="menu-item" href="/events">Tirupati</a>
+                                <a class="menu-item" href="/everyone">Tirupati</a>
 
-                                <a class="menu-item" href="/events">Trivandrum</a>
+                                <a class="menu-item" href="/everyone">Trivandrum</a>
 
-                                <a class="menu-item" href="/events">Udaipur</a>
+                                <a class="menu-item" href="/everyone">Udaipur</a>
 
-                                <a class="menu-item" href="/events">Vijayawada</a>
+                                <a class="menu-item" href="/everyone">Vijayawada</a>
 
                                 <a class="menu-item" style="font-weight: 700;">USA</a>
 
-                                <a class="menu-item" href="/events">California</a>
+                                <a class="menu-item" href="/everyone">California</a>
 
-                                <a class="menu-item" href="/events">New York</a>
+                                <a class="menu-item" href="/everyone">New York</a>
 
-                                <a class="menu-item" href="/events">Hawaii</a>
+                                <a class="menu-item" href="/everyone">Hawaii</a>
 
 
                             </ul>
@@ -674,24 +674,24 @@
                         <div id="dropdownContent3" class="Feeds-Dropdown">
                             <ul class="d-flex flex-column" style="font-size: 12px; margin: 0; padding: 0;">
 
-                                <a class="menu-item" href="/events">HR</a>
+                                <a class="menu-item" href="/everyone">HR</a>
 
 
 
 
-                                <a class="menu-item" href="/events">Operations</a>
+                                <a class="menu-item" href="/everyone">Operations</a>
 
 
-                                <a class="menu-item" href="/events">Production Team</a>
+                                <a class="menu-item" href="/everyone">Production Team</a>
 
 
-                                <a class="menu-item" href="/events">QA</a>
+                                <a class="menu-item" href="/everyone">QA</a>
 
 
-                                <a class="menu-item" href="/events">Sales Team</a>
+                                <a class="menu-item" href="/everyone">Sales Team</a>
 
 
-                                <a class="menu-item" href="/events">Testing Team</a>
+                                <a class="menu-item" href="/everyone">Testing Team</a>
 
                             </ul>
                         </div>
