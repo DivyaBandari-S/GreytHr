@@ -67,28 +67,32 @@ class AttendanceTable extends Component
     public $city='-';
 
     public $employee_shift_type;
-    public $öpenattendanceperiod = false;
+    
+    public $employeeHireDate;
     public $postal_code='-';
 
+    
     public $employeeShiftDetails;
     protected $listeners = [
-        'update',
+        'updateDates'
     ];
 
     protected $rules = [
         'fromDate' => 'required|date',
         'toDate' => 'required|date|after_or_equal:fromDate', // Ensuring toDate is after or equal to fromDate
     ];
-    public function mount()
+    public function mount($startDateForInsights, $toDate)
     {
         // First initialize
         $this->year = Carbon::now()->format('Y');
-        $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
-
-        $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        // $this->start = Carbon::now()->year($this->year)->firstOfMonth()->format('Y-m-d');
+         $this->start=$startDateForInsights;
+        // $this->end = Carbon::now()->year($this->year)->lastOfMonth()->format('Y-m-d');
+        $this->end=$toDate;
         $this->fromDate=$this->start;
         $this->toDate=$this->end;
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
+        $this->employeeHireDate=$this->employeeDetails->hire_date;
         $ip = request()->ip();
         $location = GeoIP::getLocation($ip);
         $lat = $location['lat'];
@@ -105,21 +109,29 @@ class AttendanceTable extends Component
     ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
     ->first();
     }
+    public function updatedStart($value)
+    {
+        $this->emit('updatedStart', $value);
+    }
+
+    public function updatedEnd($value)
+    {
+        $this->emit('updatedEnd', $value);
+    }
+    
   
     public function updatefromDate()
     {
         $this->fromDate=$this->fromDate;
         $this->checkUpdateDate();
     }
-    public function öpenattendanceperiodModal()
+   
+    public function updateDates($startDateForInsights, $toDate)
     {
-
-        $this->öpenattendanceperiod = true;
+        $this->start = $startDateForInsights;
+        $this->end = $toDate;
     }
-    public function closeattendanceperiodModal()
-    {
-        $this->öpenattendanceperiod = false;
-    }
+    
     public function updatetoDate()
     {
         $this->toDate=$this->toDate;
@@ -134,6 +146,215 @@ class AttendanceTable extends Component
            
         }
     }
+    private function isEmployeeFullDayLeaveOnDate($date, $employeeId)
+{
+    try {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+      
+        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->exists();
+
+        if ($sessionCheck) {
+            // Case when both sessions are 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+            $leaveRecordType= LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_applications.leave_status', 2)
+            ->where('from_session', 'Session 1')
+            ->where('to_session', 'Session 1')
+            ->where(function ($query) use ($date) {
+                $query->whereDate('from_date', '<=', $date)
+                    ->whereDate('to_date', '>', $date);
+            })
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+            ->value('leave_type');   
+        } else {
+            // Case when sessions are not both 'Session 1'
+            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->where(function ($query) use ($date) {
+                    $query->whereDate('from_date', '<=', $date)
+                        ->whereDate('to_date', '>', $date);
+                })
+                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->exists();
+            $leaveRecordType=LeaveRequest::where('emp_id', $employeeId)
+            ->where('leave_applications.leave_status', 2)
+            ->where('from_session', 'Session 2')
+            ->where('to_session', 'Session 2')
+            ->where(function ($query) use ($date) {
+                $query->whereDate('from_date', '<=', $date)
+                    ->whereDate('to_date', '>', $date);
+            })
+            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+            ->value('leave_type');    
+        }
+        return [
+          
+            'leaveRecordType' => $leaveRecordType,
+            'fullsessionCheck' => (($leaveRecord) ) ? true : false,
+            
+
+        ];
+    } catch (\Exception $e) {
+        Log::error('Error in isEmployeeHalfDayLeaveOnDate method: ' . $e->getMessage());
+        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+        [
+          
+            'leaveRecordType' => null,
+            'fullsessionCheck' =>  false,
+            
+
+        ];
+    }
+}
+    private function isEmployeeHalfDayLeaveOnDate($date, $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $sessionArray=[];
+            $leaveRecord=null;
+            $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date, $employeeId);
+            Log::info('Checking half-day leave for employee.', [
+                'employee_id' => $employeeId,
+                'date' => $date,
+            ]);
+    
+            $session1Check = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date)
+                ->exists();
+                $session1CheckleaveType = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date)
+                ->value('leave_type');    
+                $session2Check = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date)
+                ->exists();    
+                $session2CheckleaveType = LeaveRequest::where('emp_id', $employeeId)
+                ->where('leave_applications.leave_status', 2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=',  $date)
+                ->value('leave_type');  
+                
+    
+            if ($session1Check) {
+                Log::info('Session Check Result:', [
+                    'employee_id' => $employeeId,
+                    'sessionCheck' => 'Session 1'
+                ]);
+            } elseif ($session2Check) {
+                Log::info('Session Check Result:', [
+                    'employee_id' => $employeeId,
+                    'sessionCheck' => 'Session 2'
+                ]);
+            } else {
+                Log::info('No session found for the employee:', [
+                    'employee_id' => $employeeId
+                ]);
+            }
+            
+            if ($session1Check) {
+                // Case when both sessions are 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 1')
+                    ->where('to_session', 'Session 1')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+                    $sessionArray[] = 'Session 1'; 
+                Log::info('Leave Record for Session 1:', [
+                    'employee_id' => $employeeId,
+                    'date' => $date,
+                    'leaveRecord' => $leaveRecord
+                ]);
+            }
+            
+            if($session2Check) {
+                // Case when sessions are not both 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 2')
+                    ->where('to_session', 'Session 2')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+                    $sessionArray[] = 'Session 2'; 
+                Log::info('Leave Record for Session 2:', [
+                    'employee_id' => $employeeId,
+                    'date' => $date,
+                    'leaveRecord' => $leaveRecord,
+                   'sessionCheck' => ($session1Check xor $session2Check xor !$isBeforeToDate) ? true : false,
+                    'sessionCheckleaveType' => (($session1CheckleaveType) ? $session1CheckleaveType : $session2CheckleaveType),
+                    'doubleSessionCheck'=>($session1Check && $session2Check) ? true : false,
+                    'session1leaveType'=>($session1Check && $session2Check) ? $session1CheckleaveType : null,
+                    'session2leaveType'=>($session1Check && $session2Check) ? $session2CheckleaveType : null,
+                ]);
+            }
+    
+         
+            
+            return [
+                'session' => $sessionArray,
+              
+              
+                'employee_id' => $employeeId,
+                    'date' => $date,
+                    'leaveRecord' => $leaveRecord,
+                   'sessionCheck' => ($session1Check xor $session2Check xor !$isBeforeToDate) ? true : false,
+                    'sessionCheckleaveType' => (($session1CheckleaveType) ? $session1CheckleaveType : $session2CheckleaveType),
+                    'doubleSessionCheck'=>($session1Check && $session2Check) ? true : false,
+                    'session1leaveType'=>($session1Check && $session2Check) ? $session1CheckleaveType : null,
+                    'session2leaveType'=>($session1Check && $session2Check) ? $session2CheckleaveType : null,
+    
+            ];
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeHalfDayLeaveOnDate method:', [
+                'error_message' => $e->getMessage(),
+                'employee_id' => $employeeId,
+                'date' => $date
+            ]);
+    
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+    
+            return [
+                'session' => null,
+                'leaveRecord' => false,
+            ];
+        }
+    }
     private function isEmployeeLeaveOnDate($date, $employeeId)
     {
         try {
@@ -142,6 +363,9 @@ class AttendanceTable extends Component
 
             return LeaveRequest::where('emp_id', $employeeId)
             ->where('leave_applications.leave_status', 2)
+            ->where('leave_applications.from_session', 'Session 1')
+            ->where('leave_applications.to_session', 'Session 2')
+            
             ->where(function ($query) use ($date) {
                 $query->whereDate('from_date', '<=', $date)
                     ->whereDate('to_date', '>=', $date);
@@ -160,14 +384,30 @@ class AttendanceTable extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-            return LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_applications.leave_status', 2)
-            ->where(function ($query) use ($date) {
-                $query->whereDate('from_date', '<=', $date)
-                    ->whereDate('to_date', '>=', $date);
-            })
-            ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
-            ->value('leave_applications.leave_type');
+            if($this->isEmployeeLeaveOnDate($date,$employeeId))
+            {
+
+                return LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
+                    ->value('leave_applications.leave_type');
+            }
+            elseif($this->isEmployeeHalfDayLeaveOnDate($date,$employeeId)['sessionCheck']==true)
+            {
+
+                return LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status') // Join with status_types
+                    ->value('leave_applications.leave_type');
+            }
         } catch (\Exception $e) {
             Log::error('Error in isEmployeeLeaveOnDate method: ' . $e->getMessage());
             session()->flash('error', 'An error occurred while checking employee leave. Please try again later.');
@@ -178,12 +418,7 @@ class AttendanceTable extends Component
     {
         $this->legend=!$this->legend;
     }
-    public function update($start, $end) 
-    {
-        $this->year = carbon::parse($start)->format('Y');
-        $this->start = $start;
-        $this->end = $end;
-    }
+    
 
     public function changeYear()
     {
@@ -215,6 +450,31 @@ class AttendanceTable extends Component
     {
         $this->moveCaretLeftSession2 = !$this->moveCaretLeftSession2;
     }
+    private function isEmployeePresentOnDate($date)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $intime=SwipeRecord::where('emp_id', $employeeId)->where('in_or_out','IN')->whereDate('created_at', $date)->exists();    
+
+
+            return $intime;
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
+    private function isEmployeeRegularisedOnDate($date)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            return SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $date)->where('is_regularized', 1)->exists();
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeePresentOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee presence. Please try again later.');
+            return false; // Return false to handle the error gracefully
+        }
+    }
     public function render()
     {
         $this->todaysDate = date('Y-m-d');
@@ -225,11 +485,12 @@ class AttendanceTable extends Component
         $currentYear = date('Y');
         $this->holiday = HolidayCalendar::pluck('date')
             ->toArray();
-
+        
         $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
         $groupedDates = $swipeRecords->groupBy(function ($record) {
             return Carbon::parse($record->created_at)->format('Y-m-d');
         });
+       
         $this->distinctDates = $groupedDates->mapWithKeys(function ($records, $key) {
             $inRecord = $records->where('in_or_out', 'IN')->first();
             $outRecord = $records->where('in_or_out', 'OUT')->last();
@@ -243,6 +504,7 @@ class AttendanceTable extends Component
                 ]
             ];
         });
+        
         return view('livewire.attendance-table');
     }
 }

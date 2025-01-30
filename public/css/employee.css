@@ -656,7 +656,8 @@ main .btn-send:hover {
     .managerOtherDetails{
         font-size: 12px;
         display: inline-block;
-        max-width: 180px;
+        max-width: 140px;
+        max-width: 140px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -665,7 +666,8 @@ main .btn-send:hover {
     .emailNav{
         font-size: 13px;
         display: inline-block;
-        max-width: 180px;
+        max-width: 140px;
+        max-width: 140px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -714,7 +716,8 @@ main .btn-send:hover {
         display: flex;
         flex-direction: column;
         bottom: 3px;
-        left: 2.5rem;
+        left: 1.5rem;
+        left: 1.5rem;
         right: 1.5rem;
         height: 150px;
     }
@@ -1165,7 +1168,8 @@ main .btn-send:hover {
         .managerOtherDetails{
             font-size: 12px;
             display: inline-block;
-            max-width: 220px;
+            max-width: 140px;
+            max-width: 140px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1174,7 +1178,8 @@ main .btn-send:hover {
         .emailNav{
             font-size: 13px;
             display: inline-block;
-            max-width: 220px;
+            max-width: 140px;
+            max-width: 140px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1515,7 +1520,8 @@ main .btn-send:hover {
 .cardReport .bottom .content {
     position: absolute;
     bottom: 3px;
-    left: 2.5rem;
+    left: 1.5rem;
+    left: 1.5rem;
     right: 1.5rem;
     height: 125px;
 }
@@ -1529,6 +1535,7 @@ main .btn-send:hover {
 .managerOtherDetails{
     font-size: 12px;
     display: inline-block;
+    max-width: 244px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -1770,3 +1777,80 @@ main .btn-send:hover {
     background-color: #f0f0f0;
     border-left: 4px solid #007bff;
 }
+
+.timeline {
+    position: relative;
+    padding: 0px 0;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 15px;
+    width: 2px;
+    height: 100%;
+    background-color: #e9ecef;
+  }
+  .timeline-item {
+    position: relative;
+    padding: 0px 0 15px 35px;
+  }
+  .timeline-icon {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 3px solid #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+  .timeline-content {
+    background: #fff;
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #e9ecef;
+  }
+  .timeline-date {
+    font-size: 12px;
+    color: #6c757d;
+  }
+  .profile-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #e9ecef;
+    border-radius: 5px;
+  }
+  .profile-card img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .fs12 {
+    font-size: 12px;
+  }
+
+  .aiChip {
+    border: 1px solid #02114f;
+    padding: 6px 7px 8px;
+    border-radius: 15px;
+    font-size: 11px;
+    background-color: #eaedf9;
+  }
+  .textAI {
+    background-color: #eaedf9;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    padding: 10px;
+  }
+  .feedBackMsg {
+    border-left: 2px solid orange;
+    padding-left: 10px;
+  }

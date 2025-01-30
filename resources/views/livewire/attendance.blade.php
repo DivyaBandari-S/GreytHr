@@ -1,4 +1,12 @@
 <div>
+<div class="position-absolute" wire:loading
+        wire:target="dateClicked,openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .date-range-container12-attendance-info {
             margin-right: 62px;
@@ -1393,7 +1401,8 @@ color: #fff;
 
         <div class="row m-0" style="text-align: end;">
             <div class="col-md-12">
-                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton">My Regularisations</a>
+                <a href="/regularisation" class="btn btn-primary mb-3 my-button-attendance-info {{ request()->is('regularisation') ? 'active-bg1223' : '' }}" id="myButton"wire:click="redirectToRegularisation">My Regularisations</a>
+                  
             </div>
         </div>
 
@@ -1504,12 +1513,12 @@ color: #fff;
                     </div>
                 </div>
                 <div class="col-md-2 mt-5" style="text-align: center">
-                    <a href="#" class="attendanceperiod" wire:click="öpenattendanceperiodModal">
+                    <a href="#" class="attendanceperiod" wire:click="openattendanceperiodModal">
                         Insights
                     </a>
                 </div>
             </div>
-            @if ($öpenattendanceperiod==true)
+            @if ($openattendanceperiod==true)
             
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-lg modal-dialog-centered " role="document">
@@ -1520,8 +1529,8 @@ color: #fff;
 
                             </p>
 
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
-                                <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
+                            <button type="button" class="close" aria-label="Close" wire:click="closeattendanceperiodModal" style="background: none; border: none;">
+                              <span aria-hidden="true" class="close-btn" style="color: white; font-size: 30px;">×</span>
                             </button>
                         </div>
                         <div class="modal-body">
@@ -1532,12 +1541,12 @@ color: #fff;
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="start_date_for_insights" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="fromDate" wire:model="startDateForInsights" value="{{ $start_date_for_insights }}" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
                                         Date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="to_date" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="toDate" value="{{ $to_date }}" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
                             <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
@@ -1671,84 +1680,96 @@ color: #fff;
 
 
                                 @if ($day)
-                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if(($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L')&&$day['onleave']==true) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth ? ($isWeekend ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1||$day['onFullDayLeave'])rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
+                                         
+                                @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if(($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L')&&$day['onleave']==true) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth&&(strtotime($formattedDate) > $employeeHireDate->timestamp) ? ($isWeekend && (strtotime($formattedDate) > $employeeHireDate->timestamp) ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1||$day['onFullDayLeave'])rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
                                     <div>
 
-                                       @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend)
-                                                <div style="background-color:#edfaed;margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
+                                       @if($day['status']=='HP'&&!$day['isToday']&&!$isWeekend&& strtotime($formattedDate) > $employeeHireDate->timestamp)
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#edfaed' : ($day['halfdaypresentforsession2'] ? '#fcf0f0' : '') }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
                                                          <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
-                                                        <span class="text-secondary"title="Present">P</span>
+                                                        <span style="color:   {{ $day['halfdaypresentforsession1'] ? '#7f8fa4' : ($day['halfdaypresentforsession2'] ? '#f66' : '') }}"title="{{ $day['halfdaypresentforsession1'] ? 'Present' : ($day['halfdaypresentforsession2'] ? 'Absent' : '') }}">{{ $day['halfdaypresentforsession1'] ? 'P' : ($day['halfdaypresentforsession2'] ? 'A' : '') }}</span>
                                                         
                                                 </div>
                                                 
 
-                                       @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend)  
+                                       @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend&& strtotime($formattedDate) > $employeeHireDate->timestamp)  
                                           <div style="background-color:{{ $day['onHalfDayLeave'] == true 
-                                                                                                                ? ((($day['session2leave']== [["Session 1"]])||$day['session2leave']== [["Session 1","Session 2"]]) ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
+                                                                                                                ? ((($day['session2leave']== [["Session 1"]])||$day['session2leave']== [["Session 1","Session 2"]]) ? 'rgb(252, 242, 255)' :(($day['halfdaypresent'] == 'HP'||$day['halfdaypresent'] == 'P') ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
                                                                                                             }};margin:-3px;height: 45px;display: flex; justify-content: center; align-items: center;position: relative;">
                                                         
                                                         <span style="position: absolute; left: 2px;top:2px;">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
-                                                        @if(($day['status'] == 'CLP'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'CLP'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @if(($day['status'] == 'CLP'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'CLP'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave Probation">CLP</span>
-                                                        @elseif(($day['status'] == 'SL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'SL'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'SL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'SL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Sick Leave">SL</span>
-                                                        @elseif(($day['status'] == 'LOP'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'LOP'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'LOP'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'LOP'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Loss Of Pay">LOP</span>
-                                                        @elseif(($day['status'] == 'CL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'CL'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'CL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'CL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Casual Leave">CL</span>
-                                                        @elseif(($day['status'] == 'ML'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'ML'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'ML'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'ML'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Marriage Leave">ML</span>
-                                                        @elseif(($day['status'] == 'PL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'PL'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'PL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'PL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Paternity Leave">PL</span>
-                                                        @elseif(($day['status'] == 'MTL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'MTL'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'MTL'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'MTL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Maternity Leave">MTL</span>
-                                                        @elseif(($day['status'] == 'L'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'SL'&&$day['session2leave']== [["Session 1","Session 2"]]))
+                                                        @elseif(($day['status'] == 'L'&&$day['session2leave']==[["Session 1"]])||($day['leavestatusforsession1'] == 'SL'&&$day['session2leave']== [["Session 1","Session 2"]])&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  rgb(252, 242, 255);color: #7f8fa4;text-align:center; padding-left: 30px;margin-right: 20px;white-space: nowrap;padding-top:5px"title="Leave">L</span>
 
                                                         
                                                    
-                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='A')
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='A'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:  #fcf0f0;color: #f66;text-align:center;  margin-left: 7px;white-space: nowrap;padding-top:5px"title="Absent">A</span>
-                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP')
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='HP'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                              <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
-                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='P')
-                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-left:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
+                                                        @elseif($day['onHalfDayLeave']==true&&$day['halfdaypresent']=='P'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
+                                                             <span style="background-color:#edfaed; text-align:center; color: #7f8fa4; padding-right:30px; margin-left: 37px;white-space: nowrap;padding-top:10px"title="Present">P</span>
                                                         @endif     
                                                </div>   
                                        @else
                                                 <div>
-                                                        @if ($day['isToday'])
+                                                        @if ($day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                         <div style="background-color: rgb(2,17,79); color: white; border-radius: 50%; width: 24px; height: 24px; text-align: center; line-height: 24px;">
                                                             {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                                         </div>
                                                         @else
-                                                        {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
+                                                         
+                                                          @if(strtotime($formattedDate) < $employeeHireDate->timestamp)
+                                                                @php
+                                                                     $formattedMonth = date('m', strtotime($formattedDate)); // Extract the month from formattedDate
+                                                                     $hireMonth = $employeeHireDate->format('m');
+                                                                     $formattedYear = date('Y', strtotime($formattedDate));
+                                                                     $hireYear = $employeeHireDate->format('Y');
+                                                                @endphp
+                                                            <span style="color:{{($day['isCurrentMonth']==true && !$isWeekend && ($formattedMonth==$hireMonth) && ($formattedYear==$hireYear)) ? 'black': 'c5cdd4'}};">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                          @else
+                                                            <span style="color:{{($day['isCurrentMonth']==true && !$isWeekend) ? 'black': 'c5cdd4'}};">{{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}</span>
+                                                          @endif  
                                                         @endif
 
                                                 </div>
                                                 
 
                                        @endif
-                                        @if($day['onHalfDayLeave']==true&&!$day['isToday'])
+                                        @if($day['onHalfDayLeave']==true&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
 
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 14px; background-color: {{ $day['onHalfDayLeave'] == true 
-                                                                                                                ? ((($day['session2leave']== [["Session 2"]])||($day['session2leave']== [["Session 1","Session 2"]])) ? 'rgb(252, 242, 255)' :($day['halfdaypresent'] == 'HP' ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
+                                                                                                                ? ((($day['session2leave']== [["Session 2"]])||($day['session2leave']== [["Session 1","Session 2"]])) ? 'rgb(252, 242, 255)' :(($day['halfdaypresent'] == 'HP'||$day['halfdaypresent'] == 'P') ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
                                                                                                             }};">
                                             <!-- Render your grey circle -->
-                                            @if ($isWeekend&&$isCurrentMonth)
+                                            @if ($isWeekend&&$isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
 
                                             <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;"title="Off Day">
                                                 O
                                             </span>
-                                            @elseif($isCurrentMonth)
+                                            @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
 
 
-                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
+                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
                                                 @if($day['isPublicHoliday'])
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
@@ -1819,15 +1840,15 @@ color: #fff;
                                                 </span>
                                                 @endif
                                                 @endif
-                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 
-                                                @elseif($isCurrentMonth)
+                                                @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
-                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 70px;margin-right:20px; white-space: nowrap;">
+                                                    <p style="color: #a3b2c7;margin-top:{{( $day['session2leave']== [["Session 1"]]||$day['session2leave']==[["Session 2"]])? '-8px' : '5px'}};font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
                                                 @else
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
@@ -1839,9 +1860,9 @@ color: #fff;
                                                 @endif
                                         </div>
 
-                                        @elseif($day['status']=='HP'&&!$day['isToday'])
+                                        @elseif($day['status']=='HP'&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
 
-                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color:#fcf0f0;margin: -3px;">
+                                        <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};;margin: -3px;">
                                             <!-- Render your grey circle -->
                                             @if ($isWeekend&&$isCurrentMonth)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
@@ -1890,8 +1911,8 @@ color: #fff;
 
                                                 @if($day['status']=='HP')
                                                 
-                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:#f66;padding-left: 39px;margin-top: -5px;"title="Absent">
-                                                    A
+                                                <span style="padding-left:12px;width:10px;height:10px;border-radius:50%;color:{{ $day['halfdaypresentforsession1'] ? '#f66' : ($day['halfdaypresentforsession2'] ? '#7f8fa4' : '') }};padding-left: 39px;margin-top: -5px;"title="{{ $day['halfdaypresentforsession1'] ? 'Absent' : ($day['halfdaypresentforsession2'] ? 'Present' : '') }}">
+                                                     {{ $day['halfdaypresentforsession1'] ? 'A' : ($day['halfdaypresentforsession2'] ? 'P' : '') }}
                                                 </span>
                                                 @endif
                                                 
@@ -1907,23 +1928,23 @@ color: #fff;
                                                 </span>
                                                 @endif
                                                 @endif
-                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
-                                                @elseif($day['status']=='HP')
-                                                <div style="background-color:#fcf0f0;">
+                                                @elseif($day['status']=='HP'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
+                                                <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                         <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
                                                     </span>
                                                 </div>
-                                                @elseif($day['onHalfDayLeave']==true)
+                                                @elseif($day['onHalfDayLeave']==true&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <div style="background-color:#fcf0f0;">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-20px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                         <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
                                                     </span>
                                                 </div>
-                                                @elseif($isCurrentMonth)
+                                                @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
@@ -1941,16 +1962,16 @@ color: #fff;
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
                                             <!-- Render your grey circle -->
-                                            @if ($isWeekend&&$isCurrentMonth)
+                                            @if ($isWeekend&&$isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                             <i class="fas fa-tv" style="float:right;padding-left:8px;margin-top:-15px;"></i>
 
                                             <span style="text-align:center;color: #7f8fa4; padding-left:21px;padding-right:26px;margin-left: 6px;white-space: nowrap;"title="Off Day">
                                                 O
                                             </span>
-                                            @elseif($isCurrentMonth)
+                                            @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
 
 
-                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
+                                            @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp) <span style="display: flex; justify-content: center; align-items: center; width: 20px; height: 20px; border-radius: 50%; white-space: nowrap;">
 
                                                 @if($day['isPublicHoliday'])
                                                 <span style="background-color: #f3faff;text-align:center;color: #7f8fa4; padding-left: 30px; margin-left: 37px;white-space: nowrap;padding-top:5px"title="Holiday">H</span>
@@ -1995,15 +2016,15 @@ color: #fff;
                                                 </span>
                                                 @endif
                                                 @endif
-                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d')))
+                                                @if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
-                                                @elseif($day['status']=='HP')
+                                                @elseif($day['status']=='HP'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
                                                     <p style="color: #a3b2c7;font-weight: 400;">{{$employee->shift_type}}</p>
                                                 </span>
-                                                @elseif($isCurrentMonth)
+                                                @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
                                                     <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
@@ -2156,18 +2177,26 @@ color: #fff;
                             </p>
                             <p class="m-1 pb-2 attendance-legend-text">Holiday</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                        <div class="col-md-3 mb-2 pe-0" style="display: flex;margin-left:-10px">
                             <p class="mb-0">
-                                <i class="fas fa-calendar-day"></i>
+                              <img src="{{ asset('images/half-day-session1-present.png') }}"  height="20" width="20">
                             </p>
-                            <p class="m-1  pb-2 attendance-legend-text">Half Day</p>
+                            <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 1)</p>
                         </div>
-                        <div class="col-md-3 mb-2 pe-0" style="display: flex">
-                            <p class="mb-0">
-                                <i class="fas fa-battery-empty"></i>
-                            </p>
-                            <p class="m-1 attendance-legend-text">IT Maintanance</p>
-                        </div>
+                        <div class="d-flex" style="gap: 10px;"> 
+                            <div class="col-md-3 mb-2" style="display: flex;margin-left:-2px">
+                                <p class="mb-0">
+                                <img src="{{ asset('images/half-day-session2-present.png') }}"  height="20" width="20">
+                                </p>
+                                <p class="m-1  pb-2 attendance-legend-text">Half Day(Session 2)</p>
+                            </div>
+                            <div class="col-md-3 mb-2 pe-0" style="display: flex">
+                                <p class="mb-0">
+                                    <i class="fas fa-battery-empty"></i>
+                                </p>
+                                <p class="m-1 attendance-legend-text">IT Maintanance</p>
+                            </div>
+                          </div>   
                     </div>
                     @if(count($leaveTypes)>0)
                     <div class="row m-0 mb-3">
@@ -2207,8 +2236,10 @@ color: #fff;
             </div>
             @endif
             @if($defaultfaCalendar==0)
-            @livewire('attendance-table')
-
+            @livewire('attendance-table', [
+        'startDateForInsights' => $startDateForInsights, 
+        'toDate' => $toDate
+    ], key($startDateForInsights . $toDate))
             @endif
             <div class="col-md-5 custom-scrollbar-for-right-side-container">
                 @if($defaultfaCalendar==1)

@@ -36,7 +36,8 @@ use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
-
+use App\Models\EmpPersonalInfo;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class Home extends Component
 {
@@ -214,6 +215,138 @@ class Home extends Component
         }
     }
 
+    public function downloadPdf($month)
+    {
+        $month = Carbon::parse($month)->format('Y-m');
+
+        $salaryDivisions = [];
+        $empBankDetails = [];
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $empSalaryDetails = EmpSalary::join('salary_revisions', 'emp_salaries.sal_id', '=', 'salary_revisions.id')
+            ->where('salary_revisions.emp_id', $employeeId)
+            ->where('month_of_sal', 'like', $month . '%')
+            ->first();
+
+        if ($empSalaryDetails) {
+            $salaryDivisions = $empSalaryDetails->calculateSalaryComponents($empSalaryDetails->salary);
+            $empBankDetails = EmpBankDetail::where('emp_id', $employeeId)
+                ->where('id', $empSalaryDetails->bank_id)->first();
+            $employeePersonalDetails = EmpPersonalInfo::where('emp_id', $employeeId)->first();
+            // dd( $this->employeePersonalDetails);
+        } else {
+            // Handle the null case (e.g., log an error or set a default value)
+            $salaryDivisions = [];
+        }
+
+        // Generate PDF using the fetched data
+        if ($empSalaryDetails) {
+            $pdf = Pdf::loadView('download-pdf', [
+                'employees' =>  $this->employeeDetails,
+                'salaryRevision' =>  $salaryDivisions,
+                'empBankDetails' => $empBankDetails,
+                'rupeesInText' => $this->convertNumberToWords($salaryDivisions['net_pay']),
+                'salMonth' => Carbon::parse($month)->format('F Y')
+            ]);
+
+            $name = Carbon::parse($month)->format('MY');
+
+            return response()->streamDownload(function () use ($pdf) {
+                echo $pdf->stream();
+            }, 'payslip-' . $name . '.pdf');
+        }
+    }
+
+    public function convertNumberToWords($number)
+    {
+        // Array to represent numbers from 0 to 19 and the tens up to 90
+        $words = [
+            0 => 'zero',
+            1 => 'one',
+            2 => 'two',
+            3 => 'three',
+            4 => 'four',
+            5 => 'five',
+            6 => 'six',
+            7 => 'seven',
+            8 => 'eight',
+            9 => 'nine',
+            10 => 'ten',
+            11 => 'eleven',
+            12 => 'twelve',
+            13 => 'thirteen',
+            14 => 'fourteen',
+            15 => 'fifteen',
+            16 => 'sixteen',
+            17 => 'seventeen',
+            18 => 'eighteen',
+            19 => 'nineteen',
+            20 => 'twenty',
+            30 => 'thirty',
+            40 => 'forty',
+            50 => 'fifty',
+            60 => 'sixty',
+            70 => 'seventy',
+            80 => 'eighty',
+            90 => 'ninety'
+        ];
+
+        // Handle special cases
+        if ($number < 0) {
+            return 'minus ' . $this->convertNumberToWords(-$number);
+        }
+
+        // Handle numbers less than 100
+        if ($number < 100) {
+            if ($number < 20) {
+                return $words[$number];
+            } else {
+                $tens = $words[10 * (int) ($number / 10)];
+                $ones = $number % 10;
+                if ($ones > 0) {
+                    return $tens . ' ' . $words[$ones];
+                } else {
+                    return $tens;
+                }
+            }
+        }
+
+        // Handle numbers greater than or equal to 100
+        if ($number < 1000) {
+            $hundreds = $words[(int) ($number / 100)] . ' hundred';
+            $remainder = $number % 100;
+            if ($remainder > 0) {
+                return $hundreds . ' ' . $this->convertNumberToWords($remainder);
+            } else {
+                return $hundreds;
+            }
+        }
+
+        // Handle larger numbers
+        if ($number < 1000000) {
+            $thousands = $this->convertNumberToWords((int) ($number / 1000)) . ' thousand';
+            $remainder = $number % 1000;
+            if ($remainder > 0) {
+                return $thousands . ' ' . $this->convertNumberToWords($remainder);
+            } else {
+                return $thousands;
+            }
+        }
+
+        // Handle even larger numbers
+        if ($number < 1000000000) {
+            $millions = $this->convertNumberToWords((int) ($number / 1000000)) . ' million';
+            $remainder = $number % 1000000;
+            if ($remainder > 0) {
+                return $millions . ' ' . $this->convertNumberToWords($remainder);
+            } else {
+                return $millions;
+            }
+        }
+
+        // Handle numbers larger than or equal to a billion
+        return 'number too large to convert';
+    }
     public function getThisMonthLeaves()
     {
         $this->showModal = true;
@@ -365,6 +498,8 @@ class Home extends Component
                 'swipe_time' => now()->format('H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
+                'device_name'=>$platform,
+                'device_id'=>uniqid(),
             ]);
 
             // Set the message based on the swipe direction
@@ -423,7 +558,7 @@ class Home extends Component
         // Fetch employee details
         return EmployeeDetails::whereIn('emp_id', $employeeIds)
             ->take(6) // Limit to 6 for display
-            ->get(['emp_id', 'image','gender']);
+            ->get(['emp_id', 'image', 'gender']);
     }
 
     public function render()

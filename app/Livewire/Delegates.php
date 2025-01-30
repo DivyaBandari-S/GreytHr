@@ -6,6 +6,7 @@ use App\Helpers\FlashMessageHelper;
 use App\Mail\DelegateAddedNotification;
 use App\Models\Delegate;
 use App\Models\EmployeeDetails;
+use App\Models\HolidayCalendar;
 use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -48,7 +49,7 @@ class Delegates extends Component
     public $showalertmodel = false;
     public $file_path;
     public $deleteid;
-    public $editid;
+    public $editid=null;
     public $loginemp_id;
 
     public $retrievedData = [];
@@ -61,10 +62,11 @@ class Delegates extends Component
     ];
 
     public $messages = [
-        'workflow' => 'Please select Workflow.',
-        'fromDate' => 'From Date is required',
-        'toDate' => 'To Date is required',
-        'delegate' => 'Please select Delegatee.',
+        'workflow.required' => 'Please select Workflow.',
+        'fromDate.required' => 'From Date is required',
+        'toDate.required' => 'To Date is required',
+        'toDate.after_or_equal' => 'To Date must be a date after or equal to From Date',
+        'delegate.required' => 'Please select Delegatee.',
     ];
 
     public function updated($propertyName)
@@ -73,6 +75,7 @@ class Delegates extends Component
     }
     public function showForm()
     {
+        $this->resetForm();
         $this->showform = true;
     }
     public function hideForm()
@@ -99,9 +102,11 @@ class Delegates extends Component
     public function cancel()
     {
         $this->showalertmodel = false;
+        $this->editid=null;
     }
     public function editform($id)
     {
+        $this->resetErrorBag();
         $this->isedit = true;
         $this->editid = $id;
         $delegate = Delegate::findorfail($this->editid);
@@ -121,6 +126,19 @@ class Delegates extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $startOfMonth = now()->startOfMonth();
             $endOfMonth = now()->endOfMonth();
+            $holidays = HolidayCalendar::whereBetween('date', [$startOfMonth, $endOfMonth])
+                ->pluck('date') // Get only the 'date' column
+                ->map(fn($date) => Carbon::parse($date)->toDateString()) // Ensure dates are in string format
+                ->toArray();
+
+                $fromDate = Carbon::parse($this->fromDate);
+                $toDate = Carbon::parse($this->toDate);
+
+                // Check if from_date or to_date falls on a weekend or holiday
+                if ($fromDate->isWeekend() || $toDate->isWeekend() || in_array($fromDate->toDateString(), $holidays) || in_array($toDate->toDateString(), $holidays)) {
+                    FlashMessageHelper::flashError('The selected dates should not start or end on a holiday or weekend.');
+                    return;
+                }
 
             $totalDaysDelegated = Delegate::where('emp_id', $employeeId)
                 ->where('status', 1)
@@ -129,20 +147,78 @@ class Delegates extends Component
                         ->orWhereBetween('to_date', [$startOfMonth, $endOfMonth]);
                 })
                 ->get()
-                ->sum(function ($delegate) use ($startOfMonth, $endOfMonth) {
+                ->sum(function ($delegate) use ($startOfMonth, $endOfMonth, $holidays) {
                     $fromDate = Carbon::parse($delegate->from_date)->max($startOfMonth);
                     $toDate = Carbon::parse($delegate->to_date)->min($endOfMonth);
-                    return $toDate->diffInDays($fromDate) + 1; // Include the day itself
+                    $totalWeekdays = 0;
+                    while ($fromDate->lte($toDate)) {
+                        if (!$fromDate->isWeekend() && !in_array($fromDate->toDateString(), $holidays)) { // Check if the day is not Saturday or Sunday
+
+                            $totalWeekdays++;
+                        }
+                        $fromDate->addDay(); // Move to the next day
+                    }
+
+                    return $totalWeekdays;
                 });
+
+
 
             $fromDate = Carbon::parse($this->fromDate);
             $toDate = Carbon::parse($this->toDate);
             // Calculate the number of days in the new request
-            $newDaysRequested = $toDate->diffInDays($fromDate) + 1;
+            $newDaysRequested = 0;
+
+            // Loop through each date in the range
+            while ($fromDate->lte($toDate)) {
+                if (!$fromDate->isWeekend() && !in_array($fromDate->toDateString(), $holidays)) {
+                    // Increment only if the day is not a weekend or a holiday
+                    $newDaysRequested++;
+                }
+                $fromDate->addDay(); // Move to the next day
+            }
+
+            $currentediteddelecteddays = 0;
+            if ($this->isedit) {
+                $editingdelegate = Delegate::findorfail($this->editid);
+
+                $fromDate = Carbon::parse($editingdelegate->from_date);
+                $toDate = Carbon::parse($editingdelegate->to_date);
+
+
+                while ($fromDate->lte($toDate)) {
+                    if (!$fromDate->isWeekend() && !in_array($fromDate->toDateString(), $holidays)) {
+                        // Increment only if the day is not a weekend or a holiday
+                        $currentediteddelecteddays++;
+                    }
+                    $fromDate->addDay(); // Move to the next day
+                }
+            }
+
 
             // Validate against the maximum limit
-            if (($totalDaysDelegated + $newDaysRequested) > 5) {
+            if (($totalDaysDelegated + $newDaysRequested - $currentediteddelecteddays) > 5) {
                 FlashMessageHelper::flashError('You can only delegate up to 5 days per month.');
+                return;
+            }
+
+
+            // Check for overlapping delegations for the same workflow
+            $overlappingDelegations = Delegate::where('emp_id', $employeeId)
+            ->where('id', '!=', $this->editid)
+                ->where('workflow', $this->workflow)
+                ->where(function ($query) {
+                    $query->whereBetween('from_date', [$this->fromDate, $this->toDate])
+                        ->orWhereBetween('to_date', [$this->fromDate, $this->toDate])
+                        ->orWhere(function ($query) {
+                            $query->where('from_date', '<=', $this->fromDate)
+                                ->where('to_date', '>=', $this->toDate);
+                        });
+                })
+                ->exists();
+
+            if ($overlappingDelegations) {
+                FlashMessageHelper::flashError('The same workflow cannot overlap with the selected date range.');
                 return;
             }
 
@@ -217,6 +293,7 @@ class Delegates extends Component
         $this->fromDate = ''; // Reset from date
         $this->toDate = '';   // Reset to date
         $this->delegate = ''; // Reset delegate
+        $this->editid=null;
 
     }
 
@@ -237,6 +314,7 @@ class Delegates extends Component
 
     public function render()
     {
+
         $employeeId = auth()->guard('emp')->user()->emp_id;
         $this->loginemp_id = $employeeId;
         // Fetch records where emp_id or delegate contains the logged-in user's emp_id

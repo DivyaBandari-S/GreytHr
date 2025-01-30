@@ -302,17 +302,17 @@ var options = {
 // chart.render();
 
 // // chat screen js
-function openChatScreen () {
+function openChatScreen() {
     // $(this).parents("#contacts").addClass("hidden");
     $("#content-chart").addClass("active");
     $("#listCOntactDiv").addClass("hidden");
-};
+}
 
-function closeChatScreen (e) {
+function closeChatScreen(e) {
     // e.preventDefault();
     $("#listCOntactDiv").removeClass("hidden");
     $("#content-chart").removeClass("active");
-};
+}
 
 // function openMsgDiv() {
 //     $("#chatScreen").show();
@@ -345,11 +345,54 @@ function closeChatScreen (e) {
 document.addEventListener("DOMContentLoaded", function () {
     if (
         window.location.pathname === "/chat" ||
-        window.location.pathname === "/chat/"
+        window.location.pathname === "/chat/" ||
+        window.location.pathname === "/users" ||
+        window.location.pathname === "/calendar" ||
+        window.location.pathname === "/Settings"
     ) {
         document.body.id = "userPage";
     }
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname; // Get the current path
+    const menuLinks = document.querySelectorAll(".sidebar .menus a"); // Select all menu links
+
+    menuLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+
+        if (currentPath === linkHref) {
+            link.classList.add("active");
+            link.classList.add("active-side-dropdown");
+        } else {
+            link.classList.remove("active");
+            link.classList.remove("active-side-dropdown");
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const currentPath = window.location.pathname; // Get the current path
+    const menuLinks = document.querySelectorAll(".sidebar .menus a"); // Select all menu links
+
+    menuLinks.forEach((link) => {
+        const linkHref = link.getAttribute("href");
+
+        if (currentPath === linkHref) {
+            link.classList.add("active");
+            link.classList.add("active-side-dropdown");
+        } else {
+            link.classList.remove("active");
+            link.classList.remove("active-side-dropdown");
+        }
+    });
+});
+
+function openAIAssist() {
+    $(".reqModal").addClass("modal-lg");
+    $(".reqForm").addClass("col-md-7").removeClass("col-md-12");
+    $(".reqAssist").addClass("d-block").removeClass("d-none");
+}
 
 // document.addEventListener("DOMContentLoaded", () => {
 //     const emojiPicker = document.getElementById("emojiPicker");
@@ -400,5 +443,3 @@ document.addEventListener("DOMContentLoaded", function () {
 //             ? "block"
 //             : "none";
 // }
-
-

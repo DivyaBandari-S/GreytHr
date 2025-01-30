@@ -636,6 +636,22 @@ public function nextMonth()
     }
 }
  
+public function beforeMonth()
+{
+    try {
+        
+      $this->date = Carbon::create($this->year, $this->month, 1)->addMonth();
+        
+        $this->year = $this->date->year;
+        $this->month = $this->date->month;
+        $daysInMonth2 = $this->getDaysInMonth($this->year, $this->month);
+        $this->generateCalendar();
+        $this->selectedDates=[];
+    } catch (\Exception $e) {
+        Log::error('Error in nextMonth method: ' . $e->getMessage());
+        // Handle the error as needed, such as displaying a message to the user
+    }
+}
     //This function will calculate the no of days in a month
     public function getDaysInMonth($year, $month)
     {
@@ -707,6 +723,10 @@ public function nextMonth()
             Log::error('Error in deleteStoredArray method: ' . $e->getMessage());
             // You might want to inform the user about the error or take other appropriate actions
         }
+    }
+    public function redirectToAttendance()
+    {
+        return redirect('/Attendance');
     }
     //This function will store regularisation details in the database
     public function storearraydates()
@@ -818,6 +838,10 @@ public function applyButton()
         FlashMessageHelper::flashError('An error occurred while applying.');
         
     }
+}
+public function redirectToRegularisation()
+{
+    return redirect('/regularisation');
 }
 //This function will show the page where we can see the pending regularisation details
 public function pendingButton()

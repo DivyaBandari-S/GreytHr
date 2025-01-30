@@ -1329,7 +1329,7 @@ td {
     cursor: pointer;
     font-weight: 500;
     /* padding: 0 auto; */
-    margin: 2px auto;
+    /* margin: 2px auto; */
 }
 
 .nav-item-content {
@@ -1533,6 +1533,7 @@ td {
     color: #7f8fa4;
     font-size: 14px;
 }
+
 
 .horizontal-line-attendance-info {
     width: 100%;
@@ -2240,7 +2241,15 @@ input[type="date"]::before {
 
 /*Ending of submodule:who is in(Pranita Priyadarshi)*/
 /*Starting of submodule:employee swipes(Pranita Priyadarshi)*/
-
+.button-container-for-employee-swipes {
+    display: flex;
+    justify-content: center;
+    padding: 10px 10px;
+    margin:10px;
+    margin-top:30px;
+    /* margin-right: 250px; */
+    /* Adjust as needed for alignment */
+}
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
@@ -2406,6 +2415,7 @@ td {
 .dropdown-container1-employee-swipes {
     margin-left: 10px;
     position: relative;
+    margin-top: 15px;
 }
 
 .dropdown-container1-employee-swipes input[type="date"] {
@@ -2517,7 +2527,7 @@ td {
 .employee-swipes-emp-id {
     font-size: 10px;
     margin-left: 6px;
-    padding-left: 11px;
+
 }
 
 .employee-swipes-swipe-details-for-signed-employees {
@@ -2720,37 +2730,6 @@ td {
 /*ending of attendance submodule:attendance muster(Pranita Priyadarshi)*/
 
 /* start of feeds(Archana) */
-#quill-editor {
-    height: 200px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px; /* Ensuring there's space inside the editor */
-    background-color: #fff; /* Ensuring the background is white */
-}
-
-.ql-toolbar {
-    border: 1px solid #ccc;
-    padding: 8px;
-    border-radius: 6px;
-}
-
-.ql-container {
-    min-height: 150px;
-}
-
-.ql-editor {
-    min-height: 150px; /* Ensuring the editor area has a min-height */
-    outline: none; /* Prevent outline issues */
-    padding: 10px;
-}
-#editor {
-            width: 100%;
-            height: 300px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-family: 'Segoe UI Emoji', Arial, sans-serif;
-        }
-    
 .post-card {
     background-color: #fff;
     border-radius: 10px;
@@ -2809,7 +2788,7 @@ td {
 }
 
 .profile-name-wrapper {
-   
+
 }
 
 .post-profile-name {
@@ -2991,7 +2970,7 @@ td {
     border: 1px solid rgb(2, 17, 79);
     font-weight: 500;
     border-radius: 5px;
- 
+
     padding: 4px 10px;
     width: 60px;
     height: 20px;
@@ -7452,27 +7431,20 @@ select .yearSelect {
     font-family: "Montserrat", sans-serif;
 }
 
-.delegate-header {
+.delegate-cell-header {
     background-color: rgb(2, 17, 79);
     color: white;
     height: 40px;
+    font-size: 12px;
     text-align: center;
+    padding: 2px;
 }
 
 .delegate-cell {
     border: 1px solid #8d939d;
-    font-size: 10px;
-    text-align: left;
-    padding: 5px;
-}
-.delegate-cell-header {
-    border: 1px solid #8d939d;
-    font-size: 11px;
+    font-size: 9px;
     text-align: center;
-    padding: 5px;
-}
-.fa-trash, .fa-edit{
-    cursor: pointer;
+    padding: 2px 3px;
 }
 
 .delegate-row {
@@ -7723,7 +7695,7 @@ select .yearSelect {
 }
 
 .payslip-card:hover:before {
-    transform: scale(28);
+    transform: scale(32);
 }
 
 .payslip-card:hover .payslip-small-desc {
@@ -10058,7 +10030,7 @@ peoples module styles started */
         border: 1px solid #ccc;
     }
 
-   
+
     .approved-leave {
         display: flex;
         flex-direction: column;
@@ -10194,7 +10166,7 @@ peoples module styles started */
     .dropdown-for-shift-roster-download-and-dropdown
     {
         width: 48%;
-      
+
     }
     .shift-roster-download-and-dropdown-for-attendance-muster
     {
@@ -10209,8 +10181,8 @@ peoples module styles started */
     .arrow-who-is-in
     {
         cursor: pointer;
-        
-        
+
+
     }
 }
 @media (max-width: 920px) {
@@ -10883,7 +10855,7 @@ input[type="date"] {
         background: white;
         border: 1px solid #ccc;
         border-radius: 8px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
         height: 167px;
         width: 200px;
         overflow-y: scroll;

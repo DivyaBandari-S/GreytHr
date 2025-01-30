@@ -1,4 +1,12 @@
 <div>
+<div class="position-absolute" wire:loading
+        wire:target="applyButton,pendingButton,historyButton,storearraydates,redirectToAttendance">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
+        </div>
+    </div>
     <style>
         .button-container {
             display: flex;
@@ -955,7 +963,7 @@
     </div>
     @endif
     <div class="container">
-        <a href="/Attendance" class="submit-btn" style="text-decoration:none;">Back</a>
+        <a href="/Attendance" class="submit-btn" style="text-decoration:none;"wire:click="redirectToAttendance">Back</a>
         <!-- Check for success message -->
 
 

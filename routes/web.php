@@ -83,6 +83,7 @@ use App\Livewire\TeamOnLeaveChart;
 use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
 use App\Livewire\Chat\EmployeeList;
+use App\Livewire\Chat\ChatCalendar;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -104,6 +105,7 @@ use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\GiveKudos;
 use App\Livewire\LeaveBalancesChart;
+use App\Livewire\LoansAndAdvances;
 use App\Livewire\MarriageLeaveBalance;
 use App\Livewire\MaternityLeaveBalance;
 use App\Livewire\OrganisationChart;
@@ -319,6 +321,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
+    Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
@@ -364,6 +367,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
+    Route::get('/calendar', ChatCalendar::class)->name('calendar');
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
@@ -499,9 +503,9 @@ Route::get('/clear', function () {
     return 'Log contents cleared, and caches have been cleared and optimized!';
 });
 
+
 Route::get('/test-odbc', function () {
     try {
-        // Updated DSN for SQL Server
         $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
@@ -515,6 +519,13 @@ Route::get('/test-odbc', function () {
     }
 });
 
+Route::get('/test-env', function () {
+    $dsn = getenv('DB_ODBC_DSN') ?: env('DB_ODBC_DSN');
+    $username = getenv('DB_ODBC_USERNAME') ?: env('DB_ODBC_USERNAME');
+    $password = getenv('DB_ODBC_PASSWORD') ?: env('DB_ODBC_PASSWORD');
+
+    dd($dsn, $username, $password);
+});
 
 
 Route::get('/test-odbc-env', function () {
@@ -560,7 +571,7 @@ Route::get('/test-odbc-dir', function () {
         // Define your table name and user ID
         $tableName = 'DeviceLogs_1_2025'; // Replace with your actual table name
         $normalizedUserId = 'XSS0480'; // Replace with your actual user ID
-        $today = now()->subYear()->toDateString();// Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
+        $today = now()->subYear()->toDateString(); // Get today's date in 'Y-m-d' format, e.g., '2024-12-31'
 
         // Fetch data using raw PDO query
         $stmt = $dbh->prepare("SELECT UserId, logDate, Direction
