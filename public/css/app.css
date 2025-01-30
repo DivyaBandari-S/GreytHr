@@ -2244,8 +2244,9 @@ input[type="date"]::before {
 .button-container-for-employee-swipes {
     display: flex;
     justify-content: center;
-    padding: 10px;
+    padding: 10px 10px;
     margin:10px;
+    margin-top:30px;
     /* margin-right: 250px; */
     /* Adjust as needed for alignment */
 }
@@ -2414,6 +2415,7 @@ td {
 .dropdown-container1-employee-swipes {
     margin-left: 10px;
     position: relative;
+    margin-top: 15px;
 }
 
 .dropdown-container1-employee-swipes input[type="date"] {

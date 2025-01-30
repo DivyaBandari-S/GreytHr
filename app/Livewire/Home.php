@@ -498,6 +498,8 @@ class Home extends Component
                 'swipe_time' => now()->format('H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
+                'device_name'=>$platform,
+                'device_id'=>uniqid(),
             ]);
 
             // Set the message based on the swipe direction
