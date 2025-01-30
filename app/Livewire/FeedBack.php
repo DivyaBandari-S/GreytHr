@@ -129,6 +129,15 @@ class FeedBack extends Component
         $this->selectedEmployee = null;
     }
 
+    public function updatedFeedbackMessage()
+    {
+        dd('');
+        // Remove spaces and check length
+        if (strlen(trim(preg_replace('/\s+/', '', $value))) < 5) {
+            $this->feedbackMessage = ''; // Reset if less than 5 non-space chars
+        }
+    }
+
     public function saveFeedback()
     {
         $this->validate();
@@ -189,19 +198,33 @@ class FeedBack extends Component
         switch ($this->activeTab) {
             case 'received':
                 $query->where(function ($q) use ($empId) {
+                    // Feedbacks received by the logged-in user (feedback_to)
                     $q->where('feedback_to', $empId)
-                        ->where('feedback_type', 'request')
                         ->where(function ($q2) {
-                            $q2->where('is_accepted', true)
-                                ->orWhere('is_declined', true);
+                            $q2->where('feedback_type', 'request')
+                                ->where(function ($q3) {
+                                    $q3->where('is_accepted', true)
+                                        ->orWhere('is_declined', true);
+                                })
+                                ->orWhere('feedback_type', 'give'); // Ensure "Give Feedback" appears for receiver
                         });
                 })->orWhere(function ($q) use ($empId) {
+                    // Feedbacks sent by the logged-in user (feedback_from)
                     $q->where('feedback_from', $empId)
-                        ->whereNotNull('replay_feedback_message');
+                        ->where(function ($q2) {
+                            $q2->whereNotNull('replay_feedback_message')
+                                ->orWhere('is_declined', true);
+                        });
+                })->where(function ($q) use ($empId) {
+                    // Ensure only sender and receiver see the feedback
+                    $q->where('feedback_from', $empId)
+                        ->orWhere('feedback_to', $empId);
                 });
 
                 $this->setFeedbackMetadata('request_feedback.jpg', 'See what your coworkers have to say!');
                 break;
+
+
 
             case 'given':
                 $query->where('feedback_from', $empId)
@@ -443,18 +466,37 @@ class FeedBack extends Component
     public function declineFeedback($feedbackId)
     {
         $feedback = FeedbackModel::find($feedbackId);
+
         if (!$feedback) {
             FlashMessageHelper::flashError('Feedback not found.');
             return;
         }
 
-        // Mark as declined
+        // Mark feedback as declined
         $feedback->update(['is_declined' => true]);
 
+        // Get sender's email (feedback_from)
+        $sender = $feedback->feedbackFromEmployee; // Ensure the relationship exists
+
+        if ($sender && isset($sender->email)) {
+            try {
+                // Define subject dynamically
+                $subject = 'Your ' . ucfirst($feedback->feedback_type) . ' Feedback Has Been Declined';
+
+                // Send an email notification
+                Mail::to($sender->email)->send(new FeedbackNotificationMail($feedback, $subject));
+            } catch (\Exception $e) {
+                Log::error('Email Sending Failed: ' . $e->getMessage());
+                FlashMessageHelper::flashWarning('Feedback declined, but email notification could not be sent.');
+            }
+        }
+
         FlashMessageHelper::flashSuccess('Feedback declined successfully.');
+
         // Refresh feedback list
         $this->loadTabData($this->activeTab);
     }
+
 
     public function editGiveFeedback($feedbackId)
     {

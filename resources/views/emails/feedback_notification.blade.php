@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Feedback Notification</title>
 </head>
+
 <body>
     <h2>{{ $feedbackStatus }}</h2>
     <p><strong>From:</strong> {{ $feedbackFrom }}</p>
@@ -12,10 +14,17 @@
     <p><strong>Time:</strong> {{ $feedbackTime }}</p>
 
     <!-- Display reply message if it exists -->
-    @if(!empty($replayFeedbackMessage))
+    @if (!empty($replayFeedbackMessage))
         <p><strong>Reply:</strong> {{ $replayFeedbackMessage }}</p>
+    @endif
+    @if ($feedback->is_declined)
+        <p style="color: red;">
+            <strong>Note:</strong> Your feedback request has been declined by
+            <strong>{{ $receiverName }}</strong> (#{{ $receiverId }}).
+        </p>
     @endif
 
     <p>Thank you!</p>
 </body>
+
 </html>

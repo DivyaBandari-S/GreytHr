@@ -503,9 +503,9 @@ Route::get('/clear', function () {
     return 'Log contents cleared, and caches have been cleared and optimized!';
 });
 
+
 Route::get('/test-odbc', function () {
     try {
-        // Updated DSN for SQL Server
         $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
@@ -519,6 +519,13 @@ Route::get('/test-odbc', function () {
     }
 });
 
+Route::get('/test-env', function () {
+    $dsn = getenv('DB_ODBC_DSN') ?: env('DB_ODBC_DSN');
+    $username = getenv('DB_ODBC_USERNAME') ?: env('DB_ODBC_USERNAME');
+    $password = getenv('DB_ODBC_PASSWORD') ?: env('DB_ODBC_PASSWORD');
+
+    dd($dsn, $username, $password);
+});
 
 
 Route::get('/test-odbc-env', function () {
