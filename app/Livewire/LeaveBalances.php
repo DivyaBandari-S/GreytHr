@@ -99,6 +99,7 @@ class LeaveBalances extends Component
         try {
             $this->selectedYear = Carbon::now()->format('Y'); // Initialize to the current year
             $this->updateLeaveBalances();
+            $this->yearDropDown();
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->showCasualLeaveProbation = $this->employeeDetails && empty($this->employeeDetails->confirmation_date);
@@ -142,7 +143,7 @@ class LeaveBalances extends Component
                 }
 
                 $this->sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
-                $this->sickLeaveOpeningPerYear = EmployeeLeaveBalances::getOpeningLeaveBalancePerYear($this->employeeId, 'Sick Leave');
+                $this->sickLeaveOpeningPerYear = EmployeeLeaveBalances::getOpeningLeaveBalancePerYear($this->employeeId, 'Sick Leave', $this->currentYear);
                 // Combine the balances into one variable
                 $this->totalCombinedSickLeavePerYear = $this->sickLeavePerYear + $this->sickLeaveOpeningPerYear;
                 // Debugging output
@@ -317,7 +318,7 @@ class LeaveBalances extends Component
             $selectedYear = now()->year;
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
-            $sickLeaveOpeningPerYear = EmployeeLeaveBalances::getOpeningLeaveBalancePerYear($employeeId, 'Sick Leave');
+            $sickLeaveOpeningPerYear = EmployeeLeaveBalances::getOpeningLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedYear);
             // Combine the balances into one variable
             $totalCombinedSickLeavePerYear = $sickLeavePerYear + $sickLeaveOpeningPerYear;
             $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedYear);

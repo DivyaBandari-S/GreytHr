@@ -65,11 +65,12 @@ class EmployeeLeaveBalances extends Model
         return 0;
     }
 
-    public static function getOpeningLeaveBalancePerYear($employeeId, $leaveName)
+    public static function getOpeningLeaveBalancePerYear($employeeId, $leaveName, $year)
     {
         try {
             // Retrieve all records with the given employee ID and 'opening balance' status
             $openbalances = self::where('emp_id', $employeeId)
+                ->where('granted_for_year', '!=', $year)
                 ->where('status', 'opening balance')
                 ->get();
 
