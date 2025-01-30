@@ -486,26 +486,33 @@ Route::get('/taskfile/{id}', function ($id) {
 
 
 Route::get('/clear', function () {
-    // Clear the contents of all log files
+    // Clear log files
     $logFiles = File::glob(storage_path('logs/*.log'));
     foreach ($logFiles as $file) {
-        File::put($file, ''); // This will empty the file without deleting it
+        File::put($file, ''); // Empty log file
     }
-    // Perform other Artisan commands
-    Artisan::call('cache:clear');
+
+    // Force clear and reload .env configurations
     Artisan::call('config:clear');
-    Artisan::call('optimize');
-    Artisan::call('optimize:clear');
+    Artisan::call('cache:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
     Artisan::call('auth:clear-resets');
+    Artisan::call('optimize:clear');
     Artisan::call('config:cache');
-    return 'Log contents cleared, and caches have been cleared and optimized!';
+
+    return response()->json([
+        'message' => 'Logs cleared, caches cleared, and optimized!',
+        'APP_ENV' => env('APP_ENV'),
+        'DB_ODBC_DSN' => env('DB_ODBC_DSN'),
+        'DB_ODBC_USERNAME' => env('DB_ODBC_USERNAME'),
+        'DB_ODBC_PASSWORD' => env('DB_ODBC_PASSWORD'),
+    ]);
 });
+
 
 Route::get('/test-odbc', function () {
     try {
-        // Updated DSN for SQL Server
         $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
@@ -519,6 +526,13 @@ Route::get('/test-odbc', function () {
     }
 });
 
+Route::get('/test-env', function () {
+    $dsn = getenv('DB_ODBC_DSN') ?: env('DB_ODBC_DSN');
+    $username = getenv('DB_ODBC_USERNAME') ?: env('DB_ODBC_USERNAME');
+    $password = getenv('DB_ODBC_PASSWORD') ?: env('DB_ODBC_PASSWORD');
+
+    dd($dsn, $username, $password);
+});
 
 
 Route::get('/test-odbc-env', function () {
