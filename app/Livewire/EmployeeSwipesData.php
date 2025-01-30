@@ -35,6 +35,14 @@ class EmployeeSwipesData extends Component
     public $accessCardDetails;
     public $endDate;
 
+
+
+
+
+
+
+
+
     public $selectedWebEmployeeId;
     public $deviceId;
     public $selectedEmployeeId;
@@ -243,27 +251,53 @@ class EmployeeSwipesData extends Component
     public function handleEmployeeSelection()
     {
         $parts = explode('-', $this->selectedEmployeeId);
-
-
         $this->doorSwipeTime = $parts[3];
         $this->selectedEmployeeId = $parts[0] . '-' . $parts[1];
+
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
         $normalizedId = str_replace('-', '', $this->selectedEmployeeId);
+
         // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-        $this->accessCardDetails = DB::connection('sqlsrv')
-            ->table(table: $tableName)
-            ->where('UserId', $normalizedId)
+        $tableName = "DeviceLogs_{$month}_{$year}";
 
-            ->value('UserId');
-        $this->deviceId =  DB::connection('sqlsrv')
-            ->table(table: $tableName)
-            ->where('UserId', $normalizedId)
+        if (env('APP_ENV') === 'local') {
+            // ✅ Local: Use Laravel's sqlsrv connection
+            $this->accessCardDetails = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('UserId');
 
-            ->value('DeviceId');
+            $this->deviceId = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('DeviceId');
+        } else {
+            // ✅ Production: Use Direct ODBC PDO Connection
+            $dsn = trim(env('DB_ODBC_DSN')) ?: 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+            $username = trim(env('DB_ODBC_USERNAME')) ?: 'essl';
+            $password = trim(env('DB_ODBC_PASSWORD')) ?: 'essl';
+
+            try {
+                $pdo = new \PDO($dsn, $username, $password, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                ]);
+
+                $stmt = $pdo->prepare("SELECT UserId, DeviceId FROM $tableName WHERE UserId = ?");
+                $stmt->execute([$normalizedId]);
+
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                $this->accessCardDetails = $result['UserId'] ?? null;
+                $this->deviceId = $result['DeviceId'] ?? null;
+            } catch (\Exception $e) {
+                $this->accessCardDetails = null;
+                $this->deviceId = null;
+            }
+        }
     }
+
     public function updateDate()
     {
 
@@ -276,7 +310,7 @@ class EmployeeSwipesData extends Component
         // $this->selectedWebEmployeeId=$this->selectedWebEmployeeId;
         $parts = explode('-', $this->selectedWebEmployeeId);
 
-        $this->selectedWebEmployeeId = $parts[0].'-'.$parts[1];
+        $this->selectedWebEmployeeId = $parts[0] . '-' . $parts[1];
         $this->swipeTime = $parts[3];
         $this->webSwipeDirection = $parts[4];
         $this->webDeviceName = SwipeRecord::where('emp_id', $this->selectedWebEmployeeId)->where('in_or_out', $this->webSwipeDirection)->where('swipe_time', $this->swipeTime)->whereDate('created_at', $this->startDate)->value('device_name');
@@ -296,9 +330,8 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id',$userId)
-                ->where('employee_status', 'active')
                 ->orWhere('emp_id', $userId)
+                ->where('employee_status', 'active')
                 ->get();
 
             $swipeData = [];
@@ -383,7 +416,6 @@ class EmployeeSwipesData extends Component
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
         $tableName = "DeviceLogs_{$month}_{$year}";
-
         try {
             if (env('APP_ENV') === 'local') {
                 // ✅ Local: Use Laravel SQLSRV connection
@@ -398,10 +430,15 @@ class EmployeeSwipesData extends Component
                     $externalSwipeLogs = collect();
                 }
             } else {
-                // ✅ Server: Use Direct ODBC PDO Connection
-                $dsn = env('DB_ODBC_DSN');
-                $username = env('DB_ODBC_USERNAME');
-                $password = env('DB_ODBC_PASSWORD');
+                // ✅ Server: Use ODBC connection from .env
+                $dsn = trim(env('DB_ODBC_DSN')) ?: 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+                $username = trim(env('DB_ODBC_USERNAME')) ?: 'essl';
+                $password = trim(env('DB_ODBC_PASSWORD')) ?: 'essl';
+
+
+                if (empty($dsn) || empty($username) || empty($password)) {
+                    throw new \Exception("Database connection details are missing in .env!");
+                }
 
                 $pdo = new \PDO($dsn, $username, $password, [
                     \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
@@ -410,9 +447,13 @@ class EmployeeSwipesData extends Component
                 $stmt = $pdo->prepare("SELECT UserId, logDate, Direction FROM $tableName WHERE UserId IN (" . implode(',', array_fill(0, count($normalizedIds), '?')) . ") AND CONVERT(DATE, logDate) = ?");
 
                 $stmt->execute([...$normalizedIds, $today]);
-                $externalSwipeLogs = collect($stmt->fetchAll(\PDO::FETCH_ASSOC));
+
+                // ✅ Convert to object collection for Blade compatibility
+                $externalSwipeLogs = collect($stmt->fetchAll(\PDO::FETCH_ASSOC))->map(fn($log) => (object) $log);
             }
         } catch (\Exception $e) {
+            // ✅ Log the error for debugging
+            Log::error("Swipe Logs Error: " . $e->getMessage());
             $externalSwipeLogs = collect();
         }
 
@@ -439,6 +480,8 @@ class EmployeeSwipesData extends Component
 
         return array_values($filteredData);
     }
+
+
 
 
     public function render()
