@@ -60,12 +60,15 @@
             border-color: rgb(2, 17, 79);
             /* Change text color to white when clicked */
         }
-        
+        .custom-radio-class {
+    vertical-align: middle;
+    margin-bottom: 12px;
+}
 </style>
     <body>
         <div>
             <div class="employee-swipes-fields d-flex align-items-center">
-                <div class="dropdown-container1-employee-swipes">
+                <div class="dropdown-container1-employee-swipes"style="margin-top:5px;">
                     <label for="start_date" style="color: #666;font-size:12px;">Select Date<span style="color: red;">*</span>:</label><br />
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate" wire:change="updateDate"  max="{{ now()->toDateString() }}">
                       
@@ -74,13 +77,7 @@
                         <label for="end_date" style="color: #666;font-size:12px;">End Date<span style="color: red;">*</span>:</label><br />
                        <input type="date" style="font-size: 12px;" id="end_date" wire:model="endDate" wire:change="checkDates">
                 </div> -->
-                <div class="dropdown-container1-employee-swipes-for-date-type">
-                    <label for="dateType" style="color: #666;font-size:12px;">Date Type<span style="color: red;">*</span>:</label><br />
-                    <button class="dropdown-btn1" style="font-size: 12px;">Swipe Date</button>
-                    <div class="dropdown-content1-employee-swipes">
-
-                    </div>
-                </div>
+                
                 <div class="dropdown-container1-employee-swipes-for-search-employee">
                     <label for="dateType" style="color: #666;font-size:12px;">Employee Search</label><br />
 
@@ -140,7 +137,7 @@
                                                  @foreach($swipe['swipe_log'] as $log)
                                                      <tr>
                                                             <td class="employee-swipes-name-and-id">
-                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button"wire:model="selectedEmployeeId"
+                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
                wire:change="handleEmployeeSelection" />
                                                                 <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
                                                                         data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
@@ -180,18 +177,17 @@
                                             @foreach($SignedInEmployees as $swipe)
                                             @foreach($swipe['swipe_log'] as $index => $log)
                                                     <tr>
-                                                        <!-- Employee Details -->
-                                                        <td>
-                                                            <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ $log->swipe_time }}-{{ $log->in_or_out }}" class="radio-button"wire:model="selectedWebEmployeeId"
-                                                            wire:change="handleEmployeeWebSelection" />
-                                                            <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
-                                                                data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
-                                                                {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
-                                                            </span>
-                                                            <br />
-                                                            <span class="text-muted employee-swipes-emp-id">#{{ $swipe['employee']->emp_id }}</span>
-                                                        </td>
-
+                                                    <td class="employee-swipes-name-and-id">
+                                                                       <input type="radio" name="selectedEmployee" value="{{ $swipe['employee']->emp_id }}-{{ $loop->index }}-{{ \Carbon\Carbon::parse($log->logDate)->format('H:i:s') }}" class="radio-button custom-radio-class"wire:model="selectedEmployeeId"
+               wire:change="handleEmployeeSelection" />
+                                                                <span style="width:100px; display: inline-block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" data-toggle="tooltip"
+                                                                        data-placement="top" title="{{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}">
+                                                                        {{ ucwords(strtolower($swipe['employee']->first_name)) }} {{ ucwords(strtolower($swipe['employee']->last_name)) }}
+                                                                </span>
+                                                                <br />
+                                                                <span class="text-muted employee-swipes-emp-id">#{{$swipe['employee']->emp_id}}</span>
+                                                            </td>
+                                                      
                                                         <!-- Swipe Log Details -->
                                                         <td>
                                                              {{ $log->swipe_time }}<br />
