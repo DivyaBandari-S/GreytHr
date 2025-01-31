@@ -64,6 +64,11 @@
     vertical-align: middle;
     margin-bottom: 12px;
 }
+.history-button {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
 </style>
     <body>
         <div>
@@ -90,21 +95,21 @@
                 <div class="dropdown-container1-employee-swipes-for-download-and-filter d-flex">
                     <div class="dropdown-container1-employee-swipes">
 
-                        <button type="btn" class="button2" data-toggle="modal" data-target="#exampleModalCenter">
+                        <button type="btn" class="button2" data-toggle="modal" data-target="#exampleModalCenter"style="padding:5px;border-radius:5px;">
                             <i class="fa-solid fa-download" wire:click="downloadFileforSwipes"></i>
                         </button>
 
                     </div>
                     <div class="dropdown-container1-employee-swipes">
 
-                        <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top:30px;border-radius:2px;">
+                        <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter" style="margin-top:30px;border-radius:5px;padding:5px;">
                             <i class="fa-icon fas fa-filter" style="color:#666"></i>
                         </button>
 
                     </div>
                     <div class="button-container-for-employee-swipes">
                         <button class="my-button apply-button" style="background-color:{{ ($isApply == 1 && $defaultApply == 1) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isApply == 1 && $defaultApply == 1) ? '#fff' : 'initial' }};" wire:click="viewDoorSwipeButton"><span style="font-size:10px;">View Door Swipe Data</span></button>
-                        <button class="my-button pending-button" style="background-color:{{ ($isPending==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isPending==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="viewWebsignInButton"><span style="font-size:10px;">View Web Sign-In Data</span></button>
+                        <button class="my-button history-button" style="background-color:{{ ($isPending==1&&$defaultApply==0) ? 'rgb(2,17,79)' : '#fff' }};color: {{ ($isPending==1&&$defaultApply==0) ? '#fff' : 'initial' }};" wire:click="viewWebsignInButton"><span style="font-size:10px;">View Web Sign-In Data</span></button>
                     </div>
                 </div>
             </div>
@@ -243,7 +248,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border">
+                <div class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border"style="margin-left:-8px;">
                     
                     <div class="green-section-employee-swipes p-2">
                         <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
@@ -262,7 +267,14 @@
                     <hr class="swipe-details-who-is-in-horizontal-row">
                     <div class="p-2">
                         <p class="swipe-deatils-title">Device Name</p>
-                        <p class="swipe-details-description">{{$webDeviceName}}</p>
+                        <p class="swipe-details-description">
+                           @if(!empty($webDeviceName))
+
+                              {{$webDeviceName}}
+                           @else   
+                              -
+                            @endif  
+                        </p>
                         <p class="swipe-deatils-title">Access Card</p>
                         <p class="swipe-details-description">
                             @if (!empty($accessCardDetails))
