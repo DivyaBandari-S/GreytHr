@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('current_ctc')->nullable();
             $table->string('revised_ctc')->nullable();
             $table->date('revision_date')->nullable();
-            $table->enum('revision_type', ['increment', 'decrement', 'bonus'])->nullable();
+            $table->text('revision_type')->nullable();
             $table->string('reason')->nullable();
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
