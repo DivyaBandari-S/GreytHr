@@ -29,8 +29,6 @@
                 <div class="row m-0">
                     <div class="col-md-8 p-0">
                         @if ($feedbacks->count() > 0)
-
-
                             <div class="p-3" style="margin-left:5px">
                                 <!-- If an employee is selected, show a structured display -->
                                 @if ($filteredEmp)
@@ -155,12 +153,18 @@
                                                         @endif
                                                     </p>
 
-                                                    <p class="feedBackMsg fs12">{{ $feedback->feedback_message }}</p>
+                                                    <div class="ql-editor feedBackMsg fs12">
+                                                        {!! $feedback->feedback_message !!}
+                                                    </div>
+
 
                                                     @if ($feedback->is_accepted)
                                                         <div class="reply-box fs12">
-                                                            <p class="feedBackMsg"><strong>Reply:</strong>
-                                                                {{ $feedback->replay_feedback_message }}</p>
+                                                            <div class="ql-editor">
+                                                                <p class="feedBackMsg"><strong>Reply:</strong>
+                                                                    {!! $feedback->replay_feedback_message !!}</p>
+                                                            </div>
+
                                                             <p class="feedBackMsg"><strong>Replied At:</strong>
                                                                 {{ $feedback->updated_at->diffForHumans() }}</p>
                                                         </div>
@@ -315,11 +319,7 @@
                                     <div class="mb-3">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <!-- Hidden Input Field for Livewire Binding -->
-                                        <input id="requestRichText" type="hidden" wire:model.live="feedbackMessage">
-
-                                        <!-- Trix Editor (with wire:ignore) -->
-                                        <trix-editor input="requestRichText" wire:ignore></trix-editor>
+                                        <livewire:quill-text-editor wire:model.live="feedbackMessage" />
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -440,8 +440,7 @@
                                     <div class="mb-4">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"
-                                            wire:keydown="clearValidationMessages('feedbackMessage')"></textarea>
+                                        <livewire:quill-text-editor wire:model.live="feedbackMessage" />
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -516,14 +515,14 @@
                         <!-- Original Feedback -->
                         <div class="form-group">
                             <label>Original Feedback</label>
-                            <textarea class="form-control" rows="3" wire:model="originalFeedbackText" disabled></textarea>
+                            <div class="ql-editor form-control" wire:ignore>
+                                {!! $originalFeedbackText !!}
+                            </div>
                         </div>
-
                         <!-- Reply Textarea -->
                         <div class="form-group">
                             <label>Your Reply</label>
-                            <textarea class="form-control" rows="3" wire:model="replyText"
-                                wire:keydown="clearValidationMessages('replyText')" placeholder="Type your reply..."></textarea>
+                            <livewire:quill-text-editor wire:model.live="replyText" />
                             @error('replyText')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -570,8 +569,8 @@
                         <!-- Editable Feedback Message -->
                         <div class="mb-3">
                             <label class="form-label">Personalized Message <span class="text-danger">*</span></label>
-                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4"
-                                wire:keydown="clearValidationMessages('updatedFeedbackMessage')">{{ $updatedFeedbackMessage }}</textarea>
+                            <livewire:quill-text-editor wire:model.live="updatedFeedbackMessage" />
+
                             @error('updatedFeedbackMessage')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror

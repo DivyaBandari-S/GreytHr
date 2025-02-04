@@ -12,6 +12,7 @@
         "anhskohbo/no-captcha": "^3.5",
         "barryvdh/laravel-dompdf": "^2.2",
         "barryvdh/laravel-snappy": "^1.0",
+        "dasundev/livewire-quill-text-editor": "^1.0",
         "dompdf/dompdf": "^2.0",
         "google/apiclient": "^2.0",
         "guzzlehttp/guzzle": "^7.2",

@@ -9,13 +9,18 @@
     <h2>{{ $feedbackStatus }}</h2>
     <p><strong>From:</strong> {{ $feedbackFrom }}</p>
     <p><strong>To:</strong> {{ $feedbackTo }}</p>
-    <p><strong>Message:</strong> {{ $feedbackMessage }}</p>
+    <div class="ql-editor">
+        <p><strong>Message:</strong> {!! $feedbackMessage !!}</p>
+    </div>
+
     <p><strong>Feedback Type:</strong> {{ ucfirst($feedbackType) }}</p> <!-- Capitalized first letter -->
     <p><strong>Time:</strong> {{ $feedbackTime }}</p>
 
     <!-- Display reply message if it exists -->
     @if (!empty($replayFeedbackMessage))
-        <p><strong>Reply:</strong> {{ $replayFeedbackMessage }}</p>
+        <div class="ql-editor">
+            <p><strong>Reply:</strong> {!! $replayFeedbackMessage !!}</p>
+        </div>
     @endif
     @if ($feedback->is_declined)
         <p style="color: red;">
