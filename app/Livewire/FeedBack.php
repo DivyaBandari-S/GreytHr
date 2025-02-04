@@ -128,15 +128,31 @@ class FeedBack extends Component
     {
         $this->selectedEmployee = null;
     }
-
-    public function updatedFeedbackMessage()
+    public function updated($propertyName, $value)
     {
-        dd('');
-        // Remove spaces and check length
-        if (strlen(trim(preg_replace('/\s+/', '', $value))) < 5) {
-            $this->feedbackMessage = ''; // Reset if less than 5 non-space chars
+        // Check if the property being updated requires cleaning
+        $fieldsToSanitize = ['feedbackMessage', 'updatedFeedbackMessage', 'replyText']; // Add all fields you need
+
+        if (in_array($propertyName, $fieldsToSanitize)) {
+            $this->clearValidationMessages($propertyName);
+            $this->$propertyName = $this->sanitizeTextInput($value);
         }
     }
+
+    /**
+     * Sanitize input text for Quill Editor.
+     */
+    private function sanitizeTextInput($value)
+    {
+        do {
+            $previousValue = $value;
+            $value = preg_replace('/<p>\s*(<br>\s*)*<\/p>/', '', $value);
+            $value = trim($value);
+        } while ($previousValue !== $value);
+
+        return $value === '' ? '' : $value;
+    }
+
 
     public function saveFeedback()
     {
