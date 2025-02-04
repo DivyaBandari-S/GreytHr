@@ -153,14 +153,14 @@
                                                         @endif
                                                     </p>
 
-                                                    <div class="ql-editor feedBackMsg fs12">
+                                                    <div class="feedBackMsg fs12">
                                                         {!! $feedback->feedback_message !!}
                                                     </div>
 
 
                                                     @if ($feedback->is_accepted)
                                                         <div class="reply-box fs12">
-                                                            <div class="ql-editor">
+                                                            <div class="">
                                                                 <p class="feedBackMsg"><strong>Reply:</strong>
                                                                     {!! $feedback->replay_feedback_message !!}</p>
                                                             </div>
