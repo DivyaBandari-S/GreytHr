@@ -2564,6 +2564,16 @@ td {
     font-size: var(--normal-font-size);
     font-weight: 500;
 }
+.swipe-details-description-for-device-id
+{
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+    white-space: nowrap;       /* Prevents text from wrapping */
+    overflow: hidden;          /* Hides overflow text */
+    text-overflow: ellipsis;   /* Adds '...' when text overflows */
+    max-width: 150px;          /* Adjust as per your design */
+    display: inline-block;     /* Ensures proper rendering */
+}
 
 .dropdown-container1-employee-swipes-for-search-employee input[type="text"] {
     padding: 5px;
@@ -10950,3 +10960,17 @@ cursor: pointer;
     color: var(--main-heading-color);
 }
 
+.ms-circle-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 120, 212, 0.3);
+    border-top: 4px solid #0078D4;
+    border-radius: 50%;
+    animation: ms-spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+@keyframes ms-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
