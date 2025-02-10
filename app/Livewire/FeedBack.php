@@ -12,6 +12,7 @@ use App\Mail\FeedbackNotificationMail;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Http;
 
 class FeedBack extends Component
 {
@@ -41,6 +42,12 @@ class FeedBack extends Component
     public $filteredFeedbacks = [];
     public $filteredEmployees = [];
     public $filteredEmp = null;
+    public bool $isAIAssistOpen = false; // New property to toggle AI Assist
+    public $enableAIAssist = false;
+
+    public $suggestions = [];
+    public $quillKey;
+    public $field;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -48,9 +55,125 @@ class FeedBack extends Component
         'feedbackType' => 'required|in:request,give',
     ];
 
+    public function toggleAIAssist($field)
+    {
+        $this->isAIAssistOpen = true;
+        $this->field = $this->cleanText($field);
+
+        if (!empty($this->field)) {
+            $this->dispatch('trigger-correct-grammar', ['field' => $this->field]);
+        }
+    }
+
+    public function correctGrammar($field)
+    {
+        try {
+            $rawText = trim($this->cleanText($field)); // Dynamically get the value
+            if (empty($rawText)) {
+                FlashMessageHelper::flashError('Please enter text before checking grammar.');
+                return;
+            }
+
+            $response = Http::withHeaders([
+                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY'),
+                "HTTP-Referer" => env('YOUR_SITE_URL', ''), // Optional
+                "X-Title" => env('YOUR_SITE_NAME', ''), // Optional
+            ])->post(env('OPENROUTER_API_URL', 'https://openrouter.ai/api/v1/chat/completions'), [
+                "model" => env('OPENROUTER_MODEL', 'openai/gpt-4o'),
+                "messages" => [
+                    [
+                        "role" => "user",
+                        "content" => "Correct this text for grammar and provide three alternative suggestions:\n\n" . $rawText
+                    ]
+                ]
+            ]);
+
+            $data = $response->json();
+            if ($response->failed() || !isset($data['choices'][0]['message']['content'])) {
+                throw new \Exception("Invalid response from API");
+            }
+
+            $aiResponse = trim($data['choices'][0]['message']['content']);
+            $lines = explode("\n", $aiResponse);
+
+            $correctedText = "";
+            $suggestions = [];
+
+            foreach ($lines as $line) {
+                $line = trim($line, " \t\n\r\0\x0B\"'");
+
+                if ($line === "" || str_contains($line, "Corrected Text") || str_contains($line, "Reasoning for Correction") || str_contains($line, "Alternative Versions")) {
+                    continue;
+                }
+
+                if (preg_match('/^\d+\.\s/', $line)) {
+                    $suggestions[] = preg_replace('/^\d+\.\s/', '', $line);
+                } elseif (empty($correctedText)) {
+                    $correctedText = $line;
+                }
+            }
+
+            // ✅ Update the correct field dynamically
+            $this->$field = trim($correctedText, "\"'");
+            $this->suggestions = array_map(fn($s) => trim($s, "\"'"), array_slice($suggestions, 0, 3));
+        } catch (\Throwable $e) {
+            FlashMessageHelper::flashError('Grammar correction service is unavailable. Please try again later.');
+            $this->suggestions = [];
+        }
+    }
+
+
+
+    public function useSuggestion($property, $suggestion)
+    {
+        $this->{$property} = $suggestion; // Dynamically update the specified property
+        $this->quillKey = uniqid(); // Change key to force re-render
+    }
+
+
+
+    /**
+     * Remove HTML tags and extra spaces from input text
+     */
+    private function cleanText($text)
+    {
+        $text = strip_tags($text); // Remove HTML tags (rich text cleanup)
+        $text = preg_replace('/\s+/', ' ', $text); // Remove multiple spaces
+        return trim($text); // Trim leading/trailing spaces
+    }
+
+    // public function correctGrammar()
+    // {
+    //     try {
+    //         // Remove HTML tags and trim the input before sending it to the API
+    //         $rawText = trim(strip_tags($this->feedbackMessage));
+
+    //         $response = Http::post('http://127.0.0.1:8001/grammar-correct', [
+    //             'text' => $rawText
+    //         ]);
+
+    //         $data = $response->json(); // Convert response to array
+    //         // Ensure the keys exist before accessing them
+    //         $this->feedbackMessage = trim(strip_tags($data['corrected_text'] ?? $rawText));
+    //         $this->suggestions = $data['suggestions'] ?? []; // Default to an empty array if not present
+    //     } catch (\Exception $e) {
+    //         // Handle API errors gracefully
+    //         session()->flash('error', 'Grammar correction service is unavailable.');
+    //         $this->suggestions = [];
+    //     }
+    // }
+
+
+    // public function useSuggestion($suggestion)
+    // {
+    //     dd($suggestion);
+    //     $this->feedbackMessage = $suggestion;
+    // }
+
     public function mount()
     {
         $this->loadTabData($this->activeTab);
+        $this->quillKey = uniqid();
     }
 
     public function openRequestModal()
@@ -69,7 +192,7 @@ class FeedBack extends Component
 
     public function resetFields()
     {
-        $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType']);
+        $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType', 'suggestions', 'enableAIAssist']);
     }
     public function clearValidationMessages($field)
     {
@@ -83,6 +206,7 @@ class FeedBack extends Component
         $this->isRequestModalOpen = false;
         $this->isGiveModalOpen = false;
         $this->isReplyModalOpen = false;
+        $this->isAIAssistOpen = false;
     }
 
     public function updatedSearchEmployee()
@@ -149,8 +273,13 @@ class FeedBack extends Component
             $value = preg_replace('/<p>\s*(<br>\s*)*<\/p>/', '', $value);
             $value = trim($value);
         } while ($previousValue !== $value);
-
+        // Enable AI Assist if input is not empty, otherwise reset AI Assist state
+        $this->enableAIAssist = !empty($value);
+        if (!$this->enableAIAssist) {
+            $this->isAIAssistOpen = false;
+        }
         return $value === '' ? '' : $value;
+        //  return $value ?: '';
     }
 
 

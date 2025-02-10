@@ -1843,6 +1843,7 @@ main .btn-send:hover {
     border-radius: 15px;
     font-size: 11px;
     background-color: #eaedf9;
+    cursor: pointer;
   }
   .textAI {
     background-color: #eaedf9;
@@ -1852,8 +1853,15 @@ main .btn-send:hover {
   }
   .feedBackMsg {
     border-left: 2px solid orange;
-    padding-left: 10px;
+    padding-left: 10px !important;
+    white-space: unset !important;
   }
 .ql-editor{
     height: 50px; /* Set a minimum height */
 }
+.repliedDiv p {
+    margin-bottom: 10px !important;
+}
+.dropcust .dropdown-toggle::after {
+    content: none;
+  }
