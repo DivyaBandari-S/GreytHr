@@ -414,10 +414,12 @@ class EmployeeSwipesData extends Component
                 if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
                     $externalSwipeLogs = DB::connection('sqlsrv')
                         ->table($tableName)
-                        ->select('UserId', 'logDate', 'Direction')
+                        ->select('UserId', 'logDate',DB::raw("CONVERT(VARCHAR(8), logDate, 108) AS logTime"), 'Direction')
                         ->whereIn('UserId', $normalizedIds)
                         ->whereRaw("CONVERT(DATE, logDate) = ?", $today)
+                        ->orderBy('logTime')
                         ->get();
+
                 } else {
                     $externalSwipeLogs = collect();
                 }

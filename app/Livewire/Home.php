@@ -440,80 +440,56 @@ class Home extends Component
     }
     public function toggleSignState()
     {
-        // Get the current time
-        $currentTime = Carbon::now();
-
-        // Check if the session contains the last execution time
-        $lastExecutionTime = session('last_execution_time');
-
-        // If there is a last execution time, check if it was less than 30 seconds ago
-        if ($lastExecutionTime && $currentTime->diffInSeconds($lastExecutionTime) < 2) {
-            return;
-        }
-
         try {
-            // Update the session with the current time as the last execution time
+            $currentTime = Carbon::now();
+ 
+            // Prevent multiple executions within 2 seconds
+            if (session('last_execution_time') && $currentTime->diffInSeconds(session('last_execution_time')) < 2) {
+                return;
+            }
+ 
             session(['last_execution_time' => $currentTime]);
-            $todayDate = Carbon::now()->format('Y-m-d');
+ 
+            $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $isonleave = $this->isEmployeeLeaveOnDate($todayDate, $employeeId);
-            $isholiday = HolidayCalendar::where('date', $todayDate)->exists();
-
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->signIn = !$this->signIn;
-
-            if ($isonleave) {
+ 
+            // Check if employee is on leave or if today is a holiday
+            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
                 FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
                 return;
-            } elseif ($isholiday) {
+            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-
+ 
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $this->signIn = !$this->signIn;
+ 
             // Detect device type
             $agent = new Agent();
-            if ($agent->isMobile()) {
-                $deviceName = 'Mobile';
-            } elseif ($agent->isTablet()) {
-                $deviceName = 'Tablet';
-            } elseif ($agent->isDesktop()) {
-
-
-                $screenWidth = $agent->device(); // Get device details
-                $platform = $agent->platform(); // Get platform details
-
-                // Check for Laptop Devices
-                if (str_contains($screenWidth, 'MacBook') || str_contains($platform, 'Windows') || str_contains($platform, 'Linux') || str_contains($platform, 'ChromeOS')) {
-                    $deviceName = 'Laptop';
-                } else {
-                    $deviceName = 'Desktop';
-                }
-            } else {
-                $deviceName = 'Unknown Device';
-            }
-
+            $deviceName = $agent->isMobile() ? 'Mobile'
+                : ($agent->isTablet() ? 'Tablet'
+                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
+            $platform = $agent->platform();
+ 
+            // Capture user IP address instead of device ID
+            $ipAddress = request()->ip();
             // Create the swipe record
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
-                'device_name'=>$platform,
-                'device_id'=>uniqid(),
+                'device_name' => $platform,
+                'device_id' => $ipAddress, // Replacing device ID with IP address
             ]);
-
-            // Set the message based on the swipe direction
+ 
+            // Flash message for swipe action
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
-            $message = $flashMessage == "IN"
+            FlashMessageHelper::flashSuccess($flashMessage == "IN"
                 ? "You have successfully signed in."
-                : "You have successfully signed out.";
-
-            if ($message) {
-                FlashMessageHelper::flashSuccess($message);
-                return false;
-            }
+                : "You have successfully signed out.");
         } catch (Throwable $e) {
-            // Handle any errors and display an error message
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }
