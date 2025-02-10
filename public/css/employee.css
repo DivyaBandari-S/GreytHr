@@ -1854,3 +1854,6 @@ main .btn-send:hover {
     border-left: 2px solid orange;
     padding-left: 10px;
   }
+.ql-editor{
+    height: 50px; /* Set a minimum height */
+}

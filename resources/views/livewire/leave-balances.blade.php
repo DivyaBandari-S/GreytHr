@@ -190,9 +190,9 @@
                             <p class="mb-0 remaining">Balance</p>
                             @if($paternityLeaves > 0 || $maternityLeaves > 0)
                             @if($gender === 'FEMALE')
-                            <a href="/leave-balances/maternityleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/maternityleavebalance?year={{ $selectedYear }}" class="anchorTagDetails">View Details</a>
                             @else
-                            <a href="/leave-balances/paternityleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/paternityleavebalance?year={{ $selectedYear }}" class="anchorTagDetails">View Details</a>
                             @endif
                             @endif
                         </div>
@@ -213,7 +213,7 @@
                             <h5 class="mb-0">{{$casualLeaveBalance}}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($casualLeavePerYear)
-                            <a href="/leave-balances/casualleavebalance?year={{ $currentYear }}" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/casualleavebalance?year={{ $selectedYear }}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
                         @if($casualLeavePerYear > 0)
@@ -247,7 +247,7 @@
                             <h5 class="mb-0">{{ $sickLeaveBalance }}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($sickLeavePerYear > 0)
-                            <a href="/leave-balances/sickleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/sickleavebalance?year={{$selectedYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
                         @if($sickLeavePerYear > 0)
@@ -315,7 +315,7 @@
                             <h5 class="mb-0">{{ $marriageLeaveBalance }}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($marriageLeaves > 0)
-                            <a href="/leave-balances/marriageleavebalance?year={{$currentYear}}" class="anchorTagDetails">View Details</a>
+                            <a href="/leave-balances/marriageleavebalance?year={{$selectedYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
                         @if($marriageLeaves > 0)

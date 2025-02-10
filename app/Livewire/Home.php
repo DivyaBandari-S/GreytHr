@@ -494,6 +494,7 @@ class Home extends Component
         }
     }
 
+
     public function showEarlyEmployees()
     {
         $this->whoisinTitle = 'On Time';

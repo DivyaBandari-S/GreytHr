@@ -1029,7 +1029,7 @@ class Feeds extends Component
     {
         $validatedData = $this->validate([
             'category' => 'required|string|max:255',
-            'description' => 'required|string',
+            'description' => 'required|string|min:100',
             'file_path' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Only allow image files
         ]);
 

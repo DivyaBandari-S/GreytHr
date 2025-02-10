@@ -46,20 +46,20 @@ class EmployeeSwipesData extends Component
     public $selectedWebEmployeeId;
     public $deviceId;
     public $selectedEmployeeId;
-    
+
     public $webSwipeDirection;
     public $swipeTime;
     public $employeeId;
-    public $isPending=0;
+    public $isPending = 0;
 
     public $webDeviceId;
     public $webDeviceName;
-    public $isApply=1;
+    public $isApply = 1;
     public $selectedShift;
     public $employeeShiftDetails;
     public $selectedSwipeTime;
 
-    public $defaultApply=1;
+    public $defaultApply = 1;
     public $search = '';
     public $searching = 0;
     public $selectedSwipeLogTime = [];
@@ -73,7 +73,7 @@ class EmployeeSwipesData extends Component
             $authUser = Auth::user();
             $userId = $authUser->emp_id;
 
-            $this->startDate=now()->toDateString();
+            $this->startDate = now()->toDateString();
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
                 ->where('employee_status', 'active')
                 ->join('company_shifts', function ($join) {
@@ -109,52 +109,49 @@ class EmployeeSwipesData extends Component
         $this->isApply = 1;
         $this->isPending = 0;
         $this->defaultApply = 1;
-    
+
         $this->swipeTime = null;
-        $this->webSwipeDirection=null;
-        $this->webDeviceName=null;
-        $this->webDeviceId=null;
-       
+        $this->webSwipeDirection = null;
+        $this->webDeviceName = null;
+        $this->webDeviceId = null;
+
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
 
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
-        if($isManager)
-        {
+        if ($isManager) {
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-            ->orWhere('emp_id',$userId)
-            ->where('employee_status', 'active')
-            ->join('company_shifts', function ($join) {
-                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-            })
-            ->select(
-                'employee_details.first_name',
-                'employee_details.emp_id',
-                'employee_details.last_name',
-                'company_shifts.shift_start_time',
-                'company_shifts.shift_end_time'
-            )
-            ->get();
-        }
-        else
-        {
+                ->orWhere('emp_id', $userId)
+                ->where('employee_status', 'active')
+                ->join('company_shifts', function ($join) {
+                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                })
+                ->select(
+                    'employee_details.first_name',
+                    'employee_details.emp_id',
+                    'employee_details.last_name',
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->get();
+        } else {
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
 
-            ->join('company_shifts', function ($join) {
-                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-            })
-            ->select(
-                'employee_details.first_name',
-                'employee_details.emp_id',
-                'employee_details.last_name',
-                'company_shifts.shift_start_time',
-                'company_shifts.shift_end_time'
-            )
-            ->get();
+                ->join('company_shifts', function ($join) {
+                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                })
+                ->select(
+                    'employee_details.first_name',
+                    'employee_details.emp_id',
+                    'employee_details.last_name',
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->get();
         }
 
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
@@ -165,7 +162,6 @@ class EmployeeSwipesData extends Component
 
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
-
     }
     public function processWebSignInLogs()
     {
@@ -177,64 +173,62 @@ class EmployeeSwipesData extends Component
         // Check if the user is a manager
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
-            if ($isManager) {
-                $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                    ->orWhere('emp_id', $userId)
-                    ->where('employee_status', 'active')
-                    ->join('company_shifts', function ($join) {
-                        $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                            ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-                    })
-                    ->select(
-                        'employee_details.*',
-                        'company_shifts.shift_start_time',
-                        'company_shifts.shift_end_time'
-                    )
-                    ->get();
-            } else {
-                $managedEmployees = EmployeeDetails::where('emp_id', $userId)
-                    ->join('company_shifts', function ($join) {
-                        $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                            ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-                    })
-                    ->select(
-                        'employee_details.*',
-                        'company_shifts.shift_start_time',
-                        'company_shifts.shift_end_time'
-                    )
-                    ->get();
+        if ($isManager) {
+            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+                ->orWhere('emp_id', $userId)
+                ->where('employee_status', 'active')
+                ->join('company_shifts', function ($join) {
+                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                })
+                ->select(
+                    'employee_details.*',
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->get();
+        } else {
+            $managedEmployees = EmployeeDetails::where('emp_id', $userId)
+                ->join('company_shifts', function ($join) {
+                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+                })
+                ->select(
+                    'employee_details.*',
+                    'company_shifts.shift_start_time',
+                    'company_shifts.shift_end_time'
+                )
+                ->get();
+        }
+
+        // Fetch today's swipe records
+        $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+            ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+            ->get();
+
+        // Prepare Web Sign-in Data
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = $employee->emp_id;
+            $employeeSwipeLog = $todaySwipeRecords->where('emp_id', $normalizedEmployeeId);
+
+            if ($employeeSwipeLog->isNotEmpty()) {
+                $webSignInData[] = [
+                    'employee' => $employee,
+                    'swipe_log' => $employeeSwipeLog,
+                ];
             }
+        }
 
-                // Fetch today's swipe records
-                $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
-                    ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
-                    ->get();
+        // **Apply Search Filter**
+        if (!empty(trim($this->search))) {
+            $webSignInData = array_filter($webSignInData, function ($data) {
+                return stripos($data['employee']->first_name, $this->search) !== false ||
+                    stripos($data['employee']->last_name, $this->search) !== false ||
+                    stripos($data['employee']->emp_id, $this->search) !== false;
+            });
+        }
 
-                // Prepare Web Sign-in Data
-                foreach ($managedEmployees as $employee) {
-                    $normalizedEmployeeId = $employee->emp_id;
-                    $employeeSwipeLog = $todaySwipeRecords->where('emp_id', $normalizedEmployeeId);
-
-                    if ($employeeSwipeLog->isNotEmpty()) {
-                        $webSignInData[] = [
-                            'employee' => $employee,
-                            'swipe_log' => $employeeSwipeLog,
-                        ];
-                    }
-                }
-
-                // **Apply Search Filter**
-                if (!empty(trim($this->search))) {
-                    $webSignInData = array_filter($webSignInData, function ($data) {
-                        return stripos($data['employee']->first_name, $this->search) !== false ||
-                                stripos($data['employee']->last_name, $this->search) !== false ||
-                                stripos($data['employee']->emp_id, $this->search) !== false;
-                    });
-                }
-
-                return array_values($webSignInData);
-
-
+        return array_values($webSignInData);
     }
 
     public function viewWebsignInButton()
@@ -243,8 +237,8 @@ class EmployeeSwipesData extends Component
         $this->isApply = 0;
         $this->isPending = 1;
         $this->defaultApply = 0;
-        $this->accessCardDetails=null;
-        $this->deviceId=null;
+        $this->accessCardDetails = null;
+        $this->deviceId = null;
         $this->employees = $this->processWebSignInLogs();
         Log::info('isApply: ' . $this->isApply);
         Log::info('isPending: ' . $this->isPending);
@@ -252,34 +246,58 @@ class EmployeeSwipesData extends Component
 
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
-
     }
 
     public function handleEmployeeSelection()
     {
         $parts = explode('-', $this->selectedEmployeeId);
-        
-        
-        $this->doorSwipeTime=$parts[3];
-        $this->selectedEmployeeId = $parts[0].'-'.$parts[1];
+        $this->doorSwipeTime = $parts[3];
+        $this->selectedEmployeeId = $parts[0] . '-' . $parts[1];
+
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
-        $normalizedId=str_replace('-', '', $this->selectedEmployeeId);
+        $normalizedId = str_replace('-', '', $this->selectedEmployeeId);
+
         // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-        $this->accessCardDetails = DB::connection('sqlsrv')
-                    ->table(table: $tableName)
-                    ->where('UserId', $normalizedId)
-                  
-                    ->value('UserId');
-        $this->deviceId=  DB::connection('sqlsrv')
-        ->table(table: $tableName)
-        ->where('UserId', $normalizedId)
-      
-        ->value('DeviceId');           
-        
+        $tableName = "DeviceLogs_{$month}_{$year}";
+
+        if (env('APP_ENV') === 'local') {
+            // ✅ Local: Use Laravel's sqlsrv connection
+            $this->accessCardDetails = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('UserId');
+
+            $this->deviceId = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('DeviceId');
+        } else {
+            // ✅ Production: Use Direct ODBC PDO Connection
+            $dsn = trim(env('DB_ODBC_DSN')) ?: 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+            $username = trim(env('DB_ODBC_USERNAME')) ?: 'essl';
+            $password = trim(env('DB_ODBC_PASSWORD')) ?: 'essl';
+
+            try {
+                $pdo = new \PDO($dsn, $username, $password, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                ]);
+
+                $stmt = $pdo->prepare("SELECT UserId, DeviceId FROM $tableName WHERE UserId = ?");
+                $stmt->execute([$normalizedId]);
+
+                $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+                $this->accessCardDetails = $result['UserId'] ?? null;
+                $this->deviceId = $result['DeviceId'] ?? null;
+            } catch (\Exception $e) {
+                $this->accessCardDetails = null;
+                $this->deviceId = null;
+            }
+        }
     }
+
     public function updateDate()
     {
 
@@ -288,21 +306,21 @@ class EmployeeSwipesData extends Component
 
     public function handleEmployeeWebSelection()
     {
-      
+
         // $this->selectedWebEmployeeId=$this->selectedWebEmployeeId;
         $parts = explode('-', $this->selectedWebEmployeeId);
-      
-        $this->selectedWebEmployeeId = $parts[0].'-'.$parts[1];
+
+        $this->selectedWebEmployeeId = $parts[0] . '-' . $parts[1];
         $this->swipeTime = $parts[3];
-        $this->webSwipeDirection=$parts[4];
-        $this->webDeviceName=SwipeRecord::where('emp_id',$this->selectedWebEmployeeId)->where('in_or_out',$this->webSwipeDirection)->where('swipe_time',$this->swipeTime)->whereDate('created_at',$this->startDate)->value('device_name');
-        $this->webDeviceId=SwipeRecord::where('emp_id',$this->selectedWebEmployeeId)->where('in_or_out',$this->webSwipeDirection)->where('swipe_time',$this->swipeTime)->whereDate('created_at',$this->startDate)->value('device_id');
-       
+        $this->webSwipeDirection = $parts[4];
+        $this->webDeviceName = SwipeRecord::where('emp_id', $this->selectedWebEmployeeId)->where('in_or_out', $this->webSwipeDirection)->where('swipe_time', $this->swipeTime)->whereDate('created_at', $this->startDate)->value('device_name');
+        $this->webDeviceId = SwipeRecord::where('emp_id', $this->selectedWebEmployeeId)->where('in_or_out', $this->webSwipeDirection)->where('swipe_time', $this->swipeTime)->whereDate('created_at', $this->startDate)->value('device_id');
+
         // Construct the table name for SQL Server
-      
-        
-        // $this->webDeviceId=  SwipeRecord::where('')         
-        
+
+
+        // $this->webDeviceId=  SwipeRecord::where('')
+
     }
     public function downloadFileforSwipes()
     {
@@ -312,7 +330,7 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id',$userId)
+                ->orWhere('emp_id', $userId)
                 ->where('employee_status', 'active')
                 ->get();
 
@@ -324,43 +342,35 @@ class EmployeeSwipesData extends Component
                 $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
                 $employeesInExcel = $this->processSwipeLogs($managedEmployees, $this->startDate);
                 foreach ($employeesInExcel as $employee) {
-                    foreach($employee['swipe_log'] as $log)
-                    {
-                            $swipeData[] = [
-                                            $employee['employee']->emp_id,
-                                            ucwords(strtolower($employee['employee']->first_name)).' '.ucwords(strtolower($employee['employee']->last_name)),
-                                            Carbon::parse($log->logDate)->format('jS F Y') ,
-                                            Carbon::parse($log->logDate)->format('H:i:s'),
-                                            $log->Direction,
-                                        ];
+                    foreach ($employee['swipe_log'] as $log) {
+                        $swipeData[] = [
+                            $employee['employee']->emp_id,
+                            ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
+                            Carbon::parse($log->logDate)->format('jS F Y'),
+                            Carbon::parse($log->logDate)->format('H:i:s'),
+                            $log->Direction,
+                        ];
                     }
-                    
-                    
                 }
-                
             } elseif ($this->isApply == 0 && $this->isPending == 1 && $this->defaultApply == 0) {
                 $title = 'Web Sign In Data';
                 $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Web Sign In Data'];
                 $employeesInExcel = $this->processWebSignInLogs();
                 foreach ($employeesInExcel as $employee) {
-                    foreach($employee['swipe_log'] as $log)
-                    {
-                            $swipeData[] = [
-                                            $employee['employee']->emp_id,
-                                            ucwords(strtolower($employee['employee']->first_name)).' '.ucwords(strtolower($employee['employee']->last_name)),
-                                            Carbon::parse($log->created_at)->format('jS F Y') ,
-                                            Carbon::parse($log->swipe_time)->format('H:i:s'),
-                                            $log->in_or_out,
-                                        ];
+                    foreach ($employee['swipe_log'] as $log) {
+                        $swipeData[] = [
+                            $employee['employee']->emp_id,
+                            ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
+                            Carbon::parse($log->created_at)->format('jS F Y'),
+                            Carbon::parse($log->swipe_time)->format('H:i:s'),
+                            $log->in_or_out,
+                        ];
                     }
-                    
-                    
                 }
-                
-            } 
-            
+            }
 
-           
+
+
             $filePath = storage_path('app/todays_present_employees.xlsx');
 
             SimpleExcelWriter::create($filePath)
@@ -400,17 +410,15 @@ class EmployeeSwipesData extends Component
     {
         $filteredData  = [];
         $today = $this->startDate;
-        $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
-                    return str_replace('-', '', $id);
-                });
+        $normalizedIds = $managedEmployees->pluck('emp_id')->map(fn($id) => str_replace('-', '', $id));
+
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
-        $authUser = Auth::user();
-        $userId = $authUser->emp_id;
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-
+        $tableName = "DeviceLogs_{$month}_{$year}";
         try {
+            if (env('APP_ENV') === 'local') {
+                // ✅ Local: Use Laravel SQLSRV connection
                 if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
                     $externalSwipeLogs = DB::connection('sqlsrv')
                         ->table($tableName)
@@ -423,35 +431,56 @@ class EmployeeSwipesData extends Component
                 } else {
                     $externalSwipeLogs = collect();
                 }
-            } catch (\Exception $e) {
-                $externalSwipeLogs = collect();
-            }
+            } else {
+                // ✅ Server: Use ODBC connection from .env
+                $dsn = trim(env('DB_ODBC_DSN')) ?: 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+                $username = trim(env('DB_ODBC_USERNAME')) ?: 'essl';
+                $password = trim(env('DB_ODBC_PASSWORD')) ?: 'essl';
 
-            foreach ($managedEmployees as $employee) {
-                $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
-                $employeeSwipeLog = $externalSwipeLogs->where('UserId', $normalizedEmployeeId);
 
-                if ($employeeSwipeLog->isNotEmpty()) {
-                    $filteredData[] = [
-                        'employee' => $employee,
-                        'swipe_log' => $employeeSwipeLog,
-                    ];
+                if (empty($dsn) || empty($username) || empty($password)) {
+                    throw new \Exception("Database connection details are missing in .env!");
                 }
+
+                $pdo = new \PDO($dsn, $username, $password, [
+                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
+                ]);
+
+                $stmt = $pdo->prepare("SELECT UserId, logDate, Direction FROM $tableName WHERE UserId IN (" . implode(',', array_fill(0, count($normalizedIds), '?')) . ") AND CONVERT(DATE, logDate) = ?");
+
+                $stmt->execute([...$normalizedIds, $today]);
+
+                // ✅ Convert to object collection for Blade compatibility
+                $externalSwipeLogs = collect($stmt->fetchAll(\PDO::FETCH_ASSOC))->map(fn($log) => (object) $log);
             }
+        } catch (\Exception $e) {
+            // ✅ Log the error for debugging
+            Log::error("Swipe Logs Error: " . $e->getMessage());
+            $externalSwipeLogs = collect();
+        }
 
-            // **Check if search is empty**
-            if (!empty(trim($this->search))) {
-                $filteredData = array_filter($filteredData, function ($data) {
-                    return stripos($data['employee']->first_name, $this->search) !== false ||
-                        stripos($data['employee']->last_name, $this->search) !== false ||
-                        stripos($data['employee']->emp_id, $this->search) !== false;
-                });
+        foreach ($managedEmployees as $employee) {
+            $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
+            $employeeSwipeLog = $externalSwipeLogs->where('UserId', $normalizedEmployeeId);
+
+            if ($employeeSwipeLog->isNotEmpty()) {
+                $filteredData[] = [
+                    'employee' => $employee,
+                    'swipe_log' => $employeeSwipeLog,
+                ];
             }
+        }
 
-   
+        // ✅ Search Filtering
+        if (!empty(trim($this->search))) {
+            $filteredData = array_filter($filteredData, function ($data) {
+                return stripos($data['employee']->first_name, $this->search) !== false ||
+                    stripos($data['employee']->last_name, $this->search) !== false ||
+                    stripos($data['employee']->emp_id, $this->search) !== false;
+            });
+        }
 
-        $swipeCardData = array_values($filteredData);
-        return $swipeCardData;
+        return array_values($filteredData);
     }
 
 
@@ -459,13 +488,9 @@ class EmployeeSwipesData extends Component
 
     public function render()
     {
-        if($this->isApply==1&&$this->isPending==0&&$this->defaultApply==1)
-        {
+        if ($this->isApply == 1 && $this->isPending == 0 && $this->defaultApply == 1) {
             $this->viewDoorSwipeButton();
-
-        }
-        elseif($this->isApply==0&&$this->isPending==1&&$this->defaultApply==0)
-        {
+        } elseif ($this->isApply == 0 && $this->isPending == 1 && $this->defaultApply == 0) {
             $this->viewWebsignInButton();
         }
 
