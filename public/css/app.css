@@ -2563,6 +2563,17 @@ td {
 .swipe-details-description {
     font-size: var(--normal-font-size);
     font-weight: 500;
+   
+}
+.swipe-details-description-for-device-id
+{
+    font-size: var(--normal-font-size);
+    font-weight: 500;
+    white-space: nowrap;       /* Prevents text from wrapping */
+    overflow: hidden;          /* Hides overflow text */
+    text-overflow: ellipsis;   /* Adds '...' when text overflows */
+    max-width: 150px;          /* Adjust as per your design */
+    display: inline-block;     /* Ensures proper rendering */
 }
 .swipe-details-description-for-device-id
 {

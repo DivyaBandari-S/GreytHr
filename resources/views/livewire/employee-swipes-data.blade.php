@@ -89,6 +89,8 @@
                 </div>
 
 
+
+
                 <div class="dropdown-container1-employee-swipes-for-search-employee">
                     <label for="dateType" style="color: #666;font-size:12px;">Employee Search</label><br />
 
@@ -328,8 +330,7 @@
                         <p class="swipe-deatils-title">Remarks</p>
                         <p class="swipe-details-description">-</p>
                         <p class="swipe-deatils-title">Device ID</p>
-                        <p class="swipe-details-description-for-device-id"
-                            title="{{ !empty($deviceId) ? $deviceId : (!empty($webDeviceId) ? $webDeviceId : '-') }}">
+                        <p class="swipe-details-description-for-device-id"title="{{ !empty($deviceId) ? $deviceId : (!empty($webDeviceId) ? $webDeviceId : '-') }}">
                             @if (!empty($deviceId))
                                 {{ $deviceId }}
                             @elseif(!empty($webDeviceId))

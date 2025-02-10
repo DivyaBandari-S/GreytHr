@@ -4,7 +4,15 @@
             margin-right: 62px;
         }
 
-       
+       .fixed-column
+       {
+        position: sticky;
+    left: 0; /* Keeps the column fixed on the left */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); 
+    background: white;
+    z-index: 2; /* Keeps it above other columns */
+    border-right: 1px solid #ddd; /* Optional: Adds a separator */
+       }
         .my-button-attendance-info {
             padding: 5px 10px;
             border: none;
@@ -1393,10 +1401,11 @@ color: #fff;
         <div class="col-md-6"></div>
     </div>
     <div>
-        <div class="table-container scrollable-table" style=" width: 100%;">
+        <div class="table-container scrollable-table">
         <table>
+            <thead style="position:sticky;top:0;">
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
-                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px; position: relative;color:#778899;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
+                    <th class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;background-color:#eef7fa;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -1425,8 +1434,10 @@ color: #fff;
 
 
                 </tr>
+            
+              
                 <tr class="second-header-row" style="border-bottom: 1px solid #cbd5e1;">
-                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Date</th>
+                    <th class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Date</th>
 
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shift</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Attendance&nbsp;Scheme</th>
@@ -1455,7 +1466,7 @@ color: #fff;
                     @endif
 
                 </tr>
-                
+            </thead>     
                 @php
                 use Carbon\Carbon;
 
@@ -1508,9 +1519,9 @@ color: #fff;
                     }
                     
                     @endphp
-                   
-                    <tr style="border-bottom: 1px solid #cbd5e1; background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}};">
-                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1; ">
+                <tbody>   
+                    <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}};">
+                        <td class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}}; ">
                             <p style="white-space:nowrap;">
                                 {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
                                 @if($swipeRecordExists)
@@ -1860,13 +1871,9 @@ color: #fff;
 
                     </tr>
                     @endfor
-                   
-
-                      
-                    
-                    
+                 
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
-                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
+                        <td class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -1927,6 +1934,7 @@ color: #fff;
                         <td></td>
                         @endif
                     </tr>
+                    </tbody>
             </table>
         </div>
         @if ($showAlertDialog)
