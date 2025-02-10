@@ -442,17 +442,17 @@ class Home extends Component
     {
         try {
             $currentTime = Carbon::now();
-
+ 
             // Prevent multiple executions within 2 seconds
             if (session('last_execution_time') && $currentTime->diffInSeconds(session('last_execution_time')) < 2) {
                 return;
             }
-
+ 
             session(['last_execution_time' => $currentTime]);
-
+ 
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
+ 
             // Check if employee is on leave or if today is a holiday
             if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
                 FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
@@ -461,17 +461,17 @@ class Home extends Component
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-
+ 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $this->signIn = !$this->signIn;
-
+ 
             // Detect device type
             $agent = new Agent();
             $deviceName = $agent->isMobile() ? 'Mobile'
                 : ($agent->isTablet() ? 'Tablet'
                     : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
             $platform = $agent->platform();
-
+ 
             // Capture user IP address instead of device ID
             $ipAddress = request()->ip();
             // Create the swipe record
@@ -483,7 +483,7 @@ class Home extends Component
                 'device_name' => $platform,
                 'device_id' => $ipAddress, // Replacing device ID with IP address
             ]);
-
+ 
             // Flash message for swipe action
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
