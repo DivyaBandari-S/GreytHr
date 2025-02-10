@@ -687,7 +687,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Edit Feedback</h1>
-                        <button type="button" class="btn-close" wire:click="closeEditModal"
+                        <button type="button" class="btn-close" wire:click="closeEditFeedbackModal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
