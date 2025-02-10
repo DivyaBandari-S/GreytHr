@@ -46,7 +46,8 @@ class FeedBack extends Component
     public $enableAIAssist = false;
 
     public $suggestions = [];
-
+    public $quillKey;
+    public $field;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -54,23 +55,24 @@ class FeedBack extends Component
         'feedbackType' => 'required|in:request,give',
     ];
 
-    public function toggleAIAssist()
+    public function toggleAIAssist($field)
     {
         $this->isAIAssistOpen = true;
+        $this->field = $this->cleanText($field);
 
-        // Only call AI assist if feedbackMessage is not empty after cleaning
-        $this->feedbackMessage = $this->cleanText($this->feedbackMessage);
-
-        // Only call AI assist if feedbackMessage is not empty
-        if (!empty($this->feedbackMessage)) {
-            $this->dispatch('trigger-correct-grammar');
+        if (!empty($this->field)) {
+            $this->dispatch('trigger-correct-grammar', ['field' => $this->field]);
         }
     }
 
-    public function correctGrammar()
+    public function correctGrammar($field)
     {
         try {
-            $rawText = $this->cleanText($this->feedbackMessage); // Clean input
+            $rawText = trim($this->cleanText($field)); // Dynamically get the value
+            if (empty($rawText)) {
+                FlashMessageHelper::flashError('Please enter text before checking grammar.');
+                return;
+            }
 
             $response = Http::withHeaders([
                 "Authorization" => "Bearer " . env('OPENROUTER_API_KEY'),
@@ -86,50 +88,48 @@ class FeedBack extends Component
                 ]
             ]);
 
-            $data = $response->json(); // Convert response to array
-
-            if (!isset($data['choices'][0]['message']['content'])) {
+            $data = $response->json();
+            if ($response->failed() || !isset($data['choices'][0]['message']['content'])) {
                 throw new \Exception("Invalid response from API");
             }
 
             $aiResponse = trim($data['choices'][0]['message']['content']);
             $lines = explode("\n", $aiResponse);
 
-            // **Extract the corrected text**
             $correctedText = "";
             $suggestions = [];
 
             foreach ($lines as $line) {
-                $line = trim($line);
+                $line = trim($line, " \t\n\r\0\x0B\"'");
 
-                // Ignore empty lines and headers
                 if ($line === "" || str_contains($line, "Corrected Text") || str_contains($line, "Reasoning for Correction") || str_contains($line, "Alternative Versions")) {
                     continue;
                 }
 
-                // If it starts with a number (suggestion), store it separately
                 if (preg_match('/^\d+\.\s/', $line)) {
                     $suggestions[] = preg_replace('/^\d+\.\s/', '', $line);
                 } elseif (empty($correctedText)) {
-                    // First meaningful line is the corrected text
                     $correctedText = $line;
                 }
             }
 
-            // ✅ Update Livewire properties
-            $this->feedbackMessage = $correctedText; // Corrected text is updated
-            $this->suggestions = array_slice($suggestions, 0, 3); // Limit to 3 suggestions
-
-        } catch (\Exception $e) {
-            session()->flash('error', 'Grammar correction service is unavailable.');
+            // ✅ Update the correct field dynamically
+            $this->$field = trim($correctedText, "\"'");
+            $this->suggestions = array_map(fn($s) => trim($s, "\"'"), array_slice($suggestions, 0, 3));
+        } catch (\Throwable $e) {
+            FlashMessageHelper::flashError('Grammar correction service is unavailable. Please try again later.');
             $this->suggestions = [];
         }
     }
-    public function useSuggestion($suggestion)
+
+
+
+    public function useSuggestion($property, $suggestion)
     {
-        $this->feedbackMessage = $this->sanitizeTextInput($suggestion);
-        dd($this->feedbackMessage);
+        $this->{$property} = $suggestion; // Dynamically update the specified property
+        $this->quillKey = uniqid(); // Change key to force re-render
     }
+
 
 
     /**
@@ -173,6 +173,7 @@ class FeedBack extends Component
     public function mount()
     {
         $this->loadTabData($this->activeTab);
+        $this->quillKey = uniqid();
     }
 
     public function openRequestModal()
@@ -191,7 +192,7 @@ class FeedBack extends Component
 
     public function resetFields()
     {
-        $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType', 'suggestions',]);
+        $this->reset(['searchEmployee', 'feedbackMessage', 'selectedEmployee', 'employees', 'feedbackType', 'suggestions', 'enableAIAssist']);
     }
     public function clearValidationMessages($field)
     {
