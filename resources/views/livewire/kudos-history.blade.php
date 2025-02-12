@@ -12,7 +12,7 @@
                 Given
             </a>
         </div>
-        <div style="{{ $activeTab === 'Recieved' ? 'left: 8px;' : 'left: 114px;' }}"
+        <div style="{{ $activeTab === 'Recieved' ? 'left: 8px;' : 'left: 114px;' }} z-index:1;"
             class="people-emp-tab-line {{ $activeTab === 'Recieved' ? 'tab-position-emp-starred' : 'tab-position-emp-everyone' }}">
         </div>
     </div>
@@ -29,7 +29,7 @@
                     </button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body" style="height: 400px; overflow-y: scroll;">
                     <div class="row">
                         <div class="d-flex col-12 mb-2">
                             <label for="from-date">You are posting in:</label>

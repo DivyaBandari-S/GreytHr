@@ -361,9 +361,9 @@
                                         </span>
                                     </div>
 
-                                    <div>
-                                        <form wire:submit.prevent="submit" enctype="multipart/form-data">
-                                            <div class="modal-body" style="padding: 20px; width: 80%;">
+            <div>
+            <form wire:submit.prevent="submit" enctype="multipart/form-data">
+    <div class="modal-body" style="padding: 20px; width: 80%; height: 400px; overflow-y: scroll;"> 
 
                                                 <!-- Category Selection -->
                                                 <div class="form-group mb-15">
