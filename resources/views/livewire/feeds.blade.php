@@ -262,7 +262,7 @@
                                                                 style="color: var(--requiredAlert);">*</span></label>
 
                                                         <!-- Full-width text area for the rich text editor -->
-                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder=""></textarea>
+                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder="" style="padding: 10px;"></textarea>
                                                         @error('message')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -476,7 +476,7 @@
                             <label class="custom-radio-label">
 
                                 <input type="radio" id="radio-hr" name="radio" value="posts"
-                                    data-url="/kudos" wire:click="handleRadioChange('kudos')">
+                                    data-url="/givekudos" wire:click="handleRadioChange('kudos')">
 
                                 <div class="feed-icon-container" style="margin-left: 10px;">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-award stroke-current text-pink-400 stroke-1" _ngcontent-ng-c2218295350 style="width: 1rem; height: 1rem;">

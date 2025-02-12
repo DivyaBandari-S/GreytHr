@@ -84,7 +84,7 @@
                                                         wire:model.lazy="postType"
                                                         class="Employee-select-leave placeholder-big"
                                                         style="border: none; margin-left: 10px;"
-                                                        @if($kudoId) disabled @endif>
+                                                        @if ($kudoId) disabled @endif>
                                                         <option value="appreciations">Appreciations</option>
                                                         <option value="buysellrent">Buy/Sell/Rent</option>
                                                         <option value="companynews">Company News</option>
@@ -120,9 +120,10 @@
                                                             @endif
 
                                                             <!-- Search input field -->
-                                                            <input wire:model.debounce="search1" wire:change="validateKudos"
-                                                                wire:input="searchEmployees" type="text"
-                                                                placeholder="" @if($kudoId) disabled @endif>
+                                                            <input wire:model.debounce="search1"
+                                                                wire:change="validateKudos" wire:input="searchEmployees"
+                                                                type="text" placeholder=""
+                                                                @if ($kudoId) disabled @endif>
 
                                                             @if ($selectedEmployee && !$kudoId)
                                                                 <i wire:click="removeSelectedEmployee"
@@ -136,27 +137,35 @@
                                                     </div>
 
                                                     @if (!empty($search1))
-                                                        <div class="search-results-container">
-                                                            @foreach ($employees1 as $employee)
-                                                                <div class="search-result-item"
-                                                                    wire:click="selectEmployee('{{ $employee->emp_id }}')">
-                                                                    <!-- Initials in a circle -->
-                                                                    <div class="initials-circle">
-                                                                        {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
-                                                                    </div>
+                                                        @if ($employees1->isEmpty())
+                                                            <div class="no-data-found search-results-container p-3"
+                                                                style="font-size: 16px;">No data found</div>
+                                                        @else
+                                                            <div class="search-results-container">
+                                                                @foreach ($employees1 as $employee)
+                                                                    <div class="search-result-item"
+                                                                        wire:click="selectEmployee('{{ $employee->emp_id }}')">
+                                                                        <!-- Initials in a circle -->
+                                                                        <div class="initials-circle">
+                                                                            {{ strtoupper(substr($employee->first_name, 0, 1)) . strtoupper(substr($employee->last_name, 0, 1)) }}
+                                                                        </div>
 
-                                                                    <!-- Full name and employee ID -->
-                                                                    <div class="employee-details">
-                                                                        <div class="full-name">
-                                                                            {{ $employee->first_name }}
-                                                                            {{ $employee->last_name }}</div>
-                                                                        <div class="employee-id">
-                                                                            #{{ $employee->emp_id }}</div>
+                                                                        <!-- Full name and employee ID -->
+                                                                        <div class="employee-details">
+                                                                            <div class="full-name">
+                                                                                {{ $employee->first_name }}
+                                                                                {{ $employee->last_name }}
+                                                                            </div>
+                                                                            <div class="employee-id">
+                                                                                #{{ $employee->emp_id }}
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
+                                                                @endforeach
+                                                            </div>
+                                                        @endif
                                                     @endif
+
                                                     @error('selectedEmployee')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -168,11 +177,10 @@
                                                     <div class="dropdown-container input-wrapper">
 
 
-                                                        <input 
-                                                            class="form-select placeholder-small input-field"
+                                                        <input class="form-select placeholder-small input-field"
                                                             wire:click="recognizeToggleDropdown" placeholder="Select">
 
-                                                        
+
 
 
 
@@ -258,10 +266,11 @@
                                                             style="color: var(--requiredAlert);">*</span></label>
 
                                                     <!-- Full-width text area for the rich text editor -->
-                                                    <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder="" ></textarea>
+                                                    <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" style="padding: 10px;"
+                                                        placeholder=""></textarea>
                                                     @error('message')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                                 <div class="form-group col-12 mb-2">
                                                     <label for="reactions" class="mb-2">Reactions</label>
@@ -288,14 +297,10 @@
 
                                                         <!-- Display Selected Reactions -->
                                                         <div class="selected-reactions mt-2">
-                                              
-                                                            @foreach ($reactions as $reaction)
-                                                           
-                                                              
 
+                                                            @foreach ($reactions as $reaction)
                                                                 <span class="selected-reaction">
                                                                     @if (is_array($reaction) && isset($reaction['emoji']))
-                                                                  
                                                                         <!-- Second condition: Direct emoji (e.g., 👍) -->
                                                                         {!! $reaction['emoji'] !!}
                                                                         <button
@@ -333,107 +338,122 @@
             </div>
             <div class=" mt-2 bg-white d-flex align-items-center ">
                 <div class="d-flex ms-auto">
-                @if($showFeedsDialog)
-<div class="modal" tabindex="-1" role="dialog" style="display: block;">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header d-flex justify-content-between align-items-center">
-                <p class="mb-0">Create a Post</p>
-                <span class="img d-flex align-items-end">
-                    <img src="{{ asset('images/Posts.jpg') }}" class="img rounded custom-height-30">
-                </span>
-            </div>
+                    @if ($showFeedsDialog)
+                        <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header d-flex justify-content-between align-items-center">
+                                        <p class="mb-0">Create a Post</p>
+                                        <span class="img d-flex align-items-end">
+                                            <img src="{{ asset('images/Posts.jpg') }}"
+                                                class="img rounded custom-height-30">
+                                        </span>
+                                    </div>
 
-            <div>
-            <form wire:submit.prevent="submit" enctype="multipart/form-data">
-    <div class="modal-body" style="padding: 20px; width: 80%;"> 
+                                    <div>
+                                        <form wire:submit.prevent="submit" enctype="multipart/form-data">
+                                            <div class="modal-body" style="padding: 20px; width: 80%;">
 
-        <!-- Category Selection -->
-        <div class="form-group mb-15">
-            <label for="category">You are posting in:</label>
-            <select wire:model.lazy="category" class="form-select" id="category">
-                <option value="" hidden>Select Category</option>
-                <option value="Appreciations">Appreciations</option>
-                <option value="Companynews">Company News</option>
-                <option value="Events">Events</option>
-                <option value="Everyone">Everyone</option>
-                <option value="Hyderabad">Hyderabad</option>
-                <option value="US">US</option>
-            </select>
-            @error('category') <span class="text-danger">{{ $message }}</span> @enderror
-        </div>
+                                                <!-- Category Selection -->
+                                                <div class="form-group mb-15">
+                                                    <label for="category">You are posting in:</label>
+                                                    <select wire:model.lazy="category" class="form-select"
+                                                        id="category">
+                                                        <option value="" hidden>Select Category</option>
+                                                        <option value="Appreciations">Appreciations</option>
+                                                        <option value="Companynews">Company News</option>
+                                                        <option value="Events">Events</option>
+                                                        <option value="Everyone">Everyone</option>
+                                                        <option value="Hyderabad">Hyderabad</option>
+                                                        <option value="US">US</option>
+                                                    </select>
+                                                    @error('category')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
+                                                </div>
 
-        <!-- Quill Editor -->
-        <div class="row mt-3">
-            <label for="description">Write something here:</label>
-        </div>
-        <div id="quill-toolbar-container" style="margin-top:10px;background:#F7F7F7">
-            <div id="quill-toolbar" class="ql-toolbar ql-snow">
-                <span class="ql-formats">
-                    <button type="button" onclick="execCmd('bold')"><b>B</b></button>
-                    <button type="button" onclick="execCmd('italic')"><i>I</i></button>
-                    <button type="button" onclick="execCmd('underline')"><u>U</u></button>
-                    <button type="button" onclick="execCmd('strikeThrough')"><s>S</s></button>
-                    <button type="button" onclick="execCmd('insertUnorderedList')" style="display: inline-flex; align-items: center; gap: 5px;">
-                        <i class="fas fa-list-ul"></i>
-                    </button>
-                    <button type="button" onclick="execCmd('insertOrderedList')">  <i class="fas fa-list-ol"></i></button>
-                    <button type="button" onclick="insertVideo()">🎥</button>
+                                                <!-- Quill Editor -->
+                                                <div class="row mt-3">
+                                                    <label for="description">Write something here:</label>
+                                                </div>
+                                                <div id="quill-toolbar-container"
+                                                    style="margin-top:10px;background:#F7F7F7">
+                                                    <div id="quill-toolbar" class="ql-toolbar ql-snow">
+                                                        <span class="ql-formats">
+                                                            <button type="button"
+                                                                onclick="execCmd('bold')"><b>B</b></button>
+                                                            <button type="button"
+                                                                onclick="execCmd('italic')"><i>I</i></button>
+                                                            <button type="button"
+                                                                onclick="execCmd('underline')"><u>U</u></button>
+                                                            <button type="button"
+                                                                onclick="execCmd('strikeThrough')"><s>S</s></button>
+                                                            <button type="button"
+                                                                onclick="execCmd('insertUnorderedList')"
+                                                                style="display: inline-flex; align-items: center; gap: 5px;">
+                                                                <i class="fas fa-list-ul"></i>
+                                                            </button>
+                                                            <button type="button"
+                                                                onclick="execCmd('insertOrderedList')"> <i
+                                                                    class="fas fa-list-ol"></i></button>
+                                                            <button type="button" onclick="insertVideo()">🎥</button>
 
-                </span>
-            </div>
-        </div>
-        <!-- Content Editable div with wire:ignore -->
-        <div 
-                                id="richTextEditor" 
-                                contenteditable="true"
-                                wire:ignore
-                                class="form-control" 
-                                style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; min-height: 150px; background-color: #fff;"
-                                oninput="updateDescription(this.innerHTML)">
-                                {!! $description !!}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!-- Content Editable div with wire:ignore -->
+                                                <div id="richTextEditor" contenteditable="true" wire:ignore
+                                                    class="form-control"
+                                                    style="border: 1px solid #ccc; border-radius: 6px; padding: 10px; min-height: 150px; background-color: #fff;"
+                                                    oninput="updateDescription(this.innerHTML)">
+                                                    {!! $description !!}
+                                                </div>
+
+
+
+                                                @error('description')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                                <div class="form-group mt-3">
+                                                    <label for="file_path">Upload Attachment:</label>
+                                                    <div style="text-align: start;">
+                                                        <input type="file" wire:model="file_path"
+                                                            class="form-control" id="file_path"
+                                                            style="margin-top: 5px">
+                                                        @error('file_path')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+
+
+                                            <!-- Submit & Cancel Buttons -->
+                                            <div class="modal-footer border-top">
+                                                <div class="d-flex justify-content-center w-100">
+                                                    <button type="submit" class="submit-btn">Submit</button>
+                                                    <button type="button" wire:click="closeFeeds"
+                                                        class="cancel-btn1 ms-2">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+
+
+
+
+                                        <!-- Success Message -->
+                                        @if (session()->has('message'))
+                                            <div class="alert alert-success mt-3">{{ session('message') }}</div>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
-
-
-
-        @error('description') 
-            <span class="text-danger">{{ $message }}</span> 
-        @enderror
-        <div class="form-group mt-3">
-            <label for="file_path">Upload Attachment:</label>
-            <div style="text-align: start;">
-                <input type="file" wire:model="file_path" class="form-control" id="file_path" style="margin-top: 5px">
-                @error('file_path') <span class="text-danger">{{ $message }}</span> @enderror
-            </div>
-        </div>
-
-    </div>
-    
-
-
-   
-    <!-- Submit & Cancel Buttons -->
-    <div class="modal-footer border-top">
-        <div class="d-flex justify-content-center w-100">
-            <button type="submit" class="submit-btn">Submit</button>
-            <button type="button" wire:click="closeFeeds" class="cancel-btn1 ms-2">Cancel</button>
-        </div>
-    </div>
-</form>
-
-
-
-
-    <!-- Success Message -->
-    @if (session()->has('message'))
-        <div class="alert alert-success mt-3">{{ session('message') }}</div>
-    @endif
-</div>
-        </div>
-    </div>
-</div>
-<div class="modal-backdrop fade show"></div>
-@endif
+                        </div>
+                        <div class="modal-backdrop fade show"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -466,7 +486,7 @@
                 <div class="posts">
                     <label class="custom-radio-label">
 
-                        <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/kudos"
+                        <input type="radio" id="radio-hr" name="radio" value="posts" data-url="/givekudos"
                             wire:click="handleRadioChange('kudos')">
 
                         <div class="feed-icon-container" style="margin-left: 10px;">
@@ -719,14 +739,9 @@
 
 
                     @if ((is_array($kudos) && empty($kudos)) || ($kudos instanceof \Illuminate\Support\Collection && $kudos->isEmpty()))
-                        <div style="display: flex
-;
-    flex-direction: column;
-    margin-left: 170px;">
+                        <div style="display: flex;flex-direction: column;margin-left: 170px;">
                             <img src="https://cdni.iconscout.com/illustration/premium/thumb/business-failure-7626119-6210566.png"
-                                alt="Empty Image" style="width: 250px;
-    height: 289px;
-    margin-top: -36px;">
+                                alt="Empty Image" style="width: 250px;height: 289px;margin-top: -36px;">
                             <p class="text-feed">It feels empty here!</p>
                             <p class="text-xs">Your feed is still in making as there's no post to show.</p>
                             <button
@@ -734,10 +749,8 @@
                                 wire:click="addKudos">Give Kudos</button>
                         </div>
                     @else
-                    
                         <div class="kudoseventsSection">
                             @foreach ($kudos as $kudo)
-                         
                                 <div class="col-12 col-md-8" style="margin-top: 10px;">
                                     <!-- Upcoming Birthdays List -->
                                     <div class="cards" style="display: flex; flex-direction: column;">
@@ -811,20 +824,20 @@
                                         <div class="col-12 text-start">
                                             <div class="d-flex justify-content-start flex-wrap">
                                                 @foreach (json_decode($kudo->recognize_type) ?: [] as $recognize)
-                                                @php
-                                                    $colors = $this->getRecognitionColor($recognize);
-                                                @endphp
-                                                <div class="badge m-1"
-                                                    style="background-color: {{ $colors[0] }}; 
+                                                    @php
+                                                        $colors = $this->getRecognitionColor($recognize);
+                                                    @endphp
+                                                    <div class="badge m-1"
+                                                        style="background-color: {{ $colors[0] }}; 
                                                            border: 1px solid {{ $colors[1] }}; 
                                                            color: {{ $colors[1] }}; 
                                                            padding: 5px 15px; 
                                                            font-size: 12px; 
                                                            border-radius: 20px; font-weight: 400;">
-                                                    {{ ucwords(strtolower($recognize)) }}
-                                                </div>
-                                            @endforeach
-                                            
+                                                        {{ ucwords(strtolower($recognize)) }}
+                                                    </div>
+                                                @endforeach
+
                                             </div>
                                         </div>
 
@@ -871,7 +884,8 @@
                                                 @endphp
                                                 @if ($lastEmployee)
                                                     <span
-                                                        style="font-size: 12px; color: #0e82ad; margin-left: 19px; cursor: pointer;" wire:click="showReactions({{ json_encode($reactions) }},{{$kudo->id}})">
+                                                        style="font-size: 12px; color: #0e82ad; margin-left: 19px; cursor: pointer;"
+                                                        wire:click="showReactions({{ json_encode($reactions) }},{{ $kudo->id }})">
                                                         {{ $lastEmployee->first_name }}
                                                         {{ $lastEmployee->last_name }}
                                                     </span>
@@ -881,109 +895,108 @@
                                             @if ($reactionsCount > 3)
                                                 <!-- Show how many extra reactions if there are more than 3 -->
                                                 <span
-                                                    style="font-size: 12px; color: #0e82ad; margin-left: 5px; cursor: pointer;" wire:click="showReactions({{ json_encode($reactions) }},{{$kudo->id}})">
+                                                    style="font-size: 12px; color: #0e82ad; margin-left: 5px; cursor: pointer;"
+                                                    wire:click="showReactions({{ json_encode($reactions) }},{{ $kudo->id }})">
                                                     and {{ $reactionsCount - 3 }} others reacted.
                                                 </span>
                                             @endif
 
                                         </div>
                                         @if ($showDialogReactions)
-                                        <div class="modal d-block" tabindex="-1" role="dialog">
-                                            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                                                <div class="modal-content">
-                                                    
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title"><b>Reactions</b></h5>
-                                                        <button type="button" class="btn-close btn-primary" data-dismiss="modal"
-                                                            aria-label="Close" wire:click="closeEmojiReactions">
-                                                        </button>
-                                                    </div>
-                            
-                                                    <div class="modal-body">
-                                                        @foreach ($allEmojis as $emoji)
+                                            <div class="modal d-block" tabindex="-1" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+                                                    role="document">
+                                                    <div class="modal-content">
 
-                                                        <div style="display: flex; align-items: center;margin-top:10px;">
-
-                                                            <span>
-
-                                                                @php
-
-                                                                    // Access the 'emp_id' directly since $emoji is an array
-
-                                                                    $employee = \App\Models\EmployeeDetails::where('emp_id', $emoji['employee_id'])->first();
-
-                                                                @endphp
-
-                                               
-
-                                                                @if ($employee && $employee->image && $employee->image !== 'null')
-
-                                                                    <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"
-
-                                                                         src="data:image/jpeg;base64,{{ $employee->image }}">
-
-                                                                @else
-
-                                                                    @if ($employee && $employee->gender == 'Male')
-
-                                                                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"
-
-                                                                             src="{{ asset('images/male-default.png') }}" alt="Default Male Image">
-
-                                                                    @elseif($employee && $employee->gender == 'Female')
-
-                                                                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"
-
-                                                                             src="{{ asset('images/female-default.jpg') }}" alt="Default Female Image">
-
-                                                                    @else
-
-                                                                        <img style="border-radius: 50%; margin-left: 10px" height="30" width="30"
-
-                                                                             src="{{ asset('images/user.jpg') }}" alt="Default Image">
-
-                                                                    @endif
-
-                                                                @endif
-
-                                                            </span>
-
-                                               
-
-                                                            <span style="font-size: 12px; margin-left: 10px;width:50%">
-
-                                                                {{ ucwords(strtolower($employee->first_name)) }} {{ ucwords(strtolower($employee->last_name)) }}
-
-                                                            </span>
-
-                                               
-
-                                                            <div style="display: flex; justify-content: center;">
-                                                               
-                                                               
-
-                                                                <span style="font-size: 16px; cursor: pointer; color: inherit;     margin-left: 50px;
-"
-
-wire:click="removeReaction('{{ $emoji['employee_id'] }}', '{{ $emoji['emoji'] }}','{{ $kudoId }}', '{{ $emoji['created_at'] }}')"                                                                    
->
-
-                                                                    {{ $emoji['emoji'] }}
-
-                                                                </span>
-
-                                                            </div>
-
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title"><b>Reactions</b></h5>
+                                                            <button type="button" class="btn-close btn-primary"
+                                                                data-dismiss="modal" aria-label="Close"
+                                                                wire:click="closeEmojiReactions">
+                                                            </button>
                                                         </div>
 
-                                                    @endforeach
-                                                   
+                                                        <div class="modal-body">
+                                                            @foreach ($allEmojis as $emoji)
+                                                                <div
+                                                                    style="display: flex; align-items: center;margin-top:10px;">
+
+                                                                    <span>
+
+                                                                        @php
+
+                                                                            // Access the 'emp_id' directly since $emoji is an array
+
+                                                                            $employee = \App\Models\EmployeeDetails::where(
+                                                                                'emp_id',
+                                                                                $emoji['employee_id'],
+                                                                            )->first();
+
+                                                                        @endphp
+
+
+
+                                                                        @if ($employee && $employee->image && $employee->image !== 'null')
+                                                                            <img style="border-radius: 50%; margin-left: 10px"
+                                                                                height="30" width="30"
+                                                                                src="data:image/jpeg;base64,{{ $employee->image }}">
+                                                                        @else
+                                                                            @if ($employee && $employee->gender == 'Male')
+                                                                                <img style="border-radius: 50%; margin-left: 10px"
+                                                                                    height="30" width="30"
+                                                                                    src="{{ asset('images/male-default.png') }}"
+                                                                                    alt="Default Male Image">
+                                                                            @elseif($employee && $employee->gender == 'Female')
+                                                                                <img style="border-radius: 50%; margin-left: 10px"
+                                                                                    height="30" width="30"
+                                                                                    src="{{ asset('images/female-default.jpg') }}"
+                                                                                    alt="Default Female Image">
+                                                                            @else
+                                                                                <img style="border-radius: 50%; margin-left: 10px"
+                                                                                    height="30" width="30"
+                                                                                    src="{{ asset('images/user.jpg') }}"
+                                                                                    alt="Default Image">
+                                                                            @endif
+                                                                        @endif
+
+                                                                    </span>
+
+
+
+                                                                    <span
+                                                                        style="font-size: 12px; margin-left: 10px;width:50%">
+
+                                                                        {{ ucwords(strtolower($employee->first_name)) }}
+                                                                        {{ ucwords(strtolower($employee->last_name)) }}
+
+                                                                    </span>
+
+
+
+                                                                    <div
+                                                                        style="display: flex; justify-content: center;">
+
+
+
+                                                                        <span
+                                                                            style="font-size: 16px; cursor: pointer; color: inherit;     margin-left: 50px;"
+                                                                            wire:click="removeReaction('{{ $emoji['employee_id'] }}', '{{ $emoji['emoji'] }}','{{ $kudoId }}', '{{ $emoji['created_at'] }}')">
+
+                                                                            {{ $emoji['emoji'] }}
+
+                                                                        </span>
+
+                                                                    </div>
+
+                                                                </div>
+                                                            @endforeach
+
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                </div>
-                                <div class="modal-backdrop fade show transparent-backdrop"></div>
-                                @endif
+                                            <div class="modal-backdrop fade show transparent-backdrop"></div>
+                                        @endif
                                         <hr>
                                         <div>
                                             <i class="far fa-smile"
@@ -1486,23 +1499,23 @@ wire:click="removeReaction('{{ $emoji['employee_id'] }}', '{{ $emoji['emoji'] }}
     function updateDescription(content) {
         @this.set('description', content); // Update Livewire description property
     }
+
     function insertVideo() {
-    const url = prompt('Enter YouTube Video URL:');
-    if (url) {
-        // Match standard YouTube or shortened URLs
-        const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
-        if (match && match[1]) {
-            const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
-            const iframe = `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:50%; height:200px;"></iframe>`;
-            document.execCommand('insertHTML', false, iframe);
-        } else {
-            alert('Invalid YouTube URL. Please use a valid link.');
+        const url = prompt('Enter YouTube Video URL:');
+        if (url) {
+            // Match standard YouTube or shortened URLs
+            const match = url.match(
+                /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                const embedUrl = `https://www.youtube.com/embed/${match[1]}`;
+                const iframe =
+                    `<iframe src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="width:50%; height:200px;"></iframe>`;
+                document.execCommand('insertHTML', false, iframe);
+            } else {
+                alert('Invalid YouTube URL. Please use a valid link.');
+            }
         }
     }
-}
-
-
-
 </script>
 <script>
     function filterDropdowns() {
