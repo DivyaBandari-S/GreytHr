@@ -262,7 +262,7 @@
                                                                 style="color: var(--requiredAlert);">*</span></label>
 
                                                         <!-- Full-width text area for the rich text editor -->
-                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder=""></textarea>
+                                                        <textarea id="message" wire:model="message" wire:change="validateKudos" rows="4" class="w-100" placeholder="" style="padding: 10px;"></textarea>
                                                         @error('message')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
