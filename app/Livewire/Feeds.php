@@ -105,7 +105,7 @@ class Feeds extends Component
     public $kudoMessage; // Store the message content
     public $reactions = []; // Store reactions for this kudos post
     public $showKudoEmojiPicker = false; // Track if the emoji picker is visible
-    public $postType = 'appreciations';
+    public $postType = 'everyone';
     public function updatePostType($value)
     {
         $this->postType = $value;  // Update postType when the select changes
@@ -274,6 +274,7 @@ class Feeds extends Component
     public function close()
     {
         $this->showKudosDialog = false;
+        $this->resetFields();
     }
     public $search1 = ''; // Property for the search field
     public $employees1 = []; // Property to hold employee data
@@ -345,8 +346,12 @@ class Feeds extends Component
         'file_path' => 'nullable|file|mimes:jpg,jpeg,png,pdf,doc,docx|max:40960',
 
     ];
+
     protected $messages = [
+        'message.required' => 'Your message is required.',
         'category.required' => 'Category is required.',
+        'message.min' => 'Your message must be at least 5 characters.',
+        'selectedEmployee.required' => 'Search employee is required',
 
         'description.required' => 'Description is required.',
 
@@ -381,7 +386,7 @@ class Feeds extends Component
     {
         $this->message = '';
         $this->selectedEmployee = null;
-        $this->postType = '';
+        $this->postType = 'everyone';
         $this->recognizeType = [];
         $this->reactions = [];
     }
@@ -678,7 +683,7 @@ class Feeds extends Component
         $urls = [
             'posts' => '/everyone',
             'activities' => '/Feeds',
-            'kudos' => '/kudos',
+            'kudos' => '/givekudos',
             'post-requests' => '/emp-post-requests'
             // Add more mappings if necessary
         ];

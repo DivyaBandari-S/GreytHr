@@ -187,7 +187,7 @@ $this->posts = Post::where('status', 'Closed')
     $urls = [
         'posts' => '/everyone',
         'activities' => '/Feeds',
-        'kudos' => '/kudos',
+        'kudos' => '/givekudos',
         'post-requests'=>'/emp-post-requests'
         // Add more mappings if necessary
     ];
