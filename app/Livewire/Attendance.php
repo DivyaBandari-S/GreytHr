@@ -1897,6 +1897,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->addError('date_range', 'The start date cannot be greater than the end date.');
                 return; // Stop execution if validation fails
             }
+
+            
+
             if ($formattedFromDate >=  Carbon::today()->format('Y-m-d') && $formattedToDate >=  Carbon::today()->format('Y-m-d')) {
                 $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
                 $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
@@ -1912,21 +1915,30 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->averageLastOutTime = 'N/A';
                 return; // Stop execution after setting values
             }
-            if ($formattedToDate >  Carbon::today()->format('Y-m-d')) {
+            
+            if ($formattedToDate >  Carbon::today()->format('Y-m-d') && $formattedFromDate <  Carbon::today()->format('Y-m-d')) {
                 $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
                 $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
                 $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
+                $fromDatetemp = Carbon::parse($formattedFromDate);
+                $toDatetemp = Carbon::yesterday();
+                $fromDatetempForLeave = Carbon::parse($formattedFromDate);
+                $fromDatetempForAbsent = Carbon::parse($formattedFromDate);
                 // Set values to '-' and average work hours to '00:00'
-                $this->totalWorkingDays = '-';
-                $this->totalLateInSwipes = '-';
-                $this->totalnumberofEarlyOut = '-';
-                $this->totalnumberofLeaves = '-';
-                $this->totalnumberofAbsents = '-';
-                $this->averageWorkHoursForModalTitle = '-';
-                $this->averageFirstInTime = 'N/A';
-                $this->averageLastOutTime = 'N/A';
+                $insights = $this->calculatetotalLateInSwipes( $fromDatetemp, $toDatetemp);
+                $outsights = $this->calculatetotalEarlyOutSwipes($fromDatetemp, $toDatetemp);
+                
+                $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
+               
+                $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetempForLeave, $toDatetemp);
+                $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents($fromDatetempForAbsent, $toDatetemp);
+                $this->totalLateInSwipes = $insights['lateSwipeCount']; 
+                $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
+                $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp,$toDatetemp);
+                $this->averageLastOutTime = $outsights['averageLastOutTime'];
+                $this->averageFirstInTime = $insights['averageFirstInTime'];
                 return; // Stop execution after setting values
-            }
+            } 
 
             $fromDatetemp = Carbon::parse($this->startDateForInsights);
             $toDatetemp = Carbon::parse($this->toDate);
@@ -2017,6 +2029,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
     private function calculatetotalLateInSwipes($startDate, $endDate)
     {
+        
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
@@ -2292,12 +2305,13 @@ private function calculateTotalWorkingDays($startDate, $endDate)
 
     private function calculateTotalNumberOfLeaves($startDate, $endDate)
     {
+       
         $leaveCount = 0;
 
         Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
 
-    // Iterate through the date range
-    while ($startDate->lte($endDate)) {
+       // Iterate through the date range
+       while ($startDate->lte($endDate)) {
         $tempStartDate = $startDate->toDateString();
 
             // Check if the current date is a holiday

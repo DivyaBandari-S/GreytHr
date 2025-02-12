@@ -119,9 +119,7 @@
     <div class="modal-backdrop fade show"></div>
     @endif
 
-
-
-    <!-- 2024 defualt -->
+    <!-- current year defualt -->
     <div>
         <div class="bal-container">
             <div class="row my-3 mx-auto">
@@ -210,23 +208,31 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0">{{$casualLeaveBalance}}</h5>
+                            <h5 class="mb-0">
+                                @if($currentYear == $selectedYear)
+                                {{ $casualLeaveBalance }}
+                                @else
+                                0
+                                @endif
+                            </h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($casualLeavePerYear)
                             <a href="/leave-balances/casualleavebalance?year={{ $selectedYear }}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
-                        @if($casualLeavePerYear > 0)
+                        @if($casualLeavePerYear > 0 )
                         <div class="px-3">
                             <div class="tube-container">
                                 <p class="consumedContent mb-0">
-                                    @if($consumedCasualLeaves > 0)
+                                    @if($consumedCasualLeaves > 0 && $currentYear == $selectedYear)
                                     {{ $consumedCasualLeaves }} of {{ $casualLeavePerYear }} Consumed
+                                    @elseif($consumedCasualLeaves > 0 && $currentYear != $selectedYear)
+                                    {{ $casualLeavePerYear }} of {{ $casualLeavePerYear }} Consumed
                                     @else
                                     0 of {{ $casualLeavePerYear }} Consumed
                                     @endif
                                 </p>
-                                <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave Probation') }};"></div>
+                                <div class="tube" style="width: {{ $percentageCasual }}%; background-color: {{ $this->getTubeColor($consumedCasualLeaves, $casualLeavePerYear, 'Casual Leave') }};"></div>
                             </div>
                         </div>
                         @endif
