@@ -24,7 +24,8 @@ class KudosHistory extends Component
     public $kudoId = null;
     public $dropdownOpen = false; 
     public $showKudoEmojiPicker1 = false; 
-    public $kudosId; 
+    public $kudosId;
+    public $showModal = []; 
     public function validateKudos(){
         $this->validate([
            'message' => 'required|string|min:5',
@@ -34,6 +35,12 @@ class KudosHistory extends Component
         ]);
     } 
     public $allEmojis = [];
+    public function closeModal($kudoId)
+    {
+        $this->showModal[$kudoId] = false;
+        $this->mount();
+    }
+
     public function updateKudosemojiReactions()
     {
         $kudo = Kudos::find($this->kudoId); // Or pass the ID if needed
@@ -89,6 +96,12 @@ class KudosHistory extends Component
             // Handle the case where the employee is not authorized to remove this reaction
             FlashMessageHelper::flashError('You are not authorized to remove this reaction.');
         }
+    }
+    public function showPopup($kudoId)
+    {
+
+        $this->showModal[$kudoId] = !($this->showModal[$kudoId] ?? false);
+        $this->mount();
     }
     public function closeEmojiReactions()
     {
