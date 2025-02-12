@@ -70,12 +70,12 @@ class FeedBack extends Component
         try {
             $rawText = trim($this->cleanText($field)); // Dynamically get the value
             if (empty($rawText)) {
-                FlashMessageHelper::flashError('Please enter text before checking grammar.');
+                FlashMessageHelper::flashError('❌ Please enter text before checking grammar.');
                 return;
             }
 
             $response = Http::withHeaders([
-                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY'),
+                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY','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'),
                 "HTTP-Referer" => env('YOUR_SITE_URL', ''), // Optional
                 "X-Title" => env('YOUR_SITE_NAME', ''), // Optional
             ])->post(env('OPENROUTER_API_URL', 'https://openrouter.ai/api/v1/chat/completions'), [
@@ -113,20 +113,23 @@ class FeedBack extends Component
                 }
             }
 
-            // ✅ Update the correct field dynamically
-            $this->$field = trim($correctedText, "\"'");
-            $this->suggestions = array_map(fn($s) => trim($s, "\"'"), array_slice($suggestions, 0, 3));
+            // ✅ Add emoji based on length or context
+            $emoji = mb_strlen($correctedText) > 100 ? "📜" : "✍️";
+            $this->$field = $emoji . " " . trim($correctedText, "\"'");
+
+            // ✅ Add emojis to suggestions
+            $this->suggestions = array_map(fn($s) => "💡 " . trim($s, "\"'"), array_slice($suggestions, 0, 3));
         } catch (\Throwable $e) {
-            FlashMessageHelper::flashError('Grammar correction service is unavailable. Please try again later.');
+            FlashMessageHelper::flashError('⚠️ Grammar correction service is unavailable. Please try again later.');
             $this->suggestions = [];
         }
     }
 
 
-
     public function useSuggestion($property, $suggestion)
-    {
-        $this->{$property} = $suggestion; // Dynamically update the specified property
+    { // Remove the 💡 emoji if it exists
+        $this->{$property} = str_replace("💡 ", "", $suggestion);
+        // $this->{$property} = $suggestion; // Dynamically update the specified property
         $this->quillKey = uniqid(); // Change key to force re-render
     }
 
