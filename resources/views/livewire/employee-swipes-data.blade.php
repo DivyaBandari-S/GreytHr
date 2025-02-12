@@ -16,33 +16,33 @@
         height: 50px; */
             padding: 8px 30px;
         }
- 
+
         .my-button.active-button {
             background-color: rgb(2, 17, 79);
             color: #FFFFFF;
             border-color: rgb(2, 17, 79);
         }
- 
+
         .my-button.active-button:hover {
             background-color: rgb(2, 17, 79);
             color: #FFFFFF;
             border-color: rgb(2, 17, 79);
         }
- 
+
         .apply-button {
             border-top-left-radius: 5px;
             border-bottom-left-radius: 5px;
             transition: border-color 0.3s, color 0.3s;
             /* Smooth transition effect */
         }
- 
+
         .apply-button:hover {
             border-color: rgb(2, 17, 79);
             /* Change the border color to green on hover */
             color: rgb(2, 17, 79);
             /* Change the text color to green on hover */
         }
- 
+
         .apply-button:active {
             background-color: rgb(2, 17, 79);
             /* Change background color to green when clicked */
@@ -50,14 +50,14 @@
             border-color: rgb(2, 17, 79);
             /* Change text color to white when clicked */
         }
- 
+
         .pending-button:hover {
             border-color: rgb(2, 17, 79);
             /* Change the border color to green on hover */
             color: rgb(2, 17, 79);
             /* Change the text color to green on hover */
         }
- 
+
         .pending-button:active {
             background-color: rgb(2, 17, 79);
             /* Change background color to green when clicked */
@@ -65,12 +65,12 @@
             border-color: rgb(2, 17, 79);
             /* Change text color to white when clicked */
         }
- 
+
         .custom-radio-class {
             vertical-align: middle;
             margin-bottom: 12px;
         }
- 
+
         .history-button {
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
@@ -201,7 +201,7 @@
         margin-top: 0;
     }
     </style>
- 
+
     <body>
         <div>
             <div class="employee-swipes-fields d-flex align-items-center">
@@ -210,31 +210,33 @@
                             style="color: red;">*</span>:</label><br />
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate"
                         wire:change="updateDate" max="{{ now()->toDateString() }}">
- 
+
                 </div>
- 
- 
+
+
+
+
                 <div class="dropdown-container1-employee-swipes-for-search-employee">
                     <label for="dateType" style="color: #666;font-size:12px;">Employee Search</label><br />
- 
+
                     <div class="search-input-employee-swipes">
                         <div class="search-container" style="position: relative;">
                             <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"
                                 style="cursor:pointer;" wire:click="searchEmployee"></i>
                             <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
- 
+
                         </div>
- 
+
                     </div>
                 </div>
                 <div class="dropdown-container1-employee-swipes-for-download-and-filter d-flex">
                     <div class="dropdown-container1-employee-swipes">
- 
+
                         <button type="btn" class="button2" data-toggle="modal"
                             data-target="#exampleModalCenter"style="padding:5px;border-radius:5px;">
                             <i class="fa-solid fa-download" wire:click="downloadFileforSwipes"></i>
                         </button>
- 
+
                     </div>
                     <div class="dropdown-container1-employee-swipes">
                             
@@ -297,7 +299,7 @@
                     </div>
                 </div>
             </div>
- 
+
             <div class="row m-0 p-0  mt-4">
                 <div class="col-md-9 mb-4">
                     <div class="bg-white border rounded">
@@ -315,9 +317,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
- 
+
                                     @if ($isApply == 1 && $defaultApply == 1)
- 
+
                                         @if (count($SignedInEmployees) > 0)
                                             @foreach ($SignedInEmployees as $swipe)
                                                 @foreach ($swipe['swipe_log'] as $index => $log)
@@ -394,23 +396,23 @@
                                                             <span
                                                                 class="text-muted employee-swipes-emp-id">#{{ $swipe['employee']->emp_id }}</span>
                                                         </td>
- 
+
                                                         <!-- Swipe Log Details -->
                                                         <td>
                                                             {{ $log->swipe_time }}<br />
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
- 
+
                                                         </td>
- 
+
                                                         <!-- Shift Details -->
                                                         <td style="white-space:nowrap;">
                                                             {{ \Carbon\Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') }}
                                                             to
                                                             {{ \Carbon\Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a') }}
                                                         </td>
- 
+
                                                         <!-- Sign In/Out Type -->
                                                         <td>
                                                             @if ($log->in_or_out === 'IN')
@@ -424,7 +426,7 @@
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
- 
+
                                                         </td>
                                                         <td style="white-space:nowrap;">
                                                             @if ($log->in_or_out === 'IN')
@@ -443,10 +445,10 @@
                                                 </td>
                                             </tr>
                                         @endif
- 
- 
+
+
                                     @endif
- 
+
                                 </tbody>
                             </table>
                         </div>
@@ -454,7 +456,7 @@
                 </div>
                 <div
                     class="green-and-white-section-for-employee-swipes col-md-3 p-0 bg-white rounded border"style="margin-left:-8px;">
- 
+
                     <div class="green-section-employee-swipes p-2">
                         <img src="https://cdn-icons-png.flaticon.com/512/2055/2055568.png"
                             class="container-employee-swipes-right-image">
@@ -466,7 +468,7 @@
                         @else
                             <p>Not Swiped Yet</p>
                         @endif
- 
+
                     </div>
                     <h2 class="swipe-details-who-is-in p-2">Swipe Details</h2>
                     <hr class="swipe-details-who-is-in-horizontal-row">
@@ -488,9 +490,9 @@
                             @endif
                         </p>
                         <p class="swipe-deatils-title">Door/Address</p>
- 
+
                         <p class="swipe-details-description">-</p>
- 
+
                         <p class="swipe-deatils-title">Remarks</p>
                         <p class="swipe-details-description">-</p>
                         <p class="swipe-deatils-title">Device ID</p>
@@ -505,13 +507,13 @@
                         </p>
                         <p class="swipe-deatils-title">Location Details</p>
                         <p class="swipe-details-description">-</p>
- 
+
                     </div>
                 </div>
             </div>
- 
+
         </div>
- 
- 
+
+
     </body>
 </div>
