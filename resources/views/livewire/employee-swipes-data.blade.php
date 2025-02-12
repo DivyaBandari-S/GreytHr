@@ -75,6 +75,131 @@
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
         }
+        .sidebar {
+        position: fixed;
+        top: 0;
+        right: -350px; /* Initially hidden */
+        width: 350px;
+        height: 100%;
+        background: white;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+        transition: right 0.3s ease-in-out;
+        padding: 20px;
+        z-index: 1050;
+        border-radius: 10px 0 0 10px;
+    }
+
+    .sidebar.active {
+        right: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .sidebar-content {
+        margin-top: 15px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .custom-dropdown {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .apply-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .reset-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1049;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center; /* Centers buttons horizontally */
+        align-items: center; /* Aligns buttons vertically */
+        gap: 5px; /* Reduces the space between buttons */
+        margin-top: 20px; /* Adds spacing from elements above */
+    }
+
+    .apply-btn, .reset-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .apply-btn {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .reset-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+    .category-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px; /* Reduce vertical gap */
+        color: #333;
+    }
+
+    .custom-dropdown {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        margin-top: 0;
+    }
     </style>
  
     <body>
@@ -112,11 +237,52 @@
  
                     </div>
                     <div class="dropdown-container1-employee-swipes">
- 
-                        <button type="button" class="button2" data-toggle="modal" data-target="#exampleModalCenter"
-                            style="margin-top:30px;border-radius:5px;padding:5px;">
-                            <i class="fa-icon fas fa-filter" style="color:#666"></i>
-                        </button>
+                            
+                                                    <!-- Filter Button -->
+                                <button type="button" class="button2" wire:click="toggleSidebar"
+                                    style="margin-top:30px; border-radius:5px; padding:5px;">
+                                    <i class="fa-icon fas fa-filter" style="color:#666"></i>
+                                </button>
+
+                                <!-- Overlay -->
+                                @if ($isOpen)
+                                    <div class="overlay" wire:click="closeSidebar"></div>
+                                @endif
+
+                                <!-- Sidebar -->
+                                <div class="sidebar {{ $isOpen ? 'active' : '' }}">
+                                    <div class="sidebar-header">
+                                        <h3>Apply Filter</h3>
+                                        <button wire:click="closeSidebar" class="close-btn">×</button>
+                                    </div>
+
+                                    <!-- Filter Section -->
+                                    <div class="sidebar-content">
+                                            <label for="category" class="category-label">Category</label>
+                                            <select wire:model="selectedCategory" wire:change="updateselectedCategory" class="custom-dropdown">
+                                                <option value="All">All</option>
+                                                <option value="Designation">Designation</option>
+                                                <option value="Department">Department</option>
+                                                <option value="Location">Location</option>
+                                                <option value="Company">Company</option>
+                                            </select>
+                                            @if ($selectedCategory=='Designation')
+                                            <label for="designation" class="designation-label">{{$selectedCategory}}</label>
+                                            <select wire:model="selectedDesignation" wire:change="updateselectedDesignation" class="custom-dropdown">
+                                                <option value="All">All</option>
+                                                <option value="Designation">Designation</option>
+                                                <option value="Department">Department</option>
+                                                <option value="Location">Location</option>
+                                                <option value="Company">Company</option>
+                                            </select>
+                                            @endif
+                                            
+                                    </div>
+                                    <div class="button-container">
+                                            <button wire:click="closeSidebar" class="apply-btn">Apply</button>
+                                            <button wire:click="closeSidebar" class="reset-btn">Reset</button>
+                                    </div>
+                                </div>
  
                     </div>
                     <div class="button-container-for-employee-swipes">
