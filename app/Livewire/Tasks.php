@@ -765,7 +765,7 @@ class Tasks extends Component
 
     public $maxFollowers = 5;
     public $validationFollowerMessage = '';
-    public  $file_paths;
+    public  $file_paths = [];
 
 
     public function submit()
@@ -787,6 +787,7 @@ class Tasks extends Component
                 return;
             }
             $filePaths = $this->file_paths ?? [];
+        
 
             // Validate file uploads
             $validator = Validator::make($filePaths, [
