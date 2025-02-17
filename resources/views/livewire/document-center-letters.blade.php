@@ -36,41 +36,43 @@
                     </div>
                     <div class="col-md-9">
                         <div class="row mt-3 mb-3"
-                        style="background-color: #f2f2f2; border-radius:5px; width:100%; box-shadow: {{ $jumpToTab === 'Confirmation Letter' ? '0 0 10px rgba(2,17,70,0.5)' : 'none' }}; overflow: hidden; cursor: pointer;">
-                    
-                        <h6 style="font-size: 0.9rem; margin-top:5px">
-                            <div>Confirmation Letter</div>
-                        </h6>
-                    
-                        <hr style="background-color: black; border-color: black; width: 100%; border-radius:5px; margin:0">
-                    
-                        @if ($hasConfirmationLetter)
-                            <div class="row mt-2 mb-2 confirmation-letter" wire:click="toggleDetails">
-                                <div class="col-md-4">
-                                    <div class="test mt-0">Confirmation Letter</div>
-                                    <div style="color: gray;font-size:10px">Confirmation Letter</div>
-                                </div>
-                                <div class="col-md-8" style="color: gray; text-align:end; font-size:10px">
-                                    Last updated on {{ $confirmationLastUpdated }}
-                                </div>
-                                @if ($showDetails)
-                                    <div class="mt-2 mb-2 d-flex justify-content-around"
-                                        style="background-color: white; padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 235px; margin: 10px;">
-                                        <div class="d-flex"> <i class="fas fa-file-pdf" style="margin-top: 5px;"></i> Confirmation ....pdf</div>
-                    
-                                        <a  wire:click="downloadLetter({{ $confirmationLetter['id'] }})">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                    
-                                        <i class="fas fa-eye" style="margin-top: 5px;"  wire:click="viewLetter({{ $confirmationLetter['id'] }})" data-bs-toggle="modal"
-                                            data-bs-target="#letterModal"></i>
+                            style="background-color: #f2f2f2; border-radius:5px; width:100%; box-shadow: {{ $jumpToTab === 'Confirmation Letter' ? '0 0 10px rgba(2,17,70,0.5)' : 'none' }}; overflow: hidden; cursor: pointer;">
+
+                            <h6 style="font-size: 0.9rem; margin-top:5px">
+                                <div>Confirmation Letter</div>
+                            </h6>
+
+                            <hr
+                                style="background-color: black; border-color: black; width: 100%; border-radius:5px; margin:0">
+
+                            @if ($hasConfirmationLetter)
+                                <div class="row mt-2 mb-2 confirmation-letter" wire:click="toggleDetails">
+                                    <div class="col-md-4">
+                                        <div class="test mt-0">Confirmation Letter</div>
+                                        <div style="color: gray;font-size:10px">Confirmation Letter</div>
                                     </div>
-                                @endif
-                            </div>
-                        @else
-                            <div class="text-center text-danger mt-2 mb-2">No data found</div>
-                        @endif
-                    </div>
+                                    <div class="col-md-8" style="color: gray; text-align:end; font-size:10px">
+                                        Last updated on {{ $confirmationLastUpdated }}
+                                    </div>
+                                    @if ($showDetails)
+                                        <div class="mt-2 mb-2 d-flex justify-content-around"
+                                            style="background-color: white; padding: 8px; border-radius: 5px; border: 1px solid #ddd; width: 235px; margin: 10px;">
+                                            <div class="d-flex"> <i class="fas fa-file-pdf"
+                                                    style="margin-top: 5px;"></i> Confirmation ....pdf</div>
+
+                                            <a wire:click="downloadLetter({{ $confirmationLetter['id'] }})">
+                                                <i class="fas fa-download"></i>
+                                            </a>
+
+                                            <i class="fas fa-eye" style="margin-top: 5px;"
+                                                wire:click="viewLetter({{ $confirmationLetter['id'] }})"></i>
+                                        </div>
+                                    @endif
+                                </div>
+                            @else
+                                <div class="text-center text-danger mt-2 mb-2">No data found</div>
+                            @endif
+                        </div>
 
 
                         <div class="row mt-3 mb-3"
@@ -101,12 +103,14 @@
 
 
 
-                                            <a  wire:click="downloadLetter({{ $appointmentOrder['id'] }})">
+                                            <a wire:click="downloadLetter({{ $appointmentOrder['id'] }})">
                                                 <i class="fas fa-download"></i>
                                             </a>
 
-                                            <i class="fas fa-eye"  wire:click="viewLetter({{ $appointmentOrder['id'] }})" data-bs-toggle="modal"
-                                                data-bs-target="#letterModal" style="margin-top: 5px;"></i>
+                                            <i class="fas fa-eye"
+                                                wire:click="viewLetter({{ $appointmentOrder['id'] }})"
+                                                data-bs-toggle="modal" data-bs-target="#letterModal"
+                                                style="margin-top: 5px;"></i>
 
 
 
@@ -117,26 +121,142 @@
                             @endif
                         </div>
 
-                        <div wire:ignore.self class="modal fade" id="letterModal" tabindex="-1"
-                        aria-labelledby="letterModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="letterModalLabel">Letter Preview</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div wire:loading>
-                                        <p>Loading...</p>
-                                    </div>
-                                  
-                                    {!! $previewLetter !!}
-    
-                                </div>
-                            </div>
+                        <!-- Modal Popup -->
+@if ($showLetterModal)
+@php
+ 
+ $preparedBy = Auth::user()->emp_id;
+ $employee = App\Models\EmployeeDetails::where('emp_id', $preparedBy)->first();
+
+
+@endphp
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ $letter->template_name ?? 'Letter' }}</h5>
+                <button type="button" class="btn-close" wire:click="closeLetterModal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="max-height: 400px; height: 400px; overflow-y: scroll;">
+                <div class="header1" style="text-align: center;">
+                    <p>Xsilica Software Solutions Pvt. Ltd.</p>
+                    <p>Unit No - 4, Kapil Kavuri Hub, 3rd floor, Nanakramguda, 
+                        Serilingampally, Ranga Reddy, Telangana-500032.</p>
+                </div>
+            
+                <p>{{ now()->format('d M Y') }}</p>
+            
+                <p>To,<br>
+                    {{ $employeeName }}<br>  <!-- Accessing name from decoded array -->
+                    Employee ID: {{ $employeeId}}<br>  <!-- Accessing id -->
+                    {{ $employeeAddress }}
+                </p>
+                @if ($letter->template_name == 'Appointment Order')
+                <p class="text-align-center" style="font-size: 16px;"> <strong>Sub: Appointment Order</strong></p>
+                <p><strong>Dear</strong> {{ $employeeName }},</p>
+                <p>We are pleased to offer you the position of <strong>Software Engineer I</strong> at Xsilica Software Solutions Pvt. Ltd., as per the discussion we had with you. Below are the details of your appointment:</p>
+                <p><strong>1. Start Date:</strong> 02 Jan 2023 (Your appointment will be considered withdrawn if you do not report to our office on this date.)</p>
+                <p><strong>2. Compensation:</strong> Your Annual Gross Compensation is Rs. <strong>{{ number_format($letter->ctc) }}/-</strong> (subject to statutory deductions).</p>
+                <p><strong>3. Probation Period:</strong> You will be under probation for six calendar months from your date of joining.</p>
+                <p><strong>4. Confirmation of Employment:</strong> Upon successful completion of probation, you will be confirmed in employment.</p>
+                <p><strong>5. Performance Reviews:</strong> You will undergo annual performance reviews and appraisals.</p>
+                <p><strong>6. Absence from Duty:</strong> Unauthorized absence for 8 consecutive days will lead to termination of service.</p>
+                <p><strong>7. Leave Policy:</strong> You are entitled to leave as per law and company policy, including one sick leave per month.</p>
+                <p><strong>8. Confidentiality:</strong> Any products or materials developed during your employment will remain the property of Xsilica.</p>
+                <p><strong>9. Termination of Employment:</strong> Voluntary resignation requires a 60-day notice period. Immediate termination can occur for consistent underperformance or providing incorrect information.</p>
+                <p><strong>We are excited to have you as a part of our team and look forward to your contribution!</strong></p>
+                <p>Thank you.</p>
+        
+            @elseif ($letter->template_name == 'Confirmation Letter')
+                <p class="text-align-center" style="font-size: 16px;"> <strong>Sub: Confirmation Letter</strong></p>
+                <p><strong>Dear</strong> {{ $employeeName }},</p>
+                <p>Further to your appointment/joining dated <strong>{{ \Carbon\Carbon::parse($employee->hire_date)->format('d M Y') }}
+                </strong>, your employment with us is confirmed with effect from <strong>{{ now()->format('d M Y') }}</strong>.</p>
+                <p>All the terms mentioned in the Offer/Appointment letter will remain unaltered.</p>
+                <p>We thank you for your contribution so far and hope that you will continue to perform equally well in the future.</p>
+                <p><strong>We wish you the best of luck!</strong></p>
+                <p>Thank you.</p>
+            @else
+                <p>Invalid template selected.</p>
+            @endif
+        
+            <div class="signature">
+                <p>Yours faithfully,</p>
+                <p>For <strong>Xsilica Software Solutions Pvt. Ltd.</strong></p>
+                <p><strong>{{ $fullName }}</strong></p>
+                <img src="data:image/jpeg;base64,{{ $signature }}" alt="Signature" style="width:150px; height:auto;">
+                <p><strong>{{ $designation }}</strong></p>
+            </div>
+            <div class="cc">
+                <p><strong>Cc:</strong> Reporting Manager, Personal File</p>
+            </div>
+                {{-- @if ($letter->template_name == 'Appointment Order')
+                    <div class="container">
+                        <div class="header" style="text-align: center;">
+                            <p>Xsilica Software Solutions Pvt. Ltd.</p>
+                            <p>Unit No - 4, Kapil Kavuri Hub, 3rd floor, Nanakramguda, <br>
+                            Serilingampally, Ranga Reddy, Telangana-500032.</p>
+                        </div>
+                        <p style="text-align: left;">{{ now()->format('d M Y') }}</p>
+                        <p>To,<br>{{ $employeeName }}<br>
+                            Employee ID: {{ $employeeId }}<br>{{ $employeeAddress }}</p>
+                        <p class="text-center"><strong>Sub: Appointment Order</strong></p>
+                        <p><strong>Dear</strong> {{ $employeeName }},</p>
+                        <p>We are pleased to offer you the position of <strong>Software Engineer I</strong> at Xsilica Software Solutions Pvt. Ltd., as per the discussion we had with you. Below are the details of your appointment:</p>
+                        <ul>
+                            <li><strong>1. Start Date:</strong> 02 Jan 2023</li>
+                            <li><strong>2. Compensation:</strong> Rs. 2,40,000/-</li>
+                            <li><strong>3. Probation Period:</strong> Six calendar months from your joining date.</li>
+                            <li><strong>4. Confirmation of Employment:</strong> After probation.</li>
+                        </ul>
+                        <p><strong>We are excited to have you as a part of our team!</strong></p>
+                        <div class="signature">
+                            <p>Yours faithfully,</p>
+                            <p>For <strong>Xsilica Software Solutions Pvt. Ltd.</strong></p>
+                            <p style="font-size: 12px;"><strong>{{ $fullName }}</strong></p>
+                            @if ($signature)
+                                <img src="data:image/jpeg;base64,{{ $signature }}" alt="Signature" style="width:150px; height:auto;">
+                            @endif
+                            <p style="font-size: 12px;"><strong>{{ $designation }}</strong></p>
                         </div>
                     </div>
+                @elseif ($letter->template_name == 'Confirmation Letter')
+               
+                    <div class="container">
+                        <div class="header1" style="text-align: center;">
+                            <p>Xsilica Software Solutions Pvt. Ltd.</p>
+                            <p>Unit No - 4, Kapil Kavuri Hub, 3rd floor, Nanakramguda, <br>
+                            Serilingampally, Ranga Reddy, Telangana-500032.</p>
+                        </div>
+                        <p style="text-align: left;">{{ now()->format('d M Y') }}</p>
+                        <p>To,<br>{{ $employeeName }}<br>
+                            Employee ID: {{ $employeeId }}<br>{{ $employeeAddress }}</p>
+                        <p class="text-center"><strong>Sub: Confirmation Letter</strong></p>
+                        <p><strong>Dear</strong> {{ $employeeName }},</p>
+                        <p>Your employment with us is confirmed effective from <strong>{{ now()->format('d M Y') }}</strong>.</p>
+                        <div class="signature">
+                            <p>Yours faithfully,</p>
+                            <p>For <strong>Xsilica Software Solutions Pvt. Ltd.</strong></p>
+                            <p style="font-size: 12px;"><strong>{{ $fullName }}</strong></p>
+                            @if ($signature)
+                                <img src="data:image/jpeg;base64,{{ $signature }}" alt="Signature" style="width:150px; height:auto;">
+                            @endif
+                            <p style="font-size: 12px;"><strong>{{ $designation }}</strong></p>
+                        </div>
+                    </div>
+                @else
+                    <p>Invalid template selected.</p>
+                @endif --}}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" wire:click="closeLetterModal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+@endif
 
 
 
