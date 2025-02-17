@@ -10,6 +10,7 @@ use App\Models\GenerateLetter;
 use Carbon\Carbon;
 use App\Models\EmployeeDetails;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class DocumentCenterLetters extends Component
 {
@@ -52,18 +53,18 @@ class DocumentCenterLetters extends Component
     public function mount()
     {
         $loggedInEmpId = Auth::user()->emp_id;
-        $appointmentOrder = GenerateLetter::where('employee_id', $loggedInEmpId)
+        $appointmentOrder = GenerateLetter::whereJsonContains('employees', ['id' => $loggedInEmpId])
         ->where('template_name', 'Appointment Order')
         ->latest('updated_at')
         ->first();
-
+    
     if ($appointmentOrder) {
         $this->hasAppointmentOrder = true;
         $this->lastUpdated = Carbon::parse($appointmentOrder->updated_at)->format('d M, Y');
     }
 
     // Fetch the latest Confirmation Letter
-    $confirmationLetter = GenerateLetter::where('employee_id', $loggedInEmpId)
+    $confirmationLetter = GenerateLetter::whereJsonContains('employees', ['id' => $loggedInEmpId])
         ->where('template_name', 'Confirmation Letter')
         ->latest('updated_at')
         ->first();
@@ -93,56 +94,175 @@ class DocumentCenterLetters extends Component
 
         return redirect('/document-center-letters');
     }
-    public function viewLetter($letterId)
+//     public function viewLetter($letterId)
+// {
+//     $letter = GenerateLetter::find($letterId);
+   
+
+//     if (!$letter) {
+//         session()->flash('error', 'Letter not found.');
+//         return;
+//     }
+
+//     // Generate letter content dynamically
+//     $employee = EmployeeDetails::with('personalInfo')->where('emp_id', $letter->employee_id)->first();
+//     if (!$employee) {
+//         session()->flash('error', 'Employee details not found.');
+//         return;
+//     }
+//     $this->template_name = $letter->template_name;
+
+//     $this->previewLetter = $this->generateLetterContent($employee,$letter);
+   
+
+// }
+
+public $showLetterModal = false; 
+public $letter;
+public $employeeName, $employeeId, $employeeAddress, $fullName, $signature, $designation;
+public function viewLetter($letterId)
 {
-    $letter = GenerateLetter::find($letterId);
-   
+    try {
+        // Fetch the letter details
+        $this->letter = GenerateLetter::find($letterId);
+        
 
-    if (!$letter) {
-        session()->flash('error', 'Letter not found.');
-        return;
+        // Check if the letter exists
+        if (!$this->letter) {
+            session()->flash('error', 'Letter not found.');
+            return;
+        }
+
+        // Get employee data from the JSON field
+        $employees = json_decode($this->letter->employees, true);
+
+        // If there are no employees, show an error message
+        if (!$employees || count($employees) == 0) {
+            session()->flash('error', 'Employee details not found.');
+            return;
+        }
+
+        // Get employee details (assuming you are dealing with the first employee)
+        $this->employeeName = $employees[0]['name']; // Get the name of the first employee
+        $this->employeeAddress = $employees[0]['address'];
+        $this->employeeId = $employees[0]['id'];
+
+        // Get authorized signatory details
+        $authorizedSignatory = json_decode($this->letter->authorized_signatory, true);
+        
+       
+        $this->fullName = $authorizedSignatory['name'];
+        $this->designation = $authorizedSignatory['designation'];
+        $this->signature = $authorizedSignatory['signature'];
+
+        // Set modal visibility flag to true
+        $this->showLetterModal = true;
+      
+
+    } catch (\Exception $e) {
+        // Log the exception message (optional)
+        Log::error("Error in viewLetter: " . $e->getMessage());
+
+        // Flash an error message to the session
+        session()->flash('error', 'An error occurred while fetching the letter details. Please try again.');
+
+        // Optionally, you could also return a view with a more generic error message or redirect
+        // return redirect()->route('letters.index'); // Example redirection to list page
     }
-
-    // Generate letter content dynamically
-    $employee = EmployeeDetails::with('personalInfo')->where('emp_id', $letter->employee_id)->first();
-    if (!$employee) {
-        session()->flash('error', 'Employee details not found.');
-        return;
-    }
-    $this->template_name = $letter->template_name;
-
-    $this->previewLetter = $this->generateLetterContent($employee,$letter);
-   
-
 }
-
-
 public function downloadLetter($letterId)
 {
-    $letter = GenerateLetter::find($letterId);
+    try {
+       
+        // Fetch the letter and employee details
+        $letter = GenerateLetter::find($letterId);
+       
+
+        if (!$letter) {
+            session()->flash('error', 'Letter not found.');
+            return;
+        }
+
+        $employees = json_decode($letter->employees, true);
+        $employee = $employees[0];
+
+        // If there are no employees, show an error message
+        if (!$employee || count($employee) == 0) {
+            session()->flash('error', 'Employee details not found.');
+            return;
+        }
+
+        
+       
+
+        // Prepare the data to pass to the Blade view
+        $previewLetter = $letter; // assuming previewLetter is the same as letter data
+        $authorizedSignatory = json_decode($previewLetter->authorized_signatory, true); // true returns an associative array
+
+        if (!$authorizedSignatory) {
+            // Handle the error case if decoding fails
+            session()->flash('error', 'Authorized Signatory data not found.');
+            return;
+        }
+        
+        // Access the individual fields from the decoded authorized_signatory
+        $signatoryName = $authorizedSignatory['name'] ?? 'N/A';
+        $signatoryDesignation = $authorizedSignatory['designation'] ?? 'N/A';
+        $signatorySignature = $authorizedSignatory['signature'] ?? '';
+
+        // Render the Blade view content
+        $pdfContent = view('download_letter', compact('employee', 'previewLetter', 'signatoryName', 'signatoryDesignation', 'signatorySignature'))->render();
+
+        // Generate PDF from the rendered content
+        $pdf = Pdf::loadHTML($pdfContent);
+
+        // Return the PDF as a downloadable response
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, "{$letter->template_name}_{$employee['id']}.pdf");
+
+    } catch (\Exception $e) {
+        // Log the error
+        Log::error('Error generating letter PDF: ' . $e->getMessage(), [
+            'letterId' => $letterId,
+            'employeeId' => $employee->emp_id ?? 'N/A'
+        ]);
+
+        // Provide a user-friendly error message
+        session()->flash('error', 'There was an error while generating the letter. Please try again later.');
+
+        // Optionally, you could redirect or do additional error handling here
+        // return redirect()->route('letters.index');
+    }
+}
+
+
+// public function downloadLetter($letterId)
+// {
+//     $letter = GenerateLetter::find($letterId);
   
     
-    if (!$letter) {
-        session()->flash('error', 'Letter not found.');
-        return;
-    }
+//     if (!$letter) {
+//         session()->flash('error', 'Letter not found.');
+//         return;
+//     }
 
-    $employee = EmployeeDetails::with('personalInfo')->where('emp_id', $letter->employee_id)->first();
+//     $employee = EmployeeDetails::with('personalInfo')->where('emp_id', $letter->employee_id)->first();
     
-    if (!$employee) {
-        session()->flash('error', 'Employee details not found.');
-        return;
-    }
+//     if (!$employee) {
+//         session()->flash('error', 'Employee details not found.');
+//         return;
+//     }
 
-    // Generate PDF content
-    $letterContent = $this->generateLetterContent($employee,$letter);
+//     // Generate PDF content
+//     $letterContent = $this->generateLetterContent($employee,$letter);
     
-    $pdf = Pdf::loadHTML($letterContent);
-    return response()->streamDownload(
-        fn () => print($pdf->output()),
-        "Confirmation_Letter_{$employee->emp_id}.pdf"
-    );
-}
+//     $pdf = Pdf::loadHTML($letterContent);
+//     return response()->streamDownload(
+//         fn () => print($pdf->output()),
+//         "Confirmation_Letter_{$employee->emp_id}.pdf"
+//     );
+// }
 private function generateLetterContent($employee,$letter)
 {
     $authorizedSignatory = json_decode($letter['authorized_signatory'], true);
@@ -279,19 +399,27 @@ private function generateLetterContent($employee,$letter)
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        $appointmentOrder = GenerateLetter::where('employee_id', $employeeId)
+        $appointmentOrder = GenerateLetter::whereJsonContains('employees', ['id' => $employeeId])
         ->where('template_name', 'Appointment Order')
         ->latest('updated_at')
         ->first();
        
-        $confirmationLetter = GenerateLetter::where('employee_id', $employeeId)
+        $confirmationLetter = GenerateLetter::whereJsonContains('employees', ['id' => $employeeId])
         ->where('template_name', 'Confirmation Letter')
         ->latest('updated_at')
         ->first();
+      
         $this->allRequests = LetterRequest::where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
         return view('livewire.document-center-letters', [
             'appointmentOrder' => $appointmentOrder,  // Pass appointmentOrder
             'confirmationLetter' => $confirmationLetter,
+            'letter' => $this->letter,
+            'employeeId' => $this->employeeId,
         ]);
     }
+    public function closeLetterModal()
+{
+    // Hide the modal when the close button is clicked
+    $this->showLetterModal = false;
+}
 }
