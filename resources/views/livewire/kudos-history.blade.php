@@ -386,11 +386,11 @@
                             $colors = $this->getRecognitionColor($recognize);
                             @endphp
                             <div class="badge m-1"
-                                style="background-color: {{ $colors[0] }}; 
+                                style="background-color: {{ $colors[0] }};
                                                    border: 1px solid {{ $colors[1] }}; 
                                                    color: {{ $colors[1] }}; 
                                                    padding: 5px 15px; 
-                                                   font-size: 12px; 
+                                                   font-size: 12px;
                                                    border-radius: 20px; font-weight: 400;">
                                 {{ ucwords(strtolower($recognize)) }}
                             </div>
