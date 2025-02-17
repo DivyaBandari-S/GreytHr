@@ -1121,6 +1121,23 @@ td {
 
 /* Starting document center/letters module (Kumar Asapu)*/
 
+.docContent{
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex: 1;
+    gap:10px;
+    box-sizing: border-box;
+    height: 60px;
+}
+.docContent p{
+    font-weight: 500;
+    font-size: var(--sub-headings-font-size);
+    margin-bottom: 0;
+}
 .confirmation-letter:hover {
     background-color: #b3c3f1 !important;
     width: 100%;
