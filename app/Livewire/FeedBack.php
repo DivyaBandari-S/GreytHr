@@ -225,7 +225,8 @@ class FeedBack extends Component
         }
 
         $this->employees = EmployeeDetails::select('emp_id', 'first_name', 'last_name')
-            ->where('emp_id', '!=', $authEmpId) // Exclude the authenticated user
+            ->where('emp_id', '!=', $authEmpId)
+            ->where('status', 1) // Only active employees // Exclude the authenticated user
             ->where(function ($query) {
                 $query->where('emp_id', 'like', "%{$this->searchEmployee}%")
                     ->orWhere('first_name', 'like', "%{$this->searchEmployee}%")
@@ -412,6 +413,7 @@ class FeedBack extends Component
         $this->filteredEmployees = empty($this->searchFeedback) ? collect() :
             EmployeeDetails::select('emp_id', 'first_name', 'last_name')
             ->where('emp_id', '!=', $authEmpId)
+            ->where('status', 1) // Only active employees
             ->where(function ($query) {
                 $query->where('emp_id', 'like', "%{$this->searchFeedback}%")
                     ->orWhere('first_name', 'like', "%{$this->searchFeedback}%")
