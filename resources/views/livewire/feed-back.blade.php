@@ -111,6 +111,13 @@
                                                         </div>
 
                                                         <div class="fs12">
+                                                            @if ($activeTab === 'given')
+                                                                <span
+                                                                    class="badge {{ $feedback->feedback_type === 'request' ? 'bg-primary' : 'bg-secondary' }}">
+                                                                    {{ $feedback->feedback_type === 'request' ? 'My Request' : 'Given' }}
+                                                                </span>
+                                                            @endif
+
                                                             @if ($feedback->is_declined)
                                                                 <span class="badge bg-danger">Declined</span>
                                                             @endif
@@ -131,13 +138,28 @@
                                                                         <li><a class="dropdown-item" href="#"
                                                                                 wire:click="confirmDelete({{ $feedback->id }})">Delete
                                                                                 Feedback</a></li>
-                                                                        @if ($feedback->is_draft)
-                                                                            <li><a class="dropdown-item" href="#"
-                                                                                    wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
-                                                                                    Feedback</a></li>
-                                                                        @endif
                                                                     </ul>
                                                                 </div>
+                                                            @endif
+                                                            @if ($feedback->feedback_from == auth()->id() && $feedback->feedback_type === 'request')
+                                                                @if (!$feedback->is_accepted && !$feedback->is_declined)
+                                                                    <div class="btn-group dropcust">
+                                                                        <button type="button"
+                                                                            class="btn dropdown-toggle btn-sm"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false">
+                                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                                        </button>
+
+                                                                        <ul
+                                                                            class="dropdown-menu dropdown-menu-end fs12">
+                                                                            <li><a class="dropdown-item" href="#"
+                                                                                    wire:click="withDrawRequestFeedback({{ $feedback->id }})">Withdraw
+                                                                                    Feedback</a></li>
+                                                                        </ul>
+
+                                                                    </div>
+                                                                @endif
                                                             @endif
                                                         </div>
 
@@ -822,6 +844,29 @@
         </div>
         <div class="modal-backdrop fade show"></div>
     @endif
+    @if ($showWithDrawModal)
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Withdraw</h5>
+                    <button type="button" class="btn-close"
+                        wire:click="$set('showWithDrawModal', false)"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to Confirm Withdraw this feedback?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                        wire:click="$set('showWithDrawModal', false)">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-sm"
+                        wire:click="withDrawFeedback">Withdraw</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+@endif
 </div>
 </div>
 <script>

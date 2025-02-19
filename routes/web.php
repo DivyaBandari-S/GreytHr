@@ -517,7 +517,8 @@ Route::get('/clear', function () {
 
 Route::get('/test-odbc', function () {
     try {
-        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
+
+        $dsn = "FreeTDS:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 
