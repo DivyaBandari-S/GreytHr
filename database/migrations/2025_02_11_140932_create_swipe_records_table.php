@@ -25,6 +25,7 @@ return new class extends Migration
             ->on('employee_details')
             ->onDelete('restrict')
             ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }

@@ -47,7 +47,7 @@ class GiveKudos extends Component
     public $kudoMessage; // Store the message content
     public $reactions = []; // Store reactions for this kudos post
     public $showKudoEmojiPicker1 = false; // Track if the emoji picker is visible
-    public $postType;
+    public $postType = 'everyone';
     public $options = [
         'Approachable' => 'You work well with others',
         'Articulate' => 'You can express yourself well in front of groups.',
@@ -100,6 +100,7 @@ class GiveKudos extends Component
     {
         $this->showKudosDialog = false;
         $this->mount();
+        $this->resetFields();
     }
     public $search1 = ''; // Property for the search field
     public $employees1 = []; // Property to hold employee data
@@ -232,7 +233,7 @@ class GiveKudos extends Component
     {
         $this->message = '';
         $this->selectedEmployee = null;
-        $this->postType = 'appreciations';
+        $this->postType = 'everyone';
         $this->recognizeType = [];
         $this->reactions = [];
     }
@@ -693,10 +694,10 @@ class GiveKudos extends Component
         'selectedEmployee' => 'required',
     ];
     protected $messages = [
-        'message.required' => 'Message is required.',
+        'message.required' => 'Your message is required.',
         'category.required' => 'Category is required.',
-        'message.min' => 'Message must be at least 5 characters.',
-        'selectedEmployee.required' => 'Please select an employee.',
+        'message.min' => 'Your message must be at least 5 characters.',
+        'selectedEmployee.required' => 'Search employee is required',
 
         'description.required' => 'Description is required.',
 
@@ -801,7 +802,7 @@ class GiveKudos extends Component
         $urls = [
             'posts' => '/everyone',
             'activities' => '/Feeds',
-            'kudos' => '/kudos',
+            'kudos' => '/givekudos',
             'post-requests' => '/emp-post-requests'
             // Add more mappings if necessary
         ];

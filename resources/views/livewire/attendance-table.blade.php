@@ -1405,7 +1405,7 @@ color: #fff;
         <table>
             <thead style="position:sticky;top:0;">
                 <tr class="first-header-row" style="background-color:#ebf5ff;border-bottom: 1px solid #cbd5e1;">
-                    <th class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;background-color:#eef7fa;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;color:#778899;background-color:#eef7fa;border-right:1px solid #cbd5e1;">General&nbsp;Details</th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -1437,7 +1437,7 @@ color: #fff;
             
               
                 <tr class="second-header-row" style="border-bottom: 1px solid #cbd5e1;">
-                    <th class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Date</th>
+                    <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Date</th>
 
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Shift</th>
                     <th class="date" style="font-weight:normal;font-size:12px;padding-top:16px;">Attendance&nbsp;Scheme</th>
@@ -1521,7 +1521,7 @@ color: #fff;
                     @endphp
                 <tbody>   
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}};">
-                        <td class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}}; ">
+                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;background-color:{{$isDate ? ($isWeekend ? '#f8f8f8' : ($holidayNote ? '#f3faff' : ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions ? 'rgb(252, 242, 255)':($isOnHalfDayLeave|| ($totalWorkedMinutes < 270 && $totalWorkedMinutes != null && $totalWorkedMinutes > 0)? '#fff':(($isPresent || $swipeRecordExists)&& $totalWorkedMinutes  > 0 && $checkRecord ? '#edfaed' : '#fcf0f0')))))  : 'white'}}; ">
                             <p style="white-space:nowrap;">
                                 {{ $date->format('d') }}&nbsp;&nbsp;{{$currentMonthRep}}&nbsp;{{$currentYear}}({{$dayName}})
                                 @if($swipeRecordExists)
@@ -1873,7 +1873,7 @@ color: #fff;
                     @endfor
                  
                     <tr style="border-bottom: 1px solid #cbd5e1;background-color:white;">
-                        <td class="date fixed-column" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
+                        <td class="date" style="font-weight:normal;font-size:12px;padding-top:16px;border-right:1px solid #cbd5e1;">Total </td>
                         <td></td>
                         <td></td>
                         <td></td>

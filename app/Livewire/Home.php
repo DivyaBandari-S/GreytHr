@@ -474,6 +474,7 @@ class Home extends Component
  
             // Capture user IP address instead of device ID
             $ipAddress = request()->ip();
+           
             // Create the swipe record
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
@@ -484,6 +485,7 @@ class Home extends Component
                 'device_id' => $ipAddress, // Replacing device ID with IP address
             ]);
  
+            dd('ZSxdfcghbjn');
             // Flash message for swipe action
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
@@ -492,6 +494,7 @@ class Home extends Component
         } catch (Throwable $e) {
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
+
     }
 
 

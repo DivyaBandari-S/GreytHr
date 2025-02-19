@@ -556,7 +556,7 @@ class LeaveApplyPage extends Component
             }
 
             // 1. Check if the selected dates are on weekends
-            if (!$this->isWeekday($this->from_date)) {
+            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
                 return false;
             }
@@ -676,10 +676,12 @@ class LeaveApplyPage extends Component
 
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->where('category_type', 'Leave')
-                ->whereIn('leave_status', [2, 5])
-                ->whereIn('cancel_status', [5, 7])
-                ->get();
+            ->where('category_type', 'Leave')
+            ->whereIn('leave_status', [2, 5])
+            ->whereIn('cancel_status', [5, 7])
+            ->whereYear('from_date', '=', date('Y'))  // Ensure from_date is in the current year
+            ->whereYear('to_date', '=', date('Y'))    // Ensure to_date is in the current year
+            ->get();
 
 
             // Iterate over each leave request to format the dates and check for overlaps
@@ -721,6 +723,8 @@ class LeaveApplyPage extends Component
                 ->where('category_type', 'Leave')
                 ->whereIn('leave_status', [2, 5])
                 ->whereIn('cancel_status', [5, 3, 6])
+                ->whereYear('from_date', '=', date('Y'))  // Check if 'from_date' is within the current year
+                ->whereYear('to_date', '=', date('Y'))    // Check if 'to_date' is within the current year
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days
