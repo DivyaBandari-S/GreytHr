@@ -36,6 +36,7 @@ class FeedBack extends Component
     public $employeeName;
     public $feedbackIdToDelete;
     public $showDeleteModal = false; // Boolean to control modal visibility
+    public $showWithDrawModal = false;
     public $feedbackImage;
     public $feedbackEmptyText;
     public $searchFeedback;
@@ -48,6 +49,7 @@ class FeedBack extends Component
     public $suggestions = [];
     public $quillKey;
     public $field;
+    public $withDrawRequestFeedbackId;
     protected $rules = [
         'selectedEmployee' => 'required|array',
         'selectedEmployee.emp_id' => 'required',
@@ -75,7 +77,7 @@ class FeedBack extends Component
             }
 
             $response = Http::withHeaders([
-                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY','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'),
+                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY', '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'),
                 "HTTP-Referer" => env('YOUR_SITE_URL', ''), // Optional
                 "X-Title" => env('YOUR_SITE_NAME', ''), // Optional
             ])->post(env('OPENROUTER_API_URL', 'https://openrouter.ai/api/v1/chat/completions'), [
@@ -335,57 +337,47 @@ class FeedBack extends Component
     public function loadTabData($tab)
     {
         $this->activeTab = $tab;
-        $this->feedbacks = [];
-        $this->filteredFeedbacks = [];
         $this->reset(['searchFeedback', 'filteredEmp']);
 
         $empId = auth()->user()->emp_id;
         $query = FeedBackModel::where('status', 1);
 
-        // Tab-based filtering
         switch ($this->activeTab) {
             case 'received':
                 $query->where(function ($q) use ($empId) {
-                    // Feedbacks received by the logged-in user (feedback_to)
+                    // Feedback received by the user
                     $q->where('feedback_to', $empId)
                         ->where(function ($q2) {
                             $q2->where('feedback_type', 'request')
-                                ->where(function ($q3) {
-                                    $q3->where('is_accepted', true)
-                                        ->orWhere('is_declined', true);
-                                })
-                                ->orWhere('feedback_type', 'give'); // Ensure "Give Feedback" appears for receiver
+                                ->where(fn($q3) => $q3->where('is_accepted', true)->orWhere('is_declined', true))
+                                ->orWhere('feedback_type', 'give')
+                                ->where('is_draft', false);
                         });
                 })->orWhere(function ($q) use ($empId) {
-                    // Feedbacks sent by the logged-in user (feedback_from)
+                    // Feedback sent by the user with a reply or declined
                     $q->where('feedback_from', $empId)
-                        ->where(function ($q2) {
-                            $q2->whereNotNull('replay_feedback_message')
-                                ->orWhere('is_declined', true);
-                        });
-                })->where(function ($q) use ($empId) {
-                    // Ensure only sender and receiver see the feedback
-                    $q->where('feedback_from', $empId)
-                        ->orWhere('feedback_to', $empId);
-                });
+                        ->where(fn($q2) => $q2->whereNotNull('replay_feedback_message')->orWhere('is_declined', true));
+                })->where(fn($q) => $q->where('feedback_from', $empId)->orWhere('feedback_to', $empId));
 
                 $this->setFeedbackMetadata('request_feedback.jpg', 'See what your coworkers have to say!');
                 break;
 
-
-
             case 'given':
                 $query->where('feedback_from', $empId)
-                    ->where('feedback_type', 'give')
-                    ->where('is_draft', false);
+                    ->where('is_draft', false)
+                    ->where(fn($q) => $q->where('feedback_type', '!=', 'request')
+                        ->orWhere(fn($q2) => $q2->where('feedback_type', 'request')
+                            ->where(fn($q3) => $q3->where('is_accepted', true)->orWhere('is_declined', true))));
+
                 $this->setFeedbackMetadata('give_feedback.jpg', 'Empower Your Peers with 1:1 Feedback');
                 break;
 
             case 'pending':
-                $query->where('feedback_to', $empId)
-                    ->where('feedback_type', 'request')
+                $query->where('feedback_type', 'request')
                     ->where('is_accepted', false)
-                    ->where('is_declined', false);
+                    ->where('is_declined', false)
+                    ->where(fn($q) => $q->where('feedback_to', $empId)->orWhere('feedback_from', $empId));
+
                 $this->setFeedbackMetadata('pending_feedback.jpg', 'Waiting for feedback from your peers.');
                 break;
 
@@ -393,16 +385,18 @@ class FeedBack extends Component
                 $query->where('feedback_from', $empId)
                     ->where('is_draft', true)
                     ->where('feedback_type', 'give');
+
                 $this->setFeedbackMetadata('draft_feedback.jpg', 'Save feedback for later.');
                 break;
         }
 
-        // Fetch data
-        $this->feedbacks = $query->latest()->get();
-        $this->filteredFeedbacks = $this->feedbacks;
+        // Fetch data and update state
+        $this->filteredFeedbacks = $this->feedbacks = $query->latest()->get();
 
+        // Dispatch tab change event
         $this->dispatch('tabChanged');
     }
+
 
     private function setFeedbackMetadata($image, $emptyText)
     {
@@ -509,8 +503,17 @@ class FeedBack extends Component
 
             case 'given':
                 $query->where('feedback_from', $empId)
-                    ->where('feedback_type', 'give')
-                    ->where('is_draft', false);
+                    ->where('is_draft', false)
+                    ->where(function ($q) {
+                        $q->where('feedback_type', '!=', 'request')  // Show other feedback types
+                            ->orWhere(function ($q) {
+                                $q->where('feedback_type', 'request')
+                                    ->where(function ($q) {
+                                        $q->where('is_accepted', true)
+                                            ->orWhere('is_declined', true); // Show only accepted/declined requests
+                                    });
+                            });
+                    });
                 break;
 
             case 'pending':
@@ -766,10 +769,16 @@ class FeedBack extends Component
     }
 
 
-    public function withDrawnGivenFeedback($feedbackId)
+    public function withDrawRequestFeedback($feedbackId)
+    {
+        $this->withDrawRequestFeedbackId = $feedbackId;
+        $this->showWithDrawModal = true;
+    }
+
+    public function withDrawFeedback()
     {
         // Find the feedback by ID
-        $feedback = FeedBackModel::find($feedbackId);
+        $feedback = FeedBackModel::find($this->withDrawRequestFeedbackId);
 
         // Check if feedback exists and if the logged-in user is the one who created the feedback
         if (!$feedback) {
@@ -784,15 +793,17 @@ class FeedBack extends Component
 
         // Update the feedback to mark it as not a draft
         $feedback->update([
-            'is_draft' => false, // Set is_draft to false indicating the draft is withdrawn
+            'status' => false, // Set is_draft to false indicating the draft is withdrawn
         ]);
 
         // Provide success message
-        FlashMessageHelper::flashSuccess('Draft feedback withdrawn and finalized successfully!');
+        FlashMessageHelper::flashSuccess('Feedback withdrawn successfully!');
 
         // Refresh the feedback list
+        $this->showWithDrawModal = false;
         $this->loadTabData($this->activeTab);
     }
+
     public function updateDraftGiveFeedback()
     {
         // Inline validation for the updated feedback message
