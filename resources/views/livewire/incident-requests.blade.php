@@ -282,9 +282,12 @@
 
     @if ($searchData && $searchData->whereIn('status_code', [8, 10])->isEmpty())
         <tr>
-            <td colspan="8" style="text-align: center; border: none;">
-                <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
-            </td>
+        <td colspan="7" style="text-align: center; border:none">
+                   
+                   <img src="{{ asset('images/no-data_Gif.gif') }}" 
+                alt="No data available" 
+                style="width:100%; height: 250px; object-fit: contain;">
+                               </td>
         </tr>
         @else
         @foreach ($searchData->whereIn('status_code', [8, 10])->sortByDesc('created_at') as $index => $record)
@@ -720,9 +723,12 @@
             <tbody>
                 @if($searchData->where('status_code', 5)->isEmpty())
                 <tr class="search-data">
-                    <td colspan="7" style="text-align: center; border:none">
-                        <img style="width: 10em; margin: 20px;" src="https://media.istockphoto.com/id/1357284048/vector/no-item-found-vector-flat-icon-design-illustration-web-and-mobile-application-symbol-on.jpg?s=612x612&w=0&k=20&c=j0V0ww6uBl1LwQLH0U9L7Zn81xMTZCpXPjH5qJo5QyQ=" alt="No items found">
-                    </td>
+                <td colspan="7" style="text-align: center; border:none">
+                   
+                   <img src="{{ asset('images/no-data_Gif.gif') }}" 
+                alt="No data available" 
+                style="width:100%; height: 250px; object-fit: contain;">
+                               </td>
                 </tr>
                 @else
                 @foreach ($searchData->whereIn('status_code', 5)->sortByDesc('created_at') as $index => $record)
