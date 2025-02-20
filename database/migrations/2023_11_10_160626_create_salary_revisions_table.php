@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('revision_date')->nullable();
             $table->text('revision_type')->nullable();
             $table->string('reason')->nullable();
+            $table->string('payout_month',20);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
             // Define the foreign key relationship
