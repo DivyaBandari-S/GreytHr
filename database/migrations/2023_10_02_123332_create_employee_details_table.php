@@ -65,6 +65,7 @@ return new class extends Migration
             // $table->string('shift_start_time')->nullable();
             // $table->string('shift_end_time')->nullable();
             $table->string('probation_Period', 10)->default('30');
+            $table->string('extend_probation_period', 10)->nullable();
             $table->date('confirmation_date')->nullable();
             $table->string('referral', 100)->nullable();
             $table->string('service_age', 20)->nullable();
