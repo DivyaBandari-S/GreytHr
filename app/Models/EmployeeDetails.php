@@ -57,6 +57,7 @@ class EmployeeDetails extends Authenticatable
         'emp_domain',
         'referral',
         'probation_Period',
+        'extend_probation_period',
         'service_age',
         'confirmation_date',
     ];
