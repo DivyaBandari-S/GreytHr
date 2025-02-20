@@ -799,8 +799,10 @@
                     </div>
 
                     <div class="show-salary">
-                        <a href="/your-download-route" id="pdfLink2023_4" class="pdf-download"
-                            download>Download PDF</a>
+                        @if($monthOfSal)
+                        <p style="cursor: pointer;width:fit-content" wire:click="downloadPdf('{{$monthOfSal}}')">Download PDF</p>
+                        @endif
+
                         <a href="javascript:void(0);" wire:click="toggleSalary" class="showHideSalary">
                             {{ $showSalary ? 'Show Salary' : 'Hide Salary' }}
                         </a>
@@ -1200,9 +1202,9 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {{ $grossPay }}; // Correct data injection
-        var deductions = {{ $deductions}}; // Correct data injection
-        var netPay = {{$netPay}};
+        var grossPay = {{  $grossPay}}; // Correct data injection
+        var deductions = {{ $deductions }}; // Correct data injection
+        var netPay = {{ $netPay }};
 
         // Total of netPay and deductions should equal grossPay
         if (grossPay !== (netPay + deductions)) {

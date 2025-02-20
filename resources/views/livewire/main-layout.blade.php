@@ -26,10 +26,11 @@
                     @endif
                 </ul>
             </li>
-            <li><a href="#"><i class='fas fa-rss icon'></i> Feeds</a></li>
+            <li><a href="/Feeds"><i class='fas fa-rss icon'></i> Feeds</a></li>
             <li>
                 <a href="#"><i class='fas fa-briefcase icon'></i>My Worklife <i class='fa fa-chevron-right icon-right'></i></a>
                 <ul class="side-dropdown">
+                    <li><a href="{{route('kudos')}}">Kudos</a></li>
                     <li><a href="{{route('feedback')}}">Feedback</a></li>
                 </ul>
             </li>

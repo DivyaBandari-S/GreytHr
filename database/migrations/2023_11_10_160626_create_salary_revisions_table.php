@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('current_ctc')->nullable();
             $table->string('revised_ctc')->nullable();
             $table->date('revision_date')->nullable();
-            $table->enum('revision_type', ['increment', 'decrement', 'bonus'])->nullable();
+            $table->text('revision_type')->nullable();
             $table->string('reason')->nullable();
+            $table->string('payout_month',20);
             $table->tinyInteger('status')->default(1);
             $table->timestamps();
             // Define the foreign key relationship

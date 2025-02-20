@@ -35,6 +35,15 @@ class EmployeeSwipesData extends Component
     public $accessCardDetails;
     public $endDate;
 
+
+
+
+    public $isOpen=false;
+
+
+
+
+
     public $selectedWebEmployeeId;
     public $deviceId;
     public $selectedEmployeeId;
@@ -44,6 +53,7 @@ class EmployeeSwipesData extends Component
     public $employeeId;
     public $isPending = 0;
 
+    public $selectedCategory;
     public $webDeviceId;
     public $webDeviceName;
     public $isApply = 1;
@@ -243,27 +253,31 @@ class EmployeeSwipesData extends Component
     public function handleEmployeeSelection()
     {
         $parts = explode('-', $this->selectedEmployeeId);
-
-
         $this->doorSwipeTime = $parts[3];
         $this->selectedEmployeeId = $parts[0] . '-' . $parts[1];
+
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
         $normalizedId = str_replace('-', '', $this->selectedEmployeeId);
+
         // Construct the table name for SQL Server
-        $tableName = 'DeviceLogs_' . $month . '_' . $year;
-        $this->accessCardDetails = DB::connection('sqlsrv')
-            ->table(table: $tableName)
-            ->where('UserId', $normalizedId)
+        $tableName = "DeviceLogs_{$month}_{$year}";
 
-            ->value('UserId');
-        $this->deviceId =  DB::connection('sqlsrv')
-            ->table(table: $tableName)
-            ->where('UserId', $normalizedId)
+  
+            // ✅ Local: Use Laravel's sqlsrv connection
+            $this->accessCardDetails = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('UserId');
 
-            ->value('DeviceId');
+            $this->deviceId = DB::connection('sqlsrv')
+                ->table($tableName)
+                ->where('UserId', $normalizedId)
+                ->value('DeviceId');
+         
     }
+
     public function updateDate()
     {
 
@@ -276,7 +290,7 @@ class EmployeeSwipesData extends Component
         // $this->selectedWebEmployeeId=$this->selectedWebEmployeeId;
         $parts = explode('-', $this->selectedWebEmployeeId);
 
-        $this->selectedWebEmployeeId = $parts[0].'-'.$parts[1];
+        $this->selectedWebEmployeeId = $parts[0] . '-' . $parts[1];
         $this->swipeTime = $parts[3];
         $this->webSwipeDirection = $parts[4];
         $this->webDeviceName = SwipeRecord::where('emp_id', $this->selectedWebEmployeeId)->where('in_or_out', $this->webSwipeDirection)->where('swipe_time', $this->swipeTime)->whereDate('created_at', $this->startDate)->value('device_name');
@@ -296,9 +310,8 @@ class EmployeeSwipesData extends Component
             $userId = $authUser->emp_id;
 
             $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id',$userId)
-                ->where('employee_status', 'active')
                 ->orWhere('emp_id', $userId)
+                ->where('employee_status', 'active')
                 ->get();
 
             $swipeData = [];
@@ -367,52 +380,55 @@ class EmployeeSwipesData extends Component
 
 
     }
+    public function toggleSidebar()
+    {
+        $this->isOpen = !$this->isOpen; // Toggle sidebar visibility
+    }
+
+    public function closeSidebar()
+    {
+        $this->isOpen = false; // Ensure sidebar closes when called
+    }
     public function searchEmployee()
     {
         $this->searching = 1;
     }
 
+    public function updateselectedCategory()
+    {
+        $this->selectedCategory=$this->selectedCategory;
+    }
 
     public function processSwipeLogs($managedEmployees, $today)
     {
         $filteredData  = [];
         $today = $this->startDate;
         $normalizedIds = $managedEmployees->pluck('emp_id')->map(fn($id) => str_replace('-', '', $id));
-
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
         $tableName = "DeviceLogs_{$month}_{$year}";
-
         try {
-            if (env('APP_ENV') === 'local') {
+          
+        
                 // ✅ Local: Use Laravel SQLSRV connection
                 if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
                     $externalSwipeLogs = DB::connection('sqlsrv')
                         ->table($tableName)
-                        ->select('UserId', 'logDate', 'Direction')
+                        ->select('UserId', 'logDate',DB::raw("CONVERT(VARCHAR(8), logDate, 108) AS logTime"), 'Direction')
                         ->whereIn('UserId', $normalizedIds)
-                        ->whereRaw("CONVERT(DATE, logDate) = ?", [$today])
+                        ->whereRaw("CONVERT(DATE, logDate) = ?", $today)
+                        ->orderBy('logTime')
                         ->get();
+                    
+
                 } else {
                     $externalSwipeLogs = collect();
                 }
-            } else {
-                // ✅ Server: Use Direct ODBC PDO Connection
-                $dsn = env('DB_ODBC_DSN');
-                $username = env('DB_ODBC_USERNAME');
-                $password = env('DB_ODBC_PASSWORD');
-
-                $pdo = new \PDO($dsn, $username, $password, [
-                    \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION
-                ]);
-
-                $stmt = $pdo->prepare("SELECT UserId, logDate, Direction FROM $tableName WHERE UserId IN (" . implode(',', array_fill(0, count($normalizedIds), '?')) . ") AND CONVERT(DATE, logDate) = ?");
-
-                $stmt->execute([...$normalizedIds, $today]);
-                $externalSwipeLogs = collect($stmt->fetchAll(\PDO::FETCH_ASSOC));
-            }
+           
         } catch (\Exception $e) {
+            // ✅ Log the error for debugging
+            Log::error("Swipe Logs Error: " . $e->getMessage());
             $externalSwipeLogs = collect();
         }
 
@@ -439,6 +455,8 @@ class EmployeeSwipesData extends Component
 
         return array_values($filteredData);
     }
+
+
 
 
     public function render()

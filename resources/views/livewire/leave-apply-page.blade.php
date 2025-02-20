@@ -195,7 +195,7 @@
                 <div class="form-group mt-3">
                     <div class="d-flex " wire:click="applyingTo">
                         <span class="normalTextValue downArrow">
-                            <img class="rounded-circle" src="https://t4.ftcdn.net/jpg/05/35/51/31/360_F_535513106_hwSrSN1TLzoqdfjWpv1zWQR9Y5lCen6q.jpg" alt="" width="35px" height="32px">
+                            <img class="rounded-circle" src="{{ asset('/images/user.jpg')}}" alt="" width="35px" height="35px">
                             Applying To
                         </span>
                     </div>

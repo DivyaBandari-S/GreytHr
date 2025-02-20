@@ -104,6 +104,7 @@ use App\Livewire\ImageUpload;
 use App\Livewire\IncidentRequests;
 use App\Livewire\ItDashboardPage;
 use App\Livewire\GiveKudos;
+use App\Livewire\KudosHistory;
 use App\Livewire\LeaveBalancesChart;
 use App\Livewire\LoansAndAdvances;
 use App\Livewire\MarriageLeaveBalance;
@@ -289,11 +290,14 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/Feeds', Feeds::class)->name('Feeds');
     Route::get('/events', Everyone::class)->name('events');
     Route::get('/everyone', Everyone::class)->name('everyone');
-    Route::get('/kudos', GiveKudos::class)->name('kudos');
+    Route::get('/givekudos', GiveKudos::class)->name('givekudos');
     Route::get('/emp-post-requests', EmpPostrequest::class)->name('emp-post-requests');
 
     //People module
     Route::get('/PeoplesList', Peoples::class)->name('people');
+
+    //My Worklife Module
+    Route::get('/kudos', KudosHistory::class)->name('kudos');
     Route::get('/feedback', FeedBack::class)->name('feedback');
 
     //Helpdesk module
@@ -321,7 +325,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
-    Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
+    // Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
@@ -367,7 +371,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
-    Route::get('/calendar', ChatCalendar::class)->name('calendar');
+    // Route::get('/calendar', ChatCalendar::class)->name('calendar');
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
@@ -486,27 +490,35 @@ Route::get('/taskfile/{id}', function ($id) {
 
 
 Route::get('/clear', function () {
-    // Clear the contents of all log files
+    // Clear log files
     $logFiles = File::glob(storage_path('logs/*.log'));
     foreach ($logFiles as $file) {
-        File::put($file, ''); // This will empty the file without deleting it
+        File::put($file, ''); // Empty log file
     }
-    // Perform other Artisan commands
-    Artisan::call('cache:clear');
+
+    // Force clear and reload .env configurations
     Artisan::call('config:clear');
-    Artisan::call('optimize');
-    Artisan::call('optimize:clear');
+    Artisan::call('cache:clear');
     Artisan::call('route:clear');
     Artisan::call('view:clear');
     Artisan::call('auth:clear-resets');
+    Artisan::call('optimize:clear');
     Artisan::call('config:cache');
-    return 'Log contents cleared, and caches have been cleared and optimized!';
+
+    return response()->json([
+        'message' => 'Logs cleared, caches cleared, and optimized!',
+        'APP_ENV' => env('APP_ENV'),
+        'DB_ODBC_DSN' => env('DB_ODBC_DSN'),
+        'DB_ODBC_USERNAME' => env('DB_ODBC_USERNAME'),
+        'DB_ODBC_PASSWORD' => env('DB_ODBC_PASSWORD'),
+    ]);
 });
 
 
 Route::get('/test-odbc', function () {
     try {
-        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
+
+        $dsn = "FreeTDS:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 

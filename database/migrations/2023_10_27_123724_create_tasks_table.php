@@ -25,9 +25,10 @@ return new class extends Migration
             $table->string('followers')->nullable();
             $table->string('subject',100)->nullable();
             $table->text('description')->nullable();
-            $table->binary('file_path')->nullable();
-            $table->string('file_name')->nullable();
-            $table->string('mime_type')->nullable();
+            // $table->binary('file_path')->nullable();
+            // $table->string('file_name')->nullable();
+            // $table->string('mime_type')->nullable();
+            $table->json('file_paths')->nullable();
             $table->boolean('reminder_sent')->default(false);
             $table->smallInteger('status')->default(1); // CC to field (nullable)
             $table->timestamps();

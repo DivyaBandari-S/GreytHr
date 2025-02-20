@@ -29,8 +29,6 @@
                 <div class="row m-0">
                     <div class="col-md-8 p-0">
                         @if ($feedbacks->count() > 0)
-
-
                             <div class="p-3" style="margin-left:5px">
                                 <!-- If an employee is selected, show a structured display -->
                                 @if ($filteredEmp)
@@ -113,6 +111,13 @@
                                                         </div>
 
                                                         <div class="fs12">
+                                                            @if ($activeTab === 'given')
+                                                                <span
+                                                                    class="badge {{ $feedback->feedback_type === 'request' ? 'bg-primary' : 'bg-secondary' }}">
+                                                                    {{ $feedback->feedback_type === 'request' ? 'My Request' : 'Given' }}
+                                                                </span>
+                                                            @endif
+
                                                             @if ($feedback->is_declined)
                                                                 <span class="badge bg-danger">Declined</span>
                                                             @endif
@@ -133,13 +138,28 @@
                                                                         <li><a class="dropdown-item" href="#"
                                                                                 wire:click="confirmDelete({{ $feedback->id }})">Delete
                                                                                 Feedback</a></li>
-                                                                        @if ($feedback->is_draft)
-                                                                            <li><a class="dropdown-item" href="#"
-                                                                                    wire:click="withDrawnGivenFeedback({{ $feedback->id }})">Withdraw
-                                                                                    Feedback</a></li>
-                                                                        @endif
                                                                     </ul>
                                                                 </div>
+                                                            @endif
+                                                            @if ($feedback->feedback_from == auth()->id() && $feedback->feedback_type === 'request')
+                                                                @if (!$feedback->is_accepted && !$feedback->is_declined)
+                                                                    <div class="btn-group dropcust">
+                                                                        <button type="button"
+                                                                            class="btn dropdown-toggle btn-sm"
+                                                                            data-bs-toggle="dropdown"
+                                                                            aria-expanded="false">
+                                                                            <i class="bi bi-three-dots-vertical"></i>
+                                                                        </button>
+
+                                                                        <ul
+                                                                            class="dropdown-menu dropdown-menu-end fs12">
+                                                                            <li><a class="dropdown-item" href="#"
+                                                                                    wire:click="withDrawRequestFeedback({{ $feedback->id }})">Withdraw
+                                                                                    Feedback</a></li>
+                                                                        </ul>
+
+                                                                    </div>
+                                                                @endif
                                                             @endif
                                                         </div>
 
@@ -155,12 +175,24 @@
                                                         @endif
                                                     </p>
 
-                                                    <p class="feedBackMsg fs12">{{ $feedback->feedback_message }}</p>
+                                                    <div class="ql-editor feedBackMsg fs12 pt-0 pb-0 pe-0">
+                                                        {!! $feedback->feedback_message !!}
+                                                    </div>
+
 
                                                     @if ($feedback->is_accepted)
-                                                        <div class="reply-box fs12">
-                                                            <p class="feedBackMsg"><strong>Reply:</strong>
-                                                                {{ $feedback->replay_feedback_message }}</p>
+                                                        <div class="fs12 p-0 pt-2 ql-editor reply-box"
+                                                            style="white-space: unset;">
+                                                            <p class="badge text-white px-2 py-1 rounded shadow-sm"
+                                                                style="background-color: #02114f;">
+                                                                <strong>Reply Feedback:</strong>
+                                                            </p>
+
+                                                            <div class="repliedDiv feedBackMsg">
+
+                                                                {!! $feedback->replay_feedback_message !!}</p>
+                                                            </div>
+
                                                             <p class="feedBackMsg"><strong>Replied At:</strong>
                                                                 {{ $feedback->updated_at->diffForHumans() }}</p>
                                                         </div>
@@ -239,7 +271,7 @@
     <!-- Request Feedback Modal -->
     @if ($isRequestModalOpen)
         <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog reqModal">
+            <div class="modal-dialog @if (!$isAIAssistOpen) reqModal @else modal-lg @endif">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Request Feedback</h1>
@@ -248,13 +280,13 @@
                     </div>
                     <div class="modal-body">
                         <div class="row m-0">
-                            <div class="col-md-12 reqForm">
+                            <!-- Left Side: Form -->
+                            <div class="@if ($isAIAssistOpen) col-md-7 @else col-md-12 @endif reqForm">
                                 <form wire:submit.prevent="saveFeedback">
                                     <div class="mb-3">
                                         <label class="form-label">Search Employee <span
                                                 class="text-danger">*</span></label>
 
-                                        <!-- If an employee is selected, show a structured display -->
                                         @if ($selectedEmployee)
                                             <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
                                                 style="background: #f8f9fa;">
@@ -269,11 +301,11 @@
                                                         #{{ $selectedEmployee['emp_id'] }}</div>
                                                 </div>
                                                 <button type="button" class="btn btn-sm btn-outline-danger ms-auto"
-                                                    wire:click="clearSelectedEmployee"><i
-                                                        class="bi bi-dash"></i></button>
+                                                    wire:click="clearSelectedEmployee">
+                                                    <i class="bi bi-dash"></i>
+                                                </button>
                                             </div>
                                         @else
-                                            <!-- Show input field when no employee is selected -->
                                             <input type="text" class="form-control"
                                                 wire:model.live="searchEmployee"
                                                 wire:keydown="clearValidationMessages('selectedEmployee')"
@@ -284,7 +316,6 @@
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
 
-                                        <!-- Display the search results as a dropdown -->
                                         @if (count($employees) > 0)
                                             <ul class="list-group mt-2" style="max-height: 150px; overflow-y: auto;">
                                                 @foreach ($employees as $employee)
@@ -293,14 +324,14 @@
                                                         wire:click="selectEmployee('{{ $employee->emp_id }}')">
                                                         <div
                                                             style="background-color: #f5c391; color: white; font-weight: bold;
-                                                                    text-align: center; width: 40px; height: 40px; border-radius: 50%;
-                                                                    display: flex; justify-content: center; align-items: center; margin-right: 10px;">
+                                                            text-align: center; width: 40px; height: 40px; border-radius: 50%;
+                                                            display: flex; justify-content: center; align-items: center; margin-right: 10px;">
                                                             {{ strtoupper(substr($employee->first_name, 0, 1)) }}{{ strtoupper(substr($employee->last_name, 0, 1)) }}
                                                         </div>
                                                         <div>
                                                             <div style="font-weight: bold;">
-                                                                {{ $employee->first_name }}
-                                                                {{ $employee->last_name }}</div>
+                                                                {{ $employee->first_name }} {{ $employee->last_name }}
+                                                            </div>
                                                             <div style="color: #5e6e8f; font-size: 14px;">
                                                                 #{{ $employee->emp_id }}</div>
                                                         </div>
@@ -315,23 +346,29 @@
                                     <div class="mb-3">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <!-- Hidden Input Field for Livewire Binding -->
-                                        <input id="requestRichText" type="hidden" wire:model.live="feedbackMessage">
+                                        <livewire:quill-text-editor wire:model.live="feedbackMessage"
+                                            :key="$quillKey" />
 
-                                        <!-- Trix Editor (with wire:ignore) -->
-                                        <trix-editor input="requestRichText" wire:ignore></trix-editor>
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+
                                     <div class="row m-0 text-end">
                                         <p class="p-0">
-                                            <span class="aiChip" onclick="openAIAssist()">
+                                            <span class="aiChip"
+                                                wire:click="toggleAIAssist('{{ $feedbackMessage }}')"
+                                                wire:key="ai-assist-{{ $feedbackMessage }}"
+                                                style="{{ $enableAIAssist ? '' : 'pointer-events: none; opacity: 0.5;' }}">
                                                 <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
                                                 hrXpertAI
                                             </span>
+
+
+
                                         </p>
                                     </div>
+
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary"
                                             wire:click="closeModal">Close</button>
@@ -340,21 +377,57 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-5 reqAssist d-none">
-                                <div class="row m-0" style="border: 1px solid #02114f; border-radius: 10px;">
-                                    <p class="textAI mb-0">
-                                        <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
-                                        hrXpertAI Assistant
-                                    </p>
-                                    <div class="m-0 pb-4 row text-center">
-                                        <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
-                                        <p class="fs-6 fw-bold">Ready to asisst</p>
-                                        <p>Write something to see suggestions</p>
+
+                            <!-- Right Side: AI Assist (Shown Only When Active) -->
+                            @if ($isAIAssistOpen)
+                                <div class="col-md-5 reqAssist">
+                                    <div class="row m-0"
+                                        style="border: 1px solid #02114f; border-radius: 10px; padding: 10px; max-width: 100%;">
+                                        <p class="textAI mb-0">
+                                            <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                            hrXpertAI Assistant
+                                        </p>
+
+                                        <div class="m-0 pb-4 row text-center">
+                                            {{-- Hide this section when AI is loading or suggestions exist --}}
+                                            <div wire:loading.remove wire:target="correctGrammar"
+                                                @if (!empty($suggestions)) style="display: none;" @endif>
+                                                <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                                <p class="fs-6 fw-bold">Ready to assist</p>
+                                                <p>Write something to see suggestions</p>
+                                            </div>
+
+                                            {{-- **Loading Animation** --}}
+                                            <div wire:loading wire:target="correctGrammar" class="text-center w-100">
+                                                <div class="ms-circle-spinner"></div>
+                                                <p class="text-secondary">Fetching suggestions...</p>
+                                            </div>
+
+                                            {{-- **Suggestions Section** --}}
+                                            @if (!empty($suggestions))
+                                                <div class="mt-3"
+                                                    style="max-height: 150px; overflow-y: auto; padding-right: 5px; width: 100%;">
+                                                    <h5>Suggestions of your feedback:</h5>
+                                                    @foreach ($suggestions as $index => $suggestion)
+                                                        <button
+                                                            wire:click="useSuggestion('feedbackMessage',{{ json_encode($suggestion) }})"
+                                                            class="btn btn-outline-secondary btn-sm mt-1 w-100 text-start"
+                                                            wire:key="suggestion-{{ $index }}">
+                                                            {{ $suggestion }}
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            @endif
 
+
+
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -364,7 +437,7 @@
     <!-- Give Feedback Modal -->
     @if ($isGiveModalOpen)
         <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog reqModal">
+            <div class="modal-dialog @if (!$isAIAssistOpen) reqModal @else modal-lg @endif">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Give Feedback</h1>
@@ -373,7 +446,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="row m-0">
-                            <div class="col-md-12 reqForm">
+                            <div class="@if ($isAIAssistOpen) col-md-7 @else col-md-12 @endif reqForm">
                                 <form wire:submit.prevent="saveFeedback">
                                     <div class="mb-3">
                                         <label class="form-label">Search Employee <span
@@ -440,15 +513,18 @@
                                     <div class="mb-4">
                                         <label class="form-label">Personalized Message <span
                                                 class="text-danger">*</span></label>
-                                        <textarea id="requestRichText" class="form-control" wire:model.lazy="feedbackMessage"
-                                            wire:keydown="clearValidationMessages('feedbackMessage')"></textarea>
+                                        <livewire:quill-text-editor wire:model.live="feedbackMessage"
+                                            :key="$quillKey" />
                                         @error('feedbackMessage')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
                                     <div class="row m-0 text-end">
                                         <p class="p-0">
-                                            <span class="aiChip" onclick="openAIAssist()">
+                                            <span class="aiChip"
+                                                wire:click="toggleAIAssist('{{ $feedbackMessage }}')"
+                                                wire:key="ai-assist-{{ $feedbackMessage }}"
+                                                style="{{ $enableAIAssist ? '' : 'pointer-events: none; opacity: 0.5;' }}">
                                                 <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
                                                 hrXpertAI
                                             </span>
@@ -464,19 +540,51 @@
                                     </div>
                                 </form>
                             </div>
-                            <div class="col-md-5 reqAssist d-none">
-                                <div class="row m-0" style="border: 1px solid #02114f; border-radius: 10px;">
-                                    <p class="textAI mb-0">
-                                        <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
-                                        hrXpertAI Assistant
-                                    </p>
-                                    <div class="m-0 pb-4 row text-center">
-                                        <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
-                                        <p class="fs-6 fw-bold">Ready to asisst</p>
-                                        <p>Write something to see suggestions</p>
+                            <!-- Right Side: AI Assist (Shown Only When Active) -->
+                            @if ($isAIAssistOpen)
+                                <div class="col-md-5 reqAssist">
+                                    <div class="row m-0"
+                                        style="border: 1px solid #02114f; border-radius: 10px; padding: 10px; max-width: 100%;">
+                                        <p class="textAI mb-0">
+                                            <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                            hrXpertAI Assistant
+                                        </p>
+
+                                        <div class="m-0 pb-4 row text-center">
+                                            {{-- Hide this section when AI is loading or suggestions exist --}}
+                                            <div wire:loading.remove wire:target="correctGrammar"
+                                                @if (!empty($suggestions)) style="display: none;" @endif>
+                                                <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                                <p class="fs-6 fw-bold">Ready to assist</p>
+                                                <p>Write something to see suggestions</p>
+                                            </div>
+
+                                            {{-- **Loading Animation** --}}
+                                            <div wire:loading wire:target="correctGrammar" class="text-center w-100">
+                                                <div class="ms-circle-spinner"></div>
+                                                <p class="text-secondary">Fetching suggestions...</p>
+                                            </div>
+
+                                            {{-- **Suggestions Section** --}}
+                                            @if (!empty($suggestions))
+                                                <div class="mt-3"
+                                                    style="max-height: 150px; overflow-y: auto; padding-right: 5px; width: 100%;">
+                                                    <h5>Suggestions of your feedback:</h5>
+                                                    @foreach ($suggestions as $index => $suggestion)
+                                                        <button
+                                                            wire:click="useSuggestion('feedbackMessage',{{ json_encode($suggestion) }})"
+                                                            class="btn btn-outline-secondary btn-sm mt-1 w-100 text-start"
+                                                            wire:key="suggestion-{{ $index }}">
+                                                            {{ $suggestion }}
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
 
                     </div>
@@ -487,116 +595,230 @@
     {{-- accept or reply the request feedback --}}
     <!-- Request Feedback Modal -->
     @if ($isReplyModalOpen)
-        <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0,0,0,0.5);">
-            <div class="modal-dialog">
+        <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog @if (!$isAIAssistOpen) reqModal @else modal-lg @endif">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Reply to Feedback</h1>
-                        <button type="button" class="btn-close" wire:click="closeModal"
+                        <button type="button" class="btn-close" wire:click="closeReplyModal"
                             aria-label="Close"></button>
                     </div>
-
                     <div class="modal-body">
-                        <!-- Selected Employee -->
-                        @if ($selectedEmployee)
-                            <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
-                                style="background: #f8f9fa;">
-                                <div class="initials-circle text-white d-flex justify-content-center align-items-center"
-                                    style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
-                                    {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
-                                </div>
-                                <div class="ms-2">
-                                    <strong>{{ $selectedEmployee['first_name'] }}
-                                        {{ $selectedEmployee['last_name'] }}</strong>
-                                    <div style="color: #5e6e8f; font-size: 14px;">
-                                        #{{ $selectedEmployee['emp_id'] }}</div>
-                                </div>
+                        <div class="row m-0">
+                            <div class="@if ($isAIAssistOpen) col-md-7 @else col-md-12 @endif reqForm">
+                                <form wire:submit.prevent="submitReply">
+                                    <label class="form-label">Selected Employee <span
+                                            class="text-danger">*</span></label>
+                                    <!-- Selected Employee -->
+                                    @if ($selectedEmployee)
+                                        <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                            style="background: #f8f9fa;">
+                                            <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                                style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                                {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
+                                            </div>
+                                            <div class="ms-2">
+                                                <strong>{{ $selectedEmployee['first_name'] }}
+                                                    {{ $selectedEmployee['last_name'] }}</strong>
+                                                <div style="color: #5e6e8f; font-size: 14px;">
+                                                    #{{ $selectedEmployee['emp_id'] }}</div>
+                                            </div>
+                                        </div>
+                                    @endif
+                                    <!-- Original Feedback -->
+                                    <div class="form-group">
+                                        <label>Original Feedback</label>
+                                        <div class="ql-editor form-control" wire:ignore>
+                                            {!! $originalFeedbackText !!}
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <label class="form-label">Reply Message <span
+                                                class="text-danger">*</span></label>
+                                        <livewire:quill-text-editor wire:model.live="replyText" :key="$quillKey" />
+                                        @error('replyText')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <div class="row m-0 text-end">
+                                        <p class="p-0">
+                                            <span class="aiChip" wire:click="toggleAIAssist('{{ $replyText }}')"
+                                                wire:key="ai-assist-{{ $replyText }}"
+                                                style="{{ $enableAIAssist ? '' : 'pointer-events: none; opacity: 0.5;' }}">
+                                                <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
+                                                hrXpertAI
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            wire:click="closeReplyModal">Close</button>
+                                        <button type="submit" class="btn btn-primary"
+                                            style="background-color: #02114f;">Send Reply</button>
+                                    </div>
+                                </form>
                             </div>
-                        @endif
-                        <!-- Original Feedback -->
-                        <div class="form-group">
-                            <label>Original Feedback</label>
-                            <textarea class="form-control" rows="3" wire:model="originalFeedbackText" disabled></textarea>
+                            @if ($isAIAssistOpen)
+                                <div class="col-md-5 reqAssist">
+                                    <div class="row m-0"
+                                        style="border: 1px solid #02114f; border-radius: 10px; padding: 10px; max-width: 100%;">
+                                        <p class="textAI mb-0">
+                                            <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                            hrXpertAI Assistant
+                                        </p>
+                                        <div class="m-0 pb-4 row text-center">
+                                            <div wire:loading.remove wire:target="correctGrammar"
+                                                @if (!empty($suggestions)) style="display: none;" @endif>
+                                                <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                                <p class="fs-6 fw-bold">Ready to assist</p>
+                                                <p>Write something to see suggestions</p>
+                                            </div>
+                                            <div wire:loading wire:target="correctGrammar" class="text-center w-100">
+                                                <div class="ms-circle-spinner"></div>
+                                                <p class="text-secondary">Fetching suggestions...</p>
+                                            </div>
+                                            @if (!empty($suggestions))
+                                                <div class="mt-3"
+                                                    style="max-height: 150px; overflow-y: auto; padding-right: 5px; width: 100%;">
+                                                    <h5>Suggestions for your reply:</h5>
+                                                    @foreach ($suggestions as $index => $suggestion)
+                                                        <button
+                                                            wire:click="useSuggestion('replyText',{{ json_encode($suggestion) }})"
+                                                            class="btn btn-outline-secondary btn-sm mt-1 w-100 text-start"
+                                                            wire:key="suggestion-{{ $index }}">
+                                                            {{ $suggestion }}
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-
-                        <!-- Reply Textarea -->
-                        <div class="form-group">
-                            <label>Your Reply</label>
-                            <textarea class="form-control" rows="3" wire:model="replyText"
-                                wire:keydown="clearValidationMessages('replyText')" placeholder="Type your reply..."></textarea>
-                            @error('replyText')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" wire:click="closeReplyModal">Cancel</button>
-                        <button type="button" class="btn btn-primary" wire:click="submitReply">Send Reply</button>
                     </div>
                 </div>
             </div>
         </div>
     @endif
+
     <!-- Edit Feedback Modal -->
     @if ($isEditModalVisible)
-        <div class="modal fade show d-block" tabindex="-1" id="editFeedbackModal"
-            style="background: rgba(0, 0, 0, 0.5);">
-            <div class="modal-dialog">
+        <div class="modal show d-block" tabindex="-1" style="background: rgba(0, 0, 0, 0.5);">
+            <div class="modal-dialog @if (!$isAIAssistOpen) reqModal @else modal-lg @endif">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Edit Feedback for {{ $employeeName }}</h5>
+                        <h1 class="modal-title fs-5">Edit Feedback</h1>
                         <button type="button" class="btn-close" wire:click="closeEditFeedbackModal"
-                            data-bs-dismiss="modal"></button>
+                            aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <!-- Selected Employee -->
-                        @if ($selectedEmployee)
-                            <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
-                                style="background: #f8f9fa;">
-                                <div class="initials-circle text-white d-flex justify-content-center align-items-center"
-                                    style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
-                                    {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
+                        <div class="row m-0">
+                            <div class="@if ($isAIAssistOpen) col-md-7 @else col-md-12 @endif reqForm">
+                                <div class="mb-3">
+                                    <label class="form-label">Selected Employee <span
+                                            class="text-danger">*</span></label>
+                                    @if ($selectedEmployee)
+                                        <div class="selected-employee-display p-2 border rounded d-flex align-items-center"
+                                            style="background: #f8f9fa;">
+                                            <div class="initials-circle text-white d-flex justify-content-center align-items-center"
+                                                style="width: 40px; height: 40px; border-radius: 10%; background: #f5c391; font-weight: bold;">
+                                                {{ strtoupper(substr($selectedEmployee['first_name'], 0, 1)) }}{{ strtoupper(substr($selectedEmployee['last_name'], 0, 1)) }}
+                                            </div>
+                                            <div class="ms-2">
+                                                <strong>{{ $selectedEmployee['first_name'] }}
+                                                    {{ $selectedEmployee['last_name'] }}</strong>
+                                                <div style="color: #5e6e8f; font-size: 14px;">
+                                                    #{{ $selectedEmployee['emp_id'] }}</div>
+                                            </div>
+                                        </div>
+                                    @endif
                                 </div>
-                                <div class="ms-2">
-                                    <strong>{{ $selectedEmployee['first_name'] }}
-                                        {{ $selectedEmployee['last_name'] }}</strong>
-                                    <div style="color: #5e6e8f; font-size: 14px;">
-                                        #{{ $selectedEmployee['emp_id'] }}</div>
+                                <!-- Editable Feedback Message -->
+                                <div class="mb-3">
+                                    <label class="form-label">Personalized Message <span
+                                            class="text-danger">*</span></label>
+                                    <livewire:quill-text-editor wire:model.live="updatedFeedbackMessage"
+                                        :key="$quillKey" />
+
+                                    @error('updatedFeedbackMessage')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                                <div class="row m-0 text-end">
+                                    <p class="p-0">
+                                        <span class="aiChip"
+                                            wire:click="toggleAIAssist('{{ $updatedFeedbackMessage }}')"
+                                            wire:key="ai-assist-{{ $updatedFeedbackMessage }}"
+                                            style="{{ $enableAIAssist ? '' : 'pointer-events: none; opacity: 0.5;' }}">
+                                            <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 2px;" />
+                                            hrXpertAI
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm"
+                                        wire:click="closeEditFeedbackModal">Cancel</button>
+                                    @if ($feedback->id && $feedback->is_draft)
+                                        <button type="button" class="btn btn-warning btn-sm"
+                                            wire:click="updateGiveFeedback">Save as
+                                            Draft</button>
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            style="background-color: #02114f;"
+                                            wire:click="updateDraftGiveFeedback">Save
+                                            changes</button>
+                                    @else
+                                        <button type="button" class="btn btn-primary btn-sm"
+                                            style="background-color: #02114f;" wire:click="updateGiveFeedback">Save
+                                            changes</button>
+                                    @endif
                                 </div>
                             </div>
-                        @endif
-
-                        <!-- Editable Feedback Message -->
-                        <div class="mb-3">
-                            <label class="form-label">Personalized Message <span class="text-danger">*</span></label>
-                            <textarea class="form-control" wire:model="updatedFeedbackMessage" rows="4"
-                                wire:keydown="clearValidationMessages('updatedFeedbackMessage')">{{ $updatedFeedbackMessage }}</textarea>
-                            @error('updatedFeedbackMessage')
-                                <span class="text-danger">{{ $message }}</span>
-                            @enderror
+                            @if ($isAIAssistOpen)
+                                <div class="col-md-5 reqAssist">
+                                    <div class="row m-0"
+                                        style="border: 1px solid #02114f; border-radius: 10px; padding: 10px; max-width: 100%;">
+                                        <p class="textAI mb-0">
+                                            <img src="images/fav.jpeg" style="width: 1.4em; margin-right: 6px;" />
+                                            hrXpertAI Assistant
+                                        </p>
+                                        <div class="m-0 pb-4 row text-center">
+                                            <div wire:loading.remove wire:target="correctGrammar"
+                                                @if (!empty($suggestions)) style="display: none;" @endif>
+                                                <img src="images/tree.png" style="width: 6em; margin: 10px auto;" />
+                                                <p class="fs-6 fw-bold">Ready to assist</p>
+                                                <p>Write something to see suggestions</p>
+                                            </div>
+                                            <div wire:loading wire:target="correctGrammar" class="text-center w-100">
+                                                <div class="ms-circle-spinner"></div>
+                                                <p class="text-secondary">Fetching suggestions...</p>
+                                            </div>
+                                            @if (!empty($suggestions))
+                                                <div class="mt-3"
+                                                    style="max-height: 150px; overflow-y: auto; padding-right: 5px; width: 100%;">
+                                                    <h5>Suggestions for your feedback:</h5>
+                                                    @foreach ($suggestions as $index => $suggestion)
+                                                        <button
+                                                            wire:click="useSuggestion('updatedFeedbackMessage',{{ json_encode($suggestion) }})"
+                                                            class="btn btn-outline-secondary btn-sm mt-1 w-100 text-start"
+                                                            wire:key="suggestion-{{ $index }}">
+                                                            {{ $suggestion }}
+                                                        </button>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm"
-                            wire:click="closeEditFeedbackModal">Cancel</button>
-                        @if ($feedback->id && $feedback->is_draft)
-                            <button type="button" class="btn btn-warning btn-sm"
-                                wire:click="updateGiveFeedback">Save as
-                                Draft</button>
-                            <button type="button" class="btn btn-primary btn-sm" style="background-color: #02114f;"
-                                wire:click="updateDraftGiveFeedback">Save
-                                changes</button>
-                        @else
-                            <button type="button" class="btn btn-primary btn-sm" style="background-color: #02114f;"
-                                wire:click="updateGiveFeedback">Save
-                                changes</button>
-                        @endif
                     </div>
                 </div>
             </div>
         </div>
     @endif
+
+
 
     <!-- Delete Confirmation Modal -->
     @if ($showDeleteModal)
@@ -622,8 +844,38 @@
         </div>
         <div class="modal-backdrop fade show"></div>
     @endif
-
-
-
+    @if ($showWithDrawModal)
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Withdraw</h5>
+                    <button type="button" class="btn-close"
+                        wire:click="$set('showWithDrawModal', false)"></button>
+                </div>
+                <div class="modal-body">
+                    Are you sure you want to Confirm Withdraw this feedback?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm"
+                        wire:click="$set('showWithDrawModal', false)">Cancel</button>
+                    <button type="button" class="btn btn-danger btn-sm"
+                        wire:click="withDrawFeedback">Withdraw</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show"></div>
+@endif
 </div>
 </div>
+<script>
+    window.addEventListener('trigger-correct-grammar', (event) => {
+        console.log('hai hello feedback message is:', event);
+        const field = event.detail[0].field;
+        console.log('hai hello feedback message is:', field);
+        setTimeout(() => {
+            @this.call('correctGrammar', field);
+        }, 2000);
+    });
+</script>

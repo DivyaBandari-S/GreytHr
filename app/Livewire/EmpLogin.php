@@ -139,62 +139,61 @@ class EmpLogin extends Component
     }
 
     public function empLogin()
-    {
-        $this->validate($this->rules);
+{
+    $this->validate($this->rules);
 
-        // Set submitting state to true only if validation passed
+    try {
+        $this->isSubmitting = true;
+        $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])
+            ->orWhere('email', $this->form['emp_id'])
+            ->first();
 
-        try {
-            $this->isSubmitting = true;
-            $user = EmployeeDetails::where('emp_id', $this->form['emp_id'])
-                ->orWhere('email', $this->form['emp_id'])
-                ->first();
-            // Check if user exists and is inactive
-            if ($user && !$user->status) {
-                // sweetalert()->addError('Your account is inactive. Please contact support.');
-                // is_active == false
-                ################################### this is also working by using dispatch event call from in the blade using javascript
-                // Dispatch event to trigger a SweetAlert on the frontend
-                $this->dispatch('inactive-user-alert', ['message' => 'Your account is inactive. Please contact support.']);
-                $this->resetForm();
-                $this->reset('form'); // Reset the entire form
-                $this->resetKey++;
-            } else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
-                session(['post_login' => true]);
-                FlashMessageHelper::flashSuccess("you are logged in successfully");
-                return redirect('/');
-            } elseif (Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
-                session(['post_login' => true]);
-                FlashMessageHelper::flashSuccess("you are logged in successfully");
-                return redirect('/');
-            } else {
-                FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
-                $this->resetForm();
-                $this->reset('form'); // Reset the entire form
-                $this->resetKey++;
-            }
-        } catch (ValidationException $e) {
-            FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
+        if ($user && !$user->status) {
+            Log::info('Inactive user login attempt', ['emp_id' => $this->form['emp_id']]);
+
+            $this->dispatch('inactive-user-alert', ['message' => 'Your account is inactive. Please contact support.']);
             $this->resetForm();
-            $this->reset('form'); // Reset the entire form
+            $this->reset('form');
             $this->resetKey++;
-        } catch (\Illuminate\Database\QueryException $e) {
-            FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
+        } 
+        else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1]) || 
+                 Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
+            session(['post_login' => true]);
+            FlashMessageHelper::flashSuccess("You are logged in successfully");
+
+            Log::info('Employee login successful', ['emp_id' => $this->form['emp_id']]);
+
+            return redirect('/');
+        } else {
+            Log::warning('Invalid login attempt', ['emp_id' => $this->form['emp_id']]);
+
+            FlashMessageHelper::flashError("Invalid ID or Password. Please try again.");
             $this->resetForm();
-            $this->reset('form'); // Reset the entire form
-            $this->resetKey++;
-        } catch (\Symfony\Component\HttpKernel\Exception\HttpException $e) {
-            FlashMessageHelper::flashError('There is a server error. Please try again later.');
-            $this->resetForm();
-            $this->reset('form'); // Reset the entire form
-            $this->resetKey++;
-        } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
-            $this->resetForm();
-            $this->reset('form'); // Reset the entire form
+            $this->reset('form');
             $this->resetKey++;
         }
+    } 
+    catch (ValidationException $e) {
+        Log::error('Validation error during login', ['error' => $e->getMessage()]);
+        FlashMessageHelper::flashError('There was a problem with your input. Please check and try again.');
+    } 
+    catch (QueryException $e) {
+        Log::error('Database error during login', ['error' => $e->getMessage()]);
+        FlashMessageHelper::flashError('We are experiencing technical difficulties. Please try again later.');
+    } 
+    catch (HttpException $e) {
+        Log::error('HTTP error during login', ['error' => $e->getMessage()]);
+        FlashMessageHelper::flashError('There is a server error. Please try again later.');
+    } 
+    catch (\Exception $e) {
+        Log::error('Unexpected error during login', ['error' => $e->getMessage()]);
+        FlashMessageHelper::flashError('An unexpected error occurred. Please try again.');
     }
+
+    $this->resetForm();
+    $this->reset('form');
+    $this->resetKey++;
+}
 
 
     // protected function flashError($message)

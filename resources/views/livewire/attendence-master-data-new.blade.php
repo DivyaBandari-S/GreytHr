@@ -826,19 +826,21 @@
                 $currentYear = date('Y');
                 @endphp
 
-                @if($attendanceYear<=$currentYear) <tr style="height:60px;background-color:#fff;">
+                
+                <tr style="height:60px;background-color:#fff;">
                     @php
                     // Get the current day of the month
                     $currentYear = date('Y');
                     $currentDay = $daysInMonth;
-
+                    $currentDate=now()->format('Y-m-d');
+                   
                     // Check if $attendanceYear is greater than the current year
-                    if ($attendanceYear == $currentYear) {
-                    $currentDay = date('j');
-                    }
-                    elseif($attendanceYear == 0) {
-                    $currentDay = date('j');
-                    }
+                    //if ($attendanceYear == $currentYear) {
+                    //$currentDay = date('j');
+                    //}
+                    //elseif($attendanceYear == 0) {
+                    //$currentDay = date('j');
+                    //}
                     @endphp
 
                     @for ($i = 1; $i <= $currentDay; $i++)
@@ -1007,12 +1009,12 @@
 
                         @endforeach
 
-                        @if ($dayName === 'Sat' || $dayName === 'Sun')
+                        @if (($dayName === 'Sat' || $dayName === 'Sun')&&($fullDate<=$currentDate))
                         <p style="color:#666;font-weight:500;"title="Off Day">O</p>
 
-                        @elseif($isHoliday==1)
+                        @elseif(($isHoliday==1)&&($fullDate<=$currentDate))
                         <p style=" color:#666;font-weight:500;"title="Holiday">H</p>
-                        @elseif($leaveTake==1)
+                        @elseif(($leaveTake==1)&&($fullDate<=$currentDate))
             
                         @php
                                             $leaveAbbreviations = [
@@ -1030,7 +1032,7 @@
  
                         <p style=" color:#666;font-weight:500;"title="{{$leaveType}}">{{$abbreviationforLeaveType}}</p>
                         
-                        @elseif($leaveTakeforSession1==1&&$present==1)
+                        @elseif($leaveTakeforSession1==1&&$present==1&&($fullDate<=$currentDate))
                         @php
                                             $leaveAbbreviations = [
                                                 'Loss Of Pay' => 'LOP',
@@ -1046,7 +1048,7 @@
                                  @endphp
  
                         <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and Present">{{$abbreviationforLeaveTypeforSession1}}:P</p>
-                        @elseif($leaveTakeforSession2==1&&$present==1)
+                        @elseif($leaveTakeforSession2==1&&$present==1&&($fullDate<=$currentDate))
                         @php
                                             $leaveAbbreviations = [
                                                 'Loss Of Pay' => 'LOP',
@@ -1061,7 +1063,7 @@
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
                         <p style=" color:#666;font-weight:500;"title="Present and {{$leaveTypeforSession2}}">P:{{$abbreviationforLeaveTypeforSession2}}</p>
-                        @elseif($leaveTakeforSession2==1&&$leaveTakeforSession1==1)
+                        @elseif($leaveTakeforSession2==1&&$leaveTakeforSession1==1&&$fullDate<=$currentDate)
                         @php
                                             $leaveAbbreviations = [
                                                 'Loss Of Pay' => 'LOP',
@@ -1078,7 +1080,7 @@
                                  @endphp
                         <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and {{$leaveTypeforSession2}}">{{$abbreviationforLeaveTypeforSession1}}:{{$abbreviationforLeaveTypeforSession2}}</p>
                        
-                        @elseif($leaveTakeforSession1==1)
+                        @elseif(($leaveTakeforSession1==1)&&($fullDate<=$currentDate))
                         @php
                                             $leaveAbbreviations = [
                                                 'Loss Of Pay' => 'LOP',
@@ -1093,7 +1095,7 @@
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession1] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
                         <p style=" color:#666;font-weight:500;"title="{{$leaveTypeforSession1}} and absent">{{$abbreviationforLeaveTypeforSession2}}:A</p>
-                        @elseif($leaveTakeforSession2==1)
+                        @elseif(($leaveTakeforSession2==1)&&($fullDate<=$currentDate))
                         @php
                                             $leaveAbbreviations = [
                                                 'Loss Of Pay' => 'LOP',
@@ -1108,7 +1110,7 @@
                                             $abbreviationforLeaveTypeforSession2 = $leaveAbbreviations[$leaveTypeforSession2] ?? strtoupper(substr($leaveType, 0, 2));
                                  @endphp
                         <p style=" color:#666;font-weight:500;"title="Absent and {{$leaveTypeforSession2}}">A:{{$abbreviationforLeaveTypeforSession2}}</p>
-                        @elseif($present==1&&!empty($outRecord))
+                        @elseif($present==1&&!empty($outRecord)&&($fullDate<=$currentDate))
                            @php
                                 $shiftStartTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time);
                                 $shiftEndTime = \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time);
@@ -1158,7 +1160,7 @@
                                <p style=" color:#666;font-weight:500;"title="Present">P </p>
                              @endif
                          
-                        @else
+                        @elseif($fullDate<=$currentDate)
 
                         <p style=" color: #f66;font-weight:500;"title="Absent">A</p>
                         @endif
@@ -1185,7 +1187,7 @@
 
 
                         </tr>
-                        @endif
+                       
                         @endforeach
                         @if($notFound)
                         <td colspan="20" style="text-align: center;font-size:12px">Record not found</td>
