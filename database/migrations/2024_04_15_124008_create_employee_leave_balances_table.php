@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('employee_leave_balances', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id');
             $table->json('leave_policy_id')->nullable();
             $table->foreign('emp_id')->references('emp_id')->on('employee_details')->onDelete('cascade')->onUpdate('cascade');

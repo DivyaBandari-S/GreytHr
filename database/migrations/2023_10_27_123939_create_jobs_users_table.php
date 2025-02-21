@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('jobs_users', function (Blueprint $table) {
-            $table->mediumIncrements('id');
+            $table->smallInteger('id')->autoIncrement();
             $table->string('user_id')->unique();
             $table->enum('user_type', ['Job Seeker', 'Vendor']);
             $table->string('company_id')->unique()->nullable();

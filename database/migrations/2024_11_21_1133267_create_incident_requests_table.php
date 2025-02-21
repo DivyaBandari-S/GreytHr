@@ -1,10 +1,10 @@
 <?php
- 
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
- 
+
 return new class extends Migration
 {
     /**
@@ -44,7 +44,7 @@ return new class extends Migration
             $table->timestamp('ser_progress_since')->nullable();
             $table->tinyInteger('status_code')->default(11); // Default to a "Pending" status
             $table->timestamps();
- 
+
             // Foreign key constraints
             $table->foreign('emp_id')
                 ->references('emp_id')
@@ -56,7 +56,7 @@ return new class extends Migration
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
- 
+
         // Create the trigger for auto-generating snow_id
         $triggerSQL = <<<SQL
         CREATE TRIGGER generate_snow_id BEFORE INSERT ON incident_requests FOR EACH ROW
@@ -68,7 +68,7 @@ return new class extends Migration
                          FROM incident_requests WHERE snow_id LIKE 'INC-%'),
                         0
                     ) + 1;
- 
+
                     SET NEW.snow_id = CONCAT('INC-', LPAD(@max_id, 4, '0'));
                 ELSEIF NEW.category = 'Service Request' THEN
                     SET @max_id := IFNULL(
@@ -76,16 +76,16 @@ return new class extends Migration
                          FROM incident_requests WHERE snow_id LIKE 'SER-%'),
                         0
                     ) + 1;
- 
+
                     SET NEW.snow_id = CONCAT('SER-', LPAD(@max_id, 4, '0'));
                 END IF;
             END IF;
         END;
         SQL;
- 
+
         DB::unprepared($triggerSQL);
     }
- 
+
     /**
      * Reverse the migrations.
      */
@@ -93,10 +93,9 @@ return new class extends Migration
     {
         // Drop the trigger
         DB::unprepared('DROP TRIGGER IF EXISTS generate_snow_id');
- 
+
         // Drop the table
         Schema::dropIfExists('incident_requests');
     }
 };
- 
- 
+
