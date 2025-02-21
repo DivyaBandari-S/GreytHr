@@ -617,10 +617,19 @@ class LeaveApplyPage extends Component
             // New validation for file uploads
             if ($this->file_paths) {
                 if ($this->checkFileSize()) {
+                    // Check if the file extension is 'zip'
+                    foreach ($this->file_paths as $file) {
+                        if (in_array($file->getClientOriginalExtension(), ['zip', 'rar'])) {
+                            FlashMessageHelper::flashError('The uploaded file type is not allowed. Please upload a valid xls,csv,xlsx,pdf,jpeg,png,jpg,gif.');
+                            return false;
+                        }
+                    }
+                } else {
                     $this->errorMessageValidation = FlashMessageHelper::flashError('The file size must not exceed 1 MB. Please upload a smaller file.');
                     return false;
                 }
             }
+
 
             // All validations passed, now calculate the number of days
             if ($this->to_date) {
@@ -647,11 +656,7 @@ class LeaveApplyPage extends Component
     {
         try {
             foreach ($this->file_paths as $file) {
-                if ($file->getSize() > 1024 * 1024) {
-                    return true;
-                }
-                // Check if the file extension is 'zip'
-                if ($file->getClientOriginalExtension() === 'zip') {
+                if ($file->getSize() <= 1024 * 1024) {
                     return true;
                 }
             }
@@ -676,12 +681,12 @@ class LeaveApplyPage extends Component
 
             // Retrieve leave requests for the employee
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-            ->where('category_type', 'Leave')
-            ->whereIn('leave_status', [2, 5])
-            ->whereIn('cancel_status', [5, 7])
-            ->whereYear('from_date', '=', date('Y'))  // Ensure from_date is in the current year
-            ->whereYear('to_date', '=', date('Y'))    // Ensure to_date is in the current year
-            ->get();
+                ->where('category_type', 'Leave')
+                ->whereIn('leave_status', [2, 5])
+                ->whereIn('cancel_status', [5, 7])
+                ->whereYear('from_date', '=', date('Y'))  // Ensure from_date is in the current year
+                ->whereYear('to_date', '=', date('Y'))    // Ensure to_date is in the current year
+                ->get();
 
 
             // Iterate over each leave request to format the dates and check for overlaps
