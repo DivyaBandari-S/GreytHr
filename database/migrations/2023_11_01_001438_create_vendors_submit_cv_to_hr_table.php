@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('job_id', 10);
             $table->string('submited_to');
             $table->json('cv');
-            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('restrict')
+            $table->foreign('user_id')->references('user_id')->on('jobs_users')->onDelete('restrict')
                 ->onUpdate('cascade');;
-            $table->foreign('job_id')->references('job_id')->on('jobs')->onDelete('restrict')
+            $table->foreign('job_id')->references('job_id')->on('jobs_lists')->onDelete('restrict')
                 ->onUpdate('cascade');;
             $table->timestamps();
         });
