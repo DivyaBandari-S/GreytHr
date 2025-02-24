@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hold_salaries', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('emp_id', 10);
             $table->string('payout_month', 15);
             $table->string('release_month', 15);
