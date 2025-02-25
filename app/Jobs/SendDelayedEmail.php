@@ -35,7 +35,6 @@ class SendDelayedEmail implements ShouldQueue
                 ->cc($this->cc)
                 ->send(new SendTimeSheetMail($this->pathToFile, $this->originalFileName));
             
-            Log::info('Email sent successfully to ' . $this->to);
         } catch (\Exception $e) {
             Log::error('Failed to send email: ' . $e->getMessage());
         }
