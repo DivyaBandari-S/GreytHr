@@ -1468,29 +1468,29 @@
     @foreach($historyRegularisations as $hr)
 
     @php
-$regularisationEntries = json_decode($hr->regularisation_entries, true);
-// Count the number of elements in the array
-$numberOfEntries = count($regularisationEntries);
-// Initialize variables for minimum and maximum dates
-$minDate = null;
-$maxDate = null;
-// Iterate through each entry to find the minimum and maximum dates
-foreach ($regularisationEntries as $entry) {
-// Check if the entry contains the 'date' key
-if (isset($entry['date'])) {
-$date = strtotime($entry['date']);
+        $regularisationEntries = json_decode($hr->regularisation_entries, true);
+        // Count the number of elements in the array
+        $numberOfEntries = count($regularisationEntries);
+        // Initialize variables for minimum and maximum dates
+        $minDate = null;
+        $maxDate = null;
+        // Iterate through each entry to find the minimum and maximum dates
+        foreach ($regularisationEntries as $entry) {
+        // Check if the entry contains the 'date' key
+        if (isset($entry['date'])) {
+        $date = strtotime($entry['date']);
 
-// Set the initial values for min and max dates
-if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===null || $date> $maxDate) {
-    $maxDate = $date;
-    }
-    } else {
-    }
-    }
+        // Set the initial values for min and max dates
+        if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===null || $date> $maxDate) {
+            $maxDate = $date;
+            }
+            } else {
+            }
+            }
 
     // Convert timestamps back to date strings
-    $minDate = $minDate !== null ? date('Y-m-d', $minDate) : null;
-    $maxDate = $maxDate !== null ? date('Y-m-d', $maxDate) : null;
+            $minDate = $minDate !== null ? date('Y-m-d', $minDate) : null;
+            $maxDate = $maxDate !== null ? date('Y-m-d', $maxDate) : null;
     @endphp
 
     @if(($hr->status==4&&$hr->is_withdraw==1)||$hr->status==2||$hr->status==3)
@@ -1623,50 +1623,7 @@ if ($minDate === null || $date < $minDate) { $minDate=$date; } if ($maxDate===nu
     @endif
     @endif
 
-    <script>
-        function toggleAccordion(element) {
-
-            const accordionBody = element.nextElementSibling;
-
-            if (accordionBody.style.display === 'block') {
-
-                accordionBody.style.display = 'none';
-
-                element.classList.remove('active'); // Remove active class
-
-            } else {
-
-                accordionBody.style.display = 'block';
-
-                element.classList.add('active'); // Add active class
-
-            }
-        }
-
-        function validateFromTime(input) {
-            const timeFromFormat = /^([01]\d|2[0-3]):([0-5]\d)$/; // 24-hour time format validation
-            const isFromValid = timeFromFormat.test(input.value);
-            const errorFromMessage = input.nextElementSibling; // Assuming the error message is the next sibling of the input
-
-            if (!isFromValid && input.value.length === 5) {
-                errorFromMessage.style.display = 'inline'; // Show the error message
-            } else {
-                errorFromMessage.style.display = 'none'; // Hide the error message when valid
-            }
-        }
-
-        function validateToTime(input) {
-            const timeToFormat = /^([01]\d|2[0-3]):([0-5]\d)$/; // 24-hour time format validation
-            const isToValid = timeToFormat.test(input.value);
-            const errorToMessage = input.nextElementSibling; // Assuming the error message is the next sibling of the input
-
-            if (!isToValid && input.value.length === 5) {
-                errorToMessage.style.display = 'inline'; // Show the error message
-            } else {
-                errorToMessage.style.display = 'none'; // Hide the error message when valid
-            }
-        }
-    </script>
+   
 
     </div>
     </div>

@@ -2554,6 +2554,7 @@ td {
 
 .employee-swipes-swipe-date {
     font-size: 10px;
+    white-space: nowrap;
 }
 
 .empty-text {
@@ -7210,6 +7211,17 @@ select .yearSelect {
     border-radius: 50%;
     padding: 2px;
     border: 1px solid var(--label-color);
+}
+.filter-close-btn {
+    background-color:rgb(2, 17, 79);
+    height: 30px;
+    width: 30px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    color:#fff;
 }
 
 .notification-horizontal-line {
