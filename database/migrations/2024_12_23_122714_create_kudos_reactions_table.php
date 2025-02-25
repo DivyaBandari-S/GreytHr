@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kudos_reactions', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('employee_id');  // Instead of foreignId, use string or integer if necessary.
-            $table->string('reaction'); 
+            $table->string('reaction');
             $table->timestamps();
         });
     }

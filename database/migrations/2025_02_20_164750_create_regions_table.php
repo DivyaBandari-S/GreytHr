@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stop_salaries', function (Blueprint $table) {
-            $table->smallInteger('id')->autoIncrement();
-            $table->string('emp_id', 10);
-            $table->string('payout_month', 15);
-            $table->text('reason');
+        Schema::create('regions', function (Blueprint $table) {
+            $table->mediumIncrements('id');
+            $table->string('name', 100);
+            $table->text('translations')->nullable();
+            $table->boolean('flag')->default(1);
+            $table->string('wikiDataId')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stop_salaries');
+        Schema::dropIfExists('regions');
     }
 };

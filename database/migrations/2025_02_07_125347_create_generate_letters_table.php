@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('generate_letters', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('template_name'); // Letter Template
             $table->string('serial_no')->unique(); // Auto-generated Serial Number
             $table->json('authorized_signatory')->nullable();

@@ -485,7 +485,6 @@ class Home extends Component
                 'device_id' => $ipAddress, // Replacing device ID with IP address
             ]);
  
-            dd('ZSxdfcghbjn');
             // Flash message for swipe action
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"

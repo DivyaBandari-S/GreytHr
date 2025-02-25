@@ -155,8 +155,8 @@ class EmpLogin extends Component
             $this->resetForm();
             $this->reset('form');
             $this->resetKey++;
-        } 
-        else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1]) || 
+        }
+        else if (Auth::guard('emp')->attempt(['emp_id' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1]) ||
                  Auth::guard('emp')->attempt(['email' => $this->form['emp_id'], 'password' => $this->form['password'], 'status' => 1])) {
             session(['post_login' => true]);
             FlashMessageHelper::flashSuccess("You are logged in successfully");
