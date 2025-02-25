@@ -1091,6 +1091,7 @@ public function updatedAddselectedPeople()
            'priority' => $this->priority,
            'status_code' => 8,
        ]);
+       $helpDesk->refresh();
    
        // Notify super admins
        $superAdmins = IT::where('role', 'super_admin')->get();

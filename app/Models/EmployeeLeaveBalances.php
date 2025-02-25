@@ -17,9 +17,15 @@ class EmployeeLeaveBalances extends Model
         'period',
         'status',
         'periodicity',
-        'leave_policy_id'
+        'leave_policy_id',
+        'granted_for_year',
+        'is_lapsed',
+        'lapsed_date',
+        'batch_id',
+        'deleted_at',
+        'from_date',
+        'to_date'
     ];
-
     protected static function boot()
     {
         parent::boot();

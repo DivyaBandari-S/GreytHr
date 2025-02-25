@@ -556,7 +556,7 @@ class LeaveApplyPage extends Component
             }
 
             // 1. Check if the selected dates are on weekends
-            if (!$this->isWeekday($this->from_date)) {
+            if (!$this->isWeekday($this->from_date) || !$this->isWeekday($this->to_date)) {
                 $this->errorMessageValidation = FlashMessageHelper::flashError('Looks like it\'s already your non-working day. Please pick different date(s) to apply.');
                 return false;
             }
@@ -617,10 +617,19 @@ class LeaveApplyPage extends Component
             // New validation for file uploads
             if ($this->file_paths) {
                 if ($this->checkFileSize()) {
+                    // Check if the file extension is 'zip'
+                    foreach ($this->file_paths as $file) {
+                        if (in_array($file->getClientOriginalExtension(), ['zip', 'rar'])) {
+                            FlashMessageHelper::flashError('The uploaded file type is not allowed. Please upload a valid xls,csv,xlsx,pdf,jpeg,png,jpg,gif.');
+                            return false;
+                        }
+                    }
+                } else {
                     $this->errorMessageValidation = FlashMessageHelper::flashError('The file size must not exceed 1 MB. Please upload a smaller file.');
                     return false;
                 }
             }
+
 
             // All validations passed, now calculate the number of days
             if ($this->to_date) {
@@ -647,11 +656,7 @@ class LeaveApplyPage extends Component
     {
         try {
             foreach ($this->file_paths as $file) {
-                if ($file->getSize() > 1024 * 1024) {
-                    return true;
-                }
-                // Check if the file extension is 'zip'
-                if ($file->getClientOriginalExtension() === 'zip') {
+                if ($file->getSize() <= 1024 * 1024) {
                     return true;
                 }
             }
@@ -679,6 +684,8 @@ class LeaveApplyPage extends Component
                 ->where('category_type', 'Leave')
                 ->whereIn('leave_status', [2, 5])
                 ->whereIn('cancel_status', [5, 7])
+                ->whereYear('from_date', '=', date('Y'))  // Ensure from_date is in the current year
+                ->whereYear('to_date', '=', date('Y'))    // Ensure to_date is in the current year
                 ->get();
 
 
@@ -721,6 +728,8 @@ class LeaveApplyPage extends Component
                 ->where('category_type', 'Leave')
                 ->whereIn('leave_status', [2, 5])
                 ->whereIn('cancel_status', [5, 3, 6])
+                ->whereYear('from_date', '=', date('Y'))  // Check if 'from_date' is within the current year
+                ->whereYear('to_date', '=', date('Y'))    // Check if 'to_date' is within the current year
                 ->get();
 
             $totalNumberOfDays = 0; // Initialize the counter for total days

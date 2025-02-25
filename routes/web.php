@@ -325,7 +325,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/formdeclaration', Declaration::class)->name('IT-Declaration');
     Route::get('/document', Documentcenter::class)->name('Document-center');
     Route::get('/reimbursement', Reimbursement::class)->name('reimbursement');
-    Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
+    // Route::get('/loans_and_advances', LoansAndAdvances::class)->name('loans And Advances');
     Route::get('/investment', Investment::class)->name('proof-of-investment');
     Route::get('/documents', Documents::class);
     Route::get('/ytd', Ytdreport::class)->name('ytdreport');
@@ -371,7 +371,7 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
 
     // ####################################### Chat Module Routes #########################endregion
     Route::get('/users', EmployeeList::class)->name('users');
-    Route::get('/calendar', ChatCalendar::class)->name('calendar');
+    // Route::get('/calendar', ChatCalendar::class)->name('calendar');
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
@@ -517,7 +517,8 @@ Route::get('/clear', function () {
 
 Route::get('/test-odbc', function () {
     try {
-        $dsn = "sqlsrv:Server=59.144.92.154,1433;Database=eSSL;";
+
+        $dsn = "FreeTDS:Server=59.144.92.154,1433;Database=eSSL;";
         $username = 'essl'; // Replace with your actual username
         $password = 'essl'; // Replace with your actual password
 

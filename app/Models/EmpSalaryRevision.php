@@ -20,6 +20,7 @@ class EmpSalaryRevision extends Model
         'revision_date',
         'revision_type',
         'reason',
+        'payout_month',
         'status'
     ];
 

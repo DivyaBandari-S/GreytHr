@@ -16,10 +16,11 @@ return new class extends Migration
             $table->smallInteger('sal_id');
             $table->smallInteger('bank_id');
             $table->string('salary'); // Use string for encrypted salary
-            $table->date('month_of_sal');
+            $table->string('month_of_sal');
             $table->date('effective_date');
             $table->string('remarks')->nullable();
             $table->timestamps();
+            $table->tinyInteger('is_payslip')->default(0);
             $table->foreign('sal_id')->references('id')->on('salary_revisions')->onDelete('cascade');
             $table->foreign('bank_id')->references('id')->on('emp_bank_details')->onDelete('cascade');
         });

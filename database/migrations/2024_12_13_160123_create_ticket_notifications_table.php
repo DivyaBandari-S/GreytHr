@@ -12,16 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('ticket_notifications', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('title'); // Notification title
             $table->text('message'); // Notification message
             $table->boolean('is_read')->default(false)->nullable(); // Track if the notification has been read
             $table->string('redirect_url'); // URL to redirect the user when the notification is clicked
- 
+
             // Polymorphic relationship
             $table->unsignedBigInteger('notifiable_id')->nullable(); // ID of the related record
             $table->string('notifiable_type')->nullable(); // Table name or model class
- 
+
             $table->timestamps();
         });
     }

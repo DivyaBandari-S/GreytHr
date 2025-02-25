@@ -1856,8 +1856,10 @@ main .btn-send:hover {
     padding-left: 10px !important;
     white-space: unset !important;
   }
-.ql-editor{
-    height: 50px; /* Set a minimum height */
+.ql-editor {
+    height: 50px; /* Minimum height */
+    max-height: 150px; /* Maximum height to prevent overflow */
+    overflow-y: auto; /* Show scrollbar if needed */
 }
 .repliedDiv p {
     margin-bottom: 10px !important;
