@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('feed_back_models', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->enum('feedback_type', ['request', 'give']); // Type of feedback
             $table->string('feedback_to', 10); // User receiving feedback
             $table->string('feedback_from', 10); // User giving feedback

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kudos', function (Blueprint $table) {
-            $table->id();
+            $table->smallInteger('id')->autoIncrement();
             $table->string('employee_id', 10);  // employee_id column as a string, matching emp_id in employees_details
             $table->string('recipient_id', 10);  // recipient_id column as a string, matching emp_id in employees_details
 
