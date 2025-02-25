@@ -381,7 +381,7 @@
     @php
 
     $currentMonth=$monthNumber = DateTime::createFromFormat('F', $Month)->format('n');
-    $currentYear = 2024;
+    $currentYear = now()->year;
     $isHoliday=0;
     $leaveTake=0;
     $leaveType=null;
@@ -586,8 +586,14 @@
 
                         <p style="font-weight:bold;padding-top:15px;">L</p>
                         @else
-
-                            <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
+                        @php
+                            $shiftroster=$this->isEmployeeAssignedDifferentShift($fullDate, $emp->emp_id)['shiftType'];
+                        @endphp
+                            @if(!empty($shiftroster))
+                              <p style="font-weight:bold;padding-top:15px;">{{$shiftroster}}</p>
+                            @else
+                              <p style="font-weight:bold;padding-top:15px;">{{$emp->shift_type}}</p>
+                            @endif  
                         @endif
 
                         </td>

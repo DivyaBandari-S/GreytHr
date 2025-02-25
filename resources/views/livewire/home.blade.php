@@ -1011,8 +1011,14 @@
                             <span class="normalText">{{ $currentDate }}</span>
                         </div>
                         <div class="col normalTextValue">Shift
-                            Time : <span class="normalText">{{ $formattedStartShiftTime }} to
-                                {{ $formattedEndShiftTime }}</span></div>
+                            Time : <span class="normalText">
+                                @if(!empty($shiftStartTime)&&!empty($shiftEndTime))
+                            {{ \Carbon\Carbon::parse($shiftStartTime)->format('H:i a') }} to
+                                {{ \Carbon\Carbon::parse($shiftEndTime)->format('H:i a') }}
+                                @else
+                                 NA 
+                                @endif 
+                            </span></div>
                     </div>
                     <table class="swipes-table mt-2 border w-100">
                         <tr>

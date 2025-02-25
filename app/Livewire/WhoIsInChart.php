@@ -12,6 +12,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Models\EmpDepartment;
 use App\Models\EmployeeDetails;
 use App\Models\SwipeRecord;
 use App\Models\LeaveRequest;
@@ -52,6 +53,7 @@ class WhoIsInChart extends Component
     public $toggleButton=false;
     public $isToggled = false;
 
+    public $selectedDesignation;
     public $openAccordionsForEmployeesOnLeave=[];
     public $openshiftselectorforcheck = false;
     public $from_date;
@@ -60,10 +62,15 @@ class WhoIsInChart extends Component
     public $selectedShift=null;
     public $employees4;
 
+    public $selectedDepartment;
+    public $selectedLocation;
+    public $isOpen=false;
     public $openAccordionForEarlyComers=[];
     public $formattedSelectedShift;
     public $openAccordionForAbsent=null;
 
+    public $departmentId;
+    public $isupdateFilter=0;
    public $shiftSelected=null;
   
     public $openAccordionForLate=null;
@@ -75,7 +82,7 @@ class WhoIsInChart extends Component
     public $search = '';
 
     // Pass this from your controller or set it within Livewire
-   
+   public $selectedSwipeStatus;
     public $results = [];
     public function mount()
     {
@@ -87,11 +94,68 @@ class WhoIsInChart extends Component
 
 
     }
+
+    public function closeSidebar()
+    {
+        $this->isOpen=0;
+    }
+
+    public function updateselectedSwipeStatus()
+    {
+        $this->selectedSwipeStatus=$this->selectedSwipeStatus;
+    }
     public function opentoggleButton()
     {
         $this->toggleButton = !$this->toggleButton;   
     }
-    
+
+    public function resetSidebar()
+    {
+        $this->selectedSwipeStatus='All';
+        $this->selectedDesignation='All';
+        $this->selectedLocation='';
+        $this->selectedDepartment='All';
+        $this->isOpen=0;
+      
+    }
+
+
+    public function updateselectedDepartment()
+    {
+        $this->selectedDepartment=$this->selectedDepartment;
+        $this->departmentId = null;
+        if ($this->selectedDepartment === 'information_technology') {
+            $this->departmentId = EmpDepartment::where('department', 'Information Technology')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'business_development') {
+            $this->departmentId = EmpDepartment::where('department', 'Business Development')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'operations') {
+            $this->departmentId = EmpDepartment::where('department', 'Operations')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'innovation') {
+            $this->departmentId = EmpDepartment::where('department', 'Innovation')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'infrastructure') {
+            $this->departmentId = EmpDepartment::where('department', 'Infrastructure')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'human_resources') {
+            $this->departmentId = EmpDepartment::where('department', 'Human Resource')->value('dept_id');
+        }
+        elseif ($this->selectedDepartment === 'All') 
+        {
+            $this->departmentId=null;
+        }
+    }
+    public function updateselectedDesignation()
+    {
+        $this->selectedDesignation=$this->selectedDesignation;
+    }
+    public function toggleSidebar()
+    {
+        $this->isOpen = !$this->isOpen; 
+    }
+
     public function updatedSelectedShift($value)
 {
     // This method will be called whenever the selected radio button changes
@@ -426,6 +490,7 @@ public function toggleAccordionForLate($index)
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
                 })
+
                 ->select(
                     'employee_details.*',
                      // Selecting the mobile number from emp_personal_infos
@@ -512,6 +577,10 @@ public function toggleAccordionForLate($index)
         $this->openshiftselectorforcheck = true;
     }
 
+    public function updateselectedLocation()
+    {
+        $this->selectedLocation=$this->selectedLocation;
+    }
 
     public function toggle()
     {
@@ -522,6 +591,11 @@ public function toggleAccordionForLate($index)
         $this->openshiftselectorforcheck = false;
     }
     
+    public function applyFilter()
+    {
+        $this->isupdateFilter=1;
+        $this->closeSidebar();
+    }
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
@@ -549,6 +623,37 @@ public function toggleAccordionForLate($index)
     ->whereDate('from_date', '<=', $currentDate)
     ->whereDate('to_date', '>=', $currentDate)
     ->where('employee_details.employee_status', 'active')
+    ->when($this->selectedDesignation&&$this->isupdateFilter==1, function ($query) {
+        return match ($this->selectedDesignation) {
+            'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
+            'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']),
+            'team_lead' => $query->where('employee_details.job_role', 'LIKE', '%Team Lead%'),
+            'sales_head' => $query->where('employee_details.job_role', 'LIKE', '%Sales Head%'),
+            default => $query,
+        };
+    })
+    ->when($this->selectedLocation&&$this->isupdateFilter==1, function ($query) {
+        if ($this->selectedLocation === 'Remote') {
+            return $query->where('employee_details.job_mode', $this->selectedLocation);
+        } else {
+            return $query->where('employee_details.job_location', $this->selectedLocation)
+                         ->where('employee_details.job_mode', '!=', 'Remote');
+        }
+    })
+    ->when(!empty($this->selectedDepartment)&&$this->isupdateFilter==1, function ($query) {
+        
+        return match ($this->selectedDepartment) {
+            'information_technology' => $query->where('employee_details.dept_id', $this->departmentId),
+            'business_development' => $query->where('employee_details.dept_id', $this->departmentId),
+            'operations' => $query->where('employee_details.dept_id',$this->departmentId),
+            'innovation' => $query->where('employee_details.dept_id',$this->departmentId),
+            'infrastructure' => $query->where('employee_details.dept_id',$this->departmentId),
+            'human_resources' => $query->where('employee_details.dept_id',$this->departmentId),
+            default => $query,
+        };
+                     
+    
+    })
     ->get([
         'leave_applications.*',
         'employee_details.*',
@@ -641,6 +746,35 @@ public function toggleAccordionForLate($index)
     ->leftJoin('company_shifts', function ($join) {
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
+    })
+    ->when($this->selectedDesignation && $this->isupdateFilter==1, function ($query) {
+        return match ($this->selectedDesignation) {
+            'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
+            'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']),
+            'team_lead' => $query->where('employee_details.job_role', 'LIKE', '%Team Lead%'),
+            'sales_head' => $query->where('employee_details.job_role', 'LIKE', '%Sales Head%'),
+            default => $query,
+        };
+    })
+    ->when($this->selectedLocation&&$this->isupdateFilter==1, function ($query) {
+        if ($this->selectedLocation === 'Remote') {
+            return $query->where('employee_details.job_mode', $this->selectedLocation);
+        } else {
+            return $query->where('employee_details.job_location', $this->selectedLocation)
+                         ->where('employee_details.job_mode', '!=', 'Remote');
+        }
+    })
+    ->when(!empty($this->selectedDepartment)&&$this->isupdateFilter==1, function ($query) {
+        
+        return match ($this->selectedDepartment) {
+            'information_technology' => $query->where('employee_details.dept_id', $this->departmentId),
+            'business_development' => $query->where('employee_details.dept_id', $this->departmentId),
+            'operations' => $query->where('employee_details.dept_id',$this->departmentId),
+            'innovation' => $query->where('employee_details.dept_id',$this->departmentId),
+            'infrastructure' => $query->where('employee_details.dept_id',$this->departmentId),
+            'human_resources' => $query->where('employee_details.dept_id',$this->departmentId),
+            default => $query,
+        };
     })
     ->select(
         'employee_details.*',// Selecting the mobile number from emp_personal_infos
@@ -742,6 +876,51 @@ public function toggleAccordionForLate($index)
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
                 })
+                ->when($this->selectedDesignation&& $this->isupdateFilter==1, function ($query) {
+                    return match ($this->selectedDesignation) {
+                        'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
+                        'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']),
+                        'team_lead' => $query->where('employee_details.job_role', 'LIKE', '%Team Lead%'),
+                        'sales_head' => $query->where('employee_details.job_role', 'LIKE', '%Sales Head%'),
+                        default => $query,
+                    };
+                })
+                ->when($this->selectedLocation&&$this->isupdateFilter==1, function ($query) {
+                    if ($this->selectedLocation === 'Remote') {
+                        return $query->where('employee_details.job_mode', $this->selectedLocation);
+                    } else {
+                        return $query->where('employee_details.job_location', $this->selectedLocation)
+                                     ->where('employee_details.job_mode', '!=', 'Remote');
+                    }
+                })
+                ->when($this->selectedSwipeStatus=='mobile_sign_in'&&$this->isupdateFilter==1, function ($query) {
+                    
+                        return $query->where('swipe_records.in_or_out', 'IN')
+                        ->where('swipe_records.sign_in_device', 'Mobile');
+                               
+                    
+                })
+                ->when($this->selectedSwipeStatus=='web_sign_in'&&$this->isupdateFilter==1, function ($query) {
+                    
+                    return $query->where('swipe_records.in_or_out', 'IN')
+                    ->where('swipe_records.sign_in_device', 'Laptop/Desktop');
+                           
+                
+            })
+            ->when(!empty($this->selectedDepartment)&&$this->isupdateFilter==1, function ($query) {
+        
+                return match ($this->selectedDepartment) {
+                    'information_technology' => $query->where('employee_details.dept_id', $this->departmentId),
+                    'business_development' => $query->where('employee_details.dept_id', $this->departmentId),
+                    'operations' => $query->where('employee_details.dept_id',$this->departmentId),
+                    'innovation' => $query->where('employee_details.dept_id',$this->departmentId),
+                    'infrastructure' => $query->where('employee_details.dept_id',$this->departmentId),
+                    'human_resources' => $query->where('employee_details.dept_id',$this->departmentId),
+                    default => $query,
+                };
+                             
+            
+        })
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name','employee_details.email','employee_details.emergency_contact', 'employee_details.job_role','employee_details.job_location','company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'employee_details.emergency_contact', 'company_shifts.shift_name') // Include shift_name in select
                 ->where('employee_details.employee_status', 'active')
                 ->distinct()
@@ -776,7 +955,7 @@ public function toggleAccordionForLate($index)
                 ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
                 ->distinct('swipe_records.emp_id') // Apply distinct on emp_id to avoid duplicates
                 ->count(); // Count distinct late swipes
-           
+          
     $earlySwipesCount = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
         $query->selectRaw('MIN(swipe_records.id)')
             ->from('swipe_records')

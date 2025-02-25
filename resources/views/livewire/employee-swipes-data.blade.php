@@ -200,12 +200,32 @@
         font-size: 14px;
         margin-top: 0;
     }
+    
+    .apply-btn, .reset-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .apply-btn {
+        background-color: rgb(2, 17, 79);
+        color: white;
+    }
+
+    .reset-btn {
+        border:1px solid rgb(2, 17, 79);
+        color: rgb(2, 17, 79);
+        background-color: #fff;
+       
+    }
     </style>
 
     <body>
         <div>
             <div class="employee-swipes-fields d-flex align-items-center">
-                <div class="dropdown-container1-employee-swipes"style="margin-top:5px;">
+                <div class="dropdown-container1-employee-swipes">
                     <label for="start_date" style="color: #666;font-size:12px;">Select Date<span
                             style="color: red;">*</span>:</label><br />
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate"
@@ -217,10 +237,10 @@
 
 
                 <div class="dropdown-container1-employee-swipes-for-search-employee">
-                    <label for="dateType" style="color: #666;font-size:12px;">Employee Search</label><br />
+                    <label for="dateType" style="color: #666;font-size:12px;">Employee Search:</label><br />
 
                     <div class="search-input-employee-swipes">
-                        <div class="search-container" style="position: relative;">
+                        <div class="search-container" style="position: relative;margin-top:-25px;">
                             <i class="fa fa-search search-icon-employee-swipes" aria-hidden="true"
                                 style="cursor:pointer;" wire:click="searchEmployee"></i>
                             <input wire:model="search" type="text" placeholder="Search Employee" class="search-text">
@@ -241,9 +261,9 @@
                     <div class="dropdown-container1-employee-swipes">
                             
                                                     <!-- Filter Button -->
-                                <button type="button" class="button2" wire:click="toggleSidebar"
+                                <button type="button" class="button2"
                                     style="margin-top:30px; border-radius:5px; padding:5px;">
-                                    <i class="fa-icon fas fa-filter" style="color:#666"></i>
+                                    <i class="fa-icon fas fa-filter"wire:click="toggleSidebar"style="color:#666"></i>
                                 </button>
 
                                 <!-- Overlay -->
@@ -254,35 +274,63 @@
                                 <!-- Sidebar -->
                                 <div class="sidebar {{ $isOpen ? 'active' : '' }}">
                                     <div class="sidebar-header">
-                                        <h3>Apply Filter</h3>
-                                        <button wire:click="closeSidebar" class="close-btn">×</button>
+                                        <h6>Apply Filter</h6>
+                                        <button wire:click="closeSidebar" class="filter-close-btn">×</button>
                                     </div>
 
                                     <!-- Filter Section -->
                                     <div class="sidebar-content">
-                                            <label for="category" class="category-label">Category</label>
-                                            <select wire:model="selectedCategory" wire:change="updateselectedCategory" class="custom-dropdown">
-                                                <option value="All">All</option>
-                                                <option value="Designation">Designation</option>
-                                                <option value="Department">Department</option>
-                                                <option value="Location">Location</option>
-                                                <option value="Company">Company</option>
-                                            </select>
-                                            @if ($selectedCategory=='Designation')
-                                            <label for="designation" class="designation-label">{{$selectedCategory}}</label>
+                                            <label for="designation" class="designation-label">Designation:</label>
                                             <select wire:model="selectedDesignation" wire:change="updateselectedDesignation" class="custom-dropdown">
-                                                <option value="All">All</option>
-                                                <option value="Designation">Designation</option>
-                                                <option value="Department">Department</option>
-                                                <option value="Location">Location</option>
-                                                <option value="Company">Company</option>
+                                                <option value="">All</option>
+                                                <option value="software_engineer">Software Engineer</option>
+                                                <option value="senior_software_engineer">Sr. Software Engineer</option>
+                                                <option value="team_lead">Team Lead</option>
+                                                <option value="sales_head">Sales Head</option>
+                                            </select>
+                                            <label for="department" class="department-label">Department:</label>
+                                            <select wire:model="selectedDepartment" wire:change="updateselectedDepartment" class="custom-dropdown">
+                                                <option value="">All</option>
+                                                <option value="information_technology">Information Techonology</option>
+                                                <option value="business_development">Business Development</option>
+                                                <option value="operations">Operations</option>
+                                                <option value="innovation">Innovation</option>
+                                                <option value="infrastructure">Infrastructure</option>
+                                                <option value="human_resources">Human Resource</option>
+                                            </select>
+                                             
+                                            <label for="location" class="location-label">Location:</label>
+                                            @if($isPending==1&&$defaultApply==0)
+                                            <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
+                                                <option value="Hyderabad">Hyderabad</option>
+                                                <option value="Udaipur">Udaipur</option>
+                                                <option value="Mumbai">Mumbai</option>
+                                                <option value="Remote">Remote</option>
                                             </select>
                                             @endif
-                                            
+                                            @if($isApply==1&&$defaultApply==1)
+                                            @livewire('location-finder')
+                                            <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
+                                                <option value="{{ $city }}"> {{ $city }}</option>
+                                               
+                                            </select>
+                                            @endif
+                                            <label for="swipe_status" class="swipe-status-label">Swipe Status:</label>
+                                            <select wire:model="selectedSwipeStatus" wire:change="updateselectedSwipeStatus" class="custom-dropdown">
+                                               @if($isPending==1&&$defaultApply==0) 
+
+                                                <option value="All">All</option>
+                                                <option value="mobile_sign_in">Mobile Sign In</option>
+                                                <option value="web_sign_in">Web Sign In</option>
+                                              @endif  
+                                                @if($isApply == 1 && $defaultApply == 1)
+                                                   <option value="door">Door Sign In</option>
+                                                @endif
+                                            </select>
                                     </div>
                                     <div class="button-container">
-                                            <button wire:click="closeSidebar" class="apply-btn">Apply</button>
-                                            <button wire:click="closeSidebar" class="reset-btn">Reset</button>
+                                            <button wire:click="applyFilter" class="apply-btn">Apply</button>
+                                            <button wire:click="resetSidebar" class="reset-btn">Reset</button>
                                     </div>
                                 </div>
  
@@ -429,11 +477,19 @@
 
                                                         </td>
                                                         <td style="white-space:nowrap;">
-                                                            @if ($log->in_or_out === 'IN')
-                                                                Web Sign In
-                                                            @elseif ($log->in_or_out === 'OUT')
-                                                                Web Sign Out
-                                                            @endif
+                                                                           @if ($log->in_or_out === 'IN' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
+                                                                                Web Sign In  
+                                                                            @elseif ($log->in_or_out === 'IN' && $log->sign_in_device==='Mobile')
+                                                                                Mobile Sign In  
+                                                                            @elseif ($log->in_or_out === 'OUT' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
+                                                                                Web Sign Out  
+                                                                            @elseif ($log->in_or_out === 'OUT' && $log->sign_in_device==='Mobile')
+                                                                                Mobile Sign Out  
+                                                                            @elseif ($log->in_or_out === 'IN')
+                                                                                Web Sign In
+                                                                            @elseif ($log->in_or_out === 'OUT')
+                                                                                Web Sign Out
+                                                                            @endif    
                                                         </td>
                                                         <td class="text-center">-</td>
                                                     </tr>

@@ -14,6 +14,7 @@
 namespace App\Livewire;
 
 use App\Helpers\FlashMessageHelper;
+use App\Models\AttendanceException;
 use App\Models\EmployeeDetails;
 use App\Models\SwipeRecord;
 use App\Models\HolidayCalendar;
@@ -26,11 +27,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Torann\GeoIP\Facades\GeoIP;
 
+use function PHPSTORM_META\elementType;
+
 class Attendance extends Component
 {
     public $currentDate2;
     public $hours;
 
+    public $totalDaysForFormattedModalTitle;
     public $country;
 
     public $city;
@@ -44,6 +48,7 @@ class Attendance extends Component
     public $avgWorkHoursFromJuly = 0;
 
   
+    public $employeeSecondShiftDetails=null;
    
 
    
@@ -75,6 +80,7 @@ class Attendance extends Component
 
     public $first_in_time_for_date;
 
+    public $employeeSecondShift;
     public $last_out_time_for_date;
     public $swipe_records_count;
     public $clickedDate;
@@ -176,6 +182,8 @@ class Attendance extends Component
     public $totalDurationFormatted1;
     public $errorMessage;
     public $showRegularisationDialog = false;
+
+    public $totalnumberofHolidayForFormattedDate;
     public $distinctDates;
     public $isPresent;
     public $table;
@@ -687,8 +695,16 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
             ->first();
 
-            $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
-            $this->shiftEndTime=Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+            if($this->employeeShiftDetails)
+            {
+                $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
+                $this->shiftEndTime=Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+            }
+            else
+            {
+                $this->shiftStartTime = null;
+                $this->shiftEndTime=null;
+            }
             while ($currentDate->lte($endDate)) { 
                 $dateString = $currentDate->toDateString();
 
@@ -1126,6 +1142,53 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         return false; // Return false to handle the error gracefully
     }
 }
+public function findExceptioninAttendance($date)
+{
+    $attendanceException = AttendanceException::where('emp_id', auth()->guard('emp')->user()->emp_id)
+    ->whereDate('from_date', '<=', $date) // from_date should be before or equal to $date
+    ->whereDate('to_date', '>=', $date)   // to_date should be after or equal to $date
+    ->value('status');
+    return $attendanceException;
+}
+
+
+public function isEmployeeAssignedDifferentShift($date, $empId)
+{
+    $shiftExists = false;
+    $shiftType = null;
+
+    $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+    // Return array with default values if employee not found or no shift entries assigned
+    if (!$employee || empty($employee->shift_entries)) {
+        return [
+            'shiftExists' => $shiftExists,
+            'shiftType' => $shiftType,
+        ];
+    }
+
+    $shiftEntries = json_decode($employee->shift_entries, true);
+    $date = Carbon::parse($date);
+
+    foreach ($shiftEntries as $shift) {
+        $fromDate = Carbon::parse($shift['from_date']);
+        $toDate = Carbon::parse($shift['to_date']);
+
+        if ($date->between($fromDate, $toDate)) {
+            $shiftExists = true;
+            $shiftType = $shift['shift_type'];
+        } elseif ($date->isSameDay($fromDate) || $date->isSameDay($toDate)) {
+            $shiftExists = true;
+            $shiftType = $shift['shift_type'];
+        }
+    }
+
+    return [
+        'shiftExists' => $shiftExists,
+        'shiftType' => $shiftType,
+    ];
+}
+
 
     //This function will help us to create the calendar
     public function generateCalendar()
@@ -1144,8 +1207,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             ->first();
             Log::info('Welcome to generateCalendar method');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            Log::info('Employee ID:', ['employeeId' => $employeeId]);
 
+            Log::info('Employee ID:', ['employeeId' => $employeeId]);
+            
             $firstDay = Carbon::create($this->year, $this->month, 1);
             
             $daysInMonth = $firstDay->daysInMonth;
@@ -1205,6 +1269,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'halfdaypresentforsession1'=>false,
                             'halfdaypresentforsession2'=>false,
                             'session2leave'=>null,
+                            'assignedDifferentShift'=>null
 
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
@@ -1221,13 +1286,18 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         $halfdaypresent=null;
                         $isBeforeToDate=null; 
                         $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
-                        $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray());
+                        $isexceptioninAttendance=$this->findExceptioninAttendance($date);
+                        Log::info('Is Exception in Attendance:', ['isexceptioninAttendance' => $isexceptioninAttendance]);
+                        $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray())||$isexceptioninAttendance=='Holiday';
                         Log::info('Is Public Holiday:', ['isPublicHoliday' => $isPublicHoliday]);
                         $isHoliday = HolidayCalendar::where('date', $date->toDateString())->exists();
+                        $isexceptioninHoliday=($isexceptioninAttendance=='Holiday') ? true : false;
                         $isRegularised = $this->isEmployeeRegularisedOnDate($date->toDateString());
                         Log::info('Is Regularised:', ['isRegularised' => $isRegularised]);
-
-                        $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId);
+                        $isEmployeeAssignedDifferentShift=$this->isEmployeeAssignedDifferentShift($date->toDateString(),$employeeId)['shiftExists'];
+                        $employeesecondshifttype=$this->isEmployeeAssignedDifferentShift($date->toDateString(),$employeeId)['shiftType'];
+                        Log::info('Is Employee Assigned Different Shift:', ['isEmployeeAssignedDifferentShift' => $employeesecondshifttype]);
+                        $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId)||$isexceptioninAttendance=='Leave';
                         Log::info('Is On Leave:', ['isOnLeave' => $isOnLeave]);
                           
                         $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date->toDateString(), $employeeId);
@@ -1295,7 +1365,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                         }
                        
                         $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
-                        if (!$isOnLeave && !$isHoliday && !$date->isWeekend()) {
+                        if (!$isOnLeave && !$isHoliday && !$date->isWeekend()&& $isexceptioninAttendance!="Present") {
                             $isPresentOnDate = $this->isEmployeePresentOnDate($date);
                             $isEmployeeRegularisedOnDate = $this->isEmployeeRegularisedOnDate($date);
                             if ($isPresentOnDate||$isEmployeeRegularisedOnDate) {
@@ -1344,34 +1414,73 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     $outTime = Carbon::parse($outSwipeTime->swipe_time);
  
                                     Log::info('Parsed inTime and outTime', ['inTime' => $inTime, 'outTime' => $outTime]);
-                                    $shiftStartTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_start_time);
-                                    $shiftEndTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_end_time);
+                                    if(!empty($this->employeeShiftDetailsForCalendar))
+                                    {
+                                        $shiftStartTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_start_time);
+                                        $shiftEndTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_end_time);
+                                    }
+                                    else
+                                    {
+                                        $shiftStartTimeForCalendar = null;
+                                        $shiftEndTimeForCalendar = null;
+                                    
+                                    }
+                                  
                                     Log::info('Shift times parsed', [
                                         'shiftStartTimeForCalendar' => $shiftStartTimeForCalendar,
                                         'shiftEndTimeForCalendar' => $shiftEndTimeForCalendar
                                     ]);
+                                    if(!empty($shiftStartTimeForCalendar))
+                                    {
+                                        $startTimeForSession1 = \Carbon\Carbon::createFromTime(
+                                            $shiftStartTimeForCalendar->hour,
+                                            $shiftStartTimeForCalendar->minute,
+                                            $shiftStartTimeForCalendar->second
+                                        );
+
+                                    }
+                                    else
+                                    {
+                                        $startTimeForSession1=null;
+                                    }
                                     
-                                    $startTimeForSession1 = \Carbon\Carbon::createFromTime(
-                                        $shiftStartTimeForCalendar->hour,
-                                        $shiftStartTimeForCalendar->minute,
-                                        $shiftStartTimeForCalendar->second
-                                    );
                                     Log::info('Start time for Session 1', ['startTimeForSession1' => $startTimeForSession1]);
                                     // 10:00 AM
-                $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30);                    
-                $endTimeForSession1 = Carbon::createFromTime(
-                                        $shiftEndTimeForSession1->hour,
-                                        $shiftEndTimeForSession1->minute,
-                                        $shiftEndTimeForSession1->second
-                                    );
+                if(!empty($shiftEndTimeForSession1))  
+                {
+                    $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30); 
+                
+                    $endTimeForSession1 = Carbon::createFromTime(
+                                            $shiftEndTimeForSession1->hour,
+                                            $shiftEndTimeForSession1->minute,
+                                            $shiftEndTimeForSession1->second
+                                        );
+                }                  
+                else
+                {
+                 
+                    $shiftEndTimeForSession1 =null; 
+                
+                    $endTimeForSession1 =null;
+                }
                                     Log::info('End time for Session 1', ['endTimeForSession1' => $endTimeForSession1]);
-                $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);                      
-                $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
-                $endTimeForSession2 = Carbon::createFromTime(
-                        $shiftEndTimeForCalendar->hour,
-                        $shiftEndTimeForCalendar->minute,
-                        $shiftEndTimeForCalendar->second
-                    );
+                if(!empty($shiftStartTimeForCalendar))   
+                {
+                    $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);                      
+                    $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
+                    $endTimeForSession2 = Carbon::createFromTime(
+                            $shiftEndTimeForCalendar->hour,
+                            $shiftEndTimeForCalendar->minute,
+                            $shiftEndTimeForCalendar->second
+                        );
+                }  
+                else
+                {
+                    $shiftStartTimeForSession2 =null;                      
+                    $startTimeForSession2 = null; // 10:00 AM
+                    $endTimeForSession2 =null;
+                }               
+               
                     Log::info('Session 2 times', [
                         'startTimeForSession2' => $startTimeForSession2,
                         'endTimeForSession2' => $endTimeForSession2
@@ -1583,7 +1692,10 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             }
                         } else {
                             $isAbsent = !$this->isEmployeePresentOnDate($date->toDateString()) || $isAbsentFor;
-                            if ($isAbsent) {
+                            if ($isexceptioninAttendance === 'Present') {
+                                $status = 'P';
+                            } 
+                            elseif ($isAbsent) {
                                 $status = 'A';
                             } elseif ($isHalfDayPresent) {
                                 $status = 'HP';
@@ -1611,7 +1723,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'halfdaypresentforsession2'=>$isHalfDayPresentForSession2,
                             'halfdaypresent'=>$halfdaypresent,
                             'session2leave'=>$isOnSecondSessionLeave,
-
+                            'assignedDifferentShift'=>$employeesecondshifttype,
                         ];
 
                         $dayCount++;
@@ -1634,7 +1746,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             'halfdaypresent'=>'',
                             'onFullDayLeave'=>'',
                             'session2leave'=>null,
-
+                             'assignedDifferentShift'=>null,
                         ];
                         $dayCount++;
                     }
@@ -1686,6 +1798,18 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $isSwipedIn = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'In')->exists();
             $isSwipedOut = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'Out')->exists();
 
+            
+            $this->employeeSecondShift=$this->isEmployeeAssignedDifferentShift($date1,auth()->guard('emp')->user()->emp_id)['shiftType'];
+            $this->employeeSecondShiftDetails = DB::table('employee_details')
+            ->join('company_shifts', function($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id');
+ 
+            })->where('company_shifts.shift_name',$this->employeeSecondShift)
+            ->where('emp_id',auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
+            ->first();
+            
+           
             if (!$isSwipedIn) {
                 // Employee did not swipe in
                 $this->selectedDate = $date1;
@@ -1695,8 +1819,10 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 $this->selectedDate = $date1;
                 $this->status = 'P';
             }
+         
             $this->updateDate($date1);
             $this->dateclicked = $date1;
+           
         } catch (\Exception $e) {
             Log::error('Error in dateClicked method: ' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while processing the date click. Please try again later.');
@@ -1882,7 +2008,75 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
         return $absentDays;
     }
+    private function calculateTotalNumberofHolidays($startDate, $endDate)
+{
+    // Log the start of the method
+    Log::info('Starting calculateTotalNumberofHolidays method for ' . $startDate . ' and ' . $endDate);
 
+    // Initialize the total number of holidays
+    $totalnumberofHolidays = 0;
+
+    // Ensure $startDate and $endDate are Carbon instances
+    $startDate = Carbon::parse($startDate);
+    $endDate = Carbon::parse($endDate);
+
+    // Loop through each day between the start and end dates
+    while ($startDate->lte($endDate)) {
+        $dateString = $startDate->toDateString();
+
+        // Log the current date being processed
+        Log::debug('Processing date: ' . $dateString);
+
+        // Check if the current date is a holiday
+        $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
+
+        // Log whether the current date is a holiday
+        Log::debug('Is ' . $dateString . ' a holiday? ' . ($isHoliday ? 'Yes' : 'No'));
+
+        if ($isHoliday) {
+            $totalnumberofHolidays++;
+            Log::debug('Incrementing total number of holidays. Current count: ' . $totalnumberofHolidays);
+        }
+
+        // Move to the next day
+        $startDate->addDay();
+    }
+
+    // Log the final count of holidays
+    Log::info('Total number of holidays between ' . $startDate . ' and ' . $endDate . ': ' . $totalnumberofHolidays);
+
+    return $totalnumberofHolidays;
+}
+
+    private function calculateTotalDaysForModalTite($startDate,$endDate)
+    {
+        Log::info('Welcome to calculateTotalWorkingDays method for'.$startDate.'and'.$endDate);
+        $totalDaysForModalTitle = 0;
+        
+            // Iterate through the date range
+            while ($startDate->lte($endDate)) {
+                $dateString = $startDate->toDateString();
+                $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
+                
+                // Check if the day is not Saturday (6) or Sunday (7)
+               
+                    if ($startDate->isWeekend()) {
+                        Log::info("Weekend skipped for date: $dateString");
+                    } elseif ($isHoliday) {
+                        Log::info("Leave day skipped for date: $dateString");
+                    }
+                    else
+                    {
+                        $totalDaysForModalTitle++;
+                    }
+        
+                // Move to the next day
+                $startDate->addDay();
+            }
+        
+            Log::info("Total working days calculated: $totalDaysForModalTitle");
+            return $totalDaysForModalTitle;
+    }
     private function updateModalTitle()
     {
         try {
@@ -1944,10 +2138,10 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $toDatetemp = Carbon::parse($this->toDate);
             $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
-
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-
-            $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
+            $this->totalDaysForFormattedModalTitle=$this->calculateTotalDaysForModalTite($fromDatetemp, $toDatetemp);
+            $this->totalnumberofHolidayForFormattedDate=$this->calculateTotalNumberofHolidays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
+            $this->totalWorkingDays = $this->calculateTotalWorkingDays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $insights = $this->calculatetotalLateInSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $outsights = $this->calculatetotalEarlyOutSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $this->totalLateInSwipes = $insights['lateSwipeCount'];

@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('holiday_calendars', function (Blueprint $table) {
             $table->smallInteger('id')->autoIncrement();
+            $table->string('emp_id')->nullable();
             $table->string('day',10);
             $table->date('date');
             $table->string('month',10);

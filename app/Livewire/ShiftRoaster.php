@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -147,11 +148,15 @@ class ShiftRoaster extends Component
         
         for ($i = 1; $i <= $daysInMonth; $i++) {
             $currentDate = $currentYear . '-' . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            $differentShift=$this->isEmployeeAssignedDifferentShift($currentDate,$employee['emp_id'])['shiftType'];
             if (date('N', strtotime($currentDate)) == 6 || date('N', strtotime($currentDate)) == 7) {
                 $rowData[] = 'O'; 
             }
             elseif(in_array($currentDate, $holiday)) {
                 $rowData[] = 'H'; 
+            }
+            elseif(!empty($differentShift)) {
+                $rowData[] = $differentShift; 
             }
             else{
                 $rowData[] = $employee->shift_type; 
@@ -165,6 +170,42 @@ class ShiftRoaster extends Component
        SimpleExcelWriter::create($filePath)->addRows($data);
        return response()->download($filePath, 'Shift_Roaster_Data.xlsx');
     }
+    public function isEmployeeAssignedDifferentShift($date, $empId)
+    {
+        $shiftExists = false;
+        $shiftType = null;
+
+            $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+            // Return array with default values if employee not found or no shift entries assigned
+            if (!$employee || empty($employee->shift_entries)) {
+                return [
+                    'shiftExists' => $shiftExists,
+                    'shiftType' => $shiftType,
+                ];
+            }
+
+            $shiftEntries = json_decode($employee->shift_entries, true);
+            $date = Carbon::parse($date);
+
+            foreach ($shiftEntries as $shift) {
+                $fromDate = Carbon::parse($shift['from_date']);
+                $toDate = Carbon::parse($shift['to_date']);
+
+                if ($date->between($fromDate, $toDate)) {
+                    $shiftExists = true;
+                    $shiftType = $shift['shift_type'];
+                } elseif ($date->isSameDay($fromDate) || $date->isSameDay($toDate)) {
+                    $shiftExists = true;
+                    $shiftType = $shift['shift_type'];
+                }
+            }
+
+            return [
+                'shiftExists' => $shiftExists,
+                'shiftType' => $shiftType,
+            ];
+}
     public function render()
     {
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
