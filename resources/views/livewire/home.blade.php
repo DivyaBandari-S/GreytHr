@@ -352,10 +352,10 @@
                 @if ($ismanager || $leaveApplied)
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title">Review</p>
-                    @if ($this->count > 0)
+                    @if ($pendingCount > 0)
                     <div class="notify d-flex justify-content-between">
                         <p class="payslip-small-desc">
-                            {{ $count }} <br>
+                            {{ $pendingCount }} <br>
                             <span class="normalTextValue">Things to review</span>
                         </p>
                         <img src="https://png.pngtree.com/png-vector/20190214/ourlarge/pngtree-vector-notes-icon-png-image_509622.jpg"
