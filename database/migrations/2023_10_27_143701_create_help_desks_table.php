@@ -1,9 +1,10 @@
 <?php
-
+ 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+ 
 return new class extends Migration
 {
     /**
@@ -17,11 +18,11 @@ return new class extends Migration
             $table->string('emp_id');
             $table->string('category');
             $table->string('mail');
+            $table->string('mailbox')->nullable();
             $table->string('distributor_name');
             $table->string('mobile');
             $table->string('subject');
             $table->text('description');
-            $table->string('mailbox')->nullable();
             $table->text('rejection_reason')->nullable();
             $table->text('pending_notes')->nullable();
             $table->text('active_comment')->nullable();
@@ -41,23 +42,23 @@ return new class extends Migration
             $table->string('selected_equipment')->nullable();
             $table->enum('priority', ['low', 'medium', 'high'])->default('low');
             $table->timestamps();
-
+ 
             $table->foreign('emp_id')
                 ->references('emp_id')
                 ->on('employee_details')
                 ->onDelete('restrict')
                 ->onUpdate('cascade');
         });
-
-
+ 
+ 
         DB::statement("
         CREATE TRIGGER generate_request_id BEFORE INSERT ON help_desks FOR EACH ROW
         BEGIN
             DECLARE max_id INT;
-
+ 
             -- Fixed prefix for request_id
             SET @prefix = 'REQ-';
-
+ 
             -- If request_id is not provided, generate it
             IF NEW.request_id IS NULL OR NEW.request_id = '' THEN
                 -- Find the maximum existing request_id
@@ -65,7 +66,7 @@ return new class extends Migration
                 INTO max_id
                 FROM help_desks
                 WHERE request_id LIKE CONCAT(@prefix, '%');
-
+ 
                 IF max_id IS NOT NULL THEN
                     -- Increment the counter and set the new request_id
                     SET NEW.request_id = CONCAT(@prefix, LPAD(max_id + 1, 4, '0'));
@@ -76,16 +77,15 @@ return new class extends Migration
             END IF;
         END;
     ");
+ 
+ 
     }
+ 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        // Drop the trigger if it exists
-        DB::unprepared('DROP TRIGGER IF EXISTS generate_request_id');
-
-        // Drop the table
         Schema::dropIfExists('help_desks');
     }
 };

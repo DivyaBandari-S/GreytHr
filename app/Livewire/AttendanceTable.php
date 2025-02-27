@@ -71,7 +71,7 @@ class AttendanceTable extends Component
     public $employeeHireDate;
     public $postal_code='-';
 
-    
+    public $employee;
     public $employeeShiftDetails;
     protected $listeners = [
         'updateDates'
@@ -91,6 +91,9 @@ class AttendanceTable extends Component
         $this->end=$toDate;
         $this->fromDate=$this->start;
         $this->toDate=$this->end;
+        $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
+        
+    
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
         $this->employeeHireDate=$this->employeeDetails->hire_date;
         $ip = request()->ip();

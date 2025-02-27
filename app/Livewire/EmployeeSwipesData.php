@@ -15,11 +15,14 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
+use App\Models\EmpDepartment;
 use Illuminate\Support\Facades\Auth;
 use App\Models\SwipeRecord;
 use App\Models\EmployeeDetails;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
@@ -48,12 +51,22 @@ class EmployeeSwipesData extends Component
     public $deviceId;
     public $selectedEmployeeId;
 
+    public $selectedLocation;
+
+
+    public $selectedDesignation;
     public $webSwipeDirection;
     public $swipeTime;
     public $employeeId;
     public $isPending = 0;
 
+    public $selectedDepartment;
+    public $isupdateFilter=0;
     public $selectedCategory;
+
+    public $todaySwipeRecords;
+    public $selectedSwipeStatus;
+    public $departmentId;
     public $webDeviceId;
     public $webDeviceName;
     public $isApply = 1;
@@ -68,9 +81,24 @@ class EmployeeSwipesData extends Component
     public $swipeLogTime = null;
     public $status;
 
+    public $city;
     public function mount()
     {
         try {
+            $response = Http::get('http://ip-api.com/json');
+        
+        // Check if the response is successful
+        if ($response->successful()) {
+            $location = $response->json();
+
+            // Update the Livewire component properties
+           
+            $this->city = $location['city'];
+          
+        } else {
+            // Handle error (optional)
+            FlashMessageHelper::flashError('Unable to get location.');
+        }
             $today = now()->startOfDay();
             $authUser = Auth::user();
             $userId = $authUser->emp_id;
@@ -105,6 +133,51 @@ class EmployeeSwipesData extends Component
 
 
 
+
+    public function updateselectedDesignation()
+    {
+        $this->selectedDesignation=$this->selectedDesignation;
+     
+       
+    }
+
+
+    
+    public function updateselectedSwipeStatus()
+    {
+       $this->selectedSwipeStatus= $this->selectedSwipeStatus;  
+       
+
+    }
+    public function resetSidebar()
+    {
+        if($this->isApply==1&&$this->defaultApply==1)
+        {
+          
+            $this->selectedDepartment='All';
+            $this->selectedDesignation='All';
+            $this->selectedLocation='Hyderabad';
+            
+            
+        }
+        elseif($this->isPending==1&&$this->defaultApply==0)
+        {
+            
+            $this->selectedDepartment='All';
+            $this->selectedDesignation='All';
+            $this->selectedLocation='Hyderabad';
+            
+        }
+    }
+
+    public function updateselectedDepartment()
+    {
+        $this->selectedDepartment=$this->selectedDepartment;
+    }
+    public function updateselectedLocation()
+    {
+        $this->selectedLocation=$this->selectedLocation;
+    }
     public function viewDoorSwipeButton()
     {
         Log::info('Welcome to viewDoorSwipeButton method');
@@ -124,21 +197,110 @@ class EmployeeSwipesData extends Component
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
         if ($isManager) {
 
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id', $userId)
-                ->where('employee_status', 'active')
-                ->join('company_shifts', function ($join) {
-                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-                })
-                ->select(
-                    'employee_details.first_name',
-                    'employee_details.emp_id',
-                    'employee_details.last_name',
-                    'company_shifts.shift_start_time',
-                    'company_shifts.shift_end_time'
-                )
-                ->get();
+            Log::debug('Starting query for managed employees');
+
+$managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {
+    $query->where('manager_id', $userId)
+          ->orWhere('emp_id', $userId);
+})
+->where('employee_status', 'active');
+
+// Log the state of the query after initial conditions
+Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
+
+$managedEmployees = $managedEmployees->join('company_shifts', function ($join) {
+    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+});
+
+// Log the state of the query after join
+Log::debug('Query after join:', ['query' => $managedEmployees->toSql()]);
+
+if ($this->selectedDesignation&&$this->isupdateFilter==1) {
+        Log::info('Applying designation filter:', ['selectedDesignation' => $this->selectedDesignation]);
+
+            $managedEmployees = $managedEmployees->when($this->selectedDesignation, function ($query) {
+                if ($this->selectedDesignation == 'software_engineer') {
+                    Log::info('Filtering for software engineers');
+                    return $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']);
+                } elseif ($this->selectedDesignation == 'senior_software_engineer') {
+                    Log::info('Filtering for senior software engineers');
+                    return $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']);
+                } elseif ($this->selectedDesignation == 'team_lead') {
+                    Log::info('Filtering for team leads');
+                    return $query->where('employee_details.job_role',  'LIKE','%Team Lead%');
+                } elseif ($this->selectedDesignation == 'sales_head') {
+                    Log::info('Filtering for sales heads');
+                    return $query->where('employee_details.job_role', 'LIKE', '%Sales Head%');
+                }
+            });
+        }
+        if($this->selectedLocation&&$this->isupdateFilter==1) {
+
+            $managedEmployees = $managedEmployees->when($this->selectedLocation, function ($query) {
+                if ($this->selectedLocation == 'Remote') {
+                    Log::info('Filtering for software engineers');
+                    return $query->where('employee_details.job_mode', $this->selectedLocation);
+                } else {
+                    Log::info('Filtering for senior software engineers');
+                    $query->where('employee_details.job_location', $this->selectedLocation)
+                             ->where('employee_details.job_mode', '!=', 'Remote');
+                } 
+            });
+        }
+        if(!empty($this->selectedDepartment)&&$this->isupdateFilter==1) {
+
+            $this->departmentId = null;
+            if ($this->selectedDepartment === 'information_technology') {
+                $this->departmentId = EmpDepartment::where('department', 'Information Technology')->value('dept_id');
+            }
+            elseif ($this->selectedDepartment === 'business_development') {
+                $this->departmentId = EmpDepartment::where('department', 'Business Development')->value('dept_id');
+            }
+            elseif ($this->selectedDepartment === 'operations') {
+                $this->departmentId = EmpDepartment::where('department', 'Operations')->value('dept_id');
+            }
+            elseif ($this->selectedDepartment === 'innovation') {
+                $this->departmentId = EmpDepartment::where('department', 'Innovation')->value('dept_id');
+            }
+            elseif ($this->selectedDepartment === 'infrastructure') {
+                $this->departmentId = EmpDepartment::where('department', 'Infrastructure')->value('dept_id');
+            }
+            elseif ($this->selectedDepartment === 'human_resources') {
+                $this->departmentId = EmpDepartment::where('department', 'Human Resource')->value('dept_id');
+            }
+           
+            $managedEmployees = $managedEmployees->when($this->departmentId, function ($query) {
+               
+                    Log::info('Filtering for selected Department');
+                    return $query->where('employee_details.dept_id', $this->departmentId);
+               
+            });
+        }
+        // Log the state of the query after applying designation filter
+        Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
+
+        $managedEmployees = $managedEmployees->select(
+            'employee_details.first_name',
+            'employee_details.emp_id',
+            'employee_details.last_name',
+            'company_shifts.shift_start_time',
+            'company_shifts.shift_end_time'
+        );
+
+        // Log the final query before execution
+        Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
+
+        $managedEmployees = $managedEmployees->get();
+
+        // Log the final result
+        Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
+
+            
+
+                
+            
+          
         } else {
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
 
@@ -165,6 +327,12 @@ class EmployeeSwipesData extends Component
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
     }
+
+    public function applyFilter()
+    {
+        $this->isupdateFilter=1;
+        $this->closeSidebar();
+    }
     public function processWebSignInLogs()
     {
 
@@ -176,19 +344,108 @@ class EmployeeSwipesData extends Component
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
         if ($isManager) {
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id', $userId)
-                ->where('employee_status', 'active')
-                ->join('company_shifts', function ($join) {
-                    $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
-                        ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
-                })
-                ->select(
-                    'employee_details.*',
-                    'company_shifts.shift_start_time',
-                    'company_shifts.shift_end_time'
-                )
-                ->get();
+            Log::debug('Starting query for managed employees');
+
+            $managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {
+                $query->where('manager_id', $userId)
+                      ->orWhere('emp_id', $userId);
+            })
+            ->where('employee_status', 'active');
+            
+            // Log the state of the query after initial conditions
+            Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
+            
+            $managedEmployees = $managedEmployees->join('company_shifts', function ($join) {
+                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                    ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
+            });
+            
+            // Log the state of the query after join
+            Log::debug('Query after join:', ['query' => $managedEmployees->toSql()]);
+            
+            if ($this->selectedDesignation&&$this->isupdateFilter==1) {
+                    Log::info('Applying designation filter:', ['selectedDesignation' => $this->selectedDesignation]);
+            
+                        $managedEmployees = $managedEmployees->when($this->selectedDesignation, function ($query) {
+                            if ($this->selectedDesignation == 'software_engineer') {
+                                Log::info('Filtering for software engineers');
+                                return $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']);
+                            } elseif ($this->selectedDesignation == 'senior_software_engineer') {
+                                Log::info('Filtering for senior software engineers');
+                                return $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']);
+                            } elseif ($this->selectedDesignation == 'team_lead') {
+                                Log::info('Filtering for team leads');
+                                return $query->where('employee_details.job_role',  'LIKE','%Team Lead%');
+                            } elseif ($this->selectedDesignation == 'sales_head') {
+                                Log::info('Filtering for sales heads');
+                                return $query->where('employee_details.job_role', 'LIKE', '%Sales Head%');
+                            }
+                        });
+                    }
+                    if($this->selectedLocation&&$this->isupdateFilter==1) {
+            
+                        $managedEmployees = $managedEmployees->when($this->selectedLocation, function ($query) {
+                            if ($this->selectedLocation == 'Remote') {
+                                Log::info('Filtering for software engineers');
+                                return $query->where('employee_details.job_mode', $this->selectedLocation);
+                            } else {
+                                Log::info('Filtering for senior software engineers');
+                                $query->where('employee_details.job_location', $this->selectedLocation)
+                                         ->where('employee_details.job_mode', '!=', 'Remote');
+                            } 
+                        });
+                    }
+                    if(!empty($this->selectedDepartment)&&$this->isupdateFilter==1) {
+            
+                        $this->departmentId = null;
+                        if ($this->selectedDepartment === 'information_technology') {
+                            $this->departmentId = EmpDepartment::where('department', 'Information Technology')->value('dept_id');
+                        }
+                        elseif ($this->selectedDepartment === 'business_development') {
+                            $this->departmentId = EmpDepartment::where('department', 'Business Development')->value('dept_id');
+                        }
+                        elseif ($this->selectedDepartment === 'operations') {
+                            $this->departmentId = EmpDepartment::where('department', 'Operations')->value('dept_id');
+                        }
+                        elseif ($this->selectedDepartment === 'innovation') {
+                            $this->departmentId = EmpDepartment::where('department', 'Innovation')->value('dept_id');
+                        }
+                        elseif ($this->selectedDepartment === 'infrastructure') {
+                            $this->departmentId = EmpDepartment::where('department', 'Infrastructure')->value('dept_id');
+                        }
+                        elseif ($this->selectedDepartment === 'human_resources') {
+                            $this->departmentId = EmpDepartment::where('department', 'Human Resource')->value('dept_id');
+                        }
+                       
+                        $managedEmployees = $managedEmployees->when($this->departmentId, function ($query) {
+                           
+                                Log::info('Filtering for selected Department');
+                                return $query->where('employee_details.dept_id', $this->departmentId);
+                           
+                        });
+                    }
+                    // Log the state of the query after applying designation filter
+                    Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
+            
+                    $managedEmployees = $managedEmployees->select(
+                        'employee_details.first_name',
+                        'employee_details.emp_id',
+                        'employee_details.last_name',
+                        'company_shifts.shift_start_time',
+                        'company_shifts.shift_end_time'
+                    );
+            
+                    // Log the final query before execution
+                    Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
+            
+                    $managedEmployees = $managedEmployees->get();
+            
+                    // Log the final result
+                    Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
+            
+                        
+            
+                        
         } else {
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
                 ->join('company_shifts', function ($join) {
@@ -203,15 +460,42 @@ class EmployeeSwipesData extends Component
                 ->get();
         }
 
+        if($this->selectedSwipeStatus=='mobile_sign_in')
+            {
+
+                $this->todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+                        ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                        ->where('sign_in_device','Mobile')
+                        ->get();
+            }
+            elseif($this->selectedSwipeStatus=='web_sign_in')
+            {
+
+                $this->todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+                        ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                        ->where('sign_in_device','Laptop/Desktop')
+                        ->get();
+            }
+            elseif($this->selectedSwipeStatus=='All')
+            {
+
+                $this->todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+                        ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                        ->get();
+            }
+            else
+            {
+                $this->todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
+                        ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
+                        ->get();
+            }
         // Fetch today's swipe records
-        $todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
-            ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
-            ->get();
+      
 
         // Prepare Web Sign-in Data
         foreach ($managedEmployees as $employee) {
             $normalizedEmployeeId = $employee->emp_id;
-            $employeeSwipeLog = $todaySwipeRecords->where('emp_id', $normalizedEmployeeId);
+            $employeeSwipeLog = $this->todaySwipeRecords->where('emp_id', $normalizedEmployeeId);
 
             if ($employeeSwipeLog->isNotEmpty()) {
                 $webSignInData[] = [
@@ -382,12 +666,16 @@ class EmployeeSwipesData extends Component
     }
     public function toggleSidebar()
     {
+        Log::info('Welcome to toggleSidebar method');
+        Log::info('Sidebar state before toggle:', ['isOpen' => $this->isOpen]);
         $this->isOpen = !$this->isOpen; // Toggle sidebar visibility
+        Log::info('Sidebar state after toggle:', ['isOpen' => $this->isOpen]);
     }
 
     public function closeSidebar()
     {
         $this->isOpen = false; // Ensure sidebar closes when called
+
     }
     public function searchEmployee()
     {
@@ -456,6 +744,9 @@ class EmployeeSwipesData extends Component
         return array_values($filteredData);
     }
 
+   
+
+   
 
 
 

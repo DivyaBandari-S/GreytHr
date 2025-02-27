@@ -124,6 +124,10 @@ class Home extends Component
     public $showModal = false;
 
 
+    public $shiftStartTime;
+
+    public $shiftEndTime;
+    public $shiftType;
     public $showSalary = true;
     public $longitude;
     public $monthOfSal;
@@ -155,7 +159,28 @@ class Home extends Component
 
             // Get employee details
             $employeeId = auth()->guard('emp')->user()->emp_id;
-
+            $this->shiftType=EmployeeDetails::where('emp_id',$employeeId)->value('shift_type');
+            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId) // Match employee ID
+                ->join('company_shifts', function ($join) {
+                    $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
+                        ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
+                })
+                ->select(
+                    'employee_details.shift_type',          // Select the shift_type from employee_details
+                    'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
+                    'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
+                )
+                ->first();
+                if($this->employeeShiftDetails)
+                {
+                    $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
+                    $this->shiftEndTime=Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+                }
+                else
+                {
+                    $this->shiftStartTime = null;
+                    $this->shiftEndTime=null;
+                }
 
 
 
@@ -485,6 +510,7 @@ class Home extends Component
                 'device_id' => $ipAddress, // Replacing device ID with IP address
             ]);
  
+            
             // Flash message for swipe action
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
@@ -547,17 +573,7 @@ class Home extends Component
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId) // Match employee ID
-                ->join('company_shifts', function ($join) {
-                    $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
-                        ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
-                })
-                ->select(
-                    'employee_details.shift_type',          // Select the shift_type from employee_details
-                    'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
-                    'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
-                )
-                ->first();
+            
 
 
             $this->currentDay = now()->format('l');
