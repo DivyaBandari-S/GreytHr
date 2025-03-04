@@ -195,7 +195,6 @@ class Activities extends Component
             ]);
  
             // Log the successful reaction storage
-            Log::info('Emoji reaction saved for employee: ' . $employeeId);
         } else {
             // Handle the case where selectedEmojiId is null
             Log::error('Selected emoji ID is null.');
@@ -211,7 +210,6 @@ class Activities extends Component
     public function updateDescription($description)
     {
         // Log received description for debugging
-        Log::info('Description received in Livewire:', ['description' => $description]);
 
         // Update the Livewire description property
         $this->description = $description;

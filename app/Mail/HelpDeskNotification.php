@@ -63,12 +63,7 @@ class HelpDeskNotification extends Mailable
             $this->createdbyLastName = 'N/A';
             $this->employeeId = 'N/A';
         }
-    
-        Log::info('Notification Constructor Data', [
-            'Request ID' => $this->RequestId,
-            'Created By' => "{$this->createdbyFirstName} {$this->createdbyLastName}",
-            'Employee ID' => $this->employeeId,
-        ]);
+
     }
     
     /**

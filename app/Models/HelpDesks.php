@@ -10,78 +10,66 @@ class HelpDesks extends Model
 {
     use HasFactory;
     protected $fillable=[
-        'id','emp_id', 'category','mailbox', 'subject', 'description', 'file_paths','mime_type','file_name', 'cc_to', 'priority','status','mail','mobile','distributor_name','selected_equipment','request_id'
+        'emp_id', 'category', 'subject', 'description', 'file_path', 'cc_to', 'priority','status_code','mail','mobile','distributor_name','selected_equipment','rejection_reason','active_comment','closed_notes','cancel_notes','req_end_date','pending_remarks','pending_notes','cat_file_paths','inprogress_notes','cat_progress_since','total_cat_progress_time','assign_to','customer_visible_notes'
      ];
-     protected static function booted()
-     {
-         static::created(function ($helpDesk) {
-  
-             $employee = EmployeeDetails::where('emp_id', $helpDesk->emp_id)->first();
-  
-             if (!$employee) {
-                 Log::error("Employee not found for ID: {$helpDesk->employee_id}");
-                 return; // Prevent creating a notification if the employee is not found
-             }
-  
-             $employeeName = "{$employee->first_name} {$employee->last_name}";
-  
-             $title = "Catalog Request Raised by {$employeeName}";
-             $message = "Subject : {$helpDesk->category}";
-             $redirect_url = 'itrequest?currentCatalogId=' . $helpDesk->id;
-  
-  
-  
-             // Check if any value is missing, log it if necessary
-             if (!$title || !$message || !$redirect_url) {
-                 Log::error('Missing required notification data: title, message or redirect_url');
-                 return; // Prevent creating a notification if any data is missing
-             }
-  
-             // Create the notification
-             ticket_notifications::create([
-                 'title' => $title,
-                 'message' => $message,
-                 'redirect_url' => $redirect_url,
-                 'notifiable_id' => $helpDesk->id,
-                 'notifiable_type' => HelpDesks::class, // Use the HelpDesks model as the notifiable type
-             ]);
-         });
-     }
-
     public function emp()
     {
         return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
     }
-    public function employee()
-    {
-        return $this->belongsTo(EmployeeDetails::class, 'emp_id', 'emp_id');
-    }
-
     public function request()
     {
         return $this->belongsTo(Request::class, 'emp_id');// Update the foreign key as necessary
     }
- // HelpDesks Model
- public function incidentRequests()
- {
-     return $this->hasMany(IncidentRequest::class, 'incident_id', 'emp_id');
- }
- // In HelpDesks model (HelpDesks.php)
-// In HelpDesks model (HelpDesks.php)
-public function status()
-{
-    return $this->belongsTo(StatusType::class, 'status_code', 'status_code');
-}
-
-
+ 
     public function isImage()
     {
         return 'data:image/jpeg;base64,' . base64_encode($this->attributes['file_path']);
     }
-    public function getImageUrlsAttribute()
+    public function getImageUrlAttribute()
     {
-        // Assuming images are stored in the `file_paths` attribute as a JSON array
-        return json_decode($this->file_paths, true); // Adjust based on your actual data structure
+        return $this->file_path ? 'data:image/jpeg;base64,' . base64_encode($this->file_path) : null;
     }
-    
+ 
+ 
+ 
+    protected static function booted()
+    {
+        static::created(function ($helpDesk) {
+ 
+            $employee = EmployeeDetails::where('emp_id', $helpDesk->emp_id)->first();
+ 
+            if (!$employee) {
+                Log::error("Employee not found for ID: {$helpDesk->employee_id}");
+                return; // Prevent creating a notification if the employee is not found
+            }
+ 
+            $employeeName = "{$employee->first_name} {$employee->last_name}";
+ 
+            $title = "Catalog Request Raised by {$employeeName}";
+            $message = "Subject : {$helpDesk->category}";
+            $redirect_url = 'itrequest?currentCatalogId=' . $helpDesk->id;
+ 
+ 
+ 
+            // Check if any value is missing, log it if necessary
+            if (!$title || !$message || !$redirect_url) {
+                Log::error('Missing required notification data: title, message or redirect_url');
+                return; // Prevent creating a notification if any data is missing
+            }
+ 
+            // Create the notification
+            ticket_notifications::create([
+                'title' => $title,
+                'message' => $message,
+                'redirect_url' => $redirect_url,
+                'notifiable_id' => $helpDesk->id,
+                'notifiable_type' => HelpDesks::class, // Use the HelpDesks model as the notifiable type
+            ]);
+        });
+    }
+ 
+ 
+ 
+ 
 }
+ 

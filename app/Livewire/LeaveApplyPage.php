@@ -463,6 +463,7 @@ class LeaveApplyPage extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
+            FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
             // Notify
             Notification::create([
                 'emp_id' => auth()->guard('emp')->user()->emp_id,
@@ -487,9 +488,10 @@ class LeaveApplyPage extends Component
                     ->cc($ccEmails)
                     ->send(new LeaveApplicationNotification($this->createdLeaveRequest, $applyingToDetails, $ccToDetails));
             }
-            FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
+
             $this->resetFields();
         } catch (\Exception $e) {
+            Log::error('dfghjk,.' . $e->getMessage());
             FlashMessageHelper::flashError("Failed to submit leave application. Please try again later.");
             return redirect()->to('/leave-form-page');
         }

@@ -1002,13 +1002,6 @@ class LeaveBalances extends Component
                     });
             }
 
-            Log::info('Starting PDF generation for leave transactions', [
-                'employeeDetails' => $employeeDetails,
-                'transaction_type' => $this->transactionType,
-                'from_date' => $this->fromDateModal,
-                'to_date' => $this->toDateModal
-            ]);
-
             // Generate the PDF using merged data for 'all'
             $pdf = Pdf::loadView('pdf_template', [
                 'employeeDetails' => $employeeDetails,

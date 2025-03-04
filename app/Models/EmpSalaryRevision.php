@@ -73,7 +73,6 @@ class EmpSalaryRevision extends Model
      */
     private function decodeCTC($value)
     {
-        Log::info('Decoding CTC: ' . $value);
         $decoded = Hashids::decode($value);
 
         if (count($decoded) === 0) {

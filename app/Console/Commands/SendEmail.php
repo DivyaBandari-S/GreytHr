@@ -31,7 +31,6 @@ class SendEmail extends Command
      */
     public function handle()
     {
-        Log::info('Starting SendEmail Command');
         try {
             // Define the recipients and file information
             $to = 'bandaridivya1@gmail.com'; // Update with actual recipient
@@ -45,9 +44,7 @@ class SendEmail extends Command
                     ->cc($cc)
                     ->send(new SendTimeSheetMail($path, $originalFileName));
 
-                Log::info('Email sent successfully to ' . $to);
             } else {
-                Log::warning('File not found: ' . $path);
             }
         } catch (\Exception $e) {
             // Log the error using different channels based on severity
