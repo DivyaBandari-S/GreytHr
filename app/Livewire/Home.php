@@ -53,6 +53,11 @@ class Home extends Component
     public $swipeDetails;
     public $calendarData;
     public $TaskAssignedToCount;
+
+    public $signInOutStatus='IN';
+
+    public $testforswipe=null;
+    public $swipeblock;
     public $TasksCompletedCount;
     public $TasksInProgressCount;
 
@@ -73,6 +78,8 @@ class Home extends Component
     public $pieChartData;
     public $absent_employees;
     public $formattedAddress = [];
+
+    public $signStatus;
     public $showAllAbsentEmployees = false;
     public $showAllLateEmployees = false;
     public $employee_details;
@@ -123,9 +130,14 @@ class Home extends Component
     public $modalLeaveTitle = '';
     public $showModal = false;
 
+    public $swipe_location;
 
+    public $showtoggleSignState=false;
     public $shiftStartTime;
 
+    public $signstatusfortest;
+    public $swipesforbutton;
+    public $swipe_remarks;
     public $shiftEndTime;
     public $shiftType;
     public $showSalary = true;
@@ -141,8 +153,20 @@ class Home extends Component
         try {
             // Fetch weather data
             $this->fetchWeather();
+
             // Get current hour to determine greeting
             $currentHour = date('G');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $today=Carbon::now()->format('Y-m-d');
+
+            
+            $this->swipesforbutton = DB::table('swipe_records')
+            ->whereDate('created_at', $today)
+            ->where('emp_id', $employeeId)
+            ->orderBy('id', 'desc')
+            ->first();       
+            
+              
             if ($currentHour >= 4 && $currentHour < 12) {
                 $this->greetingImage = 'morning.jpeg';
                 $this->greetingText = 'Good Morning';
@@ -158,7 +182,8 @@ class Home extends Component
             }
 
             // Get employee details
-            $employeeId = auth()->guard('emp')->user()->emp_id;
+            
+            
             $this->shiftType=EmployeeDetails::where('emp_id',$employeeId)->value('shift_type');
             $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId) // Match employee ID
                 ->join('company_shifts', function ($join) {
@@ -220,6 +245,9 @@ class Home extends Component
                     ->whereRaw('JSON_LENGTH(regularisation_entries) > 0')
                     ->with('employee')
                     ->count();
+                   
+                    
+                    
             } else {
                 // Handle case where employee details could not be found
                 $this->loginEmployee = null;
@@ -240,6 +268,48 @@ class Home extends Component
         }
     }
 
+    
+    public function OpentoggleSignStatePopup()
+{
+   
+    // Do something with $swipeId and $inOrOut
+    $this->showtoggleSignState=true;
+    
+    $this->testforswipe=$this->testlatestSwipe()['swipesforbutton'];
+    $this->signstatusfortest=$this->testlatestSwipe()['signStatus'];
+    
+    
+}
+public function testlatestSwipe()
+{
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+    $today=Carbon::now()->format('Y-m-d');
+    $this->swipesforbutton = DB::table('swipe_records')
+            ->whereDate('created_at', $today)
+            ->where('emp_id', $employeeId)
+            ->orderBy('id', 'desc')
+            ->first();    
+    $this->signStatus=$this->swipesforbutton ? ($this->swipesforbutton->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
+    
+    return [
+        'swipesforbutton' => $this->swipesforbutton,
+        'signStatus' => $this->signStatus,
+
+    ];
+}
+public function closeToggleSignState()
+{
+    $this->showtoggleSignState=false;   
+}
+public function updateSwipeLocation() 
+{
+    $this->swipe_location=$this->swipe_location;
+   
+}  
+public function updateSwipeRemarks()
+{
+    $this->swipe_remarks=$this->swipe_remarks;
+} 
     public function downloadPdf($month)
     {
         $month = Carbon::parse($month)->format('Y-m');
@@ -463,64 +533,78 @@ class Home extends Component
             return false; // Return false to handle the error gracefully
         }
     }
+    
     public function toggleSignState()
-    {
-        try {
-            $currentTime = Carbon::now();
- 
-            // Prevent multiple executions within 2 seconds
-            if (session('last_execution_time') && $currentTime->diffInSeconds(session('last_execution_time')) < 2) {
-                return;
-            }
- 
-            session(['last_execution_time' => $currentTime]);
- 
-            $todayDate = $currentTime->format('Y-m-d');
-            $employeeId = auth()->guard('emp')->user()->emp_id;
- 
-            // Check if employee is on leave or if today is a holiday
-            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-                return;
-            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
-                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-                return;
-            }
- 
-            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-            $this->signIn = !$this->signIn;
- 
-            // Detect device type
-            $agent = new Agent();
-            $deviceName = $agent->isMobile() ? 'Mobile'
-                : ($agent->isTablet() ? 'Tablet'
-                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
-            $platform = $agent->platform();
- 
-            // Capture user IP address instead of device ID
-            $ipAddress = request()->ip();
+{
+    try {
+        $currentTime = Carbon::now();
+        
+        // Prevent multiple executions within 2 seconds
+        $todayDate = $currentTime->format('Y-m-d');
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        // Log current operation
+      
+        // Check if employee is on leave or if today is a holiday
+        if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+          
+            FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+            return;
+        } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
            
-            // Create the swipe record
-            SwipeRecord::create([
-                'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
-                'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
-                'sign_in_device' => $deviceName,
-                'device_name' => $platform,
-                'device_id' => $ipAddress, // Replacing device ID with IP address
-            ]);
- 
-            
-            // Flash message for swipe action
-            $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
-            FlashMessageHelper::flashSuccess($flashMessage == "IN"
-                ? "You have successfully signed in."
-                : "You have successfully signed out.");
-        } catch (Throwable $e) {
-            FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
+            FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+            return;
         }
 
+        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+        $this->signIn = !$this->signIn;
+
+        // Detect device type
+        $agent = new Agent();
+        $deviceName = $agent->isMobile() ? 'Mobile'
+            : ($agent->isTablet() ? 'Tablet'
+                : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
+        $platform = $agent->platform();
+
+        // Capture user IP address instead of device ID
+        $ipAddress = request()->ip();
+
+        // Log the device and IP information
+      
+        // Create the swipe record
+        SwipeRecord::create([
+            'emp_id' => $this->employeeDetails->emp_id,
+            'swipe_time' => now()->format('H:i:s'),
+            'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
+            'sign_in_device' => $deviceName,
+            'device_name' => $platform,
+            'device_id' => $ipAddress, // Replacing device ID with IP address
+            'swipe_location' => $this->swipe_location,
+            'swipe_remarks' => $this->swipe_remarks,
+        ]);
+
+        // Log successful swipe record creation
+     
+        // Flash message for swipe action
+        $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
+        FlashMessageHelper::flashSuccess($flashMessage == "IN"
+            ? "You have successfully signed in."
+            : "You have successfully signed out.");
+
+        $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
+        $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
+
+        // Log completion of method
+   
+
+        return redirect('/');
+
+    } catch (Throwable $e) {
+        // Log the error with exception details
+       
+        FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
     }
+}
 
 
     public function showEarlyEmployees()
@@ -579,8 +663,14 @@ class Home extends Component
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
             $today = Carbon::now()->format('Y-m-d');
+            $this->testforswipe=$this->testlatestSwipe()['swipesforbutton'];
+            $this->signstatusfortest=$this->testlatestSwipe()['signStatus'];
 
-
+            $this->swipes = DB::table('swipe_records')
+            ->whereDate('created_at', $today)
+            ->where('emp_id', $employeeId)
+            ->orderBy('created_at', 'desc')
+            ->first();
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
@@ -861,11 +951,7 @@ class Home extends Component
                 ->where('emp_id', $employeeId)
                 ->orderBy('created_at', 'desc')
                 ->get();
-            $this->swipes = DB::table('swipe_records')
-                ->whereDate('created_at', $today)
-                ->where('emp_id', $employeeId)
-                ->orderBy('created_at', 'desc')
-                ->first();
+           
 
 
             // Assuming $calendarData should contain the data for upcoming holidays
