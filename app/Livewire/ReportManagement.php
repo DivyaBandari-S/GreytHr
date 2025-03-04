@@ -321,12 +321,12 @@ class ReportManagement extends Component
         );
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            // Log::info('Logged in employee ID: ' . $loggedInEmpId);
+           
 
             if ($this->transactionType === 'granted') {
 
                 // When the transaction type is granted, fetch data from employee_leave_balances
-                // Log::info('Fetching granted leave data from employee_leave_balances.');
+              
 
                 // Query to fetch leave data
                 $query = EmployeeLeaveBalances::select(
@@ -359,9 +359,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -438,8 +435,6 @@ class ReportManagement extends Component
 
                     ->get();
 
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $lapsedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -538,9 +533,6 @@ class ReportManagement extends Component
 
                     ->get();
 
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
-
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
                     return [
@@ -614,9 +606,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $lapsedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -768,11 +757,6 @@ class ReportManagement extends Component
                     )
                     ->get();
 
-
-
-
-                // Log::info('Leave request data retrieved successfully.');
-
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
@@ -807,8 +791,7 @@ class ReportManagement extends Component
                 });
                 $leaveTransactions = $grantedData->concat($leaveTransactionData)->concat($lapsedData);
             } else {
-                // The existing code for handling leave requests in 'availed', 'rejected', etc.
-                // Log::info('Fetching leave request data for transaction type: ' . $this->transactionType);
+
 
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
@@ -894,11 +877,6 @@ class ReportManagement extends Component
                     )
                     ->get();
 
-
-
-
-                // Log::info('Leave request data retrieved successfully.');
-
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
@@ -932,9 +910,6 @@ class ReportManagement extends Component
                     ];
                 });
             }
-
-            // Log data before generating the PDF
-            // Log::info('Preparing to generate the leave transaction report PDF.');
 
             // Load the view and generate the PDF report
             $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
@@ -1055,19 +1030,11 @@ class ReportManagement extends Component
             'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
         ]);
         try {
-            // Log::info('Starting the leave transaction report generation.');
-
-            // Validate the input
-
-
-            // Log::info('Validation passed for the date range.', ['fromDate' => $this->fromDate, 'toDate' => $this->toDate]);
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            // Log::info('Logged in employee ID: ' . $loggedInEmpId);
 
             if ($this->transactionType === 'granted') {
                 // When the transaction type is granted, fetch data from employee_leave_balances
-                // Log::info('Fetching granted leave data from employee_leave_balances.');
 
                 // Query to fetch leave data
                 $query = EmployeeLeaveBalances::select(
@@ -1100,9 +1067,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1286,9 +1250,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1557,9 +1518,7 @@ class ReportManagement extends Component
                
 
             } else {
-                // The existing code for handling leave requests in 'availed', 'rejected', etc.
-                // Log::info('Fetching leave request data for transaction type: ' . $this->transactionType);
-
+        
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
                     DB::raw('count(*) as total_requests'),
@@ -1674,9 +1633,6 @@ class ReportManagement extends Component
                 });
             }
 
-            // Log data before generating the PDF
-            // Log::info('Preparing to generate the leave transaction report PDF.');
-
             // Load the view and generate the PDF report
             $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
             $pdf = Pdf::loadView('leaveTransactionReportPdf', [
@@ -1697,7 +1653,6 @@ class ReportManagement extends Component
             $this->currentSection = '';
 
             FlashMessageHelper::flashSuccess('Leave Transaction Report Downloaded Successfully!');
-            // Log::info('Leave transaction report generated successfully.');
 
             return response()->streamDownload(function () use ($pdf) {
                 echo $pdf->stream();

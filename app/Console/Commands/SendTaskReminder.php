@@ -44,23 +44,16 @@ class SendTaskReminder extends Command
                             ->where('status', '!=', 11) // Ensure task is not completed
                             ->where('reminder_sent', false) 
                             ->get();
-
-        Log::info("tasks: " . $tasksDueToday); 
         foreach ($tasksDueToday as $task) {
-            Log::info("Processing task: " . $task->task_name); // Log task being processed
     
             // Check if created_at and due_date are on the same day
             $taskCreatedDate = Carbon::parse($task->created_at)->format('Y-m-d');
-            Log::info("tasks: " . $taskCreatedDate); 
             $taskDueDate = Carbon::parse($task->due_date)->format('Y-m-d');
-            Log::info("tasks: " . $taskDueDate); 
             
             // Case 1a: If created_at and due_date are the same, send reminder 3 hours after creation
             if ($taskCreatedDate == $taskDueDate) {
                 $taskCreatedTime = Carbon::parse($task->created_at);
-                Log::info("tasks: " . $taskCreatedTime);
                 $sendReminderTime = $taskCreatedTime->addHours(3);
-                Log::info("tasks: " . $sendReminderTime);
 
                 if ($now->gte($sendReminderTime)) {
                     preg_match('/\#\((.*?)\)/', $task->assignee, $matches);
@@ -81,7 +74,6 @@ class SendTaskReminder extends Command
                         }
                     }
                 } else {
-                    Log::info('Waiting for 3 hours for task: ' . $task->task_name);
                 }
             }
             
@@ -96,7 +88,6 @@ class SendTaskReminder extends Command
                     ->join('company_shifts', 'company_shifts.shift_name', '=', 'employee_details.shift_type')
                     ->select('employee_details.*', 'company_shifts.shift_start_time') // Select the relevant columns
                     ->first();
-                    Log::info("Assignee list: " . $assignee); 
             
                     if ($assignee && $assignee->email) {
                         $shiftStartTime = Carbon::parse($assignee->shift_start_time);
@@ -107,15 +98,9 @@ class SendTaskReminder extends Command
                         // Format both the shift start time and current time to "H:i" (hours and minutes only)
                         $shiftStartTimeFormatted = $shiftStartTime->format('H:i');
                         $nowFormatted = $now->format('H:i');
-                        
-                        // Log both times for debugging
-                        Log::info("Assignee's shift start time: " . $shiftStartTimeFormatted);
-                        Log::info("Current time: " . $nowFormatted);
-                        
                         // Only send an email if the current time is >= shift start time (in the same day)
                         if ($nowFormatted === $shiftStartTimeFormatted) {
                             try {
-                                Log::info("Assignee shift start time: " . $shiftStartTime);
                                 Mail::to($assignee->email)->send(new TaskReminderMail($task));
                                 $this->info('Reminder sent to ' . $assignee->email . ' for task: ' . $task->task_name);
                                 $task->reminder_sent = true;
@@ -124,7 +109,6 @@ class SendTaskReminder extends Command
                                 $this->error('Failed to send reminder: ' . $e->getMessage());
                             }
                         } else {
-                            Log::info('Waiting for shift start time for task: ' . $task->task_name);
                         }
                     } else {
                         $this->warning('No assignee or email for task: ' . $task->task_name);
