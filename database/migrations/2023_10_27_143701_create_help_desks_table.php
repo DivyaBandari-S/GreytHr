@@ -2,8 +2,9 @@
  
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+ 
 return new class extends Migration
 {
     /**
@@ -15,14 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('request_id')->unique();
             $table->string('emp_id');
-            
             $table->string('category');
             $table->string('mail');
+            $table->string('mailbox')->nullable();
             $table->string('distributor_name');
             $table->string('mobile');
             $table->string('subject');
             $table->text('description');
-            $table->string('mailbox')->nullable();
             $table->text('rejection_reason')->nullable();
             $table->text('pending_notes')->nullable();
             $table->text('active_comment')->nullable();
@@ -77,16 +77,15 @@ return new class extends Migration
             END IF;
         END;
     ");
+ 
+ 
     }
+ 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        // Drop the trigger if it exists
-        DB::unprepared('DROP TRIGGER IF EXISTS generate_request_id');
-
-        // Drop the table
         Schema::dropIfExists('help_desks');
     }
 };

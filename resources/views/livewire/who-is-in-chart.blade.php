@@ -1,5 +1,151 @@
 <div class=" m-0 p-0">
+<style>
+  .sidebar {
+        position: fixed;
+        top: 0;
+        right: -350px; /* Initially hidden */
+        width: 350px;
+        height: 100%;
+        background: white;
+        box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+        transition: right 0.3s ease-in-out;
+        padding: 20px;
+        z-index: 1050;
+        border-radius: 10px 0 0 10px;
+    }
 
+    .sidebar.active {
+        right: 0;
+    }
+
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .sidebar-content {
+        margin-top: 15px;
+    }
+
+    label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 5px;
+        color: #333;
+    }
+
+    .custom-dropdown {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+    }
+
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    .apply-btn {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .reset-btn {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1049;
+    }
+    .button-container {
+        display: flex;
+        justify-content: center; /* Centers buttons horizontally */
+        align-items: center; /* Aligns buttons vertically */
+        gap: 5px; /* Reduces the space between buttons */
+        margin-top: 20px; /* Adds spacing from elements above */
+    }
+
+    .apply-btn, .reset-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .apply-btn {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .reset-btn {
+        background-color: #6c757d;
+        color: white;
+    }
+    .category-label {
+        display: block;
+        font-size: 14px;
+        font-weight: 500;
+        margin-bottom: 6px; /* Reduce vertical gap */
+        color: #333;
+    }
+
+    .custom-dropdown {
+        width: 100%;
+        padding: 6px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+        margin-top: 0;
+    }
+    
+    .apply-btn, .reset-btn {
+        padding: 8px 15px;
+        border-radius: 5px;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+    }
+
+    .apply-btn {
+        background-color: rgb(2, 17, 79);
+        color: white;
+    }
+
+    .reset-btn {
+        border:1px solid rgb(2, 17, 79);
+        color: rgb(2, 17, 79);
+        background-color: #fff;
+       
+    }
+</style>  
   @php
   $notyetin=0;
   $lateArrival=0;
@@ -8,9 +154,19 @@
   @endphp
   @foreach($Swipes as $s1)
   @php
+
   $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-  $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
-  $isEarlyBy10AM= $swipeTime->format('H:i') <= $s1->shift_start_time ; @endphp @if($isLateBy10AM) @php $notyetin++; $lateArrival++; @endphp @endif @if($isEarlyBy10AM) @php $onTime++; @endphp @endif @endforeach @php if($TotalEmployees>0){$CalculatePresentOnTime=($EarlySwipesCount/$TotalEmployees)*100; $CalculatePresentButLate=($LateSwipesCount/$TotalEmployees)*100;}else{$CalculatePresentOnTime=0;$CalculatePresentButLate=0;} @endphp <div class="date-form-who-is-in">
+  if($s1->shift_name)
+  {
+    $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
+    $isEarlyBy10AM= $swipeTime->format('H:i') <= $s1->shift_start_time ;
+  }
+  else
+  {
+    $isLateBy10AM = null;
+    $isEarlyBy10AM= null ;
+  }
+   @endphp @if($isLateBy10AM) @php $notyetin++; $lateArrival++; @endphp @endif @if($isEarlyBy10AM) @php $onTime++; @endphp @endif @endforeach @php if($TotalEmployees>0){$CalculatePresentOnTime=($EarlySwipesCount/$TotalEmployees)*100; $CalculatePresentButLate=($LateSwipesCount/$TotalEmployees)*100;}else{$CalculatePresentOnTime=0;$CalculatePresentButLate=0;} @endphp <div class="date-form-who-is-in">
     <input type="date" wire:model="from_date" wire:change="updateDate" class="form-control" id="fromDate" name="fromDate" style="color: #778899;">
 </div>
 <div class="shift-selector-container-who-is-in">
@@ -97,8 +253,9 @@
 </div>
 <div class="modal-backdrop fade show blurred-backdrop"></div>
 @endif
+<div>
 <div class="cont m-0 p-0 " style="display:flex; justify-content: end;">
-  <div class="search-container-who-is-in">
+  <div class="search-container-who-is-in"style="margin-top:-18px;margin-right:10px;">
     <div class="form-group-who-is-in">
       <div class="search-input-who-is-in" style="margin-top:50px;">
         <input wire:model="search" type="text" placeholder="Search Employee" class="search-text"style="font-size: 12px;">
@@ -107,7 +264,59 @@
         </div>
       </div>
     </div>
+   </div>
+    <button type="button" class="button2"
+                                    style="border-radius:5px; padding:5px;">
+                                    <i class="fa-icon fas fa-filter"wire:click="toggleSidebar"style="color:#666"></i>
+    </button>
+    <div class="sidebar {{ $isOpen ? 'active' : '' }}">
+                                    <div class="sidebar-header">
+                                        <h6>Apply Filter</h6>
+                                        <button wire:click="closeSidebar" class="filter-close-btn">×</button>
+                                    </div>
 
+                                    <!-- Filter Section -->
+                                    <div class="sidebar-content">
+                                            <label for="designation" class="designation-label">Designation:</label>
+                                            <select wire:model="selectedDesignation" wire:change="updateselectedDesignation" class="custom-dropdown">
+                                                <option value="">All</option>
+                                                <option value="software_engineer">Software Engineer</option>
+                                                <option value="senior_software_engineer">Sr. Software Engineer</option>
+                                                <option value="team_lead">Team Lead</option>
+                                                <option value="sales_head">Sales Head</option>
+                                            </select>
+                                            <label for="department" class="department-label">Department:</label>
+                                            <select wire:model="selectedDepartment" wire:change="updateselectedDepartment" class="custom-dropdown">
+                                                <option value="">All</option>
+                                                <option value="information_technology">Information Techonology</option>
+                                                <option value="business_development">Business Development</option>
+                                                <option value="operations">Operations</option>
+                                                <option value="innovation">Innovation</option>
+                                                <option value="infrastructure">Infrastructure</option>
+                                                <option value="human_resources">Human Resource</option>
+                                            </select>
+                                            <label for="location" class="location-label">Location:</label>
+                                            <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
+                                                <option value="Hyderabad">Hyderabad</option>
+                                                <option value="Udaipur">Udaipur</option>
+                                                <option value="Mumbai">Mumbai</option>
+                                                <option value="Remote">Remote</option>
+                                            </select>
+                                            <label for="swipe_status" class="swipe-status-label">Swipe Status:</label>
+                                            <select wire:model="selectedSwipeStatus" wire:change="updateselectedSwipeStatus" class="custom-dropdown">
+                                               
+
+                                                <option value="All">All</option>
+                                                <option value="mobile_sign_in">Mobile Sign In</option>
+                                                <option value="web_sign_in">Web Sign In</option>
+                                            
+                                            </select>
+                                    </div>
+                                    <div class="button-container">
+                                            <button wire:click="applyFilter" class="apply-btn">Apply</button>
+                                            <button wire:click="resetSidebar" class="reset-btn">Reset</button>
+                                    </div>
+                                </div>
 
 
   </div>
@@ -201,7 +410,13 @@
                 {{ ucwords(strtolower($e1->first_name)) }} {{ ucwords(strtolower($e1->last_name)) }}<br />
                 <span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$e1->emp_id}}</span>
               </td>
-              <td style="font-weight:700;font-size:10px;">{{$e1->shift_start_time}}</td>
+              <td style="font-weight:700;font-size:10px;">
+                  @if(!empty($e1->shift_start_time))
+                     {{$e1->shift_start_time}}
+                  @else   
+                      NA 
+                  @endif    
+              </td>
               
               <td style="text-align:right;">
                      <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ in_array($index, $openAccordionsForAbsentees) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionsForAbsentees) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForAbsent({{ $index }})">
@@ -215,6 +430,7 @@
                 <td colspan="4">
                     <div>
                         <!-- Add more details here -->
+                        @if(!empty($e1->shift_name)) 
                         <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
                             <div style="font-size: 10px;">
                               <span>{{ \Carbon\Carbon::parse($e1->shift_start_time)->format('h:i A') }} to 
@@ -226,6 +442,11 @@
                                         <span style="display: inline-block;">{{ \Carbon\Carbon::parse($e1->shift_end_time)->format('H:i') }}</span>
                               </div>
                         </div>
+                        @else
+                         <div style="text-align:center;">
+                            Shift Not Assigned Yet
+                         </div>
+                        @endif
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->email}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$e1->emergency_contact}}</span></p>
@@ -270,8 +491,17 @@
 
             @php
             $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
-            $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
+            if(!empty($s1->shift_start_time))
+            {
+              $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
+              $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
+            }
+            else
+            {
+               $lateArrivalTime='NA';
+               $isLateBy10AM='NA';
+            }
+            
             @endphp
 
             @if($isLateBy10AM)
@@ -294,7 +524,8 @@
 
                 <br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span>
               </td>
-              <td style="font-weight:700;font-size:10px;padding-left:12px;">{{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="font-weight:700;font-size:10px;padding-left:12px;">
+                 {{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
               <td style="text-align:right;">
               <button class="arrow-btn" style="background-color:#fff;cursor:pointer;color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForLate({{ $index }})">
                           <i class="fa fa-angle-{{ in_array($index, $openAccordionForLateComers) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}"></i>
@@ -307,6 +538,7 @@
                 <td colspan="4">
                     <div>
                         <!-- Add more details here -->
+                        @if(!empty($s1->shift_name)) 
                         <div style="height: 50px; background-color: #f0f0f0; padding: 5px; margin-top: 10px; width: 100%;">
                             <div style="font-size: 10px;">
                               <span>{{ \Carbon\Carbon::parse($s1->shift_start_time)->format('h:i A') }} to 
@@ -318,6 +550,11 @@
                                         <span style="display: inline-block;">{{ \Carbon\Carbon::parse($s1->shift_end_time)->format('H:i') }}</span>
                               </div>
                         </div>
+                        @else
+                                 <div style="text-align:center;">
+                                     Shift Not Assigned Yet
+                                 </div>
+                        @endif
                         <p style="font-size:12px;font-weight:700;">Contact Details</p>
                         <p style="font-size:10px;font-weight:600;">Email&nbsp;ID:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->email}}</span></p>
                         <p style="font-size:10px;font-weight:600;">Phone Number:&nbsp;&nbsp;<span style="font-weight:500;">{{$s1->emergency_contact}}</span></p>

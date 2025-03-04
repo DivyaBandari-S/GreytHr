@@ -576,6 +576,7 @@ class ViewPendingDetails extends Component
     }
     public function render()
     {
+       
         return view('livewire.view-pending-details', [
             'leaveApplications' => $this->leaveApplications,
             'filter' => $this->filter,

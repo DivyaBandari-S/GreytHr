@@ -1,6 +1,6 @@
 <div>
 <div class="position-absolute" wire:loading
-        wire:target="dateClicked,openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
+        wire:target="openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -1405,7 +1405,7 @@ color: #fff;
                   
             </div>
         </div>
-
+       
 
 
         <div class="row m-0 d-flex justify-content-center text-center">
@@ -1571,7 +1571,7 @@ color: #fff;
                                         <tr>
                                             <td class="insights-for-attendance-period-avg-working-hours">
                                                       <section class="text-center">
-                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHoursForModalTitle}}</p>
+                                                               <p class="text-2" style="margin-top:30px;font-size:14px;">{{$averageWorkHoursForModalTitle}}</p>
                                                                         
 
                                                     </section>
@@ -1579,7 +1579,7 @@ color: #fff;
                                             <td class="insights-for-attendance-period-avg-working-hours">
 
                                             <section class="text-center">
-                                                               <p class="text-2" style="margin-top:30px;">{{$averageWorkHoursForModalTitle}}</p>
+                                                               <p class="text-2" style="margin-top:30px;font-size:14px;">{{$averageWorkHoursForModalTitle}}</p>
                                                                        
                                                      </section>
                                             </td>
@@ -1594,7 +1594,15 @@ color: #fff;
                                 </table>
 
                             </div>
+                            @php
+                               $presentCount=$totalDaysForFormattedModalTitle-($totalnumberofAbsents+$totalnumberofLeaves);
+                               $absentCountpercentage=intval(($totalnumberofAbsents/$totalDaysForFormattedModalTitle)*100);
+                               $leaveTakenpercentage=intval(($totalnumberofLeaves/$totalDaysForFormattedModalTitle)*100);
+                               $presentCountpercentage=intval(($presentCount/$totalDaysForFormattedModalTitle)*100);
+                               $holidayCountpercentage=intval(($totalnumberofHolidayForFormattedDate/$totalDaysForFormattedModalTitle)*100);
+                            @endphp
                              
+                            <livewire:my-flowchart :absent="$absentCountpercentage" :present="$presentCountpercentage" :leave-taken="$leaveTakenpercentage" :holidays="$holidayCountpercentage" />      
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageFirstInTime}}</span></p>
@@ -1848,11 +1856,23 @@ color: #fff;
                                                 @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 70px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:{{( $day['session2leave']== [["Session 1"]]||$day['session2leave']==[["Session 2"]])? '-8px' : '5px'}};font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:{{( $day['session2leave']== [["Session 1"]]||$day['session2leave']==[["Session 2"]])? '-8px' : '5px'}};font-weight: 400;">
+                                                    @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @else
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top: -10px;margin-left: 5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top: -10px;margin-left: 5px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
 
                                                 @endif
@@ -1930,28 +1950,58 @@ color: #fff;
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">
+                                                       @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @elseif($day['status']=='HP'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <div style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-23px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
+                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">
+                                                                @if(!empty($day['assignedDifferentShift']))
+                                                                    {{ $day['assignedDifferentShift'] }}
+                                                                @else     
+                                                                    {{$employee->shift_type}}
+                                                                @endif
+                                                        </p>
                                                     </span>
                                                 </div>
                                                 @elseif($day['onHalfDayLeave']==true&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <div style="background-color:#fcf0f0;">
                                                     <span style="display: flex; text-align:end;width:10px;height:30px;margin-top:-20px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">{{$employee->shift_type}}</p>
+                                                        <p style="color: #a3b2c7;margin-top: 6px;padding-left: 4px;font-weight: 300;">
+                                                                @if(!empty($day['assignedDifferentShift']))
+                                                                    {{ $day['assignedDifferentShift'] }}
+                                                                @else     
+                                                                    {{$employee->shift_type}}
+                                                                @endif
+                                                        </p>
                                                     </span>
                                                 </div>
                                                 @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @else
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
 
                                                 @endif
@@ -2018,20 +2068,45 @@ color: #fff;
                                                 @endif
                                                 @if(strtotime($formattedDate) >= strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:30px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @elseif($day['status']=='HP'&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px; margin-right:12px;white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;font-weight: 400;">
+                                                        
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @elseif($isCurrentMonth&& strtotime($formattedDate) > $employeeHireDate->timestamp)
                                                 @if($day['isRegularised']==true)
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:5px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif
+                                                    </p>
                                                 </span>
                                                 @else
                                                 <span style="display: flex; text-align:end;width:10px;height:10px;border-radius:50%;padding-left: 60px;margin-right:20px; white-space: nowrap;">
-                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">{{$employee->shift_type}}</p>
+                                                    <p style="color: #a3b2c7;margin-top:15px;font-weight: 400;">
+                                                        @if(!empty($day['assignedDifferentShift']))
+                                                             {{ $day['assignedDifferentShift'] }}
+                                                        @else     
+                                                             {{$employee->shift_type}}
+                                                        @endif     
+                                                    </p>
                                                 </span>
 
                                                 @endif
@@ -2256,11 +2331,15 @@ color: #fff;
 
                           
                             <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:
-                            @if(empty($employeeShiftDetails))
-                                   NA
+                            @if(!empty($employeeSecondShiftDetails))  
+                            
+                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->format('H:i ') }} to
+                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_end_time)->format('H:i ') }}
+                            @elseif(!empty($employeeShiftDetails))
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}
                             @else
-                                    {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
-                                    {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}
+                              NA
                             @endif
                         </p>
                         </div>
@@ -2498,7 +2577,15 @@ color: #fff;
 
                                 <tr class="container3-table-row">
                                     <td class="container3-table-data">Session&nbsp;1</td>
-                                    <td class="container3-table-data">{{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i')}} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->addHours(4)->format('H:i')}} </td>
+                                    <td class="container3-table-data">
+                                        @if($employeeSecondShiftDetails)
+                                            {{\Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->format('H:i')}} - {{\Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->addHours(4)->format('H:i')}} 
+                                        @elseif($employeeShiftDetails)    
+                                          {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i')}} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->addHours(4)->format('H:i')}} 
+                                        @else
+                                             NA
+                                        @endif
+                                    </td>
                                     <td class="container3-table-data">
                                         @if($changeDate==1)
                                         {{$this->first_in_time}}
@@ -2511,7 +2598,15 @@ color: #fff;
                                 </tr>
                                 <tr class="container3-table-row">
                                     <td class="container3-table-data">Session&nbsp;2</td>
-                                    <td class="container3-table-data">{{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->subMinutes(299)->format('H:i') }} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}} </td>
+                                    <td class="container3-table-data">
+                                        @if($employeeSecondShiftDetails)
+                                        {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->addMinutes(241)->format('H:i') }} - {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_end_time)->format('H:i') }}
+                                        @elseif($employeeShiftDetails)  
+                                        {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->subMinutes(299)->format('H:i') }} - {{\Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i')}}
+                                        @else
+                                          NA
+                                        @endif
+                                    </td>
                                     <td class="container3-table-data">-</td>
                                     <td class="container3-table-data">
                                         @if($changeDate==1)

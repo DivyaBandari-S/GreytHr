@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('priority', ['Low', 'Medium', 'High'])->default('Low');
             $table->string('assigned_dept')->nullable();
             $table->json('file_paths')->nullable();
+            $table->json('it_file_paths')->nullable();
             $table->string('inc_assign_to')->nullable();
             $table->text('active_inc_notes')->nullable();
             $table->text('inc_pending_notes')->nullable();
@@ -50,11 +51,7 @@ return new class extends Migration
                 ->references('emp_id')
                 ->on('employee_details')
                 ->onDelete('restrict');
-            $table->foreign('status_code')
-                ->references('status_code')
-                ->on('status_types')
-                ->onDelete('restrict')
-                ->onUpdate('cascade');
+
         });
  
         // Create the trigger for auto-generating snow_id

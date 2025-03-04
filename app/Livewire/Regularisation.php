@@ -6,6 +6,7 @@ namespace App\Livewire;
 use App\Helpers\FlashMessageHelper;
 use App\Mail\RegularisationApplyingMail;
 use App\Mail\RegularisationWithdrawalMail;
+use App\Models\AttendanceException;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -245,18 +246,36 @@ class Regularisation extends Component
             return false; // Return false to handle the error gracefully
         }
     }
+
+    public function findExceptioninAttendance($date)
+{
+    $attendanceException = AttendanceException::where('emp_id', auth()->guard('emp')->user()->emp_id)
+    ->whereDate('from_date', '<=', $date) // from_date should be before or equal to $date
+    ->whereDate('to_date', '>=', $date)   // to_date should be after or equal to $date
+    ->value('status');
+    return $attendanceException;
+}
     public function hideAlert()
     {
         $this->showAlert = false;
     }
     public function submitShifts($date)
-    {
-        $this->isdatesApplied=false;
-        $selectedDate = Carbon::parse($date);
-        $selecteddateyear = $selectedDate->year;
-        $selecteddatemonth = $selectedDate->month;
-        $selecteddateday=$selectedDate->day;
-        if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
+{
+    Log::info("Submit Shifts method called for date: $date");
+
+    $this->isdatesApplied = false;
+    $selectedDate = Carbon::parse($date);
+    $selecteddateyear = $selectedDate->year;
+    $selecteddatemonth = $selectedDate->month;
+    $selecteddateday = $selectedDate->day;
+
+    Log::info("Selected Date Details", [
+        'Year' => $selecteddateyear,
+        'Month' => $selecteddatemonth,
+        'Day' => $selecteddateday,
+    ]);
+
+    if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
         {
             $sessionKey = 'attendance_lock_flash_time';
             $currentTimestamp = now();
@@ -445,35 +464,64 @@ class Regularisation extends Component
 
         }
 
-        if (!in_array($date, $this->selectedDates)) {
-            // Add the date to the selectedDates array only if it's not already selected
-            $this->selectedDates[] = $date;
 
-            $this->shift_times[]=[
-                'date' => $date,
-                'from'=>'',
-                'to'=>'',
-                'reason'=>'',
-            ];
-        }
-        foreach ($this->shift_times as $date => $times) {
-            if (preg_match('/^\d{2}:\d{2}$/', $times['from'])) {
-                [$hours, $minutes] = explode(':', $times['from']);
-                // Process hours and minutes as needed
-            } else {
-                // Handle invalid input format for start time
+    $isexceptioninAttendance=$this->findExceptioninAttendance($selectedDate->toDateString());
+    if($isexceptioninAttendance)
+    {
+           $sessionKey11 = 'employee_exception_on_date';
+            $currentTimestamp10 = now();
+
+            // Check if the flash message has been shown recently (e.g., within 5 seconds)
+            if (!session()->has($sessionKey11) || $currentTimestamp10->diffInSeconds(session($sessionKey11)) >= 5) {
+                sleep(1);
+                FlashMessageHelper::flashError('The exception is already modified by the HR Department');
+                $this->showAlert = true;
+
+                // Update the session with the current timestamp
+                session([$sessionKey11 => $currentTimestamp10]);
             }
 
-            if (preg_match('/^\d{2}:\d{2}$/', $times['to'])) {
-                [$hours, $minutes] = explode(':', $times['to']);
-                // Process hours and minutes as needed
-            } else {
-                // Handle invalid input format for end time
-            }
-        }
-
-
+            // Stop further execution
+            return;
     }
+
+
+   
+
+    if (!in_array($date, $this->selectedDates)) {
+        Log::info("Adding date to selectedDates: $date");
+
+        $this->selectedDates[] = $date;
+
+      
+        $this->shift_times[] = [
+            'date' => $date,
+            'from' => '',
+            'to' => '',
+            'reason' => '',
+        ];
+      
+    }
+
+    Log::info("Processing shift times for selected dates.");
+    foreach ($this->shift_times as $date => $times) {
+        if (preg_match('/^\d{2}:\d{2}$/', $times['from'])) {
+            [$hours, $minutes] = explode(':', $times['from']);
+            Log::info("Valid start time: $times[from]");
+        } else {
+            Log::error("Invalid start time format: $times[from]");
+        }
+
+        if (preg_match('/^\d{2}:\d{2}$/', $times['to'])) {
+            [$hours, $minutes] = explode(':', $times['to']);
+            Log::info("Valid end time: $times[to]");
+        } else {
+            Log::error("Invalid end time format: $times[to]");
+        }
+    }
+
+    Log::info("SubmitShifts execution completed successfully.");
+}
     private function isEmployeeRegularisedOnDate($date)
     {
         try {
@@ -549,12 +597,14 @@ class Regularisation extends Component
                             'isCurrentMonth' => false,
                             'isNextMonth'=>false,
                             'isPreviousMonth' => true,
+                            'isAssignedDifferentShift'=>null,
                             'isAfterToday' => $previousMonthDays->isAfter($today),
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
                         $date = Carbon::create($this->year, $this->month, $dayCount);
                         $isToday = $date->isSameDay($today);
                         $isregularised = $this->isEmployeeRegularisedOnDate($date);
+                        $secondshiftdate=$this->isEmployeeAssignedDifferentShift($date,$this->employeeId)['shiftType'];
                         $week[] = [
                             'day' => $dayCount,
                             'date' => $date->toDateString(),
@@ -564,6 +614,7 @@ class Regularisation extends Component
                             'isPreviousMonth' => false,
                              'isNextMonth'=>false,
                             'isRegularised' => $isregularised,
+                            'isAssignedDifferentShift'=>$secondshiftdate,
                             'isAfterToday' => $date->isAfter($today),
                         ];
                         $dayCount++;
@@ -579,6 +630,7 @@ class Regularisation extends Component
                             'isCurrentMonth' => false,
                             'isNextMonth' => true,
                             'isRegularised' => false,
+                            'isAssignedDifferentShift'=>null,
                             'isAfterToday' => $nextMonthDays->isAfter($today),
                         ];
                         $dayCount++;
@@ -728,10 +780,47 @@ public function beforeMonth()
     {
         return redirect('/Attendance');
     }
+    public function isEmployeeAssignedDifferentShift($date, $empId)
+{
+    $shiftExists = false;
+    $shiftType = null;
+
+    $employee = EmployeeDetails::where('emp_id', $empId)->first();
+
+    // Return array with default values if employee not found or no shift entries assigned
+    if (!$employee || empty($employee->shift_entries)) {
+        return [
+            'shiftExists' => $shiftExists,
+            'shiftType' => $shiftType,
+        ];
+    }
+
+    $shiftEntries = json_decode($employee->shift_entries, true);
+    $date = Carbon::parse($date);
+
+    foreach ($shiftEntries as $shift) {
+        $fromDate = Carbon::parse($shift['from_date']);
+        $toDate = Carbon::parse($shift['to_date']);
+
+        if ($date->between($fromDate, $toDate)) {
+            $shiftExists = true;
+            $shiftType = $shift['shift_type'];
+        } elseif ($date->isSameDay($fromDate) || $date->isSameDay($toDate)) {
+            $shiftExists = true;
+            $shiftType = $shift['shift_type'];
+        }
+    }
+
+    return [
+        'shiftExists' => $shiftExists,
+        'shiftType' => $shiftType,
+    ];
+}
     //This function will store regularisation details in the database
     public function storearraydates()
     {
         try {
+            
             Log::info('storearraydates method started.');
 
             // Validate the data

@@ -33,6 +33,15 @@ class TimeSheet extends Model
         return $this->belongsTo(StatusType::class, 'approval_status_for_manager', 'status_code');
     }
 
+    public function approvalStatusForHr()
+    {
+        return $this->belongsTo(StatusType::class, 'approval_status_for_hr', 'status_code');
+    }
+
+    public function submissionStatus()
+    {
+        return $this->belongsTo(StatusType::class, 'submission_status', 'status_code');
+    }
 
 
     public function employee()

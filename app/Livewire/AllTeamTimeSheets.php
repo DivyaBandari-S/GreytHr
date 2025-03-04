@@ -4,9 +4,8 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\TimeSheet;
-use Carbon\Carbon;
+use App\Helpers\FlashMessageHelper;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class AllTeamTimeSheets extends Component
 {
@@ -19,12 +18,30 @@ class AllTeamTimeSheets extends Component
     public $start_date = '';
     public $end_date = '';
     public $time_sheet_type = "weekly";
-    public $manager_approval = 'pending';
+    public $manager_approval = '';
     public $hr_approval = '';
     public $submission_status = '';
 
-    // In your Livewire component class
+    public $first_name_cm = '';
+    public $last_name_cm = '';
+    public $emp_id_cm = '';
+    public $start_date_cm = '';
+    public $end_date_cm = '';
+    public $time_sheet_type_cm = "weekly";
+    public $manager_approval_cm = '';
+    public $hr_approval_cm = '';
+    public $submission_status_cm = '';
+
     public $openAccordionIndex = null; // Store the currently open accordion index
+    public $activeTab ='currentMonth';
+    public function setActiveTab($tab)
+    {
+        if ($tab === 'currentMonth') {
+            $this->activeTab = 'currentMonth';
+        } elseif ($tab === 'all') {
+            $this->activeTab = 'all';
+        }
+    }
 
     public function toggleAccordion($index)
     {
@@ -45,15 +62,15 @@ class AllTeamTimeSheets extends Component
             ->pluck('emp_id');
 
         // Fetch all relevant timesheets first
-        $this->filteredTeamTimeSheets = TimeSheet::with('employee')
+        $this->filteredTeamTimeSheets = TimeSheet::with('employee', 'approvalStatusForManager')
             ->orderBy('start_date', 'desc')
             ->whereIn('emp_id', $managedEmployees)
-            ->whereRaw('DATEDIFF(end_date, start_date) = 6')
+            ->whereRaw('DATEDIFF(end_date, start_date) >= 4')
             ->where(function ($query) {
-                $query->where('approval_status_for_manager', 'pending')
-                    ->orWhere('approval_status_for_manager', 'approved')
-                    ->orWhere('approval_status_for_manager', 'rejected')
-                    ->orWhere('approval_status_for_manager', 're-submit');
+                $query->where('approval_status_for_manager', '5')
+                    ->orWhere('approval_status_for_manager', '2')
+                    ->orWhere('approval_status_for_manager', '3')
+                    ->orWhere('approval_status_for_manager', '14');
             })
             ->when($this->first_name, function ($query) {
                 $query->whereHas('employee', function ($q) {
@@ -91,6 +108,72 @@ class AllTeamTimeSheets extends Component
             ->get();
     }
 
+    public $filteredTeamTimeSheetsCurrentMonth,$initialTeamTimeSheetsCurrentMonth,$teamTimeSheetsCurrentMonth;
+    public function teamTimeSheetsFilterCurrentMonth()
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        $managedEmployees = DB::table('employee_details')
+            ->where('manager_id', $employeeId)
+            ->pluck('emp_id');
+
+        // Fetch all relevant timesheets first
+        $this->filteredTeamTimeSheetsCurrentMonth = TimeSheet::with('employee', 'approvalStatusForManager')
+            ->orderBy('start_date', 'desc')
+            ->whereIn('emp_id', $managedEmployees)
+            ->whereRaw('DATEDIFF(end_date, start_date) >= 4')
+            ->where(function ($query) {
+                $query->where('approval_status_for_manager', '5')
+                    ->orWhere('approval_status_for_manager', '2')
+                    ->orWhere('approval_status_for_manager', '3')
+                    ->orWhere('approval_status_for_manager', '14');
+            })
+            ->when($this->first_name_cm, function ($query) {
+                $query->whereHas('employee', function ($q) {
+                    $q->where('first_name', 'like', '%' . $this->first_name_cm . '%');
+                });
+            })
+            ->when($this->last_name_cm, function ($query) {
+                $query->whereHas('employee', function ($q) {
+                    $q->where('last_name', 'like', '%' . $this->last_name_cm . '%');
+                });
+            })
+            ->when($this->emp_id_cm, function ($query) {
+                $query->whereHas('employee', function ($q) {
+                    $q->where('emp_id', 'like', '%' . $this->emp_id_cm . '%');
+                });
+            })
+            ->when($this->start_date_cm, function ($query) {
+                $query->where('start_date', '>=', $this->start_date_cm);
+            })
+            ->when($this->end_date_cm, function ($query) {
+                $query->where('end_date', '<=', $this->end_date_cm);
+            })
+            ->when($this->time_sheet_type_cm, function ($query) {
+                $query->where('time_sheet_type', $this->time_sheet_type_cm);
+            })
+            ->when($this->submission_status_cm, function ($query) {
+                $query->where('submission_status', $this->submission_status_cm);
+            })
+            ->when($this->manager_approval_cm, function ($query) {
+                $query->where('approval_status_for_manager', $this->manager_approval_cm);
+            })
+            ->when($this->hr_approval_cm, function ($query) {
+                $query->where('approval_status_for_hr', $this->hr_approval_cm);
+            })
+            ->where(function ($query) {
+                // At least one of start_date or end_date must be in the current month
+                $query->where(function ($q) {
+                    $q->whereMonth('start_date', now()->month)
+                      ->whereYear('start_date', now()->year);
+                })
+                ->orWhere(function ($q) {
+                    $q->whereMonth('end_date', now()->month)
+                      ->whereYear('end_date', now()->year);
+                });
+            })
+            ->get();
+    }
     public function render()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -100,15 +183,29 @@ class AllTeamTimeSheets extends Component
             ->pluck('emp_id');
 
         // Initial timesheets
-        $this->initialTeamTimeSheets = TimeSheet::with('employee')
+        $this->initialTeamTimeSheets = TimeSheet::with('employee', 'approvalStatusForManager')
             ->orderBy('start_date', 'desc')
             ->whereIn('emp_id', $managedEmployees)
-            ->whereRaw('DATEDIFF(end_date, start_date) = 6')
-            ->where(function ($query) {
-                $query->where('approval_status_for_manager', '=', 'pending');
-            })
+            ->whereRaw('DATEDIFF(end_date, start_date) >=4')
             ->get();
         $this->teamTimeSheets = $this->filteredTeamTimeSheets ?? $this->initialTeamTimeSheets;
+        $this->initialTeamTimeSheetsCurrentMonth = TimeSheet::with('employee', 'approvalStatusForManager')
+        ->orderBy('start_date', 'desc')
+        ->whereIn('emp_id', $managedEmployees)
+        ->whereRaw('DATEDIFF(end_date, start_date) >= 4')
+        ->where(function ($query) {
+            // At least one of start_date or end_date must be in the current month
+            $query->where(function ($q) {
+                $q->whereMonth('start_date', now()->month)
+                  ->whereYear('start_date', now()->year);
+            })
+            ->orWhere(function ($q) {
+                $q->whereMonth('end_date', now()->month)
+                  ->whereYear('end_date', now()->year);
+            });
+        })
+        ->get();
+        $this->teamTimeSheetsCurrentMonth = $this->filteredTeamTimeSheetsCurrentMonth ?? $this->initialTeamTimeSheetsCurrentMonth;
 
         return view('livewire.all-team-time-sheets');
     }
@@ -118,18 +215,19 @@ class AllTeamTimeSheets extends Component
         $timesheet = TimeSheet::find($id);
 
         if (!$timesheet) {
-            session()->flash('approve_status', 'Timesheet not found.');
+            FlashMessageHelper::flashError('Timesheet not found.');
             return;
         }
 
-        if ($timesheet->approval_status_for_manager === "approved") {
-            session()->flash('approve_status', 'Timesheet already approved!');
+        if ($timesheet->approval_status_for_manager === "2") {
+            FlashMessageHelper::flashError('Timesheet already approved!');
         } else {
             $timesheet->update([
-                'approval_status_for_manager' => 'approved'
+                'approval_status_for_manager' => '2'
             ]);
-            session()->flash('approve_status', 'Timesheet approved successfully!');
+            FlashMessageHelper::flashSuccess('Timesheet approved successfully!');
         }
+        return redirect('/team-time-sheets');
     }
 
     public function reject($id, $reason)
@@ -137,15 +235,16 @@ class AllTeamTimeSheets extends Component
         $timesheet = TimeSheet::find($id);
 
         if (!$timesheet) {
-            session()->flash('approve_status', 'Timesheet not found.');
+            FlashMessageHelper::flashError('Timesheet not found.');
             return;
         }
 
         $timesheet->update([
-            'approval_status_for_manager' => 'rejected',
+            'approval_status_for_manager' => '3',
             'reject_reason_for_manager' => $reason,
         ]);
-        session()->flash('approve_status', 'Timesheet rejected successfully!');
+        FlashMessageHelper::flashSuccess('Timesheet rejected successfully!');
+        return redirect('/team-time-sheets');
     }
 
     public function resubmit($id, $reason)
@@ -153,16 +252,16 @@ class AllTeamTimeSheets extends Component
         $timesheet = TimeSheet::find($id);
 
         if (!$timesheet) {
-            session()->flash('approve_status', 'Timesheet not found.');
+            FlashMessageHelper::flashError('Timesheet not found.');
             return;
         }
 
         $timesheet->update([
-            'submission_status' => 'saved',
-            'approval_status_for_manager' => 're-submit',
+            'submission_status' => '12',
+            'approval_status_for_manager' => '14',
             'resubmit_reason_for_manager' => $reason,
         ]);
-
-        session()->flash('approve_status', 'Timesheet status changed to resubmit successfully!');
+        FlashMessageHelper::flashSuccess('Timesheet status changed to resubmit successfully!');
+        return redirect('/team-time-sheets');
     }
 }
