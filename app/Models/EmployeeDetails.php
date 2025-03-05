@@ -14,8 +14,9 @@ use App\Notifications\ResetPasswordLink;
 use App\Traits\ChatHelpers;
 use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
+use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class EmployeeDetails extends Authenticatable
+class EmployeeDetails extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasApiTokens, ChatHelpers;
     protected $primaryKey = 'emp_id';
@@ -66,6 +67,26 @@ class EmployeeDetails extends Authenticatable
         'company_id' => 'array',
     ];
 
+
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
     public function empBankDetails()
     {
         return $this->hasOne(EmpBankDetail::class, 'emp_id', 'emp_id');
