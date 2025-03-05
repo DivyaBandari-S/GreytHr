@@ -1,10 +1,21 @@
 <div>
-    <div class="all-team-time-sheet-container">
-        @if (session('approve_status'))
-        <div id="success-message" class="alert alert-success">
-            {{ session('approve_status') }}
+    <div class="row">
+        <div style="text-align: center; margin-top: 1rem;">
+            <button
+                type="button"
+                class="tabs-btn {{ $activeTab === 'currentMonth' ? 'active' : 'inactive' }}"
+                wire:click="setActiveTab('currentMonth')">
+                Current Month
+            </button>
+            <button
+                type="button"
+                class="tabs-btn {{ $activeTab === 'all' ? 'active' : 'inactive' }}"
+                wire:click="setActiveTab('all')">
+                All
+            </button>
         </div>
-        @endif
+    </div>
+    <div class="all-team-time-sheet-container mt-2 {{ $activeTab == 'all' ? '' : 'd-none' }}">
         <div class="filter-container">
             <div class="container-fluid filter-heading">Time Sheet Filters</div>
             <div class="team-time-sheet-filters p-2">
@@ -48,28 +59,28 @@
                         <label for="submission_status">Submission Status</label>
                         <select id="submission_status" wire:change="teamTimeSheetsFilter" wire:model="submission_status">
                             <option value="">All</option>
-                            <option value="submitted">Submitted</option>
-                            <option value="saved">Saved</option>
+                            <option value="13">Submitted</option>
+                            <option value="12">Saved</option>
                         </select>
                     </div>
                     <div>
                         <label for="manager_approval">Manager Approval Status</label>
                         <select id="manager_approval" wire:change="teamTimeSheetsFilter" wire:model="manager_approval">
                             <option value="">All</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="pending">Pending</option>
-                            <option value="re-submit">Re-Submit</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Rejected</option>
+                            <option value="5">Pending</option>
+                            <option value="14">Re-Submit</option>
                         </select>
                     </div>
                     <div>
                         <label for="hr_approval">HR Approval Status</label>
                         <select id="hr_approval" wire:change="teamTimeSheetsFilter" wire:model="hr_approval">
                             <option value="">All</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="pending">Pending</option>
-                            <option value="re-submit">Re-Submit</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Rejected</option>
+                            <option value="5">Pending</option>
+                            <option value="14">Re-Submit</option>
                         </select>
                     </div>
                 </div>
@@ -152,24 +163,22 @@
                         <td class="timesheet-type-header">Weekly</td>
                         <td class="day-header">{{ $totalDays }}</td>
                         <td class="hours-header">{{ number_format($totalHours, 2) }}</td>
-                        <td class="submission-header">{{ $team->submission_status }}</td>
-                        <td class="submission-header">{{ $team->approval_status_for_manager }}</td>
-                        <td class="submission-header">{{ $team->approval_status_for_hr }}</td>
+                        <td class="submission-header">{{ $team->submissionStatus->status_name  }}</td>
+                        <td class="submission-header">{{ $team->approvalStatusForManager->status_name }}</td>
+                        <td class="submission-header">{{ $team->approvalStatusForHr->status_name  }}</td>
                         <td class="actions-header">
-                            @if($team->approval_status_for_manager != "approved" && $team->approval_status_for_manager != "rejected" && $team->approval_status_for_manager != "re-submit")
+                            @if($team->approval_status_for_manager != "2" && $team->approval_status_for_manager != "3" && $team->approval_status_for_manager != "14")
                             <button class="approve-manager" wire:click="approve({{ $team->id }})">Approve</button>
                             <!-- Re-Submit Button -->
-
                             <button class="resubmit-manager" onclick="showReasonModal('resubmit', {{ $team->id }})">Re-submit</button>
-
                             <!-- Reject Button -->
                             <button class="reject-manager" onclick="showReasonModal('reject', {{ $team->id }})">Reject</button>
-                            @elseif($team->approval_status_for_manager=="approved")
-                            <div class="approved-manager">{{$team->approval_status_for_manager}}</div>
-                            @elseif($team->approval_status_for_manager=="rejected")
-                            <div class="rejected-manager">{{$team->approval_status_for_manager}}</div>
-                            @elseif($team->approval_status_for_manager=="re-submit")
-                            <div class="resubmitted-manager">{{$team->approval_status_for_manager}}</div>
+                            @elseif($team->approval_status_for_manager=="2")
+                            <div class="approved-manager">{{$team->approvalStatusForManager->status_name}}</div>
+                            @elseif($team->approval_status_for_manager=="3")
+                            <div class="rejected-manager">{{$team->approvalStatusForManager->status_name}}</div>
+                            @elseif($team->approval_status_for_manager=="14")
+                            <div class="resubmitted-manager">{{$team->approvalStatusForManager->status_name}}</div>
                             @endif
                         </td>
                     </tr>
@@ -182,7 +191,7 @@
                                     <tr class="details-ts">
                                         <th>Dates</th>
                                         <th>Days</th>
-                                        <th>Clients</th>
+                                        <th>Customers</th>
                                         <th>Projects</th>
                                         <th>Remarks</th>
                                         <th>Hours</th>
@@ -259,8 +268,271 @@
                             </table>
                         </td>
                     </tr>
+                    @empty
+                    <tr>
+                        <td colspan="11">
+                            No time sheets available.
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="all-team-time-sheet-container mt-2 {{ $activeTab == 'currentMonth' ? '' : 'd-none' }}">
+        <div class="filter-container">
+            <div class="container-fluid filter-heading">Time Sheet Filters</div>
+            <div class="team-time-sheet-filters p-2">
+                <div class="filter-row">
+                    <div>
+                        <label for="emp_id_cm">Employee ID</label>
+                        <input class="employee-search" type="text" id="emp_id_cm" wire:input="teamTimeSheetsFilterCurrentMonth" wire:model.debounce.0ms="emp_id_cm" placeholder="Search by employee ID">
+                    </div>
+                    <div>
+                        <label for="first_name_cm">First Name</label>
+                        <input class="employee-search" type="text" id="first_name_cm" wire:input="teamTimeSheetsFilterCurrentMonth" wire:model.debounce.0ms="first_name_cm" placeholder="Search by first name">
+                    </div>
+                    <div>
+                        <label for="last_name_cm">Last Name</label>
+                        <input class="employee-search" type="text" id="last_name_cm" wire:input="teamTimeSheetsFilterCurrentMonth" wire:model.debounce.0ms="last_name_cm" placeholder="Search by last name">
+                    </div>
+
+                </div>
+                <div class="filter-row">
+                    <div>
+                        <label for="time_sheet_type_cm">Time Sheet Type</label>
+                        <select id="time_sheet_type_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model="time_sheet_type_cm">
+                            <option value="">All</option>
+                            <option value="weekly">Weekly (Default)</option>
+                            <option value="semi-monthly">Semi-Monthly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="start_date_cm">Start Date</label>
+                        <input type="date" id="start_date_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model.debounce.0ms="start_date_cm">
+                    </div>
+                    <div>
+                        <label for="end_date_cm">End Date</label>
+                        <input type="date" id="end_date_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model.debounce.0ms="end_date_cm">
+                    </div>
+
+                </div>
+                <div class="filter-row">
+                    <div>
+                        <label for="submission_status_cm">Submission Status</label>
+                        <select id="submission_status_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model="submission_status_cm">
+                            <option value="">All</option>
+                            <option value="13">Submitted</option>
+                            <option value="12">Saved</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="manager_approval_cm">Manager Approval Status</label>
+                        <select id="manager_approval_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model="manager_approval_cm">
+                            <option value="">All</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Rejected</option>
+                            <option value="5">Pending</option>
+                            <option value="14">Re-Submit</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="hr_approval_cm">HR Approval Status</label>
+                        <select id="hr_approval_cm" wire:change="teamTimeSheetsFilterCurrentMonth" wire:model="hr_approval_cm">
+                            <option value="">All</option>
+                            <option value="2">Approved</option>
+                            <option value="3">Rejected</option>
+                            <option value="5">Pending</option>
+                            <option value="14">Re-Submit</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="team-time-sheets-table">
+                <thead>
+                    <tr>
+                        <th class="accordion-icon">Details</th>
+                        <th class="date-header start-date-header">Start Date</th>
+                        <th class="date-header">End Date</th>
+                        <th class="employee-header">Employee</th>
+                        <th class="timesheet-type-header">Time Sheet Type</th>
+                        <th class="day-header">Total Days</th>
+                        <th class="hours-header">Total Hours</th>
+                        <th class="submission-header">Submission Status</th>
+                        <th class="submission-header">Approval Status <p>(Manager)</p>
+                        </th>
+                        <th class="submission-header">Approval Status <p>(HR)</p>
+                        </th>
+                        <th class="actions-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                    $previousStartDate = null;
+                    $previousEndDate = null;
+                    @endphp
+
+                    @forelse ($teamTimeSheetsCurrentMonth as $index => $team)
+                    @php
+                    $timeSheetData = json_decode($team->date_and_day_with_tasks, true);
+                    $totalDays = count($timeSheetData);
+                    $totalHours = 0;
+
+                    foreach ($timeSheetData as $dayData) {
+                    $hours = $dayData['hours'];
+                    if (is_array($hours)) {
+                    $totalHours += array_sum($hours);
+                    } else {
+                    $totalHours += (float) $hours;
+                    }
+                    }
+                    $startDate = \Carbon\Carbon::parse($team->start_date);
+                    $endDate = \Carbon\Carbon::parse($team->end_date);
+                    @endphp
+
+                    @if ($startDate != $previousStartDate || $endDate != $previousEndDate)
+                    <!-- Timesheet Details Header -->
+                    <tr>
+                        <td colspan="11">
+                            <div class="grouped-header"> Weekly Time Sheet Overview: {{ $startDate->format('d-M-Y') }} to {{ $endDate->format('d-M-Y') }} </div>
+                        </td>
+
+                    </tr>
+                    @php
+                    $previousStartDate = $startDate;
+                    $previousEndDate = $endDate;
+                    @endphp
+                    @endif
+                    <tr class="data-row" data-index="{{ $index }}">
+                        <td class="accordion-icon">
+                            <a href="#" wire:click.prevent="toggleAccordion({{ $index }})" class="toggle-icon {{ $openAccordionIndex === $index ? 'open' : '' }}" data-index="{{ $index }}">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </td>
+                        @php
+                        $startDate = \Carbon\Carbon::parse($team->start_date);
+                        $endDate = \Carbon\Carbon::parse($team->end_date);
+                        @endphp
+
+                        <td class="date-header">{{ $startDate->format('d-M-Y') }}</td>
+                        <td class="date-header">{{ $endDate->format('d-M-Y') }}</td>
 
 
+                        <td class="employee-header">{{ $team->employee->first_name }} {{ $team->employee->last_name }}
+                            <p>({{ $team->employee->emp_id }})</p>
+                        </td>
+                        <td class="timesheet-type-header">Weekly</td>
+                        <td class="day-header">{{ $totalDays }}</td>
+                        <td class="hours-header">{{ number_format($totalHours, 2) }}</td>
+                        <td class="submission-header">{{ $team->submissionStatus->status_name  }}</td>
+                        <td class="submission-header">{{ $team->approvalStatusForManager->status_name }}</td>
+                        <td class="submission-header">{{ $team->approvalStatusForHr->status_name  }}</td>
+                        <td class="actions-header">
+                            @if($team->approval_status_for_manager != "2" && $team->approval_status_for_manager != "3" && $team->approval_status_for_manager != "14")
+                            <button class="approve-manager" wire:click="approve({{ $team->id }})">Approve</button>
+                            <!-- Re-Submit Button -->
+                            <button class="resubmit-manager" onclick="showReasonModal('resubmit', {{ $team->id }})">Re-submit</button>
+                            <!-- Reject Button -->
+                            <button class="reject-manager" onclick="showReasonModal('reject', {{ $team->id }})">Reject</button>
+                            @elseif($team->approval_status_for_manager=="2")
+                            <div class="approved-manager">{{$team->approvalStatusForManager->status_name}}</div>
+                            @elseif($team->approval_status_for_manager=="3")
+                            <div class="rejected-manager">{{$team->approvalStatusForManager->status_name}}</div>
+                            @elseif($team->approval_status_for_manager=="14")
+                            <div class="resubmitted-manager">{{$team->approvalStatusForManager->status_name}}</div>
+                            @endif
+                        </td>
+                    </tr>
+
+                    <!-- Details Row -->
+                    <tr class="detail-row {{ $openAccordionIndex === $index ? 'open' : '' }}" id="details-{{ $index }}">
+                        <td colspan="11">
+                            <table>
+                                <thead>
+                                    <tr class="details-ts">
+                                        <th>Dates</th>
+                                        <th>Days</th>
+                                        <th>Customers</th>
+                                        <th>Projects</th>
+                                        <th>Remarks</th>
+                                        <th>Hours</th>
+                                        <th>Tasks</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($timeSheetData as $dayData)
+                                    <tr>
+                                        @php
+                                        $date = new \DateTime($dayData['date']);
+                                        @endphp
+
+                                        <td class="date-column">{{ $date->format('d-M-Y') }}</td>
+                                        <td class="day-column">{{ $dayData['day'] }}</td>
+                                        <td class="clients-column">
+                                            @if (!empty($dayData['clients']))
+                                            @foreach ($dayData['clients'] as $client)
+                                            {{ $client }}<br>
+                                            @endforeach
+                                            @else
+                                            N/A
+                                            @endif
+                                        </td>
+                                        <td class="projects-column">
+                                            @php
+                                            $projects = is_array($dayData['projects']) ? array_merge(...$dayData['projects']) : [];
+                                            @endphp
+                                            @if (!empty($projects))
+                                            @foreach ($projects as $project)
+                                            {{ $project }}<br>
+                                            @endforeach
+                                            @else
+                                            N/A
+                                            @endif
+                                        </td>
+                                        <td class="remarks-column">
+                                            @php
+                                            $remarks = is_array($dayData['remarks']) ? array_merge(...$dayData['remarks']) : [];
+                                            @endphp
+                                            @if (!empty($remarks))
+                                            @foreach ($remarks as $remark)
+                                            {{ $remark }}<br>
+                                            @endforeach
+                                            @else
+                                            N/A
+                                            @endif
+                                        </td>
+                                        <td class="hours-column">
+                                            @if (is_array($dayData['hours']))
+                                            @foreach ($dayData['hours'] as $hour)
+                                            {{ $hour }}<br>
+                                            @endforeach
+                                            @else
+                                            {{ $dayData['hours'] }}
+                                            @endif
+                                        </td>
+                                        <td class="tasks-column">
+                                            @if (is_array($dayData['tasks']))
+                                            @if (empty($dayData['tasks']))
+                                            --
+                                            @else
+                                            @foreach ($dayData['tasks'] as $task)
+                                            {{ $task ?: '--' }}<br>
+                                            @endforeach
+                                            @endif
+                                            @else
+                                            {{ !empty($dayData['tasks']) ? $dayData['tasks'] : '--' }}
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
                     @empty
                     <tr>
                         <td colspan="11">
@@ -383,8 +655,6 @@
             font-size: 14px;
         }
 
-
-
         /* Re-submit Button */
         .resubmit-manager {
             color: rgb(2, 17, 79);
@@ -399,7 +669,7 @@
         .approved-manager,
         .rejected-manager,
         .resubmitted-manager {
-            width: 100px;
+            width: 120px;
         }
 
         .approve-manager:hover,
@@ -418,8 +688,6 @@
         .actions-header {
             text-transform: capitalize;
         }
-
-        /* General Styles */
 
         .submission-header,
         .timesheet-type-header {
@@ -498,7 +766,6 @@
             color: #333;
         }
 
-        /* Expandable row styles */
         .data-row {
             cursor: pointer;
         }
@@ -581,7 +848,7 @@
             max-width: 100%;
             padding: 5px;
             background-color: #ffffff;
-            border-radius: 8px;
+            border-radius: 4px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
@@ -633,12 +900,11 @@
         }
 
         .filter-heading {
-            background-color: rgb(2, 17, 79);
-            color: white;
+            color: rgb(2, 17, 79);
             font-weight: 600;
+            font-size: 1rem;
             padding: 5px;
             text-align: center;
-            border-radius: 5px
         }
 
         /* Add these styles to your CSS file or inside a <style> tag */
@@ -664,6 +930,51 @@
             /* Overlay styles */
             opacity: 0.5;
             /* Adjust overlay opacity for better visibility on mobile */
+        }
+
+        .tabs-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            cursor: pointer;
+            margin: 0 0.6rem;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border-radius: 8px;
+            background: #f7f7f7;
+            color: #333;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .tabs-btn.active {
+            background: rgba(2, 17, 79, 1);
+            color: white;
+            border: 2px solid rgba(2, 17, 79, 1);
+            box-shadow: 0 8px 16px rgba(2, 17, 79, 0.3);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .tabs-btn.inactive {
+            background: white;
+            color: #555;
+            border: 2px solid #e0e0e0;
+        }
+
+        .tabs-btn:hover {
+            background: rgba(2, 17, 79, 0.8);
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 12px rgba(2, 17, 79, 0.3);
+        }
+
+        .tabs-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(2, 17, 79, 0.4);
+        }
+
+        .tabs-btn:active {
+            transform: translateY(0);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
     </style>
 </div>
