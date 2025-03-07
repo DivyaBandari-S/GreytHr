@@ -1,6 +1,10 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\EmployeeDetailsController;
+use App\Http\Controllers\API\EmpPersonalInfoController;
+use App\Http\Controllers\API\HolidayListController;
+use App\Http\Controllers\API\SwipeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::post('login', [AuthController::class, 'login']); // Login with email or emp_id
-Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:api');
-Route::post('refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
-Route::get('me', [AuthController::class, 'me'])->middleware('auth:api');
+
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('refresh', [AuthController::class, 'refresh']);
+    Route::post('me', [AuthController::class, 'empDetails']);
+    Route::get('empdetails', [AuthController::class, 'getEmployeeDetails']); // Fetch Employee Details via Token
+    Route::post('swipe', [SwipeController::class, 'swipe']); // Handle Swipe (Single API for both IN & OUT)
+    Route::post('/holidays', [HolidayListController::class, 'index']);
+    // Route::post('/employee/update', [EmployeeDetailsController::class, 'update']);
+    Route::post('/employee/show', [EmployeeDetailsController::class, 'show']);
+    Route::post('/employee/personal/view', [EmpPersonalInfoController::class, 'show']);
+    Route::post('/employee/personal/update', [EmpPersonalInfoController::class, 'update']);
+});
