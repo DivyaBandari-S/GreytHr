@@ -18,7 +18,7 @@ use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class EmployeeDetails extends Authenticatable implements JWTSubject
 {
-    use HasFactory, Notifiable, HasApiTokens, ChatHelpers;
+    use HasFactory, Notifiable, ChatHelpers;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
     protected $table = 'employee_details';

@@ -23,10 +23,11 @@ class AuthController extends Controller
 
             // Validate input fields
             $validator = Validator::make($request->all(), [
-                'emp_id'   => 'nullable|string',
-                'email'    => 'nullable|email',
+                'emp_id'   => 'nullable|string|required_without:email',
+                'email'    => 'nullable|email|required_without:emp_id',
                 'password' => 'required|string|min:6',
             ]);
+
 
             if ($validator->fails()) {
                 return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
@@ -125,28 +126,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            // Get the authenticated user
-            $user = Auth::guard('api')->user();
-
-            if (!$user) {
-                return ApiResponse::error(self::ERROR_STATUS, 'Unauthorized', self::UNAUTHORIZED);
-            }
-
-            // Get the current token
-            $token = Auth::guard('api')->getToken();
-
-            if (!$token) {
-                return ApiResponse::error(self::ERROR_STATUS, 'Token not found', self::ERROR);
-            }
-
-            // Invalidate the token
-            Auth::guard('api')->invalidate($token);
-            auth()->logout(true);
-            auth()->invalidate(true);
-            // Revoke all tokens (if using multiple token systems like OAuth or personal access tokens)
-            // JWTAuth::parseToken()->invalidate(true); // Forcefully revoke and blacklist the token
-            // JWTAuth::invalidate(JWTAuth::parseToken());
-            JWTAuth::invalidate(JWTAuth::getToken());
+            Auth::guard('api')->logout();
             return ApiResponse::success(self::SUCCESS_STATUS, self::USER_LOGGED_OUT);
         } catch (\Exception $e) {
             Log::error('Logout error: ' . $e->getMessage());
