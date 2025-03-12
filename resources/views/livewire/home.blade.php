@@ -1136,6 +1136,9 @@
                                 <span style="color:#f66;">*</span>
                             </label>
                             <select id="location" name="location" wire:model="swipe_location"wire:change="updateSwipeLocation" required>
+                                @if (!$swipes)
+                                 <option value="">Select Your Location</option>
+                                @endif   
                                 <option value="client_location">Client Location</option>
                                 <option value="hybrid">Home</option>
                                 <option value="office">Office</option>
