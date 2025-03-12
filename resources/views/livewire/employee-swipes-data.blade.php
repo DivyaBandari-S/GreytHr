@@ -494,9 +494,9 @@
                                                                                 Web Sign Out
                                                                             @endif    
                                                         </td>
-                                                        <td class="text-center">
+                                                        <td class="text-center"style="white-space:nowrap;">
                                                             @if(!empty($log->swipe_location))
-                                                               {{ $log->swipe_location }}
+                                                               {{ ucwords(strtolower(preg_replace('/[^A-Za-z0-9]/', ' ', $log->swipe_location))) }}
                                                             @else   
                                                                  NA
                                                             @endif

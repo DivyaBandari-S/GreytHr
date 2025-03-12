@@ -488,6 +488,7 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
                 $this->todaySwipeRecords = SwipeRecord::whereDate('created_at', $today)
                         ->whereIn('emp_id', $managedEmployees->pluck('emp_id'))
                         ->get();
+                       
             }
         // Fetch today's swipe records
       
@@ -513,7 +514,7 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
                     stripos($data['employee']->emp_id, $this->search) !== false;
             });
         }
-
+       
         return array_values($webSignInData);
     }
 
@@ -530,6 +531,7 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
         Log::info('isPending: ' . $this->isPending);
         Log::info('defaultApply: ' . $this->defaultApply);
 
+     
         // Debugging: Log the output of processWebSignInLogs
         Log::info('Employees: ', ['employees' => $this->employees]);
     }
@@ -761,7 +763,7 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
         // Determine the SignedInEmployees based on conditions
 
 
-
+       
 
         return view('livewire.employee-swipes-data', [
             'SignedInEmployees' => $this->employees,
