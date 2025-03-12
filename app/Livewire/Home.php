@@ -160,13 +160,17 @@ class Home extends Component
             $today=Carbon::now()->format('Y-m-d');
 
             
-            $this->swipesforbutton = DB::table('swipe_records')
+            $this->swipes = DB::table('swipe_records')
             ->whereDate('created_at', $today)
             ->where('emp_id', $employeeId)
             ->orderBy('id', 'desc')
             ->first();       
             
-              
+             
+            if(!empty($this->swipes))
+            {
+                $this->swipe_location=$this->swipes->swipe_location;
+            }
             if ($currentHour >= 4 && $currentHour < 12) {
                 $this->greetingImage = 'morning.jpeg';
                 $this->greetingText = 'Good Morning';
@@ -535,77 +539,67 @@ public function updateSwipeRemarks()
     }
     
     public function toggleSignState()
-{
-    try {
-        $currentTime = Carbon::now();
-        
-        // Prevent multiple executions within 2 seconds
-        $todayDate = $currentTime->format('Y-m-d');
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-
-        // Log current operation
-      
-        // Check if employee is on leave or if today is a holiday
-        if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-          
-            FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-            return;
-        } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
+    {
+        try {
+            $currentTime = Carbon::now();
+         
+            $todayDate = $currentTime->format('Y-m-d');
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+    
            
-            FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-            return;
+            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+            
+                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+                return;
+            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
+               
+                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+                return;
+            }
+    
+            $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+           
+            $this->signIn = !$this->signIn;
+    
+            $agent = new Agent();
+            $deviceName = $agent->isMobile() ? 'Mobile'
+                : ($agent->isTablet() ? 'Tablet'
+                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
+            $platform = $agent->platform();
+            $ipAddress = request()->ip();
+    
+            
+    
+            SwipeRecord::create([
+                'emp_id' => $this->employeeDetails->emp_id,
+                'swipe_time' => now()->format('H:i:s'),
+                'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
+                'sign_in_device' => $deviceName,
+                'device_name' => $platform,
+                'device_id' => $ipAddress,
+                'swipe_location' => $this->swipe_location,
+                'swipe_remarks' => $this->swipe_remarks,
+            ]);
+    
+           
+    
+            $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
+            FlashMessageHelper::flashSuccess($flashMessage == "IN"
+                ? "You have successfully signed in."
+                : "You have successfully signed out.");
+    
+            $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
+            $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
+    
+           
+            return redirect('/');
+    
+        } catch (Throwable $e) {
+            
+    
+            FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
-
-        $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-        $this->signIn = !$this->signIn;
-
-        // Detect device type
-        $agent = new Agent();
-        $deviceName = $agent->isMobile() ? 'Mobile'
-            : ($agent->isTablet() ? 'Tablet'
-                : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
-        $platform = $agent->platform();
-
-        // Capture user IP address instead of device ID
-        $ipAddress = request()->ip();
-
-        // Log the device and IP information
-      
-        // Create the swipe record
-        SwipeRecord::create([
-            'emp_id' => $this->employeeDetails->emp_id,
-            'swipe_time' => now()->format('H:i:s'),
-            'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
-            'sign_in_device' => $deviceName,
-            'device_name' => $platform,
-            'device_id' => $ipAddress, // Replacing device ID with IP address
-            'swipe_location' => $this->swipe_location,
-            'swipe_remarks' => $this->swipe_remarks,
-        ]);
-
-        // Log successful swipe record creation
-     
-        // Flash message for swipe action
-        $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
-        FlashMessageHelper::flashSuccess($flashMessage == "IN"
-            ? "You have successfully signed in."
-            : "You have successfully signed out.");
-
-        $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
-        $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
-
-        // Log completion of method
-   
-
-        return redirect('/');
-
-    } catch (Throwable $e) {
-        // Log the error with exception details
-       
-        FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
     }
-}
-
 
     public function showEarlyEmployees()
     {
@@ -666,11 +660,8 @@ public function updateSwipeRemarks()
             $this->testforswipe=$this->testlatestSwipe()['swipesforbutton'];
             $this->signstatusfortest=$this->testlatestSwipe()['signStatus'];
 
-            $this->swipes = DB::table('swipe_records')
-            ->whereDate('created_at', $today)
-            ->where('emp_id', $employeeId)
-            ->orderBy('created_at', 'desc')
-            ->first();
+           
+           
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             $this->leaveRequests = LeaveRequest::with('employee')
                 ->where(function ($query) {
