@@ -29,6 +29,7 @@
         "nesbot/carbon": "^2.72",
         "php-flasher/flasher-laravel": "^1.15",
         "php-flasher/flasher-sweetalert-laravel": "^1.15",
+        "php-open-source-saver/jwt-auth": "^2.8",
         "phpoffice/phpspreadsheet": "^2.1",
         "power-components/livewire-powergrid": "^5.8",
         "sarfraznawaz2005/loading": "^1.4",
