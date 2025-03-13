@@ -361,7 +361,10 @@
                                         <th>In/Out</th>
                                         <th>Received&nbsp;On</th>
                                         <th>Door/Address</th>
-                                        <th>Status</th>
+                                        @if($isPending == 1 && $defaultApply == 0)
+                                        <th style="white-space:nowrap;">Swipe Location</th>
+                                        <th style="white-space:nowrap;">Swipe Remarks</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -413,7 +416,7 @@
                                                                 Door Swipe Out
                                                             @endif
                                                         </td>
-                                                        <td class="text-center">-</td>
+                                                       
                                                     </tr>
                                                 @endforeach
                                             @endforeach
@@ -491,7 +494,20 @@
                                                                                 Web Sign Out
                                                                             @endif    
                                                         </td>
-                                                        <td class="text-center">-</td>
+                                                        <td class="text-center"style="white-space:nowrap;">
+                                                            @if(!empty($log->swipe_location))
+                                                               {{ ucwords(strtolower(preg_replace('/[^A-Za-z0-9]/', ' ', $log->swipe_location))) }}
+                                                            @else   
+                                                                 NA
+                                                            @endif
+                                                        </td>
+                                                        <td class="text-center">
+                                                            @if(!empty($log->swipe_remarks))
+                                                               {{ $log->swipe_remarks }}
+                                                            @else   
+                                                                 NA
+                                                            @endif     
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             @endforeach

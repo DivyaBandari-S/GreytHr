@@ -82,64 +82,7 @@ class AbsentReport extends Component
 }
     public function downloadAbsentReportInExcel()
     {
-     
-        // $employees = EmployeeDetails::whereIn('emp_id', $this->selectedEmployees)->get();
-        // $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-        //     ->where('leave_applications.status', 'approved')
-        //     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-        //     ->whereDate('from_date', '<=', $this->currentDate)
-        //     ->whereDate('to_date', '>=', $this->currentDate)
-        //     ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
-        //     ->map(function ($leaveRequest) {
 
-        //         $fromDate = Carbon::parse($leaveRequest->from_date);
-        //         $toDate = Carbon::parse($leaveRequest->to_date);
-
-        //         $leaveRequest->number_of_days = $fromDate->diffInDays($toDate) + 1;
-
-        //         return $leaveRequest;
-        //     });
-           
-            // Fetch the swipe records with the minimum IDs
-            
-           
-        
-        
-            // $query = EmployeeDetails::where('emp_id', $this->selectedEmployees)
-            // ->select('emp_id', 'first_name', 'last_name', 'created_at')
-            // ->whereNotIn('emp_id', function ($query) {
-            //     $query->select('emp_id')
-            //         ->from('swipe_records')
-            //         ->where('emp_id', $this->selectedEmployees)
-            //         ->whereDate('created_at', '>=',$this->currentDate )
-            //         ->whereDate('created_at', '<=', $this->currentDate);
-            // })
-            // ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'))->get();
-            
-        // if ($this->fromDate && $this->toDate) {
-        //     $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-        //         ->select('emp_id', 'first_name', 'last_name', 'created_at')
-        //         ->whereNotIn('emp_id', function ($query) {
-        //             $query->select('emp_id')
-        //                 ->from('swipe_records')
-        //                 ->where('manager_id', $this->loggedInEmpId)
-        //                 ->whereDate('created_at', '>=', $this->fromDate)
-        //                 ->whereDate('created_at', '<=', $this->toDate);
-        //         })
-        //         ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
-        // } else {
-        //     $query = EmployeeDetails::where('manager_id', $this->loggedInEmpId)
-        //         ->select('emp_id', 'first_name', 'last_name', 'created_at')
-        //         ->whereNotIn('emp_id', function ($query) {
-        //             $query->select('emp_id')
-        //                 ->from('swipe_records')
-        //                 ->where('manager_id', $this->loggedInEmpId)
-        //                 ->whereDate('created_at', $this->currentDate);
-        //         })
-        //         ->whereNotIn('emp_id', $this->approvedLeaveRequests->pluck('emp_id'));
-        // }
-        // $employees2 = $query->get();
-        
        if(empty($this->selectedEmployees))
        {
          return redirect()->back()->with('error', 'Select at least one employee detail');
