@@ -85,7 +85,7 @@ class CheckAuthAndHandleSession
     {
         $storedSessionId = Session::get('session_id');
         $existingSession = DB::table('sessions')
-            ->where('user_id', $user->id)
+            // ->where('user_id', $user->id)
             ->where('user_type', $guard)
             ->first();
 
@@ -132,7 +132,7 @@ class CheckAuthAndHandleSession
         Session::put($guard . '_first_name', $user->first_name);
 
         Log::info('Session updated', [
-            'user_id' => $this->getUserIdByGuard($guard, $user),
+            // 'user_id' => $this->getUserIdByGuard($guard, $user),
             'session_id' => Session::getId(),
             'device_type' => $deviceType,
             'location' => $locationString,
@@ -179,7 +179,7 @@ class CheckAuthAndHandleSession
         $deviceType = Session::get('device_type');
         $id = $this->getUserIdByGuard($guard, $user);
         $existingSession = DB::table('sessions')
-            ->where('user_id', $id)
+            // ->where('user_id', $id)
             ->whereDate('created_at', now()->toDateString())
             ->first();
 
@@ -209,7 +209,7 @@ class CheckAuthAndHandleSession
         } else {
             DB::table('sessions')->insert(array_merge($sessionData, [
                 'id' => Session::getId(),
-                'user_id' => $id,
+                // 'user_id' => $id,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]));
