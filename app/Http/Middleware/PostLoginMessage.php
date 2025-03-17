@@ -4,11 +4,16 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostLoginMessage
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function handle(Request $request, Closure $next): Response
     {
         if (session('post_login')) {
@@ -22,8 +27,8 @@ class PostLoginMessage
     protected function generatePostLoginResponse(): Response
     {
         try {
-            $user = Auth::user();
 
+            $user = Auth::user();
             // Validate and format user names
             $firstName = $user->first_name ?? 'User';
             $lastName = $user->last_name ?? '';

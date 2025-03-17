@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Livewire\AllTeamTimeSheets;
 use App\Livewire\LeaveFormPage;
 use App\Models\EmpSalaryRevision;
@@ -121,13 +122,12 @@ use App\Livewire\ViewRegularisationPendingNew;
 use App\Livewire\Ytdreport;
 use App\Models\Message;
 use App\Models\SalaryRevision;
-use Illuminate\Support\Facades\Route;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\HelpDesks;
 use App\Models\Task;
 use Illuminate\Support\Facades\File;
 
-Route::group(['middleware' => 'checkAuth'], function () {
+Route::group(['middleware' => 'guest'], function () {
 
     Route::get('/emplogin', EmpLogin::class)->name('emplogin');
     Route::get('/CompanyLogin', function () {
@@ -135,7 +135,7 @@ Route::group(['middleware' => 'checkAuth'], function () {
     });
 
 
-    Route::get('/login', [GoogleLogins::class, 'redirectToGoogle'])->name('login');
+    Route::get('/google-login', [GoogleLogins::class, 'redirectToGoogle'])->name('google-login');
     Route::get('/auth/google/callback', [GoogleLogins::class, 'handleGoogleCallback'])->name('auth/google/callback');
     Route::get('/Jobs', function () {
         return view('jobs_view');
@@ -223,41 +223,7 @@ Route::middleware(['auth:com', 'handleSession'])->group(function () {
         return view('emp-update-view', compact('empId'));
     })->name('emp-update');
 });
-
-Route::middleware(['auth:hr', 'handleSession'])->group(function () {
-    Route::get('/hrFeeds', Feeds::class)->name('hrfeeds');
-    Route::get('/hreveryone', Everyone::class)->name('hreveryone');
-    Route::get('/hrevents', Activities::class);
-    Route::get('/hrPage', AuthChecking::class)->name('hrPage');
-    Route::get('/home-dashboard', HomeDashboard::class)->name('admin-home');
-    Route::get('/letter-requests', LetterRequests::class)->name('letter-requests');
-    Route::get('/add-employee-details/{employee?}', AddEmployeeDetails::class)->name('add-employee-details');
-    Route::get('/update-employee-details', UpdateEmployeeDetails::class)->name('update-employee-details');
-    Route::get('/whoisinhrchart', WhoisinChartHr::class)->name('whoisinhrchart');
-    // Route::get('/hrleaveOverview', HrLeaveOverview::class)->name('hrleaveOverview');
-    Route::get('/hrAttendanceOverview', HrAttendanceOverviewNew::class)->name('hrAttendanceOverview');
-    Route::get('/addLeaves', GrantLeaveBalance::class)->name('leave-grant');
-    // Route::get('/hremployeedirectory', EmployeeDirectory::class)->name('employee-directory');
-    Route::get('/hrorganisationchart', OrganisationChart::class)->name('organisation-chart');
-    Route::get('/add-holiday-list', AddHolidayList::class)->name('holiday-list');
-    // Route::get('/linechart', LineChart::class)->name('linechart');
-});
-
-Route::middleware(['auth:finance', 'handleSession'])->group(function () {
-    Route::get('/financePage', AuthChecking::class)->name('financePage');
-});
-
-Route::middleware(['auth:it', 'handleSession'])->group(function () {
-    Route::get('/itPage', AuthChecking::class)->name('IT-requests');
-    Route::get('/ithomepage', ItDashboardPage::class)->name('ithomepage');
-});
-
-Route::middleware(['auth:admins', 'handleSession'])->group(function () {
-    Route::get('/adminPage', AuthChecking::class)->name('auth-checking');
-});
-
-
-Route::middleware(['auth:emp', 'handleSession'])->group(function () {
+Route::middleware(['auth:emp'])->group(function () {
     Route::get('/google-redirect', [GoogleDriveController::class, 'auth'])
         ->name('google-redirect');
     Route::get('/google-callback', [GoogleDriveController::class, 'callback'])
@@ -375,10 +341,6 @@ Route::middleware(['auth:emp', 'handleSession'])->group(function () {
     Route::get('/chat{key?}', Chat::class)->name('chat');
     //*******************************************  End Of Chat Module Routes *************************/
 });
-
-
-
-
 
 
 Route::get('/itform', function () {
@@ -606,18 +568,6 @@ Route::get('/test-odbc-dir', function () {
 });
 
 
-
-Route::get('/down', function () {
-    Artisan::call('down');
-    return 'Application is now in maintenance mode!';
-});
-
-
-Route::get('/up', function () {
-    Artisan::call('up');
-    return 'Application is now live!';
-});
-Route::get('password/reset/{token}', PasswordResetComponent::class)->name('password.reset');
 
 use Illuminate\Support\Facades\Crypt;
 
