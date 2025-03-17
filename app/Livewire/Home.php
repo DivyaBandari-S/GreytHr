@@ -19,7 +19,6 @@ use App\Models\EmployeeDetails;
 use App\Models\EmpSalary;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
-use App\Models\SwipeData;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -30,9 +29,7 @@ use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Jenssegers\Agent\Agent;
 use Throwable;
-use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
@@ -551,14 +548,37 @@ class Home extends Component
 
             $this->signIn = !$this->signIn;
 
-            $agent = new Agent();
-            $deviceName = $agent->isMobile() ? 'Mobile'
-                : ($agent->isTablet() ? 'Tablet'
-                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
-            $platform = $agent->platform();
+            $userAgent = request()->header('User-Agent');
+
+            // Detect Device Type
+            if (stripos($userAgent, 'mobile') !== false) {
+                $deviceName = 'Mobile';
+            } elseif (stripos($userAgent, 'tablet') !== false) {
+                $deviceName = 'Tablet';
+            } elseif (stripos($userAgent, 'windows') !== false || stripos($userAgent, 'macintosh') !== false) {
+                $deviceName = 'Laptop/Desktop';
+            } else {
+                $deviceName = 'Unknown Device';
+            }
+
+            // Detect Platform (OS)
+            if (stripos($userAgent, 'windows') !== false) {
+                $platform = 'Windows';
+            } elseif (stripos($userAgent, 'macintosh') !== false || stripos($userAgent, 'mac os') !== false) {
+                $platform = 'MacOS';
+            } elseif (stripos($userAgent, 'linux') !== false) {
+                $platform = 'Linux';
+            } elseif (stripos($userAgent, 'android') !== false) {
+                $platform = 'Android';
+            } elseif (stripos($userAgent, 'iphone') !== false || stripos($userAgent, 'ipad') !== false) {
+                $platform = 'iOS';
+            } else {
+                $platform = 'Unknown OS';
+            }
+
             $ipAddress = request()->ip();
 
-
+            dd($deviceName, $platform, $ipAddress);
 
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
@@ -1186,7 +1206,7 @@ class Home extends Component
     {
         try {
             // Get the IP address and determine location
-            $ip = request()->ip();
+            $ip = request()->ip() === '127.0.0.1' ? Http::get('https://api64.ipify.org')->body() : request()->ip(); // Use Google's IP for testing
             $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co'); // Use the API URL from .env
             $response = Http::get("{$ipUrl}/{$ip}/json/");
 
@@ -1241,7 +1261,7 @@ class Home extends Component
             }
         } catch (\Exception $e) {
             // Log::error("Exception: ", ['message' => $e->getMessage()]);
-            FlashMessageHelper::flashError('An error occured.please try again later.');
+            FlashMessageHelper::flashError('Requested IP Not found.');
             $this->weatherCondition = 'An error occurred';
             $this->temperature = 'Unknown';
             $this->windspeed = 'Unknown';
