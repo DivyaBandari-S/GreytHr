@@ -1186,7 +1186,7 @@ class Home extends Component
     {
         try {
             // Get the IP address and determine location
-            $ip = request()->ip();
+            $ip = request()->ip() === '127.0.0.1' ? Http::get('https://api64.ipify.org')->body() : request()->ip(); // Use Google's IP for testing
             $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co'); // Use the API URL from .env
             $response = Http::get("{$ipUrl}/{$ip}/json/");
 
@@ -1241,7 +1241,7 @@ class Home extends Component
             }
         } catch (\Exception $e) {
             // Log::error("Exception: ", ['message' => $e->getMessage()]);
-            FlashMessageHelper::flashError('An error occured.please try again later.');
+            FlashMessageHelper::flashError('Requested IP Not found.');
             $this->weatherCondition = 'An error occurred';
             $this->temperature = 'Unknown';
             $this->windspeed = 'Unknown';
