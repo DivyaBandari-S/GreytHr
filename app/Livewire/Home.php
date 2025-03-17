@@ -19,7 +19,6 @@ use App\Models\EmployeeDetails;
 use App\Models\EmpSalary;
 use App\Models\LeaveRequest;
 use App\Models\SwipeRecord;
-use App\Models\SwipeData;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -30,9 +29,7 @@ use App\Models\Task;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
-use Jenssegers\Agent\Agent;
 use Throwable;
-use Torann\GeoIP\Facades\GeoIP;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
@@ -551,14 +548,37 @@ class Home extends Component
 
             $this->signIn = !$this->signIn;
 
-            $agent = new Agent();
-            $deviceName = $agent->isMobile() ? 'Mobile'
-                : ($agent->isTablet() ? 'Tablet'
-                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
-            $platform = $agent->platform();
+            $userAgent = request()->header('User-Agent');
+
+            // Detect Device Type
+            if (stripos($userAgent, 'mobile') !== false) {
+                $deviceName = 'Mobile';
+            } elseif (stripos($userAgent, 'tablet') !== false) {
+                $deviceName = 'Tablet';
+            } elseif (stripos($userAgent, 'windows') !== false || stripos($userAgent, 'macintosh') !== false) {
+                $deviceName = 'Laptop/Desktop';
+            } else {
+                $deviceName = 'Unknown Device';
+            }
+
+            // Detect Platform (OS)
+            if (stripos($userAgent, 'windows') !== false) {
+                $platform = 'Windows';
+            } elseif (stripos($userAgent, 'macintosh') !== false || stripos($userAgent, 'mac os') !== false) {
+                $platform = 'MacOS';
+            } elseif (stripos($userAgent, 'linux') !== false) {
+                $platform = 'Linux';
+            } elseif (stripos($userAgent, 'android') !== false) {
+                $platform = 'Android';
+            } elseif (stripos($userAgent, 'iphone') !== false || stripos($userAgent, 'ipad') !== false) {
+                $platform = 'iOS';
+            } else {
+                $platform = 'Unknown OS';
+            }
+
             $ipAddress = request()->ip();
 
-
+            dd($deviceName, $platform, $ipAddress);
 
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
