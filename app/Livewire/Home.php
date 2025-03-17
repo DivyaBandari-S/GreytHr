@@ -577,9 +577,6 @@ class Home extends Component
             }
 
             $ipAddress = request()->ip();
-
-            dd($deviceName, $platform, $ipAddress);
-
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
