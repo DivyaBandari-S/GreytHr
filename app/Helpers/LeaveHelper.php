@@ -25,7 +25,7 @@ class LeaveHelper
             // Check if the start and end sessions are different on the same day
             if (
                 $startDate->isSameDay($endDate) &&
-               self::getSessionNumber($fromSession) ===self::getSessionNumber($toSession)
+                self::getSessionNumber($fromSession) === self::getSessionNumber($toSession)
             ) {
                 // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !self::isHoliday($startDate, $holidays) && !self::isHoliday($endDate, $holidays)) {
@@ -37,7 +37,7 @@ class LeaveHelper
 
             if (
                 $startDate->isSameDay($endDate) &&
-               self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)
+                self::getSessionNumber($fromSession) !== self::getSessionNumber($toSession)
             ) {
                 // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
                 if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !self::isHoliday($startDate, $holidays) && !self::isHoliday($endDate, $holidays)) {
@@ -68,10 +68,10 @@ class LeaveHelper
 
             // Deduct weekends based on the session numbers
             if (self::getSessionNumber($fromSession) > 1) {
-                $totalDays -=self::getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+                $totalDays -= self::getSessionNumber($fromSession) - 1; // Deduct days for the starting session
             }
             if (self::getSessionNumber($toSession) < 2) {
-                $totalDays -= 2 -self::getSessionNumber($toSession); // Deduct days for the ending session
+                $totalDays -= 2 - self::getSessionNumber($toSession); // Deduct days for the ending session
             }
 
             // Adjust for half days
@@ -128,7 +128,8 @@ class LeaveHelper
                     'Casual Leave',
                     'Maternity Leave',
                     'Marriage Leave',
-                    'Paternity Leave'
+                    'Paternity Leave',
+                    'Earned Leave'
                 ])
                 ->whereYear('to_date', '=', $selectedYear)
                 ->get();
@@ -139,6 +140,7 @@ class LeaveHelper
             $totalMaternityDays = 0;
             $totalMarriageDays = 0;
             $totalPaternityDays = 0;
+            $totalEarnedDays = 0;
 
             // Calculate the total number of days based on sessions for each approved leave request
             foreach ($approvedLeaveRequests as $leaveRequest) {
@@ -174,6 +176,9 @@ class LeaveHelper
                     case 'Paternity Leave': // Corrected the spelling
                         $totalPaternityDays += $days;
                         break;
+                    case 'Earned Leave': // Corrected the spelling
+                        $totalEarnedDays += $days;
+                        break;
                 }
             }
 
@@ -185,6 +190,7 @@ class LeaveHelper
                 'totalMaternityDays' => $totalMaternityDays,
                 'totalMarriageDays' => $totalMarriageDays,
                 'totalPaternityDays' => $totalPaternityDays,
+                'totalEarnedDays' => $totalEarnedDays
             ];
         } catch (\Exception $e) {
             // Log the error message or handle it as needed
@@ -209,7 +215,8 @@ class LeaveHelper
                 'Casual Leave',
                 'Maternity Leave',
                 'Marriage Leave',
-                'Paternity Leave'
+                'Paternity Leave',
+                'Earned Leave'
             ])
             ->where('to_date', '=', $selectedYear)
             ->get();
@@ -223,6 +230,7 @@ class LeaveHelper
         $totalMaternityDays = 0;
         $totalMarriageDays = 0;
         $totalPaternityDays = 0;
+        $totalEarnedDays = 0;
 
         // Calculate the total number of days based on sessions for each approved leave request
         foreach ($approvedLeaveRequests as $leaveRequest) {
@@ -259,6 +267,9 @@ class LeaveHelper
                 case 'Petarnity Leave':
                     $totalPaternityDays += $days;
                     break;
+                case 'Earned Leave':
+                    $totalPaternityDays += $days;
+                    break;
             }
         }
         return [
@@ -269,6 +280,7 @@ class LeaveHelper
             'totalMaternityDays' => $totalMaternityDays,
             'totalMarriageDays' => $totalMarriageDays,
             'totalPaternityDays' => $totalPaternityDays,
+            'totalEarnedDays' => $totalEarnedDays
         ];
     }
 }

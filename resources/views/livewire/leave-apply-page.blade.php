@@ -38,6 +38,7 @@
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
                                 @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
+                                <option value="Earned Leave">Earned Leave</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
                                 @if($employeeGender && $employeeGender === 'FEMALE')
                                 <option value="Maternity Leave">Maternity Leave</option>

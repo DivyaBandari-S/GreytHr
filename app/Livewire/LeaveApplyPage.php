@@ -592,7 +592,7 @@ class LeaveApplyPage extends Component
 
             // 6. Special validation for Casual Leave
             if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 2 days of Casual Leave for the month.');
+                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 0.5 days of Casual Leave for the month.');
                 return false; // Stop further validation if error occurs
             }
 
@@ -871,7 +871,7 @@ class LeaveApplyPage extends Component
             }
 
             // Check if total leave days exceed 2
-            return $totalLeaveDays > 2;
+            return $totalLeaveDays > 0.5;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking the casual leave limit. Please try again.');
             return false; // Default return value in case of an error
@@ -1129,6 +1129,7 @@ class LeaveApplyPage extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+
     //selected applying to manager details
     public function toggleManager($empId)
     {
