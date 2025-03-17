@@ -1,22 +1,10 @@
 <?php
 
-// namespace App\Http\Controllers;
-
-// use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-// use Illuminate\Foundation\Validation\ValidatesRequests;
-// use Illuminate\Routing\Controller as BaseController;
-
-// class Controller extends BaseController
-// {
-//     use AuthorizesRequests, ValidatesRequests;
-// }
-
-
 namespace App\Http\Controllers;
 
 abstract class Controller
 {
-    # MESSAGES
+    //
     public const SUCCESS_MESSAGE     = 'Request processed successfully!';
     public const FAILED_MESSAGE      = 'Unable to process the request. Please try again!';
     public const EXCEPTION_MESSAGE   = 'Exception occurred. Please try again!';

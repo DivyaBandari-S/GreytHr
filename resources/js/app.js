@@ -1,7 +1,1 @@
 import './bootstrap';
-import 'summernote';
-
-
-
-
-

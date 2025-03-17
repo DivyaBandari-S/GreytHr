@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use App\Helpers\FlashMessageHelper;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class EmpLogin extends Component
 {

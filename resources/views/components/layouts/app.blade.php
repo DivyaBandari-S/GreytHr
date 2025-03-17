@@ -4,18 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    @guest
-        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-        <title>
-            hr xpert
-        </title>
-    @endguest
-    @auth('emp')
-        <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
-        <title>
-            hr xpert
-        </title>
-    @endauth
+    <link rel="icon" type="image/x-icon" href="{{ asset('/images/fav.jpeg') }}">
+    <title>{{ $title ?? 'HrExpert' }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         crossorigin="anonymous">
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous"> -->
@@ -55,29 +45,19 @@
                 </div>
                 <footer class="d-flexjustify-content-center ">
                     <div class="text-center mt-2 pb-2">
-
                         <small>
-
                             <a href="/Privacy&Policy" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">
-
                                 Privacy Policy
-
                             </a> |
-
                             <a href="/Terms&Services" class="privacyPolicy" target="_blank" style="color: rgb(2, 17, 79);">
-
                                 Terms of Service
-
                             </a>
-
                         </small>
-
                     </div>
                 </footer>
             </main>
         </section>
     @endguest
-
     <script src="https://cdn.tiny.cloud/1/u1aepzhsc1d6jlmrcth6txww7x7eru2qmcgmsdgj4pr2rhkm/tinymce/7/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script>
@@ -102,7 +82,6 @@
     <script src="{{ asset('js/get-location.js') }}?v={{ time() }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     @livewireScripts
-    @livewireChartsScripts
 </body>
 
 </html>
