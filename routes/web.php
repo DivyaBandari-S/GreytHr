@@ -85,6 +85,7 @@ use App\Livewire\CasualLeaveBalance;
 use App\Livewire\CasualProbationLeaveBalance;
 use App\Livewire\Chat\EmployeeList;
 use App\Livewire\Chat\ChatCalendar;
+use App\Livewire\EarnedLeaveBalanceDetails;
 use App\Livewire\ViewDetails;
 use App\Livewire\ViewDetails1;
 use App\Livewire\ListOfAppliedJobs;
@@ -321,6 +322,7 @@ Route::middleware(['auth:emp'])->group(function () {
     Route::get('/leave-balances/marriageleavebalance', MarriageLeaveBalance::class)->name('marriage-leave-balance');
     Route::get('/leave-balances/paternityleavebalance', PaternityLeaveBalance::class)->name('paternity-leave-balance');
     Route::get('/leave-balances/maternityleavebalance', MaternityLeaveBalance::class)->name('maternity-leave-balance');
+    Route::get('/leave-balances/earnedleavebalance', EarnedLeaveBalanceDetails::class)->name('earned-leave-balance');
     Route::get('/leave-calender', LeaveCalender::class)->name('leave-calendar');
     Route::get('/leave-history/{leaveRequestId}', LeaveHistory::class)->name('leave-history');
     Route::get('/leave-pending/{leaveRequestId}', LeavePending::class)->name('leave-pending');

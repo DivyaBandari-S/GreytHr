@@ -8,17 +8,21 @@
         @endif
         <div class="row m-0 p-0">
             <div class="col-md-7 col-sm-12 p-0 m-0 ">
-                <ol class="breadcrumb d-flex align-items-center ">
-                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-                    <li class="breadcrumb-item"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Casual Leave</li>
-                </ol>
+                <div aria-label="breadcrumb">
+                    <ol class="breadcrumb d-flex align-items-center ">
+                        <li class="breadcrumb-item anchorTagDetailsCrumb"><a href="{{ route('home') }}">Home</a></li>
+                        <li class="breadcrumb-item anchorTagDetailsCrumb"><a href="{{ route('leave-balance') }}">Leave Balance</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Earned Leave</li>
+                    </ol>
+                </div>
             </div>
-            <div class="col-md-5 ">
+            <div class="col-md-5 m-0 p-0">
                 <div class="buttons-container d-flex gap-3 justify-content-end  p-0 ">
-                    @if($year==$currentYear)
-                    <button class="leaveApply-balance-buttons  py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
+
+                    @if($year == $currentYear)
+                    <button class="leaveApply-balance-buttons py-2 px-4  rounded" onclick="window.location.href='/leave-form-page'">Apply</button>
                     @endif
+
                     <select class="dropdown bg-white rounded select-year-dropdown " wire:change='changeYear($event.target.value)' wire:model='year'>
                         <?php
                         // Get the current year
@@ -50,19 +54,19 @@
             </div>
             @else
             <div class="row m-0 p-0">
-                <div class="col-12 mt-2 d-flex justify-content-start">
+                <div class="col-md-12 mt-2 d-flex ">
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->lapsed_date )
-                            <div class="infso-value">0</div>
+                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->is_lapsed)
+                            <div class="info-value">0</div>
                             @else
                             <div class="info-value">{{ $Availablebalance }}</div>
                             @endif
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Opening Balance</div>
-                            <div class="info-value">0</div>
+                            <div class="info-value">{{ $openingBalCount }}</div>
                         </div>
                         <div class="info-item px-2">
                             <div class="info-title">Granted</div>
@@ -87,8 +91,7 @@
                 <div class="row m-0 p-0">
                     <div class=" p-2 bg-white border">
                         <div class="col-md-10">
-                            <canvas class="leave-details-canvas" id="casualLeaveChart">
-                            </canvas>
+                            <canvas class="leave-details-canvas" id="sickLeaveChart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -108,6 +111,45 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @if($employeeOpeningBalanceList->isNotEmpty())
+                                @foreach($employeeOpeningBalanceList as $index => $balance)
+                                <tr>
+                                    <td>Opening Balance</td>
+                                    <td>{{ date('d M Y', strtotime($balance->lapsed_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>
+                                        @if($openingBalCount)
+                                        {{ $openingBalCount }}
+                                        @else
+                                        0
+                                        @endif
+                                    </td>
+                                    <td>Year end processing</td>
+                                </tr>
+                                @endforeach
+
+                                @endif
+                                @if($employeeLapsedBalanceList->isNotEmpty())
+                                @foreach($employeeLapsedBalanceList as $index => $balance)
+                                @if($balance->lapsed_date) <!-- Check if is_lapsed is true for each balance -->
+                                <tr>
+                                    <td>Closing Balance</td>
+                                    <td>{{ date('d M Y', strtotime($balance->lapsed_date)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>
+                                        @if($employeeLapsedBalance)
+                                        {{ $Availablebalance }}
+                                        @else
+                                        0
+                                        @endif
+                                    </td>
+                                    <td>Year end processing</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @endif
                                 @foreach($employeeleaveavlid as $index => $balance)
                                 <tr>
                                     <td>
@@ -126,7 +168,7 @@
                                         Leave Cancel-Applied
 
                                         @elseif($balance->cancel_status=='2')
-                                        Leave Cancel-Approved
+                                        Leave Cancsel-Approved
                                         @elseif($balance->cancel_status=='3')
                                         Leave Cancel-Rejected
                                         @elseif($balance->cancel_status=='4')
@@ -156,34 +198,13 @@
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
                                     <td>{{ date('d M Y', strtotime('first day of ' . $balance->period)) }}</td>
                                     <td>{{ date('d M Y', strtotime('last day of ' . $balance->period)) }}</td>
-                                    <td>{{ $casualLeaveGrantDays }}</td>
-                                    <td>Annual Grant for the period {{ $balance->period }} </td>
+                                    @php
+                                    $data = json_decode($balance->leave_policy_id, true);
+                                    @endphp
+                                  <td>{{ $data[0]['grant_days'] }}</td>
+                                    <td>Monthly Grant for the period {{ $balance->period }} </td>
                                 </tr>
                                 @endforeach
-                                @if($employeeLapsedBalanceList->isNotEmpty())
-                                @foreach($employeeLapsedBalanceList as $index => $balance)
-                                @if($balance->is_lapsed) <!-- Check if is_lapsed is true for each balance -->
-                                <tr>
-                                    <td>Lapsed</td>
-                                    <td>{{ date('d M Y', strtotime($balance->lapsed_date)) }}</td>
-                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
-                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
-                                    <td>
-                                        @if($employeeLapsedBalance->first()->is_lapsed)
-                                        {{ $Availablebalance }}
-                                        @else
-                                        0
-                                        @endif
-                                    </td>
-                                    <td>Year end processing</td>
-                                </tr>
-                                @endif
-                                @endforeach
-                                @else
-                                <tr>
-                                    <td colspan="6">No lapsed balances available.</td>
-                                </tr>
-                                @endif
 
                             </tbody>
                         </table>
@@ -202,7 +223,7 @@
         var chartOptions = @json($chartOptions);
 
         // Get the context of the canvas element
-        var ctx = document.getElementById('casualLeaveChart').getContext('2d');
+        var ctx = document.getElementById('sickLeaveChart').getContext('2d');
 
         // Create the chart
         var myChart = new Chart(ctx, {
@@ -213,13 +234,3 @@
 
     });
 </script>
-
-<!-- <script>
-    var ctx = document.getElementById('sickLeaveChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data:  json_encode($chartData),
-        options: json_encode($chartOptions)
-    });
-    console.log(json_encode($chartData));
-</script> -->

@@ -352,23 +352,23 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0">{{ $marriageLeaveBalance }}</h5>
+                            <h5 class="mb-0">{{ $earnedLeavesPeryear }}</h5>
                             <p class="mb-0 remaining">Balance</p>
-                            @if($marriageLeaves > 0)
-                            <a href="/leave-balances/marriageleavebalance?year={{$selectedYear}}" class="anchorTagDetails">View Details</a>
+                            @if($earnedLeavesPeryear > 0)
+                            <a href="/leave-balances/earnedleavebalance?year={{$selectedYear}}" class="anchorTagDetails">View Details</a>
                             @endif
                         </div>
-                        @if($marriageLeaves > 0)
+                        @if($earnedLeavesPeryear > 0)
                         <div class="px-3">
                             <div class="tube-container">
                                 <p class="mb-0 consumedContent">
-                                    @if($consumedMarriageLeaves > 0)
-                                    {{ $consumedMarriageLeaves }} of {{ $marriageLeaves }} Consumed
+                                    @if($consumedEarnedLeaves > 0)
+                                    {{ $consumedEarnedLeaves }} of {{ $earnedLeavesPeryear }} Consumed
                                     @else
-                                    0 of {{ $marriageLeaves }} Consumed
+                                    0 of {{ $earnedLeavesPeryear }} Consumed
                                     @endif
                                 </p>
-                                <div class="tube" style="width: {{ $percentageMarriageLeaves }}%; background-color: {{ $this->getTubeColor($consumedMarriageLeaves, $marriageLeaves, 'Casual Leave Probation') }};"></div>
+                                <div class="tube" style="width: {{ $percentagePaternityLeaves }}%; background-color: {{ $this->getTubeColor($consumedEarnedLeaves, $earnedLeavesPeryear, 'Casual Leave Probation') }};"></div>
                             </div>
                         </div>
                         @endif
