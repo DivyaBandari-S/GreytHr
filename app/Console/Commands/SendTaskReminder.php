@@ -5,11 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Task;
-<<<<<<< HEAD
-use App\Mail\TaskReminderMail;  // A custom Mailable that you'll need to create
-=======
 use App\Mail\TaskReminderMail;
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
 use Carbon\Carbon;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Log;
@@ -23,14 +19,6 @@ class SendTaskReminder extends Command
      */
     protected $signature = 'app:send-task-reminder';
 
-<<<<<<< HEAD
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-=======
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
     protected $description = 'Send a reminder email for tasks due today';
 
     /**
@@ -45,20 +33,6 @@ class SendTaskReminder extends Command
     {
         $now = Carbon::now(); // Current time
         $today = Carbon::today(); // Today's date (no time part)
-<<<<<<< HEAD
-        
-        // Case 1: Tasks that are due today
-        $tasksDueToday = Task::whereDate('due_date', $today) // Check for today's due tasks
-                            ->where('status', '!=', 11) // Ensure task is not completed
-                            ->where('reminder_sent', false) 
-                            ->get();
-        foreach ($tasksDueToday as $task) {
-    
-            // Check if created_at and due_date are on the same day
-            $taskCreatedDate = Carbon::parse($task->created_at)->format('Y-m-d');
-            $taskDueDate = Carbon::parse($task->due_date)->format('Y-m-d');
-            
-=======
 
         // Case 1: Tasks that are due today
         $tasksDueToday = Task::whereDate('due_date', $today) // Check for today's due tasks
@@ -71,7 +45,6 @@ class SendTaskReminder extends Command
             $taskCreatedDate = Carbon::parse($task->created_at)->format('Y-m-d');
             $taskDueDate = Carbon::parse($task->due_date)->format('Y-m-d');
 
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
             // Case 1a: If created_at and due_date are the same, send reminder 3 hours after creation
             if ($taskCreatedDate == $taskDueDate) {
                 $taskCreatedTime = Carbon::parse($task->created_at);
@@ -79,19 +52,11 @@ class SendTaskReminder extends Command
 
                 if ($now->gte($sendReminderTime)) {
                     preg_match('/\#\((.*?)\)/', $task->assignee, $matches);
-<<<<<<< HEAD
-    
-                    if (isset($matches[1])) {
-                        $empId = $matches[1];
-                        $assignee = EmployeeDetails::where('emp_id', $empId)->first();
-    
-=======
 
                     if (isset($matches[1])) {
                         $empId = $matches[1];
                         $assignee = EmployeeDetails::where('emp_id', $empId)->first();
 
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
                         if ($assignee && $assignee->email) {
                             try {
                                 Mail::to($assignee->email)->send(new TaskReminderMail($task));
@@ -106,44 +71,24 @@ class SendTaskReminder extends Command
                 } else {
                 }
             }
-<<<<<<< HEAD
-            
-            // Case 1b: If created_at and due_date are not the same, send reminder at assignee's shift start time
-            if ($taskCreatedDate != $taskDueDate) {
-                preg_match('/\#\((.*?)\)/', $task->assignee, $matches);
-            
-=======
 
             // Case 1b: If created_at and due_date are not the same, send reminder at assignee's shift start time
             if ($taskCreatedDate != $taskDueDate) {
                 preg_match('/\#\((.*?)\)/', $task->assignee, $matches);
 
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
                 if (isset($matches[1])) {
                     $empId = $matches[1];
                     // $assignee = EmployeeDetails::where('emp_id', $empId)->first();
                     $assignee = EmployeeDetails::where('emp_id', $empId)
-<<<<<<< HEAD
-                    ->join('company_shifts', 'company_shifts.shift_name', '=', 'employee_details.shift_type')
-                    ->select('employee_details.*', 'company_shifts.shift_start_time') // Select the relevant columns
-                    ->first();
-            
-=======
                         ->join('company_shifts', 'company_shifts.shift_name', '=', 'employee_details.shift_type')
                         ->select('employee_details.*', 'company_shifts.shift_start_time') // Select the relevant columns
                         ->first();
 
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
                     if ($assignee && $assignee->email) {
                         $shiftStartTime = Carbon::parse($assignee->shift_start_time);
 
                         // Get the current time
                         $now = Carbon::now();
-<<<<<<< HEAD
-                        
-=======
-
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
                         // Format both the shift start time and current time to "H:i" (hours and minutes only)
                         $shiftStartTimeFormatted = $shiftStartTime->format('H:i');
                         $nowFormatted = $now->format('H:i');
@@ -166,9 +111,4 @@ class SendTaskReminder extends Command
             }
         }
     }
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> 24017b75e088016c933ebad24387cea5cc206119
 }
