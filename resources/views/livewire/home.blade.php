@@ -1140,10 +1140,7 @@
                                  <option value="">Select Your Location</option>
                                 @endif   
                                 <option value="client_location">Client Location</option>
-                                <option value="hybrid">Home</option>
-                                <option value="office">Office</option>
                                 <option value="on_duty">On-Duty</option>
-                                <option value="remote">Remote</option>
                                 <option value="work_from_office">Work from Office</option>
                                 <option value="work_from_home">Work from Home</option>
                             </select>

@@ -542,34 +542,54 @@ public function updateSwipeRemarks()
     {
         try {
             $currentTime = Carbon::now();
-         
+ 
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
-    
-           
+ 
+ 
             if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-            
+ 
                 FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
                 return;
             } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
-               
+ 
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-    
+ 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-           
+ 
             $this->signIn = !$this->signIn;
-    
-            $agent = new Agent();
-            $deviceName = $agent->isMobile() ? 'Mobile'
-                : ($agent->isTablet() ? 'Tablet'
-                    : ($agent->isDesktop() ? 'Laptop/Desktop' : 'Unknown Device'));
-            $platform = $agent->platform();
+ 
+            $userAgent = request()->header('User-Agent');
+ 
+            // Detect Device Type
+            if (stripos($userAgent, 'mobile') !== false) {
+                $deviceName = 'Mobile';
+            } elseif (stripos($userAgent, 'tablet') !== false) {
+                $deviceName = 'Tablet';
+            } elseif (stripos($userAgent, 'windows') !== false || stripos($userAgent, 'macintosh') !== false) {
+                $deviceName = 'Laptop/Desktop';
+            } else {
+                $deviceName = 'Unknown Device';
+            }
+ 
+            // Detect Platform (OS)
+            if (stripos($userAgent, 'windows') !== false) {
+                $platform = 'Windows';
+            } elseif (stripos($userAgent, 'macintosh') !== false || stripos($userAgent, 'mac os') !== false) {
+                $platform = 'MacOS';
+            } elseif (stripos($userAgent, 'linux') !== false) {
+                $platform = 'Linux';
+            } elseif (stripos($userAgent, 'android') !== false) {
+                $platform = 'Android';
+            } elseif (stripos($userAgent, 'iphone') !== false || stripos($userAgent, 'ipad') !== false) {
+                $platform = 'iOS';
+            } else {
+                $platform = 'Unknown OS';
+            }
+ 
             $ipAddress = request()->ip();
-    
-            
-    
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => now()->format('H:i:s'),
@@ -580,27 +600,25 @@ public function updateSwipeRemarks()
                 'swipe_location' => $this->swipe_location,
                 'swipe_remarks' => $this->swipe_remarks,
             ]);
-    
-           
-    
+ 
+ 
+ 
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
                 ? "You have successfully signed in."
                 : "You have successfully signed out.");
-    
+ 
             $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
             $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
-    
-           
+ 
+ 
             return redirect('/');
-    
         } catch (Throwable $e) {
-            
-    
+ 
+ 
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }
-
     public function showEarlyEmployees()
     {
         $this->whoisinTitle = 'On Time';
