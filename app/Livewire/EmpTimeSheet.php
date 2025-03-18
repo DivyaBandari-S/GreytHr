@@ -8,8 +8,8 @@ use Carbon\Carbon;
 use App\Helpers\FlashMessageHelper;
 use App\Models\TimeSheet;
 use App\Models\Task;
-use App\Models\ClientsEmployee;
-use App\Models\Client;
+use App\Models\AssignProjects;
+use App\Models\ClientDetails;
 use App\Models\EmployeeDetails;
 
 class EmpTimeSheet extends Component
@@ -158,9 +158,12 @@ class EmpTimeSheet extends Component
         } else {
             $this->timeSheetSubmitted = false;
         }
-        $this->clients = ClientsEmployee::with('client')->where('emp_id', $this->auth_empId)->get();
+        $this->clients = AssignProjects::with('client')->whereRaw(
+            'JSON_CONTAINS(emp_id, ?)', 
+            [json_encode([['emp_id' => $this->auth_empId]])]
+        )->get();
         $clientIds = $this->clients->pluck('client_id');
-        $this->client_names = Client::whereIn('client_id', $clientIds)->pluck('client_name');
+        $this->client_names = ClientDetails::whereIn('client_id', $clientIds)->pluck('client_name');
 
         // Fetch existing time sheet data from the database if needed
         $this->timeSheet = TimeSheet::where('emp_id', $this->auth_empId)
@@ -439,9 +442,13 @@ class EmpTimeSheet extends Component
 
         
         $this->auth_empId = auth()->guard('emp')->user()->emp_id;
-        $this->clients = ClientsEmployee::with('client')->where('emp_id', $this->auth_empId)->get();
+        $this->clients = AssignProjects::with('client')->whereRaw(
+            'JSON_CONTAINS(emp_id, ?)', 
+            [json_encode([['emp_id' => $this->auth_empId]])]
+        )->get();
+        // $this->clients = AssignProjects::with('client')->where('emp_id', $this->auth_empId)->get();
         $clientIds = $this->clients->pluck('client_id');
-        $this->client_names = Client::whereIn('client_id', $clientIds)->pluck('client_name');
+        $this->client_names = ClientDetails::whereIn('client_id', $clientIds)->pluck('client_name');
 
         $this->defaultTimeSheet = TimeSheet::where('emp_id', $this->auth_empId)
             ->where(function ($query) {

@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Models\Client;
+use App\Models\ClientDetails;
 use App\Mail\TaskAssignedNotification;
 use App\Mail\TaskReopenedNotification;
 use App\Mail\TaskClosedNotification;
-use App\Models\ClientsEmployee;
-use App\Models\ClientsWithProjects;
+use App\Models\AssignProjects;
+use App\Models\ClientProjects;
 use App\Models\EmployeeDetails;
 use App\Models\Task;
 use App\Models\Notification;
@@ -432,7 +432,15 @@ class Tasks extends Component
     {
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-        $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
+        // $this->selectedPersonClients = AssignProjects::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
+        $this->selectedPersonClients = AssignProjects::whereRaw(
+            'JSON_CONTAINS(emp_id, ?)', 
+            [json_encode([['emp_id' => $this->selectedPerson->emp_id]])]
+        )->get();
+        $this->selectedPersonClients = $this->selectedPersonClients->unique('client_id');
+        
+       
+        
         $this->selectedPeopleName = ucwords(strtolower(($this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name))) . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
         $this->updateFollowers();
@@ -446,7 +454,7 @@ class Tasks extends Component
 
     public function showProjects()
     {
-        $this->selectedPersonClientsWithProjects = ClientsWithProjects::where('client_id', $this->client_id)->get();
+        $this->selectedPersonClientsWithProjects = ClientProjects::where('client_id', $this->client_id)->get();
 
         if ($this->validate_tasks == "true") {
 
