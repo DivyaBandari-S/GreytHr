@@ -489,7 +489,7 @@ class Regularisation extends Component
    
 
     if (!in_array($date, $this->selectedDates)) {
-        Log::info("Adding date to selectedDates: $date");
+        // Log::info("Adding date to selectedDates: $date");
 
         $this->selectedDates[] = $date;
 

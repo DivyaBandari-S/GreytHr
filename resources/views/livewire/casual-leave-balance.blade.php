@@ -54,7 +54,7 @@
                     <div class="info-container">
                         <div class="info-item px-2">
                             <div class="info-title">Available Balance</div>
-                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->is_lapsed)
+                            @if(!$employeeLapsedBalance->isEmpty() && $employeeLapsedBalance->first() && $employeeLapsedBalance->first()->lapsed_date )
                             <div class="infso-value">0</div>
                             @else
                             <div class="info-value">{{ $Availablebalance }}</div>
@@ -154,10 +154,10 @@
                                 <tr>
                                     <td>{{ $balance->status }}</td>
                                     <td>{{ date('d M Y', strtotime($balance->created_at)) }}</td>
-                                    <td>{{ date('d M Y', strtotime('first day of January', strtotime($balance->period))) }}</td>
-                                    <td>{{ date('d M Y', strtotime('last day of December', strtotime($balance->period))) }}</td>
+                                    <td>{{ date('d M Y', strtotime('first day of ' . $balance->period)) }}</td>
+                                    <td>{{ date('d M Y', strtotime('last day of ' . $balance->period)) }}</td>
                                     <td>{{ $casualLeaveGrantDays }}</td>
-                                    <td>Annual Grant for the present year </td>
+                                    <td>Annual Grant for the period {{ $balance->period }} </td>
                                 </tr>
                                 @endforeach
                                 @if($employeeLapsedBalanceList->isNotEmpty())

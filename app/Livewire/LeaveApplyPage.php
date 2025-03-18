@@ -591,8 +591,8 @@ class LeaveApplyPage extends Component
             }
 
             // 6. Special validation for Casual Leave
-            if ($this->leave_type === 'Casual Leave' && $this->checkCasualLeaveLimit($employeeId)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 2 days of Casual Leave for the month.');
+            if ($this->leave_type === ['Casual Leave','Sick Leave'] && $this->checkCasualLeaveLimit($employeeId)) {
+                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 0.5 days of Casual Leave for the month.');
                 return false; // Stop further validation if error occurs
             }
 
@@ -789,7 +789,8 @@ class LeaveApplyPage extends Component
                     'Casual Leave Probation' => 0,
                     'Marriage Leave' => 0,
                     'Maternity Leave' => 0,
-                    'Paternity Leave' => 0
+                    'Paternity Leave' => 0,
+                    'Earned Leave' => 0
                 ];
             } else {
                 // Get the leave balance per year based on the 'from_date' year
@@ -800,6 +801,7 @@ class LeaveApplyPage extends Component
                     'Marriage Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $fromDateYear),
                     'Maternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $fromDateYear),
                     'Paternity Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Paternity Leave', $fromDateYear),
+                    'Earned Leave' => EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Earned Leave', $fromDateYear),
                 ];
             }
 
@@ -837,14 +839,13 @@ class LeaveApplyPage extends Component
             $currentMonth = now()->month;
             $currentYear = now()->year;
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave'])
+                ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave','Sick Leave'])
                 ->where('category_type', 'Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
                 ->whereIn('leave_status', [2, 5])
                 ->whereIn('cancel_status', [3, 6, 5])
                 ->get();
-
             $totalLeaveDays = 0;
 
             foreach ($leaveRequests as $leaveRequest) {
@@ -871,7 +872,7 @@ class LeaveApplyPage extends Component
             }
 
             // Check if total leave days exceed 2
-            return $totalLeaveDays > 2;
+            return $totalLeaveDays > 0.5;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking the casual leave limit. Please try again.');
             return false; // Default return value in case of an error
@@ -907,6 +908,9 @@ class LeaveApplyPage extends Component
                 break;
             case 'Marriage Leave':
                 $leaveBalanceKey = 'marriageLeaveBalance';
+                break;
+            case 'Earned Leave':
+                $leaveBalanceKey = 'earnedLeaveBalance';
                 break;
         }
 
@@ -950,6 +954,7 @@ class LeaveApplyPage extends Component
     }
 
     public $showSessionDropdown = true; // Default value
+    public $earnedLeaveBalance;
 
     public function updatedLeaveType($value)
     {
@@ -1014,6 +1019,12 @@ class LeaveApplyPage extends Component
                 case 'Marriage Leave':
                     $this->leaveBalances = [
                         'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance'] ?? '0'
+                    ];
+                    break;
+
+                case 'Earned Leave':
+                    $this->leaveBalances = [
+                        'earnedLeaveBalance' => $allLeaveBalances['earnedLeaveBalance'] ?? '0'
                     ];
                     break;
                 default:
@@ -1129,6 +1140,7 @@ class LeaveApplyPage extends Component
     {
         return (int) str_replace('Session ', '', $session);
     }
+
     //selected applying to manager details
     public function toggleManager($empId)
     {

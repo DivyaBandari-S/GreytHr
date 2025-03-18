@@ -1,12 +1,46 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="open,toggleSignState,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
+        wire:target="open,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
             </div>
         </div>
     </div>
+    <style>
+        .sign-out-form {
+    max-width: 400px;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.sign-out-form .form-group {
+    margin-bottom: 15px;
+}
+
+.sign-out-form label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.sign-out-form select,
+.sign-out-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.sign-out-form textarea {
+    resize: vertical;
+}
+
+    </style>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
             <div class="col-12 col-md-8 mb-3">
@@ -130,17 +164,23 @@
 
                                 <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
-                                    <button id="signButton" class="signInButton" wire:click="toggleSignState">
-                                        @if ($swipes)
+                                    <button id="signButton" class="signInButton" wire:click="OpentoggleSignStatePopup">
+                                    @if ($swipes)
                                         @if ($swipes->in_or_out === 'OUT')
                                         Sign In
+                                       
                                         @else
+                                       
                                         Sign Out
                                         @endif
                                         @else
+                                       
                                         Sign In
                                         @endif
+                        
+
                                     </button>
+
                                 </div>
                             </div>
                         </div>
@@ -1052,6 +1092,89 @@
                         @endif
 
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+@if ($showtoggleSignState)
+    <div class="modal d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered " role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <b>Swipes</b>
+                    </h5>
+                    <button type="button" class="btn-close btn-primary" data-dismiss="modal"
+                        aria-label="Close" wire:click="closeToggleSignState">
+                    </button>
+                </div>
+                <div class="modal-body">
+                   
+                        <p style="text-align:center;font-weight:600;font-size:18px;">Tell us your Work Location.</p>
+                    
+                    <div style="display:flex;align-items:left;">
+                    <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
+                        <div class="form-group">
+                            <label for="location">Enter 
+                                <span>
+                                @if ($swipes)
+                                        @if ($swipes->in_or_out === 'OUT')
+                                        Sign In
+                                       
+                                        @else
+                                       
+                                        Sign Out
+                                        @endif
+                                        @else
+                                       
+                                        Sign In
+                                        @endif
+                                </span>
+                                Location
+                                <span style="color:#f66;">*</span>
+                            </label>
+                            <select id="location" name="location" wire:model="swipe_location"wire:change="updateSwipeLocation" required>
+                                @if (!$swipes)
+                                 <option value="">Select Your Location</option>
+                                @endif   
+                                <option value="client_location">Client Location</option>
+                                <option value="hybrid">Home</option>
+                                <option value="office">Office</option>
+                                <option value="on_duty">On-Duty</option>
+                                <option value="remote">Remote</option>
+                                <option value="work_from_office">Work from Office</option>
+                                <option value="work_from_home">Work from Home</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks</label>
+                            <textarea id="remarks" name="remarks" rows="4"wire:model="swipe_remarks" wire:change="updateSwipeRemarks"placeholder="Enter Reason"></textarea>
+                        </div>
+                        <button id="signButton" class="signInButton" type="submit"> 
+                            
+                        @if ($swipes)
+                                        @if ($swipes->in_or_out === 'OUT')
+                                        Sign In
+                                        
+                                        @else
+                                       
+                                        Sign Out
+                                        
+                                        @endif
+                                        @else
+                                       
+                                        Sign In
+                                       
+                                        @endif
+                                        
+                        </button>
+                     </form>
+                     <div>
+                        <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;" height="180" width="180">
+                     </div>
+                    </div>           
                 </div>
             </div>
         </div>

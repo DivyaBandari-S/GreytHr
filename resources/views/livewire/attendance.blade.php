@@ -2683,7 +2683,7 @@ color: #fff;
                                 </tbody>
                                 <!-- Add table rows (tbody) and data here if needed -->
                                 @else
-                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <img src="{{ asset('images/no-record-available.png') }}" style="margin-top:30px;" height="100" width="100">
                                 <div class="text-muted">No record Found</div>
                                 @endif
                             </table>
