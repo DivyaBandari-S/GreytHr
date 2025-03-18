@@ -76,6 +76,7 @@ class LeaveBalances extends Component
     public $dateErrorMessage;
     public $currentLeaveYear;
     public $marriageLeaveBalance, $maternityLeaveBalance, $paternityLeaveBalance;
+    Public $percentageEarnedLeaves;
     public $sickLeaveOpeningPerYear;
     public $totalCombinedSickLeavePerYear;
     public $earnedLeavesPeryear;
@@ -167,6 +168,7 @@ class LeaveBalances extends Component
                 $this->totalCasualLeaveProbationDays = $leaveBalances['totalCasualLeaveProbationDays'];
                 $this->totalLossOfPayDays = $leaveBalances['totalLossOfPayDays'];
                 $this->totalEarnedLeaves = $leaveBalances['totalEarnedDays'];
+                $this->totalEarnedLeaves = $leaveBalances['totalEarnedDays'];
                 $this->marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($this->employeeId, 'Marriage Leave', $this->currentYear);
 
                 // Retrieve the lapsed status for Sick Leave
@@ -233,6 +235,8 @@ class LeaveBalances extends Component
                         return $this->getSickLeaveColor($percentage);
                     case 'Maternity Leave':
                         return $this->getSickLeaveColor($percentage);
+                    case 'Earned Leave':
+                        return $this->getSickLeaveColor($percentage);
                     default:
                         return '#000000';
                 }
@@ -287,7 +291,7 @@ class LeaveBalances extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
             if ($this->currentLeaveYear == $this->selectedYear) {
                 // For Casual Leave
-                if ($this->casualLeavePerYear > 0 && $this->currentYear === $this->selectedYear ) {
+                if ($this->casualLeavePerYear > 0 && $this->currentYear === $this->selectedYear) {
                     $this->percentageCasual = ($this->consumedCasualLeaves / $this->casualLeavePerYear) * 100;
                 }
 
@@ -310,13 +314,19 @@ class LeaveBalances extends Component
                 if ($this->paternityLeaves > 0) {
                     $this->percentagePaternityLeaves = ($this->consumedPaternityLeaves / $this->paternityLeaves) * 100;
                 }
-            } elseif($this->currentLeaveYear != $this->selectedYear) {
+
+
+                // For earned Leave
+                if ($this->earnedLeavesPeryear > 0) {
+                    $this->percentageEarnedLeaves = ($this->consumedEarnedLeaves / $this->earnedLeavesPeryear) * 100;
+                }
+            } elseif ($this->currentLeaveYear != $this->selectedYear) {
                 // If it's not the current year, set all percentages to 100%
                 $this->percentageCasual = 100;
-               // For Sick Leave
-               if ($this->sickLeavePerYear > 0) {
-                $this->percentageSick = ($this->consumedSickLeaves / $this->sickLeavePerYear) * 100;
-            }
+                // For Sick Leave
+                if ($this->sickLeavePerYear > 0) {
+                    $this->percentageSick = ($this->consumedSickLeaves / $this->sickLeavePerYear) * 100;
+                }
                 $this->percentageCasualProbation = 100;
                 $this->percentageMarriageLeaves = 100;
                 $this->percentagePaternityLeaves = 100;
@@ -362,6 +372,7 @@ class LeaveBalances extends Component
             $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
             $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
             $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);
+            $earnedLeavesPeryear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Earned Leave', $selectedYear);
             if (!$employeeDetails) {
                 return null;
             }
@@ -382,6 +393,7 @@ class LeaveBalances extends Component
                 $marriageLeaveBalance = 0;
                 $maternityLeaveBalance = 0;
                 $paternityLeaveBalance = 0;
+                $earnedLeaveBalance = 0;
                 $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
             } else {
                 // Otherwise, apply the deduction logic
@@ -393,7 +405,6 @@ class LeaveBalances extends Component
                 $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
                 $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
                 $earnedLeaveBalance =  $earnedLeavesPeryear - $approvedLeaveDays['totalEarnedDays'];
-
             }
             return [
                 'sickLeaveBalance' => $sickLeaveBalance,
@@ -427,6 +438,8 @@ class LeaveBalances extends Component
             $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
             $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
             $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);
+            $earnedLeavesPeryear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Earned Leave', $selectedYear);
+
 
             if (!$employeeDetails) {
                 return null;
@@ -452,6 +465,7 @@ class LeaveBalances extends Component
                 $maternityLeaveBalance = $maternityLeaves - $approvedLeaveDays['totalMaternityDays'];
                 $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
                 $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
+                $earnedLeaveBalance = $earnedLeavesPeryear - $approvedLeaveDays['totalEarnedDays'];
             } else {
                 // Otherwise, apply the deduction logic
 
@@ -461,6 +475,7 @@ class LeaveBalances extends Component
                 $casualProbationLeaveBalance = 0;
                 $marriageLeaveBalance = 0;
                 $maternityLeaveBalance = 0;
+                $earnedLeaveBalance =0;
                 $paternityLeaveBalance = 0;
                 $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
             }
@@ -472,6 +487,7 @@ class LeaveBalances extends Component
                 'marriageLeaveBalance' => $marriageLeaveBalance,
                 'maternityLeaveBalance' => $maternityLeaveBalance,
                 'paternityLeaveBalance' => $paternityLeaveBalance,
+                'earnedLeaveBalance' => $earnedLeaveBalance
             ];
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {

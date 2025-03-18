@@ -70,8 +70,7 @@
                                     name="from_date"
                                     wire:change="handleFieldUpdate('from_date')"
                                     max="{{ now()->endOfYear()->toDateString() }}"
-                                    onkeypress="return false"
-                                   >
+                                    onkeypress="return false">
 
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -104,8 +103,7 @@
                                     name="to_date"
                                     wire:change="handleFieldUpdate('to_date')"
                                     max="{{ now()->endOfYear()->toDateString() }}"
-                                    onkeypress="return false"
-                                    >
+                                    onkeypress="return false">
                                 @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -162,6 +160,10 @@
                                 @elseif($leave_type == 'Marriage Leave')
                                 <span class="sickLeaveBalance">
                                     {{ ($leaveBalances['marriageLeaveBalance'] ?? '0') }}
+                                </span>
+                                @elseif($leave_type == 'Earned Leave')
+                                <span class="sickLeaveBalance">
+                                    {{ ($leaveBalances['earnedLeaveBalance'] ?? '0') }}
                                 </span>
                                 @endif
                             </div>
