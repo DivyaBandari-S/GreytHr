@@ -348,7 +348,7 @@
                                 <span class="leaveTypeTitle font-weight-500">Earned Leave</span>
                             </div>
                             <div>
-                                <span class="leave-gran font-weight-500">Granted: <span class="leave-gran font-weight-500">{{ $marriageLeaves }}</span></span>
+                                <span class="leave-gran font-weight-500">Granted: <span class="leave-gran font-weight-500">{{ $earnedLeavesPeryear }}</span></span>
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">

@@ -491,7 +491,6 @@ class LeaveApplyPage extends Component
 
             $this->resetFields();
         } catch (\Exception $e) {
-            Log::error('dfghjk,.' . $e->getMessage());
             FlashMessageHelper::flashError("Failed to submit leave application. Please try again later.");
             return redirect()->to('/leave-form-page');
         }
@@ -763,6 +762,7 @@ class LeaveApplyPage extends Component
 
             return $totalNumberOfDays;
         } catch (\Exception $e) {
+            Log::error('cehck' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while calculating leave days. Please try again.');
             return false; // Default return value in case of an error
         }
