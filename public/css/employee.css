@@ -49,7 +49,7 @@ li {
     overflow-y: auto;
     scrollbar-width: none;
     transition: all 0.3s ease;
-    z-index: 100;
+    z-index: 1 !important;
 }
 .icon {
     font-size: 0.875rem;
@@ -75,7 +75,7 @@ li {
     position: sticky;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: 1;
     background: var(--light);
     transition: all 0.3s ease;
     padding: 0 6px;
@@ -121,12 +121,7 @@ li {
 #sidebar .side-menu > li > a.active .icon-right {
     transform: rotateZ(90deg);
 }
-#sidebar .side-menu > li > a.active,
-#sidebar .side-menu > li > a.active:hover {
-    /* background: var(--grey);
-	color: var(--dark) !important; */
-    /* border-left: 5px solid #0037ff; */
-}
+
 
 .side-dropdown .active-side-dropdown {
     background: #fff !important;
@@ -147,10 +142,7 @@ li {
     color: var(--light) !important;
 }
 /* Icon color when link is active */
-#sidebar .side-menu > li > a.active .icon,
-#sidebar .side-menu > li > a.active:hover .icon {
-    /* color: var(--light) !important; */
-}
+
 #sidebar .divider {
     margin-top: 24px;
     font-size: 12px;
@@ -1454,7 +1446,6 @@ main .btn-send:hover {
 .cardReport .mail {
     position: absolute;
     right: 0.5rem;
-    z-index: 4;
     top: 1rem;
     background: transparent;
     border: none;
@@ -1476,7 +1467,6 @@ main .btn-send:hover {
     top: 3px;
     left: 3px;
     border-radius: 29px;
-    z-index: 1;
     border: 0px solid #02114f;
     overflow: hidden;
     transition: all 0.5s ease-in-out 0.2s, z-index 0.5s ease-in-out 0.2s;
@@ -1511,7 +1501,6 @@ main .btn-send:hover {
     background: #fff;
     top: 80%;
     border-radius: 25px;
-    z-index: 2;
     /* box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px inset; */
     overflow: hidden;
     transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1) 0s;
@@ -1610,7 +1599,6 @@ main .btn-send:hover {
     top: 10px;
     left: 10px;
     border-radius: 50%;
-    z-index: 3;
     border: 7px solid #b2d3d9;
     box-shadow: rgba(96, 75, 74, 0.1882352941) 0px 5px 5px 0px;
     transition: all 0.5s ease-in-out, z-index 0.5s ease-in-out 0.1s;
