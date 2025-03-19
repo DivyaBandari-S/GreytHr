@@ -7,6 +7,7 @@ use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use Illuminate\Container\Attributes\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -25,12 +26,14 @@ class LeaveApplicationNotification extends Mailable
     public $applyingToDetails;
     public $ccToDetails;
     public $cancelStatus;
+    public $leaveType;
     public $leaveCategory;
     public function __construct($leaveRequest, $applyingToDetails, $ccToDetails)
     {
         $this->leaveRequest = $leaveRequest;
         $this->applyingToDetails = $applyingToDetails;
         $this->ccToDetails = $ccToDetails;
+        $this->leaveType = $leaveRequest->leave_type;
         $this->employeeDetails = EmployeeDetails::where('emp_id', $leaveRequest->emp_id)->first();
     }
     public function build()
@@ -43,7 +46,6 @@ class LeaveApplicationNotification extends Mailable
             $this->leaveRequest->to_session,
             $this->leaveRequest->leave_type
         );
-
         return $this->view('mails.leave_application_notification')
             ->with([
                 'leaveRequest' => $this->leaveRequest,
@@ -54,6 +56,7 @@ class LeaveApplicationNotification extends Mailable
                 'leave_status' => $this->leaveRequest->leave_status,
                 'leaveCategory' => $this->leaveRequest->category_type,
                 'cancelStatus' => $this->leaveRequest->cancel_status,
+                'leaveType' => $this->leaveType
             ]);
     }
 
@@ -145,7 +148,7 @@ class LeaveApplicationNotification extends Mailable
 
             while ($startDate->lte($endDate)) {
                 // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
-                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                if (!in_array($this->leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
                     if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
                         $totalDays += 1;
                     }
@@ -185,7 +188,7 @@ class LeaveApplicationNotification extends Mailable
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
+            FlashMessageHelper::flashError('efw alculating the number of days.');
             return false;
         }
     }

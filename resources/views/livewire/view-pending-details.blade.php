@@ -1,5 +1,5 @@
 <div class="position-relative">
-<div class="position-absolute" wire:loading
+    <div class="position-absolute" wire:loading
         wire:target="approveLeave,approveLeaveCancel,rejectLeaveCancel,rejectLeave,fetchPendingLeaveApplications">
         <div class="loader-overlay">
             <div class="loader">
@@ -251,7 +251,15 @@
                                 </div>
 
                                 <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Earned Leave' && isset($leaveRequest['leaveBalances']['earnedLeaveBalance']))
 
+                                <div class="earnedLeave">
+
+                                    <span class="earnedLeaveBal">EL</span>
+
+                                </div>
+
+                                <span class="earnedLeaveValue">{{ $leaveRequest['leaveBalances']['earnedLeaveBalance'] }}</span>
                                 @endif
 
                             </div>
@@ -285,7 +293,7 @@
         @endif
     </div>
     <script>
-         function toggleAccordion(element) {
+        function toggleAccordion(element) {
             const accordionBody = element.nextElementSibling;
             const arrowIcon = element.querySelector('.fa'); // Select the arrow icon
             const arrowBtn = element.querySelector('.arrow-btn');
