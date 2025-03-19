@@ -130,13 +130,13 @@
                                 <span class="leaveTypeTitle font-weight-500">Loss Of Pay</span>
                             </div>
                             <div>
-                                <span class="leave-grane font-weight-500">Granted: <span class="leave-grane font-weight-500">{{$lossOfPayPerYear}}</span></span>
+                                <span class="leave-grane font-weight-500">Granted: <span class="leave-grane font-weight-500">{{ $lossOfPayPerYear }}</span></span>
                             </div>
                         </div>
                         <div class="center d-flex flex-column align-items-center justify-content-center text-center">
-                            @if($lossOfPayBalance > 0)
+                            @if($totalLossOfPayDays > 0)
                             <h5 class="mb-0">
-                                &minus;{{($lossOfPayBalance)}}
+                                &minus;{{ $totalLossOfPayDays }}
                             </h5>
                             @else
                             <h5 class="mb-0">
