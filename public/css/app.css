@@ -11017,6 +11017,6 @@ cursor: pointer;
 }
 
 
-.fl-wrapper[data-position$=-center]{
+/* .fl-wrapper[data-position$=-center]{
     z-index: 10;
-}
+} */
