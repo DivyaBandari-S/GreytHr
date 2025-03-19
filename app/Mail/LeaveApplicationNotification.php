@@ -66,13 +66,13 @@ class LeaveApplicationNotification extends Mailable
     public function envelope(): Envelope
     {
         $subject = '';
-        if ($this->leaveRequest->category_type === 'Leave'){
+        if ($this->leaveRequest->category_type === 'Leave') {
             if ($this->leaveRequest->leave_status === 4) {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
                 $subject = 'Leave Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ')';
             }
-        }else{
+        } else {
             if ($this->leaveRequest->cancel_status === 4) {
                 $subject = 'Leave Cancel Application from: ' . ucwords(strtolower($this->employeeDetails->first_name)) . ' ' . ucwords(strtolower($this->employeeDetails->last_name)) . ' (' . $this->employeeDetails->emp_id . ') has been withdrawn.';
             } else {
@@ -188,9 +188,15 @@ class LeaveApplicationNotification extends Mailable
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('efw alculating the number of days.');
+            FlashMessageHelper::flashError('An error occured calculating the number of days.');
             return false;
         }
+    }
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
     }
 
     private function getSessionNumber($session)
