@@ -591,10 +591,14 @@ class LeaveApplyPage extends Component
             }
 
             // 6. Special validation for Casual Leave
-            if (in_array($this->leave_type, ['Casual Leave', 'Sick Leave']) && $this->checkLeaveLimit($employeeId)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('You have reached maximum limit of 0.5 days of '. $this->leave_type .' for the month.');
-                return false; // Stop further validation if error occurs
+            if (in_array($this->leave_type, ['Casual Leave', 'Sick Leave'])) {
+                // Check if Casual or Sick leave exceeds the limit
+                if ($this->checkLeaveLimit($employeeId)) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('You have reached the maximum limit of 0.5 days of ' . $this->leave_type . ' for the month.');
+                    return false; // Stop further validation if error occurs
+                }
             }
+
 
             // 7. Validate date range
             if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
@@ -847,10 +851,12 @@ class LeaveApplyPage extends Component
                 ->whereIn('leave_status', [2, 5]) // 2 = Approved, 5 = Completed
                 ->whereIn('cancel_status', [3, 6, 5]) // 3 = Canceled, 6 = Pending, 5 = Completed
                 ->get();
-
+    
+            // Initialize total leave days for Casual and Sick Leave
             $totalCasualLeaveDays = 0;
             $totalSickLeaveDays = 0;
-
+    
+            // Loop through each leave request to calculate the total days
             foreach ($leaveRequests as $leaveRequest) {
                 $numberOfDays = $this->calculateNumberOfDays(
                     $leaveRequest->from_date,
@@ -859,15 +865,15 @@ class LeaveApplyPage extends Component
                     $leaveRequest->to_session,
                     $leaveRequest->leave_type
                 );
-
-                // Separate the leave types for casual and sick leave
+    
+                // Accumulate the leave days separately for Casual Leave and Sick Leave
                 if ($leaveRequest->leave_type === 'Casual Leave') {
                     $totalCasualLeaveDays += $numberOfDays;
                 } elseif ($leaveRequest->leave_type === 'Sick Leave') {
                     $totalSickLeaveDays += $numberOfDays;
                 }
             }
-
+    
             // Calculate the number of days for the new leave request if it's Casual or Sick leave
             if ($this->from_date && $this->to_date) {
                 $newLeaveDays = $this->calculateNumberOfDays(
@@ -877,26 +883,29 @@ class LeaveApplyPage extends Component
                     $this->to_session,
                     $this->leave_type
                 );
-
-                // Check if the new leave request is Casual Leave or Sick Leave
+    
+                // Add the new leave days based on the leave type
                 if ($this->leave_type === 'Casual Leave') {
                     $totalCasualLeaveDays += $newLeaveDays;
                 } elseif ($this->leave_type === 'Sick Leave') {
                     $totalSickLeaveDays += $newLeaveDays;
                 }
             }
-
-            // Check if total Casual Leave days or Sick Leave days exceed 0.5
+    
+            // Check if Casual Leave exceeds 0.5 days
             $casualLeaveExceedsLimit = $totalCasualLeaveDays > 0.5;
+    
+            // Check if Sick Leave exceeds 0.5 days
             $sickLeaveExceedsLimit = $totalSickLeaveDays > 0.5;
-
-            // Return whether either of the limits is exceeded
+    
+            // Return true if either Casual Leave or Sick Leave exceeds 0.5 days
             return $casualLeaveExceedsLimit || $sickLeaveExceedsLimit;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while checking the leave limits. Please try again.');
             return false; // Default return value in case of an error
         }
     }
+
 
 
     private function validateDateFormat($date)
