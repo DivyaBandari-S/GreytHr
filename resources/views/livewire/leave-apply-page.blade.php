@@ -31,7 +31,6 @@
                                 <option value="">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                @else
                                 <option value="Casual Leave">Casual Leave</option>
                                 @endif
                                 @if($showCasualLeaveProbationYear == true)
