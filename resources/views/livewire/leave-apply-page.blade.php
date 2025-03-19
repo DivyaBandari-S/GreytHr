@@ -175,7 +175,7 @@
                         <div class="form-group mb-0">
                             <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
-                            @if($from_date && $to_date && $from_session && $to_session) <!-- Check for all date inputs -->
+                            @if($from_date && $to_date && $from_session && $to_session && $leave_type) <!-- Check for all date inputs -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session, $leave_type);
                             @endphp

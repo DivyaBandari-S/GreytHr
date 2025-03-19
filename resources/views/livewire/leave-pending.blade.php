@@ -143,7 +143,10 @@
                                 <span class="normalText">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
                                 @elseif($leaveRequest->leave_type === 'Petarnity Leave' && isset($leaveBalances['paternityLeaveBalance']))
                                 <span class="normalText">{{ $leaveBalances['paternityLeaveBalance'] }}</span>
+                                @elseif($leaveRequest->leave_type === 'Earned Leave' && isset($leaveBalances['earnedLeaveBalance']))
+                                <span class="normalText">{{ $leaveBalances['earnedLeaveBalance'] }}</span>
                                 @endif
+
                                 @endif
                             </div>
                         </div>

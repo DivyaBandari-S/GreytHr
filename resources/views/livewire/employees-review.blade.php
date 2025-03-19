@@ -596,7 +596,15 @@
                                     </div>
 
                                     <span class="maternityLeaveValue">{{ $leaveRequest['leaveBalances']['maternityLeaveBalance'] }}</span>
+                                    @elseif($leaveRequest['approvedLeaveRequest']->leave_type === 'Earned Leave' && isset($leaveRequest['leaveBalances']['earnedLeaveBalance']))
+                                    <div class="earnedLeave">
 
+                                        <span class="earnedLeaveBal">EL</span>
+
+                                    </div>
+
+                                    <span
+                                        class="earnedLeaveValue">{{ $leaveRequest['leaveBalances']['earnedLeaveBalance'] }}</span>
                                     @endif
 
                                 </div>
