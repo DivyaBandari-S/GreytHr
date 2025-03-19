@@ -368,7 +368,7 @@
                                     0 of {{ $earnedLeavesPeryear }} Consumed
                                     @endif
                                 </p>
-                                <div class="tube" style="width: {{ $percentagePaternityLeaves }}%; background-color: {{ $this->getTubeColor($consumedEarnedLeaves, $earnedLeavesPeryear, 'Casual Leave Probation') }};"></div>
+                                <div class="tube" style="width: {{ $percentageEarnedLeaves }}%; background-color: {{ $this->getTubeColor($consumedEarnedLeaves, $earnedLeavesPeryear, 'Earned Leave') }};"></div>
                             </div>
                         </div>
                         @endif

@@ -924,28 +924,35 @@
                         <div class="mt-3">
                             <p class="payslip-small-desc">
                                 This month ({{ $upcomingLeaveApplications }}) </p>
-                            @if ($upcomingLeaveRequests)
+                            @if ($groupedUpcomingLeaves)
+
                             <div class="mt-2 d-flex align-items-center gap-2 mb-3">
-                                @foreach ($upcomingLeaveRequests->take(3) as $requests)
+                                @foreach ($groupedUpcomingLeaves->take(3) as $employeeId => $requests)
                                 @php
                                 $randomColorList =
                                 '#' .
                                 str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
+                                $leaveRequestCount = $requests->count();
                                 @endphp
                                 <div class="d-flex align-items-center">
-                                    <div class="thisCircle"
+                                    <div class="thisCircle position-relative"
                                         style="border: 1px solid {{ $randomColorList }}">
-                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
+                                        <span>{{ substr($requests->first()->employee->first_name, 0, 1) }}{{ substr($requests->first()->employee->last_name, 0, 1) }}
                                         </span>
+                                        @if ($leaveRequestCount > 1)
+                                        <div class="badge badge-pill badge-info position-absolute translate-middle badge-count" >
+                                            {{ $leaveRequestCount }}
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 @endforeach
-                                @if ($upcomingLeaveRequests->count() > 3)
+                                @if ($groupedUpcomingLeaves->count() > 3)
                                 <div
                                     class="remainContent d-flex flex-column align-items-center">
                                     <!-- Placeholder color -->
                                     <a href="/team-on-leave-chart">
-                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }}
+                                        <span>+{{ $groupedUpcomingLeaves->count() - 3 }}
                                         </span>
                                         <span style="margin-top:-5px;">More</span>
                                     </a>
