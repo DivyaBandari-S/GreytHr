@@ -803,6 +803,8 @@ class Home extends Component
                 ->orderBy('leave_applications.created_at', 'desc')
                 ->select('leave_applications.*') // Select all columns from the leave_requests table
                 ->get();
+            // Group leave requests by employee's emp_id and count the number of leaves
+            $groupedUpcomingLeaves = $this->upcomingLeaveRequests->groupBy('emp_id');
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
 
             //attendance related query
@@ -1069,7 +1071,8 @@ class Home extends Component
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
-                'loginEmpManagerDetails' => $this->loginEmpManagerDetails
+                'loginEmpManagerDetails' => $this->loginEmpManagerDetails,
+                'groupedUpcomingLeaves' => $groupedUpcomingLeaves
 
             ]);
         } catch (\Illuminate\Database\QueryException $e) {

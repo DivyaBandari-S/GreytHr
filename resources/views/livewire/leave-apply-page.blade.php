@@ -31,7 +31,6 @@
                                 <option value="">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                @else
                                 <option value="Casual Leave">Casual Leave</option>
                                 @endif
                                 @if($showCasualLeaveProbationYear == true)
@@ -175,7 +174,7 @@
                         <div class="form-group mb-0">
                             <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
-                            @if($from_date && $to_date && $from_session && $to_session) <!-- Check for all date inputs -->
+                            @if($from_date && $to_date && $from_session && $to_session && $leave_type) <!-- Check for all date inputs -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session, $leave_type);
                             @endphp

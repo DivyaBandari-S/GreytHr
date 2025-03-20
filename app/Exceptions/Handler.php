@@ -35,7 +35,7 @@ class Handler extends ExceptionHandler
 
         // Handle database and fatal errors
         if ($this->isDatabaseOrFatalError($exception)) {
-            return response()->view('errors.db_error');
+            return response()->view('errors.500',[], 500);
         }
 
         // Handle 404 and HTTP-specific errors
@@ -57,7 +57,7 @@ class Handler extends ExceptionHandler
 
         // Handle database and fatal errors
         if ($this->isDatabaseOrFatalError($e)) {
-            return response()->view('errors.db_error');
+            return response()->view('errors.500');
         }
 
         // Handle 404 and HTTP-specific errors

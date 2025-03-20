@@ -163,7 +163,7 @@ class LeaveApplyPage extends Component
                 }
 
                 // Determine if the dropdown option should be displayed
-                $this->showCasualLeaveProbation = $this->employee && !$this->employee->confirmation_date;
+                $this->showCasualLeaveProbation = $this->employee && $this->employee->status = true;
                 $currentYear = date('Y');
                 $this->showCasualLeaveProbationYear = $this->employee &&
                     !empty($this->employee->confirmation_date) &&
@@ -463,9 +463,10 @@ class LeaveApplyPage extends Component
                 'contact_details' => $this->contact_details,
                 'reason' => $this->reason,
             ]);
+
             FlashMessageHelper::flashSuccess("Leave application submitted successfully!");
             // Notify
-            Notification::create([
+            $dd =    Notification::create([
                 'emp_id' => auth()->guard('emp')->user()->emp_id,
                 'notification_type' => 'leave',
                 'leave_type' => $this->leave_type,
@@ -473,7 +474,6 @@ class LeaveApplyPage extends Component
                 'applying_to' => json_encode($applyingToDetails),
                 'cc_to' => json_encode($ccToDetails),
             ]);
-
             // Send email notification
             $managerEmail = $applyingToDetails[0]['email'] ?? null; // Use null coalescing to avoid undefined index
             $ccEmails = array_map(fn($cc) => $cc['email'], $ccToDetails);
@@ -491,7 +491,7 @@ class LeaveApplyPage extends Component
 
             $this->resetFields();
         } catch (\Exception $e) {
-            Log::error('dfghjk,.' . $e->getMessage());
+            Log::error('check' . $e->getMessage());
             FlashMessageHelper::flashError("Failed to submit leave application. Please try again later.");
             return redirect()->to('/leave-form-page');
         }
@@ -591,10 +591,23 @@ class LeaveApplyPage extends Component
             }
 
             // 6. Special validation for Casual Leave
-            if ($this->leave_type === ['Casual Leave','Sick Leave'] && $this->checkCasualLeaveLimit($employeeId)) {
-                $this->errorMessageValidation = FlashMessageHelper::flashError('You can only apply for a maximum of 0.5 days of Casual Leave for the month.');
-                return false; // Stop further validation if error occurs
+            if (in_array($this->leave_type, ['Casual Leave']) && $this->from_date && $this->to_date && $this->from_session && $this->to_session) {
+                // Check if Casual or Sick leave exceeds the limit
+                if ($this->checkCasualLeaveLimit($employeeId)) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('You have reached the maximum limit of 0.5 days of ' . $this->leave_type . ' for the month.');
+                    return false; // Stop further validation if error occurs
+                }
             }
+
+            // 6. Special validation for CasuSickal Leave
+            if (in_array($this->leave_type, ['Sick Leave']) ) {
+                // Check if Casual or Sick leave exceeds the limit
+                if ($this->checkSickLeaveLimit($employeeId)) {
+                    $this->errorMessageValidation = FlashMessageHelper::flashError('You have reached the maximum limit of 0.5 days of ' . $this->leave_type . ' for the month.');
+                    return false; // Stop further validation if error occurs
+                }
+            }
+
 
             // 7. Validate date range
             if ($this->from_date === $this->to_date && $this->from_session > $this->to_session) {
@@ -763,6 +776,7 @@ class LeaveApplyPage extends Component
 
             return $totalNumberOfDays;
         } catch (\Exception $e) {
+            Log::error('cehck' . $e->getMessage());
             FlashMessageHelper::flashError('An error occurred while calculating leave days. Please try again.');
             return false; // Default return value in case of an error
         }
@@ -835,19 +849,23 @@ class LeaveApplyPage extends Component
     protected function checkCasualLeaveLimit($employeeId)
     {
         try {
-            // Get all casual leave requests for the current month
+            // Get all leave requests for the current month, with a filter for Casual and Sick leave
             $currentMonth = now()->month;
             $currentYear = now()->year;
             $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
-                ->whereIn('leave_type', ['Casual Leave', 'Maternity Leave','Sick Leave'])
+                ->whereIn('leave_type', ['Casual Leave'])
                 ->where('category_type', 'Leave')
                 ->whereYear('from_date', $currentYear)
                 ->whereMonth('from_date', $currentMonth)
-                ->whereIn('leave_status', [2, 5])
-                ->whereIn('cancel_status', [3, 6, 5])
+                ->whereIn('leave_status', [2, 5]) // 2 = Approved, 5 = Completed
+                ->whereIn('cancel_status', [3, 6, 5]) // 3 = Canceled, 6 = Pending, 5 = Completed
                 ->get();
-            $totalLeaveDays = 0;
 
+            // Initialize total leave days for Casual and Sick Leave
+            $totalCasualLeaveDays = 0;
+            $totalSickLeaveDays = 0;
+
+            // Loop through each leave request to calculate the total days
             foreach ($leaveRequests as $leaveRequest) {
                 $numberOfDays = $this->calculateNumberOfDays(
                     $leaveRequest->from_date,
@@ -856,10 +874,14 @@ class LeaveApplyPage extends Component
                     $leaveRequest->to_session,
                     $leaveRequest->leave_type
                 );
-                $totalLeaveDays += $numberOfDays;
+
+                // Accumulate the leave days separately for Casual Leave and Sick Leave
+                if ($leaveRequest->leave_type === 'Casual Leave') {
+                    $totalCasualLeaveDays += $numberOfDays;
+                }
             }
 
-            // Calculate days for the new leave request if it's Casual Leave
+            // Calculate the number of days for the new leave request if it's Casual or Sick leave
             if ($this->from_date && $this->to_date) {
                 $newLeaveDays = $this->calculateNumberOfDays(
                     $this->from_date,
@@ -868,13 +890,84 @@ class LeaveApplyPage extends Component
                     $this->to_session,
                     $this->leave_type
                 );
-                $totalLeaveDays += $newLeaveDays;
+
+                // Add the new leave days based on the leave type
+                if ($this->leave_type === 'Casual Leave') {
+                    $totalCasualLeaveDays += $newLeaveDays;
+                }
             }
 
-            // Check if total leave days exceed 2
-            return $totalLeaveDays > 0.5;
+            // Check if Casual Leave exceeds 0.5 days
+            $casualLeaveExceedsLimit = $totalCasualLeaveDays > 0.5;
+
+            // Return true if either Casual Leave or Sick Leave exceeds 0.5 days
+            return $casualLeaveExceedsLimit;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('An error occurred while checking the casual leave limit. Please try again.');
+            FlashMessageHelper::flashError('An error occurred while checking the leave limits. Please try again.');
+            return false; // Default return value in case of an error
+        }
+    }
+
+
+    //check for sick leave limit
+    protected function checkSickLeaveLimit($employeeId)
+    {
+        try {
+            // Get all leave requests for the current month, with a filter for Casual and Sick leave
+            $currentMonth = now()->month;
+            $currentYear = now()->year;
+            $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
+                ->whereIn('leave_type', ['Sick Leave'])
+                ->where('category_type', 'Leave')
+                ->whereYear('from_date', $currentYear)
+                ->whereMonth('from_date', $currentMonth)
+                ->whereIn('leave_status', [2, 5]) // 2 = Approved, 5 = Completed
+                ->whereIn('cancel_status', [3, 6, 5]) // 3 = Canceled, 6 = Pending, 5 = Completed
+                ->get();
+
+            // Initialize total leave days for Casual and Sick Leave
+            $totalCasualLeaveDays = 0;
+            $totalSickLeaveDays = 0;
+
+            // Loop through each leave request to calculate the total days
+            foreach ($leaveRequests as $leaveRequest) {
+                $numberOfDays = $this->calculateNumberOfDays(
+                    $leaveRequest->from_date,
+                    $leaveRequest->from_session,
+                    $leaveRequest->to_date,
+                    $leaveRequest->to_session,
+                    $leaveRequest->leave_type
+                );
+
+                // Accumulate the leave days separately for Casual Leave and Sick Leave
+                if ($leaveRequest->leave_type === 'Sick Leave') {
+                    $totalSickLeaveDays += $numberOfDays;
+                }
+            }
+
+            // Calculate the number of days for the new leave request if it's Casual or Sick leave
+            if ($this->from_date && $this->to_date) {
+                $newLeaveDays = $this->calculateNumberOfDays(
+                    $this->from_date,
+                    $this->from_session,
+                    $this->to_date,
+                    $this->to_session,
+                    $this->leave_type
+                );
+
+                // Add the new leave days based on the leave type
+                if ($this->leave_type === 'Sick Leave') {
+                    $totalSickLeaveDays += $newLeaveDays;
+                }
+            }
+
+            // Check if Sick Leave exceeds 0.5 days
+            $sickLeaveExceedsLimit = $totalSickLeaveDays > 0.5;
+
+            // Return true if either Casual Leave or Sick Leave exceeds 0.5 days
+            return $sickLeaveExceedsLimit;
+        } catch (\Exception $e) {
+            FlashMessageHelper::flashError('An error occurred while checking the leave limits. Please try again.');
             return false; // Default return value in case of an error
         }
     }
@@ -1052,7 +1145,7 @@ class LeaveApplyPage extends Component
             $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
 
             // Check if the start or end date is a weekend for non-Marriage leave
-            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave', 'Earned Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
                 return 0;
             }
 
@@ -1080,6 +1173,7 @@ class LeaveApplyPage extends Component
                     return 1;
                 }
             }
+
 
             $totalDays = 0;
 
