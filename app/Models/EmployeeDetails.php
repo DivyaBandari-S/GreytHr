@@ -21,6 +21,7 @@ class EmployeeDetails extends Authenticatable
     use HasFactory, Notifiable, ChatHelpers;
     protected $primaryKey = 'emp_id';
     public $incrementing = false;
+    protected $keyType = 'string'; // Define it as a string key
     protected $table = 'employee_details';
     protected $fillable = [
         'emp_id',

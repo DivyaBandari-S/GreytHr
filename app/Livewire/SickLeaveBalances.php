@@ -167,13 +167,13 @@ class SickLeaveBalances extends Component
                 foreach ($leavePolicyData as $leavePolicy) {
                     if (isset($leavePolicy['leave_name']) && $leavePolicy['leave_name'] === 'Sick Leave') {
                         // If found, get the grant_days and process
-                        $this->casualLeaveGrantDays = $leavePolicy['grant_days'] ?? 0;
+                        $this->casualLeaveGrantDays += ($leavePolicy['grant_days'] ?? 0);
                     }
                 }
             }
         }
 
-
+        $this->casualLeaveGrantDays = round($this->casualLeaveGrantDays, 2);
         // Now $employeeLeaveBalances contains all the rows from employee_leave_balances
         // where emp_id matches and leave_type is "Sick Leave"
         $this->employeeleaveavlid = LeaveRequest::where('emp_id', $employeeId)
@@ -285,6 +285,7 @@ class SickLeaveBalances extends Component
             // Add the sum of opening balance to grantedLeavesCount
             $grantedLeavesCount += $this->countOfOpeningBal->sum() ?? 0;
         }
+        $currentMonth = Carbon::now()->month;
 
         for ($month = $startingMonth; $month <= $lastmonth; $month++) {
             // Reset availed leaves count for this month
@@ -346,7 +347,7 @@ class SickLeaveBalances extends Component
             'datasets' => [
                 [
                     'label' => 'Granted Leaves',
-                    'data' => $grantedLeavesByMonth,
+                    'data' => array_slice($grantedLeavesByMonth, 0, $currentMonth),
                     'backgroundColor' => 'rgba(54, 162, 235, 0.5)',
                     'borderColor' => 'rgba(54, 162, 235, 1)',
                     'borderWidth' => 1

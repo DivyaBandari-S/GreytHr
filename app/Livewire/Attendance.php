@@ -26,7 +26,7 @@ use Carbon\CarbonInterval;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Torann\GeoIP\Facades\GeoIP;
-
+use Illuminate\Support\Facades\Http;
 use function PHPSTORM_META\elementType;
 
 class Attendance extends Component
@@ -44,14 +44,14 @@ class Attendance extends Component
     public $totalWorkingPercentage;
     public $minutesFormatted;
 
-    
+
     public $avgWorkHoursFromJuly = 0;
 
-  
-    public $employeeSecondShiftDetails=null;
-   
 
-   
+    public $employeeSecondShiftDetails = null;
+
+
+
     public $last_out_time;
 
     public $excessHrs;
@@ -108,7 +108,7 @@ class Attendance extends Component
 
     public $startDateForInsights;
     public $toDate;
-    
+
     public $currentDate2recordin;
 
     public $currentDate2recordout;
@@ -331,8 +331,8 @@ class Attendance extends Component
 
         
 
-    return $this->percentageDifference;
-}
+        return $this->percentageDifference;
+    }
 
 
 public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
@@ -341,23 +341,23 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     $employeeId = auth()->guard('emp')->user()->emp_id;
     
 
-    // Retrieve swipe records within the given date range
-    
-    
-        $records = SwipeRecord::where('emp_id', $employeeId)
-        ->whereDate('created_at', '>=', $startDate)
-        ->whereDate('created_at', '<=', $endDate)
-        ->orderBy('created_at', 'asc') // Ensure records are ordered by date and time
-        ->get();
-        
-// Group by date and fetch the first IN and last OUT for each date
-        $dailyRecords = $records->groupBy(function ($record) {
-        return Carbon::parse($record->created_at)->toDateString();
-        })->map(function ($groupedRecords) {
-        $firstIn = $groupedRecords->firstWhere('in_or_out', 'IN');
-        $lastOut = $groupedRecords->where('in_or_out', 'OUT')->sortByDesc('created_at')->first();
+        // Retrieve swipe records within the given date range
 
-        return collect(['first_in' => $firstIn, 'last_out' => $lastOut])->filter(); // Remove nulls
+
+        $records = SwipeRecord::where('emp_id', $employeeId)
+            ->whereDate('created_at', '>=', $startDate)
+            ->whereDate('created_at', '<=', $endDate)
+            ->orderBy('created_at', 'asc') // Ensure records are ordered by date and time
+            ->get();
+
+        // Group by date and fetch the first IN and last OUT for each date
+        $dailyRecords = $records->groupBy(function ($record) {
+            return Carbon::parse($record->created_at)->toDateString();
+        })->map(function ($groupedRecords) {
+            $firstIn = $groupedRecords->firstWhere('in_or_out', 'IN');
+            $lastOut = $groupedRecords->where('in_or_out', 'OUT')->sortByDesc('created_at')->first();
+
+            return collect(['first_in' => $firstIn, 'last_out' => $lastOut])->filter(); // Remove nulls
         });
       
   
@@ -422,11 +422,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $dayMinutes = 0;
         $carbonDate = Carbon::parse($date);
 
-        $isWeekend = $carbonDate->isWeekend();
-        $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
-        $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
-            return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
-        });
+            $isWeekend = $carbonDate->isWeekend();
+            $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
+            $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
+                return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
+            });
 
         if (!$isWeekend && !$isHoliday && !$isOnLeave) {
             foreach ($swipesForDay as $swipe) {
@@ -454,16 +454,16 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         
     }
 
-    if ($workingDaysCount > 0) {
-        $averageMinutes = $totalMinutes / $workingDaysCount;
-    } else {
-        $averageMinutes = 0;
-    }
+        if ($workingDaysCount > 0) {
+            $averageMinutes = $totalMinutes / $workingDaysCount;
+        } else {
+            $averageMinutes = 0;
+        }
 
-    $hours = intdiv($averageMinutes, 60);
-    $minutes = $averageMinutes % 60;
+        $hours = intdiv($averageMinutes, 60);
+        $minutes = $averageMinutes % 60;
 
-    $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
+        $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
 
   
     return $averageWorkHours;
@@ -585,11 +585,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         // Output results
 
         try {
-            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type','hire_date')->first();
-            $this->employeeHireDate=$this->employee->hire_date;
+            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'hire_date')->first();
+            $this->employeeHireDate = $this->employee->hire_date;
             $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
-            $this->start_date_for_insights=Carbon::now()->startOfMonth()->format('Y-m-d');
-            $this->to_date=Carbon::now()->subDay()->toDateString();
+            $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
+            $this->to_date = Carbon::now()->subDay()->toDateString();
             $this->startDateForInsights = $startDateForInsights ?? now()->startOfMonth()->toDateString();
             $this->toDate = $toDate ?? now()->subDay()->toDateString();
             // $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
@@ -604,7 +604,23 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $totalHoursWorked = 0;
             $totalMinutesWorked = 0;
             $ip = request()->ip();
-            $location = GeoIP::getLocation($ip);
+            // Get the IP address and determine location
+            $ip = request()->ip();
+            $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co'); // Use the API URL from .env
+            $response = Http::get("{$ipUrl}/{$ip}/json/");
+
+            if ($response->successful()) {
+                $location = $response->json();
+
+                $lat = $location['latitude'] ?? null;
+                $lon = $location['longitude'] ?? null;
+                $this->country = $location['country_name'] ?? null;
+                $this->city = $location['city'] ?? null;
+                $this->postal_code = $location['postal'] ?? null;
+            } else {
+                // Handle API error
+                Log::error("Failed to fetch IP location data", ['ip' => $ip, 'response' => $response->body()]);
+            }
             $lat = $location['lat'];
             $lon = $location['lon'];
             $this->country = $location['country'];
@@ -622,25 +638,22 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $endOfMonth = '2024-08-31';
 
             $this->employeeShiftDetails = DB::table('employee_details')
-            ->join('company_shifts', function($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
-                     ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
-            })
-            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
-            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
-            ->first();
+                ->join('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                        ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+                })
+                ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+                ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
+                ->first();
 
-            if($this->employeeShiftDetails)
-            {
+            if ($this->employeeShiftDetails) {
                 $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
-                $this->shiftEndTime=Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
-            }
-            else
-            {
+                $this->shiftEndTime = Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+            } else {
                 $this->shiftStartTime = null;
-                $this->shiftEndTime=null;
+                $this->shiftEndTime = null;
             }
-            while ($currentDate->lte($endDate)) { 
+            while ($currentDate->lte($endDate)) {
                 $dateString = $currentDate->toDateString();
 
                 // Get "IN" and "OUT" times for the current date
@@ -796,7 +809,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     {
         try {
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $intime=SwipeRecord::where('emp_id', $employeeId)->where('in_or_out','IN')->whereDate('created_at', $date)->exists();    
+            $intime = SwipeRecord::where('emp_id', $employeeId)->where('in_or_out', 'IN')->whereDate('created_at', $date)->exists();
 
 
             return $intime;
@@ -818,8 +831,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $employeeId = auth()->guard('emp')->user()->emp_id;
             return LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
-                ->where('from_session','Session 1')
-                ->where('to_session','Session 2')
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 2')
                 ->where(function ($query) use ($date) {
                     $query->whereDate('from_date', '<=', $date)
                         ->whereDate('to_date', '>=', $date);
@@ -833,91 +846,86 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
     }
     private function isEmployeeHalfDayLeaveOnDate($date, $employeeId)
-{
-    try {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-        $sessionArray=[];
-        $leaveRecord=null;
-        $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date, $employeeId);
-       
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+            $sessionArray = [];
+            $leaveRecord = null;
+            $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date, $employeeId);
 
-        $session1Check = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_applications.leave_status', 2)
-            ->where('from_session', 'Session 1')
-            ->where('to_session', 'Session 1')
-            ->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>=', $date)
-            ->exists();
-            $session2Check = LeaveRequest::where('emp_id', $employeeId)
-            ->where('leave_applications.leave_status', 2)
-            ->where('from_session', 'Session 2')
-            ->where('to_session', 'Session 2')
-            ->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>=', $date)
-            ->exists();    
 
-        
-
-        if ($session1Check) {
-           
-        } elseif ($session2Check) {
-           
-        } else {
-            
-        }
-        
-        if ($session1Check) {
-            // Case when both sessions are 'Session 1'
-            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+            $session1Check = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
                 ->where('from_session', 'Session 1')
                 ->where('to_session', 'Session 1')
-                ->where(function ($query) use ($date) {
-                    $query->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>=', $date);
-                })
-                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->whereDate('from_date', '<=', $date)
+                ->whereDate('to_date', '>=', $date)
                 ->exists();
-                $sessionArray[] = 'Session 1'; 
-           
-        }
-        
-        if($session2Check) {
-            // Case when sessions are not both 'Session 1'
-            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+            $session2Check = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
                 ->where('from_session', 'Session 2')
                 ->where('to_session', 'Session 2')
-                ->where(function ($query) use ($date) {
-                    $query->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>=', $date);
-                })
-                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                ->whereDate('from_date', '<=', $date)
+                ->whereDate('to_date', '>=', $date)
                 ->exists();
-                $sessionArray[] = 'Session 2'; 
-            
-        }
 
-     
-        
-        return [
-            'session' => $sessionArray,
-            'leaveRecord' => $leaveRecord,
-            'sessionCheck' => (($session1Check xor $session2Check) xor $isBeforeToDate) ? true : false,
-            'doubleSessionCheck'=>($session1Check && $session2Check) ? true : false
+
+
+            if ($session1Check) {
+            } elseif ($session2Check) {
+            } else {
+            }
+
+            if ($session1Check) {
+                // Case when both sessions are 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 1')
+                    ->where('to_session', 'Session 1')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+                $sessionArray[] = 'Session 1';
+            }
+
+            if ($session2Check) {
+                // Case when sessions are not both 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 2')
+                    ->where('to_session', 'Session 2')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>=', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+                $sessionArray[] = 'Session 2';
+            }
+
+
+
+            return [
+                'session' => $sessionArray,
+                'leaveRecord' => $leaveRecord,
+                'sessionCheck' => (($session1Check xor $session2Check) xor $isBeforeToDate) ? true : false,
+                'doubleSessionCheck' => ($session1Check && $session2Check) ? true : false
 
         ];
     } catch (\Exception $e) {
        
 
-        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
 
-        return [
-            'session' => null,
-            'leaveRecord' => false,
-        ];
+            return [
+                'session' => null,
+                'leaveRecord' => false,
+            ];
+        }
     }
-}
 
     private function caluclateNumberofLeaves($startDate, $endDate, $employeeId)
     {
@@ -949,9 +957,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return LeaveRequest::where('emp_id', $employeeId)
                 ->whereDate('from_date', '<=', $date)
                 ->whereDate('to_date', '>=', $date)
-                ->where('from_session','Session 1')
-                ->where('to_session','Session 1')
-                ->where('leave_status',2)
+                ->where('from_session', 'Session 1')
+                ->where('to_session', 'Session 1')
+                ->where('leave_status', 2)
                 ->value('leave_type');
         } catch (\Exception $e) {
           
@@ -965,9 +973,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return LeaveRequest::where('emp_id', $employeeId)
                 ->whereDate('from_date', '<=', $date)
                 ->whereDate('to_date', '>=', $date)
-                ->where('from_session','Session 2')
-                ->where('to_session','Session 2')
-                ->where('leave_status',2)
+                ->where('from_session', 'Session 2')
+                ->where('to_session', 'Session 2')
+                ->where('leave_status', 2)
                 ->value('leave_type');
         } catch (\Exception $e) {
            
@@ -982,7 +990,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             return LeaveRequest::where('emp_id', $employeeId)
                 ->whereDate('from_date', '<=', $date)
                 ->whereDate('to_date', '>=', $date)
-                ->where('leave_status',2)
+                ->where('leave_status', 2)
                 ->value('leave_type');
         } catch (\Exception $e) {
            
@@ -1006,148 +1014,146 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         return false;
     }
     private function isEmployeeFullDayLeaveOnDate($date, $employeeId)
-{
-    try {
-        $employeeId = auth()->guard('emp')->user()->emp_id;
-      
-        $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
+    {
+        try {
+            $employeeId = auth()->guard('emp')->user()->emp_id;
+
+            $sessionCheck = LeaveRequest::where('emp_id', $employeeId)
                 ->where('leave_applications.leave_status', 2)
                 ->where('from_session', 'Session 1')
                 ->where('to_session', 'Session 1')
                 ->exists();
-        
-        if ($sessionCheck) {
-            // Case when both sessions are 'Session 1'
-            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_applications.leave_status', 2)
-                ->where('from_session', 'Session 1')
-                ->where('to_session', 'Session 1')
-                ->where(function ($query) use ($date) {
-                    $query->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>', $date);
-                })
-                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-                ->exists();
-                
-        } else {
-            // Case when sessions are not both 'Session 1'
-            $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
-                ->where('leave_applications.leave_status', 2)
-                ->where('from_session', 'Session 2')
-                ->where('to_session', 'Session 2')
-                ->where(function ($query) use ($date) {
-                    $query->whereDate('from_date', '<=', $date)
-                        ->whereDate('to_date', '>', $date);
-                })
-                ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
-                ->exists();
-              
+
+            if ($sessionCheck) {
+                // Case when both sessions are 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 1')
+                    ->where('to_session', 'Session 1')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+            } else {
+                // Case when sessions are not both 'Session 1'
+                $leaveRecord = LeaveRequest::where('emp_id', $employeeId)
+                    ->where('leave_applications.leave_status', 2)
+                    ->where('from_session', 'Session 2')
+                    ->where('to_session', 'Session 2')
+                    ->where(function ($query) use ($date) {
+                        $query->whereDate('from_date', '<=', $date)
+                            ->whereDate('to_date', '>', $date);
+                    })
+                    ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
+                    ->exists();
+            }
+            return $leaveRecord;
+        } catch (\Exception $e) {
+            Log::error('Error in isEmployeeHalfDayLeaveOnDate method: ' . $e->getMessage());
+            FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
+            return false; // Return false to handle the error gracefully
         }
-        return $leaveRecord;
-    } catch (\Exception $e) {
-        Log::error('Error in isEmployeeHalfDayLeaveOnDate method: ' . $e->getMessage());
-        FlashMessageHelper::flashError('An error occurred while checking employee leave. Please try again later.');
-        return false; // Return false to handle the error gracefully
     }
-}
-public function findExceptioninAttendance($date)
-{
-    $attendanceException = AttendanceException::where('emp_id', auth()->guard('emp')->user()->emp_id)
-    ->whereDate('from_date', '<=', $date) // from_date should be before or equal to $date
-    ->whereDate('to_date', '>=', $date)   // to_date should be after or equal to $date
-    ->value('status');
-    return $attendanceException;
-}
+    public function findExceptioninAttendance($date)
+    {
+        $attendanceException = AttendanceException::where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->whereDate('from_date', '<=', $date) // from_date should be before or equal to $date
+            ->whereDate('to_date', '>=', $date)   // to_date should be after or equal to $date
+            ->value('status');
+        return $attendanceException;
+    }
 
 
-public function isEmployeeAssignedDifferentShift($date, $empId)
-{
-    $shiftExists = false;
-    $shiftType = null;
+    public function isEmployeeAssignedDifferentShift($date, $empId)
+    {
+        $shiftExists = false;
+        $shiftType = null;
 
-    $employee = EmployeeDetails::where('emp_id', $empId)->first();
+        $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
-    // Return array with default values if employee not found or no shift entries assigned
-    if (!$employee || empty($employee->shift_entries)) {
+        // Return array with default values if employee not found or no shift entries assigned
+        if (!$employee || empty($employee->shift_entries)) {
+            return [
+                'shiftExists' => $shiftExists,
+                'shiftType' => $shiftType,
+            ];
+        }
+
+        $shiftEntries = json_decode($employee->shift_entries, true);
+        $date = Carbon::parse($date);
+
+        foreach ($shiftEntries as $shift) {
+            $fromDate = Carbon::parse($shift['from_date']);
+            $toDate = Carbon::parse($shift['to_date']);
+
+            if ($date->between($fromDate, $toDate)) {
+                $shiftExists = true;
+                $shiftType = $shift['shift_type'];
+            } elseif ($date->isSameDay($fromDate) || $date->isSameDay($toDate)) {
+                $shiftExists = true;
+                $shiftType = $shift['shift_type'];
+            }
+        }
+
         return [
             'shiftExists' => $shiftExists,
             'shiftType' => $shiftType,
         ];
     }
 
-    $shiftEntries = json_decode($employee->shift_entries, true);
-    $date = Carbon::parse($date);
-
-    foreach ($shiftEntries as $shift) {
-        $fromDate = Carbon::parse($shift['from_date']);
-        $toDate = Carbon::parse($shift['to_date']);
-
-        if ($date->between($fromDate, $toDate)) {
-            $shiftExists = true;
-            $shiftType = $shift['shift_type'];
-        } elseif ($date->isSameDay($fromDate) || $date->isSameDay($toDate)) {
-            $shiftExists = true;
-            $shiftType = $shift['shift_type'];
-        }
-    }
-
-    return [
-        'shiftExists' => $shiftExists,
-        'shiftType' => $shiftType,
-    ];
-}
-
 
     //This function will help us to create the calendar
     public function generateCalendar()
     {
         try {
-            $this->leaveTypes=[];
-            $leavestatusforsession1=null;
-            $leavestatusforsession2=null;
+            $this->leaveTypes = [];
+            $leavestatusforsession1 = null;
+            $leavestatusforsession2 = null;
             $this->employeeShiftDetailsForCalendar = DB::table('employee_details')
-            ->join('company_shifts', function($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
-                     ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
-            })
-            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
-            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
-            ->first();
-        
+                ->join('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                        ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+                })
+                ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+                ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
+                ->first();
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
-            
-            
+
+
             $firstDay = Carbon::create($this->year, $this->month, 1);
-            
+
             $daysInMonth = $firstDay->daysInMonth;
-            
+
             $today = now();
 
-           
+
 
             $calendar = [];
             $dayCount = 1;
 
             // Fetch public holidays for the current month
             $publicHolidays = $this->getPublicHolidaysForMonth($this->year, $this->month);
-            
-       
+
+
 
             $firstDayOfWeek = $firstDay->dayOfWeek;
-           
-           
+
+
 
             $startOfPreviousMonth = $firstDay->copy()->subMonth();
-            
+
             $publicHolidaysPreviousMonth = $this->getPublicHolidaysForMonth(
                 $startOfPreviousMonth->year,
                 $startOfPreviousMonth->month
             );
-           
+
             $lastDayOfPreviousMonth = $firstDay->copy()->subDay();
-            
-           
+
+
 
             for ($i = 0; $i < ceil(($firstDayOfWeek + $daysInMonth) / 7); $i++) {
                 $week = [];
@@ -1155,7 +1161,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                 for ($j = 0; $j < 7; $j++) {
                     if ($i === 0 && $j < $firstDay->dayOfWeek) {
                         $previousMonthDays = $lastDayOfPreviousMonth->copy()->subDays($firstDay->dayOfWeek - $j - 1);
-                      
+
 
                         $week[] = [
                             'day' => $previousMonthDays->day,
@@ -1166,15 +1172,15 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                             'isRegularised' => false,
                             'backgroundColor' => '',
                             'status' => '',
-                            'leavestatusforsession1'=>null,
-                            'leavestatusforsession2'=>null,
-                            'onHalfDayLeave'=>'',
-                            'onFullDayLeave'=>'',
+                            'leavestatusforsession1' => null,
+                            'leavestatusforsession2' => null,
+                            'onHalfDayLeave' => '',
+                            'onFullDayLeave' => '',
                             'onleave' => '',
-                            'halfdaypresentforsession1'=>false,
-                            'halfdaypresentforsession2'=>false,
-                            'session2leave'=>null,
-                            'assignedDifferentShift'=>null
+                            'halfdaypresentforsession1' => false,
+                            'halfdaypresentforsession2' => false,
+                            'session2leave' => null,
+                            'assignedDifferentShift' => null
 
                         ];
                     } elseif ($dayCount <= $daysInMonth) {
@@ -1185,68 +1191,60 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                         $isHalfDayPresent = false;
                         $isHalfDayPresentForSession1 = false;
                         $isHalfDayPresentForSession2 = false;
-                        $leaveTypeForSession1=null;
-                        $leaveTypeForSession2=null;
-                        $halfdaypresent=null;
-                        $isBeforeToDate=null; 
+                        $leaveTypeForSession1 = null;
+                        $leaveTypeForSession2 = null;
+                        $halfdaypresent = null;
+                        $isBeforeToDate = null;
                         $isToday = $dayCount === $today->day && $this->month === $today->month && $this->year === $today->year;
-                        $isexceptioninAttendance=$this->findExceptioninAttendance($date);
-                     
-                        $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray())||$isexceptioninAttendance=='Holiday';
-                       
+                        $isexceptioninAttendance = $this->findExceptioninAttendance($date);
+
+                        $isPublicHoliday = in_array($date->toDateString(), $publicHolidays->pluck('date')->toArray()) || $isexceptioninAttendance == 'Holiday';
+
                         $isHoliday = HolidayCalendar::where('date', $date->toDateString())->exists();
-                        $isexceptioninHoliday=($isexceptioninAttendance=='Holiday') ? true : false;
+                        $isexceptioninHoliday = ($isexceptioninAttendance == 'Holiday') ? true : false;
                         $isRegularised = $this->isEmployeeRegularisedOnDate($date->toDateString());
-                       
-                        $isEmployeeAssignedDifferentShift=$this->isEmployeeAssignedDifferentShift($date->toDateString(),$employeeId)['shiftExists'];
-                        $employeesecondshifttype=$this->isEmployeeAssignedDifferentShift($date->toDateString(),$employeeId)['shiftType'];
-                 
-                        $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId)||$isexceptioninAttendance=='Leave';
-                        
-                          
+
+                        $isEmployeeAssignedDifferentShift = $this->isEmployeeAssignedDifferentShift($date->toDateString(), $employeeId)['shiftExists'];
+                        $employeesecondshifttype = $this->isEmployeeAssignedDifferentShift($date->toDateString(), $employeeId)['shiftType'];
+
+                        $isOnLeave = $this->isEmployeeLeaveOnDate($date->toDateString(), $employeeId) || $isexceptioninAttendance == 'Leave';
+
+
                         $isBeforeToDate = $this->isEmployeeFullDayLeaveOnDate($date->toDateString(), $employeeId);
-                        
-                        if($isBeforeToDate)
-                        {
-                            $isOnHalfDayLeave=false;
+
+                        if ($isBeforeToDate) {
+                            $isOnHalfDayLeave = false;
                             $isOnSecondSessionLeave[] = [];
-                        }
-                        else
-                        {
+                        } else {
                             $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['leaveRecord'];
                             $isOnSecondSessionLeave[] = $this->isEmployeeHalfDayLeaveOnDate($date->toDateString(), $employeeId)['session'];
-                             
-
-                           
                         }
-                       
-                    
 
-                       if (count($isOnSecondSessionLeave[0]) > 1) {
-                        
 
-                        $leaveTypeForSession1 = $this->getLeaveTypeForSession1($date->toDateString(), $employeeId);
-                     
-                        $leaveTypeForSession2 = $this->getLeaveTypeForSession2($date->toDateString(), $employeeId);
-                       
-                    } else {
-                        
 
-                        $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
-                       
-                    }
+                        if (count($isOnSecondSessionLeave[0]) > 1) {
 
-                       
-                       
+
+                            $leaveTypeForSession1 = $this->getLeaveTypeForSession1($date->toDateString(), $employeeId);
+
+                            $leaveTypeForSession2 = $this->getLeaveTypeForSession2($date->toDateString(), $employeeId);
+                        } else {
+
+
+                            $leaveType = $this->getLeaveType($date->toDateString(), $employeeId);
+                        }
+
+
+
                         if ($leaveType && !in_array($leaveType, $this->leaveTypes)) {
                             $this->leaveTypes[] = $leaveType;
                         }
                         // Get leave types for session 1 and session 2
                         $leaveTypeForSession1 = $this->getLeaveTypeForSession1($date->toDateString(), $employeeId);
-                       
+
 
                         $leaveTypeForSession2 = $this->getLeaveTypeForSession2($date->toDateString(), $employeeId);
-                         // Add session leave types to leaveTypes array if they are not already present
+                        // Add session leave types to leaveTypes array if they are not already present
                         if ($leaveTypeForSession1 && !in_array($leaveTypeForSession1, $this->leaveTypes)) {
                             $this->leaveTypes[] = $leaveTypeForSession1;
                         }
@@ -1254,153 +1252,121 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                         if ($leaveTypeForSession2 && !in_array($leaveTypeForSession2, $this->leaveTypes)) {
                             $this->leaveTypes[] = $leaveTypeForSession2;
                         }
-                       
+
                         $backgroundColor = $isPublicHoliday ? 'background-color: IRIS;' : '';
-                        if (!$isOnLeave && !$isHoliday && !$date->isWeekend()&& $isexceptioninAttendance!="Present") {
+                        if (!$isOnLeave && !$isHoliday && !$date->isWeekend() && $isexceptioninAttendance != "Present") {
                             $isPresentOnDate = $this->isEmployeePresentOnDate($date);
                             $isEmployeeRegularisedOnDate = $this->isEmployeeRegularisedOnDate($date);
-                            if ($isPresentOnDate||$isEmployeeRegularisedOnDate) {
-                               
+                            if ($isPresentOnDate || $isEmployeeRegularisedOnDate) {
+
                                 // Fetch both IN and OUT records together to minimize queries
                                 // Default to IN if no OUT time
                                 $swipeRecords = SwipeRecord::where('emp_id', $employeeId)
                                     ->whereDate('created_at', $date->toDateString())
                                     ->whereIn('in_or_out', ['IN', 'OUT'])
                                     ->get();
-                               $swipeoutRecords = SwipeRecord::where('emp_id', $employeeId)
+                                $swipeoutRecords = SwipeRecord::where('emp_id', $employeeId)
                                     ->whereDate('created_at', $date->toDateString())
                                     ->whereIn('in_or_out', ['OUT'])
                                     ->orderByDesc('created_at')
-                                    ->get();    
-                                if($isEmployeeRegularisedOnDate)
-                                {
-                                    $inSwipeTime = SwipeRecord::where('emp_id',$employeeId)->where('in_or_out','IN')->where('is_regularized',1)->whereDate('created_at',$date->toDateString())->first();
+                                    ->get();
+                                if ($isEmployeeRegularisedOnDate) {
+                                    $inSwipeTime = SwipeRecord::where('emp_id', $employeeId)->where('in_or_out', 'IN')->where('is_regularized', 1)->whereDate('created_at', $date->toDateString())->first();
                                     $outSwipeTime = SwipeRecord::where('emp_id', $employeeId)
-                                                    ->where('in_or_out', 'OUT')
-                                                    ->where('is_regularized', 1)
-                                                    ->whereDate('created_at', $date->toDateString())
-                                                    ->first() ?? $inSwipeTime;
-                                }
-                                else
-                                {
+                                        ->where('in_or_out', 'OUT')
+                                        ->where('is_regularized', 1)
+                                        ->whereDate('created_at', $date->toDateString())
+                                        ->first() ?? $inSwipeTime;
+                                } else {
                                     $inSwipeTime = $swipeRecords->firstWhere('in_or_out', 'IN');
                                     $outSwipeTime = $swipeoutRecords->firstWhere('in_or_out', 'OUT') ?? $inSwipeTime;
                                 }
-                                
+
 
                                 if ($inSwipeTime) {
-                                   
                                 } else {
-                                    
                                 }
 
                                 if ($outSwipeTime) {
-                                   
                                 } else {
-                                   
                                 }
                                 if ($inSwipeTime && $outSwipeTime) {
                                     $inTime = Carbon::parse($inSwipeTime->swipe_time);
                                     $outTime = Carbon::parse($outSwipeTime->swipe_time);
- 
-                                   
-                                    if(!empty($this->employeeShiftDetailsForCalendar))
-                                    {
+
+
+                                    if (!empty($this->employeeShiftDetailsForCalendar)) {
                                         $shiftStartTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_start_time);
                                         $shiftEndTimeForCalendar = \Carbon\Carbon::parse($this->employeeShiftDetailsForCalendar->shift_end_time);
-                                    }
-                                    else
-                                    {
+                                    } else {
                                         $shiftStartTimeForCalendar = null;
                                         $shiftEndTimeForCalendar = null;
-                                    
                                     }
-                                  
-                                    
-                                    if(!empty($shiftStartTimeForCalendar))
-                                    {
+
+
+                                    if (!empty($shiftStartTimeForCalendar)) {
                                         $startTimeForSession1 = \Carbon\Carbon::createFromTime(
                                             $shiftStartTimeForCalendar->hour,
                                             $shiftStartTimeForCalendar->minute,
                                             $shiftStartTimeForCalendar->second
                                         );
+                                    } else {
+                                        $startTimeForSession1 = null;
+                                    }
 
-                                    }
-                                    else
-                                    {
-                                        $startTimeForSession1=null;
-                                    }
-                                    
-                                  
+
                                     // 10:00 AM
-                if(!empty($shiftEndTimeForSession1))  
-                {
-                    $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30); 
-                
-                    $endTimeForSession1 = Carbon::createFromTime(
+                                    if (!empty($shiftEndTimeForSession1)) {
+                                        $shiftEndTimeForSession1 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(30);
+
+                                        $endTimeForSession1 = Carbon::createFromTime(
                                             $shiftEndTimeForSession1->hour,
                                             $shiftEndTimeForSession1->minute,
                                             $shiftEndTimeForSession1->second
                                         );
-                }                  
-                else
-                {
-                 
-                    $shiftEndTimeForSession1 =null; 
-                
-                    $endTimeForSession1 =null;
-                }
-                if(!empty($shiftStartTimeForCalendar))   
-                {
-                    $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);                      
-                    $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
-                    $endTimeForSession2 = Carbon::createFromTime(
-                            $shiftEndTimeForCalendar->hour,
-                            $shiftEndTimeForCalendar->minute,
-                            $shiftEndTimeForCalendar->second
-                        );
-                }  
-                else
-                {
-                    $shiftStartTimeForSession2 =null;                      
-                    $startTimeForSession2 = null; // 10:00 AM
-                    $endTimeForSession2 =null;
-                }               
-               
-                    
-                    
+                                    } else {
+
+                                        $shiftEndTimeForSession1 = null;
+
+                                        $endTimeForSession1 = null;
+                                    }
+                                    if (!empty($shiftStartTimeForCalendar)) {
+                                        $shiftStartTimeForSession2 = $shiftStartTimeForCalendar->copy()->addHours(4)->addMinutes(31);
+                                        $startTimeForSession2 = Carbon::createFromTime($shiftStartTimeForSession2->hour, $shiftStartTimeForSession2->minute, $shiftStartTimeForSession2->second); // 10:00 AM
+                                        $endTimeForSession2 = Carbon::createFromTime(
+                                            $shiftEndTimeForCalendar->hour,
+                                            $shiftEndTimeForCalendar->minute,
+                                            $shiftEndTimeForCalendar->second
+                                        );
+                                    } else {
+                                        $shiftStartTimeForSession2 = null;
+                                        $startTimeForSession2 = null; // 10:00 AM
+                                        $endTimeForSession2 = null;
+                                    }
+
+
+
                                     $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
-                                  
+
 
                                     $hours = floor($timeDifference / 60);
                                     $minutes = $timeDifference % 60;
-                                 
+
                                     if ($timeDifference == 0) {
                                         $isAbsentFor = true;
-                                       
                                     } elseif ($timeDifference < 270) {
                                         $isHalfDayPresent = true;
-                                       
-                                        if($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1))
-                                        {
+
+                                        if ($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1)) {
                                             $isHalfDayPresentForSession1 = true;
-                                           
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             $isHalfDayPresentForSession2 = true;
-                                        
                                         }
                                         // Between 4 hours and 8 hours, mark as half-day present
-                                        
-                                    }
 
-                                  
-                                }
-                                elseif($inSwipeTime==null)
-                                {
+                                    }
+                                } elseif ($inSwipeTime == null) {
                                     $isAbsentFor = false;
-                                    
                                 }
                             } else {
                                 $inSwipeTime = null;
@@ -1409,10 +1375,9 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
 
                             }
                         }
-                        if($isBeforeToDate)
-                        {
-                                   
-                            
+                        if ($isBeforeToDate) {
+
+
                             switch ($leaveType) {
                                 case 'Casual Leave Probation':
                                     $status = 'CLP';
@@ -1439,47 +1404,41 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                                     $status = 'L';
                                     break;
                             }
-                            
-                           
-                        }
-                        elseif($isOnHalfDayLeave)
-                        {
+                        } elseif ($isOnHalfDayLeave) {
 
 
-                            if($leaveTypeForSession1)
-                            {
+                            if ($leaveTypeForSession1) {
                                 switch ($leaveTypeForSession1) {
                                     case 'Casual Leave Probation':
-                                        $leavestatusforsession1= 'CLP';
+                                        $leavestatusforsession1 = 'CLP';
                                         break;
                                     case 'Sick Leave':
-                                        $leavestatusforsession1= 'SL';
-                                      
+                                        $leavestatusforsession1 = 'SL';
+
                                         break;
                                     case 'Loss Of Pay':
-                                        $leavestatusforsession1= 'LOP';
-                                        
+                                        $leavestatusforsession1 = 'LOP';
+
                                         break;
                                     case 'Casual Leave':
-                                        $leavestatusforsession1= 'CL';
-                                       
+                                        $leavestatusforsession1 = 'CL';
+
                                         break;
                                     case 'Marriage Leave':
-                                        $leavestatusforsession1= 'ML';
+                                        $leavestatusforsession1 = 'ML';
                                         break;
                                     case 'Paternity Leave':
-                                        $leavestatusforsession1= 'PL';
+                                        $leavestatusforsession1 = 'PL';
                                         break;
                                     case 'Maternity Leave':
-                                        $leavestatusforsession1= 'MTL';
+                                        $leavestatusforsession1 = 'MTL';
                                         break;
                                     default:
-                                        $leavestatusforsession1= 'L';
+                                        $leavestatusforsession1 = 'L';
                                         break;
-                                }    
+                                }
                             }
-                            if($leaveTypeForSession2)
-                            {
+                            if ($leaveTypeForSession2) {
                                 switch ($leaveTypeForSession2) {
                                     case 'Casual Leave Probation':
                                         $leavestatusforsession2 = 'CLP';
@@ -1507,8 +1466,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                                         break;
                                 }
                             }
-                            if($leaveType)
-                            {
+                            if ($leaveType) {
                                 switch ($leaveType) {
                                     case 'Casual Leave Probation':
                                         $status = 'CLP';
@@ -1544,9 +1502,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                             } else {
                                 $halfdaypresent = 'P';
                             }
-                           
-                        }
-                        elseif ($isOnLeave) {
+                        } elseif ($isOnLeave) {
                             switch ($leaveType) {
                                 case 'Casual Leave Probation':
                                     $status = 'CLP';
@@ -1577,8 +1533,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                             $isAbsent = !$this->isEmployeePresentOnDate($date->toDateString()) || $isAbsentFor;
                             if ($isexceptioninAttendance === 'Present') {
                                 $status = 'P';
-                            } 
-                            elseif ($isAbsent) {
+                            } elseif ($isAbsent) {
                                 $status = 'A';
                             } elseif ($isHalfDayPresent) {
                                 $status = 'HP';
@@ -1597,16 +1552,16 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                             'isPreviousMonth' => false,
                             'backgroundColor' => $backgroundColor,
                             'onleave' => $isOnLeave,
-                            'onHalfDayLeave'=>$isOnHalfDayLeave,
-                            'onFullDayLeave'=>$isBeforeToDate,
+                            'onHalfDayLeave' => $isOnHalfDayLeave,
+                            'onFullDayLeave' => $isBeforeToDate,
                             'status' => $status,
-                            'leavestatusforsession1'=>$leavestatusforsession1,
-                            'leavestatusforsession2'=>$leavestatusforsession2,
-                            'halfdaypresentforsession1'=>$isHalfDayPresentForSession1,
-                            'halfdaypresentforsession2'=>$isHalfDayPresentForSession2,
-                            'halfdaypresent'=>$halfdaypresent,
-                            'session2leave'=>$isOnSecondSessionLeave,
-                            'assignedDifferentShift'=>$employeesecondshifttype,
+                            'leavestatusforsession1' => $leavestatusforsession1,
+                            'leavestatusforsession2' => $leavestatusforsession2,
+                            'halfdaypresentforsession1' => $isHalfDayPresentForSession1,
+                            'halfdaypresentforsession2' => $isHalfDayPresentForSession2,
+                            'halfdaypresent' => $halfdaypresent,
+                            'session2leave' => $isOnSecondSessionLeave,
+                            'assignedDifferentShift' => $employeesecondshifttype,
                         ];
 
                         $dayCount++;
@@ -1620,16 +1575,16 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                             'isNextMonth' => true,
                             'backgroundColor' => '',
                             'onleave' => false,
-                            'onHalfDayLeave'=>false,
+                            'onHalfDayLeave' => false,
                             'status' => '',
-                            'leavestatusforsession1'=>null,
-                            'leavestatusforsession2'=>null,
-                            'halfdaypresentforsession1'=>false,
-                            'halfdaypresentforsession2'=>false,
-                            'halfdaypresent'=>'',
-                            'onFullDayLeave'=>'',
-                            'session2leave'=>null,
-                             'assignedDifferentShift'=>null,
+                            'leavestatusforsession1' => null,
+                            'leavestatusforsession2' => null,
+                            'halfdaypresentforsession1' => false,
+                            'halfdaypresentforsession2' => false,
+                            'halfdaypresent' => '',
+                            'onFullDayLeave' => '',
+                            'session2leave' => null,
+                            'assignedDifferentShift' => null,
                         ];
                         $dayCount++;
                     }
@@ -1655,7 +1610,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
 
             $this->dateToCheck = $date1;
 
-            if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')  ) {
+            if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
 
                 $this->changeDate = 1;
             }
@@ -1676,18 +1631,17 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
             $isSwipedIn = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'In')->exists();
             $isSwipedOut = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'Out')->exists();
 
-            
-            $this->employeeSecondShift=$this->isEmployeeAssignedDifferentShift($date1,auth()->guard('emp')->user()->emp_id)['shiftType'];
+
+            $this->employeeSecondShift = $this->isEmployeeAssignedDifferentShift($date1, auth()->guard('emp')->user()->emp_id)['shiftType'];
             $this->employeeSecondShiftDetails = DB::table('employee_details')
-            ->join('company_shifts', function($join) {
-                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id');
- 
-            })->where('company_shifts.shift_name',$this->employeeSecondShift)
-            ->where('emp_id',auth()->guard('emp')->user()->emp_id)
-            ->select('company_shifts.shift_start_time','company_shifts.shift_end_time','company_shifts.shift_name', 'employee_details.*')
-            ->first();
-            
-           
+                ->join('company_shifts', function ($join) {
+                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id');
+                })->where('company_shifts.shift_name', $this->employeeSecondShift)
+                ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
+                ->first();
+
+
             if (!$isSwipedIn) {
                 // Employee did not swipe in
                 $this->selectedDate = $date1;
@@ -1697,10 +1651,9 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                 $this->selectedDate = $date1;
                 $this->status = 'P';
             }
-         
+
             $this->updateDate($date1);
             $this->dateclicked = $date1;
-           
         } catch (\Exception $e) {
             
             FlashMessageHelper::flashError('An error occurred while processing the date click. Please try again later.');
@@ -1736,48 +1689,47 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
         ->whereDate('created_at', $date)
         ->first();
 
-    // Fetch OUT swipe record
-        $outSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-            ->where('in_or_out', 'OUT')
-            ->whereDate('created_at', $date)
-            ->orderByDesc('created_at')
-            ->first();
+            // Fetch OUT swipe record
+            $outSwipeRecord = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'OUT')
+                ->whereDate('created_at', $date)
+                ->orderByDesc('created_at')
+                ->first();
+        }
+        // Fetch IN swipe record
 
+
+        // Log fetched swipe records
+        Log::info('IN Swipe Record:', ['data' => $inSwipeRecord]);
+        Log::info('OUT Swipe Record:', ['data' => $outSwipeRecord]);
+
+        if ($inSwipeRecord && $outSwipeRecord) {
+            // Parse swipe times using Carbon
+            $inTime = Carbon::parse($inSwipeRecord->swipe_time);
+            $outTime = Carbon::parse($outSwipeRecord->swipe_time);
+
+            Log::info('Parsed IN Time:', ['time' => $inTime]);
+            Log::info('Parsed OUT Time:', ['time' => $outTime]);
+
+            // Calculate the difference
+            $timeDifference = $inTime->diff($outTime);
+            $formattedDifference = $timeDifference->format('%h hours %i minutes');
+            $totalMinutes = $inTime->diffInMinutes($outTime);
+
+            // Log calculated results
+            Log::info('Time Difference:', ['formatted' => $formattedDifference, 'total_minutes' => $totalMinutes]);
+
+            return [
+                'formatted_difference' => $formattedDifference,
+                'total_minutes' => $totalMinutes,
+            ];
+        }
+
+        // Log missing swipe records case
+        Log::warning('Swipe records missing for date:', ['date' => $date]);
+
+        return null; // Return null if records are not found
     }
-    // Fetch IN swipe record
-    
-
-    // Log fetched swipe records
-    Log::info('IN Swipe Record:', ['data' => $inSwipeRecord]);
-    Log::info('OUT Swipe Record:', ['data' => $outSwipeRecord]);
-
-    if ($inSwipeRecord && $outSwipeRecord) {
-        // Parse swipe times using Carbon
-        $inTime = Carbon::parse($inSwipeRecord->swipe_time);
-        $outTime = Carbon::parse($outSwipeRecord->swipe_time);
-
-        Log::info('Parsed IN Time:', ['time' => $inTime]);
-        Log::info('Parsed OUT Time:', ['time' => $outTime]);
-
-        // Calculate the difference
-        $timeDifference = $inTime->diff($outTime);
-        $formattedDifference = $timeDifference->format('%h hours %i minutes');
-        $totalMinutes = $inTime->diffInMinutes($outTime);
-
-        // Log calculated results
-        Log::info('Time Difference:', ['formatted' => $formattedDifference, 'total_minutes' => $totalMinutes]);
-
-        return [
-            'formatted_difference' => $formattedDifference,
-            'total_minutes' => $totalMinutes,
-        ];
-    }
-
-    // Log missing swipe records case
-    Log::warning('Swipe records missing for date:', ['date' => $date]);
-
-    return null; // Return null if records are not found
-}
     public function updatedToDate($value)
     {
         try {
@@ -1798,82 +1750,67 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
         $absentDays = 0;
 
         // Add a log entry for the start and end date
-        Log::info('Calculating total number of absents between: ' . $startDate->format('Y-m-d') . ' and ' . $endDate->format('Y-m-d').'for employee Id'.auth()->guard('emp')->user()->emp_id);
+        Log::info('Calculating total number of absents between: ' . $startDate->format('Y-m-d') . ' and ' . $endDate->format('Y-m-d') . 'for employee Id' . auth()->guard('emp')->user()->emp_id);
 
-        $totalMinutes=null;
-    // Loop through each date between start and end date
+        $totalMinutes = null;
+        // Loop through each date between start and end date
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
-        
-        // Log the current date being checked
-        Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
-        Log::info('Checking for weekend on: ' . $date->format('Y-m-d') . 
-          '. Is weekend: ' . ($date->isWeekend() ? 'Yes' : 'No'));
-        if(!$date->isWeekend())
-        {
-            Log::info('Checking if date is a holiday: ' . $date->format('Y-m-d'));
-            $holiday=HolidayCalendar::where('date',$date)->exists();
-            Log::info('Is holiday: ' . ($holiday ? 'Yes' : 'No'));
-            if(!$holiday)
-            {
-                Log::info('Checking leave details for Date: ' . $date->format('Y-m-d') . ' and Employee ID: ' . auth()->guard('emp')->user()->emp_id);
-                $isOnLeave=$this->isEmployeeLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id);
-                Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
-                $isOnFullDayLeave=$this->isEmployeeFullDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id);
-                Log::info('Is on full-day leave: ' . ($isOnFullDayLeave ? 'Yes' : 'No'));
-                $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id)['sessionCheck'];
-                
-                $isOnHalfDayLeaveforDifferentSessions=$this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'),auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
-                Log::info('Is on half-day leave (session check): ' . ($isOnHalfDayLeave ? 'Yes' : 'No'));
-                Log::info('Is on half-day leave (different sessions): ' . ($isOnHalfDayLeaveforDifferentSessions ? 'Yes' : 'No'));
-                if(!$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveforDifferentSessions && !$isOnHalfDayLeave)
-                {
-                    $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
-                    $totalWorkHrs =$this->calculateWorkHrsForAbsentEmployees($date->format('Y-m-d'));
-                    if ($totalWorkHrs !== null) {
-                        $totalMinutes = $totalWorkHrs['total_minutes'];
-                        
-                        // Log the total minutes fetched
-                        Log::info('Total Minutes:', ['minutes' => $totalMinutes]);
-                
-                       
+
+            // Log the current date being checked
+            Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
+            Log::info('Checking for weekend on: ' . $date->format('Y-m-d') .
+                '. Is weekend: ' . ($date->isWeekend() ? 'Yes' : 'No'));
+            if (!$date->isWeekend()) {
+                Log::info('Checking if date is a holiday: ' . $date->format('Y-m-d'));
+                $holiday = HolidayCalendar::where('date', $date)->exists();
+                Log::info('Is holiday: ' . ($holiday ? 'Yes' : 'No'));
+                if (!$holiday) {
+                    Log::info('Checking leave details for Date: ' . $date->format('Y-m-d') . ' and Employee ID: ' . auth()->guard('emp')->user()->emp_id);
+                    $isOnLeave = $this->isEmployeeLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id);
+                    Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
+                    $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id);
+                    Log::info('Is on full-day leave: ' . ($isOnFullDayLeave ? 'Yes' : 'No'));
+                    $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id)['sessionCheck'];
+
+                    $isOnHalfDayLeaveforDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
+                    Log::info('Is on half-day leave (session check): ' . ($isOnHalfDayLeave ? 'Yes' : 'No'));
+                    Log::info('Is on half-day leave (different sessions): ' . ($isOnHalfDayLeaveforDifferentSessions ? 'Yes' : 'No'));
+                    if (!$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveforDifferentSessions && !$isOnHalfDayLeave) {
+                        $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
+                        $totalWorkHrs = $this->calculateWorkHrsForAbsentEmployees($date->format('Y-m-d'));
+                        if ($totalWorkHrs !== null) {
+                            $totalMinutes = $totalWorkHrs['total_minutes'];
+
+                            // Log the total minutes fetched
+                            Log::info('Total Minutes:', ['minutes' => $totalMinutes]);
+                        }
+
+                        Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . (($isAbsent || $totalWorkHrs == null || $totalMinutes == 0) ? 'Yes' : 'No'));
+                        if ($isAbsent || ($totalMinutes == 0) || $totalWorkHrs == null) {
+                            $absentDays++;
+                            // Log the increm   ent of absent days
+                            Log::info('Absent days count incremented to: ' . $absentDays);
+                        } elseif ($totalMinutes < 270) {
+                            $absentDays += 0.5;
+                            Log::info('Absent days count incremented to: ' . $absentDays);
+                        }
                     }
-                
-                    Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . (($isAbsent||$totalWorkHrs==null||$totalMinutes == 0) ? 'Yes' : 'No'));
-                   if ($isAbsent || ($totalMinutes == 0)||$totalWorkHrs==null) {
-                        $absentDays++;
-                        // Log the increm   ent of absent days
-                        Log::info('Absent days count incremented to: ' . $absentDays);
-                    }
-                    elseif($totalMinutes < 270)
-                    {
-                        $absentDays+=0.5;
-                        Log::info('Absent days count incremented to: ' . $absentDays);
-                    }
+                    if ($isOnHalfDayLeave) {
 
-                    
-                    
+                        $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
 
 
-                }
-                if($isOnHalfDayLeave)
-                {
-
-                    $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
-                    
-                
-                    Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
-                   if ($isAbsent) {
-                        $absentDays+=0.5;
-                        // Log the increment of absent days
-                        Log::info('Absent days count incremented to: ' . $absentDays);
+                        Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
+                        if ($isAbsent) {
+                            $absentDays += 0.5;
+                            // Log the increment of absent days
+                            Log::info('Absent days count incremented to: ' . $absentDays);
+                        }
                     }
                 }
-              
             }
-            
-        }
-        // Check if the employee is absent on the current date
-        
+            // Check if the employee is absent on the current date
+
 
             // Log the result of the absence check
 
@@ -1887,73 +1824,71 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
         return $absentDays;
     }
     private function calculateTotalNumberofHolidays($startDate, $endDate)
-{
-    // Log the start of the method
-    Log::info('Starting calculateTotalNumberofHolidays method for ' . $startDate . ' and ' . $endDate);
+    {
+        // Log the start of the method
+        Log::info('Starting calculateTotalNumberofHolidays method for ' . $startDate . ' and ' . $endDate);
 
-    // Initialize the total number of holidays
-    $totalnumberofHolidays = 0;
+        // Initialize the total number of holidays
+        $totalnumberofHolidays = 0;
 
-    // Ensure $startDate and $endDate are Carbon instances
-    $startDate = Carbon::parse($startDate);
-    $endDate = Carbon::parse($endDate);
+        // Ensure $startDate and $endDate are Carbon instances
+        $startDate = Carbon::parse($startDate);
+        $endDate = Carbon::parse($endDate);
 
-    // Loop through each day between the start and end dates
-    while ($startDate->lte($endDate)) {
-        $dateString = $startDate->toDateString();
+        // Loop through each day between the start and end dates
+        while ($startDate->lte($endDate)) {
+            $dateString = $startDate->toDateString();
 
-        // Log the current date being processed
-        Log::debug('Processing date: ' . $dateString);
+            // Log the current date being processed
+            Log::debug('Processing date: ' . $dateString);
 
-        // Check if the current date is a holiday
-        $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
+            // Check if the current date is a holiday
+            $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
 
-        // Log whether the current date is a holiday
-        Log::debug('Is ' . $dateString . ' a holiday? ' . ($isHoliday ? 'Yes' : 'No'));
+            // Log whether the current date is a holiday
+            Log::debug('Is ' . $dateString . ' a holiday? ' . ($isHoliday ? 'Yes' : 'No'));
 
-        if ($isHoliday) {
-            $totalnumberofHolidays++;
-            Log::debug('Incrementing total number of holidays. Current count: ' . $totalnumberofHolidays);
+            if ($isHoliday) {
+                $totalnumberofHolidays++;
+                Log::debug('Incrementing total number of holidays. Current count: ' . $totalnumberofHolidays);
+            }
+
+            // Move to the next day
+            $startDate->addDay();
         }
 
-        // Move to the next day
-        $startDate->addDay();
+        // Log the final count of holidays
+        Log::info('Total number of holidays between ' . $startDate . ' and ' . $endDate . ': ' . $totalnumberofHolidays);
+
+        return $totalnumberofHolidays;
     }
 
-    // Log the final count of holidays
-    Log::info('Total number of holidays between ' . $startDate . ' and ' . $endDate . ': ' . $totalnumberofHolidays);
-
-    return $totalnumberofHolidays;
-}
-
-    private function calculateTotalDaysForModalTite($startDate,$endDate)
+    private function calculateTotalDaysForModalTite($startDate, $endDate)
     {
-        Log::info('Welcome to calculateTotalWorkingDays method for'.$startDate.'and'.$endDate);
+        Log::info('Welcome to calculateTotalWorkingDays method for' . $startDate . 'and' . $endDate);
         $totalDaysForModalTitle = 0;
-        
-            // Iterate through the date range
-            while ($startDate->lte($endDate)) {
-                $dateString = $startDate->toDateString();
-                $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
-                
-                // Check if the day is not Saturday (6) or Sunday (7)
-               
-                    if ($startDate->isWeekend()) {
-                        Log::info("Weekend skipped for date: $dateString");
-                    } elseif ($isHoliday) {
-                        Log::info("Leave day skipped for date: $dateString");
-                    }
-                    else
-                    {
-                        $totalDaysForModalTitle++;
-                    }
-        
-                // Move to the next day
-                $startDate->addDay();
+
+        // Iterate through the date range
+        while ($startDate->lte($endDate)) {
+            $dateString = $startDate->toDateString();
+            $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
+
+            // Check if the day is not Saturday (6) or Sunday (7)
+
+            if ($startDate->isWeekend()) {
+                Log::info("Weekend skipped for date: $dateString");
+            } elseif ($isHoliday) {
+                Log::info("Leave day skipped for date: $dateString");
+            } else {
+                $totalDaysForModalTitle++;
             }
-        
-            Log::info("Total working days calculated: $totalDaysForModalTitle");
-            return $totalDaysForModalTitle;
+
+            // Move to the next day
+            $startDate->addDay();
+        }
+
+        Log::info("Total working days calculated: $totalDaysForModalTitle");
+        return $totalDaysForModalTitle;
     }
     private function updateModalTitle()
     {
@@ -1970,7 +1905,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                 return; // Stop execution if validation fails
             }
 
-            
+
 
             if ($formattedFromDate >=  Carbon::today()->format('Y-m-d') && $formattedToDate >=  Carbon::today()->format('Y-m-d')) {
                 $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
@@ -1987,7 +1922,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                 $this->averageLastOutTime = 'N/A';
                 return; // Stop execution after setting values
             }
-            
+
             if ($formattedToDate >  Carbon::today()->format('Y-m-d') && $formattedFromDate <  Carbon::today()->format('Y-m-d')) {
                 $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
                 $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
@@ -1997,28 +1932,28 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
                 $fromDatetempForLeave = Carbon::parse($formattedFromDate);
                 $fromDatetempForAbsent = Carbon::parse($formattedFromDate);
                 // Set values to '-' and average work hours to '00:00'
-                $insights = $this->calculatetotalLateInSwipes( $fromDatetemp, $toDatetemp);
+                $insights = $this->calculatetotalLateInSwipes($fromDatetemp, $toDatetemp);
                 $outsights = $this->calculatetotalEarlyOutSwipes($fromDatetemp, $toDatetemp);
-                
+
                 $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
-               
+
                 $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetempForLeave, $toDatetemp);
                 $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents($fromDatetempForAbsent, $toDatetemp);
-                $this->totalLateInSwipes = $insights['lateSwipeCount']; 
+                $this->totalLateInSwipes = $insights['lateSwipeCount'];
                 $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
-                $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp,$toDatetemp);
+                $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp, $toDatetemp);
                 $this->averageLastOutTime = $outsights['averageLastOutTime'];
                 $this->averageFirstInTime = $insights['averageFirstInTime'];
                 return; // Stop execution after setting values
-            } 
+            }
 
             $fromDatetemp = Carbon::parse($this->startDateForInsights);
             $toDatetemp = Carbon::parse($this->toDate);
             $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
             $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
             $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-            $this->totalDaysForFormattedModalTitle=$this->calculateTotalDaysForModalTite($fromDatetemp, $toDatetemp);
-            $this->totalnumberofHolidayForFormattedDate=$this->calculateTotalNumberofHolidays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
+            $this->totalDaysForFormattedModalTitle = $this->calculateTotalDaysForModalTite($fromDatetemp, $toDatetemp);
+            $this->totalnumberofHolidayForFormattedDate = $this->calculateTotalNumberofHolidays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $this->totalWorkingDays = $this->calculateTotalWorkingDays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $insights = $this->calculatetotalLateInSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
             $outsights = $this->calculatetotalEarlyOutSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
@@ -2101,7 +2036,7 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
 
     private function calculatetotalLateInSwipes($startDate, $endDate)
     {
-        
+
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
@@ -2336,55 +2271,55 @@ public function isEmployeeAssignedDifferentShift($date, $empId)
 
         return $weekendCount;
     }
-  
 
-private function calculateTotalWorkingDays($startDate, $endDate)
-{
-    Log::info('Welcome to calculateTotalWorkingDays method for'.$startDate.'and'.$endDate);
-    $workingDays = 0;
 
-    // Iterate through the date range
-    while ($startDate->lte($endDate)) {
-        $dateString = $startDate->toDateString();
-        $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
-        $isOnLeave = $this->isEmployeeLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id);
-        $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id)['sessionCheck'];
-        $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id);
-        $isOnHalfDayLeaveForDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
+    private function calculateTotalWorkingDays($startDate, $endDate)
+    {
+        Log::info('Welcome to calculateTotalWorkingDays method for' . $startDate . 'and' . $endDate);
+        $workingDays = 0;
 
-        // Check if the day is not Saturday (6) or Sunday (7)
-        if (!$startDate->isWeekend()&& !$isOnHalfDayLeave && !$isHoliday &&!$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveForDifferentSessions) {
-            $workingDays++;
-            Log::info("Working day added for date: $dateString");
-        } elseif ($isOnHalfDayLeave) {
-            $workingDays += 0.5;
-            Log::info("Half working day added for date: $dateString");
-        } else {
-            if ($startDate->isWeekend()) {
-                Log::info("Weekend skipped for date: $dateString");
-            } elseif ($isOnLeave || $isOnFullDayLeave || $isOnHalfDayLeaveForDifferentSessions) {
-                Log::info("Leave day skipped for date: $dateString");
+        // Iterate through the date range
+        while ($startDate->lte($endDate)) {
+            $dateString = $startDate->toDateString();
+            $isHoliday = HolidayCalendar::where('date', $dateString)->exists();
+            $isOnLeave = $this->isEmployeeLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id);
+            $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id)['sessionCheck'];
+            $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id);
+            $isOnHalfDayLeaveForDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($startDate, auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
+
+            // Check if the day is not Saturday (6) or Sunday (7)
+            if (!$startDate->isWeekend() && !$isOnHalfDayLeave && !$isHoliday && !$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveForDifferentSessions) {
+                $workingDays++;
+                Log::info("Working day added for date: $dateString");
+            } elseif ($isOnHalfDayLeave) {
+                $workingDays += 0.5;
+                Log::info("Half working day added for date: $dateString");
+            } else {
+                if ($startDate->isWeekend()) {
+                    Log::info("Weekend skipped for date: $dateString");
+                } elseif ($isOnLeave || $isOnFullDayLeave || $isOnHalfDayLeaveForDifferentSessions) {
+                    Log::info("Leave day skipped for date: $dateString");
+                }
             }
+
+            // Move to the next day
+            $startDate->addDay();
         }
 
-        // Move to the next day
-        $startDate->addDay();
+        Log::info("Total working days calculated: $workingDays");
+        return $workingDays;
     }
-
-    Log::info("Total working days calculated: $workingDays");
-    return $workingDays;
-}
 
     private function calculateTotalNumberOfLeaves($startDate, $endDate)
     {
-       
+
         $leaveCount = 0;
 
         Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
 
-       // Iterate through the date range
-       while ($startDate->lte($endDate)) {
-        $tempStartDate = $startDate->toDateString();
+        // Iterate through the date range
+        while ($startDate->lte($endDate)) {
+            $tempStartDate = $startDate->toDateString();
 
             // Check if the current date is a holiday
             $isHoliday = HolidayCalendar::where('date', $tempStartDate)->exists();
@@ -2405,12 +2340,10 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                 $isOnHalfDayLeaveForDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
                 Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
 
-                if ($isOnLeave||$isOnFullDayLeave||$isOnHalfDayLeaveForDifferentSessions) {
+                if ($isOnLeave || $isOnFullDayLeave || $isOnHalfDayLeaveForDifferentSessions) {
                     $leaveCount++;
-                }
-                elseif($isOnHalfDayLeave)
-                {
-                    $leaveCount+=0.5;
+                } elseif ($isOnHalfDayLeave) {
+                    $leaveCount += 0.5;
                 }
             }
 
@@ -2662,7 +2595,7 @@ private function calculateTotalWorkingDays($startDate, $endDate)
             $date = Carbon::create($this->year, $this->month, 1)->subMonth();
             $this->year = $date->year;
             $this->month = $date->month;
-           
+
             $this->startDateForInsights = $date->startOfMonth()->toDateString();
             $this->toDate = $date->endOfMonth()->toDateString();
             $today = Carbon::today();
@@ -2670,13 +2603,13 @@ private function calculateTotalWorkingDays($startDate, $endDate)
             $this->updateModalTitle();
             $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
-           
+
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
-                
+
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->toDateString());
             } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
-               
+
                 $this->averageWorkHrsForCurrentMonth = '-';
             } else {
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
@@ -2702,16 +2635,14 @@ private function calculateTotalWorkingDays($startDate, $endDate)
             $this->month = $date->month;
             $today = Carbon::today();
             $this->startDateForInsights = $date->startOfMonth()->toDateString();
-           
+
             if (
                 Carbon::parse($this->toDate)->greaterThan(Carbon::today()) && // Check if toDate is greater than today
                 Carbon::parse($this->toDate)->isSameMonth(Carbon::today()) && // Check if the month is the same as today
                 Carbon::parse($this->toDate)->isSameYear(Carbon::today())     // Check if the year is the same as today
             ) {
                 $this->toDate = Carbon::now()->subDay()->toDateString(); // Set toDate to today's date
-            }
-            else
-            {
+            } else {
                 $this->toDate = $date->endOfMonth()->toDateString();
             }
             $this->generateCalendar();
@@ -2722,16 +2653,16 @@ private function calculateTotalWorkingDays($startDate, $endDate)
             $lastDateOfNextMonth = $date->endOfMonth()->toDateString();
             $startDateOfPreviousMonth = $date->startOfMonth()->toDateString();
             $endDateOfPreviousMonth = $date->endOfMonth()->toDateString();
-          
+
             if ($today->year == $date->year && $today->month == $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 // Adjust $endDateOfPreviousMonth to today's date since it's greater than today
 
-                
+
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $today->copy()->subDay()->toDateString());
             } elseif ($today->year >= $date->year && $today->month >= $date->month && $endDateOfPreviousMonth > $today->toDateString()) {
                 $this->averageWorkHrsForCurrentMonth = '-';
             } else {
-              
+
                 $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startDateOfPreviousMonth, $endDateOfPreviousMonth);
             }
             $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours($date->format('Y-m'));
@@ -2752,7 +2683,6 @@ private function calculateTotalWorkingDays($startDate, $endDate)
         $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
         $this->to_date = Carbon::now()->subDay()->toDateString();
         $this->updateModalTitle();
-        
     }
     public function checkDateInRegularisationEntries($d)
     {
@@ -2838,13 +2768,11 @@ private function calculateTotalWorkingDays($startDate, $endDate)
 
             if ($this->changeDate == 1) {
                 $this->currentDate2 = $this->dateclicked;
-                if($this->currentDate2==date('Y-m-d'))
-                { 
+                if ($this->currentDate2 == date('Y-m-d')) {
                     $this->currentDate2recordin = '-';
                     $this->currentDate2recordout = '-';
-
                 }
-                
+
                 if ($this->isEmployeeRegularisedOnDate($this->currentDate2) == true) {
 
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->where('is_regularized', 1)->first();
@@ -2854,7 +2782,7 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->first();
                     $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->orderBy('updated_at', 'desc')->first();
                 }
-                
+
 
                 if (isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
@@ -2871,7 +2799,7 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                     }
                     $this->first_in_time_for_date = $firstInTime;
                     $this->last_out_time_for_date = $lastOutTime;
-                 
+
                     $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
@@ -2879,32 +2807,25 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                 } elseif (!isset($this->currentDate2recordout) && isset($this->currentDate2recordin)) {
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
                     $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
-                    
-                }elseif( !in_array($this->currentDate2, ['Saturday', 'Sunday']))
-                {
+                } elseif (!in_array($this->currentDate2, ['Saturday', 'Sunday'])) {
                     $this->first_in_time = null;
-                    $this->last_out_time = null;   
-                }
-                 else {
+                    $this->last_out_time = null;
+                } else {
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
-                
                 }
                 if (Carbon::parse($this->currentDate2)->isWeekend()) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
-                    
                 } elseif ($this->isHolidayOnDate($this->currentDate2)) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
-                   
                 } elseif ($this->first_in_time == $this->last_out_time) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
-                   
                 } else {
                     $standardMinutesForShortFall = 9 * 60; // 9 hours in minutes (540 minutes)
                     $timeDifferenceForShortFall = $standardMinutesForShortFall - $this->timeDifferenceInMinutesForCalendar; // Subtracting the time difference
@@ -2917,10 +2838,9 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                     if ($timeDifferenceForShortFall == 0) {
                         $this->shortFallHrs = '08:59';
                         $this->excessHrs = '-';
-                       
                     } elseif ($this->timeDifferenceInMinutesForCalendar > $standardMinutesForShortFall) {
                         $this->shortFallHrs = '-';
-                      
+
                         $timeDifferenceForExcess = $this->timeDifferenceInMinutesForCalendar - $standardMinutesForShortFall;
                         $excesshours = floor($timeDifferenceForExcess / 60); // Get the full hours
                         $excessminutes = $timeDifferenceForExcess % 60; // Get the remaining minutes
@@ -2928,7 +2848,6 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                     } else {
                         $this->shortFallHrs = sprintf('%02d:%02d', $shortfallhours, $shortfallminutes);
                         $this->excessHrs = '-';
-                       
                     }
 
 
@@ -2937,7 +2856,6 @@ private function calculateTotalWorkingDays($startDate, $endDate)
                 $this->currentDate2recordexists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->exists();
             } else {
                 $this->currentDate2 = Carbon::now()->format('Y-m-d');
-                
             }
 
             $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();

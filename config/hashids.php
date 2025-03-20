@@ -28,27 +28,15 @@ return [
 
     'connections' => [
 
-        // 'main' => [
-        //     'salt' => '',
-        //     'length' => 0,
-        //     // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-        // ],
-
-        // 'alternative' => [
-        //     'salt' => 'your-salt-string',
-        //     'length' => 'your-length-integer',
-        //     // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-        // ],
-
         'main' => [
-            'salt' => env('HASHIDS_SALT', 'default-salt'),
-            'length' => 50,
+            'salt' => '',
+            'length' => 0,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
         'alternative' => [
-            'salt' => env('HASHIDS_ALT_SALT', 'alternative-salt'),
-            'length' => env('HASHIDS_ALT_LENGTH', 50),
+            'salt' => 'your-salt-string',
+            'length' => 'your-length-integer',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
 
