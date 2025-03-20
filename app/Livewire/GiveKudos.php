@@ -918,7 +918,6 @@ class GiveKudos extends Component
 
     public function render()
     {
-
      if (auth()->guard('emp')->check()) {
             $this->employeeDetails = EmployeeDetails::where('emp_id', Auth::user()->emp_id)->first();
         } else {
