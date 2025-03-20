@@ -120,25 +120,22 @@ class AttendenceMasterDataNew extends Component
     public function downloadExcel()
 {
     try {
-        Log::info('Excel generation started');
+       
         $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        Log::info("Logged-in Employee ID: $loggedInEmpId");
-
+      
         $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
             ->select('emp_id', 'first_name', 'last_name')
             ->where('employee_status', 'active')
             ->get();
         
-        Log::info('Employees fetched', ['employees' => $employees]);
-
+      
         $currentMonth = date('F');
         $currentMonth1 = date('n');
         $AttendanceYear = $this->selectedYear;
         $todaysDate = date('Y-m-d');
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $AttendanceYear);
 
-        Log::info("Generating report for $currentMonth, Year: $AttendanceYear");
-
+      
         $data = [['List of Employees for ' . $currentMonth . ' ' . $AttendanceYear],
                  ['Employee ID', 'Name', 'No. of Present']];
 
@@ -149,8 +146,7 @@ class AttendenceMasterDataNew extends Component
         }
 
         $employeeIds = $employees->pluck('emp_id');
-        Log::info('Employee IDs for swipe records', ['ids' => $employeeIds]);
-
+      
         $distinctDatesMapCount = SwipeRecord::whereIn('swipe_records.emp_id', $employeeIds)
             ->whereMonth('swipe_records.created_at', $currentMonth1)
             ->whereYear('swipe_records.created_at', $AttendanceYear)
@@ -164,8 +160,7 @@ class AttendenceMasterDataNew extends Component
             ->toArray();
         
 
-        Log::info('Swipe record counts fetched', ['distinctDatesMapCount' => $distinctDatesMapCount]);
-
+       
         $distinctDatesMap = SwipeRecord::whereIn('emp_id', $employeeIds)
             ->whereMonth('created_at', $currentMonth1)
             ->whereYear('created_at', $this->selectedYear)
@@ -178,8 +173,7 @@ class AttendenceMasterDataNew extends Component
             })
             ->toArray();
 
-        Log::info('Distinct swipe dates map fetched', ['distinctDatesMap' => $distinctDatesMap]);
-
+       
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->where('leave_applications.leave_status', 2)
             ->whereIn('leave_applications.emp_id', $employeeIds)
@@ -187,15 +181,13 @@ class AttendenceMasterDataNew extends Component
             ->whereDate('to_date', '<=', "$AttendanceYear-$currentMonth1-$daysInMonth")
             ->get();
 
-        Log::info('Approved leave requests fetched', ['approvedLeaveRequests' => $approvedLeaveRequests]);
-
+       
         $holiday = HolidayCalendar::where('month', $currentMonth)
             ->where('year', $AttendanceYear)
             ->pluck('date')
             ->toArray();
 
-        Log::info('Holidays fetched', ['holidays' => $holiday]);
-
+       
         foreach ($employees as $employee) {
             $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
 
@@ -324,13 +316,11 @@ class AttendenceMasterDataNew extends Component
             $data[] = $rowData;
         }
 
-        Log::info('Final data for Excel prepared', ['data' => $data]);
-
+      
         $filePath = storage_path('app/Attendance_Muster_Report.xlsx');
         SimpleExcelWriter::create($filePath)->addRows($data);
 
-        Log::info('Excel file created', ['path' => $filePath]);
-
+       
         return response()->download($filePath, 'Attendance_Muster_Report.xlsx');
     } catch (\Exception $e) {
         Log::error('Error generating Excel report', ['error' => $e->getMessage(), 'line' => $e->getLine(), 'file' => $e->getFile()]);
@@ -450,30 +440,19 @@ class AttendenceMasterDataNew extends Component
             ->whereDate('to_date', '<=', $this->selectedYear . '-' . $currentMonth . '-31') // Dynamically set year and month
             ->get(['leave_applications.*', 'employee_details.emp_id', 'employee_details.first_name', 'employee_details.last_name', 'status_types.status_name']) // Retrieve status_name from status_type
             ->mapWithKeys(function ($leaveRequestforSession1) {
-                Log::info('Processing leave request', [
-                    'emp_id' => $leaveRequestforSession1->emp_id,
-                    'from_date' => $leaveRequestforSession1->from_date,
-                    'to_date' => $leaveRequestforSession1->to_date,
-                    'status_name' => $leaveRequestforSession1->status_name,
-                ]);
+               
         
                 $fromDate = \Carbon\Carbon::parse($leaveRequestforSession1->from_date);
                 $toDate = \Carbon\Carbon::parse($leaveRequestforSession1->to_date);
                 $number_of_days = $fromDate->diffInDays($toDate) + 1;
         
-                Log::info('Calculated number of days', [
-                    'emp_id' => $leaveRequestforSession1->emp_id,
-                    'number_of_days' => $number_of_days,
-                ]);
+                
         
                 $dates = [];
                 for ($i = 0; $i < $number_of_days; $i++) {
                     $currentDate = $fromDate->copy()->addDays($i)->toDateString();
                     $dates[] = $currentDate;
-                    Log::info('Generated date for leave', [
-                        'emp_id' => $leaveRequestforSession1->emp_id,
-                        'currentDate' => $currentDate,
-                    ]);
+                    
                 }
         
                 return [
@@ -485,8 +464,7 @@ class AttendenceMasterDataNew extends Component
                 ];
             });
         
-        Log::info('Final approvedLeaveRequestsForSession1', ['data' => $approvedLeaveRequestsForSession1]);
-          
+       
             $approvedLeaveRequestsForSession2 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code') // Join with status_type table to get status_name
             ->where('leave_applications.leave_status', 2) // Filter by leave_status = 3 instead of status = 'approved'

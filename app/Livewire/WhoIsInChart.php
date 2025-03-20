@@ -160,7 +160,7 @@ class WhoIsInChart extends Component
 {
     // This method will be called whenever the selected radio button changes
     // $value will contain the value of the selected shift ('GS', 'AS', or 'ES')
-    Log::info('Selected Shift: ' . $value);
+   
 
     // You can handle the selected value here
     if ($value === 'GS') {
