@@ -189,17 +189,13 @@ class Settings extends Component
 {
     try {
         $employeeId = auth()->guard('emp')->user()->emp_id;
-        // Log::info('Attempting to save profile for employee ID: ' . $employeeId);
 
         $empPersonalInfo = EmpPersonalInfo::where('emp_id', $employeeId)->first();
         if ($empPersonalInfo) {
-            // Log::info('Updating existing employee personal info for ID: ' . $employeeId);
             $empPersonalInfo->nick_name = !empty($this->nickName) ? $this->nickName : null;
             $empPersonalInfo->date_of_birth = !empty($this->wishMeOn) ? $this->wishMeOn : null;
             $empPersonalInfo->save();
-            // Log::info('Successfully updated employee personal info for ID: ' . $employeeId);
         } else {
-            // Log::info('Creating new employee personal info for ID: ' . $employeeId);
             $empPersonalInfo = EmpPersonalInfo::create([
                 'emp_id' => $employeeId,
                 'nick_name' => !empty($this->nickName) ? $this->nickName : null,
@@ -207,7 +203,6 @@ class Settings extends Component
                 'email' => null,
                 'alternate_mobile_number' => null,
             ]);
-            // Log::info('Successfully created new employee personal info for ID: ' . $employeeId);
         }
 
         $this->editingNickName = false;

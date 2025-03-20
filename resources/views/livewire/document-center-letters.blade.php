@@ -380,13 +380,13 @@
                                 </tr>
                             </thead>
                             <tbody class="table-body">
-                                @forelse ($allRequests->where('status', 'Pending') as $request)
+                                @forelse ($allRequests->where('status', 5) as $request)
                                     <tr>
                                         <td style="width:20%;">{{ $request->emp_id }}</td>
                                         <td style="width:20%;">{{ $request->letter_type }}</td>
                                         <td style="width:20%;">{{ $request->priority }}</td>
-                                        <td style="width:20%;"> {{ $request->reason }}</td>
-                                        <td style="width:20%;">{{ $request->status }}</td>
+                                        <td style="width:20%;"> {{ ucfirst($request->reason) }}</td>
+                                        <td style="width:20%;">Pending</td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -418,8 +418,8 @@
                                         <td>{{ $request->emp_id }}</td>
                                         <td>{{ $request->letter_type }}</td>
                                         <td>{{ $request->priority }}</td>
-                                        <td>{{ $request->reason }}</td>
-                                        <td>{{ $request->status }}</td>
+                                        <td>{{ ucfirst($request->reason) }}</td>
+                                        <td>Closed</td>
                                     </tr>
                                 @empty
                                     <tr>

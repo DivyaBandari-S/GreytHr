@@ -188,7 +188,7 @@
                 <th>Manager No</th>
                 <th>Manager Name</th>
                 <th>Casual Leave</th>
-                <th>Casual Leave Probation</th>
+                <th>Earned Leave</th>
                 <th>Loss Of Pay</th>
                 <th>Sick Leave</th>
             </tr>
@@ -214,7 +214,7 @@
                                     {{ $transaction['casual_leave_balance'] ?? 'N/A' }}
                                 </td>
                                 <td>
-                                    {{ $transaction['casual_leave_probation_balance'] ?? 'N/A' }}
+                                    {{ $transaction['earned_leave_balance'] ?? 'N/A' }}
                                 </td>
                                 <td>
                                     {{ $transaction['loss_of_pay_balance'] ?? 'N/A' }}

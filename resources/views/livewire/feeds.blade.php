@@ -180,7 +180,7 @@
                                                     <input wire:model="recognizeType"
                                                         class="form-select placeholder-small input-field"
                                                         wire:click="recognizeToggleDropdown"
-                                                        placeholder="Select">
+                                                        placeholder="Select" readonly>
 
                                                     <div class="selected-items-container">
                                                         @foreach ($recognizeType as $type)
