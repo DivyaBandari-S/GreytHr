@@ -582,76 +582,60 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     public function mount($startDateForInsights = null, $toDate = null)
 {
     try {
-        Log::info('Starting mount function');
-
+       
         // Fetch employee details
         $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'hire_date')->first();
-        Log::info('Fetched employee details', ['employee' => $this->employee]);
-
+        
         if (!$this->employee) {
             Log::error('No employee details found for the authenticated user');
             throw new \Exception('No employee details found for the authenticated user');
         }
 
         $this->employeeHireDate = $this->employee->hire_date;
-        Log::info('Employee hire date set', ['hire_date' => $this->employeeHireDate]);
-
+       
         // Set date ranges
         $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
-        Log::info('From date set', ['from_date' => $this->from_date]);
-
+       
         $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
-        Log::info('Start date for insights set', ['start_date_for_insights' => $this->start_date_for_insights]);
-
+        
         $this->to_date = Carbon::now()->subDay()->toDateString();
-        Log::info('To date set', ['to_date' => $this->to_date]);
-
+        
         $this->startDateForInsights = $startDateForInsights ?? now()->startOfMonth()->toDateString();
-        Log::info('Start date for insights (defaulted)', ['startDateForInsights' => $this->startDateForInsights]);
-
+       
         $this->toDate = $toDate ?? now()->subDay()->toDateString();
-        Log::info('To date (defaulted)', ['toDate' => $this->toDate]);
-
+        
         
         // Update modal title
         $this->updateModalTitle();
-        Log::info('Modal title updated');
+        
 
         // Calculate average working hours
         $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
-        Log::info('Average working hours calculated');
+        
 
         // Parse dates
         $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
-        Log::info('From date parsed', ['fromDate' => $fromDate]);
-
+       
         $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date);
-        Log::info('To date parsed', ['toDate' => $toDate]);
-
+       
         $currentDate = Carbon::parse($this->from_date);
-        Log::info('Current date parsed', ['currentDate' => $currentDate]);
-
+       
         $endDate = Carbon::parse($this->to_date);
-        Log::info('End date parsed', ['endDate' => $endDate]);
-
+       
         // Initialize counters
         $totalHoursWorked = 0;
         $totalMinutesWorked = 0;
 
         // Get IP address and location
         $ip = request()->ip() === '127.0.0.1' ? Http::get('https://api64.ipify.org')->body() : request()->ip();
-        Log::info('IP address obtained', ['ip' => $ip]);
-
+        
         $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co');
-        Log::info('IP API URL obtained', ['ipUrl' => $ipUrl]);
-
+      
         $response = Http::get("{$ipUrl}/{$ip}/json/");
-        Log::info('IP location API response', ['response' => $response]);
-
+        
         if ($response->successful()) {
             $location = $response->json();
-            Log::info('IP location data fetched', ['location' => $location]);
-
+            
             $lat = $location['lat'] ?? null;
             $lon = $location['lon'] ?? null;
             $this->country = $location['country_name'] ?? null;
@@ -671,12 +655,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
             ->first();
 
-        Log::info('Employee shift details fetched', ['employeeShiftDetails' => $this->employeeShiftDetails]);
-
+       
         if ($this->employeeShiftDetails) {
             $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
             $this->shiftEndTime = Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
-            Log::info('Shift start and end times parsed', ['shiftStartTime' => $this->shiftStartTime, 'shiftEndTime' => $this->shiftEndTime]);
+           
         } else {
             $this->shiftStartTime = null;
             $this->shiftEndTime = null;
@@ -685,8 +668,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         // Loop through each day to calculate total time differences
         while ($currentDate->lte($endDate)) {
             $dateString = $currentDate->toDateString();
-            Log::info('Processing date', ['dateString' => $dateString]);
-
+          
             $inTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
                 ->where('in_or_out', 'IN')
                 ->whereDate('created_at', $dateString)
@@ -697,8 +679,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                 ->whereDate('created_at', $dateString)
                 ->pluck('swipe_time');
 
-            Log::info('IN and OUT times fetched', ['inTimes' => $inTimes, 'outTimes' => $outTimes]);
-
+         
             $totalDifferenceForDay = 0;
 
             foreach ($inTimes as $index => $inTime) {
@@ -707,7 +688,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $outCarbon = Carbon::parse($outTimes[$index]);
                     $difference = $outCarbon->diffInSeconds($inCarbon);
                     $totalDifferenceForDay += $difference;
-                    Log::info('Time difference calculated', ['difference' => $difference]);
+                   
                 }
             }
 
@@ -716,8 +697,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
         // Group swipe records by date
         $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-        Log::info('Swipe records fetched', ['swipeRecords' => $swipeRecords]);
-
+        
         $groupedDates = $swipeRecords->groupBy(function ($record) {
             return Carbon::parse($record->created_at)->format('Y-m-d');
         });
@@ -736,30 +716,24 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             ];
         });
 
-        Log::info('Distinct dates grouped', ['distinctDates' => $this->distinctDates]);
-
+      
         // Set current date properties
         $this->currentDate = date('d');
         $this->currentWeekday = date('D');
         $this->currentDate1 = date('d M Y');
         $this->swiperecords = SwipeRecord::all();
-        Log::info('Current date properties set', ['currentDate' => $this->currentDate, 'currentWeekday' => $this->currentWeekday, 'currentDate1' => $this->currentDate1]);
-
+        
         $startOfMonth = Carbon::now()->startOfMonth();
         $today = Carbon::now();
         $this->year = now()->year;
         $this->month = now()->month;
-        Log::info('Start of month and today dates set', ['startOfMonth' => $startOfMonth, 'today' => $today]);
-
+       
         $this->generateCalendar();
-        Log::info('Calendar generated');
-
+       
         $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
-        Log::info('Percentage in work hours for attendance calculated', ['percentageinworkhrsforattendance' => $this->percentageinworkhrsforattendance]);
-
+       
         $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(), $today->copy()->subDay()->toDateString());
-        Log::info('Average work hours for current month calculated', ['averageWorkHrsForCurrentMonth' => $this->averageWorkHrsForCurrentMonth]);
-
+       
     } catch (\Exception $e) {
         Log::error('Error in mount method', ['error' => $e->getMessage()]);
 
@@ -1391,13 +1365,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     } elseif ($timeDifference < 270) {
                                         $isHalfDayPresent = true;
 
-                                        Log::info('One of the date values is null.', [
-                                            'inTime' => $inTime,
-                                            'outTime' => $outTime,
-                                            'startTimeForSession1'=>$startTimeForSession1,
-                                            'endTimeForSession1'=>$endTimeForSession1,
-                                        ]);
-                                        if ($inTime->gte($startTimeForSession1) ) {
+
+                                        if ($startTimeForSession1 !== null && $inTime->gte($startTimeForSession1)) {
                                             $isHalfDayPresentForSession1 = true;
                                         } else {
                                             $isHalfDayPresentForSession2 = true;
@@ -1740,25 +1709,20 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
 
         // Log fetched swipe records
-        Log::info('IN Swipe Record:', ['data' => $inSwipeRecord]);
-        Log::info('OUT Swipe Record:', ['data' => $outSwipeRecord]);
-
+    
         if ($inSwipeRecord && $outSwipeRecord) {
             // Parse swipe times using Carbon
             $inTime = Carbon::parse($inSwipeRecord->swipe_time);
             $outTime = Carbon::parse($outSwipeRecord->swipe_time);
 
-            Log::info('Parsed IN Time:', ['time' => $inTime]);
-            Log::info('Parsed OUT Time:', ['time' => $outTime]);
-
+         
             // Calculate the difference
             $timeDifference = $inTime->diff($outTime);
             $formattedDifference = $timeDifference->format('%h hours %i minutes');
             $totalMinutes = $inTime->diffInMinutes($outTime);
 
             // Log calculated results
-            Log::info('Time Difference:', ['formatted' => $formattedDifference, 'total_minutes' => $totalMinutes]);
-
+          
             return [
                 'formatted_difference' => $formattedDifference,
                 'total_minutes' => $totalMinutes,
@@ -1766,8 +1730,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
 
         // Log missing swipe records case
-        Log::warning('Swipe records missing for date:', ['date' => $date]);
-
+       
         return null; // Return null if records are not found
     }
     public function updatedToDate($value)
@@ -1790,31 +1753,23 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $absentDays = 0;
 
         // Add a log entry for the start and end date
-        Log::info('Calculating total number of absents between: ' . $startDate->format('Y-m-d') . ' and ' . $endDate->format('Y-m-d') . 'for employee Id' . auth()->guard('emp')->user()->emp_id);
-
+      
         $totalMinutes = null;
         // Loop through each date between start and end date
         for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
 
             // Log the current date being checked
-            Log::info('Checking for absence on: ' . $date->format('Y-m-d'));
-            Log::info('Checking for weekend on: ' . $date->format('Y-m-d') .
-                '. Is weekend: ' . ($date->isWeekend() ? 'Yes' : 'No'));
+           
             if (!$date->isWeekend()) {
-                Log::info('Checking if date is a holiday: ' . $date->format('Y-m-d'));
+                
                 $holiday = HolidayCalendar::where('date', $date)->exists();
-                Log::info('Is holiday: ' . ($holiday ? 'Yes' : 'No'));
+              
                 if (!$holiday) {
-                    Log::info('Checking leave details for Date: ' . $date->format('Y-m-d') . ' and Employee ID: ' . auth()->guard('emp')->user()->emp_id);
                     $isOnLeave = $this->isEmployeeLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id);
-                    Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
                     $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id);
-                    Log::info('Is on full-day leave: ' . ($isOnFullDayLeave ? 'Yes' : 'No'));
                     $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id)['sessionCheck'];
 
                     $isOnHalfDayLeaveforDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($date->format('Y-m-d'), auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
-                    Log::info('Is on half-day leave (session check): ' . ($isOnHalfDayLeave ? 'Yes' : 'No'));
-                    Log::info('Is on half-day leave (different sessions): ' . ($isOnHalfDayLeaveforDifferentSessions ? 'Yes' : 'No'));
                     if (!$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveforDifferentSessions && !$isOnHalfDayLeave) {
                         $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
                         $totalWorkHrs = $this->calculateWorkHrsForAbsentEmployees($date->format('Y-m-d'));
@@ -1822,30 +1777,24 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                             $totalMinutes = $totalWorkHrs['total_minutes'];
 
                             // Log the total minutes fetched
-                            Log::info('Total Minutes:', ['minutes' => $totalMinutes]);
-                        }
+                            }
 
-                        Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . (($isAbsent || $totalWorkHrs == null || $totalMinutes == 0) ? 'Yes' : 'No'));
                         if ($isAbsent || ($totalMinutes == 0) || $totalWorkHrs == null) {
                             $absentDays++;
                             // Log the increm   ent of absent days
-                            Log::info('Absent days count incremented to: ' . $absentDays);
-                        } elseif ($totalMinutes < 270) {
+                          } elseif ($totalMinutes < 270) {
                             $absentDays += 0.5;
-                            Log::info('Absent days count incremented to: ' . $absentDays);
-                        }
+                         }
                     }
                     if ($isOnHalfDayLeave) {
 
                         $isAbsent = !$this->isEmployeePresentOnDate($date->format('Y-m-d'));
 
 
-                        Log::info('Is employee absent on ' . $date->format('Y-m-d') . '? ' . ($isAbsent ? 'Yes' : 'No'));
                         if ($isAbsent) {
                             $absentDays += 0.5;
                             // Log the increment of absent days
-                            Log::info('Absent days count incremented to: ' . $absentDays);
-                        }
+                          }
                     }
                 }
             }
@@ -1859,15 +1808,13 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
 
         // Log the final absent days count
-        Log::info('Total number of absent days: ' . $absentDays);
-
+      
         return $absentDays;
     }
     private function calculateTotalNumberofHolidays($startDate, $endDate)
     {
         // Log the start of the method
-        Log::info('Starting calculateTotalNumberofHolidays method for ' . $startDate . ' and ' . $endDate);
-
+      
         // Initialize the total number of holidays
         $totalnumberofHolidays = 0;
 
@@ -1898,14 +1845,12 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
 
         // Log the final count of holidays
-        Log::info('Total number of holidays between ' . $startDate . ' and ' . $endDate . ': ' . $totalnumberofHolidays);
-
+        
         return $totalnumberofHolidays;
     }
 
     private function calculateTotalDaysForModalTite($startDate, $endDate)
     {
-        Log::info('Welcome to calculateTotalWorkingDays method for' . $startDate . 'and' . $endDate);
         $totalDaysForModalTitle = 0;
 
         // Iterate through the date range
@@ -1916,9 +1861,9 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             // Check if the day is not Saturday (6) or Sunday (7)
 
             if ($startDate->isWeekend()) {
-                Log::info("Weekend skipped for date: $dateString");
+               
             } elseif ($isHoliday) {
-                Log::info("Leave day skipped for date: $dateString");
+               
             } else {
                 $totalDaysForModalTitle++;
             }
@@ -1927,7 +1872,6 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $startDate->addDay();
         }
 
-        Log::info("Total working days calculated: $totalDaysForModalTitle");
         return $totalDaysForModalTitle;
     }
     private function updateModalTitle()
@@ -2085,8 +2029,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $totalFirstInSeconds = 0;
 
 
-        Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
-
+        
         // Iterate through the date range
         while ($startDate->lte($endDate)) {
             $tempStartDate = $startDate->toDateString();
@@ -2101,11 +2044,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
 
             // Log the status of the current day
-            Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') .
-                ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') .
-                ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') .
-                ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
-
+            
             // If not a holiday, weekend, or leave day, and the employee is present
             if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
@@ -2125,22 +2064,19 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $lateSwipeExists = false;
                 }
                 // Log the late swipe check
-                Log::info("Late Swipe Exists: " . ($lateSwipeExists ? 'Yes' : 'No') . " on Date: $tempStartDate" . " on Time: $swipeTime");
-
+                
                 // Increment late swipe count if a late swipe is found
                 if ($lateSwipeExists == true) {
                     $lateSwipeCount++;
-                    Log::info("Late Swipe Count Incremented: $lateSwipeCount");
+                   }
                 }
-                Log::info(message: "First In Count Incremented: $firstInCount");
-            }
 
             // Move to the next day
             $startDate->addDay();
         }
 
         // Log the final late swipe count
-        Log::info("Total Late Swipes: $lateSwipeCount");
+        
         if ($firstInCount > 0) {
             $averageFirstInSeconds = $totalFirstInSeconds / $firstInCount;
             $averageFirstInTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageFirstInSeconds);
@@ -2149,9 +2085,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         }
 
         // Log results
-        Log::info("Total First In Count: $firstInCount, Late Swipe Count: $lateSwipeCount");
-        Log::info("Average First In Time: " . ($averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A'));
-
+       
         return [
             'averageFirstInTime' => $averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A',
             'lateSwipeCount' => $lateSwipeCount,
@@ -2167,8 +2101,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         $earlyOutCount = 0;
         $lastOutCount = 0;
         $totalLastOutSeconds = 0;
-        Log::info('Start Date: ' . $startDate->toDateString() . ', End Date: ' . $endDate->toDateString());
-
+        
         // Iterate through the date range
         while ($startDate->lte($endDate)) {
             $tempStartDate = $startDate->toDateString();
@@ -2185,11 +2118,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
 
             // Log the status of the current day
-            Log::info("Date: $tempStartDate, IsHoliday: " . ($isHoliday ? 'Yes' : 'No') .
-                ", IsWeekend: " . ($isweekend ? 'Yes' : 'No') .
-                ", IsOnLeave: " . ($isOnLeave ? 'Yes' : 'No') .
-                ", IsPresent: " . (!empty($isPresent) ? 'Yes' : 'No'));
-
+          
             // If not a holiday, weekend, or leave day, and the employee is present
             if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
                 // Check for late swipes
@@ -2211,13 +2140,11 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
 
                 // Log the late swipe check
-                Log::info("Early Out  Exists: " . ($earlyOutExists ? 'Yes' : 'No') . " on Date: $tempStartDate");
-
+              
                 // Increment late swipe count if a late swipe is found
                 if ($earlyOutExists) {
                     $earlyOutCount++;
-                    Log::info("Early Out Count Incremented: $earlyOutCount");
-                }
+                    }
             }
 
             // Move to the next day
@@ -2315,7 +2242,6 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
     private function calculateTotalWorkingDays($startDate, $endDate)
     {
-        Log::info('Welcome to calculateTotalWorkingDays method for' . $startDate . 'and' . $endDate);
         $workingDays = 0;
 
         // Iterate through the date range
@@ -2330,15 +2256,15 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             // Check if the day is not Saturday (6) or Sunday (7)
             if (!$startDate->isWeekend() && !$isOnHalfDayLeave && !$isHoliday && !$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeaveForDifferentSessions) {
                 $workingDays++;
-                Log::info("Working day added for date: $dateString");
+                
             } elseif ($isOnHalfDayLeave) {
                 $workingDays += 0.5;
-                Log::info("Half working day added for date: $dateString");
+               
             } else {
                 if ($startDate->isWeekend()) {
-                    Log::info("Weekend skipped for date: $dateString");
+                   
                 } elseif ($isOnLeave || $isOnFullDayLeave || $isOnHalfDayLeaveForDifferentSessions) {
-                    Log::info("Leave day skipped for date: $dateString");
+                    
                 }
             }
 
@@ -2346,7 +2272,6 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $startDate->addDay();
         }
 
-        Log::info("Total working days calculated: $workingDays");
         return $workingDays;
     }
 
@@ -2355,8 +2280,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
         $leaveCount = 0;
 
-        Log::info('Starting leave calculation from ' . $startDate->toDateString() . ' to ' . $endDate->toDateString());
-
+       
         // Iterate through the date range
         while ($startDate->lte($endDate)) {
             $tempStartDate = $startDate->toDateString();
@@ -2366,20 +2290,16 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
             // Skip weekends (Saturday and Sunday) or holidays
             if ($startDate->isWeekend()) {
-                Log::info('Skipping weekend: ' . $tempStartDate);
-            } elseif ($isHoliday) {
-                Log::info('Skipping holiday: ' . $tempStartDate);
-            } else {
+               } elseif ($isHoliday) {
+               } else {
                 // Log current date and status
-                Log::info('Checking date: ' . $tempStartDate);
-
+              
                 // Check if employee is on leave on this date
                 $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
                 $isOnHalfDayLeave = $this->isEmployeeHalfDayLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id)['sessionCheck'];
                 $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
                 $isOnHalfDayLeaveForDifferentSessions = $this->isEmployeeHalfDayLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id)['doubleSessionCheck'];
-                Log::info('Is on leave: ' . ($isOnLeave ? 'Yes' : 'No'));
-
+               
                 if ($isOnLeave || $isOnFullDayLeave || $isOnHalfDayLeaveForDifferentSessions) {
                     $leaveCount++;
                 } elseif ($isOnHalfDayLeave) {
@@ -2391,8 +2311,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
             $startDate->addDay();
         }
 
-        Log::info('Total leave count (excluding weekends and holidays): ' . $leaveCount);
-
+       
         return $leaveCount;
     }
     public function calculateTotalDays()
@@ -2714,7 +2633,6 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
     public function openattendanceperiodModal()
     {
-        Log::info('Attendance Period Modal is opened');
         $this->openattendanceperiod = true;
     }
     public function closeattendanceperiodModal()
