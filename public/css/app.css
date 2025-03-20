@@ -3802,7 +3802,7 @@ input[type="radio"] {
 
 .card-content {
     position: relative;
-    z-index: 1;
+    /* z-index: 1; */
     /* padding: 20px; */
     /* text-align: center; */
 }
@@ -5029,6 +5029,30 @@ input[type="radio"] {
     font-size: 11px;
     font-weight: 500;
     color: #863886;
+    margin-left: 5px;
+}
+
+.earnedLeave {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #eaf0f2 ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.earnedLeaveBal {
+    font-size: 10px;
+    color: #336D82;
+    font-weight: 500;
+}
+
+.earnedLeaveValue {
+    font-size: 11px;
+    font-weight: 500;
+    color: #336D82;
     margin-left: 5px;
 }
 
@@ -11014,4 +11038,9 @@ cursor: pointer;
 @keyframes ms-spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+
+.fl-wrapper[data-position$=-center]{
+    z-index: 10;
 }

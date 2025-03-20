@@ -31,13 +31,13 @@
                                 <option value="">Select Type</option>
                                 @if($showCasualLeaveProbation == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
-                                @else
                                 <option value="Casual Leave">Casual Leave</option>
                                 @endif
                                 @if($showCasualLeaveProbationYear == true)
                                 <option value="Casual Leave Probation">Casual Leave Probation</option>
                                 @endif
                                 <option value="Loss of Pay">Loss of Pay</option>
+                                <option value="Earned Leave">Earned Leave</option>
                                 <option value="Marriage Leave">Marriage Leave</option>
                                 @if($employeeGender && $employeeGender === 'FEMALE')
                                 <option value="Maternity Leave">Maternity Leave</option>
@@ -69,8 +69,7 @@
                                     name="from_date"
                                     wire:change="handleFieldUpdate('from_date')"
                                     max="{{ now()->endOfYear()->toDateString() }}"
-                                    onkeypress="return false"
-                                   >
+                                    onkeypress="return false">
 
                                 @error('from_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
@@ -103,8 +102,7 @@
                                     name="to_date"
                                     wire:change="handleFieldUpdate('to_date')"
                                     max="{{ now()->endOfYear()->toDateString() }}"
-                                    onkeypress="return false"
-                                    >
+                                    onkeypress="return false">
                                 @error('to_date') <span class="text-danger">{{ $message }}</span> @enderror
                             </div>
                         </div>
@@ -162,6 +160,10 @@
                                 <span class="sickLeaveBalance">
                                     {{ ($leaveBalances['marriageLeaveBalance'] ?? '0') }}
                                 </span>
+                                @elseif($leave_type == 'Earned Leave')
+                                <span class="sickLeaveBalance">
+                                    {{ ($leaveBalances['earnedLeaveBalance'] ?? '0') }}
+                                </span>
                                 @endif
                             </div>
                             @else
@@ -172,7 +174,7 @@
                         <div class="form-group mb-0">
                             <span class="normalTextValue">Applying For :</span>
                             @if($showNumberOfDays)
-                            @if($from_date && $to_date && $from_session && $to_session) <!-- Check for all date inputs -->
+                            @if($from_date && $to_date && $from_session && $to_session && $leave_type) <!-- Check for all date inputs -->
                             @php
                             $calculatedNumberOfDays = $this->calculateNumberOfDays($from_date, $from_session, $to_date, $to_session, $leave_type);
                             @endphp

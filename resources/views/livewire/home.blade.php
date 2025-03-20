@@ -9,37 +9,36 @@
     </div>
     <style>
         .sign-out-form {
-    max-width: 400px;
-    margin: auto;
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-.sign-out-form .form-group {
-    margin-bottom: 15px;
-}
+        .sign-out-form .form-group {
+            margin-bottom: 15px;
+        }
 
-.sign-out-form label {
-    display: block;
-    margin-bottom: 5px;
-    color: #333;
-}
+        .sign-out-form label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
 
-.sign-out-form select,
-.sign-out-form textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
+        .sign-out-form select,
+        .sign-out-form textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
 
-.sign-out-form textarea {
-    resize: vertical;
-}
-
+        .sign-out-form textarea {
+            resize: vertical;
+        }
     </style>
     <div class="content">
         <div class="row m-0 p-0 mb-3">
@@ -165,19 +164,19 @@
                                 <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                     <button id="signButton" class="signInButton" wire:click="OpentoggleSignStatePopup">
-                                    @if ($swipes)
+                                        @if ($swipes)
                                         @if ($swipes->in_or_out === 'OUT')
                                         Sign In
-                                       
+
                                         @else
-                                       
+
                                         Sign Out
                                         @endif
                                         @else
-                                       
+
                                         Sign In
                                         @endif
-                        
+
 
                                     </button>
 
@@ -193,18 +192,16 @@
                     <button class="mail">
                         <span class="rounded-pill home-reportTo"> Reports To </span>
                     </button>
-
-                    <div class="profile-pic">
-                        @if ($loginEmpManagerDetails && $loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
-                        <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
-                        @elseif($loginEmpManagerDetails === null)
-                        <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
-                        @else
-                        <img src="{{ asset('/images/user.jpg') }}" alt="">
-                        @endif
-                    </div>
-
                     <div class="bottom">
+                        <div class="profile-pic">
+                            @if ($loginEmpManagerDetails && $loginEmpManagerDetails->image && $loginEmpManagerDetails->image !== 'null')
+                            <img src="data:image/jpeg;base64,{{ $loginEmpManagerDetails->image }}" alt="">
+                            @elseif($loginEmpManagerDetails === null)
+                            <img src="{{ asset('/images/user.jpg') }}" alt="" width="50" height="50">
+                            @else
+                            <img src="{{ asset('/images/user.jpg') }}" alt="">
+                            @endif
+                        </div>
                         <div class="content">
                             @if ($loginEmpManagerDetails)
                             <span class="name"
@@ -927,28 +924,35 @@
                         <div class="mt-3">
                             <p class="payslip-small-desc">
                                 This month ({{ $upcomingLeaveApplications }}) </p>
-                            @if ($upcomingLeaveRequests)
+                            @if ($groupedUpcomingLeaves)
+
                             <div class="mt-2 d-flex align-items-center gap-2 mb-3">
-                                @foreach ($upcomingLeaveRequests->take(3) as $requests)
+                                @foreach ($groupedUpcomingLeaves->take(3) as $employeeId => $requests)
                                 @php
                                 $randomColorList =
                                 '#' .
                                 str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
+                                $leaveRequestCount = $requests->count();
                                 @endphp
                                 <div class="d-flex align-items-center">
-                                    <div class="thisCircle"
+                                    <div class="thisCircle position-relative"
                                         style="border: 1px solid {{ $randomColorList }}">
-                                        <span>{{ substr($requests->employee->first_name, 0, 1) }}{{ substr($requests->employee->last_name, 0, 1) }}
+                                        <span>{{ substr($requests->first()->employee->first_name, 0, 1) }}{{ substr($requests->first()->employee->last_name, 0, 1) }}
                                         </span>
+                                        @if ($leaveRequestCount > 1)
+                                        <div class="badge badge-pill badge-info position-absolute translate-middle badge-count" >
+                                            {{ $leaveRequestCount }}
+                                        </div>
+                                        @endif
                                     </div>
                                 </div>
                                 @endforeach
-                                @if ($upcomingLeaveRequests->count() > 3)
+                                @if ($groupedUpcomingLeaves->count() > 3)
                                 <div
                                     class="remainContent d-flex flex-column align-items-center">
                                     <!-- Placeholder color -->
                                     <a href="/team-on-leave-chart">
-                                        <span>+{{ $upcomingLeaveRequests->count() - 3 }}
+                                        <span>+{{ $groupedUpcomingLeaves->count() - 3 }}
                                         </span>
                                         <span style="margin-top:-5px;">More</span>
                                     </a>
@@ -1055,11 +1059,11 @@
                         <div class="col normalTextValue">Shift
                             Time : <span class="normalText">
                                 @if(!empty($shiftStartTime)&&!empty($shiftEndTime))
-                            {{ \Carbon\Carbon::parse($shiftStartTime)->format('H:i a') }} to
+                                {{ \Carbon\Carbon::parse($shiftStartTime)->format('H:i a') }} to
                                 {{ \Carbon\Carbon::parse($shiftEndTime)->format('H:i a') }}
                                 @else
-                                 NA 
-                                @endif 
+                                NA
+                                @endif
                             </span></div>
                     </div>
                     <table class="swipes-table mt-2 border w-100">
@@ -1098,7 +1102,7 @@
     </div>
     <div class="modal-backdrop fade show blurred-backdrop"></div>
     @endif
-@if ($showtoggleSignState)
+    @if ($showtoggleSignState)
     <div class="modal d-block" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered " role="document">
             <div class="modal-content">
@@ -1111,70 +1115,70 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                   
-                        <p style="text-align:center;font-weight:600;font-size:18px;">Tell us your Work Location.</p>
-                    
+
+                    <p style="text-align:center;font-weight:600;font-size:18px;">Tell us your Work Location.</p>
+
                     <div style="display:flex;align-items:left;">
-                    <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
-                        <div class="form-group">
-                            <label for="location">Enter 
-                                <span>
+                        <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
+                            <div class="form-group">
+                                <label for="location">Enter
+                                    <span>
+                                        @if ($swipes)
+                                        @if ($swipes->in_or_out === 'OUT')
+                                        Sign In
+
+                                        @else
+
+                                        Sign Out
+                                        @endif
+                                        @else
+
+                                        Sign In
+                                        @endif
+                                    </span>
+                                    Location
+                                    <span style="color:#f66;">*</span>
+                                </label>
+                                <select id="location" name="location" wire:model="swipe_location" wire:change="updateSwipeLocation" required>
+                                    @if (!$swipes)
+                                    <option value="">Select Your Location</option>
+                                    @endif
+                                    <option value="client_location">Client Location</option>
+                                    <option value="hybrid">Home</option>
+                                    <option value="office">Office</option>
+                                    <option value="on_duty">On-Duty</option>
+                                    <option value="remote">Remote</option>
+                                    <option value="work_from_office">Work from Office</option>
+                                    <option value="work_from_home">Work from Home</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="remarks">Remarks</label>
+                                <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks" wire:change="updateSwipeRemarks" placeholder="Enter Reason"></textarea>
+                            </div>
+                            <button id="signButton" class="signInButton" type="submit">
+
                                 @if ($swipes)
-                                        @if ($swipes->in_or_out === 'OUT')
-                                        Sign In
-                                       
-                                        @else
-                                       
-                                        Sign Out
-                                        @endif
-                                        @else
-                                       
-                                        Sign In
-                                        @endif
-                                </span>
-                                Location
-                                <span style="color:#f66;">*</span>
-                            </label>
-                            <select id="location" name="location" wire:model="swipe_location"wire:change="updateSwipeLocation" required>
-                                @if (!$swipes)
-                                 <option value="">Select Your Location</option>
-                                @endif   
-                                <option value="client_location">Client Location</option>
-                                <option value="hybrid">Home</option>
-                                <option value="office">Office</option>
-                                <option value="on_duty">On-Duty</option>
-                                <option value="remote">Remote</option>
-                                <option value="work_from_office">Work from Office</option>
-                                <option value="work_from_home">Work from Home</option>
-                            </select>
+                                @if ($swipes->in_or_out === 'OUT')
+                                Sign In
+
+                                @else
+
+                                Sign Out
+
+                                @endif
+                                @else
+
+                                Sign In
+
+                                @endif
+
+                            </button>
+                        </form>
+                        <div>
+                            <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;" height="180" width="180">
                         </div>
-                        <div class="form-group">
-                            <label for="remarks">Remarks</label>
-                            <textarea id="remarks" name="remarks" rows="4"wire:model="swipe_remarks" wire:change="updateSwipeRemarks"placeholder="Enter Reason"></textarea>
-                        </div>
-                        <button id="signButton" class="signInButton" type="submit"> 
-                            
-                        @if ($swipes)
-                                        @if ($swipes->in_or_out === 'OUT')
-                                        Sign In
-                                        
-                                        @else
-                                       
-                                        Sign Out
-                                        
-                                        @endif
-                                        @else
-                                       
-                                        Sign In
-                                       
-                                        @endif
-                                        
-                        </button>
-                     </form>
-                     <div>
-                        <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;" height="180" width="180">
-                     </div>
-                    </div>           
+                    </div>
                 </div>
             </div>
         </div>
@@ -1331,9 +1335,21 @@
     }
     // Initial check on page load
     document.addEventListener('DOMContentLoaded', function() {
-        var grossPay = {{  $grossPay}}; // Correct data injection
-        var deductions = {{ $deductions }}; // Correct data injection
-        var netPay = {{ $netPay }};
+        var grossPay = {
+            {
+                $grossPay
+            }
+        }; // Correct data injection
+        var deductions = {
+            {
+                $deductions
+            }
+        }; // Correct data injection
+        var netPay = {
+            {
+                $netPay
+            }
+        };
 
         // Total of netPay and deductions should equal grossPay
         if (grossPay !== (netPay + deductions)) {

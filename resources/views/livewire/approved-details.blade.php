@@ -170,7 +170,15 @@
                                     </div>
 
                                     <span class="maternityLeaveValue">{{ $leaveBalances['maternityLeaveBalance'] }}</span>
+                                    @elseif($leaveRequest->leave_type === 'Earned Leave' && isset($leaveBalances['earnedLeaveBalance']))
+                                    <div class="earnedLeave">
 
+                                        <span class="earnedLeaveBal">EL</span>
+
+                                    </div>
+
+                                    <span
+                                        class="earnedLeaveValue">{{ $leaveBalances['earnedLeaveBalance'] }}</span>
                                     @endif
 
                                 </div>
@@ -503,14 +511,14 @@
                         @foreach($leaveApplications as $leaveCountOfEmp)
                         @php
                         // Check if category_type is 'leave' and leave_status is either 2 or 6
-                            if ($leaveCountOfEmp->category_type === 'Leave' && in_array($leaveCountOfEmp->leave_status, [2, 6])) {
-                                $totalDays += $this->calculateNumberOfDays(
-                                $leaveCountOfEmp->from_date,
-                                $leaveCountOfEmp->from_session,
-                                $leaveCountOfEmp->to_date,
-                                $leaveCountOfEmp->to_session,
-                                $leaveCountOfEmp->leave_type
-                                );
+                        if ($leaveCountOfEmp->category_type === 'Leave' && in_array($leaveCountOfEmp->leave_status, [2, 6])) {
+                        $totalDays += $this->calculateNumberOfDays(
+                        $leaveCountOfEmp->from_date,
+                        $leaveCountOfEmp->from_session,
+                        $leaveCountOfEmp->to_date,
+                        $leaveCountOfEmp->to_session,
+                        $leaveCountOfEmp->leave_type
+                        );
                         }
                         @endphp
                         @endforeach
