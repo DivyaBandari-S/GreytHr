@@ -1223,23 +1223,14 @@ class Feeds extends Component
                 return redirect()->route('Feeds'); // Redirect to a route for no employee details
             }
         }
-        // Check if 'hr' guard is authenticated
-        elseif (auth()->guard('hr')->check()) {
-            $this->employeeDetails = Hr::where('hr_emp_id', auth()->guard('hr')->user()->hr_emp_id)->get();
 
-            // Check if no employee details are found
-            if ($this->employeeDetails->isEmpty()) {
-                // Redirect or handle the case where no employee details are found
-                return redirect()->route('no-employee-details'); // Redirect to a route for no employee details
-            }
-        }
 
         // Return the view with the necessary data
         return view('livewire.feeds', [
             'comments' => $this->comments,
             'addcomments' => $this->addcomments,
             'empCompanyLogoUrl' => $this->empCompanyLogoUrl,
-            'hr' => $this->employeeDetails,
+           
             'employees' => $this->employeeDetails,
             'emojis' => $emojis,
             'isManager' => $this->isManager,
