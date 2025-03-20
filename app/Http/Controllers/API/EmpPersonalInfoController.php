@@ -139,7 +139,7 @@ class EmpPersonalInfoController extends Controller
             // Get authenticated user based on JWT token
             $user = Auth::user();
             $empPersonalInfo = EmpPersonalInfo::where('emp_id', $user->emp_id)->first();
-dd($empPersonalInfo );
+
             if (!$empPersonalInfo) {
                 return ApiResponse::error(
                     self::ERROR_STATUS,
