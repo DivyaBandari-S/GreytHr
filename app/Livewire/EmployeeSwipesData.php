@@ -123,8 +123,15 @@ class EmployeeSwipesData extends Component
                 ->where('created_at', '<', $today->copy()->endOfDay())
                 ->exists();
 
-            $agent = new Agent();
-            $this->status = $userSwipesToday ? ($agent->isMobile() ? 'Mobile' : ($agent->isDesktop() ? 'Desktop' : '-')) : '-';
+            $userAgent = request()->header('User-Agent');
+            $this->status = $userSwipesToday 
+    ? (str_contains($userAgent, 'Mobile') 
+        ? 'Mobile' 
+        : (str_contains($userAgent, 'Windows') || str_contains($userAgent, 'Macintosh') 
+            ? 'Desktop' 
+            : '-')) 
+    : '-';
+           
         } catch (\Exception $e) {
             Log::error('Error in mount method: ' . $e->getMessage());
             $this->status = 'Error';
@@ -693,15 +700,19 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
     {
         $filteredData  = [];
         $today = $this->startDate;
-        $normalizedIds = $managedEmployees->pluck('emp_id')->map(fn($id) => str_replace('-', '', $id));
+        $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
+            return str_replace('-', '', $id);
+        });
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
-        $tableName = "DeviceLogs_{$month}_{$year}";
+        $tableName = 'DeviceLogs_' . $month . '_' . $year;
+        
         try {
           
-        
+              
                 // ✅ Local: Use Laravel SQLSRV connection
+                
                 if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
                     $externalSwipeLogs = DB::connection('sqlsrv')
                         ->table($tableName)
@@ -742,7 +753,7 @@ if ($this->selectedDesignation&&$this->isupdateFilter==1) {
                     stripos($data['employee']->emp_id, $this->search) !== false;
             });
         }
-
+      
         return array_values($filteredData);
     }
 

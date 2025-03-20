@@ -1135,50 +1135,47 @@
 
                                         Sign In
                                         @endif
-                                    </span>
-                                    Location
-                                    <span style="color:#f66;">*</span>
-                                </label>
-                                <select id="location" name="location" wire:model="swipe_location" wire:change="updateSwipeLocation" required>
-                                    @if (!$swipes)
-                                    <option value="">Select Your Location</option>
-                                    @endif
-                                    <option value="client_location">Client Location</option>
-                                    <option value="hybrid">Home</option>
-                                    <option value="office">Office</option>
-                                    <option value="on_duty">On-Duty</option>
-                                    <option value="remote">Remote</option>
-                                    <option value="work_from_office">Work from Office</option>
-                                    <option value="work_from_home">Work from Home</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="remarks">Remarks</label>
-                                <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks" wire:change="updateSwipeRemarks" placeholder="Enter Reason"></textarea>
-                            </div>
-                            <button id="signButton" class="signInButton" type="submit">
-
-                                @if ($swipes)
-                                @if ($swipes->in_or_out === 'OUT')
-                                Sign In
-
-                                @else
-
-                                Sign Out
-
-                                @endif
-                                @else
-
-                                Sign In
-
-                                @endif
-
-                            </button>
-                        </form>
-                        <div>
-                            <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;" height="180" width="180">
+                                </span>
+                                Location
+                                <span style="color:#f66;">*</span>
+                            </label>
+                            <select id="location" name="location" wire:model="swipe_location"wire:change="updateSwipeLocation" required>
+                                @if (!$swipes)
+                                 <option value="">Select Your Location</option>
+                                @endif   
+                                <option value="client_location">Client Location</option>
+                                <option value="on_duty">On-Duty</option>
+                                <option value="work_from_office">Work from Office</option>
+                                <option value="work_from_home">Work from Home</option>
+                            </select>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks</label>
+                            <textarea id="remarks" name="remarks" rows="4"wire:model="swipe_remarks" wire:change="updateSwipeRemarks"placeholder="Enter Reason"></textarea>
+                        </div>
+                        <button id="signButton" class="signInButton" type="submit"> 
+                            
+                        @if ($swipes)
+                                        @if ($swipes->in_or_out === 'OUT')
+                                        Sign In
+                                        
+                                        @else
+                                       
+                                        Sign Out
+                                        
+                                        @endif
+                                        @else
+                                       
+                                        Sign In
+                                       
+                                        @endif
+                                        
+                        </button>
+                     </form>
+                     <div>
+                        <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;" height="180" width="180">
+                     </div>
+                    </div>           
                 </div>
             </div>
         </div>
