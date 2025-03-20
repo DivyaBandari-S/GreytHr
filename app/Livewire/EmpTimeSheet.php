@@ -222,6 +222,7 @@ class EmpTimeSheet extends Component
                 ->where('assignee', 'LIKE', "%$empId%")
                 ->whereNotNull('client_id')
                 ->get();
+               
 
             $taskData = [
                 'date' => $date->toDateString(),
@@ -233,7 +234,6 @@ class EmpTimeSheet extends Component
                 'projects' => array_fill(0, count($this->client_names), []),
                 'maxHeights' => [] // Added to store maximum heights
             ];
-
             foreach ($this->tasks as $task) {
                 $taskStartDate = Carbon::parse($task->created_at);
                 $taskEndDate = Carbon::parse($task->due_date);
@@ -251,6 +251,7 @@ class EmpTimeSheet extends Component
                     }
                 }
             }
+            
 
             // Calculate max heights for each client
             foreach ($taskData['clients'] as $clientIndex => $client) {
@@ -268,7 +269,6 @@ class EmpTimeSheet extends Component
 
             $this->date_and_day_with_tasks[] = $taskData;
         }
-
         // Sort the array based on dates if necessary
         usort($this->date_and_day_with_tasks, function ($a, $b) {
             return strtotime($a['date']) - strtotime($b['date']);

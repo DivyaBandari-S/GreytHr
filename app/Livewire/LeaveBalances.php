@@ -635,7 +635,7 @@ class LeaveBalances extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
             // Fetch employee details
-            $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
+            $employeeDetails = EmployeeDetails::with('personalInfo')->where('emp_id', $employeeId)->first();
             if ($this->transactionType == 'granted') {
                 // Logic for 'granted' transaction type
 
@@ -660,6 +660,10 @@ class LeaveBalances extends Component
                     ->map(function ($balance) {
                         // Declare startDate and endDate based on the period
                         $period = $balance->period;
+                        if (!is_numeric($period) || strlen($period) !== 4) {
+                            Log::error("Invalid period format: " . json_encode($period));
+                            return [];
+                        }
                         $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
 
                         // Get the end date (last day of the year)
@@ -720,6 +724,10 @@ class LeaveBalances extends Component
                     ->map(function ($balance) use ($employeeId) {
                         // Declare startDate and endDate based on the last month of the year
                         $period = $balance->period;
+                        if (!is_numeric($period) || strlen($period) !== 4) {
+                            Log::error("Invalid period format: " . json_encode($period));
+                            return [];
+                        }
                         $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                         $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
@@ -790,6 +798,7 @@ class LeaveBalances extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -800,6 +809,10 @@ class LeaveBalances extends Component
                     ->map(function ($balance) {
                         // Declare startDate and endDate based on the period
                         $period = $balance->period;
+                        if (!is_numeric($period) || strlen($period) !== 4) {
+                            Log::error("Invalid period format: " . json_encode($period));
+                            return [];
+                        }
                         $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
 
                         // Get the end date (last day of the year)
@@ -814,6 +827,7 @@ class LeaveBalances extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         // Loop through the leave details and format them
@@ -837,6 +851,7 @@ class LeaveBalances extends Component
                         return $formattedLeaves;
                     })
                     ->flatten(1);
+                 
 
 
                 // Fetch leave requests (other transaction types like availed, withdrawn, etc.)
@@ -853,7 +868,8 @@ class LeaveBalances extends Component
                             'maternity' => 'Maternity Leave',
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
-                            'lop' => 'Loss of Pay'
+                            'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -904,6 +920,7 @@ class LeaveBalances extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -914,6 +931,10 @@ class LeaveBalances extends Component
                     ->map(function ($balance) use ($employeeId) {
                         // Declare startDate and endDate based on the last month of the year
                         $period = $balance->period;
+                        if (!is_numeric($period) || strlen($period) !== 4) {
+                            Log::error("Invalid period format: " . json_encode($period));
+                            return [];
+                        }
                         $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                         $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
@@ -929,6 +950,7 @@ class LeaveBalances extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
                         function normalizeLeaveNameToBalanceKey($leaveName)
                         {
@@ -990,7 +1012,8 @@ class LeaveBalances extends Component
                             'maternity' => 'Maternity Leave',
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
-                            'lop' => 'Loss of Pay'
+                            'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -1049,10 +1072,6 @@ class LeaveBalances extends Component
                 'toDate' => $this->toDateModal,
             ]);
 
-            // Log::info('PDF generated successfully', [
-            //     'employee_id' => $employeeDetails->emp_id,
-            //     'transaction_type' => $this->transactionType
-            // ]);
 
             $this->showModal = false;
             $this->updateLeaveBalances();
@@ -1064,7 +1083,7 @@ class LeaveBalances extends Component
             }, 'leave_transactions.pdf');
         } catch (Exception $e) {
             // Log the exception
-            Log::error('Error generating PDF for leave transactions: ' . $e->getMessage(), [
+            Log::error('Error generating PDF for leave transactions: ' . $e, [
                 'transaction_type' => $this->transactionType,
                 'employee_id' => $employeeId ?? 'N/A'
             ]);
