@@ -580,169 +580,203 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     }
 
     public function mount($startDateForInsights = null, $toDate = null)
-    {
+{
+    try {
+        Log::info('Starting mount function');
 
-        // Output results
+        // Fetch employee details
+        $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'hire_date')->first();
+        Log::info('Fetched employee details', ['employee' => $this->employee]);
 
-        try {
-            $this->employee = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->select('emp_id', 'first_name', 'last_name', 'shift_type', 'hire_date')->first();
-            $this->employeeHireDate = $this->employee->hire_date;
-            $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
-            $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
-            $this->to_date = Carbon::now()->subDay()->toDateString();
-            $this->startDateForInsights = $startDateForInsights ?? now()->startOfMonth()->toDateString();
-            $this->toDate = $toDate ?? now()->subDay()->toDateString();
-            // $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
-            // $this->to_date = Carbon::now()->subDay()->toDateString();
-
-            $this->updateModalTitle();
-            $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
-            $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
-            $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date);
-            $currentDate = Carbon::parse($this->from_date);
-            $endDate = Carbon::parse($this->to_date);
-            $totalHoursWorked = 0;
-            $totalMinutesWorked = 0;
-            $ip = request()->ip();
-            // Get the IP address and determine location
-            $ip = request()->ip();
-            $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co'); // Use the API URL from .env
-            $response = Http::get("{$ipUrl}/{$ip}/json/");
-
-            if ($response->successful()) {
-                $location = $response->json();
-
-                $lat = $location['latitude'] ?? null;
-                $lon = $location['longitude'] ?? null;
-                $this->country = $location['country_name'] ?? null;
-                $this->city = $location['city'] ?? null;
-                $this->postal_code = $location['postal'] ?? null;
-            } else {
-                // Handle API error
-                Log::error("Failed to fetch IP location data", ['ip' => $ip, 'response' => $response->body()]);
-            }
-            $lat = $location['lat'];
-            $lon = $location['lon'];
-            $this->country = $location['country'];
-            $this->city = $location['city'];
-            $this->postal_code = $location['postal_code'];
-            $firstDateOfPreviousMonth = Carbon::now()->subMonth()->startOfMonth();
-
-            // Get the current date of the current month
-            $currentDateOfCurrentMonth = Carbon::now()->endOfDay();
-
-            $this->year = now()->year;
-            $this->month = now()->month;
-            $this->generateCalendar();
-            $startOfMonth = '2024-08-01';
-            $endOfMonth = '2024-08-31';
-
-            $this->employeeShiftDetails = DB::table('employee_details')
-                ->join('company_shifts', function ($join) {
-                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
-                        ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
-                })
-                ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
-                ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
-                ->first();
-
-            if ($this->employeeShiftDetails) {
-                $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
-                $this->shiftEndTime = Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
-            } else {
-                $this->shiftStartTime = null;
-                $this->shiftEndTime = null;
-            }
-            while ($currentDate->lte($endDate)) {
-                $dateString = $currentDate->toDateString();
-
-                // Get "IN" and "OUT" times for the current date
-                $inTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->where('in_or_out', 'IN')
-                    ->whereDate('created_at', $dateString)
-                    ->pluck('swipe_time');
-
-                $outTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                    ->where('in_or_out', 'OUT')
-                    ->whereDate('created_at', $dateString)
-                    ->pluck('swipe_time');
-
-                $totalDifferenceForDay = 0;
-                // Calculate total time differences for the current date
-                foreach ($inTimes as $index => $inTime) {
-                    if (isset($outTimes[$index])) {
-                        $inCarbon = Carbon::parse($inTime);
-                        $outCarbon = Carbon::parse($outTimes[$index]);
-                        $difference = $outCarbon->diffInSeconds($inCarbon);
-                        $totalDifferenceForDay += $difference;
-                        $timeDifferences[$dateString][] = $difference;
-                        // Store differences for each date
-                    }
-                }
-                $currentDate->addDay(); // Move to the next day
-            }
-
-            // Optionally, calculate average time difference per day
-
-
-
-
-            // $this->calculateTotalDays();
-            $this->previousMonth = Carbon::now()->subMonth()->format('F');
-
-            $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
-
-            // Group the swipe records by the date part only
-            $groupedDates = $swipeRecords->groupBy(function ($record) {
-                return Carbon::parse($record->created_at)->format('Y-m-d');
-            });
-
-            $this->distinctDates = $groupedDates->mapWithKeys(function ($records, $key) {
-                $inRecord = $records->where('in_or_out', 'IN')->first();
-                $outRecord = $records->where('in_or_out', 'OUT')->last();
-
-                return [
-                    $key => [
-                        'in' => "IN",
-                        'first_in_time' => optional($inRecord)->swipe_time,
-                        'last_out_time' => optional($outRecord)->swipe_time,
-                        'out' => "OUT",
-                    ]
-                ];
-            });
-
-
-            // Get the current date and store it in the $currentDate property
-            $this->currentDate = date('d');
-            $this->currentWeekday = date('D');
-            $this->currentDate1 = date('d M Y');
-            $this->swiperecords = SwipeRecord::all();
-            $startOfMonth = Carbon::now()->startOfMonth();
-            $today = Carbon::now();
-            $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
-
-            $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(), $today->copy()->subDay()->toDateString());
-
-            // $this->averageworkhours=$averageWorkHrsForCurrentMonth['average_work_hours'];
-
-            // $this->percentageOfWorkHrs=$averageWorkHrsForCurrentMonth['work_percentage'];
-
-        } catch (\Exception $e) {
-           
-            $this->from_date = now()->startOfMonth()->toDateString();
-            $this->to_date = now()->toDateString();
-            $this->distinctDates = collect();
-            $this->currentDate = date('d');
-            $this->currentWeekday = date('D');
-            $this->currentDate1 = date('d M Y');
-            $this->swiperecords = collect();
-            $this->year = now()->year;
-            $this->month = now()->month;
-
-            // Optionally, you can set a session message or an error message to inform the user
-            FlashMessageHelper::flashError('An error occurred while initializing the component. Please try again later.');
+        if (!$this->employee) {
+            Log::error('No employee details found for the authenticated user');
+            throw new \Exception('No employee details found for the authenticated user');
         }
+
+        $this->employeeHireDate = $this->employee->hire_date;
+        Log::info('Employee hire date set', ['hire_date' => $this->employeeHireDate]);
+
+        // Set date ranges
+        $this->from_date = Carbon::now()->subMonth()->startOfMonth()->toDateString();
+        Log::info('From date set', ['from_date' => $this->from_date]);
+
+        $this->start_date_for_insights = Carbon::now()->startOfMonth()->format('Y-m-d');
+        Log::info('Start date for insights set', ['start_date_for_insights' => $this->start_date_for_insights]);
+
+        $this->to_date = Carbon::now()->subDay()->toDateString();
+        Log::info('To date set', ['to_date' => $this->to_date]);
+
+        $this->startDateForInsights = $startDateForInsights ?? now()->startOfMonth()->toDateString();
+        Log::info('Start date for insights (defaulted)', ['startDateForInsights' => $this->startDateForInsights]);
+
+        $this->toDate = $toDate ?? now()->subDay()->toDateString();
+        Log::info('To date (defaulted)', ['toDate' => $this->toDate]);
+
+        
+        // Update modal title
+        $this->updateModalTitle();
+        Log::info('Modal title updated');
+
+        // Calculate average working hours
+        $this->calculateAvgWorkingHrs($this->from_date, $this->to_date, $this->employee->emp_id);
+        Log::info('Average working hours calculated');
+
+        // Parse dates
+        $fromDate = Carbon::createFromFormat('Y-m-d', $this->from_date);
+        Log::info('From date parsed', ['fromDate' => $fromDate]);
+
+        $toDate = Carbon::createFromFormat('Y-m-d', $this->to_date);
+        Log::info('To date parsed', ['toDate' => $toDate]);
+
+        $currentDate = Carbon::parse($this->from_date);
+        Log::info('Current date parsed', ['currentDate' => $currentDate]);
+
+        $endDate = Carbon::parse($this->to_date);
+        Log::info('End date parsed', ['endDate' => $endDate]);
+
+        // Initialize counters
+        $totalHoursWorked = 0;
+        $totalMinutesWorked = 0;
+
+        // Get IP address and location
+        $ip = request()->ip() === '127.0.0.1' ? Http::get('https://api64.ipify.org')->body() : request()->ip();
+        Log::info('IP address obtained', ['ip' => $ip]);
+
+        $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co');
+        Log::info('IP API URL obtained', ['ipUrl' => $ipUrl]);
+
+        $response = Http::get("{$ipUrl}/{$ip}/json/");
+        Log::info('IP location API response', ['response' => $response]);
+
+        if ($response->successful()) {
+            $location = $response->json();
+            Log::info('IP location data fetched', ['location' => $location]);
+
+            $lat = $location['lat'] ?? null;
+            $lon = $location['lon'] ?? null;
+            $this->country = $location['country_name'] ?? null;
+            $this->city = $location['city'] ?? null;
+            $this->postal_code = $location['postal'] ?? null;
+        } else {
+            Log::error('Failed to fetch IP location data', ['ip' => $ip, 'response' => $response->body()]);
+        }
+
+        // Fetch employee shift details
+        $this->employeeShiftDetails = DB::table('employee_details')
+            ->join('company_shifts', function ($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                    ->on('employee_details.shift_type', '=', 'company_shifts.shift_name');
+            })
+            ->where('employee_details.emp_id', auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
+            ->first();
+
+        Log::info('Employee shift details fetched', ['employeeShiftDetails' => $this->employeeShiftDetails]);
+
+        if ($this->employeeShiftDetails) {
+            $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
+            $this->shiftEndTime = Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
+            Log::info('Shift start and end times parsed', ['shiftStartTime' => $this->shiftStartTime, 'shiftEndTime' => $this->shiftEndTime]);
+        } else {
+            $this->shiftStartTime = null;
+            $this->shiftEndTime = null;
+        }
+
+        // Loop through each day to calculate total time differences
+        while ($currentDate->lte($endDate)) {
+            $dateString = $currentDate->toDateString();
+            Log::info('Processing date', ['dateString' => $dateString]);
+
+            $inTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'IN')
+                ->whereDate('created_at', $dateString)
+                ->pluck('swipe_time');
+
+            $outTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('in_or_out', 'OUT')
+                ->whereDate('created_at', $dateString)
+                ->pluck('swipe_time');
+
+            Log::info('IN and OUT times fetched', ['inTimes' => $inTimes, 'outTimes' => $outTimes]);
+
+            $totalDifferenceForDay = 0;
+
+            foreach ($inTimes as $index => $inTime) {
+                if (isset($outTimes[$index])) {
+                    $inCarbon = Carbon::parse($inTime);
+                    $outCarbon = Carbon::parse($outTimes[$index]);
+                    $difference = $outCarbon->diffInSeconds($inCarbon);
+                    $totalDifferenceForDay += $difference;
+                    Log::info('Time difference calculated', ['difference' => $difference]);
+                }
+            }
+
+            $currentDate->addDay();
+        }
+
+        // Group swipe records by date
+        $swipeRecords = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+        Log::info('Swipe records fetched', ['swipeRecords' => $swipeRecords]);
+
+        $groupedDates = $swipeRecords->groupBy(function ($record) {
+            return Carbon::parse($record->created_at)->format('Y-m-d');
+        });
+
+        $this->distinctDates = $groupedDates->mapWithKeys(function ($records, $key) {
+            $inRecord = $records->where('in_or_out', 'IN')->first();
+            $outRecord = $records->where('in_or_out', 'OUT')->last();
+
+            return [
+                $key => [
+                    'in' => "IN",
+                    'first_in_time' => optional($inRecord)->swipe_time,
+                    'last_out_time' => optional($outRecord)->swipe_time,
+                    'out' => "OUT",
+                ]
+            ];
+        });
+
+        Log::info('Distinct dates grouped', ['distinctDates' => $this->distinctDates]);
+
+        // Set current date properties
+        $this->currentDate = date('d');
+        $this->currentWeekday = date('D');
+        $this->currentDate1 = date('d M Y');
+        $this->swiperecords = SwipeRecord::all();
+        Log::info('Current date properties set', ['currentDate' => $this->currentDate, 'currentWeekday' => $this->currentWeekday, 'currentDate1' => $this->currentDate1]);
+
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $today = Carbon::now();
+        $this->year = now()->year;
+        $this->month = now()->month;
+        Log::info('Start of month and today dates set', ['startOfMonth' => $startOfMonth, 'today' => $today]);
+
+        $this->generateCalendar();
+        Log::info('Calendar generated');
+
+        $this->percentageinworkhrsforattendance = $this->calculateDifferenceInAvgWorkHours(\Carbon\Carbon::now()->format('Y-m'));
+        Log::info('Percentage in work hours for attendance calculated', ['percentageinworkhrsforattendance' => $this->percentageinworkhrsforattendance]);
+
+        $this->averageWorkHrsForCurrentMonth = $this->calculateAverageWorkHoursAndPercentage($startOfMonth->toDateString(), $today->copy()->subDay()->toDateString());
+        Log::info('Average work hours for current month calculated', ['averageWorkHrsForCurrentMonth' => $this->averageWorkHrsForCurrentMonth]);
+
+    } catch (\Exception $e) {
+        Log::error('Error in mount method', ['error' => $e->getMessage()]);
+
+        $this->from_date = now()->startOfMonth()->toDateString();
+        $this->to_date = now()->toDateString();
+        $this->distinctDates = collect();
+        $this->currentDate = date('d');
+        $this->currentWeekday = date('D');
+        $this->currentDate1 = date('d M Y');
+        $this->swiperecords = collect();
+        $this->year = now()->year;
+        $this->month = now()->month;
+
+        FlashMessageHelper::flashError('An error occurred while initializing the component. Please try again later.');
     }
+}
+
 
 
     public function showTable()
@@ -1357,7 +1391,13 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     } elseif ($timeDifference < 270) {
                                         $isHalfDayPresent = true;
 
-                                        if ($inTime->gte($startTimeForSession1) && $outTime->lte($endTimeForSession1)) {
+                                        Log::info('One of the date values is null.', [
+                                            'inTime' => $inTime,
+                                            'outTime' => $outTime,
+                                            'startTimeForSession1'=>$startTimeForSession1,
+                                            'endTimeForSession1'=>$endTimeForSession1,
+                                        ]);
+                                        if ($inTime->gte($startTimeForSession1) ) {
                                             $isHalfDayPresentForSession1 = true;
                                         } else {
                                             $isHalfDayPresentForSession2 = true;
@@ -2674,7 +2714,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 
     public function openattendanceperiodModal()
     {
-
+        Log::info('Attendance Period Modal is opened');
         $this->openattendanceperiod = true;
     }
     public function closeattendanceperiodModal()
@@ -2800,7 +2840,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                     $this->first_in_time_for_date = $firstInTime;
                     $this->last_out_time_for_date = $lastOutTime;
 
-                    $this->timeDifferenceInMinutesForCalendar = $lastOutTime->diffInMinutes($firstInTime);
+                    $this->timeDifferenceInMinutesForCalendar = $firstInTime->diffInMinutes($lastOutTime);
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
