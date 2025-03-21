@@ -16,13 +16,6 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-            max-width: 400px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
 
         .sign-out-form .form-group {
             margin-bottom: 15px;
@@ -31,11 +24,6 @@
             margin-bottom: 15px;
         }
 
-        .sign-out-form label {
-            display: block;
-            margin-bottom: 5px;
-            color: #333;
-        }
         .sign-out-form label {
             display: block;
             margin-bottom: 5px;
@@ -59,9 +47,6 @@
             box-sizing: border-box;
         }
 
-        .sign-out-form textarea {
-            resize: vertical;
-        }
         .sign-out-form textarea {
             resize: vertical;
         }
@@ -193,8 +178,6 @@
                                                 Sign Out
                                             @endif
                                         @else
-
-                                        Sign In
                                             Sign In
                                         @endif
 
