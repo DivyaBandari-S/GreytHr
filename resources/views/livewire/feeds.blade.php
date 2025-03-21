@@ -783,50 +783,37 @@
                                         <div class="col-md-4 group-events m-auto">
                                             Group Events
                                         </div>
-                                        <div class=" col-md-4 group-events  m-auto">
-                                            @if (isset($data['employee']->created_at) || isset($data['employee']->personalInfo->date_of_birth))
-                                            {{-- Determine which date to use --}}
-                                            @php
-                                            $currentDate = \Carbon\Carbon::now();
+                                        <div class="col-md-4 group-events m-auto">
+    @if (!empty($data['employee']->created_at) || !empty($data['employee']->personalInfo->date_of_birth))
+        @php
+            // Get the current date
+            $currentDate = \Carbon\Carbon::now();
 
-                                            // Use created_at if available, otherwise use date_of_birth
-                                            $referenceDate = isset($data['employee']->created_at)
-                                            ? \Carbon\Carbon::parse(
-                                            $data['employee']->created_at,
-                                            )
-                                            : \Carbon\Carbon::parse(
-                                            $data['employee']->personalInfo->date_of_birth,
-                                            );
+            // Prefer created_at, otherwise use date_of_birth
+            $referenceDate = !empty($data['employee']->created_at) 
+                ? \Carbon\Carbon::parse($data['employee']->created_at)
+                : \Carbon\Carbon::parse($data['employee']->personalInfo->date_of_birth);
 
-                                            // Calculate the difference without considering the year
-                                            $ageMonths = $currentDate->diffInMonths(
-                                            $referenceDate->copy()->year($currentDate->year),
-                                            );
-                                            $ageDays = $currentDate->diffInDays(
-                                            $referenceDate->copy()->year($currentDate->year),
-                                            );
-                                            $ageHours = $currentDate->diffInHours(
-                                            $referenceDate->copy()->year($currentDate->year),
-                                            );
+            // Adjust the reference date to the current year for comparison
+            $adjustedDate = $referenceDate->copy()->year($currentDate->year);
 
-                                            // Determine the output based on the age
-                                            if ($ageMonths > 0) {
-                                            echo "{$ageMonths} month" .
-                                            ($ageMonths > 1 ? 's' : '') .
-                                            ' ago';
-                                            } elseif ($ageDays > 0) {
-                                            echo "{$ageDays} day" .
-                                            ($ageDays > 1 ? 's' : '') .
-                                            ' ago';
-                                            } else {
-                                            echo "{$ageHours} hour" .
-                                            ($ageHours > 1 ? 's' : '') .
-                                            ' ago';
-                                            }
-                                            @endphp
-                                            @endif
+            // If the adjusted date is in the future, subtract 1 year to keep it within the correct range
+            if ($adjustedDate->greaterThan($currentDate)) {
+                $adjustedDate->subYear();
+            }
 
-                                        </div>
+            // Format reference date as d-m (e.g., 15-03)
+            $formattedDate = $referenceDate->format('d-m');
+
+            // Calculate the difference in human-readable format
+            $humanReadableDiff = $adjustedDate->diffForHumans();
+
+            // Output the result
+            echo " {$humanReadableDiff}";
+        @endphp
+    @endif
+</div>
+
                                     </div>
                                     <div class="row m-0 mt-2">
                                         <div class="col-md-4">
@@ -1455,42 +1442,37 @@
                                 <div class="col-md-4 group-events m-auto">
                                     Group Events
                                 </div>
-                                <div class=" col-md-4 group-events m-auto">
-                                    @if (isset($data['employee']->created_at) || isset($data['employee']->personalInfo->date_of_birth))
-                                    {{-- Determine which date to use --}}
-                                    @php
-                                    $currentDate = \Carbon\Carbon::now();
+                                <div class="col-md-4 group-events m-auto">
+    @if (!empty($data['employee']->created_at) || !empty($data['employee']->personalInfo->date_of_birth))
+        @php
+            // Get the current date
+            $currentDate = \Carbon\Carbon::now();
 
-                                    // Use created_at if available, otherwise use date_of_birth
-                                    $referenceDate = isset($data['employee']->created_at)
-                                    ? \Carbon\Carbon::parse($data['employee']->created_at)
-                                    : \Carbon\Carbon::parse(
-                                    $data['employee']->personalInfo->date_of_birth,
-                                    );
+            // Prefer created_at, otherwise use date_of_birth
+            $referenceDate = !empty($data['employee']->created_at) 
+                ? \Carbon\Carbon::parse($data['employee']->created_at)
+                : \Carbon\Carbon::parse($data['employee']->personalInfo->date_of_birth);
 
-                                    // Calculate the difference without considering the year
-                                    $ageMonths = $currentDate->diffInMonths(
-                                    $referenceDate->copy()->year($currentDate->year),
-                                    );
-                                    $ageDays = $currentDate->diffInDays(
-                                    $referenceDate->copy()->year($currentDate->year),
-                                    );
-                                    $ageHours = $currentDate->diffInHours(
-                                    $referenceDate->copy()->year($currentDate->year),
-                                    );
+            // Adjust the reference date to the current year for comparison
+            $adjustedDate = $referenceDate->copy()->year($currentDate->year);
 
-                                    // Determine the output based on the age
-                                    if ($ageMonths > 0) {
-                                    echo "{$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . ' ago';
-                                    } elseif ($ageDays > 0) {
-                                    echo "{$ageDays} day" . ($ageDays > 1 ? 's' : '') . ' ago';
-                                    } else {
-                                    echo "{$ageHours} hour" . ($ageHours > 1 ? 's' : '') . ' ago';
-                                    }
-                                    @endphp
-                                    @endif
+            // If the adjusted date is in the future, subtract 1 year to keep it within the correct range
+            if ($adjustedDate->greaterThan($currentDate)) {
+                $adjustedDate->subYear();
+            }
 
-                                </div>
+            // Format reference date as d-m (e.g., 15-03)
+            $formattedDate = $referenceDate->format('d-m');
+
+            // Calculate the difference in human-readable format
+            $humanReadableDiff = $adjustedDate->diffForHumans();
+
+            // Output the result
+            echo " {$humanReadableDiff}";
+        @endphp
+    @endif
+</div>
+
                             </div>
                             <div class="row m-0 mt-2">
                                 <div class="col-md-3">
@@ -2069,33 +2051,36 @@
                         <div class="col-md-4 group-events m-auto">
                             Group Events
                         </div>
-                        <div class=" col-md-4 group-events m-auto">
-                            @if (isset($data['employee']->created_at) || isset($data['employee']->hire_date))
-                            {{-- Determine which date to use --}}
-                            @php
-                            $dateToUse = isset($data['employee']->created_at)
-                            ? $data['employee']->created_at
-                            : $data['employee']->hire_date;
-                            $dateToUse = \Carbon\Carbon::parse($dateToUse);
-                            $currentDate = \Carbon\Carbon::now();
+                        <div class="col-md-4 group-events m-auto">
+    @if (!empty($data['employee']->created_at) || !empty($data['employee']->hire_date))
+        @php
+            // Determine which date to use (prefer created_at, otherwise hire_date)
+            $dateToUse = $data['employee']->created_at ?? $data['employee']->hire_date;
+            $originalDate = \Carbon\Carbon::parse($dateToUse); // Keep the original date
+            $currentDate = \Carbon\Carbon::now();
 
-                            // Calculate the difference without considering the year
-                            $ageMonths = $currentDate->diffInMonths($dateToUse->copy()->year($currentDate->year));
-                            $ageDays = $currentDate->diffInDays($dateToUse->copy()->year($currentDate->year));
-                            $ageHours = $currentDate->diffInHours($dateToUse->copy()->year($currentDate->year));
+            // Set to the current year for comparison
+            $adjustedDate = $originalDate->copy()->year($currentDate->year);
 
-                            // Determine the output based on the age
-                            if ($ageMonths > 0) {
-                            echo "{$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . ' ago';
-                            } elseif ($ageDays > 0) {
-                            echo "{$ageDays} day" . ($ageDays > 1 ? 's' : '') . ' ago';
-                            } else {
-                            echo "{$ageHours} hour" . ($ageHours > 1 ? 's' : '') . ' ago';
-                            }
-                            @endphp
-                            @endif
+            // If adjustedDate is in the future, subtract 1 year
+            if ($adjustedDate->greaterThan($currentDate)) {
+                $adjustedDate->subYear();
+            }
 
-                        </div>
+            // Format date as d-m
+            $formattedDate = $originalDate->format('d-m');
+
+            // Get human-readable difference
+            $humanReadableDiff = $adjustedDate->diffForHumans();
+
+            // Output the formatted result
+            echo " {$humanReadableDiff}";
+        @endphp
+    @endif
+</div>
+
+
+
                     </div>
                     <div class="row m-0">
                         <div class="col-md-3">
@@ -2669,33 +2654,33 @@
                 <div class="col-md-4 group-events  m-auto">
                     Group Events
                 </div>
-                <div class="col-md-4 m-auto"
-                    style="font-size: 12px; font-weight: 100px; color: #9E9696; text-align: center;">
-                    @if (isset($data['employee']->created_at) || isset($data['employee']->hire_date))
-                    {{-- Determine which date to use --}}
-                    @php
-                    $dateToUse = isset($data['employee']->created_at)
-                    ? $data['employee']->created_at
-                    : $data['employee']->hire_date;
-                    $dateToUse = \Carbon\Carbon::parse($dateToUse);
-                    $currentDate = \Carbon\Carbon::now();
+                <div class="col-md-4 group-events m-auto">
+    @if (!empty($data['employee']->created_at) || !empty($data['employee']->hire_date))
+        @php
+            // Determine which date to use (prefer created_at, otherwise hire_date)
+            $dateToUse = $data['employee']->created_at ?? $data['employee']->hire_date;
+            $originalDate = \Carbon\Carbon::parse($dateToUse); // Keep the original date
+            $currentDate = \Carbon\Carbon::now();
 
-                    // Calculate the difference without considering the year
-                    $ageMonths = $currentDate->diffInMonths($dateToUse->copy()->year($currentDate->year));
-                    $ageDays = $currentDate->diffInDays($dateToUse->copy()->year($currentDate->year));
-                    $ageHours = $currentDate->diffInHours($dateToUse->copy()->year($currentDate->year));
+            // Set to the current year for comparison
+            $adjustedDate = $originalDate->copy()->year($currentDate->year);
 
-                    // Determine the output based on the age
-                    if ($ageMonths > 0) {
-                    echo "{$ageMonths} month" . ($ageMonths > 1 ? 's' : '') . ' ago';
-                    } elseif ($ageDays > 0) {
-                    echo "{$ageDays} day" . ($ageDays > 1 ? 's' : '') . ' ago';
-                    } else {
-                    echo "{$ageHours} hour" . ($ageHours > 1 ? 's' : '') . ' ago';
-                    }
-                    @endphp
-                    @endif
-                </div>
+            // If adjustedDate is in the future, subtract 1 year
+            if ($adjustedDate->greaterThan($currentDate)) {
+                $adjustedDate->subYear();
+            }
+
+            // Format date as d-m
+            $formattedDate = $originalDate->format('d-m');
+
+            // Get human-readable difference
+            $humanReadableDiff = $adjustedDate->diffForHumans();
+
+            // Output the formatted result
+            echo " {$humanReadableDiff}";
+        @endphp
+    @endif
+</div>
             </div>
             <div class="row m-0">
                 <div class="col-md-3">
