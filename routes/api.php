@@ -33,4 +33,5 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed']);
     Route::get('getBalanceBySelectingLeaveType',[LeaveApplicationsController::class,'getBalanceBySelectingLeaveType']);
     Route::get('getApprovedLeaveDays',[LeaveApplicationsController::class,'getApprovedLeaveDays']);
+    Route::get('calculateLeaveDays',[LeaveApplicationsController::class,'calculateLeaveDays']);
 });
