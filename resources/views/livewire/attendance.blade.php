@@ -1,6 +1,6 @@
 <div>
 <div class="position-absolute" wire:loading
-        wire:target="openattendanceperiodModal,redirectToRegularisation,showTable,showBars">
+        wire:target="openattendanceperiodModal,redirectToRegularisation,showBars">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -1602,7 +1602,7 @@ color: #fff;
                                $holidayCountpercentage=intval(($totalnumberofHolidayForFormattedDate/$totalDaysForFormattedModalTitle)*100);
                             @endphp
                              
-                            <livewire:my-flowchart :absent="$absentCountpercentage" :present="$presentCountpercentage" :leave-taken="$leaveTakenpercentage" :holidays="$holidayCountpercentage" />      
+                            <livewire:attendance-chart />      
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageFirstInTime}}</span></p>
@@ -2410,7 +2410,7 @@ color: #fff;
                                                 $shiftEndTime = \Carbon\Carbon::parse($shiftEndTime);
                                                 // Check if first_in_time is greater than shiftStartTime
                                                 $diffInMinutes1 = $shiftEndTime->diffInMinutes($lastOutTime);
-                                                    $diffInMinutes = $firstInTime->diffInMinutes($shiftStartTime);
+                                                    $diffInMinutes = $shiftStartTime->diffInMinutes($firstInTime);
                                                     $lateInhours = floor($diffInMinutes / 60);
                                                     $lateInminutes = $diffInMinutes % 60;
                                                 
@@ -2432,7 +2432,7 @@ color: #fff;
                                                $lastOutTime = \Carbon\Carbon::parse($this->last_out_time);
                                                $shiftEndTime = \Carbon\Carbon::parse($shiftEndTime);
                                                // Check if first_in_time is greater than shiftStartTime
-                                               $diffInMinutes1 = $shiftEndTime->diffInMinutes($lastOutTime);
+                                               $diffInMinutes1 = $lastOutTime->diffInMinutes($shiftEndTime);
                                                   
                                                    $earlyOuthours = floor($diffInMinutes1 / 60);
                                                    $earlyOutminutes = $diffInMinutes1 % 60;

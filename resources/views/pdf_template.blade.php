@@ -188,9 +188,10 @@
             <p>Reporting Manager <span style=" padding-left: 94px;">: {{ ucwords($employeeDetails->report_to) }}
                     ({{ $employeeDetails->manager_id }}) </span></p>
             <p>Employee No <span style="padding-left: 134px;">: {{ $employeeDetails->emp_id }}</span></p>
-            <p>Date of Birth <span style="padding-left: 133px;">:
-                    {{ optional(\Carbon\Carbon::parse($employeeDetails->date_of_birth))->format('d M, Y') }}
-                </span></p>
+            <p>Date of Birth <span style="padding-left: 133px;">
+                : {{ optional($employeeDetails->personalInfo)->date_of_birth ? \Carbon\Carbon::parse($employeeDetails->personalInfo->date_of_birth)->format('d M, Y') : '-' }}
+            </span></p>
+                   
             <p>Gender <span style="padding-left: 166px;">: {{ ucwords(strtolower($employeeDetails->gender)) }}</span>
             </p>
         </div>

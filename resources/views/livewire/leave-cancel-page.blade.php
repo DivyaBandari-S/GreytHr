@@ -1,6 +1,6 @@
 <div class="position-relative">
     <div class="position-absolute" wire:loading
-        wire:target="markAsLeaveCancel,toggleInfoLeave,applyingTo,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,cancel,toggleApplyingto">
+        wire:target="markAsLeaveCancel,toggleInfoLeave,getFilteredManagers,openModal,toggleManager,openCcRecipientsContainer,closeCcRecipientsContainer,toggleSelection,searchCCRecipients,cancel,toggleApplyingto">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>

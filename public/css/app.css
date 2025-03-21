@@ -5032,6 +5032,30 @@ input[type="radio"] {
     margin-left: 5px;
 }
 
+.earnedLeave {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #eaf0f2 ;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 15px;
+}
+
+.earnedLeaveBal {
+    font-size: 10px;
+    color: #336D82;
+    font-weight: 500;
+}
+
+.earnedLeaveValue {
+    font-size: 11px;
+    font-weight: 500;
+    color: #336D82;
+    margin-left: 5px;
+}
+
 .normalTextValueSmall {
     font-size: 11px;
     font-weight: 500;
@@ -6150,6 +6174,9 @@ select .yearSelect {
 
 .leave-table td.date-range {
     width: 40%;
+}
+td.calendar-date.active-date{
+    border: 0.1rem solid var(--main-color);
 }
 
 .leave-table td.date-range span {
@@ -11017,6 +11044,6 @@ cursor: pointer;
 }
 
 
-.fl-wrapper[data-position$=-center]{
+/* .fl-wrapper[data-position$=-center]{
     z-index: 10;
-}
+} */

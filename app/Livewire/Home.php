@@ -529,7 +529,7 @@ class Home extends Component
     {
         try {
             $currentTime = Carbon::now();
-
+ 
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
@@ -539,17 +539,17 @@ class Home extends Component
                 FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
                 return;
             } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
-
+ 
                 FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
                 return;
             }
-
+ 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
-
+ 
             $this->signIn = !$this->signIn;
-
+ 
             $userAgent = request()->header('User-Agent');
-
+ 
             // Detect Device Type
             if (stripos($userAgent, 'mobile') !== false) {
                 $deviceName = 'Mobile';
@@ -560,7 +560,7 @@ class Home extends Component
             } else {
                 $deviceName = 'Unknown Device';
             }
-
+ 
             // Detect Platform (OS)
             if (stripos($userAgent, 'windows') !== false) {
                 $platform = 'Windows';
@@ -575,7 +575,7 @@ class Home extends Component
             } else {
                 $platform = 'Unknown OS';
             }
-
+ 
             $ipAddress = request()->ip();
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
@@ -587,26 +587,25 @@ class Home extends Component
                 'swipe_location' => $this->swipe_location,
                 'swipe_remarks' => $this->swipe_remarks,
             ]);
-
-
-
+ 
+ 
+ 
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
                 ? "You have successfully signed in."
                 : "You have successfully signed out.");
-
+ 
             $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
             $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
-
-
+ 
+ 
             return redirect('/');
         } catch (Throwable $e) {
-
-
+ 
+ 
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }
-
     public function showEarlyEmployees()
     {
         $this->whoisinTitle = 'On Time';
@@ -804,6 +803,8 @@ class Home extends Component
                 ->orderBy('leave_applications.created_at', 'desc')
                 ->select('leave_applications.*') // Select all columns from the leave_requests table
                 ->get();
+            // Group leave requests by employee's emp_id and count the number of leaves
+            $groupedUpcomingLeaves = $this->upcomingLeaveRequests->groupBy('emp_id');
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
 
             //attendance related query
@@ -1070,7 +1071,8 @@ class Home extends Component
                 'taskCount' => $this->taskCount,
                 'employeeNames' => $this->employeeNames,
                 'groupedRequests' => $this->groupedRequests,
-                'loginEmpManagerDetails' => $this->loginEmpManagerDetails
+                'loginEmpManagerDetails' => $this->loginEmpManagerDetails,
+                'groupedUpcomingLeaves' => $groupedUpcomingLeaves
 
             ]);
         } catch (\Illuminate\Database\QueryException $e) {

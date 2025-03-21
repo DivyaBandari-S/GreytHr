@@ -25,21 +25,29 @@ class HolidayCalender extends Component
     public $initialSelectedYear;
     public $calendarData;
     public $previousYear;
+    public $previousYears = [];
     public $nextYear;
     public $noHolidaysFlag = false;
 
     public function mount()
     {
         try {
-            // Set the default year to the current year
+
             $this->selectedYear = Carbon::now()->year;
-            $this->initialSelectedYear = $this->selectedYear; // Store the initial selected year
-            $this->previousYear = $this->selectedYear - 1;
+            $this->initialSelectedYear = $this->selectedYear;
+
+            // Generate previous 4 years
+            $this->previousYears = array_reverse(range($this->selectedYear - 3, $this->selectedYear - 1));
+
+
+
+
+            // Next year
             $this->nextYear = $this->selectedYear + 1;
             $this->fetchCalendarData($this->selectedYear);
         } catch (\Exception $e) {
             // Display a friendly error message to the user
-           FlashMessageHelper::flashError('An error occurred while loading the calendar data. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while loading the calendar data. Please try again later.');
             // Redirect the user to a safe location
             return redirect()->back();
         }
@@ -54,7 +62,6 @@ class HolidayCalender extends Component
                 $this->selectedYear = $selected_Year;
                 $this->fetchCalendarData($selected_Year);
             }
-           
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while updating the calendar data. Please try again later.');
             // Redirect the user to a safe location
@@ -70,16 +77,15 @@ class HolidayCalender extends Component
             // Fetch data for the selected year
 
             $this->calendarData = HolidayCalendar::where('year', $year)
-            ->where('status', 2)
-            ->get();
-            
+                ->where('status', 2)
+                ->get();
+
             $uniqueDates = $this->calendarData->unique('date');
-    
+
             // Update the calendar data with unique dates
             $this->calendarData = $uniqueDates;
-
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError( 'An error occurred while fetching calendar data. Please try again later.');
+            FlashMessageHelper::flashError('An error occurred while fetching calendar data. Please try again later.');
             $this->calendarData = [];
         }
     }
