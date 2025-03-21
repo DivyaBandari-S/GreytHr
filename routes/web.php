@@ -344,6 +344,7 @@ Route::middleware(['auth:emp'])->group(function () {
     //*******************************************  End Of Chat Module Routes *************************/
 });
 
+Route::get('password/reset/{token}', PasswordResetComponent::class)->name('password.reset');
 
 Route::get('/itform', function () {
     return view('itform');

@@ -6,10 +6,9 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
-use Torann\GeoIP\Facades\GeoIP;
-use Jenssegers\Agent\Agent;
-
 class PasswordChangedNotification extends Notification
 {
     use Queueable;
@@ -39,23 +38,64 @@ class PasswordChangedNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        // Gather additional information
-        $ipAddress = Request::ip(); // Get the user's IP address
-        $location = GeoIP::getLocation($ipAddress); // Get location based on IP
-        $browser = Request::header('User-Agent'); // Get the User-Agent (browser) information
+        // 1. Get IP Address
+        $ipAddress = request()->ip();
 
-        // Detect device info
-        $agent = new Agent();
+        // 2. Get location using public API (Photon or ipapi, no composer package)
+        $locationData = null;
+        try {
+            $ipApiBase = env('FINDIP_API_URL', 'https://ipapi.co');
+            $locationApi = rtrim($ipApiBase, '/') . '/' . $ipAddress . '/json/';
+
+            $response = Http::timeout(5)->get($locationApi);
+
+            if ($response->successful()) {
+                $locationData = $response->json();
+            }
+        } catch (\Exception $e) {
+            Log::warning("Failed to fetch IP location: " . $e->getMessage());
+        }
+
+        // 3. Get browser and OS using PHP's User-Agent string
+        $userAgent = request()->header('User-Agent');
+
         $device = 'Unknown Device';
-        $os = $agent->platform(); // OS for desktop, tablet, or mobile
-        $osVersion = $agent->version($os); // OS version
+        $os = 'Unknown OS';
+        $browser = 'Unknown Browser';
 
-        if ($agent->isDesktop()) {
-            $device = 'Desktop';
-        } elseif ($agent->isTablet()) {
-            $device = 'Tablet';
-        } elseif ($agent->isMobile()) {
+        // Basic browser detection
+        if (strpos($userAgent, 'Chrome') !== false) {
+            $browser = 'Chrome';
+        } elseif (strpos($userAgent, 'Firefox') !== false) {
+            $browser = 'Firefox';
+        } elseif (strpos($userAgent, 'Safari') !== false) {
+            $browser = 'Safari';
+        } elseif (strpos($userAgent, 'Edge') !== false) {
+            $browser = 'Edge';
+        } elseif (strpos($userAgent, 'MSIE') !== false || strpos($userAgent, 'Trident') !== false) {
+            $browser = 'Internet Explorer';
+        }
+
+        // Basic OS detection
+        if (preg_match('/Windows NT 10.0/', $userAgent)) {
+            $os = 'Windows 10';
+        } elseif (preg_match('/Windows NT 6.3/', $userAgent)) {
+            $os = 'Windows 8.1';
+        } elseif (preg_match('/Macintosh/', $userAgent)) {
+            $os = 'macOS';
+        } elseif (preg_match('/iPhone/', $userAgent)) {
+            $os = 'iOS';
+        } elseif (preg_match('/Android/', $userAgent)) {
+            $os = 'Android';
+        } elseif (preg_match('/Linux/', $userAgent)) {
+            $os = 'Linux';
+        }
+
+        // Device type detection
+        if (preg_match('/Mobile|Android|iPhone|iPad/', $userAgent)) {
             $device = 'Mobile';
+        } else {
+            $device = 'Desktop';
         }
 
         return (new MailMessage)
@@ -64,14 +104,15 @@ class PasswordChangedNotification extends Notification
                 'user' => $notifiable,
                 'companyName' => $this->companyName,
                 'ipAddress' => $ipAddress,
-                'location' => $location,
+                'location' => $locationData,
                 'browser' => $browser,
                 'device' => $device,
                 'os' => $os,
-                'osVersion' => $osVersion, // Include OS version
+                'osVersion' => null, // You can extract version if needed
                 'logoUrl' => asset('images/hr_new_blue.png'),
             ]);
     }
+
 
     /**
      * Get the array representation of the notification.

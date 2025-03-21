@@ -79,14 +79,7 @@ class AuthController extends Controller
     }
 
 
-    /**
-     * Get the authenticated User
-     */
-    public function empDetails()
-    {
-        $user = Auth::guard('api')->user();
-        return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, $user);
-    }
+
 
     /**
      * Get Employee Details
@@ -109,10 +102,7 @@ class AuthController extends Controller
             }
 
             return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
-                'emp_id'      => $employeeDetails->emp_id,
-                'email'       => $employeeDetails->email,
-                'first_name'  => $employeeDetails->first_name,
-                'last_name'   => $employeeDetails->last_name,
+                'employee' => $employeeDetails,
             ]);
         } catch (\Exception $e) {
             Log::error('Error fetching employee details: ' . $e->getMessage());

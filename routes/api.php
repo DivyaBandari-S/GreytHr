@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\LeaveApplicationsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
@@ -30,6 +31,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/employee/personal/update', [EmpPersonalInfoController::class, 'update']);
     Route::post('showsal', [ShowSalaryController::class, 'showSalary']);
     Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed']);
-
-
+    Route::get('getBalanceBySelectingLeaveType',[LeaveApplicationsController::class,'getBalanceBySelectingLeaveType']);
+    Route::get('getApprovedLeaveDays',[LeaveApplicationsController::class,'getApprovedLeaveDays']);
+    Route::get('calculateLeaveDays',[LeaveApplicationsController::class,'calculateLeaveDays']);
 });

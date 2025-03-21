@@ -64,6 +64,8 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
         'confirmation_date',
     ];
 
+    protected $hidden = ['password'];
+
     protected $casts = [
         'company_id' => 'array',
     ];
