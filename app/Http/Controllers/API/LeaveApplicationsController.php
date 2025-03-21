@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Livewire\LeaveBalances;
+use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -113,6 +114,7 @@ class LeaveApplicationsController extends Controller
                 ])
                 ->whereYear('to_date', '=', $selectedYear)
                 ->get();
+
             return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
                 'approvedLeaveRequests' => $approvedLeaveRequests,
             ]);
@@ -120,5 +122,132 @@ class LeaveApplicationsController extends Controller
             Log::error('Login error: ' . $e->getMessage());
             return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
         }
+    }
+
+    //get calculate days for leave
+    public function calculateLeaveDays(Request $request)
+    {
+        try {
+            // Validate incoming request
+            $request->validate([
+                'fromDate' => 'required|date',
+                'fromSession' => 'required|string',
+                'toDate' => 'required|date',
+                'toSession' => 'required|string',
+                'leaveType' => 'required|string',
+            ]);
+
+            // Get the parameters
+            $fromDate = $request->input('from_date');
+            $fromSession = $request->input('from_session');
+            $toDate = $request->input('to_date');
+            $toSession = $request->input('to_session');
+            $leaveType = $request->input('leave_type');
+
+            // Call the method to calculate the leave days
+            $days = $this->calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType);
+
+            // Return a success response with the calculated days
+            return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
+                'days' => $days
+            ]);
+        } catch (\Exception $e) {
+            // Handle any errors that occur and return an error response
+            Log::error('Error fetching number of days details: ' . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
+        }
+    }
+
+    public function calculateNumberOfDays($fromDate, $fromSession, $toDate, $toSession, $leaveType)
+    {
+        try {
+            $startDate = Carbon::parse($fromDate);
+            $endDate = Carbon::parse($toDate);
+
+            // Fetch holidays between the fromDate and toDate
+            $holidays = HolidayCalendar::whereBetween('date', [$startDate, $endDate])->get();
+
+            // Check if the start or end date is a weekend for non-Marriage leave
+            if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && ($startDate->isWeekend() || $endDate->isWeekend())) {
+                return 0;
+            }
+
+            // Check if the start and end sessions are different on the same day
+            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                // Inner condition to check if both start and end dates are weekdays (for non-Marriage leave)
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
+                    return 0.5;
+                } else {
+                    return 0.5;
+                }
+            }
+
+            if ($startDate->isSameDay($endDate) && $this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave']) && !$startDate->isWeekend() && !$endDate->isWeekend() && !$this->isHoliday($startDate, $holidays) && !$this->isHoliday($endDate, $holidays)) {
+                    return 1;
+                } else {
+                    return 1;
+                }
+            }
+
+            $totalDays = 0;
+
+            while ($startDate->lte($endDate)) {
+                // For non-Marriage leave type, skip holidays and weekends, otherwise include weekdays
+                if (!in_array($leaveType, ['Marriage Leave', 'Sick Leave', 'Maternity Leave', 'Paternity Leave'])) {
+                    if (!$this->isHoliday($startDate, $holidays) && $startDate->isWeekday()) {
+                        $totalDays += 1;
+                    }
+                } else {
+                    // For Marriage leave type, count all weekdays without excluding weekends or holidays
+                    if (!$this->isHoliday($startDate, $holidays)) {
+                        $totalDays += 1;
+                    }
+                }
+
+                // Move to the next day
+                $startDate->addDay();
+            }
+
+            // Deduct weekends based on the session numbers
+            if ($this->getSessionNumber($fromSession) > 1) {
+                $totalDays -= $this->getSessionNumber($fromSession) - 1; // Deduct days for the starting session
+            }
+            if ($this->getSessionNumber($toSession) < 2) {
+                $totalDays -= 2 - $this->getSessionNumber($toSession); // Deduct days for the ending session
+            }
+
+            // Adjust for half days
+            if ($this->getSessionNumber($fromSession) === $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 0.5; // Add half a day
+                } else {
+                    $totalDays += 0.5;
+                }
+            } elseif ($this->getSessionNumber($fromSession) !== $this->getSessionNumber($toSession)) {
+                if ($this->getSessionNumber($fromSession) !== 1) {
+                    $totalDays += 1; // Add half a day
+                }
+            } else {
+                $totalDays += ($this->getSessionNumber($toSession) - $this->getSessionNumber($fromSession) + 1) * 0.5;
+            }
+
+            return $totalDays;
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while calculating the number of days.'
+            ], 500);
+        }
+    }
+
+    // Helper method to check if a date is a holiday
+    private function isHoliday($date, $holidays)
+    {
+        // Check if the date exists in the holiday collection
+        return $holidays->contains('date', $date->toDateString());
+    }
+    private function getSessionNumber($session)
+    {
+        return (int) str_replace('Session ', '', $session);
     }
 }
