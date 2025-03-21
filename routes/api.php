@@ -17,20 +17,18 @@ use App\Http\Controllers\API\SwipeController;
 Route::post('login', [AuthController::class, 'login']); // Login with email or emp_id
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::post('me', [AuthController::class, 'empDetails']);
-    Route::get('empdetails', [AuthController::class, 'getEmployeeDetails']); // Fetch Employee Details via Token
-    Route::post('allempdetails', [AuthController::class, 'getAllEmployeeDetails']);
-    Route::post('swipe', [SwipeController::class, 'swipe']); // Handle Swipe (Single API for both IN & OUT)
-    Route::post('holidays', [HolidayListController::class, 'index']);
-    Route::post('/holidays/upcoming', [HolidayListController::class, 'getUpcomingHolidays']);
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
+    Route::post('getEmployeeDetails', [AuthController::class, 'getEmployeeDetails'])->name('getEmployeeDetails');
+    Route::post('swipe', [SwipeController::class, 'swipe'])->name('swipe'); // Handle Swipe (Single API for both IN & OUT)
+    Route::post('holidays', [HolidayListController::class, 'index'])->name('holidays'); // Handle
+    Route::post('/holidays/upcoming', [HolidayListController::class, 'getUpcomingHolidays'])->name('upcomingHolidays'); // Handle
     // Route::post('/employee/update', [EmployeeDetailsController::class, 'update']);
-    Route::post('/employee/show', [EmployeeDetailsController::class, 'show']);
-    Route::post('/employee/personal/view', [EmpPersonalInfoController::class, 'show']);
-    Route::post('/employee/personal/update', [EmpPersonalInfoController::class, 'update']);
-    Route::post('showsal', [ShowSalaryController::class, 'showSalary']);
-    Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed']);
-    Route::get('getBalanceBySelectingLeaveType',[LeaveApplicationsController::class,'getBalanceBySelectingLeaveType']);
-    Route::get('getApprovedLeaveDays',[LeaveApplicationsController::class,'getApprovedLeaveDays']);
+    Route::post('/employee/show', [EmployeeDetailsController::class, 'show'])->name('employee-show');
+    Route::post('/employee/personal/view', [EmpPersonalInfoController::class, 'show'])->name('employee-personal-view');
+    Route::post('/employee/personal/update', [EmpPersonalInfoController::class, 'update'])->name('employee-personal-update');
+    Route::post('showsal', [ShowSalaryController::class, 'showSalary'])->name('showsal');
+    Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed'])->name('getfeed');
+    Route::get('getBalanceBySelectingLeaveType', [LeaveApplicationsController::class, 'getBalanceBySelectingLeaveType'])->name('getBalanceBySelectingLeaveType');
+    Route::get('getApprovedLeaveDays', [LeaveApplicationsController::class, 'getApprovedLeaveDays'])->name('getApprovedLeaveDays');
 });
