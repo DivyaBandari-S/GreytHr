@@ -261,7 +261,7 @@ class Regularisation extends Component
     }
     public function submitShifts($date)
 {
-    Log::info("Submit Shifts method called for date: $date");
+    
 
     $this->isdatesApplied = false;
     $selectedDate = Carbon::parse($date);
@@ -269,11 +269,7 @@ class Regularisation extends Component
     $selecteddatemonth = $selectedDate->month;
     $selecteddateday = $selectedDate->day;
 
-    Log::info("Selected Date Details", [
-        'Year' => $selecteddateyear,
-        'Month' => $selecteddatemonth,
-        'Day' => $selecteddateday,
-    ]);
+   
 
     if($selecteddatemonth==(Carbon::today()->month)&&$selecteddateyear==(Carbon::today()->year)&&$this->todayDay>25&&$selecteddateday<25)
         {
@@ -489,8 +485,7 @@ class Regularisation extends Component
    
 
     if (!in_array($date, $this->selectedDates)) {
-        // Log::info("Adding date to selectedDates: $date");
-
+      
         $this->selectedDates[] = $date;
 
       
@@ -503,24 +498,24 @@ class Regularisation extends Component
       
     }
 
-    Log::info("Processing shift times for selected dates.");
+   
     foreach ($this->shift_times as $date => $times) {
         if (preg_match('/^\d{2}:\d{2}$/', $times['from'])) {
             [$hours, $minutes] = explode(':', $times['from']);
-            Log::info("Valid start time: $times[from]");
+           
         } else {
-            Log::error("Invalid start time format: $times[from]");
+           
         }
 
         if (preg_match('/^\d{2}:\d{2}$/', $times['to'])) {
             [$hours, $minutes] = explode(':', $times['to']);
-            Log::info("Valid end time: $times[to]");
+           
         } else {
-            Log::error("Invalid end time format: $times[to]");
+            
         }
     }
 
-    Log::info("SubmitShifts execution completed successfully.");
+    
 }
     private function isEmployeeRegularisedOnDate($date)
     {
@@ -537,19 +532,14 @@ class Regularisation extends Component
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        // Log the employee ID and the date we're checking
-        Log::info("Checking regularisation entries for employee ID: $employeeId on date: {$date->toDateString()}");
-
-        // Fetch the regularisation record for the employee
+        
         $regularisationRecord = RegularisationDates::where('emp_id', $employeeId)
             ->where('status', 5)
             ->where('status', 5)
             ->where('is_withdraw', 0)
             ->get(['regularisation_entries']);  // Get only the JSON field
 
-        // Log the query result count
-        Log::info("Number of regularisation records fetched: " . $regularisationRecord->count());
-
+       
         // Iterate over the records and check the JSON field
         foreach ($regularisationRecord as $record) {
             // Decode the JSON only once
@@ -559,7 +549,7 @@ class Regularisation extends Component
                 foreach ($entries as $entry) {
                     // Check if 'date' exists in entry and matches the given date
                     if (isset($entry['date']) && $entry['date'] === $date->toDateString()) {
-                        Log::info("Date found in regularisation entries: " . $entry['date']);
+                        
                         return true; // Date exists in one of the regularisation entries
                     }
                 }
@@ -567,8 +557,7 @@ class Regularisation extends Component
         }
 
         // Log when the date is not found
-        Log::info('Date not found in any regularisation entries.');
-
+       
         return false; // Date not found in any regularisation entries
     }
     //This function is used to create calendar
@@ -821,10 +810,9 @@ public function beforeMonth()
     {
         try {
             
-            Log::info('storearraydates method started.');
-
+           
             // Validate the data
-            Log::info('Validating input data.');
+            
             $validatedData = $this->validate([
                 'shift_times.*.from' => 'required|date_format:H:i',
                 'shift_times.*.to' => 'required|date_format:H:i|after:shift_times.*.from',
@@ -837,36 +825,29 @@ public function beforeMonth()
                 'shift_times.*.to.after' => 'Sign-out time must be later than sign-in time',
                 'shift_times.*.reason.required' => 'Please enter the reason',
             ]);
-            Log::info('Validation successful.');
-
+           
             // Mark dates as applied
             $this->isdatesApplied = true;
-            Log::info('isdatesApplied set to true.');
-
-            // Get employee details
-            Log::info('Fetching employee details.');
+           
+            
             $employeeDetails = EmployeeDetails::where('emp_id', auth()->guard('emp')->user()->emp_id)->first();
             $emp_id = $employeeDetails->emp_id;
-            Log::info('Employee details fetched:', ['emp_id' => $emp_id]);
-
-            // Prepare regularisation entries
+           
             $regularisationEntriesJson = json_encode($this->shift_times);
-            Log::info('Shift times JSON:', ['shift_times' => $this->shift_times]);
-
+           
             if ($this->isdeletedArray > 0) {
                 $regularisationEntriesArray = $this->updatedregularisationEntries;
-                Log::info('Using updated regularisation entries.', ['entries' => $regularisationEntriesArray]);
+                
             } else {
                 $regularisationEntriesArray = json_decode($regularisationEntriesJson, true);
-                Log::info('Decoded regularisation entries.', ['entries' => $regularisationEntriesArray]);
+              
             }
 
             // Count the number of items
             $this->numberOfItems = count($regularisationEntriesArray);
-            Log::info('Number of regularisation entries:', ['count' => $this->numberOfItems]);
-
+           
             // Save to database
-            Log::info('Saving regularisation dates to database.');
+          
             RegularisationDates::create([
                 'emp_id' => $emp_id,
                 'employee_remarks' => $this->remarks,
@@ -875,38 +856,23 @@ public function beforeMonth()
                 'status' => 5,
                 'regularisation_date' => null,
             ]);
-            Log::info('Regularisation dates saved successfully.');
-            // Notification::create([
-            //     'emp_id' => $emp_id,
-
-            //     'regularisation_entries' => $regularisationEntriesJson,
-            //     'notification_type'=>'regularisationApply',
-            //     'regularisation_status' => 5,
-
-            // ]);
-            //Log::info('Regularisation Notification saved successfully.');
-
-            // Send email notification
+          
             $details = [
                 'regularisationRequests' => $regularisationEntriesArray,
                 'employee_id' => $this->employeeId,
                 'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
             ];
-            Log::info('Sending regularisation email.', ['email' => $this->employeeEmail, 'details' => $details]);
             Mail::to($this->employeeEmail)->send(new RegularisationApplyingMail($details));
-            Log::info('Regularisation email sent.');
-
+            
             // Reset variables
             $this->remarks = '';
             $regularisationEntriesJson = [];
             $this->regularisationEntries = [];
             $this->shift_times = [];
-            Log::info('Variables reset successfully.');
+           
             FlashMessageHelper::flashSuccess('Hurrah! You have successfully applied for Regularisation');
         } catch (\Exception $e) {
-            Log::error('Error in storearraydates method: ' . $e->getMessage(), [
-                'trace' => $e->getTraceAsString()
-            ]);
+         
 
             FlashMessageHelper::flashError('Please enter the fields before submitting for regularisation.');
         }
@@ -999,11 +965,9 @@ public function historyButton()
 
     try {
         // Log an initial message to check method entry
-        Log::info("Entering Withdraw Method with ID: $this->idforrecordWithdrawal");
-
+       
         $currentDateTime = Carbon::now();
-        Log::info("Current Date and Time: " . $currentDateTime);
-
+       
         // Update the RegularisationDates record
         $this->data = RegularisationDates::where('id', $this->idforrecordWithdrawal)->update([
             'is_withdraw' => 1,
@@ -1012,20 +976,18 @@ public function historyButton()
         ]);
         $item=RegularisationDates::find($this->idforrecordWithdrawal);
         // Log the updated data to confirm the update was successful
-        Log::info("Regularisation entry updated: ", ['data' => $this->data]);
-
+       
         $regularisationEntriesArray = json_decode($item->regularisation_entries, true);
 
         // Assuming you have $this->data, you can log the employee ID
         $this->employeeId = $item->emp_id;
-        Log::info("Employee ID: " . $this->employeeId);
-
+      
         // Fetch employee details from the database
         $employeeDetails = EmployeeDetails::where('emp_id', $this->employeeId)->first();
         if ($employeeDetails) {
-            Log::info("Employee Details: ", ['employee' => $employeeDetails]);
+            
         } else {
-            Log::warning("Employee details not found for employee ID: " . $this->employeeId);
+           
         }
 
 
@@ -1036,8 +998,7 @@ public function historyButton()
             'employee_name' => $employeeDetails->first_name . ' ' . $employeeDetails->last_name,
         ];
 
-        // Log email details
-        Log::info("Prepared email details: ", ['details' => $details]);
+       
 
         // Process the withdrawal session
         $this->withdraw_session = true;
@@ -1048,8 +1009,7 @@ public function historyButton()
 
         // Send email
         Mail::to($this->employeeEmail)->send(new RegularisationWithdrawalMail($details));
-        Log::info("Withdrawal email sent to: " . $this->employeeEmail);
-
+       
     } catch (\Exception $ex) {
         // Log the exception error
         Log::error("Error during withdrawal process: " . $ex->getMessage());

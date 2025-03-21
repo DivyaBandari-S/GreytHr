@@ -590,6 +590,7 @@
                                 <option value="maternity">Maternity Leave</option>
                                 <option value="casual_leave_probation">Casul Leave Probation</option>
                                 <option value="marriage_leave">Marriage Leave</option>
+                                <option value="earned_leave">Earned Leave</option>
 
                                 <!-- Add other leave types as needed -->
                             </select>

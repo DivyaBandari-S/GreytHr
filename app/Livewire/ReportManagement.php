@@ -164,6 +164,7 @@ class ReportManagement extends Component
                         'casual_leave_probation' => 'Casual Leave Probation',
                         'maternity' => 'Maternity Leave',
                         'marriage_leave' => 'Marriage Leave',
+                        'earned_leave' => 'Earned Leave',
                     ];
 
                     if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -321,12 +322,12 @@ class ReportManagement extends Component
         );
         try {
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            // Log::info('Logged in employee ID: ' . $loggedInEmpId);
+
 
             if ($this->transactionType === 'granted') {
 
                 // When the transaction type is granted, fetch data from employee_leave_balances
-                // Log::info('Fetching granted leave data from employee_leave_balances.');
+
 
                 // Query to fetch leave data
                 $query = EmployeeLeaveBalances::select(
@@ -351,17 +352,28 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -378,6 +390,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -387,6 +400,10 @@ class ReportManagement extends Component
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
                                 $period = $item->period;
+                                if (!is_numeric($period) || strlen($period) !== 4) {
+                                    Log::error("Invalid period format: " . json_encode($period));
+                                    continue;
+                                }
 
                                 // Create Carbon instance for the start and end date of the year
                                 $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
@@ -429,6 +446,7 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -439,8 +457,6 @@ class ReportManagement extends Component
                     ->get();
 
 
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
-
                 // Group the data by emp_id
                 $lapsedData = $query->groupBy('emp_id')->map(function ($group) {
                     return [
@@ -450,6 +466,7 @@ class ReportManagement extends Component
                         'leave_details' => $group->map(function ($item) {
 
                             $period = $item->period;
+
                             $decemberStart = Carbon::createFromFormat('Y', $period)->month(12)->startOfMonth()->toDateString(); // First day of December
                             $decemberEnd = Carbon::createFromFormat('Y', $period)->month(12)->endOfMonth()->toDateString();   // Last day of December
 
@@ -466,6 +483,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -529,17 +547,31 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
 
 
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
+
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -556,6 +588,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -565,16 +598,21 @@ class ReportManagement extends Component
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
                                 $period = $item->period;
+                                if (!is_numeric($period) || strlen($period) !== 4) {
+                                    Log::error("Invalid period format: " . json_encode($period));
+                                    continue;
+                                }
 
                                 // Create Carbon instance for the start and end date of the year
-                                $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
-                                $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString(); // '2024-12-31'
+                                $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString();
+                                $endDate = Carbon::createFromFormat('Y', $period)->lastOfYear()->toDateString();
+
                                 $leaveDetails[] = [
                                     'leave_name' => $leave['leave_name'] ?? 'Unknown',
                                     'grant_days' => $leave['grant_days'] ?? 0,
                                     'status' => $item->status,
                                     'created_at' => $item->created_at,
-                                    'from_date' => $startDate,  // The start date of the year
+                                    'from_date' => $startDate,
                                     'to_date' => $endDate,
                                 ];
                             }
@@ -583,6 +621,8 @@ class ReportManagement extends Component
                         }),
                     ];
                 });
+
+
                 $query = EmployeeLeaveBalances::select(
                     'employee_leave_balances.emp_id',
                     'employee_details.first_name',
@@ -606,6 +646,7 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -614,9 +655,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $lapsedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -643,6 +681,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -709,6 +748,7 @@ class ReportManagement extends Component
                             'casual_leave_probation' => 'Casual Leave Probation',
                             'maternity' => 'Maternity Leave',
                             'marriage_leave' => 'Marriage Leave',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -768,11 +808,6 @@ class ReportManagement extends Component
                     )
                     ->get();
 
-
-
-
-                // Log::info('Leave request data retrieved successfully.');
-
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
@@ -805,10 +840,10 @@ class ReportManagement extends Component
                         })
                     ];
                 });
+
                 $leaveTransactions = $grantedData->concat($leaveTransactionData)->concat($lapsedData);
             } else {
-                // The existing code for handling leave requests in 'availed', 'rejected', etc.
-                // Log::info('Fetching leave request data for transaction type: ' . $this->transactionType);
+
 
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
@@ -894,11 +929,6 @@ class ReportManagement extends Component
                     )
                     ->get();
 
-
-
-
-                // Log::info('Leave request data retrieved successfully.');
-
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
                     return [
                         'date' => Carbon::parse($group->first()->date_only)->format('d M Y'),
@@ -933,9 +963,6 @@ class ReportManagement extends Component
                 });
             }
 
-            // Log data before generating the PDF
-            // Log::info('Preparing to generate the leave transaction report PDF.');
-
             // Load the view and generate the PDF report
             $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
 
@@ -962,9 +989,9 @@ class ReportManagement extends Component
             }, 'Daywise_leave_transactions.pdf');
         } catch (\Exception $e) {
 
-            // Log::error('Error generating Leave Availed Report', [
-            //     'exception' => $e, // Logs the exception details
-            // ]);
+            Log::error('Error generating Leave Availed Report', [
+                'exception' => $e, // Logs the exception details
+            ]);
             // Optionally, return a user-friendly error message
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
         }
@@ -998,7 +1025,7 @@ class ReportManagement extends Component
                     ->whereIn('emp_id', $this->leaveBalance)
                     ->select('emp_id', 'first_name', 'last_name')
                     ->get();
-                 
+
 
 
 
@@ -1015,8 +1042,13 @@ class ReportManagement extends Component
                         'casual_leave_balance' => $leaveBalances['casualLeaveBalance'] ?? 0,
                         'casual_leave_probation_balance' => $leaveBalances['casualProbationLeaveBalance'] ?? 0,
                         'loss_of_pay_balance' => $leaveBalances['lossOfPayBalance'] ?? 0,
+                        'marriage_leave_balance' => $leaveBalances['marriageLeaveBalance'] ?? 0,
+                        'maternity_leave_balance' => $leaveBalances['maternityLeaveBalance'] ?? 0,
+                        'paternity_leave_balance' => $leaveBalances['paternityLeaveBalance'] ?? 0,
+                        'earned_leave_balance' => $leaveBalances['earnedLeaveBalance'] ?? 0,
                     ];
                 });
+
 
 
                 $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
@@ -1055,19 +1087,11 @@ class ReportManagement extends Component
             'toDate.after_or_equal' => 'To date must be a date after or equal to the from date.',
         ]);
         try {
-            // Log::info('Starting the leave transaction report generation.');
-
-            // Validate the input
-
-
-            // Log::info('Validation passed for the date range.', ['fromDate' => $this->fromDate, 'toDate' => $this->toDate]);
 
             $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-            // Log::info('Logged in employee ID: ' . $loggedInEmpId);
 
             if ($this->transactionType === 'granted') {
                 // When the transaction type is granted, fetch data from employee_leave_balances
-                // Log::info('Fetching granted leave data from employee_leave_balances.');
 
                 // Query to fetch leave data
                 $query = EmployeeLeaveBalances::select(
@@ -1101,9 +1125,6 @@ class ReportManagement extends Component
 
                     ->get();
 
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
-
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
                     return [
@@ -1128,6 +1149,10 @@ class ReportManagement extends Component
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
                                 $period = $item->period;
+                                if (!is_numeric($period) || strlen($period) !== 4) {
+                                    Log::error("Invalid period format: " . json_encode($period));
+                                    continue;
+                                }
 
                                 // Create Carbon instance for the start and end date of the year
                                 $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
@@ -1278,6 +1303,7 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -1286,9 +1312,6 @@ class ReportManagement extends Component
                     })
 
                     ->get();
-
-
-                // Log::info('Granted leave data retrieved successfully.', ['query' => $query->toArray()]);
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1305,6 +1328,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -1314,6 +1338,10 @@ class ReportManagement extends Component
                                     continue;  // Skip if the leave name doesn't match the selected leave type
                                 }
                                 $period = $item->period;
+                                if (!is_numeric($period) || strlen($period) !== 4) {
+                                    Log::error("Invalid period format: " . json_encode($period));
+                                    continue;
+                                }
 
                                 // Create Carbon instance for the start and end date of the year
                                 $startDate = Carbon::createFromFormat('Y', $period)->firstOfYear()->toDateString(); // '2024-01-01'
@@ -1361,6 +1389,7 @@ class ReportManagement extends Component
                             'casual_leave_probation' => 'Casual Leave Probation',
                             'maternity' => 'Maternity Leave',
                             'marriage_leave' => 'Marriage Leave',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -1473,6 +1502,7 @@ class ReportManagement extends Component
                             'paternity' => 'Paternity Leave',
                             'sick' => 'Sick Leave',
                             'lop' => 'Loss of Pay',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -1510,6 +1540,7 @@ class ReportManagement extends Component
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
+                                'earned_leave' => 'Earned Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -1554,11 +1585,7 @@ class ReportManagement extends Component
 
 
                 $leaveTransactions = $leaveTransactionData->concat($lapsedData)->concat($grantedData);
-               
-
             } else {
-                // The existing code for handling leave requests in 'availed', 'rejected', etc.
-                // Log::info('Fetching leave request data for transaction type: ' . $this->transactionType);
 
                 $query = LeaveRequest::select(
                     DB::raw('DATE(from_date) as date_only'),
@@ -1585,6 +1612,7 @@ class ReportManagement extends Component
                             'casual_leave_probation' => 'Casual Leave Probation',
                             'maternity' => 'Maternity Leave',
                             'marriage_leave' => 'Marriage Leave',
+                            'earned_leave' => 'Earned Leave',
                         ];
 
                         if (array_key_exists($this->leaveType, $leaveTypes)) {
@@ -1643,6 +1671,7 @@ class ReportManagement extends Component
                         'leave_applications.leave_status'
                     )
                     ->get();
+   
 
                 // Refactor the data grouping
                 $leaveTransactionData = $query->groupBy('date_only')->map(function ($group) {
@@ -1661,21 +1690,19 @@ class ReportManagement extends Component
                                 $item->leave_type
                             );
                             return [
-                                'leave_name' => $item->leave_type,
-                                'from_date' => $item->leave_from_date,
-                                'to_date' => $item->leave_to_date,
+                                'leave_type' => $item->leave_type,
+                                'leave_from_date' => $item->leave_from_date,
+                                'leave_to_date' => $item->leave_to_date,
                                 'reason' => $item->reason,
                                 'created_at' => $item->created_at,
-                                'grant_days' => $leaveDays,
-                                'status' => $item->leave_status,
+                                'leave_days' => $leaveDays,
+                                'leave_status' => $item->leave_status,
                             ];
                         }),
                     ];
                 });
             }
 
-            // Log data before generating the PDF
-            // Log::info('Preparing to generate the leave transaction report PDF.');
 
             // Load the view and generate the PDF report
             $employeeDetails = EmployeeDetails::where('emp_id', $loggedInEmpId)->first();
@@ -1697,14 +1724,13 @@ class ReportManagement extends Component
             $this->currentSection = '';
 
             FlashMessageHelper::flashSuccess('Leave Transaction Report Downloaded Successfully!');
-            // Log::info('Leave transaction report generated successfully.');
 
             return response()->streamDownload(function () use ($pdf) {
                 echo $pdf->stream();
             }, 'leave_transactions_report.pdf');
         } catch (\Exception $e) {
             // Log the exception message
-            // Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
+            Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
         }
     }
@@ -1914,7 +1940,7 @@ class ReportManagement extends Component
                     stripos($employee->city, $nameFilter) !== false ||
                     stripos($employee->state, $nameFilter) !== false;
             });
-          
+
 
 
             if ($this->filteredEmployees->isEmpty()) {
@@ -1936,13 +1962,15 @@ class ReportManagement extends Component
 
             $selectedParticularYear = Carbon::parse($selectedYear)->year;
 
-
             $employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
             $sickLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Sick Leave', $selectedParticularYear);
             $casualLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave', $selectedParticularYear);
+            $earnedLeavesPeryear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Earned Leave', $selectedParticularYear);
             $casualProbationLeavePerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Casual Leave Probation', $selectedParticularYear);
             $lossOfPayPerYear = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Loss Of Pay', $selectedParticularYear);
-
+            $marriageLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Marriage Leave', $selectedYear);
+            $maternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Maternity Leave', $selectedYear);
+            $paternityLeaves = EmployeeLeaveBalances::getLeaveBalancePerYear($employeeId, 'Petarnity Leave', $selectedYear);
             if (!$employeeDetails) {
                 return null;
             }
@@ -1950,18 +1978,40 @@ class ReportManagement extends Component
             // Get the logged-in employee's approved leave days for all leave types
             $approvedLeaveDays = LeaveHelper::getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear);
 
-
-            // Calculate leave balances
-            $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
-            $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
-            $lossOfPayBalance = $approvedLeaveDays['totalLossOfPayDays'];
-            $casualProbationLeaveBalance = $casualProbationLeavePerYear - $approvedLeaveDays['totalCasualLeaveProbationDays'];
-
+            $toggleLapsedData = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->where('is_lapsed', true)
+                ->where('period', 'like', "%$selectedYear%")
+                ->first();
+            if ($toggleLapsedData && $toggleLapsedData->is_lapsed) {
+                // If lapsed, set the balance directly to leavePerYear
+                $sickLeaveBalance = 0;
+                $casualLeaveBalance = 0;
+                $casualProbationLeaveBalance = 0;
+                $marriageLeaveBalance = 0;
+                $maternityLeaveBalance = 0;
+                $paternityLeaveBalance = 0;
+                $earnedLeaveBalance = 0;
+                $lossOfPayBalance = $lossOfPayPerYear - $approvedLeaveDays['totalLossOfPayDays'];
+            } else {
+                // Calculate leave balances
+                $sickLeaveBalance = $sickLeavePerYear - $approvedLeaveDays['totalSickDays'];
+                $casualLeaveBalance = $casualLeavePerYear - $approvedLeaveDays['totalCasualDays'];
+                $lossOfPayBalance = $approvedLeaveDays['totalLossOfPayDays'];
+                $casualProbationLeaveBalance = $casualProbationLeavePerYear - $approvedLeaveDays['totalCasualLeaveProbationDays'];
+                $marriageLeaveBalance = $marriageLeaves - $approvedLeaveDays['totalMarriageDays'];
+                $maternityLeaveBalance = $maternityLeaves - $approvedLeaveDays['totalMaternityDays'];
+                $paternityLeaveBalance = $paternityLeaves - $approvedLeaveDays['totalPaternityDays'];
+                $earnedLeaveBalance =  $earnedLeavesPeryear - $approvedLeaveDays['totalEarnedDays'];
+            }
             return [
                 'sickLeaveBalance' => $sickLeaveBalance,
                 'casualLeaveBalance' => $casualLeaveBalance,
                 'lossOfPayBalance' => $lossOfPayBalance,
                 'casualProbationLeaveBalance' => $casualProbationLeaveBalance,
+                'marriageLeaveBalance' => $marriageLeaveBalance,
+                'maternityLeaveBalance' => $maternityLeaveBalance,
+                'paternityLeaveBalance' => $paternityLeaveBalance,
+                'earnedLeaveBalance' => $earnedLeaveBalance
             ];
         } catch (\Exception $e) {
             if ($e instanceof \Illuminate\Database\QueryException) {

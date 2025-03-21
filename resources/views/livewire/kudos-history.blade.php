@@ -133,7 +133,7 @@
 
 
                                 <input class="form-select placeholder-small input-field"
-                                    wire:click="recognizeToggleDropdown" placeholder="Select">
+                                    wire:click="recognizeToggleDropdown" placeholder="Select" readonly>
 
 
 
