@@ -257,7 +257,7 @@ class LeaveFormPage extends Component
 
             return $totalDays;
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('leave form page.');
+            FlashMessageHelper::flashError('An error occured while calculating number of days.');
             return false;
         }
     }
