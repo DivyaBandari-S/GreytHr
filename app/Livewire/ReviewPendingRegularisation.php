@@ -56,7 +56,7 @@ class ReviewPendingRegularisation extends Component
         $this->regularisationEntries = json_decode($this->regularisationrequest->regularisation_entries, true);
         $this->countofregularisations=$count;
         $this->totalEntries = count($this->regularisationEntries);
-        Log::info('Remarks are: ' . json_encode($this->remarks));
+      
 
     }
    
@@ -67,7 +67,7 @@ class ReviewPendingRegularisation extends Component
         $remark = $this->remarks[$date] ?? null;
 
         // Log the remark for debugging purposes
-        Log::info('Remark:', ['remark' => $remark]);
+        
 
         // Find the entry with the matching date and update its status
         foreach ($this->regularisationEntries as &$entry) {
@@ -145,7 +145,7 @@ class ReviewPendingRegularisation extends Component
         $remark = $this->remarks[$date] ?? null;
 
         // Log the remark for debugging purposes
-        Log::info('Remark:', ['remark' => $remark]);
+       
 
         // Find the entry with the matching date and update its status
         foreach ($this->regularisationEntries as &$entry) {
@@ -165,64 +165,51 @@ class ReviewPendingRegularisation extends Component
    
     public function submitRegularisation()
     {
-        Log::info('Method `submitRegularisation` started.');
+        
      
         // Check if regularisation request exists
         if ($this->regularisationrequest) {
-            Log::info('Regularisation request found.', ['request' => $this->regularisationrequest]);
-    
+         
             // Validation
             $validationErrors = [];
             foreach ($this->regularisationEntries as $entry) {
-                Log::info('Validating entry.', ['entry' => $entry]);
-    
+            
                 $date = $entry['date'];
                 
                 // Check if status is not set
                 if (!isset($entry['status']) || empty($entry['status'])) {
                     $validationErrors[] = "Status (approve/reject) must be selected for the date: $date.";
-                    Log::warning("Validation error: Status missing for date $date.");
+                  
                 }
             
                 // Check if remarks are empty or contain only whitespace
                 if (!isset($entry['remark']) || empty(trim($entry['remark']))) {
                     $validationErrors[] = "Remarks are required for the date: $date.";
-                    Log::warning("Validation error: Remarks missing or invalid for date $date.");
+                   
                 }
-                Log::info('Validating entry.', ['entry' => $entry]);
+               
             }
     
             if (!empty($validationErrors)) {
-                Log::info('Validation failed. Errors:', ['errors' => $validationErrors]);
+               
                 foreach ($validationErrors as $error) {
                     FlashMessageHelper::flashError($error);
                 }
-                Log::info('Exiting method due to validation failure.');
+               
                 return;
             }
     
-            Log::info('Validation passed.');
-    
-            // Update the regularisation request
-            Log::info('Updating regularisation request.');
+          
             $this->regularisationrequest->status = 13;
             $this->regularisationrequest->regularisation_date = Carbon::now();
             $this->regularisationrequest->save();
-            Log::info('Regularisation request updated.', [
-                'status' => $this->regularisationrequest->status,
-                'date' => $this->regularisationrequest->regularisation_date
-            ]);
+          
     
             // Process each regularisation entry
             foreach ($this->regularisationEntries as $entry) {
-                Log::info('Processing entry.', ['entry' => $entry]);
-    
+               
                 if ($entry['status'] === 'approved') {
-                    Log::info('Entry approved. Creating swipe records.', [
-                        'in_time' => $entry['from'],
-                        'out_time' => $entry['to'],
-                        'date' => $entry['date']
-                    ]);
+                   
     
                     // Create IN SwipeRecord
                     $swipeIn = new SwipeRecord();
@@ -232,8 +219,7 @@ class ReviewPendingRegularisation extends Component
                     $swipeIn->created_at = $entry['date'];
                     $swipeIn->is_regularized = 1;
                     $swipeIn->save();
-                    Log::info('IN swipe record saved.', ['swipe_in' => $swipeIn]);
-    
+                
                     // Create OUT SwipeRecord
                     $swipeOut = new SwipeRecord();
                     $swipeOut->emp_id = $this->regularisationrequest->employee->emp_id;
@@ -242,24 +228,22 @@ class ReviewPendingRegularisation extends Component
                     $swipeOut->created_at = $entry['date'];
                     $swipeOut->is_regularized = 1;
                     $swipeOut->save();
-                    Log::info('OUT swipe record saved.', ['swipe_out' => $swipeOut]);
+                   
                 } else {
-                    Log::info('Entry not approved. No swipe records created.', ['entry_status' => $entry['status']]);
+                   
                 }
             }
     
             // Send notification email
-            Log::info('Sending notification email for regularisation.');
+           
             $this->sendmailForRegularisation($this->regularisationrequest);
-            Log::info('Notification email sent.');
-    
+         
             // Success message
             FlashMessageHelper::flashSuccess('Regularisation status submitted successfully.');
-            Log::info('Regularisation submission complete. Redirecting to review page.');
-    
+          
             return redirect()->route('review');
         } else {
-            Log::error('Regularisation request not found.');
+            
             FlashMessageHelper::flashError('Regularisation request not found.');
         }
     }

@@ -2094,7 +2094,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     }
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
-        log::info('early out method called');
+    
         // Parse start and end dates using Carbon
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
