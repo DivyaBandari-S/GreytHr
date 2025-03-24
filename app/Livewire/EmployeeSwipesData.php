@@ -179,17 +179,19 @@ class EmployeeSwipesData extends Component
         $this->isApply = 1;
         $this->isPending = 0;
         $this->defaultApply = 1;
-
         $this->swipeTime = null;
         $this->webSwipeDirection = null;
         $this->webDeviceName = null;
         $this->webDeviceId = null;
-
+    
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
-
+    
+        Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
+    
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
+        
         if ($isManager) {
 
             Log::debug('Starting query for managed employees');
@@ -284,8 +286,9 @@ class EmployeeSwipesData extends Component
             // Log the final result
             Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
         } else {
+            Log::info('User is not a manager, retrieving self details');
+    
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
-
                 ->join('company_shifts', function ($join) {
                     $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
                         ->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))');
@@ -298,10 +301,13 @@ class EmployeeSwipesData extends Component
                     'company_shifts.shift_end_time'
                 )
                 ->get();
+    
+            Log::info('Retrieved Self Employee Data:', ['data' => $managedEmployees->toArray()]);
         }
-
+    
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
     }
+    
 
     public function applyFilter()
     {
@@ -644,9 +650,7 @@ class EmployeeSwipesData extends Component
 
         $filteredData  = [];
         $today = $this->startDate;
-        $normalizedIds = $managedEmployees->pluck('emp_id')->map(function ($id) {
-            return str_replace('-', '', $id);
-        });
+        $normalizedIds = $managedEmployees->pluck('emp_id')->map(fn($id) => str_replace('-', '', $id));
         $currentDate = Carbon::today();
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');

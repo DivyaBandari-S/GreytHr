@@ -260,7 +260,7 @@ class ViewRegularisationPendingNew extends Component
             'regularisation_status' => 2,
            
         ]);
-        Log::info('Regularisation Notification approved successfully.');
+       
         $this->showAlert=true;
     
         
@@ -326,8 +326,7 @@ class ViewRegularisationPendingNew extends Component
             'regularisation_status' => 3,
            
         ]);
-        Log::info('Regularisation Notification rejected successfully.');
-
+      
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeRejectModal();
