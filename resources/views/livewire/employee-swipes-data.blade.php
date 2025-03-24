@@ -200,7 +200,7 @@
         font-size: 14px;
         margin-top: 0;
     }
-    
+
     .apply-btn, .reset-btn {
         padding: 8px 15px;
         border-radius: 5px;
@@ -218,7 +218,7 @@
         border:1px solid rgb(2, 17, 79);
         color: rgb(2, 17, 79);
         background-color: #fff;
-       
+
     }
     </style>
 
@@ -259,7 +259,7 @@
 
                     </div>
                     <div class="dropdown-container1-employee-swipes">
-                            
+
                                                     <!-- Filter Button -->
                                 <button type="button" class="button2"
                                     style="margin-top:30px; border-radius:5px; padding:5px;">
@@ -298,7 +298,7 @@
                                                 <option value="infrastructure">Infrastructure</option>
                                                 <option value="human_resources">Human Resource</option>
                                             </select>
-                                             
+
                                             <label for="location" class="location-label">Location:</label>
                                             @if($isPending==1&&$defaultApply==0)
                                             <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
@@ -312,17 +312,17 @@
                                             @livewire('location-finder')
                                             <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
                                                 <option value="{{ $city }}"> {{ $city }}</option>
-                                               
+
                                             </select>
                                             @endif
                                             <label for="swipe_status" class="swipe-status-label">Swipe Status:</label>
                                             <select wire:model="selectedSwipeStatus" wire:change="updateselectedSwipeStatus" class="custom-dropdown">
-                                               @if($isPending==1&&$defaultApply==0) 
+                                               @if($isPending==1&&$defaultApply==0)
 
                                                 <option value="All">All</option>
                                                 <option value="mobile_sign_in">Mobile Sign In</option>
                                                 <option value="web_sign_in">Web Sign In</option>
-                                              @endif  
+                                              @endif
                                                 @if($isApply == 1 && $defaultApply == 1)
                                                    <option value="door">Door Sign In</option>
                                                 @endif
@@ -333,7 +333,7 @@
                                             <button wire:click="resetSidebar" class="reset-btn">Reset</button>
                                     </div>
                                 </div>
- 
+
                     </div>
                     <div class="button-container-for-employee-swipes">
                         <button class="my-button apply-button"
@@ -416,7 +416,7 @@
                                                                 Door Swipe Out
                                                             @endif
                                                         </td>
-                                                       
+
                                                     </tr>
                                                 @endforeach
                                             @endforeach
@@ -481,32 +481,32 @@
                                                         </td>
                                                         <td style="white-space:nowrap;">
                                                                            @if ($log->in_or_out === 'IN' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
-                                                                                Web Sign In  
+                                                                                Web Sign In
                                                                             @elseif ($log->in_or_out === 'IN' && $log->sign_in_device==='Mobile')
-                                                                                Mobile Sign In  
+                                                                                Mobile Sign In
                                                                             @elseif ($log->in_or_out === 'OUT' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
-                                                                                Web Sign Out  
+                                                                                Web Sign Out
                                                                             @elseif ($log->in_or_out === 'OUT' && $log->sign_in_device==='Mobile')
-                                                                                Mobile Sign Out  
+                                                                                Mobile Sign Out
                                                                             @elseif ($log->in_or_out === 'IN')
                                                                                 Web Sign In
                                                                             @elseif ($log->in_or_out === 'OUT')
                                                                                 Web Sign Out
-                                                                            @endif    
+                                                                            @endif
                                                         </td>
                                                         <td class="text-center"style="white-space:nowrap;">
                                                             @if(!empty($log->swipe_location))
                                                                {{ ucwords(strtolower(preg_replace('/[^A-Za-z0-9]/', ' ', $log->swipe_location))) }}
-                                                            @else   
+                                                            @else
                                                                  NA
                                                             @endif
                                                         </td>
                                                         <td class="text-center">
                                                             @if(!empty($log->swipe_remarks))
                                                                {{ $log->swipe_remarks }}
-                                                            @else   
+                                                            @else
                                                                  NA
-                                                            @endif     
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach

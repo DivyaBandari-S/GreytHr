@@ -99,13 +99,13 @@ return [
 
         'sqlsrv' => [
             'driver' => 'sqlsrv',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', 'localhost'),
-            'port' => env('DB_PORT', '1433'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
-            'charset' => env('DB_CHARSET', 'utf8'),
+            'url' => env('SQLSERVER_DB_URL'),
+            'host' => env('SQLSERVER_DB_HOST', 'localhost'),
+            'port' => env('SQLSERVER_DB_PORT', '1433'),
+            'database' => env('SQLSERVER_DB_DATABASE', 'laravel'),
+            'username' => env('SQLSERVER_DB_USERNAME', 'root'),
+            'password' => env('SQLSERVER_DB_PASSWORD', ''),
+            'charset' => env('SQLSERVER_DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
             // 'encrypt' => env('DB_ENCRYPT', 'yes'),
@@ -147,7 +147,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
             'persistent' => env('REDIS_PERSISTENT', false),
         ],
 
