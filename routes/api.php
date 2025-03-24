@@ -29,6 +29,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/employee/personal/update', [EmpPersonalInfoController::class, 'update'])->name('employee-personal-update');
     Route::post('showsal', [ShowSalaryController::class, 'showSalary'])->name('showsal');
     Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed'])->name('getfeed');
-    Route::get('getBalanceBySelectingLeaveType', [LeaveApplicationsController::class, 'getBalanceBySelectingLeaveType'])->name('getBalanceBySelectingLeaveType');
-    Route::get('getApprovedLeaveDays', [LeaveApplicationsController::class, 'getApprovedLeaveDays'])->name('getApprovedLeaveDays');
+    Route::post('getApprovedLeaveDays', [LeaveApplicationsController::class, 'getApprovedLeaveDays'])->name('getApprovedLeaveDays');
+    Route::post('getTotalLeaveApplications',[LeaveApplicationsController::class,'getTotalLeaveApplications'])->name('total-leaves');
+    Route::post('getGrantedLeaveBalance',[LeaveApplicationsController::class, 'getGrantedLeaveBalance'])->name('emp-leave-balance');
 });

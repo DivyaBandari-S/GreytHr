@@ -110,7 +110,6 @@ class LeaveHelper
     public static function getApprovedLeaveDays($employeeId, $selectedYear)
     {
         try {
-
             // Fetch approved leave requests
             $selectedYear = (int) $selectedYear;
             $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
