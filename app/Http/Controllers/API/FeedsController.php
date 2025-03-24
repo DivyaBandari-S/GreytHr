@@ -36,7 +36,7 @@ class FeedsController extends Controller
                     'employee_details.first_name',
                     'employee_details.last_name',
                     'employee_details.hire_date',
-             
+                'employee_details.image',
                     'emp_personal_infos.date_of_birth'
                 )
                 ->get();
@@ -77,6 +77,7 @@ class FeedsController extends Controller
                             'emp_id' => $employee->emp_id,
                             'name' => "{$employee->first_name} {$employee->last_name}",
                             'date_of_birth' => $employee->date_of_birth,
+                            'image' => $employee->image ? base64_encode($employee->image) : null,
                         ]
                     ];
                 }
@@ -90,7 +91,8 @@ class FeedsController extends Controller
     
                 // Include work anniversaries from January 1st up to today’s date
                 if ($formattedDate >= $startDate->format('m-d') && $formattedDate <= $currentDate->format('m-d')) {
-                    $yearsCompleted = $hireDate->diffInYears(Carbon::today());
+                    $yearsCompleted = (int) $hireDate->diffInYears(Carbon::today());
+
     
                     $combinedData[] = [
                         'date' => $formattedDate,
@@ -101,6 +103,7 @@ class FeedsController extends Controller
                             'emp_id' => $employee->emp_id,
                             'name' => "{$employee->first_name} {$employee->last_name}",
                             'hire_date' => $employee->hire_date,
+                            'image' => $employee->image ? base64_encode($employee->image) : null,
                         ]
                     ];
                 }
