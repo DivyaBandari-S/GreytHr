@@ -15,6 +15,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\SwipeDataExport;
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmpDepartment;
 use Illuminate\Support\Facades\Auth;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
 use Jenssegers\Agent\Agent;
+use Maatwebsite\Excel\Facades\Excel;
 use PDO;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
@@ -547,68 +549,60 @@ class EmployeeSwipesData extends Component
     }
     public function downloadFileforSwipes()
     {
-        try {
-            $today = now()->toDateString();
-            $authUser = Auth::user();
-            $userId = $authUser->emp_id;
+            try {
+                $today = now()->toDateString();
+                $authUser = Auth::user();
+                $userId = $authUser->emp_id;
 
-            $managedEmployees = EmployeeDetails::where('manager_id', $userId)
-                ->orWhere('emp_id', $userId)
-                ->where('employee_status', 'active')
-                ->get();
+                $managedEmployees = EmployeeDetails::where('manager_id', $userId)
+                    ->orWhere('emp_id', $userId)
+                    ->where('employee_status', 'active')
+                    ->get();
 
-            $swipeData = [];
+                $swipeData = [];
 
+                if ($this->isApply == 1 && $this->isPending == 0 && $this->defaultApply == 1) {
+                    $title = 'First Door Swipe Data';
+                    $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
+                    $employeesInExcel = $this->processSwipeLogs($managedEmployees, $this->startDate);
 
-            if ($this->isApply == 1 && $this->isPending == 0 && $this->defaultApply == 1) {
-                $title = 'First Door Swipe Data';
-                $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Direction'];
-                $employeesInExcel = $this->processSwipeLogs($managedEmployees, $this->startDate);
-                foreach ($employeesInExcel as $employee) {
-                    foreach ($employee['swipe_log'] as $log) {
-                        $swipeData[] = [
-                            $employee['employee']->emp_id,
-                            ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
-                            Carbon::parse($log->logDate)->format('jS F Y'),
-                            Carbon::parse($log->logDate)->format('H:i:s'),
-                            $log->Direction,
-                        ];
+                    foreach ($employeesInExcel as $employee) {
+                        foreach ($employee['swipe_log'] as $log) {
+                            $swipeData[] = [
+                                $employee['employee']->emp_id,
+                                ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
+                                Carbon::parse($log->logDate)->format('jS F Y'),
+                                Carbon::parse($log->logDate)->format('H:i:s'),
+                                $log->Direction,
+                            ];
+                        }
+                    }
+                } elseif ($this->isApply == 0 && $this->isPending == 1 && $this->defaultApply == 0) {
+                    $title = 'Web Sign In Data';
+                    $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Web Sign In Data'];
+                    $employeesInExcel = $this->processWebSignInLogs();
+
+                    foreach ($employeesInExcel as $employee) {
+                        foreach ($employee['swipe_log'] as $log) {
+                            $swipeData[] = [
+                                $employee['employee']->emp_id,
+                                ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
+                                Carbon::parse($log->created_at)->format('jS F Y'),
+                                Carbon::parse($log->swipe_time)->format('H:i:s'),
+                                $log->in_or_out,
+                            ];
+                        }
                     }
                 }
-            } elseif ($this->isApply == 0 && $this->isPending == 1 && $this->defaultApply == 0) {
-                $title = 'Web Sign In Data';
-                $headerColumns = ['Employee ID', 'Employee Name', 'Swipe Date', 'Swipe Time', 'Web Sign In Data'];
-                $employeesInExcel = $this->processWebSignInLogs();
-                foreach ($employeesInExcel as $employee) {
-                    foreach ($employee['swipe_log'] as $log) {
-                        $swipeData[] = [
-                            $employee['employee']->emp_id,
-                            ucwords(strtolower($employee['employee']->first_name)) . ' ' . ucwords(strtolower($employee['employee']->last_name)),
-                            Carbon::parse($log->created_at)->format('jS F Y'),
-                            Carbon::parse($log->swipe_time)->format('H:i:s'),
-                            $log->in_or_out,
-                        ];
-                    }
-                }
+
+                return Excel::download(new SwipeDataExport($swipeData, $title, $this->startDate), 'todays_present_employees.xlsx');
+
+            } catch (\Exception $e) {
+                Log::error('Error downloading file for swipes: ' . $e->getMessage());
+                session()->flash('error', 'An error occurred while downloading the file for swipes. Please try again.');
+                return redirect()->back();
             }
-
-
-
-            $filePath = storage_path('app/todays_present_employees.xlsx');
-
-            SimpleExcelWriter::create($filePath)
-                ->addRow([$title])
-                ->addRow($headerColumns)
-                ->addRows($swipeData)
-                ->close();
-
-            return response()->download($filePath, 'todays_present_employees.xlsx');
-        } catch (\Exception $e) {
-            Log::error('Error downloading file for swipes: ' . $e->getMessage());
-            session()->flash('error', 'An error occurred while downloading the file for swipes. Please try again.');
-            return redirect()->back();
         }
-    }
 
     public function updatedSelectedShift($value)
     {

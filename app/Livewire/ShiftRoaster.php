@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\ShiftRosterExport;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class ShiftRoaster extends Component
@@ -101,75 +103,86 @@ class ShiftRoaster extends Component
         
     }
     public function downloadExcel()
-    {
-        $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
-        $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','shift_type')->get();
-        $currentMonth = $this->selectedMonth;
-        $currentMonth1 = DateTime::createFromFormat('F', $currentMonth)->format('n');
-        $currentYear = date('Y');
-        $holiday = HolidayCalendar::where('month', $currentMonth)
-                ->where('year', $currentYear)
-                ->pluck('date')
-                ->toArray();
-        if(empty($holiday))
-        {
-           $count_of_holiday=0;  
-        }
-        else
-        {
-            $count_of_holiday=count($holiday);
-            
-        }
-        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $currentYear);
-        $data = [['List of Employees for ' . $currentMonth. ' ' . $currentYear],
-                  ['Employee ID', 'Name', 'No. of Regular Days'],
-                ];
-       for ($i = 1; $i <= $daysInMonth; $i++) {
-                $date = new DateTime("$currentYear-$currentMonth1-$i");
-                // Get the day name
-                $dayName = $date->format('D');
-                $data[1][] = $i . $dayName; 
+{
+    $loggedInEmpId = Auth::guard('emp')->user()->emp_id;
+    $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name', 'shift_type')->get();
+    $currentMonth = $this->selectedMonth;
+    $currentMonth1 = DateTime::createFromFormat('F', $currentMonth)->format('n');
+    $currentYear = date('Y');
 
-       }
-       foreach ($employees as $employee) {
-        $rowData = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name']))];
-        
-        
-        $dateCount=0;
-        for ($i = 1; $i <= $daysInMonth; $i++) 
-        {
-            $currentDate = $currentYear . '-' . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            if (date('N', strtotime($currentDate)) == 6 || date('N', strtotime($currentDate)) == 7) {
-                $dateCount+=1; 
-            }
-           
+    
+    $holiday = HolidayCalendar::where('month', $currentMonth)
+        ->where('year', $currentYear)
+        ->pluck('date')
+        ->toArray();
+
+    $count_of_holiday = empty($holiday) ? 0 : count($holiday);
+    $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
+    ->where('leave_applications.leave_status', 3)
+    ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id')->toArray())
+    ->whereDate('from_date', '>=', "$currentYear-$currentMonth1-01")
+    ->whereDate('to_date', '<=', "$currentYear-$currentMonth1-31")
+    ->get(['leave_applications.emp_id', 'leave_applications.from_date', 'leave_applications.to_date'])
+    ->flatMap(function ($leaveRequest) {
+        $fromDate = Carbon::parse($leaveRequest->from_date);
+        $toDate = Carbon::parse($leaveRequest->to_date);
+        $dates = [];
+        for ($i = 0; $i <= $fromDate->diffInDays($toDate); $i++) {
+            $dates[] = $fromDate->copy()->addDays($i)->toDateString();
         }
-        $rowData[]=$daysInMonth-$dateCount-$count_of_holiday;
-        
+        return [$leaveRequest->emp_id => $dates]; 
+    });
+
+    $leaveDates = $approvedLeaveRequests1->toArray(); 
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $currentMonth1, $currentYear);
+
+    $data = [['List of Employees for ' . $currentMonth . ' ' . $currentYear]];
+    $headers = ['Employee ID', 'Name', 'No. of Regular Days'];
+    $leaveDates = [];
+    foreach ($approvedLeaveRequests1 as $emp_id => $datesCollection) { 
+        foreach ($datesCollection as $date) {  
+            $leaveDates[$emp_id][] = $date;  // Store dates for each employee
+        }
+    }
+    for ($i = 1; $i <= $daysInMonth; $i++) {
+        $date = new DateTime("$currentYear-$currentMonth1-$i");
+        $headers[] = $i . $date->format('D'); 
+    }
+    $data[] = $headers;
+
+    foreach ($employees as $employee) {
+        $rowData = [$employee->emp_id, ucwords(strtolower($employee->first_name)) . ' ' . ucwords(strtolower($employee->last_name))];
+        $dateCount = 0;
+
         for ($i = 1; $i <= $daysInMonth; $i++) {
-            $currentDate = $currentYear . '-' . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
-            $differentShift=$this->isEmployeeAssignedDifferentShift($currentDate,$employee['emp_id'])['shiftType'];
-            if (date('N', strtotime($currentDate)) == 6 || date('N', strtotime($currentDate)) == 7) {
-                $rowData[] = 'O'; 
+            $currentDate = "$currentYear-" . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            if (date('N', strtotime($currentDate)) >= 6) {
+                $dateCount++;
             }
-            elseif(in_array($currentDate, $holiday)) {
-                $rowData[] = 'H'; 
+        }
+        $rowData[] = $daysInMonth - $dateCount - $count_of_holiday;
+
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            $currentDate = "$currentYear-" . str_pad($currentMonth1, 2, '0', STR_PAD_LEFT) . '-' . str_pad($i, 2, '0', STR_PAD_LEFT);
+            $differentShift = $this->isEmployeeAssignedDifferentShift($currentDate, $employee->emp_id)['shiftType'];
+
+            if (date('N', strtotime($currentDate)) >= 6) {
+                $rowData[] = 'O';
+            } elseif (in_array($currentDate, $holiday)) {
+                $rowData[] = 'H';
+            } elseif (isset($leaveDates[$employee->emp_id]) && in_array($currentDate, $leaveDates[$employee->emp_id])) {
+                $rowData[] = 'L'; // Leave
+            } elseif (!empty($differentShift)) {
+                $rowData[] = $differentShift;
+            } else {
+                $rowData[] = $employee->shift_type;
             }
-            elseif(!empty($differentShift)) {
-                $rowData[] = $differentShift; 
-            }
-            else{
-                $rowData[] = $employee->shift_type; 
-            } 
-           
         }
         $data[] = $rowData;
-    } 
-      
-       $filePath = storage_path('app/ShiftRoasterData.xlsx');
-       SimpleExcelWriter::create($filePath)->addRows($data);
-       return response()->download($filePath, 'Shift_Roaster_Data.xlsx');
     }
+
+    return Excel::download(new ShiftRosterExport($data), 'Shift_Roaster_Data.xlsx');
+}
     public function isEmployeeAssignedDifferentShift($date, $empId)
     {
         $shiftExists = false;
