@@ -188,13 +188,13 @@ class EmployeeSwipesData extends Component
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
     
-        Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
+        // Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
     
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
         
         if ($isManager) {
 
-            Log::debug('Starting query for managed employees');
+            // Log::debug('Starting query for managed employees');
 
             $managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {
                 $query->where('manager_id', $userId)
@@ -203,7 +203,7 @@ class EmployeeSwipesData extends Component
                 ->where('employee_status', 'active');
 
             // Log the state of the query after initial conditions
-            Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->join('company_shifts', function ($join) {
                 $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
@@ -211,7 +211,7 @@ class EmployeeSwipesData extends Component
             });
 
             // Log the state of the query after join
-            Log::debug('Query after join:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Query after join:', ['query' => $managedEmployees->toSql()]);
 
             if ($this->selectedDesignation && $this->isupdateFilter == 1) {
 
@@ -268,7 +268,7 @@ class EmployeeSwipesData extends Component
                 });
             }
             // Log the state of the query after applying designation filter
-            Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->select(
                 'employee_details.first_name',
@@ -279,14 +279,14 @@ class EmployeeSwipesData extends Component
             );
 
             // Log the final query before execution
-            Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->get();
 
             // Log the final result
-            Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
+            // Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
         } else {
-            Log::info('User is not a manager, retrieving self details');
+            // Log::info('User is not a manager, retrieving self details');
     
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
                 ->join('company_shifts', function ($join) {
@@ -302,7 +302,7 @@ class EmployeeSwipesData extends Component
                 )
                 ->get();
     
-            Log::info('Retrieved Self Employee Data:', ['data' => $managedEmployees->toArray()]);
+            // Log::info('Retrieved Self Employee Data:', ['data' => $managedEmployees->toArray()]);
         }
     
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
@@ -325,7 +325,7 @@ class EmployeeSwipesData extends Component
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
         if ($isManager) {
-            Log::debug('Starting query for managed employees');
+            // Log::debug('Starting query for managed employees');
 
             $managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {
                 $query->where('manager_id', $userId)
@@ -334,7 +334,7 @@ class EmployeeSwipesData extends Component
                 ->where('employee_status', 'active');
 
             // Log the state of the query after initial conditions
-            Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Query after initial conditions:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->join('company_shifts', function ($join) {
                 $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
@@ -398,7 +398,7 @@ class EmployeeSwipesData extends Component
                 });
             }
             // Log the state of the query after applying designation filter
-            Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->select(
                 'employee_details.first_name',
@@ -409,12 +409,12 @@ class EmployeeSwipesData extends Component
             );
 
             // Log the final query before execution
-            Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
+            // Log::debug('Final query before execution:', ['query' => $managedEmployees->toSql()]);
 
             $managedEmployees = $managedEmployees->get();
 
             // Log the final result
-            Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
+            // Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
         } else {
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
                 ->join('company_shifts', function ($join) {
