@@ -1594,15 +1594,9 @@ color: #fff;
                                 </table>
 
                             </div>
-                            @php
-                               $presentCount=$totalDaysForFormattedModalTitle-($totalnumberofAbsents+$totalnumberofLeaves);
-                               $absentCountpercentage=intval(($totalnumberofAbsents/$totalDaysForFormattedModalTitle)*100);
-                               $leaveTakenpercentage=intval(($totalnumberofLeaves/$totalDaysForFormattedModalTitle)*100);
-                               $presentCountpercentage=intval(($presentCount/$totalDaysForFormattedModalTitle)*100);
-                               $holidayCountpercentage=intval(($totalnumberofHolidayForFormattedDate/$totalDaysForFormattedModalTitle)*100);
-                            @endphp
+
                              
-                            <livewire:attendance-chart />      
+
                             <div class="row m-0 mt-3 average-first-and-last-time">
                                 <div class="col-md-3 col-sm-6 p-0">
                                     <p style="font-size:12px;color:#778899;">Avg First In Time:&nbsp;&nbsp;<span style="font-weight:600;color:black;">{{$averageFirstInTime}}</span></p>
