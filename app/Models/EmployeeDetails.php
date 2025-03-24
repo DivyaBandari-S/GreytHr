@@ -16,7 +16,7 @@ use Carbon\Carbon;
 use Illuminate\Auth\Notifications\ResetPassword;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
-class EmployeeDetails extends Authenticatable 
+class EmployeeDetails extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, ChatHelpers;
     protected $primaryKey = 'emp_id';
@@ -63,6 +63,8 @@ class EmployeeDetails extends Authenticatable
         'service_age',
         'confirmation_date',
     ];
+
+    protected $hidden = ['password'];
 
     protected $casts = [
         'company_id' => 'array',

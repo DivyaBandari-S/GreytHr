@@ -29,7 +29,7 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background-color: #02114f;
+            background-color: #fff;
         }
 
         #notfound .notfound {
@@ -74,8 +74,8 @@
             font-size: 15px;
             font-weight: 400;
             text-transform: uppercase;
-            color: #fff;
-            margin-top: 20px;
+            color: #6c78b3;
+            margin-top: 80px;
             margin-bottom: 15px;
         }
 
@@ -96,19 +96,24 @@
             transition: 0.2s all;
         }
 
-        .notfound .home-btn:hover,
         .notfound .contact-btn:hover {
             opacity: 0.9;
         }
+        .notfound .home-btn:hover
+        {
+        opacity: 0.9;
+        }
 
         .notfound .home-btn {
-            color: rgba(255, 0, 36, 0.7);
+            color: #6c78b3;
             background: #fff;
+            border: 2px solid #6c78b3;
         }
 
         .notfound .contact-btn {
-            border: 2px solid rgba(255, 255, 255, 0.9);
-            color: rgba(255, 255, 255, 0.9);
+            color: #fff;
+            background: #6c78b3;
+            border: 2px solid #6c78b3;
         }
 
         @media only screen and (max-width: 767px) {
@@ -144,9 +149,9 @@
         <div class="notfound-bg"></div>
         <div class="notfound">
             <div class="notfound-404">
-                <h1>@yield('code')</h1>
+                <h1>@yield('image')</h1>
             </div>
-            <h2>@yield('message')</h2>
+            <h2 class="mt-4">@yield('message')</h2>
             <a href="{{ route('home') }}" class="home-btn">Go Home</a>
             <a href="{{ route('home') }}" class="contact-btn">Contact us</a>
         </div>

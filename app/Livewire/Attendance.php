@@ -1365,8 +1365,8 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
                                     } elseif ($timeDifference < 270) {
                                         $isHalfDayPresent = true;
 
-                                       
-                                        if ($inTime->gte($startTimeForSession1) ) {
+
+                                        if ($startTimeForSession1 !== null && $inTime->gte($startTimeForSession1)) {
                                             $isHalfDayPresentForSession1 = true;
                                         } else {
                                             $isHalfDayPresentForSession2 = true;

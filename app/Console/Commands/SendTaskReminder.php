@@ -89,7 +89,6 @@ class SendTaskReminder extends Command
 
                         // Get the current time
                         $now = Carbon::now();
-
                         // Format both the shift start time and current time to "H:i" (hours and minutes only)
                         $shiftStartTimeFormatted = $shiftStartTime->format('H:i');
                         $nowFormatted = $now->format('H:i');

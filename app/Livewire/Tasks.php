@@ -2,12 +2,12 @@
 
 namespace App\Livewire;
 
-use App\Models\Client;
+use App\Models\ClientDetails;
 use App\Mail\TaskAssignedNotification;
 use App\Mail\TaskReopenedNotification;
 use App\Mail\TaskClosedNotification;
-use App\Models\ClientsEmployee;
-use App\Models\ClientsWithProjects;
+use App\Models\AssignProjects;
+use App\Models\ClientProjects;
 use App\Models\EmployeeDetails;
 use App\Models\Task;
 use App\Models\Notification;
@@ -432,7 +432,15 @@ class Tasks extends Component
     {
         $this->showRecipients = true;
         $this->selectedPerson = $this->peoples->where('emp_id', $personId)->first();
-        $this->selectedPersonClients = ClientsEmployee::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
+        // $this->selectedPersonClients = AssignProjects::whereNotNull('emp_id')->where('emp_id', $this->selectedPerson->emp_id)->get();
+        $this->selectedPersonClients = AssignProjects::whereRaw(
+            'JSON_CONTAINS(emp_id, ?)', 
+            [json_encode([['emp_id' => $this->selectedPerson->emp_id]])]
+        )->get();
+        $this->selectedPersonClients = $this->selectedPersonClients->unique('client_id');
+        
+       
+        
         $this->selectedPeopleName = ucwords(strtolower(($this->selectedPerson->first_name . ' ' . $this->selectedPerson->last_name))) . ' #(' . $this->selectedPerson->emp_id . ')';
         $this->assignee = $this->selectedPeopleName;
         $this->updateFollowers();
@@ -446,7 +454,7 @@ class Tasks extends Component
 
     public function showProjects()
     {
-        $this->selectedPersonClientsWithProjects = ClientsWithProjects::where('client_id', $this->client_id)->get();
+        $this->selectedPersonClientsWithProjects = ClientProjects::where('client_id', $this->client_id)->get();
 
         if ($this->validate_tasks == "true") {
 
@@ -532,8 +540,10 @@ class Tasks extends Component
     public function openForTasks($taskId)
     {
         $task = Task::find($taskId);
+     
 
         if ($task) {
+         
             // Update task status to "closed"
             $task->update(['status' => 11]);
 
@@ -543,15 +553,19 @@ class Tasks extends Component
             $assigneeEmpId = isset($matches[1]) ? $matches[1] : null;
 
             if ($task && $assigneeEmpId) {
+
                 Notification::create([
                     'emp_id' => $task->emp_id,
                     'notification_type' => 'task-Closed',
                     'task_name' => $this->task_name,
                     'assignee' => $task->assignee,
                 ]);
+                
+                
             }
 
             if ($assigneeEmpId) {
+             
                 // Retrieve the assignee details using the emp_id
                 $assigneeDetails = EmployeeDetails::where('emp_id', $assigneeEmpId)->first();
 
@@ -587,6 +601,7 @@ class Tasks extends Component
                         ));
 
                         // Flash success message for email
+                     
                         FlashMessageHelper::flashSuccess('Task closed successfully and notification email sent!');
                     } else {
                         // Log error if assignee email is empty
@@ -601,11 +616,6 @@ class Tasks extends Component
                 Log::error('Employee ID not found in assignee field for task: ' . $task->task_name);
             }
         }
-
-
-        session()->flash('showAlert', true);
-
-        // Reload tasks after update
         $this->loadTasks();
     }
 
@@ -717,6 +727,7 @@ class Tasks extends Component
 
                 // Close the modal
                 $this->closeReopen();
+
 
                 // Reload tasks if necessary
                 $this->loadTasks();
@@ -866,9 +877,6 @@ class Tasks extends Component
                 'subject' => $this->subject,
                 'description' => $this->description,
                 'file_paths' => json_encode($fileDataArray),
-                // 'file_path' => $fileContent,
-                // 'file_name' => $fileName,
-                // 'mime_type' => $mimeType,
                 'status' => 10,
             ]);
 
@@ -957,7 +965,7 @@ class Tasks extends Component
                             $assignedBy,
                             $formattedAssignee,
                             $searchData,
-                            $formattedFollowerName, // Pass formatted follower name
+                            $formattedFollowerName, 
                             true
                         ));
                     }
@@ -989,9 +997,12 @@ class Tasks extends Component
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }
+    public $inputMessage;
     public function fileSelected()
     {
-        FlashMessageHelper::flashSuccess('File Uploaded successfully!');
+        // FlashMessageHelper::flashSuccess('File Uploaded successfully!');
+        // session()->flash('inputMessage', 'File Uploaded successfully!');
+        $this->inputMessage = 'File Uploaded successfully!';
     }
 
     public function resetFields()
@@ -1163,7 +1174,9 @@ class Tasks extends Component
         $comment->update([
             'comment' => $this->editingComment,
         ]);
-        FlashMessageHelper::flashSuccess('Comment updated successfully.');
+        // FlashMessageHelper::flashSuccess('Comment updated successfully.');
+        session()->flash('message', 'Comment updated successfully!');
+
         $this->showAlert = true;
 
 
@@ -1202,11 +1215,14 @@ class Tasks extends Component
         try {
             $comment = TaskComment::findOrFail($commentId);
             $comment->delete();
-            FlashMessageHelper::flashSuccess('Comment deleted successfully.');
+            // FlashMessageHelper::flashSuccess('Comment deleted successfully.');
+            session()->flash('message', 'Comment deleted successfully!');
+
             $this->showAlert = true;
             $this->fetchTaskComments($this->taskId);
         } catch (\Exception $e) {
-            FlashMessageHelper::flashError('Failed to delete comment: ' . $e->getMessage());
+            // FlashMessageHelper::flashError('Failed to delete comment: ' . $e->getMessage());
+            session()->flash('message', 'Failed to delete comment:'. $e->getMessage());
         }
     }
     public function cancelEdit()

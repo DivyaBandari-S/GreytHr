@@ -149,7 +149,7 @@ class Home extends Component
     {
         try {
             // Fetch weather data
-            $this->fetchWeather();
+            $this->getLocationByIP();
 
             // Get current hour to determine greeting
             $currentHour = date('G');
@@ -1312,17 +1312,23 @@ class Home extends Component
 
         try {
 
-            $ip = '';
+            // Get the IP address and determine location
+            $ip = request()->ip() === '127.0.0.1' ? Http::get('https://api64.ipify.org')->body() : request()->ip(); // Use Google's IP for testing
+            $ipUrl = env('FINDIP_API_URL', 'https://ipapi.co'); // Use the API URL from .env
+            $response = Http::get("{$ipUrl}/{$ip}/json/");
 
-            // $ip = request()->ip();
-            $apiUrl = env('FINDIP_API_URL');
+            if ($response->successful()) {
+                $location = $response->json();
 
-            // Construct the full API URL
-            $url = "{$apiUrl}/{$ip}/json/";
-
-            // Make the HTTP request
-            $response = Http::get($url);
-            // dd($response->json());
+                $this->lat = $location['latitude'] ?? null;
+                $this->lon = $location['longitude'] ?? null;
+                $this->country = $location['country_name'] ?? null;
+                $this->city = $location['city'] ?? null;
+                $this->postal_code = $location['postal'] ?? null;
+            } else {
+                // Handle API error
+                Log::error("Failed to fetch IP location data", ['ip' => $ip, 'response' => $response->body()]);
+            }
         } catch (\Exception $e) {
             // Log::error("Exception: ", ['message' => $e->getMessage()]);
             FlashMessageHelper::flashError('An error occured while getting location.');
@@ -1365,43 +1371,81 @@ class Home extends Component
     protected $listeners = ['sendCoordinates'];
 
 
+    // public function sendCoordinates($latitude, $longitude)
+    // {
+    //     // Log the received coordinates
+    //     Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
+    //     // Build the API URL for reverse geocoding
+    //     $apiUrl = env('LOCATION_API', 'https://nominatim.openstreetmap.org/reverse');
+    //     // Call the Nominatim API to get address details
+    //     try {
+    //         $response = Http::get($apiUrl, [
+    //             'lat' => $latitude,
+    //             'lon' => $longitude,
+    //             'format' => 'json'
+    //         ]);
+    //         if ($response->successful()) {
+    //             $data = $response->json();
+    //             // Extract address details
+    //             $address = $data['address'] ?? [];
+    //             $this->formattedAddress = [
+    //                 'village' => $address['village'] ?? '',
+    //                 'road' => $address['road'] ?? '',
+    //                 'suburb' => $address['suburb'] ?? '',
+    //                 'city_district' => $address['city_district'] ?? '',
+    //                 'city' => $address['city'] ?? '',
+    //                 'county' => $address['county'] ?? '',
+    //                 'state' => $address['state'] ?? '',
+    //                 'postcode' => $address['postcode'] ?? '',
+    //                 'country' => $address['country'] ?? '',
+    //                 'country_code' => $address['country_code'] ?? ''
+    //             ];
+    //         } else {
+    //             Log::error("Failed to fetch address. Error: " . $response->body());
+    //         }
+    //     } catch (\Exception $e) {
+    //         // Log::error("Error occurred while fetching address: " . $e->getMessage());
+    //         FlashMessageHelper::flashError('Error occurred while fetching address');
+    //     }
+    // }
+
     public function sendCoordinates($latitude, $longitude)
     {
         // Log the received coordinates
-        // Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
 
         // Build the API URL for reverse geocoding
-        $apiUrl = "https://nominatim.openstreetmap.org/reverse";
+        $apiUrl = env('LOCATION_API', 'https://photon.komoot.io/reverse');
 
-        // Call the Nominatim API to get address details
         try {
-            $response = Http::get($apiUrl, [
+            $response = Http::timeout(5)->get($apiUrl, [
                 'lat' => $latitude,
                 'lon' => $longitude,
-                'format' => 'json'
             ]);
+
+            // Debug raw response (optional)
+            // dd($response->json());
+
             if ($response->successful()) {
                 $data = $response->json();
-                // Extract address details
-                $address = $data['address'] ?? [];
+                $properties = $data['features'][0]['properties'] ?? [];
+
                 $this->formattedAddress = [
-                    'village' => $address['village'] ?? '',
-                    'road' => $address['road'] ?? '',
-                    'suburb' => $address['suburb'] ?? '',
-                    'city_district' => $address['city_district'] ?? '',
-                    'city' => $address['city'] ?? '',
-                    'county' => $address['county'] ?? '',
-                    'state' => $address['state'] ?? '',
-                    'postcode' => $address['postcode'] ?? '',
-                    'country' => $address['country'] ?? '',
-                    'country_code' => $address['country_code'] ?? ''
+                    'name' => $properties['name'] ?? '',
+                    'street' => $properties['street'] ?? '',
+                    'district' => $properties['district'] ?? '',
+                    'county' => $properties['county'] ?? '',
+                    'postcode' => $properties['postcode'] ?? '',
+                    'country_code' => $properties['countrycode'] ?? '',
                 ];
             } else {
-                // Log::error("Failed to fetch address. Error: " . $response->body());
+                Log::error("Failed to fetch address. Response: " . $response->body());
+                FlashMessageHelper::flashError('Unable to fetch location data.');
             }
         } catch (\Exception $e) {
-            // Log::error("Error occurred while fetching address: " . $e->getMessage());
-            FlashMessageHelper::flashError('Error occurred while fetching address');
+            Log::error("Exception occurred while fetching address: " . $e->getMessage());
+            FlashMessageHelper::flashError('Error occurred while fetching address.');
         }
     }
 }

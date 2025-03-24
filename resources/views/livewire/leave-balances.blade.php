@@ -76,6 +76,7 @@
                                         <option value="paternity">Paternity Leave</option>
                                         <option value="sick">Sick Leave</option>
                                         <option value="lop">Loss of Pay</option>
+                                        <option value="earned_leave">Earned Leave</option>
                                     </select>
                                 </div>
                             </div>
@@ -352,7 +353,7 @@
                             </div>
                         </div>
                         <div class="center text-center d-flex flex-column align-items-center justify-content-center">
-                            <h5 class="mb-0">{{ $earnedLeavesPeryear }}</h5>
+                            <h5 class="mb-0">{{ $earnedLeaveBalance }}</h5>
                             <p class="mb-0 remaining">Balance</p>
                             @if($earnedLeavesPeryear > 0)
                             <a href="/leave-balances/earnedleavebalance?year={{$selectedYear}}" class="anchorTagDetails">View Details</a>

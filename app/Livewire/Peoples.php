@@ -172,7 +172,7 @@ class Peoples extends Component
         $this->employee = EmployeeDetails::with('empPersonalInfo')->find($employeeId);
         
         if ($this->employee) {
-            // Log::info("Employee found: ", ['employee' => $this->employee]);
+            
             if ($this->employee->employee_status === 'terminated' || $this->employee->employee_status === 'resigned') {
                 // Flash error message and prevent starring
                 FlashMessageHelper::flashError('You cannot star this employee as they have been terminated or resigned.');
@@ -185,9 +185,7 @@ class Peoples extends Component
                 ->first();
 
             if ($this->starredPerson) {
-                // Log::info("Starred person found, deleting: ", ['starredPerson' => $this->starredPerson]);
                 $this->starredPerson->delete();
-                // Log::info("Starred person deleted successfully.");
             } else {
                 $employeeId = auth()->guard('emp')->user()->emp_id;
                 $this->employeeDetails = EmployeeDetails::find($employeeId);
@@ -211,16 +209,13 @@ class Peoples extends Component
                         'starred_status' => 'starred'
                     ]);
                     FlashMessageHelper::flashSuccess('Star Added successfully!');
-
-                    // Log::info("Starred person created successfully: ", ['starredPerson' => $this->starredPerson]);
                 } catch (\Exception $e) {
-                    // Log::error("Error while creating starred person: " . $e->getMessage());
                     FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
                     $this->addError('duplicate', 'You have already starred this person.');
                 }
             }
         } else {
-            Log::warning("Employee not found for ID: {$employeeId}");
+           
         }
         
         // return redirect()->to('/PeoplesList');
@@ -248,7 +243,7 @@ class Peoples extends Component
 
             // return redirect('/PeoplesList');
         } catch (\Exception $e) {
-            // Log::info('error',$e);
+           
             FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
         }
     }

@@ -88,7 +88,6 @@ class LeaveHelper
             } else {
                 $totalDays += (self::getSessionNumber($toSession) - self::getSessionNumber($fromSession) + 1) * 0.5;
             }
-
             return $totalDays;
         } catch (\Exception $e) {
             FlashMessageHelper::flashError('An error occurred while calculating the number of days.');
@@ -108,11 +107,9 @@ class LeaveHelper
         return (int) str_replace('Session ', '', $session);
     }
 
-
     public static function getApprovedLeaveDays($employeeId, $selectedYear)
     {
         try {
-
             // Fetch approved leave requests
             $selectedYear = (int) $selectedYear;
             $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
@@ -201,7 +198,6 @@ class LeaveHelper
 
     public static function getApprovedLeaveDaysOnSelectedDay($employeeId, $selectedYear)
     {
-        // Fetch approved leave requests
 
         $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
             ->where(function ($query) {
@@ -218,7 +214,7 @@ class LeaveHelper
                 'Paternity Leave',
                 'Earned Leave'
             ])
-            ->where('to_date', '=', $selectedYear)
+            ->where('to_date', '<=', $selectedYear)
             ->get();
 
 
@@ -268,7 +264,7 @@ class LeaveHelper
                     $totalPaternityDays += $days;
                     break;
                 case 'Earned Leave':
-                    $totalPaternityDays += $days;
+                    $totalEarnedDays += $days;
                     break;
             }
         }

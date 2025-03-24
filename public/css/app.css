@@ -6175,6 +6175,9 @@ select .yearSelect {
 .leave-table td.date-range {
     width: 40%;
 }
+td.calendar-date.active-date{
+    border: 0.1rem solid var(--main-color);
+}
 
 .leave-table td.date-range span {
     color: black;
@@ -11041,6 +11044,6 @@ cursor: pointer;
 }
 
 
-.fl-wrapper[data-position$=-center]{
+/* .fl-wrapper[data-position$=-center]{
     z-index: 10;
-}
+} */

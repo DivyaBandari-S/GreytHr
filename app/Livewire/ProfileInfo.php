@@ -116,7 +116,7 @@ class ProfileInfo extends Component
         $info = EmpPersonalInfo::where('emp_id', $empId)->first();
 
         if ($info && !empty($info->qualification)) {
-            // Log the raw qualification data
+           
 
             // Decode the JSON twice to handle double encoding
             $decodedData = json_decode($info->qualification, true);
@@ -125,7 +125,7 @@ class ProfileInfo extends Component
                 $decodedData = json_decode($decodedData, true);
             }
 
-            // Log the decoded data
+            
 
             // Check if decoding was successful
             if (is_array($decodedData)) {
