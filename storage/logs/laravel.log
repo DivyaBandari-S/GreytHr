@@ -1,4 +1,0 @@
-[2025-03-24 15:17:23] local.ERROR: Class App\Exports\EarlyArrivalsExport contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Maatwebsite\Excel\Concerns\WithHeadings::headings) {"userId":"XSS-0307","exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Class App\\Exports\\EarlyArrivalsExport contains 1 abstract method and must therefore be declared abstract or implement the remaining methods (Maatwebsite\\Excel\\Concerns\\WithHeadings::headings) at C:\\xampp\\htdocs\\GreytHr\\app\\Exports\\EarlyArrivalsExport.php:15)
-[stacktrace]
-#0 {main}
-"} 
