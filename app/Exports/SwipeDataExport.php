@@ -40,7 +40,7 @@ class SwipeDataExport implements FromCollection,WithHeadings
     public function headings(): array
     {
         return [
-            ['List of Late Arrival Employees on ' . Carbon::parse($this->startDate)->format('jS F, Y')],
+            ['List of Employees Swiped on ' . Carbon::parse($this->startDate)->format('jS F, Y')],
             ['Employee ID', 'Name', 'Sign In Time', 'Late By (HH:MM)'],
         ];
     }
