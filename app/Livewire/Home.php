@@ -653,6 +653,7 @@ class Home extends Component
     {
         try {
             $loggedInEmpId = Session::get('emp_id');
+            
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
@@ -792,6 +793,7 @@ class Home extends Component
             $this->teamCount = count($teamOnLeaveApplications);
 
             $currentDate = Carbon::today();
+          
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id') // Join with employee_details table
                 ->where('leave_applications.leave_status', 2)
@@ -808,7 +810,7 @@ class Home extends Component
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
 
             //attendance related query
-            $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            $this->absent_employees = EmployeeDetails::where('manager_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) {
                     $query->select('emp_id')
@@ -826,7 +828,7 @@ class Home extends Component
 
 
 
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+            $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.leave_status', 2)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
@@ -843,12 +845,12 @@ class Home extends Component
                     return $leaveRequest;
                 });
 
-            $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            $this->absent_employees = EmployeeDetails::where('manager_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name')
-                ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
+                ->whereNotIn('emp_id', function ($query) use ($employeeId, $currentDate, $approvedLeaveRequests) {
                     $query->select('emp_id')
                         ->from('swipe_records')
-                        ->where('manager_id', $loggedInEmpId)
+                        ->where('manager_id', $employeeId)
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
@@ -856,9 +858,9 @@ class Home extends Component
                 ->get();
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
-
-            $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+            
+            $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $employeeId)
+              
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
@@ -870,18 +872,20 @@ class Home extends Component
                     'company_shifts.shift_start_time',
                     'company_shifts.shift_end_time'
                 )
-                ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                ->whereNotIn('employee_details.emp_id', function ($query) use ($employeeId, $currentDate) {
                     $query->select('emp_id')
                         ->from('swipe_records')
-                        ->where('manager_id', $loggedInEmpId)
+                        ->where('manager_id', $employeeId)
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
                 ->where('employee_details.employee_status', 'active')
                 ->distinct('employee_details.emp_id')
                 ->count();
-
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status', 'active')->get();
+               
+           
+            $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->where('employee_status', 'active')->get();
+           
             $swipes_early = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -941,7 +945,8 @@ class Home extends Component
                 // Apply distinct on emp_id to avoid duplicates
                 ->distinct('swipe_records.emp_id')
                 ->get();
-
+             
+          
             $swipes_late1 = $swipes_late->count();
 
             $this->swipeDetails = DB::table('swipe_records')

@@ -258,7 +258,7 @@ public function toggleAccordionForLate($index)
                     $leaveRequest->number_of_days = Carbon::parse($leaveRequest->from_date)->diffInDays(Carbon::parse($leaveRequest->to_date)) + 1;
                     return $leaveRequest;
                 });
-            dd($approvedLeaveRequests);
+           
             $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
