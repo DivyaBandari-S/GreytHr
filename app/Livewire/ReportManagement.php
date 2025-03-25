@@ -1122,8 +1122,23 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
+                   
+                  
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1204,7 +1219,21 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
                     ->get();
+                 
 
 
                 // Check what is being grouped by emp_id
@@ -1310,8 +1339,22 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
+                   
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1509,7 +1552,21 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
                     ->get();
+                   
 
 
                 // Check what is being grouped by emp_id
@@ -1729,8 +1786,14 @@ class ReportManagement extends Component
                 echo $pdf->stream();
             }, 'leave_transactions_report.pdf');
         } catch (\Exception $e) {
-            // Log the exception message
-            Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
+            // // Log the exception message
+            // Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
+            Log::error('An error occurred while generating the leave transaction report.', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(), // Logs the full stack trace
+            ]);
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
         }
     }
