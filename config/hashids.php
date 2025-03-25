@@ -1,7 +1,7 @@
 <?php
-
+ 
 return [
-
+ 
     /*
     |--------------------------------------------------------------------------
     | Default Connection Name
@@ -12,9 +12,9 @@ return [
     | connections at once using the manager class.
     |
     */
-
+ 
     'default' => 'main',
-
+ 
     /*
     |--------------------------------------------------------------------------
     | Hashids Connections
@@ -25,21 +25,22 @@ return [
     | you would like.
     |
     */
-
+ 
     'connections' => [
-
+ 
         'main' => [
             'salt' => '',
             'length' => 0,
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
-
+ 
         'alternative' => [
             'salt' => 'your-salt-string',
             'length' => 'your-length-integer',
             // 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
         ],
-
+ 
     ],
-
+ 
 ];
+ 

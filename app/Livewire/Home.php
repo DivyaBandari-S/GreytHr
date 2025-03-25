@@ -625,7 +625,8 @@ class Home extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-
+            $this->calculateTaskData();
+            $this->getChatUserImages();
 
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
@@ -916,13 +917,10 @@ class Home extends Component
 
             $swipes_late1 = $swipes_late->count();
 
-            $this->swipeDetails = DB::table('swipe_records')
-                ->whereDate('created_at', $today)
+            $this->swipeDetails = SwipeRecord::whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
                 ->orderBy('created_at', 'desc')
                 ->get();
-
-
 
             // Assuming $calendarData should contain the data for upcoming holidays
             // Get the current year and date
@@ -1009,11 +1007,6 @@ class Home extends Component
                     $this->netPay = $salComponents['net_pay'] ?? 0;
                 }
             }
-
-
-
-            $this->calculateTaskData();
-            $this->getChatUserImages();
 
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
