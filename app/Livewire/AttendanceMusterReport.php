@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -85,24 +86,25 @@ class AttendanceMusterReport extends Component
     }
     public function downloadAttendanceMusterReportInExcel()
     { 
-           if(empty($this->selectedEmployees))
-           {
-              return redirect()->back()->with('error', 'Select at least one employee detail');
-           }
-           elseif(empty($this->fromDate) && empty($this->toDate))
-           {
-              return redirect()->back()->with('error', 'Please select FromDate and ToDate');
-           }
-           elseif(empty($this->fromDate))
-           {
-              return redirect()->back()->with('error', 'Please select FromDate');
-           }
-           elseif(empty($this->toDate))
-           {
-              return redirect()->back()->with('error', 'Please select toDate');
-           }
-           else
-           {
+        if(empty($this->selectedEmployees))
+        {
+           return redirect()->back()->with('error', 'Select at least one employee detail');
+        }
+        elseif(empty($this->fromDate) && empty($this->toDate))
+        {
+           return redirect()->back()->with('error', 'Please select FromDate and ToDate');
+        }
+        elseif(empty($this->fromDate))
+        {
+           return redirect()->back()->with('error', 'Please select FromDate');
+        }
+        elseif(empty($this->toDate))
+        {
+           return redirect()->back()->with('error', 'Please select toDate');
+        }
+        else
+        {
+       
             if ($this->fromDate && $this->toDate) {
                 $fromDate = Carbon::parse($this->fromDate);
                 $toDate = Carbon::parse($this->toDate);
@@ -312,9 +314,9 @@ class AttendanceMusterReport extends Component
             $filePath = storage_path('app/attendance_muster_report.xlsx');
             SimpleExcelWriter::create($filePath)->addRows($data);
             return response()->download($filePath, 'attendance_muster_report.xlsx');
- 
+        }
     
-           }
+           
     }
 
     public function render()

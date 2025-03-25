@@ -1,5 +1,5 @@
 <div>
-    @if (session('error'))
+@if (session('error'))
     <div class="alert alert-danger">
         {{ session('error') }}
     </div>
@@ -12,10 +12,12 @@
                     <label for="from-date">From Date:</label>
                     <input type="date" class="form-control" id="from-date" wire:model="fromDate" wire:change="updatefromDate">
                 </div>
+              
                 <div class="form-group col-md-6">
                     <label for="to-date">To Date:</label>
                     <input type="date" class="form-control" id="to-date" wire:model="toDate" wire:change="updatetoDate">
                 </div>
+                
             </div>
             <div class="row mt-3 mb-3 m-0 p-0 d-flex align-items-center">
                 <div class="col-md-6">

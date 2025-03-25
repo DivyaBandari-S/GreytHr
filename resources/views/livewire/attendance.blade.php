@@ -1687,7 +1687,7 @@ color: #fff;
                                 @endphp
 
 
-                                @if ($day)
+                            @if ($day)
                                          
                                 @if(strtotime($formattedDate) < strtotime(date('Y-m-d'))&& strtotime($formattedDate) > $employeeHireDate->timestamp) @php $flag=1; @endphp @else @php $flag=0; @endphp @endif @if(($day['status']=='CLP' ||$day['status']=='SL' ||$day['status']=='LOP'||$day['status']=='CL'||$day['status']=='ML'||$day['status']=='PL'||$day['status']=='L')&&$day['onleave']==true) @php $leave=1; @endphp @else @php $leave=0; @endphp @endif <td wire:click="dateClicked('{{$formattedDate}}')" wire:model="dateclicked" class="attendance-calendar-date {{ $isCurrentMonth && !$isWeekend ? 'clickable-date' : '' }}" style="text-align:start;color: {{ $isCurrentMonth&&(strtotime($formattedDate) > $employeeHireDate->timestamp) ? ($isWeekend && (strtotime($formattedDate) > $employeeHireDate->timestamp) ? '#c5cdd4' : 'black')  : '#c5cdd4'}};background-color:  @if($isCurrentMonth && !$isWeekend && $flag==1 ) @if($day['isPublicHoliday'] ) #f3faff @elseif($leave == 1||$day['onFullDayLeave'])rgb(252, 242, 255) @elseif($day['status'] == 'A') #fcf0f0 @elseif($day['status'] == 'P') #edfaed @endif @elseif($isCurrentMonth && $isWeekend && $flag==1)rgb(247, 247, 247) @endif ;">
                                     <div>
@@ -1701,7 +1701,7 @@ color: #fff;
                                                 </div>
                                                 
 
-                                       @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend&& strtotime($formattedDate) > $employeeHireDate->timestamp)  
+                                       @elseif($day['onHalfDayLeave']==true&&!$day['isToday']&&!$isWeekend&& strtotime($formattedDate) > $employeeHireDate->timestamp&&$flag==1)  
                                           <div style="background-color:{{ $day['onHalfDayLeave'] == true 
                                                                                                                 ? ((($day['session2leave']== [["Session 1"]])||$day['session2leave']== [["Session 1","Session 2"]]) ? 'rgb(252, 242, 255)' :(($day['halfdaypresent'] == 'HP'||$day['halfdaypresent'] == 'P') ? '#edfaed' : ($day['halfdaypresent'] == 'A' ? '#fcf0f0' : '#ffffff')) )
                                                                                                                 : '#ffffff'
@@ -1760,7 +1760,7 @@ color: #fff;
                                                 
 
                                        @endif
-                                        @if($day['onHalfDayLeave']==true&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
+                                       @if($day['onHalfDayLeave']==true&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp&&$flag==1)
 
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="margin: -3px; padding-top: 14px; background-color: {{ $day['onHalfDayLeave'] == true 
@@ -1880,7 +1880,7 @@ color: #fff;
                                                 @endif
                                         </div>
 
-                                        @elseif($day['status']=='HP'&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
+                                       @elseif($day['status']=='HP'&&!$day['isToday']&& strtotime($formattedDate) > $employeeHireDate->timestamp)
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}"style="background-color: {{ $day['halfdaypresentforsession1'] ? '#fcf0f0' : ($day['halfdaypresentforsession2'] ? '#edfaed' : '') }};;margin: -3px;">
                                             <!-- Render your grey circle -->
@@ -2008,7 +2008,7 @@ color: #fff;
                                                 @endif
                                                 @endif
                                         </div>
-                                        @else
+                                       @else
 
                                         <div class="{{ $isWeekend ? '' : 'circle-grey' }}">
                                             <!-- Render your grey circle -->
@@ -2113,9 +2113,9 @@ color: #fff;
                                                 @endif
                                                 @endif
                                         </div>
-                                        @endif
+                                       @endif
                                     </div>
-                                    @endif
+                            @endif
                                     </td>
 
                                     @endforeach
