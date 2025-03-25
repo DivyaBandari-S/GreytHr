@@ -719,7 +719,7 @@
                         $outRecord=App\Models\SwipeRecord::whereDate('created_at',$distinctDate)->where('in_or_out','OUT')->where('emp_id',$emp->emp_id)->orderByDesc('created_at')->first();
                         Illuminate\Support\Facades\Log::info("IN Record:", ['inRecord' => $inRecord]);
                         Illuminate\Support\Facades\Log::info("OUT Record:", ['outRecord' => $outRecord]);
-                        if($outRecord==null)
+                        if(($outRecord==null||$inRecord==null)||($inRecord==null)||($outRecord==null))
                                     {
                                         Illuminate\Support\Facades\Log::warning("OUT record is null for date: {$distinctDate}, increasing decreaseincount by 1");
                                         $decreaseincount+=1;

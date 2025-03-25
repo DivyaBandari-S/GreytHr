@@ -265,7 +265,7 @@ class Home extends Component
 
     public function OpentoggleSignStatePopup()
     {
-
+          
         // Do something with $swipeId and $inOrOut
         $this->showtoggleSignState = true;
 
