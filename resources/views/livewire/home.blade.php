@@ -65,7 +65,6 @@
                         </div> -->
 
                         <div class="col-md-8 px-3 pt-4">
-
                             <div class="mb-4 homeBaneerCard row m-0">
                                 <div class="col-md-5 pe-0">
                                     <div class="bigCircle">
@@ -93,6 +92,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-7 ps-0 pt-2 text-end">
+                                <p class="normalText mt-2">Tuesday | 10:00 Am To 07:00 Pm</p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
                                     <div class="locationGlobe m-0 mt-4 pe-0 mb-2 row">
                                         <div class="col-11 p-0" style="text-align: end;">
@@ -1327,3 +1327,92 @@
 <div class="modal-backdrop fade show blurred-backdrop"></div>
 @endif
 </div>
+<script>
+    // Function to check if an element is in the viewport
+    function isElementInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    // Initial check on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        var grossPay = {{ $grossPay }}; // Correct data injection
+        var deductions = {{ $deductions }}; // Correct data injection
+        var netPay = {{ $netPay }};
+
+        // Total of netPay and deductions should equal grossPay
+        if (grossPay !== (netPay + deductions)) {
+            console.error('The sum of net pay and deductions does not match the gross pay.');
+        }
+
+        var ctx = document.getElementById('combinedPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gross Pay', 'Net Pay', 'Deductions'], // Labels for the rings
+                datasets: [
+                    // Outer ring for Gross Pay (always 100%)
+                    {
+                        label: 'Gross Pay',
+                        data: [grossPay, 0, 0], // Gross Pay only in the outer ring
+                        backgroundColor: ['#000000', 'transparent',
+                            'transparent'
+                        ], // Black for Gross Pay, Transparent for the rest
+                        borderColor: 'transparent', // No border for outer ring
+                        borderWidth: 2,
+                        hoverBorderWidth: 3,
+                        cutout: '65%' // Decrease cutout to reduce the gap (thicker outer ring)
+                    },
+                    // Inner ring for Net Pay and Deductions
+                    {
+                        label: 'Net Pay and Deductions',
+                        data: [0, netPay,
+                            deductions
+                        ], // Inner ring is split between Net Pay and Deductions
+                        backgroundColor: ['transparent', '#1C9372',
+                            '#B9E3C6'
+                        ], // Green for Net Pay, Light Green for Deductions
+                        borderColor: 'transparent', // No border for inner ring
+                        borderWidth: 2,
+                        hoverBorderWidth: 3,
+                        cutout: '55%' // Decrease cutout to reduce the gap (thinner inner ring)
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    },
+                    tooltip: {
+                        enabled: true, // Enable tooltips
+                        mode: 'nearest', // Tooltip will be displayed when hovering over any segment
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var percentage = 0;
+                                // Show 100% for the Gross Pay segment
+                                if (tooltipItem.dataIndex === 0) {
+                                    percentage = 100; // Gross Pay is always 100%
+                                } else if (tooltipItem.dataIndex === 1) {
+                                    percentage = (netPay / grossPay) *
+                                        100; // Calculate percentage for Net Pay
+                                } else if (tooltipItem.dataIndex === 2) {
+                                    percentage = (deductions / grossPay) *
+                                        100; // Calculate percentage for Deductions
+                                }
+
+                                // Return the percentage with two decimal places
+                                return tooltipItem.label + ': ' + percentage.toFixed(2) + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
