@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\FamilyReportExport;
 use App\Models\EmployeeDetails;
 use Carbon\Carbon;
 use DateInterval;
@@ -10,6 +11,7 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class ShiftSummaryReport extends Component
@@ -149,7 +151,21 @@ class ShiftSummaryReport extends Component
            }
           else
           {
-            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)->select('emp_id', 'first_name', 'last_name','shift_type','shift_start_time','shift_end_time')->get();
+            $employees1 = EmployeeDetails::whereIn('emp_id', $this->shiftSummary)
+                            ->select(
+                                'employee_details.emp_id',
+                                'employee_details.first_name',
+                                'employee_details.last_name',
+                                'employee_details.shift_type',
+                                'company_shifts.shift_start_time',
+                                'company_shifts.shift_end_time'
+                            )
+                            ->join('company_shifts', function ($join) {
+                                $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
+                                    ->whereRaw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]')) = company_shifts.company_id");
+                            })
+                            ->get();
+
             $datesAndWeeknames = $this->getDatesAndWeeknames();
             foreach ($datesAndWeeknames as $daw) {
                 if ($daw['weekname'] == 'Sat' || $daw['weekname'] == 'Sun') {
@@ -181,9 +197,8 @@ class ShiftSummaryReport extends Component
                 }
              }
 
-             $filePath = storage_path('app/shift_summary_report.xlsx');
-             SimpleExcelWriter::create($filePath)->addRows($data);
-             return response()->download($filePath, 'shift_summary_report.xlsx');
+             return Excel::download(new FamilyReportExport($data), 'shift_summary_report.xlsx');
+       
           }
         }
         catch (\Exception $e) {

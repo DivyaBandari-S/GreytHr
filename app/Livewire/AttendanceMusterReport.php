@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\FamilyReportExport;
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
@@ -11,6 +12,7 @@ use Carbon\Carbon;
 use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class AttendanceMusterReport extends Component
@@ -124,7 +126,7 @@ class AttendanceMusterReport extends Component
                         ->exists();
                     $day = $date->format('l'); // Get day of the week
                     $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-                        ->where('leave_applications.status', 'approved')
+                        ->where('leave_applications.leave_status', 2)
                         ->whereIn('leave_applications.emp_id', $employees1->pluck('emp_id'))
                         ->get(['leave_applications.*', 'employee_details.first_name', 'employee_details.last_name'])
                         ->map(function ($leaveRequest) {
@@ -311,9 +313,8 @@ class AttendanceMusterReport extends Component
                 ];
             }
      
-            $filePath = storage_path('app/attendance_muster_report.xlsx');
-            SimpleExcelWriter::create($filePath)->addRows($data);
-            return response()->download($filePath, 'attendance_muster_report.xlsx');
+            return Excel::download(new FamilyReportExport($data), 'attendance_muster_report.xlsx');
+       
         }
     
            

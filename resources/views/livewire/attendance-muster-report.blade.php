@@ -1,9 +1,5 @@
 <div>
-@if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-    @endif
+
     @if($showAttendanceMusterReportDialog==true)
     <div>
         <div class="modal-body">
@@ -32,6 +28,11 @@
                 </div>
             </div>
             <div class="table-responsive" style="height:200px;max-height:200px;overflow-y:auto;">
+                      @if (session('error'))
+    
+                         <span style="color:#f66;font-size:12px;">{{ session('error') }}</span>
+
+                      @endif
                 <table class="swipes-table mt-2 border" style="width: 100%;">
                     <tr style="background-color: #f6fbfc;">
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>
