@@ -10,7 +10,7 @@
         <div class="wrapper-canvas bg-white" style="height: 93vh">
             {{-- chat side bar --}}
             <livewire:chat.chat-side-bar />
-            <div class="row m-0 p-0">
+            <div class="row m-0 p-0" style="width:100% !important">
                 <!-- Left Side: Department Dropdown -->
                 <div class="col-md-3 border-end bg-white" style="height: 92vh; overflow-y: auto;">
                     <div class="bg-white" style="height: 100%;"> <!-- Set background color and full height -->
