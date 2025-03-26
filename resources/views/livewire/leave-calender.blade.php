@@ -95,7 +95,10 @@
                                 $isActiveDate = ($selectedDate === $carbonDate->toDateString());
                                 $leaveCount = $filterCriteria === 'Me' ? $day['leaveCountMe'] : $day['leaveCountMyTeam'];
                                 @endphp
-                                <td wire:click="dateClicked('{{ $day['day'] }}')" class="calendar-date{{ $isActiveDate ? ' active-date' : '' }}" data-date="{{ $day['day'] }}" style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
+                                <td wire:click="dateClicked('{{ $day['day'] }}')"
+                                    class="calendar-date{{ $isActiveDate && $isCurrentMonth ? ' active-date' : '' }}"
+                                    data-date="{{ $day['day'] }}"
+                                    style="color: {{ $isCurrentMonth ? ($isWeekend ? '#9da4a9' : 'black') : '#9da4a9' }};">
                                     @if ($day)
                                     <div>
                                         @if ($day['isToday'])
@@ -105,7 +108,7 @@
                                         @else
                                         {{ str_pad($day['day'], 2, '0', STR_PAD_LEFT) }}
                                         @endif
-                                        <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}" >
+                                        <div class="circle-holiday{{ $day['isPublicHoliday'] ? ' IRIS' : '' }}">
                                             <!-- Render your content -->
                                         </div>
                                         @if (!$isWeekend && $leaveCount > 0) {{-- Only display leave count for weekdays --}}
@@ -118,6 +121,7 @@
                                     </div>
                                     @endif
                                 </td>
+
                                 @endforeach
                             </tr>
                             @endforeach

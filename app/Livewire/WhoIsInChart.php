@@ -14,6 +14,7 @@ namespace App\Livewire;
 use App\Exports\AbsentEmployeesExport;
 use App\Exports\EarlyArrivalsExport;
 use App\Exports\LateArrivalsExport;
+use App\Exports\OnLeaveExport;
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmpDepartment;
 use App\Models\EmployeeDetails;
@@ -258,7 +259,7 @@ public function toggleAccordionForLate($index)
                     $leaveRequest->number_of_days = Carbon::parse($leaveRequest->from_date)->diffInDays(Carbon::parse($leaveRequest->to_date)) + 1;
                     return $leaveRequest;
                 });
-            dd($approvedLeaveRequests);
+           
             $swipes = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -416,7 +417,7 @@ public function toggleAccordionForLate($index)
                 $data[] = [$employee['emp_id'], ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name'])), $employee['leave_type'], $employee['number_of_days']];
             }
 
-            return Excel::download(new EarlyArrivalsExport($data), 'employees_on_time.xlsx');
+            return Excel::download(new OnLeaveExport($data), 'employees_on_leave.xlsx');
 
         } catch (\Exception $e) {
             Log::error('Error generating Excel report for leave: ' . $e->getMessage());

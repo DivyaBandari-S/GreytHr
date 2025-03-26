@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Exports\FamilyReportExport;
+use App\Exports\OnLeaveExport;
 use App\Models\Company;
 use App\Models\EmployeeDetails;
 use App\Models\EmpParentDetails;
@@ -11,6 +13,7 @@ use App\Models\ParentDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class FamilyReport extends Component
@@ -243,9 +246,10 @@ foreach ($employees2 as $employee) {
         }
    
     }    
-       $filePath = storage_path('app/family_reports.xlsx');
-        SimpleExcelWriter::create($filePath)->addRows($rows);
-        return response()->download($filePath, 'family_reports.xlsx');
+     
+        
+        return Excel::download(new FamilyReportExport($rows), 'family_details_report.xlsx');
+       
 
       }
     }

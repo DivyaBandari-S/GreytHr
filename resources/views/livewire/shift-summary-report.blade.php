@@ -1,9 +1,5 @@
 <div>
-    @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-    @endif
+    
     <div class="modal-body">
         <div class="date-filters mb-2 d-flex mt-2 gap-2">
             <div class="form-group col-md-6">
@@ -20,12 +16,17 @@
             </div>
             <div class="search-container col-md-6 " style="position: relative;">
                 <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
-                <button wire:click="searchfilter" id="searchButtonReports">
+                <button wire:click="searchfilter" id="searchButtonReportsForRegularisation">
                     <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                 </button>
             </div>
         </div>
         <div class="table-responsive mt-2" style="height:200px;max-height:200px;overflow-y:auto;">
+           @if (session('error'))
+   
+            <span style="color:#f66;fort-size:12px;">{{ session('error') }}</span>
+
+            @endif
             <table class="swipes-table mt-2 border" style="width: 100%;">
                 <tr style="background-color: #f6fbfc;">
                     <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>

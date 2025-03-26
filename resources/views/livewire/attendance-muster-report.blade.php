@@ -1,9 +1,5 @@
 <div>
-    @if (session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
-    @endif
+
     @if($showAttendanceMusterReportDialog==true)
     <div>
         <div class="modal-body">
@@ -12,10 +8,12 @@
                     <label for="from-date">From Date:</label>
                     <input type="date" class="form-control" id="from-date" wire:model="fromDate" wire:change="updatefromDate">
                 </div>
+              
                 <div class="form-group col-md-6">
                     <label for="to-date">To Date:</label>
                     <input type="date" class="form-control" id="to-date" wire:model="toDate" wire:change="updatetoDate">
                 </div>
+                
             </div>
             <div class="row mt-3 mb-3 m-0 p-0 d-flex align-items-center">
                 <div class="col-md-6">
@@ -23,13 +21,18 @@
                 <div class="col-md-6">
                     <div class="search-container" style="position: relative;">
                         <input type="text" wire:model.debounce.500ms="search" id="searchInput" placeholder="Search..." class="form-control placeholder-small border outline-none rounded">
-                        <button wire:click="searchfilter" id="searchButtonReports" style>
+                        <button wire:click="searchfilter" id="searchButtonReportsForRegularisation" style>
                             <i class="fas fa-search" style="width: 16px; height: 16px;"></i>
                         </button>
                     </div>
                 </div>
             </div>
             <div class="table-responsive" style="height:200px;max-height:200px;overflow-y:auto;">
+                      @if (session('error'))
+    
+                         <span style="color:#f66;font-size:12px;">{{ session('error') }}</span>
+
+                      @endif
                 <table class="swipes-table mt-2 border" style="width: 100%;">
                     <tr style="background-color: #f6fbfc;">
                         <th style="width:50%;font-size: 11px; text-align:start;padding:5px 10px;color:#778899;font-weight:500;white-space:nowrap;">Employee Name</th>

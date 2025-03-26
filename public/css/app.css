@@ -4843,6 +4843,20 @@ input[type="radio"] {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
 }
+#searchButtonReportsForRegularisation
+{
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    outline: none;
+    background: rgb(2, 17, 79);
+    padding: 6px 12px;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
 
 /* //end of leave-history styles */
 
