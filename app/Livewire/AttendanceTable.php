@@ -97,12 +97,12 @@ class AttendanceTable extends Component
         $this->employeeDetails=EmployeeDetails::where('emp_id',auth()->guard('emp')->user()->emp_id)->first();
         $this->employeeHireDate=$this->employeeDetails->hire_date;
         $ip = request()->ip();
-        $location = GeoIP::getLocation($ip);
-        $lat = $location['lat'];
-        $lon = $location['lon'];
-        $this->country = $location['country'];
-        $this->city = $location['city'];
-        $this->postal_code = $location['postal_code'];
+        // $location = GeoIP::getLocation($ip);
+        // $lat = $location['lat'];
+        // $lon = $location['lon'];
+        // $this->country = $location['country'];
+        // $this->city = $location['city'];
+        // $this->postal_code = $location['postal_code'];
         $this->employeeShiftDetails = DB::table('employee_details')
     ->join('company_shifts', function($join) {
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
