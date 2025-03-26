@@ -2040,7 +2040,7 @@ color: #fff;
                             </div>
                             @else
                             <div style="text-align:center;">
-                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <img src="{{ asset('images/no-record-available.png') }}" style="margin-top:50px;" height="80" width="80">
                                 <div class="text-muted">No record available</div>
                             </div>
                             @endif

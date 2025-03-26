@@ -169,10 +169,7 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-            $this->swipes = SwipeRecord::whereDate('created_at', $today)
-                ->where('emp_id', $employeeId)
-                ->orderBy('id', 'desc')
-                ->first();
+           
 
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)

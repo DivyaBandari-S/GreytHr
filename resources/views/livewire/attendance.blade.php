@@ -2394,6 +2394,7 @@ color: #fff;
                                     </td>
                                     <td class="attendance-info-table-data">
                                        @if($changeDate==1&&!empty($this->first_in_time)&& $this->first_in_time > $shiftStartTime)
+                                    
                                        @php
                                                
 
