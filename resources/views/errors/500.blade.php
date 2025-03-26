@@ -1,4 +1,4 @@
-@extends('errors.minimal') <!-- If "errors" is inside "views/errors/" -->
+@extends('errors.minimal')
 @section('title', __('Database Connection Error'))
 @section('code', '500')
 @section('message', __('Database Connection Error Occurred please try again later'))
