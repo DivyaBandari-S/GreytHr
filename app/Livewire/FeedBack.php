@@ -77,7 +77,7 @@ class FeedBack extends Component
             }
 
             $response = Http::withHeaders([
-                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY', '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'),
+                "Authorization" => "Bearer " . env('OPENROUTER_API_KEY', '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'),
                 "HTTP-Referer" => env('YOUR_SITE_URL', ''), // Optional
                 "X-Title" => env('YOUR_SITE_NAME', ''), // Optional
             ])->post(env('OPENROUTER_API_URL', 'https://openrouter.ai/api/v1/chat/completions'), [
