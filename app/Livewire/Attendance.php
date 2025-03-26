@@ -335,36 +335,37 @@ class Attendance extends Component
     }
 
 
-public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
+    public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
 {
-  
-    $employeeId = auth()->guard('emp')->user()->emp_id;
     
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+   
+    // Retrieve swipe records within the given date range
+    $records = SwipeRecord::where('emp_id', $employeeId)
+        ->whereDate('created_at', '>=', $startDate)
+        ->whereDate('created_at', '<=', $endDate)
+        ->orderBy('created_at', 'asc')
+        ->get();
 
-        // Retrieve swipe records within the given date range
+   
+    // Group by date and fetch the first IN and last OUT for each date
+    $dailyRecords = $records->groupBy(function ($record) {
+        return Carbon::parse($record->created_at)->toDateString();
+    })->map(function ($groupedRecords) {
+        $firstIn = $groupedRecords->where('in_or_out', 'IN')->sortByDesc('created_at')->first();
+        $lastOut = $groupedRecords->where('in_or_out', 'OUT')->sortByDesc('created_at')->first();
+        
+       
 
+        return collect(['first_in' => $firstIn, 'last_out' => $lastOut])->filter();
+    });
 
-        $records = SwipeRecord::where('emp_id', $employeeId)
-            ->whereDate('created_at', '>=', $startDate)
-            ->whereDate('created_at', '<=', $endDate)
-            ->orderBy('created_at', 'asc') // Ensure records are ordered by date and time
-            ->get();
-
-        // Group by date and fetch the first IN and last OUT for each date
-        $dailyRecords = $records->groupBy(function ($record) {
-            return Carbon::parse($record->created_at)->toDateString();
-        })->map(function ($groupedRecords) {
-            $firstIn = $groupedRecords->firstWhere('in_or_out', 'IN');
-            $lastOut = $groupedRecords->where('in_or_out', 'OUT')->sortByDesc('created_at')->first();
-
-            return collect(['first_in' => $firstIn, 'last_out' => $lastOut])->filter(); // Remove nulls
-        });
-      
-  
+    
+    // Retrieve approved leave requests
     $leaveRequests = LeaveRequest::where('emp_id', $employeeId)
         ->where('leave_applications.leave_status', 2)
         ->where('leave_applications.from_session', 'Session 1')
-        ->where('leave_applications.to_session','Session 2')
+        ->where('leave_applications.to_session', 'Session 2')
         ->where(function ($query) use ($startDate, $endDate) {
             $query->whereDate('from_date', '<=', $endDate)
                   ->whereDate('to_date', '>=', $startDate);
@@ -372,104 +373,87 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
         ->join('status_types', 'status_types.status_code', '=', 'leave_applications.leave_status')
         ->select('leave_applications.*', 'status_types.status_name')
         ->get();
+
    
-    
     $totalMinutes = 0;
     $workingDaysCount = 0;
-
-    // Determine if the current month is involved
     $today = Carbon::now();
     $isCurrentMonth = Carbon::parse($startDate)->isSameMonth($today) && Carbon::parse($endDate)->isSameMonth($today);
-  
-    // Calculate the total working days in the date range
+
     $currentDate = Carbon::parse($startDate);
     $endDate = Carbon::parse($endDate);
 
     while ($currentDate <= $endDate) {
-       
+        $dateStr = $currentDate->toDateString();
+
         if ($isCurrentMonth && $currentDate->isSameDay($today)) {
-          
+        
             $currentDate->addDay();
             continue;
         }
 
         $isWeekend = $currentDate->isWeekend();
-        $isHoliday = HolidayCalendar::where('date', $currentDate->toDateString())->exists();
-        $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($currentDate) {
-            return $currentDate->between($leaveRequest->from_date, $leaveRequest->to_date);
-        });
-        $isOnfullDayLeave =$this->isEmployeeFullDayLeaveOnDate($currentDate->toDateString(), $employeeId);   
-        $isOnHalfDayLeave=$this->isEmployeeHalfDayLeaveOnDate($currentDate->toDateString(), $employeeId)['sessionCheck'];
-        $isOnHalfDayLeaveForDifferentSessions=$this->isEmployeeHalfDayLeaveOnDate($currentDate->toDateString(),$employeeId)['doubleSessionCheck'];
-       
-                  if (!$isWeekend && !$isHoliday && !$isOnLeave && !$isOnfullDayLeave && !$isOnHalfDayLeave && !$isOnHalfDayLeaveForDifferentSessions) {
-                    $workingDaysCount++;
-                 
-                }
-                 elseif ($isOnHalfDayLeave && !$isWeekend && !$isHoliday && !$isOnLeave) {
-                    $workingDaysCount += 0.5;
-                   
-                } else {
-                    
-                }
+        $isHoliday = HolidayCalendar::where('date', $dateStr)->exists();
+        $isOnLeave = $leaveRequests->contains(fn($leave) => $currentDate->between($leave->from_date, $leave->to_date));
+        $isOnFullDayLeave = $this->isEmployeeFullDayLeaveOnDate($dateStr, $employeeId);
+        $halfDayLeaveData = $this->isEmployeeHalfDayLeaveOnDate($dateStr, $employeeId);
+        $isOnHalfDayLeave = $halfDayLeaveData['sessionCheck'];
+        $isOnHalfDayLeaveForDifferentSessions = $halfDayLeaveData['doubleSessionCheck'];
+
+        
+        if (!$isWeekend && !$isHoliday && !$isOnLeave && !$isOnFullDayLeave && !$isOnHalfDayLeave && !$isOnHalfDayLeaveForDifferentSessions) {
+            $workingDaysCount++;
+        } elseif ($isOnHalfDayLeave && !$isWeekend && !$isHoliday && !$isOnLeave) {
+            $workingDaysCount += 0.5;
+        }
 
         $currentDate->addDay();
     }
-   
+
     foreach ($dailyRecords as $date => $swipesForDay) {
-    
         $inTime = null;
         $dayMinutes = 0;
         $carbonDate = Carbon::parse($date);
 
-            $isWeekend = $carbonDate->isWeekend();
-            $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
-            $isOnLeave = $leaveRequests->contains(function ($leaveRequest) use ($carbonDate) {
-                return $carbonDate->between($leaveRequest->from_date, $leaveRequest->to_date);
-            });
+        $isWeekend = $carbonDate->isWeekend();
+        $isHoliday = HolidayCalendar::where('date', $carbonDate->toDateString())->exists();
+        $isOnLeave = $leaveRequests->contains(fn($leave) => $carbonDate->between($leave->from_date, $leave->to_date));
 
         if (!$isWeekend && !$isHoliday && !$isOnLeave) {
             foreach ($swipesForDay as $swipe) {
-               
                 if ($swipe->in_or_out === 'IN') {
                     $inTime = Carbon::parse($swipe->swipe_time);
-                   
                 }
 
                 if ($swipe->in_or_out === 'OUT' && $inTime) {
                     $outTime = Carbon::parse($swipe->swipe_time);
-                    $dayMinutes += $inTime->diffInMinutes($outTime);
-                   
+                    $diff = $inTime->diffInMinutes($outTime);
+                    $dayMinutes += $diff;
                     $inTime = null;
+
+                   
                 }
             }
 
             if ($inTime && $dayMinutes === 0) {
-               
                 $dayMinutes = 0;
             }
 
             $totalMinutes += $dayMinutes;
         }
+
         
     }
 
-        if ($workingDaysCount > 0) {
-            $averageMinutes = $totalMinutes / $workingDaysCount;
-        } else {
-            $averageMinutes = 0;
-        }
+    $averageMinutes = $workingDaysCount > 0 ? $totalMinutes / $workingDaysCount : 0;
+    $hours = intdiv($averageMinutes, 60);
+    $minutes = $averageMinutes % 60;
+    $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
 
-        $hours = intdiv($averageMinutes, 60);
-        $minutes = $averageMinutes % 60;
+    
 
-        $averageWorkHours = sprintf('%02d:%02d', $hours, $minutes);
-
-  
     return $averageWorkHours;
 }
-
-
 
     public function toggleSession1Fields()
     {
@@ -770,6 +754,7 @@ public function calculateAverageWorkHoursAndPercentage($startDate, $endDate)
     public function showBars()
     {
         try {
+            
             $this->defaultfaCalendar = 1;
             $this->showMessage = false;
         } catch (\Exception $e) {
