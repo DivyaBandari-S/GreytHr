@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\SwipeRecord;
 use App\Models\EmployeeDetails;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
@@ -183,15 +184,15 @@ class EmployeeSwipesData extends Component
         $this->webSwipeDirection = null;
         $this->webDeviceName = null;
         $this->webDeviceId = null;
-    
+
         $today = now()->toDateString();
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
-    
+
         // Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
-    
+
         $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
-        
+
         if ($isManager) {
 
             // Log::debug('Starting query for managed employees');
@@ -287,7 +288,7 @@ class EmployeeSwipesData extends Component
             // Log::debug('Final result:', ['managedEmployees' => $managedEmployees->toArray()]);
         } else {
             // Log::info('User is not a manager, retrieving self details');
-    
+
             $managedEmployees = EmployeeDetails::where('emp_id', $userId)
                 ->join('company_shifts', function ($join) {
                     $join->on('employee_details.shift_type', '=', 'company_shifts.shift_name')
@@ -301,13 +302,13 @@ class EmployeeSwipesData extends Component
                     'company_shifts.shift_end_time'
                 )
                 ->get();
-    
+
             // Log::info('Retrieved Self Employee Data:', ['data' => $managedEmployees->toArray()]);
         }
-    
+
         $this->employees = $this->processSwipeLogs($managedEmployees, $this->startDate);
     }
-    
+
 
     public function applyFilter()
     {
@@ -646,8 +647,6 @@ class EmployeeSwipesData extends Component
 
     public function processSwipeLogs($managedEmployees, $today)
     {
-        // dd($managedEmployees);
-
         $filteredData  = [];
         $today = $this->startDate;
         $normalizedIds = $managedEmployees->pluck('emp_id')->map(fn($id) => str_replace('-', '', $id));
@@ -655,28 +654,46 @@ class EmployeeSwipesData extends Component
         $month = $currentDate->format('n');
         $year = $currentDate->format('Y');
         $tableName = 'DeviceLogs_' . $month . '_' . $year;
+
         try {
+            if (App::environment('production')) {
+                // ✅ In Production: Use ODBC via FreeTDS directly
+                $dsn = env('DB_ODBC_DSN') ?: 'odbc:Driver={FreeTDS};Server=59.144.92.154,1433;Database=eSSL;';
+                $username = env('DB_ODBC_USERNAME') ?: 'essl';
+                $password = env('DB_ODBC_PASSWORD') ?: 'essl';
 
-            // ✅ Local: Use Laravel SQLSRV connection
+                $pdo = new \PDO($dsn, $username, $password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+                ]);
 
-            if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
-                $externalSwipeLogs = DB::connection('sqlsrv')
-                    ->table($tableName)
-                    ->select('UserId', 'logDate', DB::raw("CONVERT(VARCHAR(8), logDate, 108) AS logTime"), 'Direction')
-                    ->whereIn('UserId', $normalizedIds)
-                    ->whereRaw("CONVERT(DATE, logDate) = ?", $today)
-                    ->orderBy('logTime')
-                    ->get();
-                // dd($externalSwipeLogs);
+                $sql = "SELECT UserId, logDate, CONVERT(VARCHAR(8), logDate, 108) AS logTime, Direction
+                        FROM {$tableName}
+                        WHERE CONVERT(DATE, logDate) = ?";
+                $stmt = $pdo->prepare($sql);
+                $stmt->execute([$today]);
+                $rows = array_map(fn($r) => (object) $r, $stmt->fetchAll(\PDO::FETCH_ASSOC));
+                // Convert to Laravel collection and filter
+                $externalSwipeLogs = collect($rows)->whereIn('UserId', $normalizedIds);
             } else {
-                $externalSwipeLogs = collect();
+                // ✅ In Local/Dev: Use Laravel SQLSRV connection
+                if (DB::connection('sqlsrv')->getSchemaBuilder()->hasTable($tableName)) {
+                    $externalSwipeLogs = DB::connection('sqlsrv')
+                        ->table($tableName)
+                        ->select('UserId', 'logDate', DB::raw("CONVERT(VARCHAR(8), logDate, 108) AS logTime"), 'Direction')
+                        ->whereIn('UserId', $normalizedIds)
+                        ->whereRaw("CONVERT(DATE, logDate) = ?", [$today])
+                        ->orderBy('logTime')
+                        ->get();
+                } else {
+                    $externalSwipeLogs = collect();
+                }
             }
         } catch (\Exception $e) {
-            // ✅ Log the error for debugging
             Log::error("Swipe Logs Error: " . $e->getMessage());
             $externalSwipeLogs = collect();
         }
 
+        // Match logs to employees
         foreach ($managedEmployees as $employee) {
             $normalizedEmployeeId = str_replace('-', '', $employee->emp_id);
             $employeeSwipeLog = $externalSwipeLogs->where('UserId', $normalizedEmployeeId);
@@ -689,7 +706,7 @@ class EmployeeSwipesData extends Component
             }
         }
 
-        // ✅ Search Filtering
+        // Apply search filter if present
         if (!empty(trim($this->search))) {
             $filteredData = array_filter($filteredData, function ($data) {
                 return stripos($data['employee']->first_name, $this->search) !== false ||
