@@ -519,64 +519,6 @@
             @endif
             @endif
 
-
-
-            <div class="payslip-card mb-4">
-                <p class="payslip-card-title">Praise</p>
-                <!-- <p class="payslip-small-desc">
-                    Kindly click on the Arrow button to apply a leave.
-                </p> -->
-
-                <div class="container mt-4 p-0">
-                    <div class="timeline">
-                        <!-- <div class="timeline-item">
-                            <div class="timeline-icon bg-primary text-white">
-                                <i class="bi bi-currency-rupee"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Money Maker Medal</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon bg-warning text-dark">
-                                <i class="bi bi-watch"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Relentless Cogwheel</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div> -->
-
-                        <!-- Praise -->
-                        <div class="timeline-item">
-                            <div class="timeline-icon bg-danger text-white">
-                                <i class="bi bi-puzzle-fill"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Problem Solver</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div>
-
-                        <div class="timeline-item">
-                            <div class="timeline-icon bg-primary text-white">
-                                <i class="bi bi-fire"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Torch Bearer</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <a href="#">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-            </div>
-
             <div class="payslip-card mb-4">
                 <p class="payslip-card-title">IT Declaration</p>
                 <p class="payslip-small-desc">
