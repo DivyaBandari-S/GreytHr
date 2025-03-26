@@ -228,14 +228,37 @@ class Home extends Component
 
 
     public function OpentoggleSignStatePopup()
-    {
-
-        // Do something with $swipeId and $inOrOut
-        $this->showtoggleSignState = true;
-
-        $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
-        $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
+{
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+   
+    $todayDate = Carbon::now()->format('Y-m-d');
+   
+    // Check if the employee is on leave today
+    if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+     
+        FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+        return;
     }
+
+    // Check if today is a holiday
+    if (HolidayCalendar::where('date', $todayDate)->exists()) {
+       
+        FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+        return;
+    }
+
+    // Proceed with opening the toggle sign state popup
+   
+    $this->showtoggleSignState = true;
+
+    // Fetching swipe data
+    $testSwipeData = $this->testlatestSwipe();
+   
+    $this->testforswipe = $testSwipeData['swipesforbutton'];
+   
+    $this->signstatusfortest = $testSwipeData['signStatus'];
+    
+}
     public function testlatestSwipe()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -498,15 +521,6 @@ class Home extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-
-                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-                return;
-            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
-
-                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-                return;
-            }
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 

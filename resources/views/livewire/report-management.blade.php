@@ -77,6 +77,12 @@
                 Attendance Regularization Report
 
             </a>
+            <a class="px-1" wire:click="showContent('Swipe Data Report')" data-toggle="modal"
+                data-target="#FamilyDetailsModal"
+                style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px; white-space: nowrap;{{ $currentSection === 'Swipe Data Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">
+                Swipe Data Report
+
+            </a>
         </div>
         <div class="d-flex flex-column mb-2" style="line-height:2;">
             <span style="color:#b1b1b1;font-size:12px;" class="mt-2" class="mt-2" class="mt-2">Leave</span>
@@ -192,6 +198,21 @@
                 </div>
             </div>
             <div class="modal-backdrop fade show blurred-backdrop"></div>
+            @elseif($currentSection == 'Swipe Data Report')
+            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><b>{{ $currentSection }}</b></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                                wire:click="close">
+                            </button>
+                        </div>
+                        @livewire('swipe-data-report')
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show blurred-backdrop"></div>    
         @elseif($currentSection == 'Leave Availed Report')
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
