@@ -1023,7 +1023,7 @@ class ReportManagement extends Component
 
                 $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                     ->whereIn('emp_id', $this->leaveBalance)
-                    ->select('emp_id', 'first_name', 'last_name')
+                    ->select('emp_id', 'first_name', 'last_name','employee_status')
                     ->get();
 
 
@@ -1366,12 +1366,14 @@ class ReportManagement extends Component
                             // Decode the JSON to get all leave types
                             $leavePolicy = json_decode($item->leave_policy_id, true);
                             $leaveTypes = [
-                                'casual_probation' => 'Casual Leave',
+                                'casual_leave' => 'Casual Leave',
                                 'maternity' => 'Maternity Leave',
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
                                 'earned_leave' => 'Earned Leave',
+                                'casual_leave_probation' => 'Casul Leave Probation',
+                                'marriage_leave' => 'Marriage Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -1992,7 +1994,7 @@ class ReportManagement extends Component
         // For Leave Balance On Day
 
 
-        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
         if ($this->searching == 1) {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter
             $this->filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {

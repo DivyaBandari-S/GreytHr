@@ -244,8 +244,8 @@
                             <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}</td>
                             <td>{{ $transaction['leave_days'] }}</td>
                             <td>{{ ucwords(strtolower($transaction['reason'])) }}</td>
-                            <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}</td>
-                            <td>{{ \Carbon\Carbon::parse($transaction['updated_at'])->format('d M Y H:i') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y h:i A') }}</td>
+                            <td>{{ \Carbon\Carbon::parse($transaction['updated_at'])->format('d M Y h:i A') }}</td>
                             <td class="approver-column">{{ ucwords(strtolower($employeeDetails->first_name)) }}
                                 {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
                         </tr>
