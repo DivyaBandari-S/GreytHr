@@ -150,6 +150,7 @@ class Home extends Component
     {
         try {
             $this->getLocationByIP();
+            // $this->swipe_location=$this->swipe_location;
             // Get current hour to determine greeting
             $currentHour = date('G');
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -175,6 +176,11 @@ class Home extends Component
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
                 ->first();
 
+            $this->swipes = DB::table('swipe_records')
+            ->whereDate('created_at', $today)
+            ->where('emp_id', $employeeId)
+            ->orderBy('id', 'desc')
+            ->first();
             if ($this->loginEmployee) {
                 // Get manager details
                 $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')

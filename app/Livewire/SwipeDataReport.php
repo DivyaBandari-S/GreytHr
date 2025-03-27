@@ -56,18 +56,21 @@ class SwipeDataReport extends Component
 
     public function updateselectDate()
     {
+        
+
         $this->selectDate=$this->selectDate;
     }
     public function resetFields()
     {
         $this->swipeData=[];
-        $this->selectDate='';
+        $this->selectDate=Carbon::now()->format('Ý-m-d');
     }
     
 
     public function processSwipeLogs()
     {
         $filteredData  = [];
+       
         $today = $this->selectDate;
         $managedEmployees =  EmployeeDetails:: 
                 whereIn('emp_id', $this->swipeData);
@@ -169,7 +172,7 @@ class SwipeDataReport extends Component
     public function processWebSignInLogs()
     {
 
-        $today = Carbon::now()->format('Y-m-d');
+        $today = $this->selectDate;
         $authUser = Auth::user();
         $userId = $authUser->emp_id;
         $webSignInData = [];
@@ -241,6 +244,9 @@ class SwipeDataReport extends Component
 
     public function exportWebSignInData()
 {
+   
+    
+
     if($this->isApply == 1 && $this->defaultApply == 1)
     {   
        
@@ -251,27 +257,18 @@ class SwipeDataReport extends Component
      
         $webSignInData = $this->processWebSignInLogs(); 
     }
-    // Call your function to get data
-
-    // if (empty($doorSignInData)) {
-    //     session()->flash('error', 'No Door Sign-In Data available to export.');
-    //     return;
-    // }
-    // elseif (empty($webSignInData)) {
-    //     session()->flash('error', 'No Web Sign-In Data available to export.');
-    //     return;
-    // }
+    
     if($this->isApply == 1 && $this->defaultApply == 1)
     {
         $fileName = 'DoorSignInData_' . Carbon::now()->format('Ymd_His') . '.xlsx';
         return Excel::download(new  DoorSwipeExport($doorSignInData), $fileName);
-        // $doorSignInData = $this->processSwipeLogs(); 
+     
     }
     elseif($this->isPending == 1 && $this->defaultApply == 0)
     {
         $fileName = 'WebSignInData_' . Carbon::now()->format('Ymd_His') . '.xlsx';
         return Excel::download(new  WebSignInExport($webSignInData), $fileName);
-        // $webSignInData = $this->processWebSignInLogs(); 
+      
     }
     
 }

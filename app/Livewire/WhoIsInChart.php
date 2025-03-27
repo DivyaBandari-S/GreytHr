@@ -270,7 +270,7 @@ public function toggleAccordionForLate($index)
             })
             ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
             ->leftJoin('company_shifts', function ($join) {
-                $join->on(\DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
             })
             ->select(
@@ -436,7 +436,7 @@ public function toggleAccordionForLate($index)
 
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->join('status_types', 'leave_applications.leave_status', '=', 'status_types.status_code')
-            ->where('leave_applications.leave_status', 3)
+            ->where('leave_applications.leave_status', 2)
             ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
             ->whereDate('from_date', '<=', $currentDate)
             ->whereDate('to_date', '>=', $currentDate)
@@ -455,7 +455,7 @@ public function toggleAccordionForLate($index)
             });
 
         $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+           
             ->leftJoin('company_shifts', function ($join) {
                 $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
@@ -572,7 +572,7 @@ public function toggleAccordionForLate($index)
      if(empty($this->selectedShift))
      {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-    ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')
+   
     ->leftJoin('company_shifts', function ($join) {
         // Use JSON_CONTAINS to match company_id from employee_details JSON format with company_shifts.company_id
         $join->on(DB::raw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))'), '=', DB::raw('1'))
@@ -642,7 +642,7 @@ public function toggleAccordionForLate($index)
      else
      {
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-        ->leftjoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id') // Joining with emp_personal_infos
+        // Joining with emp_personal_infos
         ->where('leave_applications.leave_status', 2)
         ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
         ->whereDate('from_date', '<=', $currentDate)
@@ -678,7 +678,7 @@ public function toggleAccordionForLate($index)
 
 
     $approvedLeaveRequests1 = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-    ->leftJoin('emp_personal_infos', 'leave_applications.emp_id', '=', 'emp_personal_infos.emp_id')  // Join with emp_personal_infos
+      // Join with emp_personal_infos
     ->where('leave_applications.leave_status', 2)
     ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
     ->whereDate('leave_applications.from_date', '<=', $currentDate)
@@ -702,7 +702,7 @@ public function toggleAccordionForLate($index)
             if(empty($this->selectedShift))
             {
                 $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-    ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+   // Join personal info table
     ->leftJoin('company_shifts', function ($join) {
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
@@ -752,8 +752,10 @@ public function toggleAccordionForLate($index)
     ->where('employee_details.employee_status', 'active')
     ->distinct('employee_details.emp_id')
     ->get();
+   
+    
                 $countOfAbsentEmployees =EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+                // Join personal info table
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
@@ -780,7 +782,7 @@ public function toggleAccordionForLate($index)
             else
             {
                 $employees1 = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-    ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join with personal info
+     // Join with personal info
     ->leftJoin('company_shifts', function ($join) {
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
@@ -801,7 +803,7 @@ public function toggleAccordionForLate($index)
     ->where('company_shifts.shift_name', $this->selectedShift) // Ensure shift type matches
     ->get();
                 $countOfAbsentEmployees = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-    ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Use leftJoin here
+    // Use leftJoin here
     ->select(
         'employee_details.*',
          // Selecting the mobile number from emp_personal_infos, will be null if no match
@@ -898,7 +900,7 @@ public function toggleAccordionForLate($index)
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Join with emp_personal_infos table
+              // Join with emp_personal_infos table
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
@@ -925,7 +927,7 @@ public function toggleAccordionForLate($index)
             ->groupBy('swipe_records.emp_id');
     })
     ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-    ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') // Joining emp_personal_infos
+   // Joining emp_personal_infos
     ->leftJoin('company_shifts', function ($join) {
         $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id') // Join on company_id
              ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type
@@ -985,7 +987,7 @@ public function toggleAccordionForLate($index)
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id')
+                
                 ->leftJoin('company_shifts', function ($join) {
                     $join->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))")
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
@@ -1014,7 +1016,7 @@ public function toggleAccordionForLate($index)
                         ->groupBy('swipe_records.emp_id');
                 })
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->leftJoin('emp_personal_infos', 'swipe_records.emp_id', '=', 'emp_personal_infos.emp_id') 
+               
                 ->leftJoin('company_shifts', function ($join) {
                     $join->whereRaw("JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))")
                          ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
