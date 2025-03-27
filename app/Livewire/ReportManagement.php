@@ -44,9 +44,13 @@ class ReportManagement extends Component
     public $leaveBalance = [];
     public function showContent($section)
     {
-
-        $this->currentSection = $section;
-        $this->resetFields();
+           
+            // Step 1: Assign section value
+            $this->currentSection = $section;
+           
+           
+            $this->resetFields();
+           
     }
     public function updateLeaveType()
     {

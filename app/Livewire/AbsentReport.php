@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\AbsentEmployeesReportExport;
 use App\Models\EmployeeDetails;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
@@ -11,6 +12,7 @@ use DateTime;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class AbsentReport extends Component
@@ -97,7 +99,7 @@ class AbsentReport extends Component
         foreach ($employees as $employee) {
             $empId = $employee['emp_id'];
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
+            ->where('leave_applications.leave_status', 2)
             ->where('leave_applications.emp_id', $employee->emp_id)
             ->whereDate('from_date', '<=', $this->currentDate)
             ->whereDate('to_date', '>=', $this->currentDate)
@@ -161,23 +163,9 @@ class AbsentReport extends Component
             }
         }
          }
-         $filePath = storage_path('app/absent_employees.xlsx');
-
-        // Create the Excel file
-        $writer = SimpleExcelWriter::create($filePath);
-    
-        // Add a header row
-        $writer->addRow(['Emp ID', 'Absent Date']);
-    
-        // Add the data rows
-        foreach ($missingData as $row) {
-            $writer->addRow($row);
-        }
-        // Close the writer to ensure the file is saved
-        $writer->close();
     
         // Return the file as a download response
-        return response()->download($filePath, 'absent_employees.xlsx');
+        return Excel::download(new AbsentEmployeesReportExport($missingData), 'absent_report_employees.xlsx');
        }
         $startDate = new DateTime($this->fromDate);
         $endDate = new DateTime($this->toDate);
@@ -207,7 +195,7 @@ class AbsentReport extends Component
 
         $this->employees = EmployeeDetails::where('manager_id', $this->loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->orderBy('first_name')->get();
         $this->approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-            ->where('leave_applications.status', 'approved')
+            ->where('leave_applications.leave_status', 2)
             ->whereIn('leave_applications.emp_id', $this->employees->pluck('emp_id'))
             ->whereDate('from_date', '<=', $this->currentDate)
             ->whereDate('to_date', '>=', $this->currentDate)

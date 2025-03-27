@@ -35,6 +35,7 @@ use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
 use App\Models\EmpPersonalInfo;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
 
 class Home extends Component
 {
@@ -168,10 +169,7 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-            $this->swipes = SwipeRecord::whereDate('created_at', $today)
-                ->where('emp_id', $employeeId)
-                ->orderBy('id', 'desc')
-                ->first();
+           
 
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
@@ -231,14 +229,37 @@ class Home extends Component
 
 
     public function OpentoggleSignStatePopup()
-    {
-
-        // Do something with $swipeId and $inOrOut
-        $this->showtoggleSignState = true;
-
-        $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
-        $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
+{
+    $employeeId = auth()->guard('emp')->user()->emp_id;
+   
+    $todayDate = Carbon::now()->format('Y-m-d');
+   
+    // Check if the employee is on leave today
+    if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+     
+        FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+        return;
     }
+
+    // Check if today is a holiday
+    if (HolidayCalendar::where('date', $todayDate)->exists()) {
+       
+        FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+        return;
+    }
+
+    // Proceed with opening the toggle sign state popup
+   
+    $this->showtoggleSignState = true;
+
+    // Fetching swipe data
+    $testSwipeData = $this->testlatestSwipe();
+   
+    $this->testforswipe = $testSwipeData['swipesforbutton'];
+   
+    $this->signstatusfortest = $testSwipeData['signStatus'];
+    
+}
     public function testlatestSwipe()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -501,15 +522,6 @@ class Home extends Component
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-
-                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-                return;
-            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
-
-                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-                return;
-            }
 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
 
@@ -1377,10 +1389,18 @@ class Home extends Component
 
     public function sendCoordinates($latitude, $longitude)
     {
-        // Log the received coordinates
-        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        // Generate a unique cache key based on latitude and longitude
+        $cacheKey = "location_{$latitude}_{$longitude}";
+        // Check if data is already cached
+        if (Cache::has($cacheKey)) {
+            $this->formattedAddress = Cache::get($cacheKey);
+            // dd($this->formattedAddress);
+            Log::info("Using cached address for coordinates: {$cacheKey}");
+            return;
+        }
 
-        // Build the API URL for reverse geocoding
+        Log::info("Fetching address for coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
         $apiUrl = env('LOCATION_API', 'https://photon.komoot.io/reverse');
 
         try {
@@ -1389,14 +1409,11 @@ class Home extends Component
                 'lon' => $longitude,
             ]);
 
-            // Debug raw response (optional)
-            // dd($response->json());
-
             if ($response->successful()) {
                 $data = $response->json();
                 $properties = $data['features'][0]['properties'] ?? [];
 
-                $this->formattedAddress = [
+                $formattedAddress = [
                     'name' => $properties['name'] ?? '',
                     'street' => $properties['street'] ?? '',
                     'district' => $properties['district'] ?? '',
@@ -1404,6 +1421,11 @@ class Home extends Component
                     'postcode' => $properties['postcode'] ?? '',
                     'country_code' => $properties['countrycode'] ?? '',
                 ];
+
+                // Store in cache for 1 hour
+                Cache::put($cacheKey, $formattedAddress, now()->addHour());
+
+                $this->formattedAddress = $formattedAddress;
             } else {
                 Log::error("Failed to fetch address. Response: " . $response->body());
                 FlashMessageHelper::flashError('Unable to fetch location data.');

@@ -2268,6 +2268,15 @@ input[type="date"]::before {
     /* margin-right: 250px; */
     /* Adjust as needed for alignment */
 }
+.button-container-for-employee-swipes-for-reports {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 20px;
+ 
+    margin-top:30px;
+    /* margin-right: 250px; */
+    /* Adjust as needed for alignment */
+}
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
@@ -4831,6 +4840,20 @@ input[type="radio"] {
 }
 
 #searchButtonReports {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    outline: none;
+    background: rgb(2, 17, 79);
+    padding: 3px 12px;
+    color: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+#searchButtonReportsForRegularisation
+{
     position: absolute;
     right: 0;
     top: 50%;
