@@ -2268,6 +2268,15 @@ input[type="date"]::before {
     /* margin-right: 250px; */
     /* Adjust as needed for alignment */
 }
+.button-container-for-employee-swipes-for-reports {
+    display: flex;
+    justify-content: flex-start;
+    padding-bottom: 20px;
+ 
+    margin-top:30px;
+    /* margin-right: 250px; */
+    /* Adjust as needed for alignment */
+}
 .container-employee-swipes {
     display: flex;
     justify-content: space-between;
