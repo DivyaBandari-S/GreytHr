@@ -49,7 +49,7 @@ class WebSignInExport implements FromCollection,WithHeadings
                 $data->push([
                     ucwords(strtolower($swipe['employee']->first_name)) . ' ' . ucwords(strtolower($swipe['employee']->last_name)),
                     $swipe['employee']->emp_id,
-                    $log->swipe_time,
+                    Carbon::parse($log->swipe_time)->format('H:i:s'),
                     Carbon::parse($log->created_at)->format('jS F, Y'),
                     Carbon::parse($swipe['employee']->shift_start_time)->format('H:i a') . ' to ' . Carbon::parse($swipe['employee']->shift_end_time)->format('H:i a'),
                     $log->in_or_out === 'IN' ? 'IN' : 'OUT',

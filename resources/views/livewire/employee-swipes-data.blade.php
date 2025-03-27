@@ -348,7 +348,7 @@
                 </div>
             </div>
 
-            <div class="row m-0 p-0  mt-4">
+            <div class="row m-0 p-0  mt-4 gap-2">
                 <div class="col-md-9 mb-4">
                     <div class="bg-white border rounded">
                         <div class="table-responsive bg-white rounded p-0 m-0" style="max-height: 500px;">
@@ -450,7 +450,7 @@
 
                                                         <!-- Swipe Log Details -->
                                                         <td>
-                                                            {{ $log->swipe_time }}<br />
+                                                            {{ \Carbon\Carbon::parse($log->swipe_time)->format('H:i:s') }}<br />
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
@@ -473,7 +473,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            {{ $log->swipe_time }}<br />
+                                                            {{ \Carbon\Carbon::parse($log->swipe_time)->format('H:i:s') }}<br />
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
