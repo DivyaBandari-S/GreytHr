@@ -87,10 +87,11 @@
             @else
             <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text-para">
-                    <a href="#" wire:click="getNotification({{ json_encode($getRemainingJoineesID->pluck('id')->toArray()) }})" class="notification-head">
+                    <a href="#" wire:click="getNotification({{ json_encode($getRemainingJoineesID ? $getRemainingJoineesID->pluck('id')->toArray() : []) }})" class="notification-head">
                         Congratulations to {{$totalExpEmp}} members on completing their successful year(s)!
                     </a>
                 </p>
+
 
                 <p class="mb-0 notification-text-para">Please congratulate them. </p>
                 <div class="notify-time">
@@ -356,7 +357,7 @@
         </div>
         @elseif($notification->notification_type=='delegate')
         <div>
-            <div class="border rounded bg-white p-2 mb-2 leave-request-container" >
+            <div class="border rounded bg-white p-2 mb-2 leave-request-container">
                 <p class="mb-0 notification-text">
                     <a href="#" class="notification-head" onclick="window.location.href='{{ url('/delegates');}}'">
                         {{ ucwords(strtolower($notification->first_name)) }} {{ ucwords(strtolower($notification->last_name)) }}
