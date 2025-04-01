@@ -35,7 +35,7 @@ use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
 use App\Models\EmpPersonalInfo;
 use Barryvdh\DomPDF\Facade\Pdf;
-use DateTime;
+use Illuminate\Support\Facades\Cache;
 
 class Home extends Component
 {
@@ -1395,10 +1395,18 @@ class Home extends Component
 
     public function sendCoordinates($latitude, $longitude)
     {
-        // Log the received coordinates
-        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        // Generate a unique cache key based on latitude and longitude
+        $cacheKey = "location_{$latitude}_{$longitude}";
+        // Check if data is already cached
+        if (Cache::has($cacheKey)) {
+            $this->formattedAddress = Cache::get($cacheKey);
+            // dd($this->formattedAddress);
+            Log::info("Using cached address for coordinates: {$cacheKey}");
+            return;
+        }
 
-        // Build the API URL for reverse geocoding
+        Log::info("Fetching address for coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
         $apiUrl = env('LOCATION_API', 'https://photon.komoot.io/reverse');
 
         try {
@@ -1407,14 +1415,11 @@ class Home extends Component
                 'lon' => $longitude,
             ]);
 
-            // Debug raw response (optional)
-            // dd($response->json());
-
             if ($response->successful()) {
                 $data = $response->json();
                 $properties = $data['features'][0]['properties'] ?? [];
 
-                $this->formattedAddress = [
+                $formattedAddress = [
                     'name' => $properties['name'] ?? '',
                     'street' => $properties['street'] ?? '',
                     'district' => $properties['district'] ?? '',
@@ -1422,6 +1427,11 @@ class Home extends Component
                     'postcode' => $properties['postcode'] ?? '',
                     'country_code' => $properties['countrycode'] ?? '',
                 ];
+
+                // Store in cache for 1 hour
+                Cache::put($cacheKey, $formattedAddress, now()->addHour());
+
+                $this->formattedAddress = $formattedAddress;
             } else {
                 Log::error("Failed to fetch address. Response: " . $response->body());
                 FlashMessageHelper::flashError('Unable to fetch location data.');
