@@ -350,7 +350,7 @@ public function toggleAccordionForLate($index)
                         $data[] = [
                             $employee['emp_id'],
                             ucwords(strtolower($employee['first_name'])) . ' ' . ucwords(strtolower($employee['last_name'])),
-                            $employee['swipe_time'],
+                            Carbon::parse($employee['swipe_time'])->format('H:i:s'),
                             $earlyArrivalTime
                         ];
                     }
@@ -392,18 +392,32 @@ public function toggleAccordionForLate($index)
                             ->map(function ($leaveRequest) {
                             $fromDate = Carbon::parse($leaveRequest->from_date);
                             $toDate = Carbon::parse($leaveRequest->to_date);
-
+                            $fromSession=$leaveRequest->from_session;
+                            $toSession=$leaveRequest->to_session;
                             // Calculate the number of days excluding weekends
                             $numberOfDays = 0;
                             while ($fromDate->lte($toDate)) {
                             // Check if the day is not a weekend
                             if (!$fromDate->isWeekend()) {
+                            
                                 $numberOfDays++;
                             }
                             $fromDate->addDay();
                             }
+                            if($fromSession=='Session 1'&& $toSession=='Session 2')
+                            {
+                                $leaveRequest->number_of_days = $numberOfDays;    
+                            }
+                            elseif($numberOfDays>1)
+                            {
+                                $leaveRequest->number_of_days = ($numberOfDays-1)+0.5;
+                            }
+                            else
+                            {
+                                $leaveRequest->number_of_days = $numberOfDays*0.5;
+                            }
 
-                            $leaveRequest->number_of_days = $numberOfDays;
+                            
                             return $leaveRequest;
                             });
 
@@ -571,72 +585,115 @@ public function toggleAccordionForLate($index)
         }
      if(empty($this->selectedShift))
      {
+        Log::info('Fetching approved leave requests with filters...');
+
+        // Start the query
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
-   
-    ->leftJoin('company_shifts', function ($join) {
-        // Use JSON_CONTAINS to match company_id from employee_details JSON format with company_shifts.company_id
-        $join->on(DB::raw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))'), '=', DB::raw('1'))
-             ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
-    })
-    ->where('leave_applications.leave_status', 2)
-    ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
-    ->whereDate('from_date', '<=', $currentDate)
-    ->whereDate('to_date', '>=', $currentDate)
-    ->where('employee_details.employee_status', 'active')
-    ->when($this->selectedDesignation&&$this->isupdateFilter==1, function ($query) {
-        return match ($this->selectedDesignation) {
-            'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
-            'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III','Senior Software Engineer']),
-            'team_lead' => $query->where('employee_details.job_role', 'LIKE', '%Team Lead%'),
-            'sales_head' => $query->where('employee_details.job_role', 'LIKE', '%Sales Head%'),
-            default => $query,
-        };
-    })
-    ->when($this->selectedLocation&&$this->isupdateFilter==1, function ($query) {
-        if ($this->selectedLocation === 'Remote') {
-            return $query->where('employee_details.job_mode', $this->selectedLocation);
-        } else {
-            return $query->where('employee_details.job_location', $this->selectedLocation)
-                         ->where('employee_details.job_mode', '!=', 'Remote');
-        }
-    })
-    ->when(!empty($this->selectedDepartment)&&$this->isupdateFilter==1, function ($query) {
+            ->leftJoin('company_shifts', function ($join) {
+                // Log the left join process
+                Log::info('Joining company_shifts using JSON_CONTAINS...');
+                $join->on(DB::raw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))'), '=', DB::raw('1'))
+                     ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
+            })
+            ->where('leave_applications.leave_status', 2)
+            ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
+            ->whereDate('from_date', '<=', $currentDate)
+            ->whereDate('to_date', '>=', $currentDate)
+            ->where('employee_details.employee_status', 'active')
         
-        return match ($this->selectedDepartment) {
-            'information_technology' => $query->where('employee_details.dept_id', $this->departmentId),
-            'business_development' => $query->where('employee_details.dept_id', $this->departmentId),
-            'operations' => $query->where('employee_details.dept_id',$this->departmentId),
-            'innovation' => $query->where('employee_details.dept_id',$this->departmentId),
-            'infrastructure' => $query->where('employee_details.dept_id',$this->departmentId),
-            'human_resources' => $query->where('employee_details.dept_id',$this->departmentId),
-            default => $query,
-        };
-                     
-    
-    })
-    ->get([
-        'leave_applications.*',
-        'employee_details.*',
-        'company_shifts.*', // Selecting fields from company_shifts
-    ])
-    ->map(function ($leaveRequest) {
-        $fromDate = Carbon::parse($leaveRequest->from_date);
-        $toDate = Carbon::parse($leaveRequest->to_date);
-
-        // Generate all dates between from_date and to_date, excluding weekends
-        $leave_dates = [];
-        for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
-            if (!$date->isWeekend()) {
-                $leave_dates[] = $date->format('Y-m-d');
+            // Log selected designation filter
+            ->when($this->selectedDesignation && $this->isupdateFilter == 1, function ($query) {
+                Log::info('Applying designation filter...', ['selectedDesignation' => $this->selectedDesignation]);
+                return match ($this->selectedDesignation) {
+                    'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
+                    'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III', 'Senior Software Engineer']),
+                    'team_lead' => $query->where('employee_details.job_role', 'LIKE', '%Team Lead%'),
+                    'sales_head' => $query->where('employee_details.job_role', 'LIKE', '%Sales Head%'),
+                    default => $query,
+                };
+            })
+        
+            // Log selected location filter
+            ->when($this->selectedLocation && $this->isupdateFilter == 1, function ($query) {
+                Log::info('Applying location filter...', ['selectedLocation' => $this->selectedLocation]);
+                if ($this->selectedLocation === 'Remote') {
+                    return $query->where('employee_details.job_mode', $this->selectedLocation);
+                } else {
+                    return $query->where('employee_details.job_location', $this->selectedLocation)
+                                 ->where('employee_details.job_mode', '!=', 'Remote');
+                }
+            })
+        
+            // Log selected department filter
+            ->when(!empty($this->selectedDepartment) && $this->isupdateFilter == 1, function ($query) {
+                Log::info('Applying department filter...', ['selectedDepartment' => $this->selectedDepartment]);
+                return match ($this->selectedDepartment) {
+                    'information_technology', 'business_development', 'operations', 'innovation', 'infrastructure', 'human_resources' => 
+                        $query->where('employee_details.dept_id', $this->departmentId),
+                    default => $query,
+                };
+            })
+        
+            // Execute query and fetch results
+            ->get([
+                'leave_applications.*',
+                'employee_details.*',
+                'company_shifts.*', // Selecting fields from company_shifts
+            ]);
+        
+        // Log retrieved leave requests count
+        Log::info('Retrieved approved leave requests', ['count' => $approvedLeaveRequests->count()]);
+        
+        // Map through the leave requests
+        $approvedLeaveRequests = $approvedLeaveRequests->map(function ($leaveRequest) {
+            Log::info('Processing leave request', ['emp_id' => $leaveRequest->emp_id]);
+        
+            $fromDate = Carbon::parse($leaveRequest->from_date);
+            $toDate = Carbon::parse($leaveRequest->to_date);
+            $fromSession = $leaveRequest->from_session;
+            $toSession = $leaveRequest->to_session;
+        
+            // Generate all dates between from_date and to_date, excluding weekends
+            $leave_dates = [];
+            for ($date = $fromDate->copy(); $date->lte($toDate); $date->addDay()) {
+                if (!$date->isWeekend()) {
+                    $leave_dates[] = $date->format('Y-m-d');
+                }
             }
-        }
-
-        // Set the leave_dates attribute and number_of_days
-        $leaveRequest->setAttribute('leave_dates', $leave_dates);
-        $leaveRequest->number_of_days = count($leave_dates);
-
-        return $leaveRequest;
-    });
+        
+            Log::info('Generated leave_dates', [
+                'emp_id' => $leaveRequest->emp_id,
+                'leave_dates' => $leave_dates
+            ]);
+        
+            // Calculate number_of_days based on session values
+            $leaveRequest->setAttribute('leave_dates', $leave_dates);
+        
+            if ($fromSession == 'Session 1' && $toSession == 'Session 2') {
+                $leaveRequest->number_of_days = count($leave_dates); // Full-day calculation
+            }
+            elseif(count($leave_dates) > 1) {
+                $leaveRequest->number_of_days = (count($leave_dates)-1)+0.5; // Half-day calculation
+               
+            } 
+            else {
+                $leaveRequest->number_of_days = count($leave_dates) * 0.5; // Half-day calculation
+            }
+           
+        
+            Log::info('Final leave request details', [
+                'emp_id' => $leaveRequest->emp_id,
+                'number_of_days' => $leaveRequest->number_of_days,
+                'leave_dates' => $leaveRequest->leave_dates
+            ]);
+        
+            return $leaveRequest;
+        });
+        
+        
+        // Log final output
+        Log::info('Final processed leave requests:', ['approvedLeaveRequests' => $approvedLeaveRequests->toArray()]);
+        
     
      }
      else

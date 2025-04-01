@@ -1242,7 +1242,7 @@
                             <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks"
                                 wire:change="updateSwipeRemarks" placeholder="Enter Reason"></textarea>
                         </div>
-                        <button id="signButton" class="signInButton" type="submit">
+                        <button id="signButton" class="signInButton" type="submit"  @if ($swipe_location) disabled @endif>
 
                             @if ($swipes)
                             @if ($swipes->in_or_out === 'OUT')

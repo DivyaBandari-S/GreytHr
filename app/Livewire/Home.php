@@ -35,6 +35,7 @@ use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
 use App\Models\EmpPersonalInfo;
 use Barryvdh\DomPDF\Facade\Pdf;
+use DateTime;
 
 class Home extends Component
 {
@@ -563,7 +564,7 @@ class Home extends Component
             $ipAddress = request()->ip();
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
+                'swipe_time' => Carbon::now()->format('Y-m-d H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
                 'device_name' => $platform,
