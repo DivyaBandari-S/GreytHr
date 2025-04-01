@@ -21,7 +21,9 @@ class ShowSalaryController extends Controller
             $user = JWTAuth::parseToken()->authenticate();
 
             // Get month from request, or use current month as default
-            $requestedMonth = $request->input('month', Carbon::now()->format('Y-m'));
+            // $requestedMonth = $request->input('month', Carbon::now()->format('Y-m'));
+            // Get month from request, or use previous month as default
+            $requestedMonth = $request->input('month', Carbon::now()->subMonth()->format('Y-m'));
 
             // Validate the month format (YYYY-MM)
             if (!preg_match('/^\d{4}-\d{2}$/', $requestedMonth)) {
