@@ -170,7 +170,7 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-           
+
 
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
@@ -178,10 +178,10 @@ class Home extends Component
                 ->first();
 
             $this->swipes = DB::table('swipe_records')
-            ->whereDate('created_at', $today)
-            ->where('emp_id', $employeeId)
-            ->orderBy('id', 'desc')
-            ->first();
+                ->whereDate('created_at', $today)
+                ->where('emp_id', $employeeId)
+                ->orderBy('id', 'desc')
+                ->first();
             if ($this->loginEmployee) {
                 // Get manager details
                 $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
@@ -235,37 +235,36 @@ class Home extends Component
 
 
     public function OpentoggleSignStatePopup()
-{
-    $employeeId = auth()->guard('emp')->user()->emp_id;
-   
-    $todayDate = Carbon::now()->format('Y-m-d');
-   
-    // Check if the employee is on leave today
-    if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
-     
-        FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-        return;
+    {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
+
+        $todayDate = Carbon::now()->format('Y-m-d');
+
+        // Check if the employee is on leave today
+        if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+
+            FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+            return;
+        }
+
+        // Check if today is a holiday
+        if (HolidayCalendar::where('date', $todayDate)->exists()) {
+
+            FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+            return;
+        }
+
+        // Proceed with opening the toggle sign state popup
+
+        $this->showtoggleSignState = true;
+
+        // Fetching swipe data
+        $testSwipeData = $this->testlatestSwipe();
+
+        $this->testforswipe = $testSwipeData['swipesforbutton'];
+
+        $this->signstatusfortest = $testSwipeData['signStatus'];
     }
-
-    // Check if today is a holiday
-    if (HolidayCalendar::where('date', $todayDate)->exists()) {
-       
-        FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-        return;
-    }
-
-    // Proceed with opening the toggle sign state popup
-   
-    $this->showtoggleSignState = true;
-
-    // Fetching swipe data
-    $testSwipeData = $this->testlatestSwipe();
-   
-    $this->testforswipe = $testSwipeData['swipesforbutton'];
-   
-    $this->signstatusfortest = $testSwipeData['signStatus'];
-    
-}
     public function testlatestSwipe()
     {
         $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -1395,7 +1394,7 @@ class Home extends Component
 
     public function sendCoordinates($latitude, $longitude)
     {
-        // Generate a unique cache key based on latitude and longitude
+        // // Generate a unique cache key based on latitude and longitude
         $cacheKey = "location_{$latitude}_{$longitude}";
         // Check if data is already cached
         if (Cache::has($cacheKey)) {
@@ -1418,7 +1417,8 @@ class Home extends Component
             if ($response->successful()) {
                 $data = $response->json();
                 $properties = $data['features'][0]['properties'] ?? [];
-
+                // Extract address details
+                // dd($properties);
                 $formattedAddress = [
                     'name' => $properties['name'] ?? '',
                     'street' => $properties['street'] ?? '',
@@ -1426,6 +1426,7 @@ class Home extends Component
                     'county' => $properties['county'] ?? '',
                     'postcode' => $properties['postcode'] ?? '',
                     'country_code' => $properties['countrycode'] ?? '',
+                    'osm_value' => $properties['osm_value'],
                 ];
 
                 // Store in cache for 1 hour
@@ -1434,11 +1435,11 @@ class Home extends Component
                 $this->formattedAddress = $formattedAddress;
             } else {
                 Log::error("Failed to fetch address. Response: " . $response->body());
-                FlashMessageHelper::flashError('Unable to fetch location data.');
+                // FlashMessageHelper::flashError('Unable to fetch location data.');
             }
         } catch (\Exception $e) {
             Log::error("Exception occurred while fetching address: " . $e->getMessage());
-            FlashMessageHelper::flashError('Error occurred while fetching address.');
+            // FlashMessageHelper::flashError('Error occurred while fetching address.');
         }
     }
 }
