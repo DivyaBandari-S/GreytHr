@@ -187,6 +187,7 @@ class Peoples extends Component
 
             if ($this->starredPerson) {
                 $this->starredPerson->delete();
+                FlashMessageHelper::flashSuccess('Star removed successfully!'); 
             } else {
                 $employeeId = auth()->guard('emp')->user()->emp_id;
                 $this->employeeDetails = EmployeeDetails::find($employeeId);
