@@ -532,56 +532,66 @@
                 </div>
 
 
+            <div class="payslip-card mb-3">
+                <p class="payslip-card-title">POI</p>
+                <p class="payslip-small-desc">
+                    Hold on! You can submit your Proof of Investments (POI) once released.
+                </p>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
             </div>
-            <div class="col-md-5 mb-4 ">
-                @if ($ismanager)
-                    <div class="payslip-card mb-4">
-                        <p class="payslip-card-title">Who is in?</p>
-                        <div class="who-is-in d-flex flex-column justify-content-start ">
-                            <p class="mb-2  mt-2 section-name payslip-small-desc">
-                                Not Yet In ({{ $CountAbsentEmployees }})
-                            </p>
-                            <div class="team-leave d-flex flex-row gap-3">
-                                @php
-                                    function getRandomAbsentColor()
-                                    {
-                                        $colors = ['#FFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF', '#FFC5C5'];
-                                        return $colors[array_rand($colors)];
-                                    }
-                                @endphp
-                                @if ($CountAbsentEmployees > 0)
-                                    @for ($i = 0; $i < min($CountAbsentEmployees, 5); $i++)
-                                        @if (isset($AbsentEmployees[$i]))
-                                            @php
-                                                $employee = $AbsentEmployees[$i];
-                                                $randomColorAbsent =
-                                                    '#' . str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0', STR_PAD_LEFT);
-                                            @endphp
-                                            <a href="/whoisinchart" style="text-decoration: none;">
-                                                <div class="thisCircle"
-                                                    style="border: 2px solid {{ getRandomAbsentColor() }};"
-                                                    data-toggle="tooltip" data-placement="top"
-                                                    title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
-                                                    <span class="initials">
-                                                        {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0, 1)) }}
-                                                    </span>
-                                                </div>
-                                            </a>
-                                        @endif
-                                    @endfor
-                                @else
-                                    <p class="payslip-small-desc">No employees are absent today</p>
-                                @endif
-                                @if ($CountAbsentEmployees > 5)
-                                    <div class="remainContent d-flex flex-column align-items-center payslip-small-desc"
-                                        wire:click="openAbsentEmployees">
-                                        <span>+{{ $CountAbsentEmployees - 5 }}</span>
-                                        <p class="mb-0" style="margin-top:-5px;">More</p>
-                                    </div>
-                                @endif
+        </div>
+        <div class="col-md-5 mb-4 ">
+            @if ($ismanager)
+            <div class="payslip-card mb-4">
+                <p class="payslip-card-title">Who is in?</p>
+                <div class="who-is-in d-flex flex-column justify-content-start ">
+                    <p class="mb-2  mt-2 section-name payslip-small-desc">
+                        Not Yet In ({{ $CountAbsentEmployees }})
+                    </p>
+                    <div class="team-leave d-flex flex-row gap-3">
+                        @php
+                        function getRandomAbsentColor()
+                        {
+                        $colors = ['#FFD1DC', '#D2E0FB', '#ADD8E6', '#E6E6FA', '#F1EAFF', '#FFC5C5'];
+                        return $colors[array_rand($colors)];
+                        }
+                        @endphp
+                        @if ($CountAbsentEmployees > 0)
+                        @for ($i = 0; $i < min($CountAbsentEmployees, 5); $i++)
+                            @if (isset($AbsentEmployees[$i]))
+                            @php
+                            $employee=$AbsentEmployees[$i];
+                            $randomColorAbsent='#' . str_pad(dechex(mt_rand(0, 0xffffff)), 6, '0' , STR_PAD_LEFT);
+                            @endphp
+                            <a href="/whoisinchart" style="text-decoration: none;">
+                            <div class="thisCircle"
+                                style="border: 2px solid {{ getRandomAbsentColor() }};"
+                                data-toggle="tooltip" data-placement="top"
+                                title="{{ ucwords(strtolower($employee['first_name'])) }} {{ ucwords(strtolower($employee['last_name'])) }}">
+                                <span class="initials">
+                                    {{ strtoupper(substr(trim($employee['first_name']), 0, 1)) }}{{ strtoupper(substr(trim($employee['last_name']), 0, 1)) }}
+                                </span>
                             </div>
-                        </div>
-                        <!-- /second row -->
+                            </a>
+                            @endif
+                            @endfor
+                            @else
+                            <p class="payslip-small-desc">No employees are absent today</p>
+                            @endif
+                            @if ($CountAbsentEmployees > 5)
+                            <div class="remainContent d-flex flex-column align-items-center payslip-small-desc"
+                                wire:click="openAbsentEmployees">
+                                <span>+{{ $CountAbsentEmployees - 5 }}</span>
+                                <p class="mb-0" style="margin-top:-5px;">More</p>
+                            </div>
+                            @endif
+                    </div>
+                </div>
+                <!-- /second row -->
 
                         <div class="who-is-in d-flex flex-column justify-content-start ">
                             <p class="mb-2 mt-2 section-name mt-1 payslip-small-desc">
@@ -753,42 +763,30 @@
                     </div>
                 </div>
 
-
-                <div class="payslip-card mb-3">
-                    <p class="payslip-card-title">POI</p>
-                    <p class="payslip-small-desc">
-                        Hold on! You can submit your Proof of Investments (POI) once released.
-                    </p>
-                    <a href="#">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <!-- TEAM ON LEAVE -->
-            <div class="col-md-4  mb-4 ">
-                @if ($this->showLeaveApplies)
-                    <div class="payslip-card  mb-4">
-                        <div class="reviews">
+        </div>
+        <!-- TEAM ON LEAVE -->
+        <div class="col-md-4  mb-4 ">
+            @if ($this->showLeaveApplies)
+            <div class="payslip-card  mb-4">
+                <div class="reviews">
+                    <div>
+                        <div class="team-heading mt-2 d-flex justify-content-between">
                             <div>
-                                <div class="team-heading mt-2 d-flex justify-content-between">
-                                    <div>
-                                        <p class="payslip-card-title"> Team On Leave</p>
-                                    </div>
-                                </div>
-                                @if ($this->teamCount > 0)
-                                    <div class="team-Notify ">
-                                        <p class="payslip-small-desc">
-                                            Today ({{ $teamCount }}) </p>
-                                        <div class="team-leave d-flex flex-row  gap-3">
-                                            @php
-                                                function getRandomLightColor()
-                                                {
-                                                    $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
-                                                    return $colors[array_rand($colors)];
-                                                }
-                                            @endphp
+                                <p class="payslip-card-title"> Team On Leave</p>
+                            </div>
+                        </div>
+                        @if ($this->teamCount > 0)
+                        <div class="team-Notify ">
+                            <p class="payslip-small-desc">
+                                Today ({{ $teamCount }}) </p>
+                            <div class="team-leave d-flex flex-row  gap-3">
+                                @php
+                                function getRandomLightColor()
+                                {
+                                $colors = ['#FFD1DC', '#B0E57C', '#ADD8E6', '#E6E6FA', '#FFB6C1'];
+                                return $colors[array_rand($colors)];
+                                }
+                                @endphp
 
                                             @for ($i = 0; $i < min($teamCount, 3); $i++)
                                                 <?php
