@@ -532,6 +532,17 @@
             </div>
 
 
+            <div class="payslip-card mb-3">
+                <p class="payslip-card-title">POI</p>
+                <p class="payslip-small-desc">
+                    Hold on! You can submit your Proof of Investments (POI) once released.
+                </p>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow">→</div>
+                    </div>
+                </a>
+            </div>
         </div>
         <div class="col-md-5 mb-4 ">
             @if ($ismanager)
@@ -751,18 +762,6 @@
                 </div>
             </div>
 
-
-            <div class="payslip-card mb-3">
-                <p class="payslip-card-title">POI</p>
-                <p class="payslip-small-desc">
-                    Hold on! You can submit your Proof of Investments (POI) once released.
-                </p>
-                <a href="#">
-                    <div class="payslip-go-corner">
-                        <div class="payslip-go-arrow">→</div>
-                    </div>
-                </a>
-            </div>
         </div>
         <!-- TEAM ON LEAVE -->
         <div class="col-md-4  mb-4 ">
