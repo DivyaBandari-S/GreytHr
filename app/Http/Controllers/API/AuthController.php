@@ -10,6 +10,8 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\ApiResponse;
+use App\Models\Company;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -145,5 +147,68 @@ class AuthController extends Controller
             'expires_in'   => Auth::guard('api')->factory()->getTTL() * 60,
             'user'         => $user,
         ]);
+    }
+
+
+    public function resetPassword(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/',
+                'confirmed'
+            ],
+
+        ], [
+            'new_password.regex' => 'Password must be at least 8 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
+
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                $validator->errors()->first(),
+                self::VALIDATION_ERROR
+            );
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                'Current password is incorrect.',
+                self::FORBIDDEN
+            );
+        }
+        // Prevent reusing current password
+        if (Hash::check($request->new_password, $user->password)) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                'New password cannot be the same as your current password.',
+                self::VALIDATION_ERROR
+            );
+        }
+
+        // Get company name safely
+        $company = Company::where('company_id', $user->company_id)->first();
+        $companyName = $company ? $company->company_name : 'Your Company';
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Send email notification
+        if (!empty($user->email)) {
+            $user->notify(new \App\Notifications\PasswordChangedNotification($companyName));
+        }
+
+        return ApiResponse::success(
+            self::SUCCESS_STATUS,
+            'Password updated successfully.'
+        );
     }
 }

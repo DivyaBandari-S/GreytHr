@@ -13,8 +13,6 @@ use Carbon\Carbon;
 use App\Helpers\ApiResponse;
 use App\Models\SwipeRecord;
 use App\Models\CompanyShift;
-use Torann\GeoIP\Facades\GeoIP;
-use Jenssegers\Agent\Agent;
 
 class SwipeController extends Controller
 {
@@ -55,6 +53,11 @@ class SwipeController extends Controller
             if (!$shift) {
                 return ApiResponse::error(self::ERROR_STATUS, 'No assigned shift found for this user.', self::NOT_FOUND);
             }
+            if ($shift) {
+                $formattedStart = Carbon::parse($shift->shift_start_time)->format('H:i');
+                $formattedEnd = Carbon::parse($shift->shift_end_time)->format('H:i');
+            }
+
 
             // Parse shift times and handle overnight shifts
             $shiftStart = Carbon::now()->setTimeFrom(Carbon::parse($shift->shift_start_time));
@@ -153,6 +156,7 @@ class SwipeController extends Controller
                 'device_id'      => $swipeRecord->device_id,
                 'swipe_location' => $swipeRecord->swipe_location,
                 'swipe_remarks'  => $swipeRecord->swipe_remarks,
+                'shift_time' => "{$formattedStart} to {$formattedEnd}"
             ];
 
             return ApiResponse::success(self::SUCCESS_STATUS, "Swipe-$inOrOut successful", $response);
@@ -168,18 +172,60 @@ class SwipeController extends Controller
 
     /**
      * Get Device Details Automatically
-     */ private function getDeviceDetails(Request $request)
+     */
+    private function getDeviceDetails(Request $request)
     {
         $userAgent = $request->header('User-Agent') ?? 'Unknown Device';
         $deviceId = $request->ip() ?? 'Unknown IP';
-        $agent = new Agent();
-        $deviceType = $agent->isMobile() ? 'Mobile' : ($agent->isTablet() ? 'Tablet' : 'Desktop');
+
         return [
-            'device' => $deviceType,
+            'device' => $this->detectDeviceType($userAgent),
             'device_name' => $userAgent,
             'device_id' => $deviceId,
+            // 'os' => $this->detectOperatingSystem($userAgent),
         ];
     }
+
+    private function detectDeviceType($userAgent)
+    {
+        $userAgent = strtolower($userAgent);
+
+        if (strpos($userAgent, 'mobile') !== false || strpos($userAgent, 'android') !== false || strpos($userAgent, 'iphone') !== false) {
+            return 'Mobile';
+        }
+
+        if (strpos($userAgent, 'tablet') !== false || strpos($userAgent, 'ipad') !== false) {
+            return 'Tablet';
+        }
+
+        return 'Desktop';
+    }
+
+    private function detectOperatingSystem($userAgent)
+    {
+        $osArray = [
+            'Windows NT 10.0' => 'Windows 10',
+            'Windows NT 6.3' => 'Windows 8.1',
+            'Windows NT 6.2' => 'Windows 8',
+            'Windows NT 6.1' => 'Windows 7',
+            'Windows NT 6.0' => 'Windows Vista',
+            'Windows NT 5.1' => 'Windows XP',
+            'Mac OS X' => 'macOS',
+            'Android' => 'Android',
+            'iPhone' => 'iOS',
+            'iPad' => 'iOS',
+            'Linux' => 'Linux',
+        ];
+
+        foreach ($osArray as $key => $os) {
+            if (stripos($userAgent, $key) !== false) {
+                return $os;
+            }
+        }
+
+        return 'Unknown OS';
+    }
+
 
 
     /**

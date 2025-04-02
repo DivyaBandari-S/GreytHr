@@ -75,6 +75,7 @@
             <div class="form-group col-md-4">
                 <label for="from-date">Select Date:</label>
                 <input type="date" class="form-control" max="{{ now()->toDateString() }}" id="from-date" wire:model="selectDate" wire:change="updateselectDate">
+               
             </div>
             
         </div>
