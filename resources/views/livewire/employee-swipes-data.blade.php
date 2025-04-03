@@ -261,11 +261,12 @@
                     <div class="dropdown-container1-employee-swipes">
 
                                                     <!-- Filter Button -->
+                            @if($isManager)                         
                                 <button type="button" class="button2"
                                     style="margin-top:30px; border-radius:5px; padding:5px;">
                                     <i class="fa-icon fas fa-filter"wire:click="toggleSidebar"style="color:#666"></i>
                                 </button>
-
+                            @endif
                                 <!-- Overlay -->
                                 @if ($isOpen)
                                     <div class="overlay" wire:click="closeSidebar"></div>

@@ -77,6 +77,7 @@ class EmployeeSwipesData extends Component
     public $employeeShiftDetails;
     public $selectedSwipeTime;
 
+    public $isManager;
     public $defaultApply = 1;
     public $search = '';
     public $searching = 0;
@@ -165,6 +166,7 @@ class EmployeeSwipesData extends Component
             $this->selectedDepartment = 'All';
             $this->selectedDesignation = 'All';
             $this->selectedLocation = 'Hyderabad';
+            $this->selectedSwipeStatus='All';
         }
     }
 
@@ -193,9 +195,9 @@ class EmployeeSwipesData extends Component
 
         // Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
 
-        $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
+        $this->isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
-        if ($isManager) {
+        if ($this->isManager) {
 
             // Log::debug('Starting query for managed employees');
 
@@ -316,6 +318,7 @@ class EmployeeSwipesData extends Component
     {
         $this->isupdateFilter = 1;
         $this->closeSidebar();
+        
     }
     public function processWebSignInLogs()
     {
@@ -325,9 +328,9 @@ class EmployeeSwipesData extends Component
         $userId = $authUser->emp_id;
         $webSignInData = [];
         // Check if the user is a manager
-        $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
+        $this->isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
-        if ($isManager) {
+        if ($this->isManager) {
             // Log::debug('Starting query for managed employees');
 
             $managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {
@@ -363,6 +366,7 @@ class EmployeeSwipesData extends Component
                         return $query->where('employee_details.job_role', 'LIKE', '%Sales Head%');
                     }
                 });
+                
             }
             if ($this->selectedLocation && $this->isupdateFilter == 1) {
 
@@ -376,6 +380,7 @@ class EmployeeSwipesData extends Component
                             ->where('employee_details.job_mode', '!=', 'Remote');
                     }
                 });
+                
             }
             if (!empty($this->selectedDepartment) && $this->isupdateFilter == 1) {
 
@@ -399,6 +404,7 @@ class EmployeeSwipesData extends Component
 
                     return $query->where('employee_details.dept_id', $this->departmentId);
                 });
+               
             }
             // Log the state of the query after applying designation filter
             // Log::debug('Query after designation filter:', ['query' => $managedEmployees->toSql()]);
@@ -478,7 +484,7 @@ class EmployeeSwipesData extends Component
                     stripos($data['employee']->emp_id, $this->search) !== false;
             });
         }
-
+         
         return array_values($webSignInData);
     }
 
@@ -619,14 +625,16 @@ class EmployeeSwipesData extends Component
     }
     public function toggleSidebar()
     {
-
         $this->isOpen = !$this->isOpen; // Toggle sidebar visibility
-
+        $this->isupdateFilter=0;
+        
     }
 
     public function closeSidebar()
     {
         $this->isOpen = false; // Ensure sidebar closes when called
+       
+       
 
     }
     public function searchEmployee()

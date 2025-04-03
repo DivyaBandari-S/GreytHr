@@ -33,7 +33,7 @@ class LateArrivalsExport implements FromCollection,WithHeadings
                 return [
                     'emp_id' => $employee->emp_id,
                     'name' => ucwords(strtolower($employee->first_name)) . ' ' . ucwords(strtolower($employee->last_name)),
-                    'sign_in_time' => $employee->swipe_time,
+                    'sign_in_time' => Carbon::parse($employee->swipe_time)->format('H:i:s'),
                     'late_by' => $lateArrivalTime,
                 ];
             }
