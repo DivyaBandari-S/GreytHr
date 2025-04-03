@@ -490,17 +490,26 @@
             @foreach($Swipes as $index=>$s1)
 
             @php
-            $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            if(!empty($s1->shift_start_time))
-            {
-              $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
-              $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
-            }
-            else
-            {
-               $lateArrivalTime='NA';
-               $isLateBy10AM='NA';
-            }
+                 $swipeTime = \Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s'); // Extract only time
+                 $shiftStartTime = !empty($s1->shift_start_time) ? \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i:s') : null;
+
+                  if($shiftStartTime)
+                  {
+                        $swipeTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $swipeTime);
+                        $shiftStartTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $shiftStartTime);
+
+                        // Subtract swipe time from shift start time
+                        $lateArrivalTime = $shiftStartTimeCarbon->diff($swipeTimeCarbon)->format('%H:%I:%S');
+
+
+                        $isLateBy10AM = $swipeTimeCarbon > $shiftStartTimeCarbon;
+                    
+                  }
+                  else
+                  {
+                    $lateArrivalTime='NA';
+                    $isLateBy10AM='NA';
+                  }
             
             @endphp
 
@@ -612,9 +621,26 @@
              @if($onTime > 0)
             @foreach($Swipes as $index=>$s1)
             @php
-            $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
-            $isEarlyBy10AM = $swipeTime->format('H:i') <= $s1->shift_start_time ; 
+                 $swipeTime = \Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s'); // Extract only time
+                 $shiftStartTime = !empty($s1->shift_start_time) ? \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i:s') : null;
+                 if($shiftStartTime)
+                  {
+                        $swipeTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $swipeTime);
+                        $shiftStartTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $shiftStartTime);
+ 
+                        // Subtract swipe time from shift start time
+                        $earlyArrivalTime = $swipeTimeCarbon->diff($shiftStartTimeCarbon)->format('%H:%I:%S');
+ 
+ 
+                        $isEarlyBy10AM = $swipeTimeCarbon <= $shiftStartTimeCarbon;
+                   
+                  }
+                  else
+                  {
+                    $earlyArrivalTime='NA';
+                    $isEarlyBy10AM='NA';
+                  }
+                
             @endphp 
             @if($isEarlyBy10AM) 
             <tr style="border-bottom: 1px solid #ddd;">

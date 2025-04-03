@@ -585,13 +585,13 @@ public function toggleAccordionForLate($index)
         }
      if(empty($this->selectedShift))
      {
-        Log::info('Fetching approved leave requests with filters...');
+        // Log::info('Fetching approved leave requests with filters...');
 
         // Start the query
         $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
             ->leftJoin('company_shifts', function ($join) {
                 // Log the left join process
-                Log::info('Joining company_shifts using JSON_CONTAINS...');
+                // Log::info('Joining company_shifts using JSON_CONTAINS...');
                 $join->on(DB::raw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))'), '=', DB::raw('1'))
                      ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name');
             })
@@ -603,7 +603,7 @@ public function toggleAccordionForLate($index)
         
             // Log selected designation filter
             ->when($this->selectedDesignation && $this->isupdateFilter == 1, function ($query) {
-                Log::info('Applying designation filter...', ['selectedDesignation' => $this->selectedDesignation]);
+                // Log::info('Applying designation filter...', ['selectedDesignation' => $this->selectedDesignation]);
                 return match ($this->selectedDesignation) {
                     'software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer I', 'Software Engineer II']),
                     'senior_software_engineer' => $query->whereIn('employee_details.job_role', ['Software Engineer III', 'Senior Software Engineer']),
@@ -615,7 +615,7 @@ public function toggleAccordionForLate($index)
         
             // Log selected location filter
             ->when($this->selectedLocation && $this->isupdateFilter == 1, function ($query) {
-                Log::info('Applying location filter...', ['selectedLocation' => $this->selectedLocation]);
+                // Log::info('Applying location filter...', ['selectedLocation' => $this->selectedLocation]);
                 if ($this->selectedLocation === 'Remote') {
                     return $query->where('employee_details.job_mode', $this->selectedLocation);
                 } else {
@@ -626,7 +626,7 @@ public function toggleAccordionForLate($index)
         
             // Log selected department filter
             ->when(!empty($this->selectedDepartment) && $this->isupdateFilter == 1, function ($query) {
-                Log::info('Applying department filter...', ['selectedDepartment' => $this->selectedDepartment]);
+                // Log::info('Applying department filter...', ['selectedDepartment' => $this->selectedDepartment]);
                 return match ($this->selectedDepartment) {
                     'information_technology', 'business_development', 'operations', 'innovation', 'infrastructure', 'human_resources' => 
                         $query->where('employee_details.dept_id', $this->departmentId),
@@ -642,11 +642,11 @@ public function toggleAccordionForLate($index)
             ]);
         
         // Log retrieved leave requests count
-        Log::info('Retrieved approved leave requests', ['count' => $approvedLeaveRequests->count()]);
+        // Log::info('Retrieved approved leave requests', ['count' => $approvedLeaveRequests->count()]);
         
         // Map through the leave requests
         $approvedLeaveRequests = $approvedLeaveRequests->map(function ($leaveRequest) {
-            Log::info('Processing leave request', ['emp_id' => $leaveRequest->emp_id]);
+            // Log::info('Processing leave request', ['emp_id' => $leaveRequest->emp_id]);
         
             $fromDate = Carbon::parse($leaveRequest->from_date);
             $toDate = Carbon::parse($leaveRequest->to_date);
@@ -661,10 +661,10 @@ public function toggleAccordionForLate($index)
                 }
             }
         
-            Log::info('Generated leave_dates', [
-                'emp_id' => $leaveRequest->emp_id,
-                'leave_dates' => $leave_dates
-            ]);
+            // Log::info('Generated leave_dates', [
+            //     'emp_id' => $leaveRequest->emp_id,
+            //     'leave_dates' => $leave_dates
+            // ]);
         
             // Calculate number_of_days based on session values
             $leaveRequest->setAttribute('leave_dates', $leave_dates);
@@ -681,18 +681,18 @@ public function toggleAccordionForLate($index)
             }
            
         
-            Log::info('Final leave request details', [
-                'emp_id' => $leaveRequest->emp_id,
-                'number_of_days' => $leaveRequest->number_of_days,
-                'leave_dates' => $leaveRequest->leave_dates
-            ]);
+            // Log::info('Final leave request details', [
+            //     'emp_id' => $leaveRequest->emp_id,
+            //     'number_of_days' => $leaveRequest->number_of_days,
+            //     'leave_dates' => $leaveRequest->leave_dates
+            // ]);
         
             return $leaveRequest;
         });
         
         
         // Log final output
-        Log::info('Final processed leave requests:', ['approvedLeaveRequests' => $approvedLeaveRequests->toArray()]);
+        // Log::info('Final processed leave requests:', ['approvedLeaveRequests' => $approvedLeaveRequests->toArray()]);
         
     
      }
@@ -971,7 +971,7 @@ public function toggleAccordionForLate($index)
                     'company_shifts.shift_end_time',   // Optionally, include shift_end_time if needed
                     'employee_details.emergency_contact'  // Include fields from emp_personal_infos
                 )
-                ->whereRaw("swipe_records.swipe_time > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
+                ->whereRaw("TIME(swipe_records.swipe_time) > company_shifts.shift_start_time") // Compare against company_shifts.shift_start_time
                 ->distinct('swipe_records.emp_id') // Apply distinct on emp_id to avoid duplicates
                 ->count(); // Count distinct late swipes
           
@@ -999,7 +999,7 @@ public function toggleAccordionForLate($index)
         'company_shifts.shift_end_time',
     )
     ->where(function ($query) {
-        $query->whereRaw("swipe_records.swipe_time <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
+        $query->whereRaw("TIME(swipe_records.swipe_time) <= company_shifts.shift_start_time"); // Compare against company_shifts.shift_start_time
     })
     ->distinct('swipe_records.emp_id')
     ->count();

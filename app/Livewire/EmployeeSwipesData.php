@@ -77,6 +77,7 @@ class EmployeeSwipesData extends Component
     public $employeeShiftDetails;
     public $selectedSwipeTime;
 
+    public $isManager;
     public $defaultApply = 1;
     public $search = '';
     public $searching = 0;
@@ -194,9 +195,9 @@ class EmployeeSwipesData extends Component
 
         // Log::info("Authenticated User: {$authUser->name} (ID: $userId)");
 
-        $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
+        $this->isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
-        if ($isManager) {
+        if ($this->isManager) {
 
             // Log::debug('Starting query for managed employees');
 
@@ -327,9 +328,9 @@ class EmployeeSwipesData extends Component
         $userId = $authUser->emp_id;
         $webSignInData = [];
         // Check if the user is a manager
-        $isManager = EmployeeDetails::where('manager_id', $userId)->exists();
+        $this->isManager = EmployeeDetails::where('manager_id', $userId)->exists();
 
-        if ($isManager) {
+        if ($this->isManager) {
             // Log::debug('Starting query for managed employees');
 
             $managedEmployees =  EmployeeDetails::where(function ($query) use ($userId) {

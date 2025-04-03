@@ -1,0 +1,6 @@
+[2025-04-03 15:11:44] local.ERROR: Failed to fetch IP location data {"ip":"43.249.227.194","response":"{
+    \"error\": true,
+    \"reason\": \"RateLimited\",
+    \"message\": \"Visit https://ipapi.co/ratelimited/ for details\"
+}"} 
+[2025-04-03 15:11:44] local.INFO: Decodinggg CTC: JAgLkG0Y47rzxVnap26vXPJoVyS01WwQOqy8omlR3KMEDb9ZNj  
