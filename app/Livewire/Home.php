@@ -170,18 +170,24 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-
-
+       
+           
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
                 ->first();
 
             $this->swipes = DB::table('swipe_records')
-                ->whereDate('created_at', $today)
-                ->where('emp_id', $employeeId)
-                ->orderBy('id', 'desc')
-                ->first();
+            ->whereDate('created_at', $today)
+            ->where('emp_id', $employeeId)
+            ->orderBy('id', 'desc')
+            ->first();
+            if(!empty($this->swipes))
+            {
+
+                 $swipe_record=SwipeRecord::where('emp_id',$employeeId)->whereDate('created_at',Carbon::now()->format('Y-m-d'))->orderByDesc('updated_at')->first();
+                 $this->swipe_location=$swipe_record->swipe_location;
+            }
             if ($this->loginEmployee) {
                 // Get manager details
                 $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
@@ -289,6 +295,7 @@ class Home extends Component
     public function updateSwipeLocation()
     {
         $this->swipe_location = $this->swipe_location;
+     
     }
     public function updateSwipeRemarks()
     {
@@ -522,6 +529,7 @@ class Home extends Component
     {
         try {
             $currentTime = Carbon::now();
+            
 
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -563,7 +571,7 @@ class Home extends Component
             $ipAddress = request()->ip();
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
+                'swipe_time' => Carbon::now()->format('Y-m-d H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
                 'device_name' => $platform,

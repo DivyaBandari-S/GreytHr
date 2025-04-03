@@ -2304,6 +2304,7 @@ color: #fff;
 
             </div>
             @endif
+            
             @if($defaultfaCalendar==0)
             @livewire('attendance-table', [
         'startDateForInsights' => $startDateForInsights, 
@@ -2327,11 +2328,11 @@ color: #fff;
                             <p class="text-muted m-0" style="font-size:12px;padding-top:10px;white-space:nowrap;">Shift:
                             @if(!empty($employeeSecondShiftDetails))  
                             
-                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->format('H:i ') }} to
-                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_end_time)->format('H:i ') }}
+                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_start_time)->format('H:i') }} to
+                                {{ \Carbon\Carbon::parse($employeeSecondShiftDetails->shift_end_time)->format('H:i') }}
                             @elseif(!empty($employeeShiftDetails))
-                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i ') }} to
-                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i ') }}
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_start_time)->format('H:i') }} to
+                            {{ \Carbon\Carbon::parse($employeeShiftDetails->shift_end_time)->format('H:i') }}
                             @else
                               NA
                             @endif
@@ -2711,7 +2712,7 @@ color: #fff;
 
                                         <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Date:<br /><span style="color: #000000;">{{\Carbon\Carbon::parse($swiperecord->created_at)->format('jS F, Y')}}</span></div>
 
-                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;">{{ $view_student_swipe_time }}</span></div>
+                                        <div class="col" style="font-size: 11px;color:#778899;font-weight:500;">Swipe&nbsp;Time:<br /><span style="color: #000000;">{{ \Carbon\Carbon::parse($view_student_swipe_time)->format('H:i:s') }}</span></div>
 
                                     </div>
                                     <div class="row m-0 mt-3">
