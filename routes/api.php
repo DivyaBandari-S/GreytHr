@@ -17,7 +17,7 @@ use App\Http\Controllers\API\SwipeController;
 Route::post('login', [AuthController::class, 'login']); // Login with email or emp_id
 
 Route::middleware(['auth:api'])->group(function () {
-    Route::post('logout', [AuthController::class, 'logout'])->nfame('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('refresh', [AuthController::class, 'refresh'])->name('refresh');
     Route::post('getEmployeeDetails', [AuthController::class, 'getEmployeeDetails'])->name('getEmployeeDetails');
     Route::post('change-password', [AuthController::class, 'resetPassword'])->name('changePassword');
