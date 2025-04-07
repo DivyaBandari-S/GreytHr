@@ -167,7 +167,7 @@
     $isEarlyBy10AM= null ;
   }
    @endphp @if($isLateBy10AM) @php $notyetin++; $lateArrival++; @endphp @endif @if($isEarlyBy10AM) @php $onTime++; @endphp @endif @endforeach @php if($TotalEmployees>0){$CalculatePresentOnTime=($EarlySwipesCount/$TotalEmployees)*100; $CalculatePresentButLate=($LateSwipesCount/$TotalEmployees)*100;}else{$CalculatePresentOnTime=0;$CalculatePresentButLate=0;} @endphp <div class="date-form-who-is-in">
-    <input type="date" wire:model="from_date" wire:change="updateDate" class="form-control" id="fromDate" name="fromDate" style="color: #778899;">
+    <input type="date" wire:model="from_date" wire:change="updateDate" class="form-control" id="fromDate" name="fromDate" max="{{ now()->toDateString() }}"style="color: #778899;">
 </div>
 <div class="shift-selector-container-who-is-in">
   <input type="text" class="shift-selector-who-is-in small-font" placeholder="Select Shifts"value="{{ $formattedSelectedShift }}" readonly>
@@ -490,17 +490,26 @@
             @foreach($Swipes as $index=>$s1)
 
             @php
-            $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            if(!empty($s1->shift_start_time))
-            {
-              $lateArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
-              $isLateBy10AM = $swipeTime->format('H:i') > $s1->shift_start_time;
-            }
-            else
-            {
-               $lateArrivalTime='NA';
-               $isLateBy10AM='NA';
-            }
+                 $swipeTime = \Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s'); // Extract only time
+                 $shiftStartTime = !empty($s1->shift_start_time) ? \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i:s') : null;
+
+                  if($shiftStartTime)
+                  {
+                        $swipeTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $swipeTime);
+                        $shiftStartTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $shiftStartTime);
+
+                        // Subtract swipe time from shift start time
+                        $lateArrivalTime = $shiftStartTimeCarbon->diff($swipeTimeCarbon)->format('%H:%I:%S');
+
+
+                        $isLateBy10AM = $swipeTimeCarbon > $shiftStartTimeCarbon;
+                    
+                  }
+                  else
+                  {
+                    $lateArrivalTime='NA';
+                    $isLateBy10AM='NA';
+                  }
             
             @endphp
 
@@ -525,7 +534,7 @@
                 <br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span>
               </td>
               <td style="font-weight:700;font-size:10px;padding-left:12px;">
-                 {{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+                 {{$lateArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{\Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s')}}</span></td>
               <td style="text-align:right;">
               <button class="arrow-btn" style="background-color:#fff;cursor:pointer;color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForLate({{ $index }})">
                           <i class="fa fa-angle-{{ in_array($index, $openAccordionForLateComers) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionForLateComers) ? '#3a9efd' : '#778899' }}"></i>
@@ -612,15 +621,32 @@
              @if($onTime > 0)
             @foreach($Swipes as $index=>$s1)
             @php
-            $swipeTime = \Carbon\Carbon::parse($s1->swipe_time);
-            $earlyArrivalTime = $swipeTime->diff(\Carbon\Carbon::parse($s1->shift_start_time))->format('%H:%I:%S');
-            $isEarlyBy10AM = $swipeTime->format('H:i') <= $s1->shift_start_time ; 
+                 $swipeTime = \Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s'); // Extract only time
+                 $shiftStartTime = !empty($s1->shift_start_time) ? \Carbon\Carbon::parse($s1->shift_start_time)->format('H:i:s') : null;
+                 if($shiftStartTime)
+                  {
+                        $swipeTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $swipeTime);
+                        $shiftStartTimeCarbon = \Carbon\Carbon::createFromFormat('H:i:s', $shiftStartTime);
+ 
+                        // Subtract swipe time from shift start time
+                        $earlyArrivalTime = $swipeTimeCarbon->diff($shiftStartTimeCarbon)->format('%H:%I:%S');
+ 
+ 
+                        $isEarlyBy10AM = $swipeTimeCarbon <= $shiftStartTimeCarbon;
+                   
+                  }
+                  else
+                  {
+                    $earlyArrivalTime='NA';
+                    $isEarlyBy10AM='NA';
+                  }
+                
             @endphp 
             @if($isEarlyBy10AM) 
             <tr style="border-bottom: 1px solid #ddd;">
               <td style="font-size:10px;font-weight:700;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;max-width:100px;"data-toggle="tooltip"
               data-placement="top" title="{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}">{{ ucwords(strtolower($s1->first_name)) }} {{ ucwords(strtolower($s1->last_name)) }}<br /><span class="text-muted" style="font-weight:normal;font-size:10px;">#{{$s1->emp_id}}</span></td>
-              <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{$s1->swipe_time}}</span></td>
+              <td style="font-weight:700;font-size:10px;">{{$earlyArrivalTime}}<br /><span class="text-muted" style="font-size:10px;font-weight:300;">{{\Carbon\Carbon::parse($s1->swipe_time)->format('H:i:s')}}</span></td>
               <td style="text-align:right;">
               <button class="arrow-btn" style="background-color:#fff;float:right;margin-top:-2px;margin-right:20px;cursor:pointer;color:{{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }};border:1px solid {{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }}" wire:click="toggleAccordionForEarly({{ $index }})">
                           <i class="fa fa-angle-{{ in_array($index, $openAccordionForEarlyComers) ? 'down' : 'up' }}"style="color:{{ in_array($index, $openAccordionForEarlyComers) ? '#3a9efd' : '#778899' }}"></i>

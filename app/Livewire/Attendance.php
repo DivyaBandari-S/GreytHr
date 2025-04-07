@@ -510,7 +510,7 @@ class Attendance extends Component
 
         // Process swipe records
         foreach ($swipes as $swipe) {
-            $date = Carbon::parse($swipe->swipe_time)->toDateString();
+            $date = Carbon::parse($swipe->swipe_time)->toTimeString();
             if ($swipe->in_or_out === 'IN') {
                 if (!isset($inSwipes[$date])) {
                     $inSwipes[$date] = [];
@@ -1067,14 +1067,14 @@ class Attendance extends Component
         $employee = EmployeeDetails::where('emp_id', $empId)->first();
 
         // Return array with default values if employee not found or no shift entries assigned
-        if (!$employee || empty($employee->shift_entries)) {
+        if (!$employee || empty($employee->shift_entries_from_hr)) {
             return [
                 'shiftExists' => $shiftExists,
                 'shiftType' => $shiftType,
             ];
         }
 
-        $shiftEntries = json_decode($employee->shift_entries, true);
+        $shiftEntries = json_decode($employee->shift_entries_from_hr, true);
         $date = Carbon::parse($date);
 
         foreach ($shiftEntries as $shift) {
@@ -1284,8 +1284,8 @@ class Attendance extends Component
                                 } else {
                                 }
                                 if ($inSwipeTime && $outSwipeTime) {
-                                    $inTime = Carbon::parse($inSwipeTime->swipe_time);
-                                    $outTime = Carbon::parse($outSwipeTime->swipe_time);
+                                    $inTime = Carbon::parse($inSwipeTime->swipe_time)->format('H:i:s');
+                                    $outTime = Carbon::parse($outSwipeTime->swipe_time)->format('H:i:s');
 
 
                                     if (!empty($this->employeeShiftDetailsForCalendar)) {
@@ -1339,7 +1339,7 @@ class Attendance extends Component
 
 
 
-                                    $timeDifference = $inTime->diffInMinutes($outTime); // Calculate difference in minutes
+                                    $timeDifference = Carbon::parse($inTime)->diffInMinutes(Carbon::parse($outTime)); // Calculate difference in minutes
 
 
                                     $hours = floor($timeDifference / 60);
@@ -1598,62 +1598,106 @@ class Attendance extends Component
     }
     //This function will help us to check the details related to the particular date in the calendar
     public function updateDate($date1)
-    {
-        try {
-            $parsedDate = Carbon::parse($date1);
+{
+    try {
+        // Log::info("updateDate method invoked", ['date1' => $date1]);
 
-            $this->dateToCheck = $date1;
+        // Parse the date
+        $parsedDate = Carbon::parse($date1);
+        // Log::debug("Parsed date", ['parsedDate' => $parsedDate->toDateString()]);
 
-            if ($parsedDate->format('Y-m-d') < Carbon::now()->format('Y-m-d')) {
+        $this->dateToCheck = $date1;
+        // Log::debug("dateToCheck set", ['dateToCheck' => $this->dateToCheck]);
 
-                $this->changeDate = 1;
-            }
-        } catch (\Exception $e) {
-           
-            FlashMessageHelper::flashError('An error occurred while updating the date. Please try again later.');
+        // Check if the date is in the past
+        if ($date1 < Carbon::now()->format('Y-m-d')) {
+            $this->changeDate = 1;
+            // Log::info("Date is in the past, changeDate set to 1", [
+            //     'currentDate' => Carbon::now()->toDateString(),
+            //     'date1' => $date1,
+            //     'changeDate' => $this->changeDate
+            // ]);
+        } else {
+            // Log::info("Date is not in the past", [
+            //     'currentDate' => Carbon::now()->toDateString(),
+            //     'date1' => $date1
+            // ]);
         }
+    } catch (\Exception $e) {
+        Log::error("Error in updateDate", [
+            'date1' => $date1,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        FlashMessageHelper::flashError('An error occurred while updating the date. Please try again later.');
     }
+}
     //This function will help us to check whether the employee is absent 'A' or present 'P'
     public function dateClicked($date1)
-    {
-        try {
+{
+    try {
+        // Log::info("dateClicked invoked", ['date1' => $date1]);
 
-            $date1 = trim($date1);
+        // Set selected date
+        $this->selectedDate = $date1;
+        // Log::debug("Selected date set", ['selectedDate' => $this->selectedDate]);
 
-            $this->selectedDate = $this->year . '-' . $this->month . '-' . str_pad($date1, 2, '0', STR_PAD_LEFT);
+        // Check swipe statuses
+        $isSwipedIn = SwipeRecord::whereDate('created_at', $date1)
+            ->where('in_or_out', 'In')
+            ->exists();
+        $isSwipedOut = SwipeRecord::whereDate('created_at', $date1)
+            ->where('in_or_out', 'Out')
+            ->exists();
 
-            $isSwipedIn = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'In')->exists();
-            $isSwipedOut = SwipeRecord::whereDate('created_at', $date1)->where('in_or_out', 'Out')->exists();
+        // Log::debug("Swipe status", [
+        //     'isSwipedIn' => $isSwipedIn,
+        //     'isSwipedOut' => $isSwipedOut
+        // ]);
 
+        // Get employee second shift details
+        $shiftData = $this->isEmployeeAssignedDifferentShift($date1, auth()->guard('emp')->user()->emp_id);
+        $this->employeeSecondShift = $shiftData['shiftType'] ?? null;
+        // Log::debug("Employee second shift", ['employeeSecondShift' => $this->employeeSecondShift]);
 
-            $this->employeeSecondShift = $this->isEmployeeAssignedDifferentShift($date1, auth()->guard('emp')->user()->emp_id)['shiftType'];
-            $this->employeeSecondShiftDetails = DB::table('employee_details')
-                ->join('company_shifts', function ($join) {
-                    $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id');
-                })->where('company_shifts.shift_name', $this->employeeSecondShift)
-                ->where('emp_id', auth()->guard('emp')->user()->emp_id)
-                ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
-                ->first();
+        $this->employeeSecondShiftDetails = DB::table('employee_details')
+            ->join('company_shifts', function ($join) {
+                $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id');
+            })
+            ->where('company_shifts.shift_name', $this->employeeSecondShift)
+            ->where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->select('company_shifts.shift_start_time', 'company_shifts.shift_end_time', 'company_shifts.shift_name', 'employee_details.*')
+            ->first();
 
+        // Log::debug("Employee second shift details", ['employeeSecondShiftDetails' => $this->employeeSecondShiftDetails]);
 
-            if (!$isSwipedIn) {
-                // Employee did not swipe in
-                $this->selectedDate = $date1;
-                $this->status = 'A';
-            } elseif (!$isSwipedOut) {
-                // Employee swiped in but not out
-                $this->selectedDate = $date1;
-                $this->status = 'P';
-            }
-
-            $this->updateDate($date1);
-            $this->dateclicked = $date1;
-        } catch (\Exception $e) {
-            
-            FlashMessageHelper::flashError('An error occurred while processing the date click. Please try again later.');
+        // // Determine employee status based on swipe records
+        if (!$isSwipedIn) {
+            // Employee did not swipe in
+            $this->status = 'A';
+            // Log::info("Employee did not swipe in", ['status' => $this->status, 'date' => $date1]);
+        } elseif (!$isSwipedOut) {
+            // Employee swiped in but not out
+            $this->status = 'P';
+            // Log::info("Employee swiped in but not out", ['status' => $this->status, 'date' => $date1]);
+        } else {
+            // Both swipe in and swipe out are present
+            // Log::info("Employee swiped in and out", ['date' => $date1]);
         }
-    }
 
+        $this->updateDate($date1);
+        $this->dateclicked = $date1;
+        // Log::info("dateClicked processing completed", ['dateclicked' => $this->dateclicked]);
+    } catch (\Exception $e) {
+        Log::error("Error in dateClicked", [
+            'date' => $date1,
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        FlashMessageHelper::flashError('An error occurred while processing the date click. Please try again later.');
+    }
+}
     public function updatedFromDate($value)
     {
         try {
@@ -1859,224 +1903,149 @@ class Attendance extends Component
 
         return $totalDaysForModalTitle;
     }
+    
     private function updateModalTitle()
-    {
-        try {
-            // Format the dates and update the modal title
+{
+    try {
+        // Log::info('updateModalTitle method started.', [
+        //     'startDateForInsights' => $this->startDateForInsights,
+        //     'toDate' => $this->toDate
+        // ]);
 
-            $formattedFromDate = Carbon::parse($this->startDateForInsights)->format('Y-m-d');
-            $formattedToDate = Carbon::parse($this->toDate)->format('Y-m-d');
-            if ($formattedFromDate > $formattedToDate) {
-                $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
-                $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
-                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-                $this->addError('date_range', 'The start date cannot be greater than the end date.');
-                return; // Stop execution if validation fails
-            }
+        $formattedFromDate = Carbon::parse($this->startDateForInsights)->format('Y-m-d');
+        $formattedToDate = Carbon::parse($this->toDate)->format('Y-m-d');
 
+        // Log::debug('Formatted dates:', [
+        //     'formattedFromDate' => $formattedFromDate,
+        //     'formattedToDate' => $formattedToDate
+        // ]);
 
-
-            if ($formattedFromDate >=  Carbon::today()->format('Y-m-d') && $formattedToDate >=  Carbon::today()->format('Y-m-d')) {
-                $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
-                $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
-                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-                // Set values to '-' and average work hours to '00:00'
-                $this->totalWorkingDays = '-';
-                $this->totalLateInSwipes = '-';
-                $this->totalnumberofEarlyOut = '-';
-                $this->totalnumberofLeaves = '-';
-                $this->totalnumberofAbsents = '-';
-                $this->averageWorkHoursForModalTitle = '-';
-                $this->averageFirstInTime = 'N/A';
-                $this->averageLastOutTime = 'N/A';
-                return; // Stop execution after setting values
-            }
-
-            if ($formattedToDate >  Carbon::today()->format('Y-m-d') && $formattedFromDate <  Carbon::today()->format('Y-m-d')) {
-                $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
-                $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
-                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-                $fromDatetemp = Carbon::parse($formattedFromDate);
-                $toDatetemp = Carbon::yesterday();
-                $fromDatetempForLeave = Carbon::parse($formattedFromDate);
-                $fromDatetempForAbsent = Carbon::parse($formattedFromDate);
-                // Set values to '-' and average work hours to '00:00'
-                $insights = $this->calculatetotalLateInSwipes($fromDatetemp, $toDatetemp);
-                $outsights = $this->calculatetotalEarlyOutSwipes($fromDatetemp, $toDatetemp);
-
-                $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
-
-                $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetempForLeave, $toDatetemp);
-                $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents($fromDatetempForAbsent, $toDatetemp);
-                $this->totalLateInSwipes = $insights['lateSwipeCount'];
-                $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
-                $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp, $toDatetemp);
-                $this->averageLastOutTime = $outsights['averageLastOutTime'];
-                $this->averageFirstInTime = $insights['averageFirstInTime'];
-                return; // Stop execution after setting values
-            }
-
-            $fromDatetemp = Carbon::parse($this->startDateForInsights);
-            $toDatetemp = Carbon::parse($this->toDate);
-            $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
-            $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
-            $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
-            $this->totalDaysForFormattedModalTitle = $this->calculateTotalDaysForModalTite($fromDatetemp, $toDatetemp);
-            $this->totalnumberofHolidayForFormattedDate = $this->calculateTotalNumberofHolidays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $this->totalWorkingDays = $this->calculateTotalWorkingDays(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $insights = $this->calculatetotalLateInSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $outsights = $this->calculatetotalEarlyOutSwipes(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $this->totalLateInSwipes = $insights['lateSwipeCount'];
-            $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-            $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
-            $this->averageLastOutTime = $outsights['averageLastOutTime'];
-            $this->averageFirstInTime = $insights['averageFirstInTime'];
-
-            // $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-
-
-            $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage(Carbon::parse($this->startDateForInsights), Carbon::parse($this->toDate));
-
-            // $timePattern = '/^\d{2}:\d{2}:\d{2}$/';
-            // if (!empty($this->averageLastOutTime) && !empty($this->avergageFirstInTime) && 
-            //         preg_match($timePattern, $this->averageLastOutTime) && preg_match($timePattern, $this->avergageFirstInTime)) {
-
-            //         $lastOutTime = Carbon::createFromFormat('H:i:s', $this->averageLastOutTime);
-            //         $firstInTime = Carbon::createFromFormat('H:i:s', $this->avergageFirstInTime);
-
-            //         // Calculate time difference if both times are valid
-            //         $timeDifferenceFormatted = gmdate('H:i', $lastOutTime->diffInSeconds($firstInTime));
-            //         $this->averageWorkHoursForModalTitle = $timeDifferenceFormatted;
-
-            //     } else {
-            //         // Log the issue for debugging purposes
-            //         Log::warning('Invalid time format for averageLastOutTime or avergageFirstInTime.');
-
-            //         // Set fallback value
-            //         $this->averageWorkHoursForModalTitle = '00:00'; 
-            //     }
-
-            $FirstInTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                ->where('in_or_out', 'IN')
-                ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
-                ->select('swipe_time')->get();
-
-            $FirstOutTimes = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                ->where('in_or_out', 'OUT')
-                ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
-                ->select('swipe_time')->get();
-
-            $totalDuration = CarbonInterval::seconds(0);
-            $totalDuration1 = CarbonInterval::seconds(0);
-
-            foreach ($FirstInTimes as $record) {
-                $time = Carbon::parse($record->swipe_time);
-                $totalDuration->addSeconds($time->secondsSinceMidnight());
-            }
-
-            foreach ($FirstOutTimes as $record) {
-                $time1 = Carbon::parse($record->swipe_time);
-                $totalDuration1->addSeconds($time1->secondsSinceMidnight());
-            }
-
-            $this->totalDurationFormatted = $totalDuration->cascade()->format('%H:%I:%S');
-            $this->totalDurationFormatted1 = $totalDuration1->cascade()->format('%H:%I:%S');
-
-            // Convert total duration to seconds for calculation
-            $totalSeconds = $totalDuration->totalSeconds;
-            $totalSeconds1 = $totalDuration1->totalSeconds;
-
-            $FirstInTimesCount = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
-                ->where('in_or_out', 'IN')
-                ->whereBetween('created_at', [$formattedFromDate, $formattedToDate])
-                ->count();
-
-            if ($FirstInTimesCount > 0) {
-                $this->avgDurationFormatted = $totalSeconds / $FirstInTimesCount;
-            } else {
-                $this->avgDurationFormatted = 0; // Handle division by zero
-            }
-        } catch (\Exception $e) {
-            Log::error('Error in updateModalTitle method: ' . $e->getMessage());
-            FlashMessageHelper::flashError('An error occurred while updating the modal title. Please try again later.');
+        if ($formattedFromDate > $formattedToDate) {
+            // Log::warning('Start date is greater than end date.', [
+            //     'formattedFromDate' => $formattedFromDate,
+            //     'formattedToDate' => $formattedToDate
+            // ]);
+            $this->addError('date_range', 'The start date cannot be greater than the end date.');
+            return;
         }
+
+        if ($formattedFromDate >= Carbon::today()->format('Y-m-d') && $formattedToDate >= Carbon::today()->format('Y-m-d')) {
+            // Log::info('Date range falls in future, setting default values.');
+            // $this->setDefaultModalValues();
+            // return;
+        }
+
+        Log::info('Calculating insights for past dates.');
+        $fromDatetemp = Carbon::parse($formattedFromDate);
+        $toDatetemp = $formattedToDate > Carbon::today()->format('Y-m-d') ? Carbon::yesterday() : Carbon::parse($formattedToDate);
+
+        // Log::debug('Parsed date range for calculations.', [
+        //     'fromDatetemp' => $fromDatetemp,
+        //     'toDatetemp' => $toDatetemp
+        // ]);
+
+        $insights = $this->calculatetotalLateInSwipes($fromDatetemp, $toDatetemp);
+        $outsights = $this->calculatetotalEarlyOutSwipes($fromDatetemp, $toDatetemp);
+
+        // Log::debug('Insights calculations:', [
+        //     'totalLateInSwipes' => $insights['lateSwipeCount'] ?? 'N/A',
+        //     'totalEarlyOut' => $outsights['EarlyOutCount'] ?? 'N/A'
+        // ]);
+
+        $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
+        $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
+        $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents($fromDatetemp, $toDatetemp);
+        $this->totalLateInSwipes = $insights['lateSwipeCount'];
+        $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
+        $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp, $toDatetemp);
+        $this->averageLastOutTime = $outsights['averageLastOutTime'];
+        $this->averageFirstInTime = $insights['averageFirstInTime'];
+
+        // Log::info('Successfully updated modal title and insights.');
+    } catch (\Exception $e) {
+        Log::error('Error in updateModalTitle method: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString()
+        ]);
+        FlashMessageHelper::flashError('An error occurred while updating the modal title. Please try again later.');
     }
+}
 
-    private function calculatetotalLateInSwipes($startDate, $endDate)
-    {
+private function calculatetotalLateInSwipes($startDate, $endDate)
+{
+    // Parse start and end dates using Carbon
+    $startDate = Carbon::parse($startDate);
+    $endDate = Carbon::parse($endDate);
+    $lateSwipeCount = 0;
+    $firstInCount = 0;
+    $totalFirstInSeconds = 0;
 
-        // Parse start and end dates using Carbon
-        $startDate = Carbon::parse($startDate);
-        $endDate = Carbon::parse($endDate);
-        $lateSwipeCount = 0;
-        $firstInCount = 0;
-        $totalFirstInSeconds = 0;
+    // Log::info("Calculating late swipes from {$startDate} to {$endDate}");
 
+    // Iterate through the date range
+    while ($startDate->lte($endDate)) {
+        $tempStartDate = $startDate->toDateString();
 
-        
-        // Iterate through the date range
-        while ($startDate->lte($endDate)) {
-            $tempStartDate = $startDate->toDateString();
+        // Log::info("Checking date: {$tempStartDate}");
 
-            // Check if the date is a holiday, weekend, or employee is on leave
-            $isweekend = $startDate->isWeekend();
+        // Check if the date is a holiday, weekend, or employee is on leave
+        $isweekend = $startDate->isWeekend();
+        $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
+        $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
+        $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)
+            ->where('in_or_out', 'IN')
+            ->whereDate('created_at', $tempStartDate)
+            ->first();
 
-            $isHoliday = HolidayCalendar::whereDate('date', $tempStartDate)->exists();
+        // Log::info("Weekend: " . ($isweekend ? 'Yes' : 'No') . ", Holiday: " . ($isHoliday ? 'Yes' : 'No') . ", On Leave: " . ($isOnLeave ? 'Yes' : 'No') . ", Present: " . ($isPresent ? 'Yes' : 'No'));
 
-            $isOnLeave = $this->isEmployeeLeaveOnDate($tempStartDate, auth()->guard('emp')->user()->emp_id);
-            $isPresent = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->where('in_or_out', 'IN')->whereDate('created_at', $tempStartDate)->first();
+        // If not a holiday, weekend, or leave day, and the employee is present
+        if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
+            // Check for late swipes
+            $firstInCount++;
 
-
-            // Log the status of the current day
-            
-            // If not a holiday, weekend, or leave day, and the employee is present
-            if (!$isHoliday && !$isweekend && !$isOnLeave && !empty($isPresent)) {
-                // Check for late swipes
-                $firstInCount++;
-                try {
-                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
-                    $limitTime = Carbon::createFromTime(10, 0, 0);
-                } catch (\Exception $e) {
-                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
-                    $limitTime = Carbon::createFromTime(10, 0);
-                }
-                $totalFirstInSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
-                if ($swipeTime->greaterThan($limitTime)) {
-                    $lateSwipeExists = true;
-                } else {
-                    // Swipe time is 10:00 AM or later
-                    $lateSwipeExists = false;
-                }
-                // Log the late swipe check
+            try {
+                $timePart = Carbon::parse($isPresent->swipe_time)->format('H:i:s');
+                $swipeTime = Carbon::createFromFormat('H:i:s', $timePart);
+                $limitTime = Carbon::createFromTime(10, 0, 0);
                 
-                // Increment late swipe count if a late swipe is found
-                if ($lateSwipeExists == true) {
-                    $lateSwipeCount++;
-                   }
-                }
+            } catch (\Exception $e) {
+                $timePart = Carbon::parse($isPresent->swipe_time)->format('H:i');
+                $swipeTime = Carbon::createFromFormat('H:i', $timePart);
+                $limitTime = Carbon::createFromTime(10, 0);
+                
+            }
 
-            // Move to the next day
-            $startDate->addDay();
+            // Log::info("Swipe Time: " . $swipeTime->format('H:i:s'));
+
+            $totalFirstInSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
+
+            $lateSwipeExists = $swipeTime->greaterThan($limitTime);
+            // Log::info("Late Swipe: " . ($lateSwipeExists ? 'Yes' : 'No'));
+
+            if ($lateSwipeExists) {
+                $lateSwipeCount++;
+            }
         }
 
-        // Log the final late swipe count
-        
-        if ($firstInCount > 0) {
-            $averageFirstInSeconds = $totalFirstInSeconds / $firstInCount;
-            $averageFirstInTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageFirstInSeconds);
-        } else {
-            $averageFirstInTime = null;  // No valid first in records
-        }
-
-        // Log results
-       
-        return [
-            'averageFirstInTime' => $averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A',
-            'lateSwipeCount' => $lateSwipeCount,
-
-        ];
+        // Move to the next day
+        $startDate->addDay();
     }
+
+    if ($firstInCount > 0) {
+        $averageFirstInSeconds = $totalFirstInSeconds / $firstInCount;
+        $averageFirstInTime = Carbon::createFromTime(0, 0, 0)->addSeconds($averageFirstInSeconds);
+    } else {
+        $averageFirstInTime = null;
+    }
+
+    // Log::info("Total Late Swipes: {$lateSwipeCount}");
+    // Log::info("Average First In Time: " . ($averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A'));
+
+    return [
+        'averageFirstInTime' => $averageFirstInTime ? $averageFirstInTime->format('H:i:s') : 'N/A',
+        'lateSwipeCount' => $lateSwipeCount,
+    ];
+}
     private function calculatetotalEarlyOutSwipes($startDate, $endDate)
     {
     
@@ -2109,10 +2078,12 @@ class Attendance extends Component
                 // Check for late swipes
                 $lastOutCount++;
                 try {
-                    $swipeTime = Carbon::createFromFormat('H:i:s', $isPresent->swipe_time);
+                    $timePart = Carbon::parse($isPresent->swipe_time)->format('H:i:s');
+                    $swipeTime = Carbon::createFromFormat('H:i:s', $timePart);
                     $limitTime = Carbon::createFromTime(19, 0, 0);
                 } catch (\Exception $e) {
-                    $swipeTime = Carbon::createFromFormat('H:i', $isPresent->swipe_time);
+                    $timePart = Carbon::parse($isPresent->swipe_time)->format('H:i');
+                    $swipeTime = Carbon::createFromFormat('H:i', $timePart);
                     $limitTime = Carbon::createFromTime(19, 0);
                 }
                 $totalLastOutSeconds += $swipeTime->diffInSeconds(Carbon::createFromTime(0, 0, 0));
@@ -2710,7 +2681,9 @@ class Attendance extends Component
             $this->leaveApplies = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
 
             if ($this->changeDate == 1) {
+                
                 $this->currentDate2 = $this->dateclicked;
+               
                 if ($this->currentDate2 == date('Y-m-d')) {
                     $this->currentDate2recordin = '-';
                     $this->currentDate2recordout = '-';
@@ -2724,12 +2697,15 @@ class Attendance extends Component
 
                     $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->first();
                     $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->orderBy('updated_at', 'desc')->first();
+
                 }
 
 
                 if (isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
+                    
                     $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
                     $this->last_out_time = substr($this->currentDate2recordout->swipe_time, 0, 5);
+                    
                     $firstInTime = Carbon::createFromFormat('H:i', $this->first_in_time);
                     $lastOutTime = Carbon::createFromFormat('H:i', $this->last_out_time);
 
@@ -2748,8 +2724,10 @@ class Attendance extends Component
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
                 } elseif (!isset($this->currentDate2recordout) && isset($this->currentDate2recordin)) {
-                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
-                    $this->last_out_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
+                   
+                    $this->first_in_time = Carbon::parse($this->currentDate2recordin->swipe_time)->format('H:i');
+                    $this->last_out_time = Carbon::parse($this->currentDate2recordin->swipe_time)->format('H:i');
+                   
                 } elseif (!in_array($this->currentDate2, ['Saturday', 'Sunday'])) {
                     $this->first_in_time = null;
                     $this->last_out_time = null;

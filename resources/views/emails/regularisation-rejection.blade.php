@@ -5,7 +5,7 @@
 </head>
 <body>
 
-    <h1>Regularization Rejection Mail</h1>
+    <h6>Regularization Rejection Mail</h6>
     <p>Your regularization request has been rejected for the following dates.</p>
     
     <div style="margin-bottom: 20px;">

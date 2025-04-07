@@ -1211,41 +1211,41 @@
                         <p style="text-align:center;font-weight:600;font-size:18px;">Tell us your Work
                             Location.</p>
 
-                        <div style="display:flex;align-items:left;">
-                            <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
-                                <div class="form-group">
-                                    <label for="location">Enter
-                                        <span>
-                                            @if ($swipes)
-                                                @if ($swipes->in_or_out === 'OUT')
-                                                    Sign In
-                                                @else
-                                                    Sign Out
-                                                @endif
-                                            @else
-                                                Sign In
-                                            @endif
-                                        </span>
-                                        Location
-                                        <span style="color:#f66;">*</span>
-                                    </label>
-                                    <select id="location" name="location" wire:model="swipe_location"
-                                        wire:change="updateSwipeLocation" required>
-                                        @if (!$swipes)
-                                            <option value="">Select Your Location</option>
-                                        @endif
-                                        <option value="client_location">Client Location</option>
-                                        <option value="on_duty">On-Duty</option>
-                                        <option value="work_from_office">Work from Office</option>
-                                        <option value="work_from_home">Work from Home</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="remarks">Remarks</label>
-                                    <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks" wire:change="updateSwipeRemarks"
-                                        placeholder="Enter Reason"></textarea>
-                                </div>
-                                <button id="signButton" class="signInButton" type="submit">
+                <div style="display:flex;align-items:left;">
+                    <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
+                        <div class="form-group">
+                            <label for="location">Enter
+                                <span>
+                                    @if ($swipes)
+                                    @if ($swipes->in_or_out === 'OUT')
+                                    Sign In
+                                    @else
+                                    Sign Out
+                                    @endif
+                                    @else
+                                    Sign In
+                                    @endif
+                                </span>
+                                Location
+                                <span style="color:#f66;">*</span>
+                            </label>
+                            <select id="location" name="location"
+                                wire:model="swipe_location" wire:change="updateSwipeLocation" required>
+                                @if (!$swipes)
+                                <option value="">Select Your Location</option>
+                                @endif
+                                <option value="client_location">Client Location</option>
+                                <option value="on_duty">On-Duty</option>
+                                <option value="work_from_office">Work from Office</option>
+                                <option value="work_from_home">Work from Home</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="remarks">Remarks</label>
+                            <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks"
+                                wire:change="updateSwipeRemarks" placeholder="Enter Reason"></textarea>
+                        </div>
+                        <button id="signButton" class="signInButton" type="submit"  @if (empty($swipe_location)) disabled @endif>
 
                                     @if ($swipes)
                                         @if ($swipes->in_or_out === 'OUT')
