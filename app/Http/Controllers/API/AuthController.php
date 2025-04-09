@@ -211,4 +211,78 @@ class AuthController extends Controller
             'Password updated successfully.'
         );
     }
+
+    public function setMpin(Request $request)
+    {
+        try {
+            Log::info('Set MPIN request received.', $request->all());
+
+            // Validate MPIN
+            $validator = Validator::make($request->all(), [
+                'mpin' => 'required|string|min:4|max:6',
+            ]);
+
+            if ($validator->fails()) {
+                return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
+            }
+
+            // Get the currently authenticated user
+            $user = auth('api')->user();
+
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, self::USER_NOT_FOUND, self::UNAUTHORIZED);
+            }
+
+            // Set MPIN (hashed)
+            $user->mpin = Hash::make($request->mpin);
+            $user->save();
+
+            return ApiResponse::success(self::SUCCESS_STATUS, 'MPIN set successfully.');
+        } catch (\Exception $e) {
+            Log::error('Set MPIN error: ' . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
+        }
+    }
+
+    public function verifyMpin(Request $request)
+    {
+        try {
+            Log::info('MPIN verification request received.', $request->all());
+
+            $validator = Validator::make($request->all(), [
+                'mpin' => 'required|string|min:4|max:6',
+            ]);
+
+            if ($validator->fails()) {
+                return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
+            }
+
+            // Get user from token
+            $user = auth('api')->user();
+
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, self::USER_NOT_FOUND, self::UNAUTHORIZED);
+            }
+
+            if ($user->status != 1) {
+                return ApiResponse::error(self::ERROR_STATUS, self::INACTIVE_USER, self::FORBIDDEN);
+            }
+
+            if (!Hash::check($request->mpin, $user->mpin)) {
+                return ApiResponse::error(self::ERROR_STATUS, 'Invalid MPIN', self::UNAUTHORIZED);
+            }
+
+            // If you want, regenerate token (optional)
+            $token = auth('api')->login($user);
+            $userData = [
+                'email' => $user->email,
+                'emp_id' => $user->emp_id,
+            ];
+
+            return $this->respondWithToken($token, $userData);
+        } catch (\Exception $e) {
+            Log::error('MPIN verification error: ' . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
+        }
+    }
 }

@@ -33,4 +33,6 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('getApprovedLeaveDays', [LeaveApplicationsController::class, 'getApprovedLeaveDays'])->name('getApprovedLeaveDays');
     Route::post('getTotalLeaveApplications', [LeaveApplicationsController::class, 'getTotalLeaveApplications'])->name('total-leaves');
     Route::post('getGrantedLeaveBalance', [LeaveApplicationsController::class, 'getGrantedLeaveBalance'])->name('emp-leave-balance');
+    Route::post('/set-mpin', [AuthController::class, 'setMpin'])->name('set-mpin');
+    Route::post('/verify-mpin', [AuthController::class, 'verifyMpin'])->name('verify-mpin');
 });
