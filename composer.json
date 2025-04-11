@@ -10,12 +10,14 @@
         "barryvdh/laravel-dompdf": "^3.1",
         "dasundev/livewire-quill-text-editor": "^1.0",
         "laravel/framework": "^12.0",
+        "laravel/reverb": "^1.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "livewire/livewire": "^3.6",
         "maatwebsite/excel": "^3.1",
         "php-flasher/flasher-laravel": "^2.1",
         "php-open-source-saver/jwt-auth": "^2.8",
+        "predis/predis": "^2.3",
         "vinkla/hashids": "^13.0"
     },
     "require-dev": {
