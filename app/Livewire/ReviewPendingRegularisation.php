@@ -88,7 +88,7 @@ class ReviewPendingRegularisation extends Component
 
     public function rejectAll($id)
     {
-        
+       
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
         if(empty($this->remarks))

@@ -115,6 +115,7 @@ use App\Livewire\OrganisationChart;
 use App\Livewire\PasswordResetComponent;
 use App\Livewire\PaternityLeaveBalance;
 use App\Livewire\ReportManagement;
+
 use App\Livewire\ReviewPendingRegularisation;
 use App\Livewire\ShiftRoaster;
 use App\Livewire\SickLeaveBalances;

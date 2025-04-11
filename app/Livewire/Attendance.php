@@ -1351,7 +1351,7 @@ class Attendance extends Component
                                         $isHalfDayPresent = true;
 
 
-                                        if ($startTimeForSession1 !== null && $inTime->gte($startTimeForSession1)) {
+                                        if ($startTimeForSession1 !== null && Carbon::parse($inTime)->gte(Carbon::parse($startTimeForSession1))) {
                                             $isHalfDayPresentForSession1 = true;
                                         } else {
                                             $isHalfDayPresentForSession2 = true;
