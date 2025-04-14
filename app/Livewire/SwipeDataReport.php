@@ -19,6 +19,7 @@ class SwipeDataReport extends Component
 {
     public $filteredEmployees;
 
+    public $selectAll=[];
     public $selectDate;
     public $todaySwipeRecords;
     public $startDate;
@@ -41,12 +42,19 @@ class SwipeDataReport extends Component
     }
     public function viewDoorSwipeButton()
     {
+        $this->selectAll=[];
         $this->isApply = 1;
         $this->isPending = 0;
         $this->defaultApply = 1;
         $this->employees=$this->processSwipeLogs();
         $this->swipeData=[];
        
+    }
+
+    public function updateSelectAll()
+    {
+       $this->swipeData = EmployeeDetails::pluck('emp_id')->toArray();
+    //    dd($this->swipeData);
     }
     public function searchEmployee()
     {
@@ -63,6 +71,7 @@ class SwipeDataReport extends Component
     public function resetFields()
     {
         $this->swipeData=[];
+        $this->selectAll=[];
         $this->selectDate=Carbon::now()->format('Ý-m-d');
     }
     
@@ -274,7 +283,7 @@ class SwipeDataReport extends Component
 }
     public function viewWebsignInButton()
     {
-
+        $this->selectAll=[];
         $this->isApply = 0;
         $this->isPending = 1;
         $this->defaultApply = 0;

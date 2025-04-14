@@ -170,23 +170,22 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-       
-           
+
+
             // Check if employee details exist before attempting to access
             $this->loginEmployee = EmployeeDetails::where('emp_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
                 ->first();
 
             $this->swipes = DB::table('swipe_records')
-            ->whereDate('created_at', $today)
-            ->where('emp_id', $employeeId)
-            ->orderBy('id', 'desc')
-            ->first();
-            if(!empty($this->swipes))
-            {
+                ->whereDate('created_at', $today)
+                ->where('emp_id', $employeeId)
+                ->orderBy('id', 'desc')
+                ->first();
+            if (!empty($this->swipes)) {
 
-                 $swipe_record=SwipeRecord::where('emp_id',$employeeId)->whereDate('created_at',Carbon::now()->format('Y-m-d'))->orderByDesc('updated_at')->first();
-                 $this->swipe_location=$swipe_record->swipe_location;
+                $swipe_record = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->orderByDesc('updated_at')->first();
+                $this->swipe_location = $swipe_record->swipe_location;
             }
             if ($this->loginEmployee) {
                 // Get manager details
@@ -295,7 +294,6 @@ class Home extends Component
     public function updateSwipeLocation()
     {
         $this->swipe_location = $this->swipe_location;
-     
     }
     public function updateSwipeRemarks()
     {
@@ -529,7 +527,7 @@ class Home extends Component
     {
         try {
             $currentTime = Carbon::now();
-            
+
 
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
@@ -1432,6 +1430,7 @@ class Home extends Component
                     'postcode' => $properties['postcode'] ?? '',
                     'country_code' => $properties['countrycode'] ?? '',
                     'osm_value' => $properties['osm_value'],
+                    'state' => $properties['state'] ?? '',
                 ];
 
                 // Store in cache for 1 hour
