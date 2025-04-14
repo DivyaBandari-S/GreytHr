@@ -20,7 +20,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('me', [AuthController::class, 'empDetails']);
-    Route::get('empdetails', [AuthController::class, 'getEmployeeDetails']); // Fetch Employee Details via Token
+    Route::post('empdetails', [AuthController::class, 'getEmployeeDetails']); // Fetch Employee Details via Token
     Route::post('allempdetails', [AuthController::class, 'getAllEmployeeDetails']);
     Route::post('swipe', [SwipeController::class, 'swipe']); // Handle Swipe (Single API for both IN & OUT)
     Route::post('holidays', [HolidayListController::class, 'index']);
