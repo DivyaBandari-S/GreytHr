@@ -99,7 +99,15 @@
                 </button>
             </div>
         </div>
-        
+              <label class="custom-checkbox">
+
+                        <input type="checkbox" name="employeeCheckbox[]" class="employee-swipes-checkbox" wire:model="selectAll"wire:change="updateSelectAll">
+
+                        <span class="checkmark"></span>
+                        Select All Employees
+
+
+              </label>
         <div class="table-responsive mt-2" style="height:200px;max-height:200px;overflow-y:auto;">
            @if (session('error'))
    
