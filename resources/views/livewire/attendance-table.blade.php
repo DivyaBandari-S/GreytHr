@@ -1987,7 +1987,7 @@ color: #fff;
                                     <tr style="border:1px solid #ccc;">
 
                                         <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10pxwhite-space:nowrap;"> {{$viewDetailsInswiperecord->in_or_out}} </td>
-                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;"> {{\Carbon\Carbon::parse($viewDetailsInswiperecord->swipe_time)->format('H:i:s')}} </td>
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> - </td>
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> -</td>
@@ -2000,10 +2000,10 @@ color: #fff;
 
                                         @if($viewDetailsOutswiperecord)
                                         <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:5px;white-space:nowrap;"> {{$viewDetailsOutswiperecord->in_or_out}} </td>
-                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{$viewDetailsOutswiperecord->swipe_time}} </td>
+                                        <td style="width:15%;font-size: 10px; color: #778899;text-align:start;padding:10px"> {{ \Carbon\Carbon::parse($viewDetailsOutswiperecord->swipe_time)->format('H:i:s')}} </td>
                                         @else
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px;white-space:nowrap;"> OUT </td>
-                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{$viewDetailsInswiperecord->swipe_time}} </td>
+                                        <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px"> {{\Carbon\Carbon::parse($viewDetailsInswiperecord->swipe_time)->format('H:i:s')}} </td>
                                         @endif
                                         @if($viewDetailsOutswiperecord)
                                         <td style="width:30%;font-size: 10px; color: #778899;text-align:start;padding:10px 10px">-</td>
@@ -2040,7 +2040,7 @@ color: #fff;
                             </div>
                             @else
                             <div style="text-align:center;">
-                                <img src="https://linckia.cdn.greytip.com/static-ess-v6.3.0-prod-1543/attendace_swipe_empty.svg" style="margin-top:30px;">
+                                <img src="{{ asset('images/no-record-available.png') }}" style="margin-top:50px;" height="80" width="80">
                                 <div class="text-muted">No record available</div>
                             </div>
                             @endif

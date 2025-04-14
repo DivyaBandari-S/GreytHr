@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Livewire\LeaveBalances;
+use App\Models\EmployeeLeaveBalances;
 use App\Models\HolidayCalendar;
 use App\Models\LeaveRequest;
 use Carbon\Carbon;
@@ -13,116 +14,104 @@ use Illuminate\Support\Facades\Log;
 
 class LeaveApplicationsController extends Controller
 {
-    //get balance for selected leave type
-    public function getBalanceBySelectingLeaveType(Request $request)
-    {
-        try {
-            $leave_type = $request->input('leave_type');
-            $from_date = $request->input('from_date');
-            $to_date = $request->input('to_date');
-            $selectedYear = Carbon::now()->format('Y');
-            if ($from_date && $to_date) {
-                $fromYear = Carbon::parse($from_date)->format('Y');
-                $toYear = Carbon::parse($to_date)->format('Y');
-                // If both from and to dates belong to the same year, use that year
-                // Otherwise, use the current year or the year from 'from_date' as fallback
-                $selectedYear = ($fromYear === $toYear) ? $fromYear : Carbon::now()->format('Y');
-            } else {
-                // Fallback to the current year if no dates are set
-                $selectedYear = Carbon::now()->format('Y');
-            }
-            $employeeId = auth()->guard('emp')->user()->emp_id;
-            // Retrieve all leave balances
-            $allLeaveBalances = LeaveBalances::getLeaveBalances($employeeId, $selectedYear);
-            $leaveBalances = [];
-            switch ($leave_type) {
-                case 'Casual Leave Probation':
-                    $leaveBalances = [
-                        'casualProbationLeaveBalance' => $allLeaveBalances['casualProbationLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Casual Leave':
-                    $leaveBalances = [
-                        'casualLeaveBalance' => $allLeaveBalances['casualLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Loss of Pay':
-                    $leaveBalances = [
-                        'lossOfPayBalance' => $allLeaveBalances['lossOfPayBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Sick Leave':
-                    $leaveBalances = [
-                        'sickLeaveBalance' => $allLeaveBalances['sickLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Maternity Leave':
-                    $leaveBalances = [
-                        'maternityLeaveBalance' => $allLeaveBalances['maternityLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Paternity Leave':
-                    $leaveBalances = [
-                        'paternityLeaveBalance' => $allLeaveBalances['paternityLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Marriage Leave':
-                    $leaveBalances = [
-                        'marriageLeaveBalance' => $allLeaveBalances['marriageLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                case 'Earned Leave':
-                    $leaveBalances = [
-                        'earnedLeaveBalance' => $allLeaveBalances['earnedLeaveBalance'] ?? '0'
-                    ];
-                    break;
-                default:
-                    break;
-            }
-            return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
-                'leaveBalances' => $leaveBalances,
-                'selectedYear' => $selectedYear,
-            ]);
-        } catch (\Exception $e) {
-            Log::error('Error fetching employee details: ' . $e->getMessage());
-            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
-        }
-    }
-
-    //get total count of approval leave days
-    public function getApprovedLeaveDays(Request $request)
+    //get total leave application history
+    public function getTotalLeaveApplications(Request $request)
     {
         try {
             $employeeId = $request->input('employee_id');
             $selectedYear = $request->input('selected_year');
             $selectedYear = (int) $selectedYear;
-            $approvedLeaveRequests = LeaveRequest::where('emp_id', $employeeId)
+
+            // Start building the query
+            $query = LeaveRequest::where('emp_id', $employeeId)
                 ->where('category_type', 'Leave')
-                ->where(function ($query) {
-                    $query->where('leave_status', 2)
-                        ->whereIn('cancel_status', [6, 5, 3, 4]);
-                })
-                ->whereIn('leave_type', [
-                    'Casual Leave Probation',
-                    'Loss Of Pay',
-                    'Sick Leave',
-                    'Casual Leave',
-                    'Maternity Leave',
-                    'Marriage Leave',
-                    'Paternity Leave',
-                    'Earned Leave'
-                ])
-                ->whereYear('to_date', '=', $selectedYear)
-                ->get();
+                ->where(function ($query) use ($selectedYear) {
+                    $query->whereYear('from_date', '=', $selectedYear)
+                        ->orWhereYear('to_date', '=', $selectedYear)
+                        ->orWhere(function ($query) use ($selectedYear) {
+                            $query->where('from_date', '<=', Carbon::createFromDate($selectedYear, 12, 31))
+                                ->where('to_date', '>=', Carbon::createFromDate($selectedYear, 1, 1));
+                        });
+                });
+
+            // Apply leave_status filter if it's present in the request
+            if ($request->has('leave_status')) {
+                $leaveStatus = $request->input('leave_status');
+                $query->where('leave_status', $leaveStatus);
+            }
+
+            // Apply cancel_status filter if it's present in the request
+            if ($request->has('cancel_status')) {
+                $cancelStatus = $request->input('cancel_status');
+                $query->whereIn('cancel_status', $cancelStatus);
+            }
+            // Apply cancel_status filter if it's present in the request
+            if ($request->has('leave_type')) {
+                $leaveType = $request->input('leave_type');
+                $query->whereIn('leave_type', $leaveType);
+            }
+
+            // Execute the query to get the leave requests
+            $approvedLeaveRequests = $query->get();
 
             return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
                 'approvedLeaveRequests' => $approvedLeaveRequests,
             ]);
         } catch (\Exception $e) {
-            Log::error('Login error: ' . $e->getMessage());
+            Log::error('Error: ' . $e->getMessage());
             return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
         }
     }
+
+
+    //get granted leave balance method
+    public function getGrantedLeaveBalance(Request $request)
+    {
+        try {
+            $employeeId = $request->input('employeeId');
+            $selectedYear = $request->input('selectedYear');
+            $leaveName = $request->input('leave_type');
+
+            // Get leave balances for the specified employee and year
+            $balances = EmployeeLeaveBalances::where('emp_id', $employeeId)
+                ->where('period', 'like', "%$selectedYear%")
+                ->get();
+
+            // Initialize total granted days
+            $totalGrantDays = 0;
+
+            // Loop through each balance record
+            foreach ($balances as $balance) {
+                // Decode the leave_policy_id column (assuming it's a JSON string)
+                $leavePolicies = is_string($balance->leave_policy_id) ? json_decode($balance->leave_policy_id, true) : $balance->leave_policy_id;
+
+                // Ensure leavePolicies is an array
+                if (is_array($leavePolicies)) {
+                    foreach ($leavePolicies as $policy) {
+                        // Check if the leave_name matches the specified leave_name
+                        if (isset($policy['leave_name']) && $policy['leave_name'] == $leaveName) {
+                            // Add the grant_days for the specified leave_name
+                            $totalGrantDays += $policy['grant_days'];
+                        }
+                    }
+                }
+            }
+
+            // Round total granted days to 2 decimal places
+            $totalGrantDays = round($totalGrantDays, 2);
+
+            // Return the total granted days as part of the response
+            return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
+                'totalGrantDays' => $totalGrantDays,
+            ]);
+        } catch (\Exception $e) {
+            // Log the error message
+            Log::error('Error occurred while calculating granted leave balance: ' . $e->getMessage());
+            // Return an error response
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, 'An error occurred while calculating the granted leave balance.');
+        }
+    }
+
 
     //get calculate days for leave
     public function calculateLeaveDays(Request $request)
@@ -130,11 +119,11 @@ class LeaveApplicationsController extends Controller
         try {
             // Validate incoming request
             $request->validate([
-                'fromDate' => 'required|date',
-                'fromSession' => 'required|string',
-                'toDate' => 'required|date',
-                'toSession' => 'required|string',
-                'leaveType' => 'required|string',
+                'from_date' => 'required|date',
+                'from_session' => 'required|string',
+                'to_date' => 'required|date',
+                'to_session' => 'required|string',
+                'leave_type' => 'required|string',
             ]);
 
             // Get the parameters

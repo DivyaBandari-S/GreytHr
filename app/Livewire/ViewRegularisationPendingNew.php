@@ -166,107 +166,97 @@ class ViewRegularisationPendingNew extends Component
     }
     public function approve($id)
     {
+       
         $currentDateTime = Carbon::now();
         $item = RegularisationDates::find($id);
-        $managerId=EmployeeDetails::where('emp_id',$item->emp_id)->value('manager_id');
-        $employeeId=$item->emp_id;
-        $employee=EmployeeDetails::find($employeeId);
-        
-        $item->status=2;
-        if(empty($this->remarks))
-        {
-            if($this->auto_approve==true)
-            {
-                $item->approver_remarks='auto_approved';
-            }
+        $managerId = EmployeeDetails::where('emp_id', $item->emp_id)->value('manager_id');
+        $employeeId = $item->emp_id;
+        $employee = EmployeeDetails::find($employeeId);
 
+       
+        // Check if item exists
+        if (!$item) {
+           
+            return;
         }
-        else
-        {
-            
-                $item->approver_remarks=$this->remarks;
-            
-            
+
+        $item->status = 2;
+
+        // Logging remarks
+        if (empty($this->remarks)) {
+            if ($this->auto_approve == true) {
+                $item->approver_remarks = 'auto_approved';
+                          }
+        } else {
+            $item->approver_remarks = $this->remarks;
+          
         }
+
         $item->approved_date = $currentDateTime;
-        
-        
         $item->save();
-      
+       
         $regularisationEntries = json_decode($item['regularisation_entries'], true);
-        $count_of_regularisations=count($regularisationEntries);
+        $count_of_regularisations = count($regularisationEntries);
+
+      
         $this->closeApproveModal();
-        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');  
+        FlashMessageHelper::flashSuccess('Regularisation Request approved successfully');
+
         if (!empty($regularisationEntries) && is_array($regularisationEntries)) {
-            
-            for($i=0;$i<$count_of_regularisations;$i++) {
-               
-                $swiperecord=new SwipeRecord();
-                $swiperecord->emp_id=$employeeId;
+            for ($i = 0; $i < $count_of_regularisations; $i++) {
+                $swiperecord = new SwipeRecord();
+                $swiperecord->emp_id = $employeeId;
                 $date = $regularisationEntries[$i]['date'];
-                $from=$regularisationEntries[$i]['from'];
-                $to=$regularisationEntries[$i]['to'];
-                $reason=$regularisationEntries[$i]['reason'];
-               
-               
-                
+                $from = $regularisationEntries[$i]['from'];
+                $to = $regularisationEntries[$i]['to'];
+                $reason = $regularisationEntries[$i]['reason'];
+
+                // Log swipe details
+              
                 if (empty($from)) {
-                    
-                    
-                    $swiperecord->in_or_out='IN';
-                    $swiperecord->swipe_time= '10:00';
-                    $swiperecord->created_at=$date;
-                    $swiperecord->is_regularized=true;
-                    
-                } else {
-                    $swiperecord->in_or_out='IN';
-                    $swiperecord->swipe_time= $from;
-                    $swiperecord->created_at=$date;
-                    $swiperecord->is_regularized=true;
+                    $swiperecord->in_or_out = 'IN';
+                    $swiperecord->swipe_time = '10:00';
+                                   } else {
+                    $swiperecord->in_or_out = 'IN';
+                    $swiperecord->swipe_time = $from;
+                  
                 }
+                $swiperecord->created_at = $date;
+                $swiperecord->is_regularized = true;
                 $swiperecord->save();
-                $swiperecord1=new SwipeRecord();
-                $swiperecord1->emp_id=$employeeId;
-                
-                if (empty($to) ){
-                    
-                    
-                    $swiperecord1->in_or_out='OUT';
-                    $swiperecord1->swipe_time= '19:00';
-                    $swiperecord1->created_at=$date;
-                    $swiperecord1->is_regularized=true;
-                    
-                } else {
-                    $swiperecord1->in_or_out='OUT';
-                    $swiperecord1->swipe_time= $to;
-                    $swiperecord1->created_at=$date;
-                    $swiperecord1->is_regularized=true;
+              
+                $swiperecord1 = new SwipeRecord();
+                $swiperecord1->emp_id = $employeeId;
+
+                if (empty($to)) {
+                    $swiperecord1->in_or_out = 'OUT';
+                    $swiperecord1->swipe_time = '19:00';
+                                   } else {
+                    $swiperecord1->in_or_out = 'OUT';
+                    $swiperecord1->swipe_time = $to;
+                  
                 }
+                $swiperecord1->created_at = $date;
+                $swiperecord1->is_regularized = true;
                 $swiperecord1->save();
-                // Exit the loop after the first entry since the example has one entry
-                SwipeRecord::whereDate('created_at', $date)->where('is_regularized',NULL)->delete();
+               
+                // Deleting un-regularized swipe records
+                SwipeRecord::whereDate('created_at', $date)->where('is_regularized', NULL)->delete();
+               
             }
         }
-        
+
         $this->countofregularisations--;
-        $this->remarks='';
-      
-        Notification::create([
-            'emp_id' => $managerId,
-          
-            'regularisation_entries' => $item->regularisation_entries,
-            'notification_type'=>'regularisationApprove',
-            'assignee'=>$item->emp_id,
-            'regularisation_status' => 2,
-           
-        ]);
-        Log::info('Regularisation Notification approved successfully.');
-        $this->showAlert=true;
-    
-        
-        // Send the SMS notification to the employee's mobile number
+        $this->remarks = '';
+
+        // Create notification
        
+        
+        $this->showAlert = true;
+
+        // Send the approval email
         $this->sendApprovalMail($id);
+        
     }
     public function sendApprovalMail($id)
     {
@@ -326,8 +316,7 @@ class ViewRegularisationPendingNew extends Component
             'regularisation_status' => 3,
            
         ]);
-        Log::info('Regularisation Notification rejected successfully.');
-
+      
         $this->countofregularisations--;
         $this->remarks='';
         $this->closeRejectModal();

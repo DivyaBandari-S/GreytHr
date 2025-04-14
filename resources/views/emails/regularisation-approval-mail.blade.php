@@ -5,7 +5,7 @@
 </head>
 <body>
 
-    <h1>Regularization Approval Mail</h1>
+    <h6>Regularization Approval Mail</h6>
     <p>Your regularization request has been accepted for the following dates.</p>
     
     <div style="margin-bottom: 20px;">

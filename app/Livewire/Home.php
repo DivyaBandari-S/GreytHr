@@ -35,6 +35,7 @@ use Livewire\Attributes\On;
 use App\Models\EmpBankDetail;
 use App\Models\EmpPersonalInfo;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Cache;
 
 class Home extends Component
 {
@@ -145,28 +146,16 @@ class Home extends Component
 
 
     public $sal;
+
     public function mount()
     {
         try {
-            // Fetch weather data
             $this->getLocationByIP();
-
+            // $this->swipe_location=$this->swipe_location;
             // Get current hour to determine greeting
             $currentHour = date('G');
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $today = Carbon::now()->format('Y-m-d');
-
-
-            $this->swipes = DB::table('swipe_records')
-                ->whereDate('created_at', $today)
-                ->where('emp_id', $employeeId)
-                ->orderBy('id', 'desc')
-                ->first();
-
-
-            if (!empty($this->swipes)) {
-                $this->swipe_location = $this->swipes->swipe_location;
-            }
             if ($currentHour >= 4 && $currentHour < 12) {
                 $this->greetingImage = 'morning.jpeg';
                 $this->greetingText = 'Good Morning';
@@ -181,29 +170,6 @@ class Home extends Component
                 $this->greetingText = 'Good Night';
             }
 
-            // Get employee details
-
-
-            $this->shiftType = EmployeeDetails::where('emp_id', $employeeId)->value('shift_type');
-            $this->employeeShiftDetails = EmployeeDetails::where('emp_id', $employeeId) // Match employee ID
-                ->join('company_shifts', function ($join) {
-                    $join->whereRaw('JSON_CONTAINS(employee_details.company_id, JSON_QUOTE(company_shifts.company_id))') // Match JSON company_id
-                        ->whereColumn('employee_details.shift_type', '=', 'company_shifts.shift_name'); // Match shift_type with shift_name
-                })
-                ->select(
-                    'employee_details.shift_type',          // Select the shift_type from employee_details
-                    'company_shifts.shift_start_time',      // Select shift_start_time from company_shifts
-                    'company_shifts.shift_end_time'         // Select shift_end_time from company_shifts
-                )
-                ->first();
-            if ($this->employeeShiftDetails) {
-                $this->shiftStartTime = Carbon::parse($this->employeeShiftDetails->shift_start_time)->format('H:i');
-                $this->shiftEndTime = Carbon::parse($this->employeeShiftDetails->shift_end_time)->format('H:i');
-            } else {
-                $this->shiftStartTime = null;
-                $this->shiftEndTime = null;
-            }
-
 
 
             // Check if employee details exist before attempting to access
@@ -211,6 +177,16 @@ class Home extends Component
                 ->select('emp_id', 'first_name', 'last_name', 'manager_id')
                 ->first();
 
+            $this->swipes = DB::table('swipe_records')
+                ->whereDate('created_at', $today)
+                ->where('emp_id', $employeeId)
+                ->orderBy('id', 'desc')
+                ->first();
+            if (!empty($this->swipes)) {
+
+                $swipe_record = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', Carbon::now()->format('Y-m-d'))->orderByDesc('updated_at')->first();
+                $this->swipe_location = $swipe_record->swipe_location;
+            }
             if ($this->loginEmployee) {
                 // Get manager details
                 $this->loginEmpManagerDetails = EmployeeDetails::with('empSubDepartment')
@@ -265,12 +241,34 @@ class Home extends Component
 
     public function OpentoggleSignStatePopup()
     {
+        $employeeId = auth()->guard('emp')->user()->emp_id;
 
-        // Do something with $swipeId and $inOrOut
+        $todayDate = Carbon::now()->format('Y-m-d');
+
+        // Check if the employee is on leave today
+        if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
+
+            FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
+            return;
+        }
+
+        // Check if today is a holiday
+        if (HolidayCalendar::where('date', $todayDate)->exists()) {
+
+            FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
+            return;
+        }
+
+        // Proceed with opening the toggle sign state popup
+
         $this->showtoggleSignState = true;
 
-        $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
-        $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
+        // Fetching swipe data
+        $testSwipeData = $this->testlatestSwipe();
+
+        $this->testforswipe = $testSwipeData['swipesforbutton'];
+
+        $this->signstatusfortest = $testSwipeData['signStatus'];
     }
     public function testlatestSwipe()
     {
@@ -529,27 +527,19 @@ class Home extends Component
     {
         try {
             $currentTime = Carbon::now();
- 
+
+
             $todayDate = $currentTime->format('Y-m-d');
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-            if ($this->isEmployeeLeaveOnDate($todayDate, $employeeId)) {
 
-                FlashMessageHelper::flashError('You cannot swipe on this date as you are on leave.');
-                return;
-            } elseif (HolidayCalendar::where('date', $todayDate)->exists()) {
- 
-                FlashMessageHelper::flashError('You cannot swipe on this date as it is a holiday.');
-                return;
-            }
- 
             $this->employeeDetails = EmployeeDetails::where('emp_id', $employeeId)->first();
- 
+
             $this->signIn = !$this->signIn;
- 
+
             $userAgent = request()->header('User-Agent');
- 
+
             // Detect Device Type
             if (stripos($userAgent, 'mobile') !== false) {
                 $deviceName = 'Mobile';
@@ -560,7 +550,7 @@ class Home extends Component
             } else {
                 $deviceName = 'Unknown Device';
             }
- 
+
             // Detect Platform (OS)
             if (stripos($userAgent, 'windows') !== false) {
                 $platform = 'Windows';
@@ -575,11 +565,11 @@ class Home extends Component
             } else {
                 $platform = 'Unknown OS';
             }
- 
+
             $ipAddress = request()->ip();
             SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
-                'swipe_time' => now()->format('H:i:s'),
+                'swipe_time' => Carbon::now()->format('Y-m-d H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
                 'sign_in_device' => $deviceName,
                 'device_name' => $platform,
@@ -587,22 +577,22 @@ class Home extends Component
                 'swipe_location' => $this->swipe_location,
                 'swipe_remarks' => $this->swipe_remarks,
             ]);
- 
- 
- 
+
+
+
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
                 ? "You have successfully signed in."
                 : "You have successfully signed out.");
- 
+
             $this->testforswipe = $this->testlatestSwipe()['swipesforbutton'];
             $this->signstatusfortest = $this->testlatestSwipe()['signStatus'];
- 
- 
+
+
             return redirect('/');
         } catch (Throwable $e) {
- 
- 
+
+
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }
@@ -653,11 +643,13 @@ class Home extends Component
     {
         try {
             $loggedInEmpId = Session::get('emp_id');
+
             $isManager = EmployeeDetails::where('manager_id', $loggedInEmpId)->exists();
             $employeeId = auth()->guard('emp')->user()->emp_id;
 
 
-
+            $this->calculateTaskData();
+            $this->getChatUserImages();
 
             $this->currentDay = now()->format('l');
             $this->currentDate = now()->format('d M Y');
@@ -792,6 +784,7 @@ class Home extends Component
             $this->teamCount = count($teamOnLeaveApplications);
 
             $currentDate = Carbon::today();
+
             $this->upcomingLeaveRequests = LeaveRequest::with('employee')
                 ->join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id') // Join with employee_details table
                 ->where('leave_applications.leave_status', 2)
@@ -808,7 +801,7 @@ class Home extends Component
             $this->upcomingLeaveApplications = count($this->upcomingLeaveRequests);
 
             //attendance related query
-            $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            $this->absent_employees = EmployeeDetails::where('manager_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name')
                 ->whereNotIn('emp_id', function ($query) {
                     $query->select('emp_id')
@@ -826,7 +819,7 @@ class Home extends Component
 
 
 
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+            $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->get();
             $approvedLeaveRequests = LeaveRequest::join('employee_details', 'leave_applications.emp_id', '=', 'employee_details.emp_id')
                 ->where('leave_applications.leave_status', 2)
                 ->whereIn('leave_applications.emp_id', $employees->pluck('emp_id'))
@@ -843,12 +836,12 @@ class Home extends Component
                     return $leaveRequest;
                 });
 
-            $this->absent_employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
+            $this->absent_employees = EmployeeDetails::where('manager_id', $employeeId)
                 ->select('emp_id', 'first_name', 'last_name')
-                ->whereNotIn('emp_id', function ($query) use ($loggedInEmpId, $currentDate, $approvedLeaveRequests) {
+                ->whereNotIn('emp_id', function ($query) use ($employeeId, $currentDate, $approvedLeaveRequests) {
                     $query->select('emp_id')
                         ->from('swipe_records')
-                        ->where('manager_id', $loggedInEmpId)
+                        ->where('manager_id', $employeeId)
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('emp_id', $approvedLeaveRequests->pluck('emp_id'))
@@ -857,8 +850,8 @@ class Home extends Component
 
             $arrayofabsentemployees = $this->absent_employees->toArray();
 
-            $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $loggedInEmpId)
-                ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id') // Join personal info table
+            $this->absent_employees_count = EmployeeDetails::where('employee_details.manager_id', $employeeId)
+
                 ->leftJoin('company_shifts', function ($join) {
                     $join->on(DB::raw("JSON_UNQUOTE(JSON_EXTRACT(employee_details.company_id, '$[0]'))"), '=', 'company_shifts.company_id')
                         ->whereColumn('employee_details.shift_type', 'company_shifts.shift_name'); // Join on shift_type and shift_name
@@ -870,10 +863,10 @@ class Home extends Component
                     'company_shifts.shift_start_time',
                     'company_shifts.shift_end_time'
                 )
-                ->whereNotIn('employee_details.emp_id', function ($query) use ($loggedInEmpId, $currentDate) {
+                ->whereNotIn('employee_details.emp_id', function ($query) use ($employeeId, $currentDate) {
                     $query->select('emp_id')
                         ->from('swipe_records')
-                        ->where('manager_id', $loggedInEmpId)
+                        ->where('manager_id', $employeeId)
                         ->whereDate('created_at', $currentDate);
                 })
                 ->whereNotIn('employee_details.emp_id', $approvedLeaveRequests->pluck('emp_id'))
@@ -881,7 +874,9 @@ class Home extends Component
                 ->distinct('employee_details.emp_id')
                 ->count();
 
-            $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->where('employee_status', 'active')->get();
+
+            $employees = EmployeeDetails::where('manager_id', $employeeId)->select('emp_id', 'first_name', 'last_name')->where('employee_status', 'active')->get();
+
             $swipes_early = SwipeRecord::whereIn('swipe_records.id', function ($query) use ($employees, $approvedLeaveRequests, $currentDate) {
                 $query->selectRaw('MIN(swipe_records.id)')
                     ->from('swipe_records')
@@ -942,15 +937,13 @@ class Home extends Component
                 ->distinct('swipe_records.emp_id')
                 ->get();
 
+
             $swipes_late1 = $swipes_late->count();
 
-            $this->swipeDetails = DB::table('swipe_records')
-                ->whereDate('created_at', $today)
+            $this->swipeDetails = SwipeRecord::whereDate('created_at', $today)
                 ->where('emp_id', $employeeId)
                 ->orderBy('created_at', 'desc')
                 ->get();
-
-
 
             // Assuming $calendarData should contain the data for upcoming holidays
             // Get the current year and date
@@ -1037,11 +1030,6 @@ class Home extends Component
                     $this->netPay = $salComponents['net_pay'] ?? 0;
                 }
             }
-
-
-
-            $this->calculateTaskData();
-            $this->getChatUserImages();
 
             // Pass the data to the view and return the view instance
             return view('livewire.home', [
@@ -1412,10 +1400,18 @@ class Home extends Component
 
     public function sendCoordinates($latitude, $longitude)
     {
-        // Log the received coordinates
-        Log::info("Received coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+        // // Generate a unique cache key based on latitude and longitude
+        $cacheKey = "location_{$latitude}_{$longitude}";
+        // Check if data is already cached
+        if (Cache::has($cacheKey)) {
+            $this->formattedAddress = Cache::get($cacheKey);
+            // dd($this->formattedAddress);
+            Log::info("Using cached address for coordinates: {$cacheKey}");
+            return;
+        }
 
-        // Build the API URL for reverse geocoding
+        Log::info("Fetching address for coordinates: Latitude: {$latitude}, Longitude: {$longitude}");
+
         $apiUrl = env('LOCATION_API', 'https://photon.komoot.io/reverse');
 
         try {
@@ -1424,28 +1420,33 @@ class Home extends Component
                 'lon' => $longitude,
             ]);
 
-            // Debug raw response (optional)
-            // dd($response->json());
-
             if ($response->successful()) {
                 $data = $response->json();
                 $properties = $data['features'][0]['properties'] ?? [];
-
-                $this->formattedAddress = [
+                // Extract address details
+                // dd($properties);
+                $formattedAddress = [
                     'name' => $properties['name'] ?? '',
                     'street' => $properties['street'] ?? '',
                     'district' => $properties['district'] ?? '',
                     'county' => $properties['county'] ?? '',
                     'postcode' => $properties['postcode'] ?? '',
                     'country_code' => $properties['countrycode'] ?? '',
+                    'osm_value' => $properties['osm_value'],
+                    'state' => $properties['state'] ?? '',
                 ];
+
+                // Store in cache for 1 hour
+                Cache::put($cacheKey, $formattedAddress, now()->addHour());
+
+                $this->formattedAddress = $formattedAddress;
             } else {
                 Log::error("Failed to fetch address. Response: " . $response->body());
-                FlashMessageHelper::flashError('Unable to fetch location data.');
+                // FlashMessageHelper::flashError('Unable to fetch location data.');
             }
         } catch (\Exception $e) {
             Log::error("Exception occurred while fetching address: " . $e->getMessage());
-            FlashMessageHelper::flashError('Error occurred while fetching address.');
+            // FlashMessageHelper::flashError('Error occurred while fetching address.');
         }
     }
 }

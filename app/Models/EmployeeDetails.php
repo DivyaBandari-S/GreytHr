@@ -62,9 +62,10 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
         'extend_probation_period',
         'service_age',
         'confirmation_date',
+        'mpin'
     ];
 
-    protected $hidden = ['password'];
+    protected $hidden = ['password', 'remember_token', 'mpin'];
 
     protected $casts = [
         'company_id' => 'array',

@@ -44,9 +44,13 @@ class ReportManagement extends Component
     public $leaveBalance = [];
     public function showContent($section)
     {
-
-        $this->currentSection = $section;
-        $this->resetFields();
+           
+            // Step 1: Assign section value
+            $this->currentSection = $section;
+           
+           
+            $this->resetFields();
+           
     }
     public function updateLeaveType()
     {
@@ -1023,7 +1027,7 @@ class ReportManagement extends Component
 
                 $employees = EmployeeDetails::where('manager_id', $loggedInEmpId)
                     ->whereIn('emp_id', $this->leaveBalance)
-                    ->select('emp_id', 'first_name', 'last_name')
+                    ->select('emp_id', 'first_name', 'last_name','employee_status')
                     ->get();
 
 
@@ -1122,8 +1126,23 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
+                   
+                  
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1204,7 +1223,21 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
                     ->get();
+                 
 
 
                 // Check what is being grouped by emp_id
@@ -1310,8 +1343,22 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
 
                     ->get();
+                   
 
                 // Group the data by emp_id
                 $grantedData = $query->groupBy('emp_id')->map(function ($group) {
@@ -1323,12 +1370,14 @@ class ReportManagement extends Component
                             // Decode the JSON to get all leave types
                             $leavePolicy = json_decode($item->leave_policy_id, true);
                             $leaveTypes = [
-                                'casual_probation' => 'Casual Leave',
+                                'casual_leave' => 'Casual Leave',
                                 'maternity' => 'Maternity Leave',
                                 'paternity' => 'Paternity Leave',
                                 'sick' => 'Sick Leave',
                                 'lop' => 'Loss of Pay',
                                 'earned_leave' => 'Earned Leave',
+                                'casual_leave_probation' => 'Casul Leave Probation',
+                                'marriage_leave' => 'Marriage Leave',
                             ];
 
                             // Loop through all the leave types in the JSON array
@@ -1509,7 +1558,21 @@ class ReportManagement extends Component
                             $query->whereJsonContains('leave_policy_id', [['leave_name' => $leaveTypes[$this->leaveType]]]);
                         }
                     })
+                    ->when($this->employeeType, function ($query) {
+                        if ($this->employeeType == 'active') {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'active')
+                                    ->orWhere('employee_details.employee_status', 'on-probation');
+                            });
+                        } else {
+                            $query->where(function ($query) {
+                                $query->where('employee_details.employee_status', 'resigned')
+                                    ->orWhere('employee_details.employee_status', 'terminated');
+                            });
+                        }
+                    })
                     ->get();
+                   
 
 
                 // Check what is being grouped by emp_id
@@ -1729,8 +1792,14 @@ class ReportManagement extends Component
                 echo $pdf->stream();
             }, 'leave_transactions_report.pdf');
         } catch (\Exception $e) {
-            // Log the exception message
-            Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
+            // // Log the exception message
+            // Log::error('An error occurred while generating the leave transaction report.', ['error' => $e->getMessage()]);
+            Log::error('An error occurred while generating the leave transaction report.', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(), // Logs the full stack trace
+            ]);
             FlashMessageHelper::flashError('An error occurred while generating the report. Please try again.');
         }
     }
@@ -1929,7 +1998,7 @@ class ReportManagement extends Component
         // For Leave Balance On Day
 
 
-        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name')->get();
+        $this->employees = EmployeeDetails::where('manager_id', $loggedInEmpId)->select('emp_id', 'first_name', 'last_name','employee_status')->get();
         if ($this->searching == 1) {
             $nameFilter = $this->search; // Assuming $this->search contains the name filter
             $this->filteredEmployees = $this->employees->filter(function ($employee) use ($nameFilter) {

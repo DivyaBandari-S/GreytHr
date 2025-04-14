@@ -201,7 +201,7 @@ class AttendenceMasterDataNew extends Component
                     $inRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','IN')->where('emp_id',$employee['emp_id'])->first();
                     $outRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','OUT')->where('emp_id',$employee['emp_id'])->orderByDesc('created_at')->first();
                  
-                    if($outRecord==null)
+                    if(($outRecord==null||$inRecord==null)||($inRecord==null)||($outRecord==null))
                     {
                        
                         $dateCount-=1;
@@ -247,7 +247,7 @@ class AttendenceMasterDataNew extends Component
                                 $inRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','IN')->where('emp_id',$employee['emp_id'])->first();
                                 $outRecord=SwipeRecord::whereDate('created_at',$currentDate)->where('in_or_out','OUT')->where('emp_id',$employee['emp_id'])->orderByDesc('created_at')->first();
                              
-                                if($outRecord==null)
+                                if(($outRecord==null||$inRecord==null)||($inRecord==null)||($outRecord==null))
                                 {
                                     $dateExists=false;
                                     $dateCount-=1;

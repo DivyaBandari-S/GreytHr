@@ -27,6 +27,7 @@ class Peoples extends Component
 
     public function setActiveTab($tab)
     {
+        
         if ($tab === 'starred') {
             $this->activeTab = 'starred';
         } elseif ($tab === 'myteam') {
@@ -186,6 +187,7 @@ class Peoples extends Component
 
             if ($this->starredPerson) {
                 $this->starredPerson->delete();
+                FlashMessageHelper::flashSuccess('Star removed successfully!'); 
             } else {
                 $employeeId = auth()->guard('emp')->user()->emp_id;
                 $this->employeeDetails = EmployeeDetails::find($employeeId);
@@ -209,14 +211,16 @@ class Peoples extends Component
                         'starred_status' => 'starred'
                     ]);
                     FlashMessageHelper::flashSuccess('Star Added successfully!');
+                    // $this->activeTab = 'starred';
                 } catch (\Exception $e) {
                     FlashMessageHelper::flashError('An error occurred while creating the request. Please try again.');
                     $this->addError('duplicate', 'You have already starred this person.');
                 }
             }
-        } else {
-           
-        }
+            $currentTab = $this->activeTab;
+            $this->reset();
+            $this->activeTab = $currentTab;
+        } 
         
         // return redirect()->to('/PeoplesList');
     } catch (\Exception $e) {

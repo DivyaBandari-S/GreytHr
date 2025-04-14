@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -99,9 +98,9 @@
         .notfound .contact-btn:hover {
             opacity: 0.9;
         }
-        .notfound .home-btn:hover
-        {
-        opacity: 0.9;
+
+        .notfound .home-btn:hover {
+            opacity: 0.9;
         }
 
         .notfound .home-btn {

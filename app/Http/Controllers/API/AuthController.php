@@ -10,6 +10,8 @@ use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 use App\Models\EmployeeDetails;
 use Illuminate\Support\Facades\Log;
 use App\Helpers\ApiResponse;
+use App\Models\Company;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -145,5 +147,142 @@ class AuthController extends Controller
             'expires_in'   => Auth::guard('api')->factory()->getTTL() * 60,
             'user'         => $user,
         ]);
+    }
+
+
+    public function resetPassword(Request $request)
+    {
+        $user = Auth::guard('api')->user();
+
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required',
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/',
+                'confirmed'
+            ],
+
+        ], [
+            'new_password.regex' => 'Password must be at least 8 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character.',
+
+        ]);
+
+        if ($validator->fails()) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                $validator->errors()->first(),
+                self::VALIDATION_ERROR
+            );
+        }
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                'Current password is incorrect.',
+                self::FORBIDDEN
+            );
+        }
+        // Prevent reusing current password
+        if (Hash::check($request->new_password, $user->password)) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                'New password cannot be the same as your current password.',
+                self::VALIDATION_ERROR
+            );
+        }
+
+        // Get company name safely
+        $company = Company::where('company_id', $user->company_id)->first();
+        $companyName = $company ? $company->company_name : 'Your Company';
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        // Send email notification
+        if (!empty($user->email)) {
+            $user->notify(new \App\Notifications\PasswordChangedNotification($companyName));
+        }
+
+        return ApiResponse::success(
+            self::SUCCESS_STATUS,
+            'Password updated successfully.'
+        );
+    }
+
+    public function setMpin(Request $request)
+    {
+        try {
+            Log::info('Set MPIN request received.', $request->all());
+
+            // Validate MPIN
+            $validator = Validator::make($request->all(), [
+                'mpin' => 'required|string|min:4|max:6',
+            ]);
+
+            if ($validator->fails()) {
+                return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
+            }
+
+            // Get the currently authenticated user
+            $user = auth('api')->user();
+
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, self::USER_NOT_FOUND, self::UNAUTHORIZED);
+            }
+
+            // Set MPIN (hashed)
+            $user->mpin = Hash::make($request->mpin);
+            $user->save();
+
+            return ApiResponse::success(self::SUCCESS_STATUS, 'MPIN set successfully.');
+        } catch (\Exception $e) {
+            Log::error('Set MPIN error: ' . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
+        }
+    }
+
+    public function verifyMpin(Request $request)
+    {
+        try {
+            Log::info('MPIN verification request received.', $request->all());
+
+            $validator = Validator::make($request->all(), [
+                'mpin' => 'required|string|min:4|max:6',
+            ]);
+
+            if ($validator->fails()) {
+                return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
+            }
+
+            // Get user from token
+            $user = auth('api')->user();
+
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, self::USER_NOT_FOUND, self::UNAUTHORIZED);
+            }
+
+            if ($user->status != 1) {
+                return ApiResponse::error(self::ERROR_STATUS, self::INACTIVE_USER, self::FORBIDDEN);
+            }
+
+            if (!Hash::check($request->mpin, $user->mpin)) {
+                return ApiResponse::error(self::ERROR_STATUS, 'Invalid MPIN', self::UNAUTHORIZED);
+            }
+
+            // If you want, regenerate token (optional)
+            $token = auth('api')->login($user);
+            $userData = [
+                'email' => $user->email,
+                'emp_id' => $user->emp_id,
+            ];
+
+            return $this->respondWithToken($token, $userData);
+        } catch (\Exception $e) {
+            Log::error('MPIN verification error: ' . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
+        }
     }
 }

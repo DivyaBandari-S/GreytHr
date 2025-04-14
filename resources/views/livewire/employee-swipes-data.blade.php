@@ -200,7 +200,7 @@
         font-size: 14px;
         margin-top: 0;
     }
-    
+
     .apply-btn, .reset-btn {
         padding: 8px 15px;
         border-radius: 5px;
@@ -218,7 +218,7 @@
         border:1px solid rgb(2, 17, 79);
         color: rgb(2, 17, 79);
         background-color: #fff;
-       
+
     }
     </style>
 
@@ -227,7 +227,7 @@
             <div class="employee-swipes-fields d-flex align-items-center">
                 <div class="dropdown-container1-employee-swipes">
                     <label for="start_date" style="color: #666;font-size:12px;">Select Date<span
-                            style="color: red;">*</span>:</label><br />
+                            style="color: red;">*</span>:</label>
                     <input type="date" style="font-size: 12px;" id="start_date" wire:model="startDate"
                         wire:change="updateDate" max="{{ now()->toDateString() }}">
 
@@ -259,13 +259,14 @@
 
                     </div>
                     <div class="dropdown-container1-employee-swipes">
-                            
+
                                                     <!-- Filter Button -->
+                            @if($isManager)                         
                                 <button type="button" class="button2"
                                     style="margin-top:30px; border-radius:5px; padding:5px;">
                                     <i class="fa-icon fas fa-filter"wire:click="toggleSidebar"style="color:#666"></i>
                                 </button>
-
+                            @endif
                                 <!-- Overlay -->
                                 @if ($isOpen)
                                     <div class="overlay" wire:click="closeSidebar"></div>
@@ -298,7 +299,7 @@
                                                 <option value="infrastructure">Infrastructure</option>
                                                 <option value="human_resources">Human Resource</option>
                                             </select>
-                                             
+
                                             <label for="location" class="location-label">Location:</label>
                                             @if($isPending==1&&$defaultApply==0)
                                             <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
@@ -312,17 +313,17 @@
                                             @livewire('location-finder')
                                             <select wire:model="selectedLocation" wire:change="updateselectedLocation" class="custom-dropdown">
                                                 <option value="{{ $city }}"> {{ $city }}</option>
-                                               
+
                                             </select>
                                             @endif
                                             <label for="swipe_status" class="swipe-status-label">Swipe Status:</label>
                                             <select wire:model="selectedSwipeStatus" wire:change="updateselectedSwipeStatus" class="custom-dropdown">
-                                               @if($isPending==1&&$defaultApply==0) 
+                                               @if($isPending==1&&$defaultApply==0)
 
                                                 <option value="All">All</option>
                                                 <option value="mobile_sign_in">Mobile Sign In</option>
                                                 <option value="web_sign_in">Web Sign In</option>
-                                              @endif  
+                                              @endif
                                                 @if($isApply == 1 && $defaultApply == 1)
                                                    <option value="door">Door Sign In</option>
                                                 @endif
@@ -333,7 +334,7 @@
                                             <button wire:click="resetSidebar" class="reset-btn">Reset</button>
                                     </div>
                                 </div>
- 
+
                     </div>
                     <div class="button-container-for-employee-swipes">
                         <button class="my-button apply-button"
@@ -348,7 +349,7 @@
                 </div>
             </div>
 
-            <div class="row m-0 p-0  mt-4">
+            <div class="row m-0 p-0  mt-4 gap-2">
                 <div class="col-md-9 mb-4">
                     <div class="bg-white border rounded">
                         <div class="table-responsive bg-white rounded p-0 m-0" style="max-height: 500px;">
@@ -416,7 +417,7 @@
                                                                 Door Swipe Out
                                                             @endif
                                                         </td>
-                                                       
+
                                                     </tr>
                                                 @endforeach
                                             @endforeach
@@ -450,7 +451,7 @@
 
                                                         <!-- Swipe Log Details -->
                                                         <td>
-                                                            {{ $log->swipe_time }}<br />
+                                                            {{ \Carbon\Carbon::parse($log->swipe_time)->format('H:i:s') }}<br />
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
@@ -473,7 +474,7 @@
                                                             @endif
                                                         </td>
                                                         <td>
-                                                            {{ $log->swipe_time }}<br />
+                                                            {{ \Carbon\Carbon::parse($log->swipe_time)->format('H:i:s') }}<br />
                                                             <span class="text-muted employee-swipes-swipe-date">
                                                                 {{ \Carbon\Carbon::parse($log->created_at)->format('jS F, Y') }}
                                                             </span>
@@ -481,32 +482,32 @@
                                                         </td>
                                                         <td style="white-space:nowrap;">
                                                                            @if ($log->in_or_out === 'IN' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
-                                                                                Web Sign In  
+                                                                                Web Sign In
                                                                             @elseif ($log->in_or_out === 'IN' && $log->sign_in_device==='Mobile')
-                                                                                Mobile Sign In  
+                                                                                Mobile Sign In
                                                                             @elseif ($log->in_or_out === 'OUT' && ($log->sign_in_device==='Laptop/Desktop'||$log->sign_in_device==='Laptop'))
-                                                                                Web Sign Out  
+                                                                                Web Sign Out
                                                                             @elseif ($log->in_or_out === 'OUT' && $log->sign_in_device==='Mobile')
-                                                                                Mobile Sign Out  
+                                                                                Mobile Sign Out
                                                                             @elseif ($log->in_or_out === 'IN')
                                                                                 Web Sign In
                                                                             @elseif ($log->in_or_out === 'OUT')
                                                                                 Web Sign Out
-                                                                            @endif    
+                                                                            @endif
                                                         </td>
                                                         <td class="text-center"style="white-space:nowrap;">
                                                             @if(!empty($log->swipe_location))
                                                                {{ ucwords(strtolower(preg_replace('/[^A-Za-z0-9]/', ' ', $log->swipe_location))) }}
-                                                            @else   
+                                                            @else
                                                                  NA
                                                             @endif
                                                         </td>
                                                         <td class="text-center">
                                                             @if(!empty($log->swipe_remarks))
                                                                {{ $log->swipe_remarks }}
-                                                            @else   
+                                                            @else
                                                                  NA
-                                                            @endif     
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach

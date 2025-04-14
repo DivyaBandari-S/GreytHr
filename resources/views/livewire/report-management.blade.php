@@ -1,12 +1,12 @@
 <div class="row p-0 m-0 mt-3 p-2 position-relative">
     <div class="position-absolute" wire:loading
-    wire:target="downloadLeaveAvailedReportInExcel,close,resetFields,downloadNegativeLeaveBalanceReport,dayWiseLeaveTransactionReport,downloadLeaveTransactionReport,leaveBalanceAsOnADayReport">
-    <div class="loader-overlay">
-        <div class="loader">
-            <div></div>
+        wire:target="downloadLeaveAvailedReportInExcel,close,resetFields,downloadNegativeLeaveBalanceReport,dayWiseLeaveTransactionReport,downloadLeaveTransactionReport,leaveBalanceAsOnADayReport">
+        <div class="loader-overlay">
+            <div class="loader">
+                <div></div>
+            </div>
         </div>
     </div>
-</div>
     <style>
         .report-search-input {
             font-size: 0.75rem !important;
@@ -75,6 +75,12 @@
                 data-target="#FamilyDetailsModal"
                 style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px; white-space: nowrap;{{ $currentSection === 'Attendance Regularization Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">
                 Attendance Regularization Report
+
+            </a>
+            <a class="px-1" wire:click="showContent('Swipe Data Report')" data-toggle="modal"
+                data-target="#FamilyDetailsModal"
+                style="text-decoration:none; margin-top:5px;cursor:pointer;color: var(--label-color);font-weight:500; font-size:12px; white-space: nowrap;{{ $currentSection === 'Swipe Data Report' ? 'border-left: 2px solid rgb(2, 17, 79); padding-left: 5px;color: var(--main-heading-color);font-size:12px;' : '' }}">
+                Swipe Data Report
 
             </a>
         </div>
@@ -192,6 +198,21 @@
                 </div>
             </div>
             <div class="modal-backdrop fade show blurred-backdrop"></div>
+            @elseif($currentSection == 'Swipe Data Report')
+            <div class="modal" tabindex="-1" role="dialog" style="display: block;">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><b>{{ $currentSection }}</b></h5>
+                            <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"
+                                wire:click="close">
+                            </button>
+                        </div>
+                        @livewire('swipe-data-report')
+                    </div>
+                </div>
+            </div>
+            <div class="modal-backdrop fade show blurred-backdrop"></div>    
         @elseif($currentSection == 'Leave Availed Report')
             <div class="modal" tabindex="-1" role="dialog" style="display: block;">
                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -210,8 +231,7 @@
                                     <label for="fromDate">From <span
                                             style="color: var(--requiredAlert);">*</span></label>
                                     <input type="date" class="form-control placeholder-small"
-                                        wire:change="updateFromDate"   id="fromDate"
-                                        wire:model="fromDate">
+                                        wire:change="updateFromDate" id="fromDate" wire:model="fromDate">
                                     @error('fromDate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -219,8 +239,8 @@
                                 <div class="form-group col-md-6 mb-2">
                                     <label for="toDate">To <span
                                             style="color: var(--requiredAlert);">*</span></label>
-                                    <input type="date" class="form-control placeholder-small" 
-                                        wire:change="updateToDate" wire:model="toDate"   id="toDate">
+                                    <input type="date" class="form-control placeholder-small"
+                                        wire:change="updateToDate" wire:model="toDate" id="toDate">
                                     @error('toDate')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -228,8 +248,8 @@
                                 <div class="form-group col-md-6 mb-2">
                                     <label for="leaveType">Leave
                                         Type</label>
-                                    <select id="leaveType"  wire:change="updateLeaveType"
-                                        wire:model="leaveType" class="form-select placeholder-small">
+                                    <select id="leaveType" wire:change="updateLeaveType" wire:model="leaveType"
+                                        class="form-select placeholder-small">
                                         <option value="all">All Leaves</option>
                                         <option value="lop">Loss Of Pay</option>
                                         <option value="casual_leave">Casual Leave</option>
@@ -382,16 +402,15 @@
                         <div class="form-group col-md-6 mb-2">
                             <label for="to-date">Transaction
                                 Type</label>
-                            <select id="transactionType" 
-                                wire:change="updateTransactionType($event.target.value)"
+                            <select id="transactionType" wire:change="updateTransactionType($event.target.value)"
                                 wire:model.lazy="transactionType" class="form-select placeholder-small">
                                 <option value="all">All Transactions</option>
-                                        <option value="granted">Granted</option>
-                                        <option value="availed">Availed</option>
-                                        <option value="lapsed">Lapsed</option>
-                                        <option value="withdrawn">Withdrawn</option>
-                                        <option value="rejected">Rejected</option>
-                              
+                                <option value="granted">Granted</option>
+                                <option value="availed">Availed</option>
+                                <option value="lapsed">Lapsed</option>
+                                <option value="withdrawn">Withdrawn</option>
+                                <option value="rejected">Rejected</option>
+
 
                                 <!-- Add other leave types as needed -->
                             </select>
@@ -497,32 +516,37 @@
 
                             </tr>
                             @php
-                            // Sorting alphabetically by first_name and then last_name
-                            $sortedEmployees = $this->filteredEmployees->sortBy(function ($employee) {
-                                return strtolower($employee->first_name . ' ' . $employee->last_name); // Combine first and last name for sorting
-                            });
-                        
-                           
-                        @endphp
-                        
+                                // Sorting alphabetically by first_name and then last_name
+                                $sortedEmployees = $this->filteredEmployees->sortBy(function ($employee) {
+                                    return strtolower($employee->first_name . ' ' . $employee->last_name); // Combine first and last name for sorting
+                                });
+
+                            @endphp
+
                             @if ($sortedEmployees->isNotEmpty())
                                 @foreach ($sortedEmployees as $emp)
-                                    <tr style="border:1px solid #ccc;">
+                                    <tr style="border:1px solid #ccc;"
+                                        class="@if (in_array(strtolower($emp->employee_status), ['terminated', 'resigned'])) text-danger @endif">
 
-                                        <td
-                                            style="width:50%; font-size: 10px; color: var(--label-color); text-align:start; padding:5px 10px; white-space:nowrap; display: flex; align-items: center;">
+                                        <td style="width:50%; font-size: 10px; text-align:start; padding:5px 10px; 
+                                           white-space:nowrap; display: flex; align-items: center;"
+                                            class="@if (in_array(strtolower($emp->employee_status), ['terminated', 'resigned'])) text-danger @endif">
+
                                             <label class="custom-checkbox" style="margin-right: 5px;">
                                                 <input type="checkbox" name="employeeCheckbox[]"
                                                     class="employee-swipes-checkbox" wire:model="leaveBalance"
                                                     value="{{ $emp->emp_id }}">
                                                 <span class="checkmark"></span>
                                             </label>
+
                                             {{ ucwords(strtolower($emp->first_name)) }}&nbsp;{{ ucwords(strtolower($emp->last_name)) }}
                                         </td>
 
-                                        <td
-                                            style="width:50%;font-size: 10px; color: var(--label-color);text-align:start;padding:5px 10px;white-space:nowrap;">
-                                            {{ $emp->emp_id }}</td>
+                                        <td style="width:50%; font-size: 10px; text-align:start; padding:5px 10px; 
+                                           white-space:nowrap;"
+                                            class="@if (in_array(strtolower($emp->employee_status), ['terminated', 'resigned'])) text-danger @endif">
+                                            {{ $emp->emp_id }}
+                                        </td>
                                     </tr>
                                 @endforeach
                             @else

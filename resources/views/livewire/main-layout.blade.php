@@ -7,7 +7,7 @@
     <!-- SIDEBAR -->
     <section id="sidebar">
         <a href="{{route('home')}}" class="brand">
-            <!-- <i class='bx bxs-smile icon'></i> -->
+            <!-- <i class='bx bxs-smile icon'></iprofile> -->
             <img class="m-auto" src="{{ asset('images/hr_new_blue.png') }}" alt="Company Logo" style="width: 6em !important;">
         </a>
         <ul class="side-menu">
@@ -147,7 +147,7 @@
                         <img class="navProfileImg" src="{{ asset('images/male-default.png') }}" alt="" onclick="openProfile()">
                         @elseif($loginEmployeeProfile->gender=='FEMALE')
                         <img class="navProfileImg" src="{{ asset('images/female-default.jpg') }}" alt="" onclick="openProfile()">
-                        ~ @else
+                         @else
                         <img class="navProfileImg" src="{{ asset('images/user.jpg') }}" alt="" onclick="openProfile()">
                         @endif
                         @endif

@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Exports\FamilyReportExport;
 use App\Helpers\FlashMessageHelper;
 use App\Models\EmployeeDetails;
 use App\Models\RegularisationDates;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Google\Service\SecretManager\EnableSecretVersionRequest;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Maatwebsite\Excel\Facades\Excel;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class AttendanceRegularisationReport extends Component
@@ -68,7 +70,7 @@ class AttendanceRegularisationReport extends Component
           
         if(empty($this->EmployeeId))
         {
-            return FlashMessageHelper::flashError( 'Please Select at least one employee detail.');
+            return FlashMessageHelper::flashError( 'Please Select fromDate and ToDate.');
             
         }
         elseif(empty($this->fromDate)&&empty($this->fromDate))
@@ -159,9 +161,8 @@ class AttendanceRegularisationReport extends Component
                 }
             }
         
-        $filePath = storage_path('app/attendance_regularisation_report.xlsx');
-        SimpleExcelWriter::create($filePath)->addRows($data);
-        return response()->download($filePath, 'attendance_regularisation_report.xlsx');
+            return Excel::download(new FamilyReportExport($data), 'attendance_regularisation_report.xlsx');
+       
         }
     }
     public function closeAttendanceRegularisationReport()

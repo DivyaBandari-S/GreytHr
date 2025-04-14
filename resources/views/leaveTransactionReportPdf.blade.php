@@ -243,11 +243,11 @@
                                         {{ ucwords(strtolower($employeeDetails->last_name)) }}</td>
                                     <td>{{ $transaction['leave_name'] }}</td> {{-- Leave Type --}}
                                     <td>{{ $transaction['status'] }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}
+                                    <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y  h:i A') }}
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($transaction['from_date'])->format('d M Y H:i') }}
+                                    <td>{{ \Carbon\Carbon::parse($transaction['from_date'])->format('d M Y') }}
                                     </td>
-                                    <td>{{ \Carbon\Carbon::parse($transaction['to_date'])->format('d M Y H:i') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($transaction['to_date'])->format('d M Y') }}</td>
                                     <td>{{ $transaction['grant_days'] }}</td> {{-- Grant Days --}}
                                     <td>Annual Grant for the year</td> {{-- Static reason for granted leaves --}}
                                 </tr>
@@ -289,10 +289,10 @@
                                     @endif
                                 </td>
 
-                                <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y H:i') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y H:i') }}
+                                <td>{{ \Carbon\Carbon::parse($transaction['created_at'])->format('d M Y h:i A') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($transaction['leave_from_date'])->format('d M Y') }}
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y H:i') }}
+                                <td>{{ \Carbon\Carbon::parse($transaction['leave_to_date'])->format('d M Y') }}
                                 </td>
                                 <td>{{ $transaction['leave_days'] }}</td> {{-- Leave Days --}}
 

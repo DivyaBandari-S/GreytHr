@@ -1,12 +1,4 @@
 <div class="position-relative">
-    <div class="position-absolute" wire:loading
-        wire:target="open,openAbsentEmployees,openLateEmployees,openEarlyEmployees">
-        <div class="loader-overlay">
-            <div class="loader">
-                <div></div>
-            </div>
-        </div>
-    </div>
     <style>
         .sign-out-form {
             max-width: 400px;
@@ -20,6 +12,7 @@
         .sign-out-form .form-group {
             margin-bottom: 15px;
         }
+
         .sign-out-form .form-group {
             margin-bottom: 15px;
         }
@@ -38,6 +31,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         .sign-out-form select,
         .sign-out-form textarea {
             width: 100%;
@@ -66,15 +60,12 @@
                             </p>
                         </div>
 
-
                         <!-- <div class="col-md-3 p-0">
 
                         </div> -->
 
                         <div class="col-md-8 px-3 pt-4">
-
                             <div class="mb-4 homeBaneerCard row m-0">
-
                                 <div class="col-md-5 pe-0">
                                     <div class="bigCircle">
                                         <div class="smallCircle"></div>
@@ -100,74 +91,37 @@
                                         <img src="images/stopwatch.png" style="width: 2.5em; height: fit-content" />
                                     </div>
                                 </div>
-
                                 <div class="col-md-7 ps-0 pt-2 text-end">
-                                    <p class="normalText mt-2">
-                                        @php
-                                            // Fetch shift times
-                                            if ($this->employeeShiftDetails) {
-                                                $EmployeeStartshiftTime = $this->employeeShiftDetails->shift_start_time;
-                                                $EmployeeEndshiftTime = $this->employeeShiftDetails->shift_end_time;
-                                            } else {
-                                                // Handle the case when no data is found, e.g., set default values or show a message
-                                                $EmployeeStartshiftTime = null;
-                                                $EmployeeEndshiftTime = null;
-                                            }
-
-                                            // Default times
-
-                                            if ($EmployeeStartshiftTime === null && $EmployeeEndshiftTime === null) {
-                                                $formattedShiftMessage = 'Shift not assigned yet';
-                                            } else {
-                                                // Format the times if they are not null
-                                                $formattedStartShiftTime = (new DateTime(
-                                                    $EmployeeStartshiftTime,
-                                                ))->format('H:i a');
-                                                $formattedEndShiftTime = (new DateTime($EmployeeEndshiftTime))->format(
-                                                    'H:i a',
-                                                );
-                                                $formattedShiftMessage =
-                                                    $formattedStartShiftTime .
-                                                    ' to ' .
-                                                    $formattedEndShiftTime .
-                                                    ' Shift';
-                                            }
-
-                                        @endphp
-                                        {{ substr($currentDay, 0, 3) }} | {{ $formattedShiftMessage }}
-
-                                    </p>
+                                    <p class="normalText mt-2">Tuesday | 10:00 Am To 07:00 Pm</p>
                                     <p class="payslip-card-title">{{ $currentDate }}</p>
                                     <div class="locationGlobe m-0 mt-4 pe-0 mb-2 row">
-
                                         <div class="col-11 p-0" style="text-align: end;">
                                             @if (
                                                 !empty($formattedAddress['street']) ||
                                                     !empty($formattedAddress['country_code']) ||
                                                     !empty($formattedAddress['postcode']))
-                                                {{-- Display the formatted address if any of the fields are not empty --}}
                                                 <p class="mb-1">
-                                                    {{ !empty($formattedAddress['street']) ? $formattedAddress['street'] . ', ' : '' }}
-                                                    {{ !empty($formattedAddress['country_code']) ? $formattedAddress['country_code'] . '-' : '' }}
+                                                    @if (!empty($formattedAddress['osm_value']) && $formattedAddress['osm_value'] === 'village')
+                                                        {{ $formattedAddress['name'] ?: $formattedAddress['county'] }}
+                                                    @else
+                                                        {{ !empty($formattedAddress['district']) || !empty($formattedAddress['name']) ? ($formattedAddress['district'] ?: $formattedAddress['name']) . ',' : '' }}
+                                                    @endif
+                                                    {{ !empty($formattedAddress['state']) ? $formattedAddress['state'] . '' : '' }}
+                                                    {{ !empty($formattedAddress['country_code']) ? ', ' . $formattedAddress['country_code'] . '-' : '' }}
                                                     {{ !empty($formattedAddress['postcode']) ? $formattedAddress['postcode'] . '.' : '' }}
                                                 </p>
-                                            @elseif(!empty($country) || !empty($city))
-                                                {{-- Display fallback values if the formatted address is empty but country, city, or postal code are available --}}
-                                                <p class="mb-1">{{ $city }}, {{ $country }}</p>
+                                            @elseif(!empty($city) || !empty($country))
+                                                <p class="mb-1">{{ trim("{$city}, {$country}", ', ') }}</p>
                                             @else
-                                                {{-- Display a default message if everything is empty --}}
                                                 <p class="mb-1"></p>
                                             @endif
-
                                         </div>
                                         <div class="col-1 p-0" style="text-align: end;">
                                             <i class="fa-solid fa-location-dot" id="openMapIcon"
                                                 style="color: red;cursor: pointer; font-size: 14px;"></i>
                                         </div>
-
                                     </div>
                                 </div>
-
                                 <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
                                     <a class="viewSwipesList" wire:click="open">View Swipes</a>
                                     <button id="signButton" class="signInButton" wire:click="OpentoggleSignStatePopup">
@@ -180,8 +134,6 @@
                                         @else
                                             Sign In
                                         @endif
-
-
 
                                     </button>
 
@@ -272,19 +224,10 @@
                             @endif
 
                         </div>
-
-                        <!-- <div class="bottom-bottom">
-                            <div class="social-links-container">
-                                <img src="images/teams.png" style="width: 1.5em; height: fit-content;" />
-                                <img src="images/outlook.png" style="width: 1.5em; height: fit-content;" />
-                            </div>
-
-                        </div> -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- main content -->
         <div class="row m-0">
             <div class="col-md-3">
                 <div class="payslip-card mb-4" style="height: 195px;">
@@ -577,64 +520,6 @@
                     @endif
                 @endif
 
-
-
-                <div class="payslip-card mb-4">
-                    <p class="payslip-card-title">Praise</p>
-                    <!-- <p class="payslip-small-desc">
-                    Kindly click on the Arrow button to apply a leave.
-                </p> -->
-
-                    <div class="container mt-4 p-0">
-                        <div class="timeline">
-                            <!-- <div class="timeline-item">
-                            <div class="timeline-icon bg-primary text-white">
-                                <i class="bi bi-currency-rupee"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Money Maker Medal</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div>
-                        <div class="timeline-item">
-                            <div class="timeline-icon bg-warning text-dark">
-                                <i class="bi bi-watch"></i>
-                            </div>
-                            <div class="timeline-content">
-                                <h6 class="fs12">Relentless Cogwheel</h6>
-                                <p class="timeline-date">Jan 24, 2020</p>
-                            </div>
-                        </div> -->
-
-                            <!-- Praise -->
-                            <div class="timeline-item">
-                                <div class="timeline-icon bg-danger text-white">
-                                    <i class="bi bi-puzzle-fill"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h6 class="fs12">Problem Solver</h6>
-                                    <p class="timeline-date">Jan 24, 2020</p>
-                                </div>
-                            </div>
-
-                            <div class="timeline-item">
-                                <div class="timeline-icon bg-primary text-white">
-                                    <i class="bi bi-fire"></i>
-                                </div>
-                                <div class="timeline-content">
-                                    <h6 class="fs12">Torch Bearer</h6>
-                                    <p class="timeline-date">Jan 24, 2020</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
-
                 <div class="payslip-card mb-4">
                     <p class="payslip-card-title">IT Declaration</p>
                     <p class="payslip-small-desc">
@@ -648,6 +533,17 @@
                 </div>
 
 
+                <div class="payslip-card mb-3">
+                    <p class="payslip-card-title">POI</p>
+                    <p class="payslip-small-desc">
+                        Hold on! You can submit your Proof of Investments (POI) once released.
+                    </p>
+                    <a href="#">
+                        <div class="payslip-go-corner">
+                            <div class="payslip-go-arrow">→</div>
+                        </div>
+                    </a>
+                </div>
             </div>
             <div class="col-md-5 mb-4 ">
                 @if ($ismanager)
@@ -869,18 +765,6 @@
                     </div>
                 </div>
 
-
-                <div class="payslip-card mb-3">
-                    <p class="payslip-card-title">POI</p>
-                    <p class="payslip-small-desc">
-                        Hold on! You can submit your Proof of Investments (POI) once released.
-                    </p>
-                    <a href="#">
-                        <div class="payslip-go-corner">
-                            <div class="payslip-go-arrow">→</div>
-                        </div>
-                    </a>
-                </div>
             </div>
             <!-- TEAM ON LEAVE -->
             <div class="col-md-4  mb-4 ">
@@ -1146,24 +1030,21 @@
                                                 Location
                                                 <span style="color:#f66;">*</span>
                                             </label>
-                                            <select id="location" name="location"
-                                                wire:model="swipe_location"wire:change="updateSwipeLocation" required>
+                                            <select id="location" name="location" wire:model="swipe_location"
+                                                wire:change="updateSwipeLocation" required>
                                                 @if (!$swipes)
                                                     <option value="">Select Your Location</option>
                                                 @endif
                                                 <option value="client_location">Client Location</option>
-                                                <option value="hybrid">Home</option>
-                                                <option value="office">Office</option>
                                                 <option value="on_duty">On-Duty</option>
-                                                <option value="remote">Remote</option>
                                                 <option value="work_from_office">Work from Office</option>
                                                 <option value="work_from_home">Work from Home</option>
                                             </select>
                                         </div>
                                         <div class="form-group">
                                             <label for="remarks">Remarks</label>
-                                            <textarea id="remarks" name="remarks" rows="4"wire:model="swipe_remarks"
-                                                wire:change="updateSwipeRemarks"placeholder="Enter Reason"></textarea>
+                                            <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks" wire:change="updateSwipeRemarks"
+                                                placeholder="Enter Reason"></textarea>
                                         </div>
                                         <button id="signButton" class="signInButton" type="submit">
 
@@ -1315,108 +1196,171 @@
             @endif
         </div>
     </div>
-    <div>
-        {{-- @script
-        <script>
-            // Livewire.dispatch('post-created') (or) $wire.dispatch('post-created'); both are working........
-        </script>
-    @endscript --}}
+    @if ($showtoggleSignState)
+        <div class="modal d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered " role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <b>Swipes</b>
+                        </h5>
+                        <button type="button" class="btn-close btn-primary" data-dismiss="modal" aria-label="Close"
+                            wire:click="closeToggleSignState">
+                        </button>
+                    </div>
+                    <div class="modal-body">
 
-    </div>
+                        <p style="text-align:center;font-weight:600;font-size:18px;">Tell us your Work
+                            Location.</p>
 
-    {{-- <script>
-    document.addEventListener('livewire:initialized', () => {
-        // Runs immediately after Livewire has finished initializing
-        // on the page...
-        Livewire.dispatch('post-created')
-    })
-</script> --}}
-    <script>
-        // Function to check if an element is in the viewport
-        function isElementInViewport(el) {
-            var rect = el.getBoundingClientRect();
-            return (
-                rect.top >= 0 &&
-                rect.left >= 0 &&
-                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-            );
+                        <div style="display:flex;align-items:left;">
+                            <form class="sign-out-form" action="post" wire:submit.prevent="toggleSignState">
+                                <div class="form-group">
+                                    <label for="location">Enter
+                                        <span>
+                                            @if ($swipes)
+                                                @if ($swipes->in_or_out === 'OUT')
+                                                    Sign In
+                                                @else
+                                                    Sign Out
+                                                @endif
+                                            @else
+                                                Sign In
+                                            @endif
+                                        </span>
+                                        Location
+                                        <span style="color:#f66;">*</span>
+                                    </label>
+                                    <select id="location" name="location" wire:model="swipe_location"
+                                        wire:change="updateSwipeLocation" required>
+                                        @if (!$swipes)
+                                            <option value="">Select Your Location</option>
+                                        @endif
+                                        <option value="client_location">Client Location</option>
+                                        <option value="on_duty">On-Duty</option>
+                                        <option value="work_from_office">Work from Office</option>
+                                        <option value="work_from_home">Work from Home</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="remarks">Remarks</label>
+                                    <textarea id="remarks" name="remarks" rows="4" wire:model="swipe_remarks" wire:change="updateSwipeRemarks"
+                                        placeholder="Enter Reason"></textarea>
+                                </div>
+                                <button id="signButton" class="signInButton" type="submit"
+                                    @if (empty($swipe_location)) disabled @endif>
+
+                                    @if ($swipes)
+                                        @if ($swipes->in_or_out === 'OUT')
+                                            Sign In
+                                        @else
+                                            Sign Out
+                                        @endif
+                                    @else
+                                        Sign In
+
+                                    @endif
+
+                                </button>
+                            </form>
+                            <div>
+                                <img src="{{ asset('images/swipe-popup-image.png') }}" style="margin-top:50px;"
+                                    height="180" width="180">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-backdrop fade show blurred-backdrop"></div>
+    @endif
+</div>
+<script>
+    // Function to check if an element is in the viewport
+    function isElementInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        return (
+            rect.top >= 0 &&
+            rect.left >= 0 &&
+            rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+            rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+        );
+    }
+    // Initial check on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        var grossPay = {{ $grossPay }}; // Correct data injection
+        var deductions = {{ $deductions }}; // Correct data injection
+        var netPay = {{ $netPay }};
+
+        // Total of netPay and deductions should equal grossPay
+        if (grossPay !== (netPay + deductions)) {
+            console.error('The sum of net pay and deductions does not match the gross pay.');
         }
-        // Initial check on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            var grossPay = {{ $grossPay }}; // Correct data injection
-            var deductions = {{ $deductions }}; // Correct data injection
-            var netPay = {{ $netPay }};
 
-            // Total of netPay and deductions should equal grossPay
-            if (grossPay !== (netPay + deductions)) {
-                console.error('The sum of net pay and deductions does not match the gross pay.');
-            }
-
-            var ctx = document.getElementById('combinedPieChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Gross Pay', 'Net Pay', 'Deductions'], // Labels for the rings
-                    datasets: [
-                        // Outer ring for Gross Pay (always 100%)
-                        {
-                            label: 'Gross Pay',
-                            data: [grossPay, 0, 0], // Gross Pay only in the outer ring
-                            backgroundColor: ['#000000', 'transparent',
-                                'transparent'
-                            ], // Black for Gross Pay, Transparent for the rest
-                            borderColor: 'transparent', // No border for outer ring
-                            borderWidth: 2,
-                            hoverBorderWidth: 3,
-                            cutout: '65%' // Decrease cutout to reduce the gap (thicker outer ring)
-                        },
-                        // Inner ring for Net Pay and Deductions
-                        {
-                            label: 'Net Pay and Deductions',
-                            data: [0, netPay,
-                                deductions
-                            ], // Inner ring is split between Net Pay and Deductions
-                            backgroundColor: ['transparent', '#1C9372',
-                                '#B9E3C6'
-                            ], // Green for Net Pay, Light Green for Deductions
-                            borderColor: 'transparent', // No border for inner ring
-                            borderWidth: 2,
-                            hoverBorderWidth: 3,
-                            cutout: '55%' // Decrease cutout to reduce the gap (thinner inner ring)
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false // Hide the legend
-                        },
-                        tooltip: {
-                            enabled: true, // Enable tooltips
-                            mode: 'nearest', // Tooltip will be displayed when hovering over any segment
-                            callbacks: {
-                                label: function(tooltipItem) {
-                                    var percentage = 0;
-                                    // Show 100% for the Gross Pay segment
-                                    if (tooltipItem.dataIndex === 0) {
-                                        percentage = 100; // Gross Pay is always 100%
-                                    } else if (tooltipItem.dataIndex === 1) {
-                                        percentage = (netPay / grossPay) *
-                                            100; // Calculate percentage for Net Pay
-                                    } else if (tooltipItem.dataIndex === 2) {
-                                        percentage = (deductions / grossPay) *
-                                            100; // Calculate percentage for Deductions
-                                    }
-
-                                    // Return the percentage with two decimal places
-                                    return tooltipItem.label + ': ' + percentage.toFixed(2) + '%';
+        var ctx = document.getElementById('combinedPieChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gross Pay', 'Net Pay', 'Deductions'], // Labels for the rings
+                datasets: [
+                    // Outer ring for Gross Pay (always 100%)
+                    {
+                        label: 'Gross Pay',
+                        data: [grossPay, 0, 0], // Gross Pay only in the outer ring
+                        backgroundColor: ['#000000', 'transparent',
+                            'transparent'
+                        ], // Black for Gross Pay, Transparent for the rest
+                        borderColor: 'transparent', // No border for outer ring
+                        borderWidth: 2,
+                        hoverBorderWidth: 3,
+                        cutout: '65%' // Decrease cutout to reduce the gap (thicker outer ring)
+                    },
+                    // Inner ring for Net Pay and Deductions
+                    {
+                        label: 'Net Pay and Deductions',
+                        data: [0, netPay,
+                            deductions
+                        ], // Inner ring is split between Net Pay and Deductions
+                        backgroundColor: ['transparent', '#1C9372',
+                            '#B9E3C6'
+                        ], // Green for Net Pay, Light Green for Deductions
+                        borderColor: 'transparent', // No border for inner ring
+                        borderWidth: 2,
+                        hoverBorderWidth: 3,
+                        cutout: '55%' // Decrease cutout to reduce the gap (thinner inner ring)
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    },
+                    tooltip: {
+                        enabled: true, // Enable tooltips
+                        mode: 'nearest', // Tooltip will be displayed when hovering over any segment
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                var percentage = 0;
+                                // Show 100% for the Gross Pay segment
+                                if (tooltipItem.dataIndex === 0) {
+                                    percentage = 100; // Gross Pay is always 100%
+                                } else if (tooltipItem.dataIndex === 1) {
+                                    percentage = (netPay / grossPay) *
+                                        100; // Calculate percentage for Net Pay
+                                } else if (tooltipItem.dataIndex === 2) {
+                                    percentage = (deductions / grossPay) *
+                                        100; // Calculate percentage for Deductions
                                 }
+
+                                // Return the percentage with two decimal places
+                                return tooltipItem.label + ': ' + percentage.toFixed(2) + '%';
                             }
                         }
                     }
                 }
-            });
+            }
         });
-    </script>
+    });
+</script>

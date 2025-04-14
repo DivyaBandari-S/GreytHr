@@ -180,7 +180,7 @@
                             <div class="d-flex align-items-center justify-content-center">
 
                                 <!-- Sick Leave -->
-
+                                @if($leaveRequest['leaveRequest']->leave_type === 'Sick Leave' && isset($leaveRequest['leaveBalances']['casualLeaveBalance']))
                                 <div class="sickLeaveCircle">
 
                                     <span class="sickLeaveBal">SL</span>
@@ -190,7 +190,7 @@
                                 <span class="sickLeaveValue">{{ $leaveRequest['leaveBalances']['sickLeaveBalance'] }}</span>
 
                                 <!-- Casual Leave  -->
-
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Casual Leave' && isset($leaveRequest['leaveBalances']['casualLeaveBalance']))
                                 <div class="casLeaveCircle">
 
                                     <span class="casLeaveBal">CL</span>
@@ -200,7 +200,7 @@
                                 <span class="casLeaveValue">{{ $leaveRequest['leaveBalances']['casualLeaveBalance'] }}</span>
 
                                 <!-- Casual Leave  Probation-->
-                                @if($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
+                                @elseif($leaveRequest['leaveRequest']->leave_type === 'Casual Leave Probation' && isset($leaveRequest['leaveBalances']['casualProbationLeaveBalance']))
                                 <div class="probLeave">
 
                                     <span class="probLeaveBal">CLP</span>

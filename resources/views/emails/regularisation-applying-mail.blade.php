@@ -5,7 +5,7 @@
 </head>
 <body>
 
-    <h1>Regularization Applied Mail</h1>
+    <h6>Regularization Applied Mail</h6>
     <p>You have applied regularisation for the following dates.</p>
     
     <div style="margin-bottom: 20px;">

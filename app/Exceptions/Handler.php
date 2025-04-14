@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use BadMethodCallException;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Livewire\Exceptions\MethodNotFoundException;
 use Throwable;
@@ -35,7 +36,7 @@ class Handler extends ExceptionHandler
 
         // Handle database and fatal errors
         if ($this->isDatabaseOrFatalError($exception)) {
-            return response()->view('errors.500',[], 500);
+            return response()->view('errors.500', [], 500);
         }
 
         // Handle 404 and HTTP-specific errors
@@ -79,6 +80,7 @@ class Handler extends ExceptionHandler
             $e instanceof \Illuminate\Database\DeadlockException ||
             $e instanceof \Illuminate\View\ViewException ||
             $e instanceof \Symfony\Component\ErrorHandler\Error\FatalError ||
+            $e instanceof  Builder ||
             $e instanceof Model;
     }
 }
