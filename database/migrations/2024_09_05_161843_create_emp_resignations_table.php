@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('emp_id', 10); // Foreign key to employee table
             $table->text('reason')->nullable(); // Reason for resignation
             $table->date('resignation_date'); // Date of resignation
-            $table->date('approved_date')->nullable(); // Date of approved
+            $table->date('action_date')->nullable(); // Date of approved
+            $table->string('action_by')->nullable();
             $table->date('last_working_day')->nullable(); // Last working day
             $table->text('comments')->nullable(); // Additional comments
             $table->binary('signature')->nullable();
