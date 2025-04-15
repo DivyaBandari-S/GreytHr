@@ -1155,7 +1155,7 @@
                                         Last Working Date:
                                     </div>
                                     <div class="d-flex justify-content-center" style=" font-size: 12px;color:#000;">
-                                        {{ \Carbon\Carbon::parse($last_working_date)->format('d-M-Y') }}
+                                    {{ $last_working_date ? \Carbon\Carbon::parse($last_working_date)->format('d-M-Y') : 'N/A' }}
                                     </div>
                                 </div>
                                 <div class="col-md-5  form-group mt-2" style="display: flex;flex-direction:column;justify-content:center">

@@ -46,7 +46,7 @@
         }
     </style>
     <div class="content">
-        <div class="row m-0 p-0 mb-3">
+        <div class="row m-0 p-0 mb-3 home1">
             <div class="col-12 col-md-8 mb-3">
                 <div class="row m-0 welcomeContainer hover-card">
                     <div class="card-content  row p-0 m-0">
@@ -144,7 +144,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md-4 ">
                 <div class="cardReport">
                     <button class="mail">
                         <span class="rounded-pill home-reportTo"> Reports To </span>
@@ -228,7 +228,7 @@
                 </div>
             </div>
         </div>
-        <div class="row m-0">
+        <div class="row m-0 home2">
             <div class="col-md-3">
                 <div class="payslip-card mb-4" style="height: 195px;">
                     <p class="payslip-card-title mb-0">Upcoming Holidays</p>
@@ -334,7 +334,7 @@
                 </div>
             </div>
         </div>
-        <div class="row m-0">
+        <div class="row m-0 ">
             <div class="col-md-3  ">
                 @if ($ismanager || $leaveApplied)
                     <div class="payslip-card mb-4" style="height: 195px;">

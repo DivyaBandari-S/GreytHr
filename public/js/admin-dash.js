@@ -443,3 +443,221 @@ function openAIAssist() {
 //             ? "block"
 //             : "none";
 // }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const welcomeSectionDiv = document.querySelector('.home1'); // Select the main container
+
+    if (!welcomeSectionDiv) return;
+
+    const originalContent = welcomeSectionDiv.innerHTML;
+
+    const skeletonHTML = `
+        <div class="col-12 col-md-8 mb-3">
+            <div class="row m-0 welcomeContainer hover-card">
+                <div class="card-content row p-0 m-0">
+                    <div class="col-md-4 p-0 ps-3 pt-4">
+                        <p class="morning-city skeleton-loader" style="height: 20px; width: 150px;"></p>
+                        <p class="morning-city skeleton-loader" style="padding-top: 2.5em; height: 30px; width: 200px;"></p>
+                    </div>
+                    <div class="col-md-8 px-3 pt-4">
+                        <div class="mb-4 homeBaneerCard row m-0">
+                            <div class="col-md-5 pe-0">
+                                <div class="bigCircle skeleton-loader" style="width: 100px; height: 100px; border-radius: 50%;">
+                                    <div class="smallCircle skeleton-loader" style="width: 50px; height: 50px; border-radius: 50%; margin: 25px;"></div>
+                                </div>
+                                <div class="d-flex" style="margin-top: 3em; margin-left: 5px;">
+                                    <span class="skeleton-loader" style="width: 80px; height: 20px;"></span>
+                                    <span class="skeleton-loader" style="width: 2.5em; height: 2.5em; border-radius: 50%; margin-left: 10px;"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-7 ps-0 pt-2 text-end">
+                                <p class="normalText skeleton-loader" style="height: 20px; width: 180px; margin-top: 25px;"></p>
+                                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 120px;"></p>
+                                 <div class="locationGlobe m-0 mt-4 pe-0 mb-2 row">
+                                    <div class="col-11 p-0" style="text-align: end;">
+                                        <p class="mb-1 skeleton-loader" style="height: 20px; width: 150px;"></p>
+                                    </div>
+                                    <div class="col-1 p-0" style="text-align: end;">
+                                         <span class="skeleton-loader" style="width: 1em; height: 1em;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="A d-flex justify-content-between align-items-center flex-row mb-3">
+                            <span class="viewSwipesList skeleton-loader" style="height: 30px; width: 100px;"></span>
+                            <span  class="signInButton skeleton-loader" style="height: 30px; width: 100px;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="cardReport">
+                <div class="mail">
+                    <span class="rounded-pill home-reportTo skeleton-loader" style="height: 30px; width: 120px; border-radius: 1rem;"></span>
+                </div>
+                <div class="profile-pic">
+                    <span class="skeleton-loader" style="width: 50px; height: 50px; border-radius: 50%;"></span>
+                </div>
+                <div class="bottom">
+                    <div class="content">
+                         <p class="name skeleton-loader" style="height: 20px; width: 150px;"></p>
+                         <p class="about-me skeleton-loader" style="height: 18px; width: 100px;"></p>
+                         <p class="managerOtherDetails skeleton-loader" style="height: 18px; width: 120px;"></p>
+                         <p class="managerOtherDetails skeleton-loader" style="height: 18px; width: 120px;"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    welcomeSectionDiv.innerHTML = skeletonHTML;
+
+    setTimeout(function() {
+        welcomeSectionDiv.innerHTML = originalContent;
+    }, 3000);
+});
+
+const style = document.createElement('style');
+style.textContent = `
+.skeleton-loader {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite linear;
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 100% 0;
+    }
+    100% {
+        background-position: -100% 0;
+    }
+}
+`;
+document.head.appendChild(style);
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dashboardCardsDiv = document.querySelector('.home2');
+    if (!dashboardCardsDiv) return;
+
+    const originalContent = dashboardCardsDiv.innerHTML;
+
+    const skeletonHTML = `
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 150px;"></p>
+                
+                <div class="row m-0" >
+                    <div class="col-12 p-0">
+                        <p class="payslip-small-desc mt-3 skeleton-loader" style="height: 20px; width: 90%;"></p>
+                        <p class="payslip-small-desc mt-2 skeleton-loader" style="height: 20px; width: 80%;"></p>
+                     </div>
+                 </div>
+                <div class="payslip-go-corner">
+                    <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <div class="avatarImgDiv" style="display:flex; gap: 5px;">
+                    <span class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></span>
+                    <span class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></span>
+                    <span class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></span>
+                    <span class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></span>
+                </div>
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 100px;"></p>
+                <p class="payslip-small-desc skeleton-loader" style="height: 20px; width: 90%;"></p>
+                <div class="payslip-go-corner">
+                    <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 100px;"></p>
+                <p class="payslip-small-desc skeleton-loader" style="height: 20px; width: 90%;"></p>
+                <div class="payslip-go-corner">
+                    <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 130px;"></p>
+                <p class="payslip-small-desc skeleton-loader" style="height: 20px; width: 90%;"></p>
+                <div class="payslip-go-corner">
+                    <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    dashboardCardsDiv.innerHTML = skeletonHTML;
+
+    setTimeout(function() {
+        dashboardCardsDiv.innerHTML = originalContent;
+    }, 3000);
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dashboardCardsDiv = document.querySelector('.home3');
+    if (!dashboardCardsDiv) return;
+
+    const originalContent = dashboardCardsDiv.innerHTML;
+
+    const skeletonHTML = `
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 150px;"></p>
+                <div class="notify d-flex justify-content-between">
+                    <p class="payslip-small-desc skeleton-loader" style="height: 40px; width: 80%;"></p>
+                    <div  style="width: 40px; height: 40px;"></div>
+                </div>
+                <div class="leave-display d-flex align-items-center border-top pt-3 gap-3">
+                    <div class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+                    <div class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+                    <div class="skeleton-loader" style="width: 40px; height: 40px; border-radius: 50%;"></div>
+                </div>
+                <a href="/employees-review">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="payslip-card mb-4" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 150px;"></p>
+                <p class="payslip-small-desc skeleton-loader" style="height: 20px; width: 90%;"></p>
+                <a href="/formdeclaration">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="payslip-card mb-3" style="height: 195px;">
+                <p class="payslip-card-title skeleton-loader" style="height: 24px; width: 100px;"></p>
+                <p class="payslip-small-desc skeleton-loader" style="height: 20px; width: 90%;"></p>
+                <a href="#">
+                    <div class="payslip-go-corner">
+                        <div class="payslip-go-arrow skeleton-loader" style="width: 30px; height: 30px;"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    `;
+
+    dashboardCardsDiv.innerHTML = skeletonHTML;
+
+    setTimeout(function() {
+        dashboardCardsDiv.innerHTML = originalContent;
+    }, 3000);
+});
+
+

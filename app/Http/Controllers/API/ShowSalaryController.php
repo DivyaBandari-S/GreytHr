@@ -36,9 +36,15 @@ class ShowSalaryController extends Controller
 
             // Fetch salary details using the provided or default month
             $salaryDetails = EmpSalary::join('salary_revisions', 'emp_salaries.sal_id', '=', 'salary_revisions.id')
-                ->where('salary_revisions.emp_id', $user->emp_id)
-                ->where('emp_salaries.month_of_sal', $requestedMonth)
-                ->select('emp_salaries.*', 'salary_revisions.*')
+               
+            ->join('employee_details', 'salary_revisions.emp_id', '=', 'employee_details.emp_id')
+            ->leftJoin('emp_departments', 'employee_details.dept_id', '=', 'emp_departments.dept_id')
+            ->leftJoin('emp_personal_infos', 'employee_details.emp_id', '=', 'emp_personal_infos.emp_id')
+            ->leftJoin('emp_bank_details', 'employee_details.emp_id', '=', 'emp_bank_details.emp_id') 
+            ->where('salary_revisions.emp_id', $user->emp_id)
+            ->where('emp_salaries.month_of_sal', $requestedMonth)
+                ->select('emp_salaries.*', 'salary_revisions.*', 'emp_bank_details.bank_name', // ✅ Bank
+                'emp_bank_details.account_number','emp_departments.department' )
                 ->first();
 
             if (!$salaryDetails) {
@@ -59,8 +65,13 @@ class ShowSalaryController extends Controller
                     'employee_id' => $user->emp_id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
+                    'job_role' => $user->job_role,
+                    'hire_date' => $user->hire_date,
+                    'job_location' => $user->job_location,
+                    'bank_name'=>$salaryDetails->bank_name,
                     'month_of_salary' => $salaryDetails->month_of_sal,
-                    'salary_components' => $salaryComponents
+                    'department'=>$salaryDetails->department,
+                    'salary_components' => $salaryComponents,
                 ],
                 self::SUCCESS
             );
