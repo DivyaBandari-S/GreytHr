@@ -22,6 +22,8 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('getEmployeeDetails', [AuthController::class, 'getEmployeeDetails'])->name('getEmployeeDetails');
     Route::post('change-password', [AuthController::class, 'resetPassword'])->name('changePassword');
     Route::post('swipe', [SwipeController::class, 'swipe'])->name('swipe'); // Handle Swipe (Single API for both IN & OUT)
+    Route::post('swipe-status', [SwipeController::class, 'getSwipeStatus'])->name('swipe-status'); // Handle Swipe StatusRecords
+    Route::post('swipe-history', [SwipeController::class, 'getDailySwipeTimeline'])->name('swipe-history'); // Handle Swipe History
     Route::post('holidays', [HolidayListController::class, 'index'])->name('holidays'); // Handle
     Route::post('holidays/upcoming', [HolidayListController::class, 'getUpcomingHolidays'])->name('upcomingHolidays'); // Handle
     // Route::post('/employee/update', [EmployeeDetailsController::class, 'update']);

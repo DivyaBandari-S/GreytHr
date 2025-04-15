@@ -72,8 +72,12 @@ class AuthController extends Controller
             if (!$token = auth('api')->attempt($credentials)) {
                 return ApiResponse::error(self::ERROR_STATUS, self::INVALID_CREDENTIALS, self::UNAUTHORIZED);
             }
-
-            return $this->respondWithToken($token);
+            // Prepare the user data to be returned
+            $employee = [
+                'email' => $user->email,
+                'emp_id' => $user->emp_id,
+            ];
+            return $this->respondWithToken($token, $employee, 'Login successful!');
         } catch (\Exception $e) {
             Log::error('Login error: ' . $e->getMessage());
             return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
@@ -139,15 +143,20 @@ class AuthController extends Controller
     /**
      * Return token response
      */
-    protected function respondWithToken($token, $user = null)
+    protected function respondWithToken($token, $user = null, $message = null)
     {
-        return ApiResponse::success(self::SUCCESS_STATUS, self::SUCCESS_MESSAGE, [
-            'access_token' => $token,
-            'token_type'   => 'bearer',
-            'expires_in'   => Auth::guard('api')->factory()->getTTL() * 60,
-            'user'         => $user,
-        ]);
+        return ApiResponse::success(
+            self::SUCCESS_STATUS,
+            $message ?? self::SUCCESS_MESSAGE,
+            [
+                'access_token' => $token,
+                'token_type'   => 'bearer',
+                'expires_in'   => Auth::guard('api')->factory()->getTTL() * 60,
+                'employee'     => $user,
+            ]
+        );
     }
+
 
 
     public function resetPassword(Request $request)
@@ -249,16 +258,31 @@ class AuthController extends Controller
         try {
             Log::info('MPIN verification request received.', $request->all());
 
+            // Validate the input: either emp_id or email should be provided, but not both
             $validator = Validator::make($request->all(), [
-                'mpin' => 'required|string|min:4|max:6',
+                'emp_id'   => 'nullable|string|required_without:email',
+                'email'    => 'nullable|email|required_without:emp_id',
+                'mpin'     => 'required|string|min:4|max:6',
             ]);
 
             if ($validator->fails()) {
                 return ApiResponse::error(self::ERROR_STATUS, $validator->errors()->first(), self::ERROR);
             }
 
-            // Get user from token
-            $user = auth('api')->user();
+            // Check if email or emp_id is provided in the request
+            if (!$request->has('email') && !$request->has('emp_id')) {
+                return ApiResponse::error(self::ERROR_STATUS, 'Email or emp_id is required.', self::ERROR);
+            }
+
+            $user = EmployeeDetails::where(function ($query) use ($request) {
+                if ($request->filled('emp_id')) {
+                    $query->where('emp_id', $request->emp_id);
+                }
+                if ($request->filled('email')) {
+                    $query->orWhere('email', $request->email);
+                }
+            })->first();
+
 
             if (!$user) {
                 return ApiResponse::error(self::ERROR_STATUS, self::USER_NOT_FOUND, self::UNAUTHORIZED);
@@ -268,18 +292,21 @@ class AuthController extends Controller
                 return ApiResponse::error(self::ERROR_STATUS, self::INACTIVE_USER, self::FORBIDDEN);
             }
 
+            // Check if the MPIN is valid
             if (!Hash::check($request->mpin, $user->mpin)) {
                 return ApiResponse::error(self::ERROR_STATUS, 'Invalid MPIN', self::UNAUTHORIZED);
             }
 
             // If you want, regenerate token (optional)
             $token = auth('api')->login($user);
-            $userData = [
+
+            // Prepare the user data to be returned
+            $employee = [
                 'email' => $user->email,
                 'emp_id' => $user->emp_id,
             ];
 
-            return $this->respondWithToken($token, $userData);
+            return $this->respondWithToken($token, $employee, 'MPIN verified successfully!');
         } catch (\Exception $e) {
             Log::error('MPIN verification error: ' . $e->getMessage());
             return ApiResponse::error(self::ERROR_STATUS, self::INTERNAL_SERVER_ERROR, self::SERVER_ERROR);
