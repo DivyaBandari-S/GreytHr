@@ -1,12 +1,5 @@
 <div class="position-relative">
-    <div class="position-absolute" wire:loading
-        wire:target="setActiveTab,searchPendingLeave,setActiveLeaveTab">
-        <div class="loader-overlay">
-            <div class="loader">
-                <div></div>
-            </div>
-        </div>
-    </div>
+    
     <style>
         .emp-side-page-nav-item-group {
             font-weight: 600;
@@ -135,7 +128,7 @@
         </div>
 
 
-        @if($showattendance )
+        @if($showattendance)
         <div class="col-md-9 col-lg-9 py-2x ml-3x">
             <div class="nav-buttons d-flex justify-content-center" style="margin-top: 15px;">
                 <ul class="nav custom-nav-tabs border">
