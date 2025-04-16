@@ -567,7 +567,7 @@ class Home extends Component
             }
 
             $ipAddress = request()->ip();
-            SwipeRecord::create([
+           $data =  SwipeRecord::create([
                 'emp_id' => $this->employeeDetails->emp_id,
                 'swipe_time' => Carbon::now()->format('Y-m-d H:i:s'),
                 'in_or_out' => $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN',
@@ -577,8 +577,6 @@ class Home extends Component
                 'swipe_location' => $this->swipe_location,
                 'swipe_remarks' => $this->swipe_remarks,
             ]);
-
-
 
             $flashMessage = $this->swipes ? ($this->swipes->in_or_out == "IN" ? "OUT" : "IN") : 'IN';
             FlashMessageHelper::flashSuccess($flashMessage == "IN"
@@ -591,8 +589,7 @@ class Home extends Component
 
             return redirect('/');
         } catch (Throwable $e) {
-
-
+            Log::error('dfghjkl' . $e->getMessage());
             FlashMessageHelper::flashError("An error occurred while toggling sign state. Please try again later.");
         }
     }

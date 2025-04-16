@@ -88,22 +88,21 @@ class ProfileInfo extends Component
     public function getResignationDetails()
     {
         $empId = Auth::guard('emp')->user()->emp_id;
-        $resig_requests = EmpResignations::where('emp_id', $empId)->whereIn('status', ['5', '2'])->first();
+        $resig_requests = EmpResignations::where('emp_id', $empId)->whereIn('status', [5, 2])->first();
         if ($resig_requests) {
             $this->resignId = $resig_requests->id;
             $this->resignation_date = $resig_requests->resignation_date;
             $this->reason = $resig_requests->reason;
             $this->fileName = $resig_requests->file_name;
             $this->mime_types=$resig_requests->mime_type;
-            if ($resig_requests->status == '5') {
+            if ($resig_requests->status == 5) {
                 $this->isResigned = 'Pending';
-            } elseif($resig_requests->status == '2') {
+            } elseif($resig_requests->status == 2) {
                 $this->isResigned = 'Approved';
-                $this->last_working_date = EmployeeDetails::where('emp_id', $empId)->value('last_working_date');
-                $this->approvedOn = EmpResignations::where('emp_id', $empId)->where('status','2')->value('approved_date');
-
+                $this->last_working_date = EmpResignations::where('emp_id', $empId)->value('last_working_day');
+                $this->approvedOn = EmpResignations::where('emp_id', $empId)->where('status',2)->value('action_date');
             }
-            elseif($resig_requests->status == '2') {
+            elseif($resig_requests->status == 3) {
                 $this->isResigned = 'Rejected';
             }
         }else{
@@ -212,9 +211,9 @@ class ProfileInfo extends Component
                 $file_name = null;
 
             }else{
-                $resig_requests = EmpResignations::where('emp_id', $employeeId)->where('status', ['5', '2'])->first();
+                $resig_requests = EmpResignations::where('emp_id', $employeeId)->where('status', [5, 2])->first();
                 if ($resig_requests) {
-                    if ($resig_requests->status == '5') {
+                    if ($resig_requests->status == 5) {
                         $fileContent= $resig_requests->signature;
                         $mime_type = $this->mime_types;
                         $file_name = $this->fileName;
@@ -287,7 +286,7 @@ class ProfileInfo extends Component
             $resignationRequest = EmpResignations::findOrFail($this->resignId);
 
             // Update the status to 'withdrawn'
-            $resignationRequest->status = '4';
+            $resignationRequest->status = 4;
             $resignationRequest->save();
             $this->showModal = false;
             $this->getResignationDetails();

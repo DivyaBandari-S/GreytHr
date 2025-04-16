@@ -13,6 +13,7 @@ use Carbon\Carbon;
 use App\Helpers\ApiResponse;
 use App\Models\SwipeRecord;
 use App\Models\CompanyShift;
+use App\Models\EmployeeDetails;
 
 class SwipeController extends Controller
 {
@@ -166,6 +167,207 @@ class SwipeController extends Controller
         }
     }
 
+
+
+    public function getSwipeStatus(Request $request)
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, 'Unauthorized', self::UNAUTHORIZED);
+            }
+
+            $emp_id = $user->emp_id;
+            $currentDate = Carbon::now()->toDateString();
+
+            // Get assigned shift from CompanyShifts
+            $shift = CompanyShifts::where('shift_name', $user->shift_type)
+                ->where('company_id', $user->company_id)
+                ->first();
+
+            $shiftDetails = $shift ? [
+                'shift_name'  => strtoupper($shift->shift_name),
+                'start_time'  => Carbon::parse($shift->shift_start_time)->format('h:i A'),
+                'end_time'    => Carbon::parse($shift->shift_end_time)->format('h:i A'),
+            ] : [
+                'shift_name'  => '',
+                'start_time'  => '',
+                'end_time'    => '',
+            ];
+
+            // Get last swipe
+            $lastSwipe = SwipeRecord::where('emp_id', $emp_id)
+                ->whereDate('swipe_time', $currentDate)
+                ->latest('swipe_time')
+                ->first();
+
+            $data = [
+                'emp_id'          => $emp_id,
+                'swipe_status'    => $lastSwipe ? $lastSwipe->in_or_out : 'N/A',
+                'last_swipe_time' => $lastSwipe ? Carbon::parse($lastSwipe->swipe_time)->format('d-m-Y H:i:s') : '',
+                'shift_details'   => $shiftDetails,
+            ];
+
+            $message = $lastSwipe ? 'Swipe status fetched' : "Don't have any swipes today";
+
+            return ApiResponse::success(self::SUCCESS_STATUS, $message, $data);
+        } catch (\Exception $e) {
+            Log::error("Get swipe status failed for Emp ID: $emp_id. Error: " . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, 'Server Error', self::SERVER_ERROR);
+        }
+    }
+
+
+    /**
+     * Get Daily Swipe Timeline and date range if want
+     */
+    public function getDailySwipeTimeline(Request $request)
+    {
+        try {
+            $user = Auth::guard('api')->user();
+            if (!$user) {
+                return ApiResponse::error(self::ERROR_STATUS, 'Unauthorized', self::UNAUTHORIZED);
+            }
+
+            $emp_id = $user->emp_id;
+            $fromDate = $request->input('from');
+            $toDate = $request->input('to');
+            $singleDate = $request->input('date');
+            $month = $request->input('month');
+
+            // Determine date range
+            if ($month) {
+                $startDate = Carbon::parse($month)->startOfMonth();
+                $endDate = Carbon::parse($month)->endOfMonth();
+
+                // If current month, end with yesterday
+                if ($startDate->isSameMonth(Carbon::now())) {
+                    $endDate = Carbon::yesterday();
+                }
+            } elseif ($fromDate && $toDate) {
+                $startDate = Carbon::parse($fromDate)->startOfDay();
+                $endDate = Carbon::parse($toDate)->endOfDay();
+            } else {
+                $currentDate = $singleDate
+                    ? Carbon::parse($singleDate)->toDateString()
+                    : Carbon::now()->toDateString();
+            }
+
+            // Get user shift
+            $shift = CompanyShifts::where('shift_name', $user->shift_type)
+                ->whereIn('company_id', [$user->company_id])
+                ->first();
+
+            $shiftStartTime = $shift ? Carbon::parse($shift->start_time) : Carbon::createFromTime(9, 0);
+            $shiftEndTime = $shift ? Carbon::parse($shift->end_time) : Carbon::createFromTime(18, 0);
+
+            // Build query
+            $swipesQuery = SwipeRecord::where('emp_id', $emp_id);
+
+            if (isset($startDate) && isset($endDate)) {
+                $swipesQuery->whereBetween('swipe_time', [$startDate, $endDate]);
+            } else {
+                $swipesQuery->whereDate('swipe_time', $currentDate);
+            }
+
+            $swipes = $swipesQuery->orderBy('swipe_time')->get();
+
+            if ($swipes->isEmpty()) {
+                return ApiResponse::success(self::SUCCESS_STATUS, 'No activity found for the given date(s).');
+            }
+
+            $grouped = $swipes->groupBy(function ($item) {
+                return Carbon::parse($item->swipe_time)->toDateString();
+            });
+
+            $timeline = [];
+            $performance = [
+                'working_days' => 0,
+                'total_hours' => 0,
+                'late_check_ins' => 0,
+                'early_check_outs' => 0,
+                'total_overtime_minutes' => 0,
+            ];
+
+            foreach ($grouped as $date => $dailySwipes) {
+                $dailySwipes = $dailySwipes->sortBy('swipe_time');
+                $dailyEntries = [];
+                $inTime = null;
+                $outTime = null;
+
+                foreach ($dailySwipes as $swipe) {
+                    $swipeTime = Carbon::parse($swipe->swipe_time);
+                    $label = '';
+
+                    if ($swipe->in_or_out === 'IN') {
+                        $inTime = $swipeTime;
+                        if ($swipeTime->gt($shiftStartTime)) {
+                            $label = 'Late Check In';
+                            $performance['late_check_ins']++;
+                        } else {
+                            $label = 'Check In';
+                        }
+                    }
+
+                    if ($swipe->in_or_out === 'OUT') {
+                        $outTime = $swipeTime;
+
+                        if ($swipeTime->lt($shiftEndTime)) {
+                            $label = 'Early Check Out';
+                            $performance['early_check_outs']++;
+                        } else {
+                            $label = 'Check Out';
+                        }
+
+                        if ($swipeTime->gt($shiftEndTime)) {
+                            $overtimeMinutes = $swipeTime->diffInMinutes($shiftEndTime);
+                            $performance['total_overtime_minutes'] += $overtimeMinutes;
+
+                            $dailyEntries[] = [
+                                'label' => 'Overtime',
+                                'time' => $swipeTime->format('h:i A'),
+                                'date' => $swipeTime->format('d M Y'),
+                                'overtime_minutes' => $overtimeMinutes,
+                            ];
+                        }
+                    }
+
+                    if ($label) {
+                        $dailyEntries[] = [
+                            'label' => $label,
+                            'time' => $swipeTime->format('h:i A'),
+                            'date' => $swipeTime->format('d M Y'),
+                        ];
+                    }
+                }
+
+                if ($inTime && $outTime) {
+                    $workedHours = $outTime->floatDiffInHours($inTime);
+                    $performance['total_hours'] += $workedHours;
+                }
+
+                $timeline[$date] = $dailyEntries;
+                $performance['working_days']++;
+            }
+
+            // Final performance summary
+            $performanceSummary = [
+                'working_days' => $performance['working_days'],
+                'total_hours' => round($performance['total_hours'], 2),
+                'late_check_ins' => $performance['late_check_ins'],
+                'early_check_outs' => $performance['early_check_outs'],
+                'total_overtime_hours' => round($performance['total_overtime_minutes'] / 60, 2),
+            ];
+
+            return ApiResponse::success(self::SUCCESS_STATUS, 'Swipe timeline data fetched', [
+                'timeline' => $timeline,
+                'performance' => $performanceSummary,
+            ]);
+        } catch (\Exception $e) {
+            Log::error("Swipe timeline fetch failed for Emp ID: $emp_id. Error: " . $e->getMessage());
+            return ApiResponse::error(self::ERROR_STATUS, 'Server Error', self::SERVER_ERROR);
+        }
+    }
 
 
 

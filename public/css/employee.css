@@ -1434,7 +1434,7 @@ main .btn-send:hover {
 
 /* From Uiverse.io by Smit-Prajapati */
 .cardReport {
-    height: 240px;
+    height: 235px;
     background: #b2d9e0;
     border-radius: 25px;
     padding: 3px;
@@ -1503,11 +1503,11 @@ main .btn-send:hover {
 
 .cardReport .bottom .content {
     position: absolute;
-    bottom: 3px;
+    bottom: 6px;
     left: 1.5rem;
     left: 1.5rem;
     right: 1.5rem;
-    height: 125px;
+    height: 100px;
 }
 
 .cardReport .bottom .content .name {
@@ -1849,4 +1849,7 @@ main .btn-send:hover {
 }
 .dropcust .dropdown-toggle::after {
     content: none;
+  }
+  .vertMidd {
+    vertical-align: text-bottom;
   }
