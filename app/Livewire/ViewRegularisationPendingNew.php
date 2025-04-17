@@ -383,10 +383,12 @@ class ViewRegularisationPendingNew extends Component
             ->with('employee') 
             ->orderBy('created_at','desc')
             ->get();
+            // dd($this->regularisations);
         }
         
               
-        $this->countofregularisations=$this->regularisations->count();  
+        $this->countofregularisations=$this->regularisations->regularisation_entries_count; 
+       
         return view('livewire.view-regularisation-pending-new');
     }
 }
