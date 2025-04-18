@@ -29,6 +29,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('holidays/upcoming', [HolidayListController::class, 'getUpcomingHolidays'])->name('upcomingHolidays'); // Handle
     // Route::post('/employee/update', [EmployeeDetailsController::class, 'update']);
     Route::post('employee/show', [EmployeeDetailsController::class, 'show'])->name('employee-show');
+    Route::post('get-all-employeeDetails', [EmployeeDetailsController::class, 'getAllEmployeeDetails'])->name('getAllEmployeeDetails'); // Handle
     Route::post('employee/personal/view', [EmpPersonalInfoController::class, 'show'])->name('employee-personal-view');
     Route::post('employee/personal/update', [EmpPersonalInfoController::class, 'update'])->name('employee-personal-update');
     Route::post('showsal', [ShowSalaryController::class, 'showSalary'])->name('showsal');
