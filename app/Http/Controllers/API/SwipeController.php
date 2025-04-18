@@ -209,7 +209,6 @@ class SwipeController extends Controller
             ];
 
             $message = $lastSwipe ? 'Swipe status fetched' : "Don't have any swipes today";
-
             return ApiResponse::success(self::SUCCESS_STATUS, $message, $data);
         } catch (\Exception $e) {
             Log::error("Get swipe status failed for Emp ID: $emp_id. Error: " . $e->getMessage());
