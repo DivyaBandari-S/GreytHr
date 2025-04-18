@@ -68,7 +68,7 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
     protected $hidden = ['password', 'remember_token', 'mpin'];
 
     protected $casts = [
-        'company_id' => 'array',
+        'company_id' => 'array',  // Ensure JSON is casted to array
     ];
 
 
@@ -194,5 +194,10 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
     public function manager()
     {
         return $this->belongsTo(EmployeeDetails::class, 'manager_id', 'emp_id');
+    }
+
+    public function getCompaniesAttribute()
+    {
+        return Company::whereIn('company_id', $this->company_id)->get();
     }
 }
