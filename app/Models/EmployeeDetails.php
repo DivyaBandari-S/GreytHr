@@ -189,16 +189,4 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
             'conversation_id'      // Related key on pivot table
         );
     }
-
-    // Define the relationship with the Department model
-    public function department()
-    {
-        return $this->belongsTo(EmpDepartment::class, 'dept_id');
-    }
-
-    // Define the relationship with the SubDepartment model
-    public function subDepartment()
-    {
-        return $this->belongsTo(EmpSubDepartments::class, 'sub_dept_id');
-    }
 }

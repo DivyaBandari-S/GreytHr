@@ -35,4 +35,54 @@ class EmployeeDetailsController extends Controller
             self::SUCCESS
         );
     }
+    public function getAllEmployeeDetails(Request $request)
+    {
+        // Fetch selected fields only
+        $employees = EmployeeDetails::select(
+            'emp_id',
+            'company_id',
+            'dept_id',
+            'sub_dept_id',
+            'first_name',
+            'last_name',
+            'gender',
+            'email',
+            'image',
+            'hire_date',
+            'employee_type',
+            'job_role',
+            'manager_id',
+            'employee_status',
+            'emergency_contact',
+            'status',
+            'confirmation_date',
+            'probation_Period'
+        )
+            ->with([
+                'empDepartment:id,dept_id,department',
+                'empSubDepartment:id,sub_dept_id,sub_department'
+            ])
+            ->where('status', 1)
+            ->orderBy('emp_id', 'desc')
+            ->get();
+
+
+        if ($employees->isEmpty()) {
+            return ApiResponse::error(
+                self::ERROR_STATUS,
+                'No Active Employees found.',
+                self::NOT_FOUND
+            );
+        }
+
+        return ApiResponse::success(
+            self::SUCCESS_STATUS,
+            'Employee list retrieved successfully.',
+            [
+                'total_active_employees' => $employees->count(),
+                'employees' => $employees,
+            ],
+            self::SUCCESS
+        );
+    }
 }
