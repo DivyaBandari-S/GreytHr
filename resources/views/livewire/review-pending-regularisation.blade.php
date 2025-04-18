@@ -232,24 +232,22 @@
             <div class="heading mb-3">
                 <div class="heading-2" >
                     <div class="d-flex flex-row justify-content-between rounded">
-                    <div class="field">
+                                <div class="field">
                                
-                                        <span style="color: #778899; font-size: 12px; font-weight: 500;">
+                                    <span style="color: #778899; font-size: 12px; font-weight: 500;">
                                             Applied by
-                                        </span>
+                                    </span>
+                                    <span style="color: #333; font-weight: 500;font-size:12px;">
+                                            {{ucwords(strtolower($employeeDetails->first_name))}}&nbsp;&nbsp;{{ucwords(strtolower($employeeDetails->last_name))}}
+                                    </span>
                                
                                       
                            
                                 
                                
                                   
-                                        <span style="color: #333; font-weight: 500;font-size:12px;">
-                                            {{ucwords(strtolower($employeeDetails->first_name))}}&nbsp;&nbsp;{{ucwords(strtolower($employeeDetails->last_name))}}
-                                        </span>
-                                   
-                                       
-                                 
-                        </div>
+                                        
+</div>
  
                      <div>
                         <span style="color: #32CD32; font-size: 12px; font-weight: 500; text-transform:uppercase;">

@@ -1925,11 +1925,17 @@ class Attendance extends Component
             //     'formattedFromDate' => $formattedFromDate,
             //     'formattedToDate' => $formattedToDate
             // ]);
+                 $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
+                $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
+                $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
             $this->addError('date_range', 'The start date cannot be greater than the end date.');
             return;
         }
 
         if ($formattedFromDate >= Carbon::today()->format('Y-m-d') && $formattedToDate >= Carbon::today()->format('Y-m-d')) {
+            $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
+            $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
+            $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
             // Log::info('Date range falls in future, setting default values.');
             // $this->setDefaultModalValues();
             // return;
@@ -1943,7 +1949,10 @@ class Attendance extends Component
         //     'fromDatetemp' => $fromDatetemp,
         //     'toDatetemp' => $toDatetemp
         // ]);
-
+    
+        $formattedFromDateForModalTitle = Carbon::parse($this->startDateForInsights)->format('d M');
+        $formattedToDateForModalTitle = Carbon::parse($this->toDate)->format('d M');
+        $this->modalTitle = "Insights for Attendance Period $formattedFromDateForModalTitle - $formattedToDateForModalTitle";
         $insights = $this->calculatetotalLateInSwipes($fromDatetemp, $toDatetemp);
         $outsights = $this->calculatetotalEarlyOutSwipes($fromDatetemp, $toDatetemp);
 
@@ -1953,11 +1962,11 @@ class Attendance extends Component
         // ]);
 
         $this->totalWorkingDays = $this->calculateTotalWorkingDays($fromDatetemp, $toDatetemp);
-        $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves($fromDatetemp, $toDatetemp);
-        $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents($fromDatetemp, $toDatetemp);
+        $this->totalnumberofLeaves = $this->calculateTotalNumberOfLeaves(Carbon::parse($formattedFromDate), $toDatetemp);
+        $this->totalnumberofAbsents = $this->calculateTotalNumberOfAbsents(Carbon::parse($formattedFromDate), $toDatetemp);
         $this->totalLateInSwipes = $insights['lateSwipeCount'];
         $this->totalnumberofEarlyOut = $outsights['EarlyOutCount'];
-        $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage($fromDatetemp, $toDatetemp);
+        $this->averageWorkHoursForModalTitle = $this->calculateAverageWorkHoursAndPercentage(Carbon::parse($formattedFromDate), $toDatetemp);
         $this->averageLastOutTime = $outsights['averageLastOutTime'];
         $this->averageFirstInTime = $insights['averageFirstInTime'];
 
@@ -2660,62 +2669,67 @@ private function calculatetotalLateInSwipes($startDate, $endDate)
     {
         try {
             $this->dynamicDate = now()->format('Y-m-d');
+            Log::info('Dynamic Date set: ' . $this->dynamicDate);
+
             $employeeId = auth()->guard('emp')->user()->emp_id;
-            $this->employeeIdForRegularisation = auth()->guard('emp')->user()->emp_id;
+            $this->employeeIdForRegularisation = $employeeId;
+            Log::info('Employee ID: ' . $employeeId);
+
             $this->swiperecord = SwipeRecord::where('swipe_records.emp_id', $employeeId)
                 ->where('is_regularized', 1)
                 ->join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();
+            Log::info('Regularized swipe records retrieved', ['records_count' => $this->swiperecord->count()]);
 
             $currentDate = Carbon::now()->format('Y-m-d');
             $holiday = HolidayCalendar::all();
             $today = Carbon::today();
             $data = SwipeRecord::join('employee_details', 'swipe_records.emp_id', '=', 'employee_details.emp_id')
-                ->where('swipe_records.emp_id', auth()->guard('emp')->user()->emp_id)
+                ->where('swipe_records.emp_id', $employeeId)
                 ->whereDate('swipe_records.created_at', $today)
                 ->select('swipe_records.*', 'employee_details.first_name', 'employee_details.last_name')
                 ->get();
+            Log::info('Today\'s swipe records retrieved', ['count' => $data->count()]);
 
-            $this->holiday = HolidayCalendar::all();
-            $this->leaveApplies = LeaveRequest::where('emp_id', auth()->guard('emp')->user()->emp_id)->get();
+            $this->holiday = $holiday;
+            $this->leaveApplies = LeaveRequest::where('emp_id', $employeeId)->get();
+            Log::info('Leave requests retrieved', ['count' => $this->leaveApplies->count()]);
 
             if ($this->changeDate == 1) {
-                
                 $this->currentDate2 = $this->dateclicked;
-               
+                Log::info('Date clicked: ' . $this->currentDate2);
+
                 if ($this->currentDate2 == date('Y-m-d')) {
                     $this->currentDate2recordin = '-';
                     $this->currentDate2recordout = '-';
+                    Log::info('Date is today. No swipe records set yet.');
                 }
 
-                if ($this->isEmployeeRegularisedOnDate($this->currentDate2) == true) {
-
-                    $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->where('is_regularized', 1)->first();
-                    $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->where('is_regularized', 1)->first();
+                if ($this->isEmployeeRegularisedOnDate($this->currentDate2)) {
+                    Log::info('Employee is regularized on date: ' . $this->currentDate2);
+                    $this->currentDate2recordin = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->where('is_regularized', 1)->first();
+                    $this->currentDate2recordout = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->where('is_regularized', 1)->first();
                 } else {
-
-                    $this->currentDate2recordin = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->first();
-                    $this->currentDate2recordout = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->orderBy('updated_at', 'desc')->first();
-
+                    Log::info('Employee is NOT regularized on date: ' . $this->currentDate2);
+                    $this->currentDate2recordin = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'IN')->first();
+                    $this->currentDate2recordout = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->where('in_or_out', 'OUT')->orderBy('updated_at', 'desc')->first();
                 }
-
 
                 if (isset($this->currentDate2recordin) && isset($this->currentDate2recordout)) {
-                    
-                    $this->first_in_time = substr($this->currentDate2recordin->swipe_time, 0, 5);
-                    $this->last_out_time = substr($this->currentDate2recordout->swipe_time, 0, 5);
-                    
+                    $this->first_in_time = Carbon::parse($this->currentDate2recordin->swipe_time)->format('H:i');
+                    $this->last_out_time = Carbon::parse($this->currentDate2recordout->swipe_time)->format('H:i');
+
+                    Log::info("Swipe IN time: {$this->first_in_time}, Swipe OUT time: {$this->last_out_time}");
+
                     $firstInTime = Carbon::createFromFormat('H:i', $this->first_in_time);
                     $lastOutTime = Carbon::createFromFormat('H:i', $this->last_out_time);
 
                     if ($lastOutTime < $firstInTime) {
                         $lastOutTime->addDay();
+                        Log::info('Adjusted last out time to next day');
                     }
 
-                    if ($lastOutTime < $firstInTime) {
-                        $lastOutTime->addDay();
-                    }
                     $this->first_in_time_for_date = $firstInTime;
                     $this->last_out_time_for_date = $lastOutTime;
 
@@ -2723,68 +2737,69 @@ private function calculatetotalLateInSwipes($startDate, $endDate)
                     $this->hours = floor($this->timeDifferenceInMinutesForCalendar / 60);
                     $minutes = $this->timeDifferenceInMinutesForCalendar % 60;
                     $this->minutesFormatted = str_pad($minutes, 2, '0', STR_PAD_LEFT);
+
+                    Log::info("Total worked time: {$this->hours} hours and {$this->minutesFormatted} minutes");
                 } elseif (!isset($this->currentDate2recordout) && isset($this->currentDate2recordin)) {
-                   
                     $this->first_in_time = Carbon::parse($this->currentDate2recordin->swipe_time)->format('H:i');
-                    $this->last_out_time = Carbon::parse($this->currentDate2recordin->swipe_time)->format('H:i');
-                   
+                    $this->last_out_time = $this->first_in_time;
+                    Log::info("Only IN swipe found at: {$this->first_in_time}");
                 } elseif (!in_array($this->currentDate2, ['Saturday', 'Sunday'])) {
                     $this->first_in_time = null;
                     $this->last_out_time = null;
+                    Log::info("No IN/OUT swipe records and not a weekend.");
                 } else {
                     $this->first_in_time = '-';
                     $this->last_out_time = '-';
+                    Log::info("Weekend detected: {$this->currentDate2}");
                 }
-                if (Carbon::parse($this->currentDate2)->isWeekend()) {
+
+                if (Carbon::parse($this->currentDate2)->isWeekend() || $this->isHolidayOnDate($this->currentDate2) || $this->first_in_time == $this->last_out_time) {
                     $this->shortFallHrs = '-';
                     $this->work_hrs_in_shift_time = '-';
                     $this->excessHrs = '-';
-                } elseif ($this->isHolidayOnDate($this->currentDate2)) {
-                    $this->shortFallHrs = '-';
-                    $this->work_hrs_in_shift_time = '-';
-                    $this->excessHrs = '-';
-                } elseif ($this->first_in_time == $this->last_out_time) {
-                    $this->shortFallHrs = '-';
-                    $this->work_hrs_in_shift_time = '-';
-                    $this->excessHrs = '-';
+                    Log::info("No shortfall or excess hours (Weekend/Holiday/Same in-out time)");
                 } else {
-                    $standardMinutesForShortFall = 9 * 60; // 9 hours in minutes (540 minutes)
-                    $timeDifferenceForShortFall = $standardMinutesForShortFall - $this->timeDifferenceInMinutesForCalendar; // Subtracting the time difference
+                    $standardMinutesForShortFall = 9 * 60;
+                    $timeDifferenceForShortFall = $standardMinutesForShortFall - $this->timeDifferenceInMinutesForCalendar;
 
-                    // Convert the result to hours and minutes
-                    $shortfallhours = floor($timeDifferenceForShortFall / 60); // Get the full hours
-                    $shortfallminutes = $timeDifferenceForShortFall % 60; // Get the remaining minutes
-
-                    // Format the result in HH:MM format
                     if ($timeDifferenceForShortFall == 0) {
-                        $this->shortFallHrs = '08:59';
+                        $this->shortFallHrs = '08:59'; // Intentional? Log it.
                         $this->excessHrs = '-';
                     } elseif ($this->timeDifferenceInMinutesForCalendar > $standardMinutesForShortFall) {
                         $this->shortFallHrs = '-';
-
                         $timeDifferenceForExcess = $this->timeDifferenceInMinutesForCalendar - $standardMinutesForShortFall;
-                        $excesshours = floor($timeDifferenceForExcess / 60); // Get the full hours
-                        $excessminutes = $timeDifferenceForExcess % 60; // Get the remaining minutes
+                        $excesshours = floor($timeDifferenceForExcess / 60);
+                        $excessminutes = $timeDifferenceForExcess % 60;
                         $this->excessHrs = sprintf('%02d:%02d', $excesshours, $excessminutes);
                     } else {
+                        $shortfallhours = floor($timeDifferenceForShortFall / 60);
+                        $shortfallminutes = $timeDifferenceForShortFall % 60;
                         $this->shortFallHrs = sprintf('%02d:%02d', $shortfallhours, $shortfallminutes);
                         $this->excessHrs = '-';
                     }
 
-
                     $this->work_hrs_in_shift_time = '09:00';
+                    Log::info("Shortfall: {$this->shortFallHrs}, Excess: {$this->excessHrs}");
                 }
-                $this->currentDate2recordexists = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->exists();
+
+                $this->currentDate2recordexists = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->exists();
+                Log::info("Record exists on date {$this->currentDate2}: " . ($this->currentDate2recordexists ? 'Yes' : 'No'));
             } else {
                 $this->currentDate2 = Carbon::now()->format('Y-m-d');
+                Log::info('No date change detected. Defaulting to today: ' . $this->currentDate2);
             }
 
-            $swipe_records = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
-            $this->swipe_records_count = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->count();
-            $this->swiperecordsfortoggleButton = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->whereDate('created_at', $this->currentDate2)->get();
-            $swipe_records1 = SwipeRecord::where('emp_id', auth()->guard('emp')->user()->emp_id)->orderBy('created_at', 'desc')->get();
+            $swipe_records = SwipeRecord::where('emp_id', $employeeId)->whereDate('created_at', $this->currentDate2)->get();
+            $this->swipe_records_count = $swipe_records->count();
+            $this->swiperecordsfortoggleButton = $swipe_records;
+            Log::info('Swipe records on current date', ['count' => $this->swipe_records_count]);
+
+            $swipe_records1 = SwipeRecord::where('emp_id', $employeeId)->orderBy('created_at', 'desc')->get();
+            Log::info('Swipe records fetched for history', ['count' => $swipe_records1->count()]);
 
             $this->calculateActualHours($swipe_records);
+            Log::info('Actual hours calculated.');
+
             return view('livewire.attendance', [
                 'Holiday' => $this->holiday,
                 'Swiperecords' => $swipe_records,

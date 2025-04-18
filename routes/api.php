@@ -8,6 +8,7 @@ use App\Http\Controllers\API\EmployeeDetailsController;
 use App\Http\Controllers\API\EmpPersonalInfoController;
 use App\Http\Controllers\API\FeedsController;
 use App\Http\Controllers\API\HolidayListController;
+use App\Http\Controllers\Api\RegularisationHistoryController;
 use App\Http\Controllers\API\ShowSalaryController;
 use App\Http\Controllers\API\SwipeController;
 // Route::get('/user', function (Request $request) {
@@ -32,6 +33,7 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('employee/personal/update', [EmpPersonalInfoController::class, 'update'])->name('employee-personal-update');
     Route::post('showsal', [ShowSalaryController::class, 'showSalary'])->name('showsal');
     Route::post('getfeed', [FeedsController::class, 'getEmployeeFeed'])->name('getfeed');
+    Route::get('/regularisation-history', [RegularisationHistoryController::class, 'index'])->name('regularisation-history');
     Route::post('getApprovedLeaveDays', [LeaveApplicationsController::class, 'getApprovedLeaveDays'])->name('getApprovedLeaveDays');
     Route::post('getTotalLeaveApplications', [LeaveApplicationsController::class, 'getTotalLeaveApplications'])->name('total-leaves');
     Route::post('getGrantedLeaveBalance', [LeaveApplicationsController::class, 'getGrantedLeaveBalance'])->name('emp-leave-balance');

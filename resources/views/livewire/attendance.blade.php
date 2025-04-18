@@ -1,6 +1,6 @@
 <div>
 <div class="position-absolute" wire:loading
-        wire:target="openattendanceperiodModal,redirectToRegularisation,showBars">
+        wire:target="redirectToRegularisation,showBars">
         <div class="loader-overlay">
             <div class="loader">
                 <div></div>
@@ -1541,12 +1541,12 @@ color: #fff;
                                 <div class="form-group col-md-3 col-sm-6 start-date-for-attend-period">
                                     <label for="fromDate" style="color: #778899; font-size: 12px; font-weight: 500;">From
                                         Date</label>
-                                    <input type="date" class="form-control" id="fromDate" wire:model="startDateForInsights" value="{{ $start_date_for_insights }}" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="fromDate" max="{{ now()->toDateString() }}" wire:model="startDateForInsights" value="{{ $start_date_for_insights }}" name="fromDate" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                                 <div class="form-group col-md-3 col-sm-6">
                                     <label for="toDate" style="color: #778899; font-size: 12px; font-weight: 500;">To
                                         Date</label>
-                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="toDate" value="{{ $to_date }}" wire:change="calculateTotalDays" style="color: #778899;">
+                                    <input type="date" class="form-control" id="toDate" name="toDate" wire:model="toDate" max="{{ now()->toDateString() }}" value="{{ $to_date }}" wire:change="calculateTotalDays" style="color: #778899;">
                                 </div>
                             </div>
                             <p style="font-size:12px;margin-top:3px">Total Working Days:&nbsp;&nbsp;<span style="font-weight:bold;">{{$totalWorkingDays}}</span></p>
