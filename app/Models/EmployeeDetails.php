@@ -189,4 +189,10 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
             'conversation_id'      // Related key on pivot table
         );
     }
+
+    // ✅ Correct usage in your case
+    public function manager()
+    {
+        return $this->belongsTo(EmployeeDetails::class, 'manager_id', 'emp_id');
+    }
 }

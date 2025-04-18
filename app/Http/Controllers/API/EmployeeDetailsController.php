@@ -37,8 +37,7 @@ class EmployeeDetailsController extends Controller
     }
     public function getAllEmployeeDetails(Request $request)
     {
-        // Fetch selected fields only
-        $employees = EmployeeDetails::select(
+        $query = EmployeeDetails::select(
             'emp_id',
             'company_id',
             'dept_id',
@@ -60,12 +59,29 @@ class EmployeeDetailsController extends Controller
         )
             ->with([
                 'empDepartment:id,dept_id,department',
-                'empSubDepartment:id,sub_dept_id,sub_department'
+                'empSubDepartment:id,sub_dept_id,sub_department',
+                'manager:emp_id,first_name,last_name'
             ])
-            ->where('status', 1)
-            ->orderBy('emp_id', 'desc')
-            ->get();
+            ->where('status', 1);
 
+        // Apply filters if present
+        if ($request->filled('emp_id')) {
+            $query->where('emp_id', $request->emp_id);
+        }
+
+        if ($request->filled('first_name')) {
+            $query->where('first_name', 'like', '%' . $request->first_name . '%');
+        }
+
+        if ($request->filled('last_name')) {
+            $query->where('last_name', 'like', '%' . $request->last_name . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        $employees = $query->orderBy('emp_id', 'desc')->get();
 
         if ($employees->isEmpty()) {
             return ApiResponse::error(
