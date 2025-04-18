@@ -50,6 +50,7 @@ class ViewPendingDetails extends Component
     public function fetchPendingLeaveApplications($filter = null)
     {
         try {
+            $filter = $this->filter;
             $employeeId = auth()->guard('emp')->user()->emp_id;
             $threeWorkingDaysAgo = $this->subtractWorkingDays(3);
             // Base query for fetching leave applications
@@ -67,11 +68,12 @@ class ViewPendingDetails extends Component
                 $query->where(function ($query) use ($filter) {
                     $query->where('employee_details.first_name', 'like', '%' . $filter . '%')
                         ->orWhere('employee_details.last_name', 'like', '%' . $filter . '%')
-                        ->orWheree('leave_applications.category_type', 'like', '%' . $filter . '%')
+                        ->orWhere('leave_applications.category_type', 'like', '%' . $filter . '%')
                         ->orWhere('leave_applications.emp_id', 'like', '%' . $filter . '%')
                         ->orWhere('leave_applications.leave_type', 'like', '%' . $filter . '%')
                         ->orWhere('status_types.status_name', 'like', '%' . $filter . '%');
                 });
+
             }
 
             // Applying conditions for employee's role in the leave application
@@ -131,8 +133,10 @@ class ViewPendingDetails extends Component
         } catch (\Illuminate\Database\QueryException $e) {
             FlashMessageHelper::flashError('Error while getting the data. Please try again.');
         } catch (PDOException $e) {
+            Log::error('ghjk' . $e->getMessage());
             FlashMessageHelper::flashError('Connection error . Please try again.');
         } catch (\Exception $e) {
+            Log::error('ghjk' . $e->getMessage());
             FlashMessageHelper::flashError('Connection error . Please try again.');
         }
     }
