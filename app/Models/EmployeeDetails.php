@@ -190,15 +190,9 @@ class EmployeeDetails extends Authenticatable implements JWTSubject
         );
     }
 
-    // Define the relationship with the Department model
-    public function department()
+    // ✅ Correct usage in your case
+    public function manager()
     {
-        return $this->belongsTo(EmpDepartment::class, 'dept_id');
-    }
-
-    // Define the relationship with the SubDepartment model
-    public function subDepartment()
-    {
-        return $this->belongsTo(EmpSubDepartments::class, 'sub_dept_id');
+        return $this->belongsTo(EmployeeDetails::class, 'manager_id', 'emp_id');
     }
 }
