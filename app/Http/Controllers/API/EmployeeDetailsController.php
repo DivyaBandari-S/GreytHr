@@ -4,11 +4,10 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Models\Company;
 use App\Models\EmployeeDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class EmployeeDetailsController extends Controller
@@ -71,7 +70,7 @@ class EmployeeDetailsController extends Controller
                 ])
                 ->where('status', 1);
 
-            // Apply filters
+            // Filter by emp_id, name, email
             if ($request->filled('emp_id')) {
                 $query->where('emp_id', $request->emp_id);
             }
@@ -88,30 +87,43 @@ class EmployeeDetailsController extends Controller
                 $query->where('email', 'like', '%' . $request->email . '%');
             }
 
-            $employees = $query->orderBy('emp_id', 'desc')->get();
+            // 🔍 Filter by manager (ID or name)
+            // Filter by manager_id
+            if ($request->filled('manager_id')) {
+                $query->where('manager_id', $request->manager_id);
+            }
+            // Filter by manager_name (first, last, or full)
+            if ($request->filled('manager_name')) {
+                $managerName = $request->manager_name;
 
+                $query->whereHas('manager', function ($q) use ($managerName) {
+                    $q->where('first_name', 'like', '%' . $managerName . '%')
+                        ->orWhere('last_name', 'like', '%' . $managerName . '%')
+                        ->orWhere(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', '%' . $managerName . '%');
+                });
+            }
+            $employees = $query->orderBy('emp_id', 'asc')->get();
             if ($employees->isEmpty()) {
+                $message = $request->filled('manager_id') || $request->filled('manager_name')
+                    ? 'No employee found under this manager.'
+                    : 'No Active Employees found.';
+
                 return ApiResponse::error(
                     self::ERROR_STATUS,
-                    'No Active Employees found.',
+                    $message,
                     self::NOT_FOUND
                 );
             }
 
             // Add manager_name and company_details
             $employees->transform(function ($employee) {
-                try {
-                    $employee->manager_name = $employee->manager
-                        ? $employee->manager->first_name . ' ' . $employee->manager->last_name
-                        : null;
+                $employee->manager_name = $employee->manager
+                    ? $employee->manager->first_name . ' ' . $employee->manager->last_name
+                    : null;
 
-                    $employee->company_details = $employee->companies ?? [];
+                $employee->company_details = $employee->companies ?? [];
 
-                    unset($employee->manager); // optional cleanup
-                } catch (\Exception $e) {
-                    // skip transformation on failure
-                }
-
+                unset($employee->manager); // Optional
                 return $employee;
             });
 
